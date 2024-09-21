@@ -16,12 +16,12 @@ export class UserService {
     const name = this.configService.get('ADMIN_USER', 'admin');
     const password = this.configService.get('ADMIN_PASSWD', 'admin');
 
-    this.createUser({ name, password, role: 'admin' })
-      .then(() => {
-        console.log(`[easy-blog] 管理员账户创建成功，用户名：${name}，密码：${password}，请及时登录系统修改默认密码`);
-      })
-      .catch(async () => {
-        const existAdminUser = await this.userRepository.findOne({ where: { name } });
+    this.createUser({ name, password, role: 'admin' }, true)
+    .then(() => {
+      console.log(`[easy-blog] 管理员账户创建成功，用户名：${name}，密码：${password}，请及时登录系统修改默认密码`);
+    })
+    .catch(async (e) => {
+      const existAdminUser = await this.userRepository.findOne({ where: { name } });
         const isDefaultPasswd = User.comparePassword(password, existAdminUser.password);
         if (isDefaultPasswd) {
           console.log(`[easy-blog] 管理员账户已经存在，用户名：${name}，密码：${password}，请及时登录系统修改默认密码`);
@@ -58,18 +58,22 @@ export class UserService {
 
   /**
    * 创建用户
-   * @param user
+   * @param user 用户模型
+   * @param ignoreValidator 是否忽略名称校验
    */
-  async createUser(user: Partial<User>): Promise<User> {
+  async createUser(user: Partial<User>, ignoreValidator?: boolean): Promise<User> {
     const { name, password } = user;
 
-    if (!name || !password) {
-      throw new HttpException('请输入用户名和密码', HttpStatus.BAD_REQUEST);
-    }
-
-    // 防止用户名称非法
-    if (!isValidUsername(name)) {
-      throw new HttpException('用户名不能包含空格和非法字符', HttpStatus.BAD_REQUEST);
+    // 如果忽略了名称校验，来自于系统内部默认的注入
+    if (!ignoreValidator) {
+      if (!name || !password) {
+        throw new HttpException('请输入用户名和密码', HttpStatus.BAD_REQUEST);
+      }
+  
+      // 防止用户名称非法
+      if (!isValidUsername(name)) {
+        throw new HttpException('用户名不能包含空格和非法字符', HttpStatus.BAD_REQUEST);
+      }
     }
 
     const existUser = await this.userRepository.findOne({ where: { name } });
