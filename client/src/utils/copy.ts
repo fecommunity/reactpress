@@ -1,7 +1,7 @@
 import { message } from 'antd';
 import _copy from 'copy-to-clipboard';
 
-export function copy(text, t) {
+export function copy(text, t?: any) {
   if (t) {
     message.success(t('copySuccess'));
   } else {
