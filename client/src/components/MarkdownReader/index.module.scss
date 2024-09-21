@@ -1,0 +1,25 @@
+.copyCodeBtn {
+  position: absolute;
+  top: 8px;
+  right: 5px;
+  font-size: 12px;
+  line-height: 1;
+  color: hsl(0deg 0% 54.9% / 80%);
+  cursor: pointer;
+  transition: color 0.1s;
+  &:hover {
+    opacity: .6;
+  }
+}
+.colorGroup {
+  color: red;
+  position: absolute;
+  top: 0;
+  i {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 6px;
+    margin-left: 6px;
+  }
+}

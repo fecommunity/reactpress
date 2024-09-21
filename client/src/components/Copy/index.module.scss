@@ -1,0 +1,14 @@
+.wrapper {
+  position: absolute;
+  top: 8px;
+  right: 15px;
+  font-size: 12px;
+  line-height: 1;
+  color: hsl(0deg 0% 54.9% / 80%);
+  cursor: pointer;
+  transition: color 0.1s;
+
+  span {
+    cursor: pointer;
+  }
+}

@@ -1,0 +1,15 @@
+.preview {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 120px;
+  margin-bottom: 12px;
+  color: #888;
+  background-color: #f5f5f5;
+
+  img {
+    display: block;
+    max-width: 100%;
+    max-height: 120px;
+  }
+}

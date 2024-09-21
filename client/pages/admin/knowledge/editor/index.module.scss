@@ -1,0 +1,52 @@
+.wrapper {
+  display: flex;
+  flex-wrap: nowrap;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+
+  > aside {
+    display: flex;
+    width: 240px;
+    padding: 12px 0;
+    overflow: hidden;
+    background: var(--bg-body);
+    user-select: none;
+    flex-direction: column;
+
+    > header {
+      padding: 0 12px;
+
+      > div {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        + div {
+          margin-top: 16px;
+        }
+      }
+    }
+
+    > main {
+      flex: 1;
+      padding: 0 12px;
+      overflow: auto;
+      scroll-behavior: smooth;
+    }
+  }
+
+  > main {
+    position: relative;
+    flex: 1;
+    width: calc(100% - 240px);
+  }
+}
+
+.helper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  font-size: 1.1em;
+  transform: translate(-50%, -50%);
+}

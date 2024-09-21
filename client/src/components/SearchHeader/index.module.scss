@@ -1,0 +1,37 @@
+.wrapper {
+  padding: 24px;
+  margin-bottom: 16px;
+  background: var(--bg-second);
+
+  .content {
+    display: flex;
+    align-items: stretch;
+    flex-wrap: wrap;
+
+    > div {
+      display: inline-flex;
+      align-items: center;
+    }
+  }
+
+  :global {
+    .ant-legacy-form-item {
+      display: flex;
+      width: 100%;
+    }
+
+    .ant-legacy-form-item-control-wrapper {
+      flex: 1;
+    }
+
+    @media (max-width: 575px) {
+      .ant-legacy-form-item {
+        flex-wrap: wrap;
+      }
+
+      .ant-legacy-form-item-control-wrapper {
+        flex: 1;
+      }
+    }
+  }
+}

@@ -1,0 +1,6 @@
+node_modules
+**/.next/**
+**/_next/**
+**/dist/**
+.eslintrc.js
+dist

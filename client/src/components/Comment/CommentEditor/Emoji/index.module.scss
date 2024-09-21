@@ -1,0 +1,36 @@
+.wrapper {
+  display: flex;
+  display: flex;
+  width: 390px;
+  height: 240px;
+  overflow: auto;
+  flex-wrap: wrap;
+  flex-wrap: wrap;
+
+  li {
+    position: relative;
+    display: flex;
+    width: 32px;
+    height: 32px;
+    font-size: 18px;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.text {
+  display: flex;
+  align-items: center;
+  color: var(--disable-text-color);
+  cursor: pointer;
+
+  &:hover {
+    color: var(--primary-color);
+  }
+
+  > span {
+    margin-left: 4px;
+    transform: translateY(1px);
+  }
+}
