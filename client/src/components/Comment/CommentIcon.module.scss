@@ -1,0 +1,21 @@
+.wrap {
+  display: flex;
+  width: 32px;
+  height: 32px;
+  font-size: 22px;
+  color: var(--disable-text-color);
+  cursor: pointer;
+  background: var(--bg-second);
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
+
+  &:hover,
+  &.active {
+    color: var(--primary-color);
+  }
+
+  + .iconWrap {
+    margin-top: 12px;
+  }
+}

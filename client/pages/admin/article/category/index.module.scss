@@ -1,0 +1,46 @@
+.wrapper {
+  .btns {
+    margin-top: 16px;
+
+    button + button {
+      margin-left: 16px;
+    }
+
+    &.isEdit {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+
+  ul.list {
+    background-color: #fff;
+  }
+
+  li.item {
+    display: inline-block;
+    padding: 2px 8px;
+    margin: 0 7px 7px 0;
+    line-height: 1.5em;
+    color: #8e8787;
+    cursor: pointer;
+    border: 1px solid #d9d9d9;
+    border-radius: 2px;
+    transition: all ease-in-out 0.2s;
+
+    &:hover {
+      color: #fff;
+      background-color: var(--primary-color);
+      border: 1px solid var(--primary-color);
+    }
+
+    &.active {
+      color: var(--primary-color);
+      background-color: var(--primary-color);
+      border: 1px solid var(--primary-color);
+    }
+
+    a {
+      color: inherit;
+    }
+  }
+}

@@ -1,0 +1,122 @@
+.content {
+  background-color: var(--bg-second);
+  box-shadow: var(--box-shadow);
+}
+
+.summary {
+  padding: 16px 0;
+  text-align: center;
+  background-color: var(--bg-second);
+  border-bottom: 1px solid var(--border-color);
+
+  i {
+    font-size: 2.5rem;
+    color: var(--disable-text-color);
+  }
+
+  p {
+    margin-bottom: 0;
+
+    &:first-of-type {
+      margin-top: 0.5rem;
+
+      span {
+        font-size: 1.5rem;
+        color: var(--primary-color);
+      }
+    }
+
+    &:last-of-type {
+      span {
+        font-size: 1.1rem;
+        color: var(--primary-color);
+      }
+    }
+  }
+}
+
+.list {
+  padding: 1rem 1.3rem;
+
+  + .list {
+    margin-top: 1.5rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    color: var(--main-text-color);
+  }
+
+  .item {
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+
+    + .item {
+      margin-top: 0.75rem;
+    }
+
+    ul {
+      padding-left: 2.5rem;
+    }
+
+    li {
+      position: relative;
+      padding: 0.5rem 0;
+
+      a {
+        display: inline-block;
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      &::before {
+        position: absolute;
+        top: 17px;
+        left: -1rem;
+        width: 6px;
+        height: 6px;
+        margin-left: -4px;
+        background: var(--disable-text-color);
+        border-radius: 50%;
+        content: ' ';
+      }
+
+      &:hover {
+        color: var(--primary-color);
+
+        .title,
+        .meta {
+          color: var(--primary-color);
+        }
+
+        &::before {
+          background-color: var(--primary-color);
+        }
+      }
+    }
+
+    .title {
+      overflow: hidden;
+      font-size: 1rem;
+      font-weight: 600;
+      line-height: 1.4;
+      color: var(--main-text-color);
+      text-align: left;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    h3 {
+      color: var(--second-text-color);
+    }
+
+    .meta {
+      padding-right: 1em;
+      margin: 0;
+      font-size: 0.8rem;
+      color: var(--second-text-color);
+    }
+  }
+}
