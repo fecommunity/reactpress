@@ -1,0 +1,38 @@
+.formItem {
+  display: flex;
+  align-items: center;
+
+  + .formItem {
+    margin-top: 16px;
+  }
+
+  > span {
+    padding-right: 16px;
+  }
+
+  > div {
+    flex: 1;
+  }
+}
+
+.cover {
+  .preview {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 180px;
+    margin-bottom: 16px;
+    color: #888;
+    background-color: #f5f5f5;
+
+    img {
+      display: block;
+      max-width: 100%;
+      max-height: 180px;
+    }
+  }
+
+  button {
+    margin-top: 16px;
+  }
+}

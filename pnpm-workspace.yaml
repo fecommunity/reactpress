@@ -1,0 +1,7 @@
+packages:
+  # 公共配置文件
+  - "config"
+  # 客户端
+  - "client"
+  # 服务器
+  - "server"
