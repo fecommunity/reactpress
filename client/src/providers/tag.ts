@@ -4,7 +4,7 @@ export class TagProvider {
   /**
    * 获取所有标签
    */
-  static async getTags(params): Promise<ITag[]> {
+  static async getTags(params?: any): Promise<ITag[]> {
     return httpProvider.get('/tag', { params });
   }
 
