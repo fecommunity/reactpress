@@ -1,0 +1,25 @@
+.wrap {
+  display: flex;
+  align-items: stretch;
+
+  img {
+    width: 100%;
+    height: 120px;
+    border-top-right-radius: var(--border-radius);
+    border-top-left-radius: var(--border-radius);
+    object-fit: cover;
+  }
+}
+
+.item {
+  display: flex;
+  height: 100%;
+  cursor: pointer;
+  justify-content: center;
+  align-items: center;
+
+  &:hover {
+    color: var(--link-color);
+    border-color: var(--link-color);
+  }
+}
