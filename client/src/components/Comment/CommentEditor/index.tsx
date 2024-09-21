@@ -29,6 +29,7 @@ export const CommentEditor: React.FC<Props> = ({ hostId, parentComment, replyCom
   const [addComment, loading] = useAsyncLoading(CommentProvider.addComment);
   const [needSetInfo, toggleNeedSetInfo] = useToggle(false);
   const [content, setContent] = useState('');
+  // @ts-ignore
   const hasValidUser = useMemo(() => isValidUser(user), [user]);
   const textareaPlaceholder = useMemo(
     () => (replyComment ? `${t('reply')} ${replyComment.name}` : t('replyPlaceholder')),
