@@ -17,8 +17,14 @@ Easy-Blog 是一套集成文章发表、页面创建、知识库管理、博客�
 首页-暗黑主题
 [![首页-暗黑主题](./public/dark.png)](https://gaoredu.com)
 
+文章阅读
+[![后台管理](./public/en-reading.png)](https://gaoredu.com)
+
 后台管理
 [![后台管理](./public/admin.png)](https://gaoredu.com)
+
+移动端
+[![后台管理](./public/mobile.png)](https://gaoredu.com)
 
 ## ✨ 特性
 
@@ -30,6 +36,7 @@ Easy-Blog 是一套集成文章发表、页面创建、知识库管理、博客�
 - 📃 页面管理：支持自定义新页面
 - 💬 评论管理：支持内容评论管理
 - 📷️ 媒体管理：支持文件本地上传和 `OSS` 文件上传
+- 📱 移动端：完美适配移动端H5页面
 - ...
 
 ## ⌨️ 本地开发
