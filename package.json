@@ -1,6 +1,7 @@
 {
   "name": "easy-blog",
   "author": "fecommunity",
+  "version": "1.0.0",
   "scripts": {
     "clean": "pnpm clean:node_modules && pnpm clean:dist",
     "clean:node_modules": "npx rimraf ./node_modules ./**/node_modules",
