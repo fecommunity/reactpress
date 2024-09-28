@@ -1,6 +1,5 @@
 {
   "name": "easy-blog",
-  "private": true,
   "author": "fecommunity",
   "scripts": {
     "clean": "pnpm clean:node_modules && pnpm clean:dist",
