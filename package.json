@@ -13,6 +13,7 @@
     "build:config": "pnpm run --dir ./config build",
     "build:server": "pnpm run --dir ./server build",
     "build:client": "pnpm run --dir ./client build",
+    "deploy": "sh scripts/deploy.sh",
     "start": "concurrently 'pnpm:start:*'",
     "start:server": "pnpm run --dir ./server start",
     "start:client": "pnpm run --dir ./client start",
