@@ -24,51 +24,58 @@ export const ArticleList: React.FC<IProps> = ({ articles = [] }) => {
         articles.map((article) => {
           return (
             <div key={article.id} className={style.articleItem}>
-              <Link href={`/article/[id]`} as={`/article/${article.id}`} scroll={false}>
-                <a aria-label={article.title}>
-                  <header>
-                    <div className={style.title}>{article.title}</div>
-                    <div className={style.info}>
-                      <Divider type="vertical" />
-                      <span className={style.time}>
-                        <LocaleTime date={article.publishAt} timeago={true} />
-                      </span>
-                      {article.category && (
-                        <>
-                          <Divider type="vertical" />
-                          <span className={style.time}>{article.category.label}</span>
-                        </>
-                      )}
+              <div className={style.coverWrapper}>
+                {article.cover && (
+                  <LazyLoad height={120}>
+                    <div className={style.coverWrapper}>
+                      <Link href={`/article/[id]`} as={`/article/${article.id}`} scroll={false}>
+                        <img src={article.cover} alt="cover" />
+                      </Link>
                     </div>
-                  </header>
-                  <main>
-                    <div className={style.contentWrapper}>
-                      <div className={style.desc}>
-                        <span dangerouslySetInnerHTML={{ __html: article.summary }} />
+                  </LazyLoad>
+                )}
+              </div>
+              <div className={style.articleWrapper}>
+                <Link href={`/article/[id]`} as={`/article/${article.id}`} scroll={false}>
+                  <a aria-label={article.title} className={style.link}>
+                    <header>
+                      <div className={style.title}>{article.title}</div>
+                      <div className={style.info}>
+                        {article.category && (
+                          <>
+                            <Divider type="vertical" />
+                            <span className={style.time}>{article.category.label}</span>
+                          </>
+                        )}
                       </div>
-                      <div className={style.meta}>
-                        <span>
-                          <HeartOutlined />
-                          <span className={style.number}>{article.likes}</span>
-                        </span>
-                        <span className={style.seperator}>·</span>
-                        <span>
-                          <EyeOutlined />
-                          <span className={style.number}>{article.views}</span>
-                        </span>
-                      </div>
-                    </div>
-
-                    {article.cover && (
-                      <LazyLoad height={120}>
-                        <div className={style.coverWrapper}>
-                          <img src={article.cover} alt="cover" />
+                    </header>
+                    <main>
+                      <div className={style.contentWrapper}>
+                        <div className={style.desc}>
+                          <span dangerouslySetInnerHTML={{ __html: article.summary }} />
                         </div>
-                      </LazyLoad>
-                    )}
-                  </main>
-                </a>
-              </Link>
+                        <div className={style.meta}>
+                          <div>
+                            <span>
+                              <HeartOutlined />
+                              <span className={style.number}>{article.likes}</span>
+                            </span>
+                            <span className={style.separator}>·</span>
+                            <span>
+                              <EyeOutlined />
+                              <span className={style.number}>{article.views}</span>
+                            </span>
+                          </div>
+                          <span className={style.time}>
+                            <LocaleTime date={article.publishAt} format="yyyy-MM-dd" />
+                          </span>
+                        </div>
+                      </div>
+                    </main>
+                  </a>
+                </Link>
+              </div>
+              <span className={style.badge} />
             </div>
           );
         })

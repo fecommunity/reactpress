@@ -93,6 +93,12 @@ iframe {
   }
 }
 
+@media (min-width: 1360px) {
+  .container {
+    width: 1240px;
+  }
+}
+
 .sticky {
   position: sticky;
   top: 1rem;
