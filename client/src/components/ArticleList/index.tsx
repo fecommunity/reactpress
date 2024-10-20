@@ -43,7 +43,9 @@ export const ArticleList: React.FC<IProps> = ({ articles = [] }) => {
                   </header>
                   <main>
                     <div className={style.contentWrapper}>
-                      <div className={style.desc}>{article.summary}</div>
+                      <div className={style.desc}>
+                        <span dangerouslySetInnerHTML={{ __html: article.summary }} />
+                      </div>
                       <div className={style.meta}>
                         <span>
                           <HeartOutlined />
