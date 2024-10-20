@@ -12,6 +12,23 @@
     border-bottom: 1px solid var(--border-color);
   }
 
+  .tagWrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .item {
+    flex: 1;
+    margin: 3px 3px;
+    padding: .2rem .6rem;
+  }
+
+  .link {
+    display: inline-block;
+    width: 100%;
+  }
+
   ul {
     padding: 1rem;
     > * {
