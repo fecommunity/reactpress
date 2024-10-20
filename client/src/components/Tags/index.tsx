@@ -25,22 +25,15 @@ export const Tags = ({ tags = [], needTitle = true, style: cssStyle = {} }) => {
           <span>{t('tagTitle')}</span>
         </div>
       )}
-      <ul>
+      <ul className={style.tagWrapper}>
         {tags.map((tag, index) => (
           <Tag key={tag.id} color={getColorFromNumber(index)} className={style.item}>
             <Link href={`/tag/[tag]`} as={`/tag/` + tag.value} scroll={false}>
-              <a aria-label={tag.label}>
+              <a aria-label={tag.label} className={style.link}>
                 {tag.label} [{tag.articleCount}]
               </a>
             </Link>
           </Tag>
-          // <li key={tag.id} className={cls(style.item, routerTag === tag.value ? style.active : false)}>
-          //   <Link href={`/tag/[tag]`} as={`/tag/` + tag.value} scroll={false}>
-          //     <a aria-label={tag.label}>
-          //       {tag.label} [{tag.articleCount}]
-          //     </a>
-          //   </Link>
-          // </li>
         ))}
       </ul>
     </div>
