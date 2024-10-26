@@ -29,7 +29,7 @@
       width: 100vw;
       height: 52px;
       padding-right: 0;
-      background-color: var(--bg-second);
+      background-color: var(--bg-box);
       transform: translate(0, 0);
       border-top: 1px solid var(--border-color);
       transition: all 0.2s;
@@ -63,7 +63,7 @@
 
   @media (min-width: 1440px) {
     > .fixed {
-      margin-left: -1140px;
+      margin-left: -1224px;
     }
   }
 
