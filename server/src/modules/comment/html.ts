@@ -1,9 +1,7 @@
 import { dateFormat } from '../../utils/date.util';
 
 export const getNewCommentHTML = ({
-  systemLogo,
   systemTitle,
-  systemFavicon,
   systemUrl,
   adminSystemUrl,
   adminName,
