@@ -1,7 +1,7 @@
-import { Alert, Card, Col, List, Row, Skeleton, Typography } from 'antd';
+import { Alert, Card, Col, List, Row, Empty, Typography } from 'antd';
 import { NextPage } from 'next';
 import Link from 'next/link';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { CommentAction } from '@/components/Comment/CommentAction/CommentAction';
 import { CommentArticle } from '@/components/Comment/CommentAction/CommentArticle';
@@ -54,6 +54,7 @@ const Home: NextPage<IHomeProps> = ({ articles = [], comments: defaultComments =
   const setting = useSetting();
   const user = useUser();
   const [comments, setComments] = useState<IComment[]>(defaultComments);
+  const hasPermission = user?.name && user.role === 'admin';
 
   const getComments = useCallback(() => {
     return CommentProvider.getComments({ page: 1, pageSize }).then((res) => {
@@ -62,9 +63,13 @@ const Home: NextPage<IHomeProps> = ({ articles = [], comments: defaultComments =
     });
   }, []);
 
+  useEffect(() => {
+    !hasPermission && (window.location.pathname = '/');
+  }, []);
+
   // 如果user为空或者不是管理员，不展示
-  if (!user?.name || user.role !== 'admin') {
-    return <Skeleton />;
+  if (!hasPermission) {
+    return <Empty description="无权访问当前页面" />;
   }
 
   return (

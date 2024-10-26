@@ -74,7 +74,7 @@ export const CommentEditor: React.FC<Props> = ({ hostId, parentComment, replyCom
       hostId,
       name: user.name,
       email: user.email,
-      avatar: user.avatar,
+      avatar: user.avatar || '',
       content,
       url: window.location.pathname,
     };
