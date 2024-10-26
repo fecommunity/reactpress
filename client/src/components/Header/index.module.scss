@@ -19,7 +19,7 @@ $height: 64px;
   z-index: 100;
   width: 100vw;
   height: $height;
-  background-color: var(--bg);
+  background-color: var(--bg-box);
   border-bottom: 1px solid var(--border-color);
 
   &.transparent {
@@ -36,7 +36,7 @@ $height: 64px;
     top: 0;
     right: 0;
     left: 0;
-    background-color: var(--bg);
+    background-color: var(--bg-box);
     transform: translateY(-64px);
     transition: all 0.2s;
     border-bottom: 1px solid var(--border-color);
@@ -217,7 +217,7 @@ $height: 64px;
       padding: 0 15px;
       margin-left: 0;
       overflow: hidden;
-      background-color: var(--bg);
+      background-color: var(--bg-box);
       transition: max-height 0.25s;
 
       &.active {

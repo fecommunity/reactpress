@@ -74,7 +74,6 @@ export const DoubleColumnLayout: React.FC<IProps> = ({
             <div
               className={cls(style.fixed, showWidge && style.active)}
               onClick={(e) => {
-                console.log('clicked');
                 e.preventDefault();
                 e.nativeEvent.stopImmediatePropagation();
                 e.stopPropagation();

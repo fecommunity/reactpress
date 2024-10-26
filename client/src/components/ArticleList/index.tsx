@@ -1,4 +1,4 @@
-import { EyeOutlined, HeartOutlined, ShareAltOutlined } from '@ant-design/icons';
+import { EyeOutlined, HeartOutlined, HistoryOutlined } from '@ant-design/icons';
 import { Divider } from 'antd';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
@@ -67,6 +67,7 @@ export const ArticleList: React.FC<IProps> = ({ articles = [] }) => {
                             </span>
                           </div>
                           <span className={style.time}>
+                            <HistoryOutlined />
                             <LocaleTime date={article.publishAt} format="yyyy-MM-dd" />
                           </span>
                         </div>

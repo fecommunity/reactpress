@@ -1,8 +1,8 @@
 .wrapper {
   overflow: hidden;
-  background-color: var(--bg);
   border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
+  margin-top: 1rem;
 }
 
 .articleItem {
@@ -11,6 +11,7 @@
   justify-content: space-between;
   overflow: hidden;
   padding: 1rem;
+  background-color: var(--bg-box);
 
 
   &:hover {
@@ -23,7 +24,7 @@
     position: relative;
     height: auto;
     width: 200px;
-    // transition: 0.5s ease-in;
+    transition: 0.5s ease-in;
     margin: 0 10px 0 0;
     flex-shrink: 0;
     overflow: hidden;
@@ -61,7 +62,7 @@
   }
 
   & + .articleItem {
-    margin-top: 2rem;
+    margin-top: 1rem;
   }
 
   &::after {
@@ -69,7 +70,7 @@
     bottom: 0rem;
     width: calc(100% - 32px);
     height: 1px;
-    background: var(--border-color);
+    // background: var(--border-color);
     content: '';
   }
 
@@ -171,6 +172,11 @@
         .number {
           margin-left: 6px;
           color: var(--second-text-color);
+        }
+        .time {
+          > * {
+            margin-left: 6px;
+          }
         }
       }
     }
