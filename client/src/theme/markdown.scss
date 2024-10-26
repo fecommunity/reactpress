@@ -169,7 +169,7 @@ $languages: ts js typescript javascript html css php go sql json bash less scss 
     margin: 0 2px;
     color: var(--main-text-color);
     background-color: var(--bg-code);
-    font-size: 14px;
+    font-size: inherit;
     word-wrap: break-word;
     word-break: break-all;
   }
@@ -206,7 +206,7 @@ $languages: ts js typescript javascript html css php go sql json bash less scss 
       background-color: var(--bg-code);
       overflow: auto;
       overscroll-behavior: contain;
-      font-size: 12px;
+      font-size: inherit;
       margin: 0;
       white-space: pre-wrap;
 
@@ -223,7 +223,7 @@ $languages: ts js typescript javascript html css php go sql json bash less scss 
     border-left: 4px solid var(--disable-text-color);
     margin: 22px 0;
     color: var(--blockquote-color);
-    background-color: var(--bg);
+    background-color: var(--bg-box);
   }
 
   strong {

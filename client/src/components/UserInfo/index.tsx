@@ -151,7 +151,7 @@ export const UserInfo: React.FC<{
             <Input placeholder={t('userInfoName') as string} />
           </Form.Item>
           <Form.Item name="password" rules={[{ required: true, message: t('userInfoPasswordValidMsg') as string }]}>
-            <Input.Password className={styles.password}  placeholder={t('userInfoPassword') as string} />
+          <Input.Password className={styles.password}  placeholder={t('userInfoPassword') as string} />
           </Form.Item>
           <Form.Item style={{ textAlign: 'right', marginBottom: 0 }}>
             <Button type="primary" htmlType="submit" style={{ width: '100%' }}>
@@ -201,6 +201,21 @@ export const UserInfo: React.FC<{
         <Form name="user-info" onFinish={submitRegister}>
           <Form.Item name="name" rules={[{ required: true, message: t('userInfoNameValidMsg') as string }]}>
             <Input placeholder={t('userInfoName') as string} />
+          </Form.Item>
+          <Form.Item
+            name="email"
+            rules={[
+              {
+                type: 'email',
+                message: t('userInfoIllegalEmailValidMsg') as string,
+              },
+              {
+                required: true,
+                message: t('userInfoEmailValidMsg') as string,
+              },
+            ]}
+          >
+            <Input type='email' placeholder={t('userInfoEmail') as string} />
           </Form.Item>
           <Form.Item name="password" rules={[{ required: true, message: t('userInfoPasswordValidMsg') as string }]}>
             <Input.Password className={styles.password} placeholder={t('userInfoPassword') as string} />

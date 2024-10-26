@@ -1,12 +1,12 @@
 .editorWrapper {
   padding: 16px;
-  background-color: var(--bg-second);
+  background-color: var(--bg-box);
 }
 
 .pagination {
   color: var(--second-text-color);
   text-align: center;
-  background-color: var(--bg-second);
+  background-color: var(--bg-box);
 
   :global {
     .ant-pagination {

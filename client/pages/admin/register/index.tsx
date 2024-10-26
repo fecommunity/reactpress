@@ -114,7 +114,7 @@ const _Register: React.FC<IProps> = ({ form }) => {
                   注册
                 </Button>
                 Or{' '}
-                <Link href="/admin/login">
+                <Link href="/login">
                   <a>去登录</a>
                 </Link>
               </Form.Item>
