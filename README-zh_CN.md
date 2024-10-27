@@ -20,6 +20,9 @@ Easy-Blog 是一套集成文章发表、页面创建、知识库管理、博客�
 文章阅读
 [![后台管理](./public/en-reading.png)](https://gaoredu.com)
 
+博客分类
+[![Blog Category](./public/category.png)](https://gaoredu.com)
+
 后台管理
 [![后台管理](./public/admin.png)](https://gaoredu.com)
 

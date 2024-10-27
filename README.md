@@ -17,11 +17,14 @@ Light Theme
 Dark Theme
 [![Home-Dark Theme](./public/en-home-dark.png)](https://gaoredu.com)
 
+Blog Category
+[![Blog Category](./public/category.png)](https://gaoredu.com)
+
 Blog Reading
 [![Blog Management](./public/en-reading.png)](https://gaoredu.com)
 
 Blog Management
-[![后台管理](./public/admin.png)](https://gaoredu.com)
+[![Blog Management](./public/admin.png)](https://gaoredu.com)
 
 ## ✨ Features
 
