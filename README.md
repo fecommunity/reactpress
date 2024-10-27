@@ -20,6 +20,9 @@ Dark Theme
 Blog Reading
 [![Blog Management](./public/en-reading.png)](https://gaoredu.com)
 
+Blog Management
+[![后台管理](./public/admin.png)](https://gaoredu.com)
+
 ## ✨ Features
 
 -  📦  Technology Stack: Built on React+MySQL+NestJS+NextJS
