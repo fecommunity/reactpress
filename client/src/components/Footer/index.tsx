@@ -53,7 +53,7 @@ export const Footer = ({ setting, className = '', hasBg = false }) => {
                 <a
                   aria-label="Github"
                   className={style.github}
-                  href="https://github.com/fecommunity/easy-blog"
+                  href="https://github.com/fecommunity/reactpress"
                   target="_blank"
                   rel="noopener noreferrer"
                 >

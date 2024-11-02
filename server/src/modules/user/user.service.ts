@@ -18,13 +18,13 @@ export class UserService {
 
     this.createUser({ name, password, role: 'admin' }, true)
     .then(() => {
-      console.log(`[easy-blog] 管理员账户创建成功，用户名：${name}，密码：${password}，请及时登录系统修改默认密码`);
+      console.log(`[reactpress] 管理员账户创建成功，用户名：${name}，密码：${password}，请及时登录系统修改默认密码`);
     })
     .catch(async (e) => {
       const existAdminUser = await this.userRepository.findOne({ where: { name } });
         const isDefaultPasswd = User.comparePassword(password, existAdminUser.password);
         if (isDefaultPasswd) {
-          console.log(`[easy-blog] 管理员账户已经存在，用户名：${name}，密码：${password}，请及时登录系统修改默认密码`);
+          console.log(`[reactpress] 管理员账户已经存在，用户名：${name}，密码：${password}，请及时登录系统修改默认密码`);
         }
       });
   }
