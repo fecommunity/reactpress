@@ -3,13 +3,6 @@ node_modules
 .idea
 .husky
 
-dist
-dist-ssr
-coverage
-test-results
-.pnpm-store
-tsconfig.tsbuildinfo
-
 .env.prod
 *.local
 *.cache
@@ -17,4 +10,9 @@ tsconfig.tsbuildinfo
 *debug.log
 *.conf
 
-scripts/update.sh
+dist
+dist-ssr
+coverage
+test-results
+.pnpm-store
+tsconfig.tsbuildinfo

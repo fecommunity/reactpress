@@ -1,4 +1,4 @@
-node_modules
-.next
-dist
 lib
+dist
+.next
+node_modules
