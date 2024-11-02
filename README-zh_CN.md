@@ -4,7 +4,7 @@
 
 `ReactPress` 是使用React开发的开源发布平台，用户可以在支持React和MySQL数据库的服务器上架设属于自己的博客、网站。也可以把 `ReactPress` 当作一个内容管理系统（CMS）来使用。
 
-[![GitHub license](https://img.shields.io/badge/license-Apache-blue.svg)](https://github.com/fecommunity/reactpress/blob/master/LICENSE)[![(Runtime) Build and Test](https://github.com/facebook/react/actions/workflows/runtime_build_and_test.yml/badge.svg)](https://github.com/fecommunity/reactpress/blob/master/package.json) [![(Compiler) TypeScript](https://github.com/facebook/react/actions/workflows/compiler_typescript.yml/badge.svg?branch=main)](https://github.com/fecommunity/reactpress/blob/master/client/tsconfig.json) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/fecommunity/reactpress/pulls)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/fecommunity/reactpress/blob/master/LICENSE)[![(Runtime) Build and Test](https://github.com/facebook/react/actions/workflows/runtime_build_and_test.yml/badge.svg)](https://github.com/fecommunity/reactpress/blob/master/package.json) [![(Compiler) TypeScript](https://github.com/facebook/react/actions/workflows/compiler_typescript.yml/badge.svg?branch=main)](https://github.com/fecommunity/reactpress/blob/master/client/tsconfig.json) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/fecommunity/reactpress/pulls)
 
 [报告问题](https://github.com/fecommunity/reactpress/issues) · [参与共建](https://github.com/fecommunity/reactpress/pulls) · [English](./README.md) · 中文
 </div>
