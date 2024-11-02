@@ -1,4 +1,4 @@
-import { messages } from '@easy-blog/config';
+import { messages } from '@reactpress/config';
 
 export const i18n = messages;
 
