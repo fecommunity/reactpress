@@ -1,6 +1,10 @@
 <div align="center"><a name="readme-top"></a>
 
-<a href="https://gaoredu.com" title="ReactPress"><img height="180" src="./public/logo.png"></a>
+<a href="https://gaoredu.com" title="ReactPress"><img height="180" src="./public/logo.png">
+</a>
+
+[![ReactPress](./public/poster.png)](https://gaoredu.com)
+
 
 `ReactPress` 是使用React开发的开源发布平台，用户可以在支持React和MySQL数据库的服务器上架设属于自己的博客、网站。也可以把 `ReactPress` 当作一个内容管理系统（CMS）来使用。
 
@@ -19,7 +23,7 @@
 
 - 移动端
 
-[![Mobile Phone](./public/mobile.png)](https://gaoredu.com)
+<img src="./public/mobile.png" alt="Mobile Phone" width="500">
 
 ## ✨ 特性
 
