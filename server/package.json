@@ -1,5 +1,5 @@
 {
-  "name": "@easy-blog/server",
+  "name": "@reactpress/server",
   "version": "1.0.0",
   "description": "",
   "author": "fecommunity",
@@ -11,7 +11,7 @@
     "dev": "nest start --watch",
     "debug": "nest start --debug --watch",
     "start": "cross-env NODE_ENV=production node dist/main",
-    "pm2": "pm2 start npm --name @easy-blog/server -- start",
+    "pm2": "pm2 start npm --name @reactpress/server -- start",
     "lint": "tslint -p tsconfig.json -c tslint.json",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -20,7 +20,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@easy-blog/config": "workspace:^1.0.0",
+    "@reactpress/config": "workspace:^1.0.0",
     "@nestjs/common": "^6.7.2",
     "@nestjs/config": "^0.6.3",
     "@nestjs/core": "^6.7.2",
@@ -85,7 +85,8 @@
     "ts-node": "^8.4.1",
     "tsconfig-paths": "^3.9.0",
     "tslint": "^5.20.0",
-    "typescript": "~4.1.6"
+    "typescript": "~4.1.6",
+    "open": "^8.2.1"
   },
   "jest": {
     "moduleFileExtensions": [

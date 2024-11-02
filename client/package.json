@@ -1,5 +1,5 @@
 {
-  "name": "@easy-blog/client",
+  "name": "@reactpress/client",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -8,11 +8,11 @@
     "postbuild": "next-sitemap",
     "dev": "node dev-server.js",
     "start": "cross-env NODE_ENV=production node prod-server.js",
-    "pm2": "pm2 start npm --name @easy-blog/client -- start"
+    "pm2": "pm2 start npm --name @reactpress/client -- start"
   },
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
-    "@easy-blog/config": "workspace:^1.0.0",
+    "@reactpress/config": "workspace:^1.0.0",
     "antd": "^5.20.6",
     "axios": "^0.23.0",
     "classnames": "^2.3.1",

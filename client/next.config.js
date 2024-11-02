@@ -3,7 +3,7 @@ const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const withPlugins = require('next-compose-plugins');
 const withLess = require('next-with-less');
 const withPWA = require('next-pwa');
-const { config, locales, defaultLocale } = require('@easy-blog/config');
+const { config, locales, defaultLocale } = require('@reactpress/config');
 const antdVariablesFilePath = path.resolve(__dirname, './antd-custom.less');
 
 /** @type {import('next').NextConfig} */

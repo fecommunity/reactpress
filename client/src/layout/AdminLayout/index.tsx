@@ -83,8 +83,7 @@ export const AdminLayout: React.FC<{ headerAppender?: React.ReactNode }> = ({ he
     <Layout className={style.container}>
       <Sider className={style.asider} trigger={null} collapsible={true} collapsed={collapsed}>
         <div className={style.logo}>
-          {setting.systemFavicon && <img src={setting.systemFavicon} />}
-          {!collapsed && <span style={{ marginLeft: 4 }}>管理后台</span>}
+          {!collapsed && <span style={{ marginLeft: 4 }}>ReactPress管理后台</span>}
         </div>
         <div className={style.resourceCreate}>
           <ResourceCreate collapsed={collapsed} />
@@ -104,7 +103,7 @@ export const AdminLayout: React.FC<{ headerAppender?: React.ReactNode }> = ({ he
                 </a>
                 <a
                   className={style.github}
-                  href="https://github.com/fecommunity/easy-blog"
+                  href="https://github.com/fecommunity/reactpress"
                   target="_blank"
                   rel="noreferrer"
                 >
@@ -134,8 +133,8 @@ export const AdminLayout: React.FC<{ headerAppender?: React.ReactNode }> = ({ he
           <main>{children}</main>
         </Content>
         <Footer style={{ textAlign: 'center' }}>
-          EasyBlog ©{new Date().getFullYear()} Created by{' '}
-          <a className={style.github} href="https://github.com/fecommunity/easy-blog" target="_blank" rel="noreferrer">
+          ReactPress ©{new Date().getFullYear()} Created by{' '}
+          <a className={style.github} href="https://github.com/fecommunity/reactpress" target="_blank" rel="noreferrer">
             FECommunity
           </a>
         </Footer>

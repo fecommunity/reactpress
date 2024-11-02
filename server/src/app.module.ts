@@ -1,5 +1,5 @@
 // 配置文件
-import { file as envFilePath } from '@easy-blog/config';
+import { file as envFilePath } from '@reactpress/config';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -56,7 +56,7 @@ import { ViewModule } from './modules/view/view.module';
         port: configService.get<number>('DB_PORT', 3306),
         username: configService.get('DB_USER', 'root'),
         password: configService.get('DB_PASSWD', 'root'),
-        database: configService.get('DB_DATABASE', 'easy-blog'),
+        database: configService.get('DB_DATABASE', 'reactpress'),
         charset: 'utf8mb4',
         timezone: '+08:00',
         synchronize: true,

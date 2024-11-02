@@ -7,8 +7,8 @@ pnpm install
 pnpm run build
 
 # 启动进程
-pm2 delete @easy-blog/server
-pm2 delete @easy-blog/client
+pm2 delete @reactpress/server
+pm2 delete @reactpress/client
 pnpm run pm2
 
 # 开机启动

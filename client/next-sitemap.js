@@ -1,4 +1,4 @@
-const { config } = require('@easy-blog/config');
+const { config } = require('@reactpress/config');
 
 module.exports = {
   siteUrl: config.CLIENT_SITE_URL,

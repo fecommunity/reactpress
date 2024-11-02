@@ -1,4 +1,4 @@
-# `@easy-blog/server`
+# `@reactpress/server`
 
 后台服务。配置文件在 `../../.env`。
 

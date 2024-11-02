@@ -100,7 +100,7 @@ export class AuthService {
             from: setting.smtpFromUser,
             to: result.data.email,
             subject: 'Github 用户登录通知',
-            html: `您好，您使用了 Github 登录了 easy-blog。easy-blog 已为您创建用户，用户名称：${result.data.name}， 用户密码：${password}，请及时登录系统修改密码`,
+            html: `您好，您使用了 Github 登录了 reactpress。reactpress 已为您创建用户，用户名称：${result.data.name}， 用户密码：${password}，请及时登录系统修改密码`,
           };
           this.smtpService.create(emailMessage).catch(() => {
             console.log(`通知用户 ${result.data.name}（${result.data.email}），但发送邮件通知失败`);
