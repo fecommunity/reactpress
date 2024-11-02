@@ -56,8 +56,8 @@ $ pnpm i
 ```js
 DB_HOST=127.0.0.1 // 数据库地址
 DB_PORT=3306 // 端口
-DB_USER=admin // 用户名
-DB_PASSWD=admin // 密码
+DB_USER=reactpress // 用户名
+DB_PASSWD=reactpress // 密码
 DB_DATABASE=reactpress // 数据库
 ```
 
