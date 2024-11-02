@@ -6,6 +6,7 @@ import * as express from 'express';
 import * as rateLimit from 'express-rate-limit';
 import * as helmet from 'helmet';
 import { join } from 'path';
+import * as open from 'open';
 
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './filters/http-exception.filter';
@@ -13,9 +14,10 @@ import { TransformInterceptor } from './interceptors/transform.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const configService = app.get('ConfigService');
 
   app.enableCors(); // 开启跨域
-  app.setGlobalPrefix(app.get('ConfigService').get('SERVER_API_PREFIX', '/api'));
+  app.setGlobalPrefix(configService.get('SERVER_API_PREFIX', '/api'));
   app.use(
     rateLimit({
       windowMs: 60 * 1000, // 1 minutes
@@ -34,15 +36,16 @@ async function bootstrap() {
   app.use(bodyParser.json({ limit: '10mb' })); // 修改请求的容量
   app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
   const swaggerConfig = new DocumentBuilder()
-    .setTitle('EasyBlog Open Api')
-    .setDescription('EasyBlog Open Api Document')
+    .setTitle('ReactPress Open Api')
+    .setDescription('ReactPress Open Api Document')
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('api', app, document);
 
-  await app.listen(app.get('ConfigService').get('SERVER_PORT', 3003));
-  console.log('[easy-blog] 服务启动成功');
+  await app.listen(configService.get('SERVER_PORT', 3002));
+  await open(`http://localhost:${configService.get('CLIENT_PORT', 3001)}`)
+  console.log(`[ReactPress] 服务启动成功`);
 }
 
 bootstrap();

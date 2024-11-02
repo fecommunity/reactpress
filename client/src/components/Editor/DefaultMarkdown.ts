@@ -2,9 +2,9 @@ export const DEFAULT_MARKDOWN = `
 
 <a href="https://gaoredu.com" title="高热度网"><img height="180" src="https://www.gaoredu.com/wp-content/uploads/2023/10/logo.png"></a>
 
-<h1>Easy-Blog</h1>
+<h1>ReactPress</h1>
 
-Easy-Blog 是一套集成文章发表、页面创建、知识库管理、博客后台管理等功能于一体的博客系统。
+ReactPress 是一套集成文章发表、页面创建、知识库管理、博客后台管理等功能于一体的博客系统。
 
 ## ✨ 特性
 
@@ -22,22 +22,22 @@ Easy-Blog 是一套集成文章发表、页面创建、知识库管理、博客�
 
 ### 环境准备
 \`\`\`bash
-$ git clone --depth=1 https://github.com/fecommnity/easy-blog.git
-$ cd easy-blog
+$ git clone --depth=1 https://github.com/fecommnity/reactpress.git
+$ cd reactpress
 $ npm i -g pnpm
 $ pnpm i
 \`\`\`
 
 ### 配置文件
 
-项目启动后会加载根目录下的 \`.env\` 配置文件，请确保MySQL数据库服务和下面的配置保持一致，并提前创建好 \`easy_blog\` 数据库
+项目启动后会加载根目录下的 \`.env\` 配置文件，请确保MySQL数据库服务和下面的配置保持一致，并提前创建好 \`reactpress\` 数据库
 
 \`\`\`js
 DB_HOST=127.0.0.1 // 数据库地址
 DB_PORT=3306 // 端口
 DB_USER=admin // 用户名
 DB_PASSWD=admin // 密码
-DB_DATABASE=easy_blog // 数据库
+DB_DATABASE=reactpress // 数据库
 \`\`\`
 
 环境准备好后，执行启动命令：
@@ -51,10 +51,10 @@ $ pnpm run dev
 
 ## 🔗 链接
 
-- [首页](https://github.com/fecommunity/easy-blog)
+- [首页](https://github.com/fecommunity/reactpress)
 - [高热度网](https://gaoredu.com)
-- [报告问题](https://github.com/fecommunity/easy-blog/issues)
-- [参与共建](https://github.com/fecommunity/easy-blog/pulls) 
+- [报告问题](https://github.com/fecommunity/reactpress/issues)
+- [参与共建](https://github.com/fecommunity/reactpress/pulls) 
 - [next.js 源码](https://github.com/vercel/next.js)
 - [nest.js 源码](https://github.com/nestjs/nest)
 
@@ -70,7 +70,7 @@ $ pnpm run dev
 
 - 通过 GitHub Discussions 提问时，建议使用 \`Q&A\` 标签。
 
-- 通过 Stack Overflow 或者 Segment Fault 提问时，建议加上 \`easy-blog\` 标签。
+- 通过 Stack Overflow 或者 Segment Fault 提问时，建议加上 \`reactpress\` 标签。
 
 
 1. [GitHub Discussions](https://github.com/ant-design/ant-design/discussions)

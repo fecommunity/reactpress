@@ -11,7 +11,7 @@ import { JwtStrategy } from './jwt.strategy';
 
 const passModule = PassportModule.register({ defaultStrategy: 'jwt' });
 const jwtModule = JwtModule.register({
-  secret: 'easy-blog',
+  secret: 'reactpress',
   signOptions: { expiresIn: '4h' },
 });
 
