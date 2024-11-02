@@ -4,6 +4,7 @@
 
 [![ReactPress](./public/poster.png)](https://gaoredu.com)
 
+## Introduction
 
 `ReactPress` is an open-source publishing platform developed using the React. Users can set up their own blogs and websites on servers that support React and MySQL databases. `ReactPress` can also be used as a content management system (CMS).
 

@@ -5,6 +5,7 @@
 
 [![ReactPress](./public/poster.png)](https://gaoredu.com)
 
+## 项目简介
 
 `ReactPress` 是使用React开发的开源发布平台，用户可以在支持React和MySQL数据库的服务器上架设属于自己的博客、网站。也可以把 `ReactPress` 当作一个内容管理系统（CMS）来使用。
 
