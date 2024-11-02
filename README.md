@@ -1,30 +1,26 @@
 <div align="center"><a name="readme-top"></a>
 
-<a href="https://gaoredu.com" title="高热度网"><img height="180" src="https://www.gaoredu.com/wp-content/uploads/2023/10/logo.png"></a>
+<a href="https://gaoredu.com" title="ReactPress"><img height="180" src="./public/logo.png"></a>
 
-<h1>Easy-Blog</h1>
+`ReactPress` is an open-source publishing platform developed using the React. Users can set up their own blogs and websites on servers that support React and MySQL databases. `ReactPress` can also be used as a content management system (CMS).
 
-Easy-Blog is a very easy blog system that integrates article publishing, page creation, knowledge management, blog management and other functions.
+[![GitHub license](https://img.shields.io/badge/license-Apache-blue.svg)](https://github.com/fecommunity/reactpress/blob/master/LICENSE)[![(Runtime) Build and Test](https://github.com/facebook/react/actions/workflows/runtime_build_and_test.yml/badge.svg)](https://github.com/fecommunity/reactpress/blob/master/package.json) [![(Compiler) TypeScript](https://github.com/facebook/react/actions/workflows/compiler_typescript.yml/badge.svg?branch=main)](https://github.com/fecommunity/reactpress/blob/master/client/tsconfig.json) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/fecommunity/reactpress/pulls)
 
-[![GitHub license](https://img.shields.io/badge/license-Apache-blue.svg)](https://github.com/fecommunity/easy-blog/blob/master/LICENSE)[![(Runtime) Build and Test](https://github.com/facebook/react/actions/workflows/runtime_build_and_test.yml/badge.svg)](https://github.com/fecommunity/easy-blog/blob/master/package.json) [![(Compiler) TypeScript](https://github.com/facebook/react/actions/workflows/compiler_typescript.yml/badge.svg?branch=main)](https://github.com/fecommunity/easy-blog/blob/master/client/tsconfig.json) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/fecommunity/easy-blog/pulls)
-
-[Issues](https://github.com/fecommunity/easy-blog/issues) · [Pull Request](https://github.com/fecommunity/easy-blog/pulls) · English · [中文](./README-zh_CN.md)
+[Issues](https://github.com/fecommunity/reactpress/issues) · [Pull Request](https://github.com/fecommunity/reactpress/pulls) · English · [中文](./README-zh_CN.md)
 </div>
 
-Light Theme
-[![Home-Light Theme](./public/en-home-light.png)](https://gaoredu.com)
+- Blog Management
 
-Dark Theme
-[![Home-Dark Theme](./public/en-home-dark.png)](https://gaoredu.com)
+[![Blog Management](./public/admin.png)](https://gaoredu.com)
 
-Blog Category
-[![Blog Category](./public/category.png)](https://gaoredu.com)
+- Article Reading
 
-Blog Reading
 [![Blog Management](./public/en-reading.png)](https://gaoredu.com)
 
-Blog Management
-[![Blog Management](./public/admin.png)](https://gaoredu.com)
+- Mobile Phone
+
+[![Mobile Phone](./public/mobile.png)](https://gaoredu.com)
+
 
 ## ✨ Features
 
@@ -42,22 +38,22 @@ Blog Management
 
 ### Environment
 ```bash
-$ git clone --depth=1 https://github.com/fecommnity/easy-blog.git
-$ cd easy-blog
+$ git clone --depth=1 https://github.com/fecommnity/reactpress.git
+$ cd reactpress
 $ npm i -g pnpm
 $ pnpm i
 ```
 
 ### Configuration
 
-After the project starts, the `. env ` configuration file in the root directory will be loaded. Please ensure that the MySQL database service is consistent with the following configuration, and create the ` easy-blog ` database in advance
+After the project starts, the `. env ` configuration file in the root directory will be loaded. Please ensure that the MySQL database service is consistent with the following configuration, and create the ` reactpress ` database in advance
 
 ```js
 DB_HOST=127.0.0.1 // Default Database Host
 DB_PORT=3306 // Default Database Port
-DB_USER=admin // Default Username
-DB_PASSWD=admin // Default Password
-DB_DATABASE=easy_blog // Default Database Name
+DB_USER=reactpress // Default Username
+DB_PASSWD=reactpress // Default Password
+DB_DATABASE=reactpress // Default Database Name
 ```
 
 After the environment is ready, execute the startup shell:
@@ -71,10 +67,10 @@ Open your browser and visit http://127.0.0.1:3001
 
 ## 🔗 Links
 
-- [Home](https://github.com/fecommunity/easy-blog)
+- [Home](https://github.com/fecommunity/reactpress)
 - [Easy Blog](https://gaoredu.com)
-- [Issues](https://github.com/fecommunity/easy-blog/issues)
-- [Pull Request](https://github.com/fecommunity/easy-blog/pulls) 
+- [Issues](https://github.com/fecommunity/reactpress/issues)
+- [Pull Request](https://github.com/fecommunity/reactpress/pulls) 
 - [next.js](https://github.com/vercel/next.js)
 - [nest.js](https://github.com/nestjs/nest)
 
@@ -94,4 +90,4 @@ You can also send me an email: admin@gaoredu.com
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=fecommunity/easy-blog&type=Date)](https://star-history.com/#fecommunity/easy-blog&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=fecommunity/reactpress&type=Date)](https://star-history.com/#fecommunity/reactpress&Date)
