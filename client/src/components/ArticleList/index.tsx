@@ -1,9 +1,10 @@
 import { EyeOutlined, HeartOutlined, HistoryOutlined } from '@ant-design/icons';
 import { Divider } from 'antd';
-import Link from 'next/link';
 import { useTranslations } from 'next-intl';
+import Link from 'next/link';
 import React from 'react';
 import LazyLoad from 'react-lazyload';
+import LogoSvg from '../../assets/LogoSvg';
 
 import { LocaleTime } from '@/components/LocaleTime';
 
@@ -25,7 +26,7 @@ export const ArticleList: React.FC<IProps> = ({ articles = [] }) => {
           return (
             <div key={article.id} className={style.articleItem}>
               <div className={style.coverWrapper}>
-                {article.cover && (
+                {article.cover ? (
                   <LazyLoad height={120}>
                     <div className={style.coverWrapper}>
                       <Link href={`/article/[id]`} as={`/article/${article.id}`} scroll={false}>
@@ -33,6 +34,8 @@ export const ArticleList: React.FC<IProps> = ({ articles = [] }) => {
                       </Link>
                     </div>
                   </LazyLoad>
+                ) : (
+                  <LogoSvg />
                 )}
               </div>
               <div className={style.articleWrapper}>
