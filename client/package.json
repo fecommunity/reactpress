@@ -41,7 +41,7 @@
     "xml": "^1.0.1",
     "@ant-design/compatible": "^1.1.0",
     "@ant-design/pro-layout": "7.19.11",
-    "@monaco-editor/react": "^4.4.4",
+    "@monaco-editor/react": "^4.6.0",
     "array-move": "^3.0.1",
     "deep-equal": "^2.0.5",
     "echarts": "^4.6.0",
