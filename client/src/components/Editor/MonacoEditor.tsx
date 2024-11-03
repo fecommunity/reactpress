@@ -1,4 +1,4 @@
-import Editor from '@monaco-editor/react';
+import Editor, { loader } from '@monaco-editor/react';
 import { message, Spin } from 'antd';
 import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
 
@@ -25,6 +25,14 @@ const MonacoEditorOptions = {
     horizontalScrollbarSize: 6,
   },
 } as any;
+
+
+// solve jsdelivr cdn load error
+loader.config({
+  paths: {
+    vs: "https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.31.1/min/vs"
+  }
+});
 
 const _MonacoEditor = (props, ref) => {
   const { defaultValue, onMount, onChange, onSave } = props;
