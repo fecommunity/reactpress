@@ -46,7 +46,7 @@ importers:
         specifier: 7.19.11
         version: 7.19.11(antd@5.20.6(date-fns@2.30.0)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       '@monaco-editor/react':
-        specifier: ^4.4.4
+        specifier: ^4.6.0
         version: 4.6.0(monaco-editor@0.52.0)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       '@reactpress/config':
         specifier: workspace:^1.0.0
@@ -93,6 +93,9 @@ importers:
       mime-types:
         specifier: ^2.1.26
         version: 2.1.35
+      monaco-editor:
+        specifier: ^0.52.0
+        version: 0.52.0
       next:
         specifier: 12.1.0
         version: 12.1.0(@babel/core@7.25.2)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(sass@1.79.3)
