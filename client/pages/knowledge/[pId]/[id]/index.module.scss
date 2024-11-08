@@ -16,7 +16,7 @@
 .content {
   > article {
     padding: 1rem;
-    background: var(--bg-second);
+    background: var(--bg-box);
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow);
 
@@ -62,7 +62,7 @@
         width: 40%;
         padding: 8px;
         overflow: hidden;
-        background: var(--bg-second);
+        background: var(--bg-box);
         border: 1px solid var(--border-color);
         border-radius: var(--border-radius);
         box-shadow: var(--box-shadow);
@@ -100,7 +100,7 @@
 
   .commentWrap {
     box-shadow: var(--box-shadow);
-    background: var(--bg-second);
+    background: var(--bg-box);
 
     .title {
       margin: 1rem 0;
@@ -128,7 +128,7 @@
 
   &.isBg {
     padding: 0.8rem;
-    background: var(--bg-second);
+    background: var(--bg-box);
 
     > main {
       max-height: 200px;
