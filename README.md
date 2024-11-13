@@ -11,6 +11,7 @@
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/fecommunity/reactpress/blob/master/LICENSE)[![(Runtime) Build and Test](https://github.com/facebook/react/actions/workflows/runtime_build_and_test.yml/badge.svg)](https://github.com/fecommunity/reactpress/blob/master/package.json) [![(Compiler) TypeScript](https://github.com/facebook/react/actions/workflows/compiler_typescript.yml/badge.svg?branch=main)](https://github.com/fecommunity/reactpress/blob/master/client/tsconfig.json) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/fecommunity/reactpress/pulls)
 
 [Issues](https://github.com/fecommunity/reactpress/issues) · [Pull Request](https://github.com/fecommunity/reactpress/pulls) · English · [中文](./README-zh_CN.md)
+
 </div>
 
 - Blog Management
@@ -25,17 +26,16 @@
 
 [![Mobile Phone](./public/mobile.png)](https://gaoredu.com)
 
-
 ## ✨ Features
 
--  📦  Technology Stack: Built on React+MySQL+NestJS+NextJS
--  🌈  Componentization: an interactive language and visual style based on antd
--  🌍  Internationalization: Supports switching between Chinese and English, with international configuration management capabilities
--  🌞  Black and White Theme: Supports free switching between light and dark mode themes
--  🖌️  Creation Management: Built in 'MarkDown' editor, supporting article writing, category and directory management, and tag management
--  📃  Page management: supports customizing new pages
--  💬  Comment management: supports content comment management
--  📷 Media Management: Supports local file upload and OSS file upload
+- 📦 Technology Stack: Built on React+MySQL+NestJS+NextJS
+- 🌈 Componentization: an interactive language and visual style based on antd
+- 🌍 Internationalization: Supports switching between Chinese and English, with international configuration management capabilities
+- 🌞 Black and White Theme: Supports free switching between light and dark mode themes
+- 🖌️ Creation Management: Built in 'MarkDown' editor, supporting article writing, category and directory management, and tag management
+- 📃 Page management: supports customizing new pages
+- 💬 Comment management: supports content comment management
+- 📷 Media Management: Supports local file upload and OSS file upload
 - ...
 
 ## 🔥 Live Demo
@@ -45,6 +45,7 @@
 ## ⌨️ Development
 
 ### Environment
+
 ```bash
 $ git clone --depth=1 https://github.com/fecommnity/reactpress.git
 $ cd reactpress
@@ -54,7 +55,7 @@ $ pnpm i
 
 ### Configuration
 
-After the project starts, the `. env ` configuration file in the root directory will be loaded. Please ensure that the MySQL database service is consistent with the following configuration, and create the ` reactpress ` database in advance
+After the project starts, the `.env ` configuration file in the root directory will be loaded. Please ensure that the MySQL database service is consistent with the following configuration, and create the `reactpress` database in advance
 
 ```js
 DB_HOST=127.0.0.1 // Default Database Host
@@ -72,17 +73,14 @@ $ pnpm run dev
 
 Open your browser and visit http://127.0.0.1:3001
 
-
 ## 🔗 Links
 
 - [Home](https://github.com/fecommunity/reactpress)
 - [Easy Blog](https://gaoredu.com)
 - [Issues](https://github.com/fecommunity/reactpress/issues)
-- [Pull Request](https://github.com/fecommunity/reactpress/pulls) 
+- [Pull Request](https://github.com/fecommunity/reactpress/pulls)
 - [next.js](https://github.com/vercel/next.js)
 - [nest.js](https://github.com/nestjs/nest)
-
-
 
 ## 👥 Contributing
 
@@ -92,9 +90,7 @@ We warmly invite contributions from everyone. Before you get started, please tak
 2. [Stack Overflow](http://stackoverflow.com/questions/tagged/antd)（English）
 3. [Segment Fault](https://segmentfault.com/t/antd)（Chinese）
 
-
 You can also send me an email: admin@gaoredu.com
-
 
 ## Star History
 
