@@ -107,11 +107,11 @@ Open your browser and visit http://127.0.0.1:3001
 
 ## 👥 Contributing
 
-We warmly invite contributions from everyone. Before you get started, please take a moment to review our [Contributing Guide](https://ant.design/docs/react/contributing). Feel free to share your ideas through [Pull Requests](https://github.com/ant-design/ant-design/pulls) or [GitHub Issues](https://github.com/ant-design/ant-design/issues). If you're interested in enhancing our codebase, explore the [Development Instructions](https://github.com/ant-design/ant-design/wiki/Development) and enjoy your coding journey! 
+We warmly invite contributions from everyone. Before you get started, please take a moment to review our [Contributing Guide](https://github.com/fecommunity/reactpress). Feel free to share your ideas through [Pull Requests](https://github.com/fecommunity/reactpress/pulls) or [GitHub Issues](https://github.com/fecommunity/reactpress/issues). If you're interested in enhancing our codebase, explore the [Development Instructions](https://github.com/fecommunity/reactpress/wiki/Development) and enjoy your coding journey! 
 
-1. [GitHub Discussions](https://github.com/ant-design/ant-design/discussions)
+1. [GitHub Discussions](https://github.com/fecommunity/reactpress/discussions)
 2. [Stack Overflow](http://stackoverflow.com/questions/tagged/antd)（English）
-3. [Segment Fault](https://segmentfault.com/t/antd)（Chinese）
+3. [Segment Fault](https://segmentfault.com/t/reactpress)（Chinese）
 
 You can also send me an email: admin@gaoredu.com
 
