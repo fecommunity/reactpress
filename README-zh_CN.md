@@ -28,10 +28,6 @@
 
 </div>
 
-## 🔥 在线示例
-
-[ReacPress Demo](https://blog.gaoredu.com/)
-
 ## 🆚 框架对比
 
 以下是`ReactPress`、`WordPress` 和 `VuePress` 三者的对比：
@@ -64,6 +60,10 @@
 - 📷️ 媒体管理：支持文件本地上传和 `OSS` 文件上传
 - 📱 移动端：完美适配移动端H5页面
 - ...
+
+## 🔥 在线示例
+
+[ReacPress Demo](https://blog.gaoredu.com/)
 
 ## ⌨️ 本地开发
 
