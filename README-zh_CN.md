@@ -12,19 +12,21 @@
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/fecommunity/reactpress/blob/master/LICENSE)[![(Runtime) Build and Test](https://github.com/facebook/react/actions/workflows/runtime_build_and_test.yml/badge.svg)](https://github.com/fecommunity/reactpress/blob/master/package.json) [![(Compiler) TypeScript](https://github.com/facebook/react/actions/workflows/compiler_typescript.yml/badge.svg?branch=main)](https://github.com/fecommunity/reactpress/blob/master/client/tsconfig.json) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/fecommunity/reactpress/pulls)
 
 [报告问题](https://github.com/fecommunity/reactpress/issues) · [参与共建](https://github.com/fecommunity/reactpress/pulls) · [English](./README.md) · 中文
-</div>
 
-- 内容管理
+**内容管理**
 
 [![Blog Management](./public/admin.png)](https://gaoredu.com)
 
-- 文章阅读
+**文章阅读**
 
 [![Blog Management](./public/en-reading.png)](https://gaoredu.com)
 
-- 移动端
+**移动端**
 
 <img src="./public/mobile.png" alt="Mobile Phone" width="500">
+
+
+</div>
 
 ## 🔥 在线示例
 

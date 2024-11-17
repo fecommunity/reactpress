@@ -12,19 +12,21 @@
 
 [Issues](https://github.com/fecommunity/reactpress/issues) · [Pull Request](https://github.com/fecommunity/reactpress/pulls) · English · [中文](./README-zh_CN.md)
 
-</div>
 
-- Blog Management
+**Blog Management**
 
 [![Blog Management](./public/admin.png)](https://gaoredu.com)
 
-- Article Reading
+**Article Reading**
 
 [![Blog Management](./public/en-reading.png)](https://gaoredu.com)
 
-- Mobile Phone
+**Mobile Phone**
 
 <img src="./public/mobile.png" alt="Mobile Phone" width="500">
+
+</div>
+
 
 ## 🆚 Why ReactPress?
 
