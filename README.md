@@ -24,7 +24,7 @@
 
 - Mobile Phone
 
-[![Mobile Phone](./public/mobile.png)](https://gaoredu.com)
+<img src="./public/mobile.png" alt="Mobile Phone" width="500">
 
 ## 🆚 Why ReactPress?
 
