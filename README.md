@@ -26,6 +26,27 @@
 
 [![Mobile Phone](./public/mobile.png)](https://gaoredu.com)
 
+## 🆚 Why ReactPress?
+
+**Comparison of ReactPress, WordPress, and VuePress**
+
+| **Feature**       | **ReactPress**                                           | **WordPress**                                             | **VuePress**                                     |
+|-------------------|----------------------------------------------------------|-----------------------------------------------------------|------------------------------------------------|
+| **Technology Stack** | React + NextJS + MySQL + NestJS                           | PHP + MySQL                                               | Vue.js                                       |
+| **Type**          | Open-source publishing platform / CMS                   | Open-source publishing platform / CMS                     | Static site generator / Documentation tool   |
+| **Front-end & Back-end Separation** | Supported                                            | Not supported (traditional approach)                      | Supported                                    |
+| **Component-based Development** | Supported                                            | Limited support (via plugins and themes)                | Supported                                    |
+| **Performance Optimization** | Virtual DOM, Code Splitting, Lazy Loading                | Plugin-dependent optimization                           | Static page generation, excellent performance |
+| **SEO Performance** | Excellent (SSR support)                                | Good                                                    | Outstanding (static pages)                   |
+| **Customizability** | High (fully customizable themes and styles)             | High (via plugins and themes)                           | Moderate (theme and component customization) |
+| **Extensibility**   | Strong (API interfaces, independent front-end and back-end extensions) | Strong (plugin extensions)                              | Moderate (plugin and theme extensions)       |
+| **User Interface**  | Modern, component-based design based on React          | User-friendly backend interface                           | Minimalist, optimized for technical documentation |
+| **Security**      | Depends on the security of the framework and database   | Depends on plugin and theme updates and maintenance       | Static site, high security                   |
+| **Application Scenarios** | Complex functionality, high concurrent access, SEO optimization needs | Quick website setup, content publishing, and management | Technical documentation, static blogs        |
+| **User Groups**   | Developers, technical teams，Personal blogs，small businesses               | Personal blogs, small businesses, startups                 | Technical documentation writers, developers  |
+| **Community Support** | Active and growing                                       | Very active, with a large user base                       | Supported by the Vue.js community            |
+
+
 ## ✨ Features
 
 - 📦 Technology Stack: Built on React+MySQL+NestJS+NextJS
