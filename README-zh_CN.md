@@ -63,7 +63,7 @@
 
 ## 🔥 在线示例
 
-[ReacPress Demo](https://blog.gaoredu.com/)
+[ReactPress Demo](https://blog.gaoredu.com/)
 
 ## ⌨️ 本地开发
 

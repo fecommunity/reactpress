@@ -63,7 +63,7 @@
 
 ## 🔥 Live Demo
 
-[ReacPress Demo](https://blog.gaoredu.com/)
+[ReactPress Demo](https://blog.gaoredu.com/)
 
 ## ⌨️ Development
 
