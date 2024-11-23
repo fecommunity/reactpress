@@ -47,12 +47,12 @@ export const ArticleList: React.FC<IProps> = ({ articles = [] }) => {
                         {article.category && (
                           <>
                             <Divider type="vertical" />
-                            <span className={style.time}>{article.category.label}</span>
+                            <span className={style.category}>{article.category?.label}</span>
                           </>
                         )}
                       </div>
                     </header>
-                    <main>
+                    <main title={style.desc}>
                       <div className={style.contentWrapper}>
                         <div className={style.desc}>
                           <span dangerouslySetInnerHTML={{ __html: article.summary }} />
