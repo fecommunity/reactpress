@@ -8,7 +8,7 @@ import style from './index.module.scss';
 const SystemNotification: React.FC = () => {
   const { setting } = useContext(GlobalContext);
   const notices = setting?.systemNoticeInfo?.split('\n').filter(Boolean);
-  return !!notices.length ? (
+  return !!notices?.length ? (
     <Alert
       className={style.alert}
       closeIcon
