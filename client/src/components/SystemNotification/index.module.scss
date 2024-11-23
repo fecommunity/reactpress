@@ -2,6 +2,7 @@
   margin-top: 16px;
   background-color: var(--bg-box);
   overflow: hidden;
+  width: 100%;
   > span {
     color: var(---brand-danger) !important;
   }
@@ -10,4 +11,22 @@
       color: var(--primary-color) !important;
     }
   }
+}
+
+.textLoop {
+  white-space: wrap;
+  width: 100%;
+  overflow: hidden;
+  div {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100% !important;
+  }
+}
+
+.overflowEllipse {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

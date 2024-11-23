@@ -16,11 +16,13 @@ const SystemNotification: React.FC = () => {
       type="info"
       icon={<BellFilled size={16} />}
       message={
-        <TextLoop interval={5000}>
-          {notices.map((notice) => (
-            <span dangerouslySetInnerHTML={{ __html: notice }} />
-          ))}
-        </TextLoop>
+        <div className={style.textLoop}>
+          <TextLoop interval={5000}>
+            {notices.map((notice) => (
+              <span className={style.overflowEllipse} dangerouslySetInnerHTML={{ __html: notice }} />
+            ))}
+          </TextLoop>
+        </div>
       }
     />
   ) : null;
