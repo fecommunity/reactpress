@@ -136,11 +136,11 @@ const Page: NextPage<IProps> = ({ pId, book, otherBooks = [] }) => {
             <main>
               <KnowledgeList small={true} knowledges={otherBooks} />
             </main>
-            <Footer className={style.footer} setting={setting} />
           </div>
         }
         isRightNodeMobileHidden={false}
       />
+      <Footer className={style.footer} setting={setting} />
     </div>
   );
 };

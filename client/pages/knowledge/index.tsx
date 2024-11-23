@@ -1,9 +1,8 @@
 import { Categories } from '@components/Categories';
-import { Footer } from '@components/Footer';
 import { KnowledgeList } from '@components/KnowledgeList';
 import { NextPage } from 'next';
 import { useTranslations } from 'next-intl';
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 
 import { ArticleRecommend } from '@/components/ArticleRecommend';
@@ -11,6 +10,7 @@ import { GlobalContext } from '@/context/global';
 import { DoubleColumnLayout } from '@/layout/DoubleColumnLayout';
 import { KnowledgeProvider } from '@/providers/knowledge';
 
+import AboutUs from '@/components/AboutUs';
 import styles from '../index.module.scss';
 
 interface IHomeProps {
@@ -62,10 +62,10 @@ const Page: NextPage<IHomeProps> = ({ books: defaultBooks = [], total = 0 }) => 
           <div className={'sticky'}>
             <ArticleRecommend mode="inline" />
             <Categories categories={categories} />
+            <AboutUs className={styles.footer} setting={setting} />
           </div>
         }
       />
-      <Footer className={styles.footer} setting={setting} />
     </>
   );
 };

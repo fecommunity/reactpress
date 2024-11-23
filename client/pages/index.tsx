@@ -1,6 +1,6 @@
 import { ArticleCarousel } from '@components/ArticleCarousel';
 import { ArticleList } from '@components/ArticleList';
-import { Footer } from '@components/Footer';
+import AboutUs from '@components/AboutUs';
 import { Tags } from '@components/Tags';
 import { Menu } from 'antd';
 import cls from 'classnames';
@@ -114,10 +114,10 @@ const Home: NextPage<IHomeProps> = ({ articles: defaultArticles = [], recommende
           <div className="sticky">
             <ArticleRecommend mode="inline" />
             <Tags tags={tags} />
+            <AboutUs className={style.footer} setting={setting} />
           </div>
         }
       />
-      <Footer className={style.footer} setting={setting} />
     </div>
   );
 };
