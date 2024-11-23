@@ -1,9 +1,8 @@
 import { ArticleList } from '@components/ArticleList';
-import { Footer } from '@components/Footer';
 import { Tags } from '@components/Tags';
 import { NextPage } from 'next';
 import { useTranslations } from 'next-intl';
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 
 import { ArticleRecommend } from '@/components/ArticleRecommend';
@@ -12,6 +11,7 @@ import { DoubleColumnLayout } from '@/layout/DoubleColumnLayout';
 import { ArticleProvider } from '@/providers/article';
 import { CategoryProvider } from '@/providers/category';
 
+import AboutUs from '@/components/AboutUs';
 import { CategoryMenu } from '../index';
 import style from '../index.module.scss';
 
@@ -85,7 +85,7 @@ const Home: NextPage<IProps> = ({ articles: defaultArticles = [], total, categor
           <div className="sticky">
             <ArticleRecommend mode="inline" />
             <Tags tags={tags} />
-            <Footer className={style.footer} setting={setting} />
+            <AboutUs className={style.footer} setting={setting} />
           </div>
         }
       />

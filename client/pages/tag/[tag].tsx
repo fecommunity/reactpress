@@ -1,10 +1,9 @@
 import { ArticleList } from '@components/ArticleList';
 import { Categories } from '@components/Categories';
-import { Footer } from '@components/Footer';
 import { Tags } from '@components/Tags';
 import { NextPage } from 'next';
 import { useTranslations } from 'next-intl';
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 
 import { ArticleRecommend } from '@/components/ArticleRecommend';
@@ -13,6 +12,7 @@ import { DoubleColumnLayout } from '@/layout/DoubleColumnLayout';
 import { ArticleProvider } from '@/providers/article';
 import { TagProvider } from '@/providers/tag';
 
+import AboutUs from '@/components/AboutUs';
 import style from '../index.module.scss';
 
 interface IProps {
@@ -83,7 +83,7 @@ const Home: NextPage<IProps> = ({ articles: defaultArticles = [], total, tag }) 
           <div className="sticky">
             <ArticleRecommend mode="inline" />
             <Categories categories={categories} />
-            <Footer className={style.footer} setting={setting} />
+            <AboutUs className={style.footer} setting={setting} />
           </div>
         }
       />

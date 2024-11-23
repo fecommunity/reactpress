@@ -56,8 +56,17 @@
     "userInfoCancel": "Cancel",
     "logout": "Logout",
     "register": "Register",
+    "userRegister": "User Register",
     "userInfoPleaseEnterConfirmPassword": "Confirm Password",
-    "confirmPasswordIsNotMatchTips": "Confirm password is not match your password"
+    "confirmPasswordIsNotMatchTips": "Confirm password is not match your password",
+    "registerSuccessTips": "Register Success",
+    "registerSuccessToLoginTips": "Registration successful, login now ?",
+    "loginSuccess": "Login succeeded",
+    "areYouNoAccount": "Don't have an account?",
+    "registerNow": "Register now?",
+    "openAuth": "Use third-party login",
+    "areYouHasAccount": "Do you already have an account?",
+    "loginNow": "Login now"
   },
   "loading": "Loading",
   "copySuccess": "Copy successfully",
@@ -77,5 +86,7 @@
   "toc": "Toc",
   "logingWithGithub": "Login With Github, Please wait...",
   "useGithubToLogin": "Login with Github account",
-  "loginTipMessage": "Please login, otherwise you will not be able to comment. If you need an account, you can go to the admin system to register"
+  "loginTipMessage": "Please login, otherwise you will not be able to comment. If you need an account, you can go to the admin system to register",
+  "rssSubscribe": "RSS Subscription",
+  "aboutUs": "About Us"
 }
