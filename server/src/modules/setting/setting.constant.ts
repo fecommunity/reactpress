@@ -10,6 +10,7 @@ export const UNPROTECTED_KEYS = [
   'systemBg',
   'systemLogo',
   'systemFavicon',
+  'systemNoticeInfo',
   'systemFooterInfo',
   'seoKeyword',
   'seoDesc',
