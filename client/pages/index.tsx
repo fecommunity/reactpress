@@ -1,14 +1,14 @@
+import AboutUs from '@components/AboutUs';
 import { ArticleCarousel } from '@components/ArticleCarousel';
 import { ArticleList } from '@components/ArticleList';
-import AboutUs from '@components/AboutUs';
 import { Tags } from '@components/Tags';
 import { Menu } from 'antd';
 import cls from 'classnames';
 import { NextPage } from 'next';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useTranslations } from 'next-intl';
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 
 import { ArticleRecommend } from '@/components/ArticleRecommend';
@@ -17,6 +17,7 @@ import { DoubleColumnLayout } from '@/layout/DoubleColumnLayout';
 import { ArticleProvider } from '@/providers/article';
 
 import style from './index.module.scss';
+
 interface IHomeProps {
   articles: IArticle[];
   total: number;

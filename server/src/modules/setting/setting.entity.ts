@@ -33,6 +33,10 @@ export class Setting {
 
   @ApiProperty()
   @Column({ type: 'text', default: null })
+  systemNoticeInfo: string; // 系统通知信息
+
+  @ApiProperty()
+  @Column({ type: 'text', default: null })
   systemFooterInfo: string; // 系统页脚
 
   @ApiProperty()

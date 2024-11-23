@@ -7,6 +7,7 @@ import { useToggle } from '@/hooks/useToggle';
 import { getDocumentScrollTop } from '@/utils';
 
 import style from './index.module.scss';
+import SystemNotification from '@/components/SystemNotification';
 
 interface IProps {
   leftNode: React.ReactNode;
@@ -69,6 +70,7 @@ export const DoubleColumnLayout: React.FC<IProps> = ({
   return (
     <div className={cls(style.outerWrap)} style={{ minHeight }}>
       <div className={cls('container')}>
+        <SystemNotification />
         <div className={style.wrap}>
           {(likesProps || showComment) && (
             <div
