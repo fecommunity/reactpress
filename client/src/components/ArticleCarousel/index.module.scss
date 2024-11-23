@@ -11,7 +11,7 @@
     position: relative;
     display: flex;
     width: 100%;
-    height: 380px;
+    height: 460px;
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
@@ -54,7 +54,7 @@
 
   @media (max-width: 768px) {
     .articleItem {
-      height: 170px;
+      height: 180px;
     }
   }
 }

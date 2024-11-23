@@ -22,6 +22,14 @@
   &:hover {
     img {
       transform: scale(1.1);
+      transition: all .2s ease-in;
+    }
+  }
+
+  .antBadge {
+    margin-left: 4px;
+    > * {
+      margin-left: 4px;
     }
   }
 
@@ -106,7 +114,7 @@
 
     .time,
     .category {
-      color: #8590a6;
+      color: #fff;
     }
   }
 
