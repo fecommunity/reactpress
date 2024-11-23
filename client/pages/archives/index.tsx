@@ -1,9 +1,8 @@
 import { Categories } from '@components/Categories';
-import { Footer } from '@components/Footer';
 import { NextPage } from 'next';
-import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import React, { useContext } from 'react';
+import Link from 'next/link';
+import { useContext } from 'react';
 
 import { ListTrail } from '@/components/Animation/Trail';
 import { ArticleRecommend } from '@/components/ArticleRecommend';
@@ -12,6 +11,7 @@ import { GlobalContext } from '@/context/global';
 import { DoubleColumnLayout } from '@/layout/DoubleColumnLayout';
 import { ArticleProvider } from '@/providers/article';
 
+import AboutUs from '@/components/AboutUs';
 import indexStyle from '../index.module.scss';
 import style from './index.module.scss';
 
@@ -95,10 +95,10 @@ const Archives: NextPage<IProps> = ({ articles }) => {
           <div className="sticky">
             <ArticleRecommend mode="inline" />
             <Categories categories={categories} />
+            <AboutUs className={indexStyle.footer} setting={setting} />
           </div>
         }
       />
-      <Footer className={indexStyle.footer} setting={setting} />
     </>
   );
 };

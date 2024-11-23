@@ -10,7 +10,7 @@ import { GlobalContext } from '@/context/global';
 import { DoubleColumnLayout } from '@/layout/DoubleColumnLayout';
 import { KnowledgeProvider } from '@/providers/knowledge';
 
-import AboutUs from '@/components/AboutUs';
+import { Footer } from '@/components/Footer';
 import styles from '../index.module.scss';
 
 interface IHomeProps {
@@ -62,10 +62,10 @@ const Page: NextPage<IHomeProps> = ({ books: defaultBooks = [], total = 0 }) => 
           <div className={'sticky'}>
             <ArticleRecommend mode="inline" />
             <Categories categories={categories} />
-            <AboutUs className={styles.footer} setting={setting} />
           </div>
         }
       />
+      <Footer className={styles.footer} setting={setting} />
     </>
   );
 };
