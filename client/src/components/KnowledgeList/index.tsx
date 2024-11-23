@@ -1,8 +1,8 @@
-import { EyeOutlined, ShareAltOutlined } from '@ant-design/icons';
-import { Divider } from 'antd';
+import { EyeOutlined } from '@ant-design/icons';
+import { Divider, Spin } from 'antd';
 import cls from 'classnames';
-import Link from 'next/link';
 import { useTranslations } from 'next-intl';
+import Link from 'next/link';
 import React from 'react';
 import LazyLoad from 'react-lazyload';
 
@@ -46,7 +46,7 @@ export const KnowledgeList: React.FC<IProps> = ({ knowledges = [], small = false
                     </div>
 
                     {knowledge.cover && (
-                      <LazyLoad height={120}>
+                      <LazyLoad height={120} placeholder={<Spin />}>
                         <div className={style.coverWrapper}>
                           <img src={knowledge.cover} alt="cover" />
                         </div>
