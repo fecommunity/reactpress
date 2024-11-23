@@ -185,7 +185,7 @@ const Article: NextPage = () => {
     fixed: 'left',
     width: 200,
     render: (text, record) => (
-      <a href={resolveUrl(setting.systemUrl, `/admin/article/${record.id}`)} target="_blank" rel="noreferrer">
+      <a href={resolveUrl(setting.systemUrl, `/article/${record.id}`)} target="_blank" rel="noreferrer">
         {text}
       </a>
     ),
