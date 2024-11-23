@@ -16,6 +16,7 @@ export const SystemSetting = ({ setting }) => {
   const [systemFavicon, setSystemFavicon] = useState(null);
   const [systemFooterInfo, setSystemFooterInfo] = useState(null);
   const [adminSystemUrl, setAdminSystemUrl] = useState(null);
+  const [systemNoticeInfo, setSystemNoticeInfo] = useState(null);
 
   useEffect(() => {
     setSystemUrl((setting && setting.systemUrl) || null);
@@ -25,6 +26,7 @@ export const SystemSetting = ({ setting }) => {
     setSystemFavicon((setting && setting.systemFavicon) || null);
     setSystemFooterInfo((setting && setting.systemFooterInfo) || null);
     setAdminSystemUrl((setting && setting.adminSystemUrl) || null);
+    setSystemNoticeInfo((setting && setting.systemNoticeInfo) || null);
   }, [setting]);
 
   const save = () => {
@@ -36,6 +38,7 @@ export const SystemSetting = ({ setting }) => {
       systemFavicon,
       systemFooterInfo,
       adminSystemUrl,
+      systemNoticeInfo,
     };
     SettingProvider.updateSetting(data).then(() => {
       message.success('保存成功');
@@ -119,6 +122,16 @@ export const SystemSetting = ({ setting }) => {
           value={systemFavicon}
           onChange={(e) => {
             setSystemFavicon(e.target.value);
+          }}
+        />
+      </Form.Item>
+      <Form.Item label="系统通知">
+        <Input.TextArea
+          placeholder="请输入系统通知信息，每行可输入一个消息"
+          rows={8}
+          value={systemNoticeInfo}
+          onChange={(e) => {
+            setSystemNoticeInfo(e.target.value);
           }}
         />
       </Form.Item>
