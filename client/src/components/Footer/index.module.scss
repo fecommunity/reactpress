@@ -17,7 +17,7 @@
     display: inline-block;
     text-align: left;
     &.left {
-      width: 75%;
+      width: 54%;
     }
   }
   .title {
@@ -66,4 +66,10 @@ ul.icons {
 .container {
   display: flex;
   justify-content: space-between;
+}
+
+@media (max-width: 991px) {
+  .footer {
+    padding-bottom: 60px;
+  }
 }
