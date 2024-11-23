@@ -69,9 +69,7 @@ iframe {
 
 @media (max-width: 768px) {
   .container {
-    width: 100%;
-    padding-right: 15px;
-    padding-left: 15px;
+    width: calc(100% - 32px);
   }
 }
 

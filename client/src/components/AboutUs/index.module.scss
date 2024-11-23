@@ -1,25 +1,17 @@
-.footer {
+.card {
   position: relative;
-  padding: 30px 0;
   color: var(--main-text-color);
   text-align: center;
   background: var(--bg-footer);
   border-top: 1px solid var(--border-color);
-  display: flex;
-  justify-content: space-between;
+  text-align: left;
 
   &.hasBg {
     color: var(--main-text-color);
     background: transparent;
   }
 
-  ul {
-    display: inline-block;
-    text-align: left;
-    &.left {
-      width: 75%;
-    }
-  }
+
   .title {
     font-size: 16px;
     display: inline-block;
@@ -29,17 +21,20 @@
   }
 }
 
-ul.icons {
-  width: 25%;
+.icons {
   text-align: right;
+  display: flex;
+  align-items: center;
   ul {
-    text-align: right;
+    text-align: left;
     width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 
   li {
     display: inline-block;
-    margin: 0 5px;
     font-size: 24px;
     text-align: center;
     border-radius: 50%;
@@ -62,8 +57,8 @@ ul.icons {
   line-height: 24px;
 }
 
-
 .container {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  width: 100%;
 }
