@@ -23,7 +23,7 @@ export function Locales() {
   );
 
   useEffect(() => {
-    if (typeof window === 'undefined' || defaultLocale) return;
+    if (typeof window === 'undefined') return;
     const local = window.localStorage.getItem('locale');
     if (local && i18n[local]) {
       changeLocale(local);
