@@ -141,7 +141,7 @@
         a {
           position: relative;
           display: flex;
-          width: 100%;
+          width: calc(100% - 28px);
           height: 44px;
           padding-right: 16px;
           padding-left: 12px;
