@@ -1,14 +1,13 @@
 import { Icon as LegacyIcon } from '@ant-design/compatible';
-import { CopyrightOutlined, GithubOutlined, HomeOutlined } from '@ant-design/icons';
-import { Breadcrumb, Col, Layout, Menu, Row, theme as antdTheme } from 'antd';
+import { GithubOutlined, HomeOutlined } from '@ant-design/icons';
+import { Breadcrumb, Col, Layout, Menu, Row } from 'antd';
 import cls from 'classnames';
 import Link from 'next/link';
 import { default as Router, useRouter } from 'next/router';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 
 import { UserInfo } from '@/components/UserInfo';
 import { GlobalContext } from '@/context/global';
-import { useSetting } from '@/hooks/useSetting';
 
 import style from './index.module.scss';
 import { findActiveKeys, findActiveMenu, menus } from './menus';
@@ -18,12 +17,12 @@ const { Sider, Content, Footer } = Layout;
 const { SubMenu } = Menu;
 
 export const AdminLayout: React.FC<{ headerAppender?: React.ReactNode }> = ({ headerAppender, children }) => {
-  const { collapsed, toggleCollapse, theme } = useContext(GlobalContext);
-  const setting = useSetting();
+  const { collapsed, toggleCollapse } = useContext(GlobalContext);
   const router = useRouter();
   const { pathname } = router;
   const [activeMenu, breadcrumbs] = findActiveMenu(pathname);
   const pathOpenedKeys = findActiveKeys(pathname);
+  const context = useContext(GlobalContext);
 
   const onOpenChange = (keys) => {
     const activeKey = keys[keys.length - 1];
@@ -35,6 +34,11 @@ export const AdminLayout: React.FC<{ headerAppender?: React.ReactNode }> = ({ he
     }
     router.push(path);
   };
+
+  useEffect(() => {
+    document.body.classList.remove('dark');
+    context.changeTheme('light');
+  }, [])
 
   const renderMenuItem = (menu) => (
     <Menu.Item
