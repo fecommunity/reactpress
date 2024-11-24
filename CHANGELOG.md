@@ -1,12 +1,3 @@
-# [1.0.0](https://github.com/fecommunity/easy-blog/compare/v1.2.0...v1.0.0) (2024-11-24)
-
-
-### Features
-
-* optimized the css style loading experience for homepage ([0e7761f](https://github.com/fecommunity/easy-blog/commit/0e7761fd28c1cac099ac15ddaa644a904aca8da4))
-
-
-
 # [1.2.0](https://github.com/fecommunity/easy-blog/compare/v1.1.0...v1.2.0) (2024-11-23)
 
 
