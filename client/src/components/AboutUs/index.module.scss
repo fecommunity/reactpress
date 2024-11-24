@@ -33,6 +33,13 @@
     align-items: center;
   }
 
+  a {
+    color: inherit;
+    &:hover {
+      color: var(--primary-color);
+    }
+  }
+
   li {
     display: inline-block;
     font-size: 24px;

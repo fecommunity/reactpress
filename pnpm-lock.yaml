@@ -39,6 +39,9 @@ importers:
       '@ant-design/compatible':
         specifier: ^1.1.0
         version: 1.1.2(antd@5.20.6(date-fns@2.30.0)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(prop-types@15.8.1)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
+      '@ant-design/cssinjs':
+        specifier: ^1.22.0
+        version: 1.22.0(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       '@ant-design/icons':
         specifier: ^4.7.0
         version: 4.8.3(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
@@ -471,8 +474,8 @@ packages:
       react: '>=16.9.0'
       react-dom: '>=16.9.0'
 
-  '@ant-design/cssinjs@1.21.1':
-    resolution: {integrity: sha512-tyWnlK+XH7Bumd0byfbCiZNK43HEubMoCcu9VxwsAwiHdHTgWa+tMN0/yvxa+e8EzuFP1WdUNNPclRpVtD33lg==}
+  '@ant-design/cssinjs@1.22.0':
+    resolution: {integrity: sha512-W9XSFeRPR0mAN3OuxfuS/xhENCYKf+8s+QyNNER0FSWoK9OpISTag6CCweg6lq0hASQ/2Vcza0Z8/kGivCP0Ng==}
     peerDependencies:
       react: '>=16.0.0'
       react-dom: '>=16.0.0'
@@ -8214,13 +8217,13 @@ snapshots:
 
   '@ant-design/cssinjs-utils@1.1.0(react-dom@17.0.2(react@17.0.2))(react@17.0.2)':
     dependencies:
-      '@ant-design/cssinjs': 1.21.1(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
+      '@ant-design/cssinjs': 1.22.0(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       '@babel/runtime': 7.25.6
       rc-util: 5.43.0(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       react: 17.0.2
       react-dom: 17.0.2(react@17.0.2)
 
-  '@ant-design/cssinjs@1.21.1(react-dom@17.0.2(react@17.0.2))(react@17.0.2)':
+  '@ant-design/cssinjs@1.22.0(react-dom@17.0.2(react@17.0.2))(react@17.0.2)':
     dependencies:
       '@babel/runtime': 7.25.6
       '@emotion/hash': 0.8.0
@@ -8281,7 +8284,7 @@ snapshots:
 
   '@ant-design/pro-provider@2.14.9(antd@5.20.6(date-fns@2.30.0)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(react-dom@17.0.2(react@17.0.2))(react@17.0.2)':
     dependencies:
-      '@ant-design/cssinjs': 1.21.1(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
+      '@ant-design/cssinjs': 1.22.0(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       '@babel/runtime': 7.25.6
       '@ctrl/tinycolor': 3.6.1
       antd: 5.20.6(date-fns@2.30.0)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
@@ -9424,7 +9427,9 @@ snapshots:
       source-map: 0.6.1
       string-length: 2.0.0
     transitivePeerDependencies:
+      - bufferutil
       - supports-color
+      - utf-8-validate
 
   '@jest/schemas@29.6.3':
     dependencies:
@@ -10844,7 +10849,7 @@ snapshots:
   antd@5.20.6(date-fns@2.30.0)(react-dom@17.0.2(react@17.0.2))(react@17.0.2):
     dependencies:
       '@ant-design/colors': 7.1.0
-      '@ant-design/cssinjs': 1.21.1(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
+      '@ant-design/cssinjs': 1.22.0(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       '@ant-design/cssinjs-utils': 1.1.0(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       '@ant-design/icons': 5.5.1(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       '@ant-design/react-slick': 1.1.2(react@17.0.2)
@@ -13995,7 +14000,9 @@ snapshots:
       pretty-format: 24.9.0
       throat: 4.1.0
     transitivePeerDependencies:
+      - bufferutil
       - supports-color
+      - utf-8-validate
 
   jest-leak-detector@24.9.0:
     dependencies:
