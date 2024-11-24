@@ -1,12 +1,13 @@
 .alert {
-  margin-top: 16px;
-  background-color: var(--bg-box);
+  margin-top: 16px !important;
+  background-color: var(--bg-box) !important;
   overflow: hidden;
   width: 100%;
   > span {
     color: var(---brand-danger) !important;
   }
   a {
+    color: inherit;
     &:hover {
       color: var(--primary-color) !important;
     }
