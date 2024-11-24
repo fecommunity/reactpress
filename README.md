@@ -70,7 +70,7 @@
 ### Environment
 
 ```bash
-$ git clone --depth=1 https://github.com/fecommnity/reactpress.git
+$ git clone --depth=1 https://github.com/fecommunity/reactpress.git
 $ cd reactpress
 $ npm i -g pnpm
 $ pnpm i
