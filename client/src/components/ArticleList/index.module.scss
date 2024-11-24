@@ -22,7 +22,7 @@
   &:hover {
     img {
       transform: scale(1.1);
-      transition: all .2s ease-in;
+      transition: all 0.2s ease-in;
     }
   }
 
@@ -194,7 +194,6 @@
 }
 
 @media (max-width: 658px) {
-
   .articleItem {
     .coverWrapper {
       width: 140px;
@@ -212,6 +211,16 @@
     header {
       flex-direction: column;
       align-items: flex-start;
+
+      .title {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        line-height: 1.2em;
+        max-height: 2.4em;
+      }
 
       .info {
         font-size: 0.8em;
