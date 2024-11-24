@@ -87,7 +87,7 @@ export const WeChat = () => {
   );
 };
 
-export const ContactInfo = ({ }) => {
+export const ContactInfo = () => {
   return (
     <ul className={style.icons}>
       <ul>
@@ -112,24 +112,26 @@ export const ContactInfo = ({ }) => {
 const AboutUs = ({ setting, className = '', hasBg = false }: IProps) => {
   const t = useTranslations();
   return (
-    <Card title={t('aboutUs')} className={style.card}>
-      <div className={style.wrapper}>
-        {setting?.systemFooterInfo && (
-          <div
-            className={style.copyright}
-            dangerouslySetInnerHTML={{
-              __html: setting.systemFooterInfo,
-            }}
-          ></div>
-        )}
-        <footer className={cls(style.footer, className, hasBg && style.hasBg)}>
-          <div className={style.container}>
-            <Divider dashed />
-            <ContactInfo setting={setting} />
+    <footer>
+      <Card title={t('aboutUs')} className={style.card}>
+        <div className={style.wrapper}>
+          {setting?.systemFooterInfo && (
+            <div
+              className={style.copyright}
+              dangerouslySetInnerHTML={{
+                __html: setting.systemFooterInfo,
+              }}
+            ></div>
+          )}
+          <div className={cls(style.footer, className, hasBg && style.hasBg)}>
+            <div className={style.container}>
+              <Divider dashed />
+              <ContactInfo />
+            </div>
           </div>
-        </footer>
-      </div>
-    </Card>
+        </div>
+      </Card>
+    </footer>
   );
 };
 

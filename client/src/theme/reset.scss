@@ -43,7 +43,7 @@ a {
   text-decoration: none;
 
   &:hover {
-    color: inherit;
+    color: var(--primary-color);
   }
 }
 
