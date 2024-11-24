@@ -75,7 +75,7 @@ iframe {
 
 @media (min-width: 768px) {
   .container {
-    width: 768px;
+    width: calc(768px - 32px);
   }
 }
 
