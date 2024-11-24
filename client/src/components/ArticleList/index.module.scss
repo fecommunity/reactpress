@@ -110,6 +110,14 @@
       color: var(--main-text-color);
       text-overflow: ellipsis;
       font-synthesis: style;
+
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1.2em;
+      max-height: 2.4em;
     }
 
     .time,
@@ -155,14 +163,17 @@
       justify-content: space-between;
 
       .desc {
-        display: flex;
-        max-width: 100%;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
         overflow: hidden;
         font-size: 14px;
         color: var(--second-text-color);
         text-overflow: ellipsis;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
+        line-height: 1.2em;
+        max-height: 2.4em;
+        max-width: 100%;
+        width: calc(100% - 24px);
       }
 
       .meta {
@@ -211,16 +222,6 @@
     header {
       flex-direction: column;
       align-items: flex-start;
-
-      .title {
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 2;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        line-height: 1.2em;
-        max-height: 2.4em;
-      }
 
       .info {
         font-size: 0.8em;
