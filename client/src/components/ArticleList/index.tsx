@@ -46,7 +46,7 @@ export const ArticleList: React.FC<IProps> = ({ articles = [] }) => {
                 <Link href={`/article/[id]`} as={`/article/${article.id}`} scroll={false}>
                   <a aria-label={article.title} className={style.link}>
                     <header>
-                      <div className={style.title}>{article.title}</div>
+                      <div className={style.title} title={article.title}>{article.title}</div>
                       <div className={style.info}>
                         {article.category && categoryIndex >= 0 && (
                           <Tag className={style.antBadge} color={getColorFromNumber(categoryIndex)}>
@@ -58,7 +58,7 @@ export const ArticleList: React.FC<IProps> = ({ articles = [] }) => {
                     </header>
                     <main className={style.desc} title={article.title}>
                       <div className={style.contentWrapper}>
-                        <div className={style.desc}>
+                        <div className={style.desc} title={article.summary}>
                           <span dangerouslySetInnerHTML={{ __html: article.summary }} />
                         </div>
                         <div className={style.meta}>

@@ -11,7 +11,7 @@
     position: relative;
     display: flex;
     width: 100%;
-    height: 460px;
+    height: 260px;
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
@@ -54,7 +54,31 @@
 
   @media (max-width: 768px) {
     .articleItem {
-      height: 180px;
+      height: 300px;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .container {
+      width: 768px;
+    }
+  }
+
+  @media (min-width: 992px) {
+    .articleItem {
+      height: 340px;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .articleItem {
+      height: 380px;
+    }
+  }
+
+  @media (min-width: 1360px) {
+    .articleItem {
+      height: 460px;
     }
   }
 }
