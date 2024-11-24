@@ -1,4 +1,6 @@
 变更日志
+### [1.1.3](https://github.com/fecommunity/easy-blog/compare/v1.3.4...v1.1.3) (2024-11-24)
+
 ### [1.3.4](https://github.com/fecommunity/easy-blog/compare/v1.3.3...v1.3.4) (2024-11-24)
 
 ### [1.3.3](https://github.com/fecommunity/easy-blog/compare/v1.3.2...v1.3.3) (2024-11-24)
