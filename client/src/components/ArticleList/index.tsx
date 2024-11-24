@@ -56,7 +56,7 @@ export const ArticleList: React.FC<IProps> = ({ articles = [] }) => {
                         )}
                       </div>
                     </header>
-                    <main title={style.desc}>
+                    <main className={style.desc} title={article.title}>
                       <div className={style.contentWrapper}>
                         <div className={style.desc}>
                           <span dangerouslySetInnerHTML={{ __html: article.summary }} />
