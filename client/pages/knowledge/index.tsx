@@ -4,6 +4,7 @@ import { NextPage } from 'next';
 import { useTranslations } from 'next-intl';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
+import { Helmet } from 'react-helmet';
 
 import { ArticleRecommend } from '@/components/ArticleRecommend';
 import { GlobalContext } from '@/context/global';
@@ -45,18 +46,23 @@ const Page: NextPage<IHomeProps> = ({ books: defaultBooks = [], total = 0 }) => 
     <>
       <DoubleColumnLayout
         leftNode={
-          <InfiniteScroll
-            pageStart={1}
-            loadMore={getArticles}
-            hasMore={page * pageSize < total}
-            loader={
-              <div className={'loading'} key={0}>
-                {t('gettingKnowledge')}
-              </div>
-            }
-          >
-            <KnowledgeList knowledges={books} />
-          </InfiniteScroll>
+          <>
+            <Helmet>
+              <title>{`${t('knowledge')} - ${setting.systemTitle}`}</title>
+            </Helmet>
+            <InfiniteScroll
+              pageStart={1}
+              loadMore={getArticles}
+              hasMore={page * pageSize < total}
+              loader={
+                <div className={'loading'} key={0}>
+                  {t('gettingKnowledge')}
+                </div>
+              }
+            >
+              <KnowledgeList knowledges={books} />
+            </InfiniteScroll>
+          </>
         }
         rightNode={
           <div className={'sticky'}>

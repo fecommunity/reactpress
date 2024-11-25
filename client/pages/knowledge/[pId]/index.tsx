@@ -3,9 +3,10 @@ import { Footer } from '@components/Footer';
 import { Breadcrumb, Button } from 'antd';
 import cls from 'classnames';
 import { NextPage } from 'next';
-import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import React, { useCallback, useContext, useMemo } from 'react';
+import Link from 'next/link';
+import { useCallback, useContext, useMemo } from 'react';
+import { Helmet } from 'react-helmet';
 
 import { ListTrail } from '@/components/Animation/Trail';
 import { KnowledgeList } from '@/components/KnowledgeList';
@@ -67,6 +68,9 @@ const Page: NextPage<IProps> = ({ pId, book, otherBooks = [] }) => {
         minHeight={'0px'}
         leftNode={
           <div className={style.content}>
+            <Helmet>
+              <title>{`${book.title} - ${t('knowledge')} - ${setting.systemTitle}`}</title>
+            </Helmet>
             <section className={cls(style.tocWrapper)}>
               <header>{book.title}</header>
               <main className={style.bgMain}>
