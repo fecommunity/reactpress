@@ -2,9 +2,10 @@ import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { Breadcrumb } from 'antd';
 import cls from 'classnames';
 import { NextPage } from 'next';
-import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import React, { useEffect, useMemo } from 'react';
+import Link from 'next/link';
+import { useContext, useEffect, useMemo } from 'react';
+import { Helmet } from 'react-helmet';
 
 import { Comment } from '@/components/Comment';
 import { ImageViewer } from '@/components/ImageViewer';
@@ -14,6 +15,7 @@ import { Toc } from '@/components/Toc';
 import { DoubleColumnLayout } from '@/layout/DoubleColumnLayout';
 import { KnowledgeProvider } from '@/providers/knowledge';
 
+import { GlobalContext } from '@/context/global';
 import style from './index.module.scss';
 
 interface IProps {
@@ -28,6 +30,7 @@ const Page: NextPage<IProps> = ({ pId, id, book, chapter }) => {
   const chapters = book.children || [];
   const tocs = chapter.toc ? JSON.parse(chapter.toc) : [];
   const idx = chapters.findIndex((t) => t.id === chapter.id);
+  const { setting } = useContext(GlobalContext);
 
   const prev = useMemo(() => {
     if (idx <= 0) {
@@ -72,6 +75,9 @@ const Page: NextPage<IProps> = ({ pId, id, book, chapter }) => {
       <DoubleColumnLayout
         leftNode={
           <>
+            <Helmet>
+              <title>{`${book.title} - ${t('knowledge')} - ${setting.systemTitle}`}</title>
+            </Helmet>
             <div className={cls(style.breadcrump)}>
               <Breadcrumb>
                 <Breadcrumb.Item>
