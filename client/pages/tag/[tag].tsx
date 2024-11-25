@@ -5,6 +5,7 @@ import { NextPage } from 'next';
 import { useTranslations } from 'next-intl';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
+import { Helmet } from 'react-helmet';
 
 import { ArticleRecommend } from '@/components/ArticleRecommend';
 import { GlobalContext } from '@/context/global';
@@ -52,6 +53,9 @@ const Home: NextPage<IProps> = ({ articles: defaultArticles = [], total, tag }) 
       <DoubleColumnLayout
         leftNode={
           <>
+            <Helmet>
+              <title>{`${tag.label} - ${t('tagTitle')} - ${setting.systemTitle}`}</title>
+            </Helmet>
             <div className={style.tagOrCategoryDetail}>
               <p>
                 {t('yu')} <span>{tag.label}</span> {t('tagRelativeArticles')}

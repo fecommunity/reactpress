@@ -83,7 +83,7 @@ const Article: NextPage<IProps> = ({ article }) => {
     <>
       {checkPassWordModal}
       <Helmet>
-        <title>{(article?.title || t('unknownTitle')) + ' | ' + setting.systemTitle}</title>
+        <title>{(article?.title || t('unknownTitle')) + ' - ' + setting.systemTitle}</title>
       </Helmet>
       <ImageViewer containerSelector="#js-article-wrapper">
         <article id="js-article-wrapper" className={style.articleWrap}>
