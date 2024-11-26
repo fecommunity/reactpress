@@ -1,4 +1,4 @@
-import { Form } from 'antd';
+import { Form, Image } from 'antd';
 import { FileImageOutlined } from '@ant-design/icons';
 import { Button, Input, message } from 'antd';
 import React, { useEffect, useState } from 'react';
@@ -11,6 +11,7 @@ export const SystemSetting = ({ setting }) => {
   const [mode, setMode] = useState('logo');
   const [systemUrl, setSystemUrl] = useState(null);
   const [systemTitle, setSystemTitle] = useState(null);
+  const [systemSubTitle, setSystemSubTitle] = useState(null);
   const [systemBg, setSystemBg] = useState(null);
   const [systemLogo, setSystemLogo] = useState(null);
   const [systemFavicon, setSystemFavicon] = useState(null);
@@ -20,6 +21,7 @@ export const SystemSetting = ({ setting }) => {
 
   useEffect(() => {
     setSystemUrl((setting && setting.systemUrl) || null);
+    setSystemSubTitle((setting && setting.systemSubTitle) || null);
     setSystemTitle((setting && setting.systemTitle) || null);
     setSystemBg((setting && setting.systemBg) || null);
     setSystemLogo((setting && setting.systemLogo) || null);
@@ -33,6 +35,7 @@ export const SystemSetting = ({ setting }) => {
     const data = {
       systemUrl,
       systemTitle,
+      systemSubTitle,
       systemBg,
       systemLogo,
       systemFavicon,
@@ -47,6 +50,24 @@ export const SystemSetting = ({ setting }) => {
 
   return (
     <Form layout="vertical">
+      <Form.Item label="系统标题">
+        <Input
+          placeholder="请输入系统标题，将作为 head.title 显示"
+          value={systemTitle}
+          onChange={(e) => {
+            setSystemTitle(e.target.value);
+          }}
+        />
+      </Form.Item>
+      <Form.Item label="系统标题">
+        <Input
+          placeholder="请输入系统副标题，首页将在系统标题后展示"
+          value={systemSubTitle}
+          onChange={(e) => {
+            setSystemSubTitle(e.target.value);
+          }}
+        />
+      </Form.Item>
       <Form.Item label="系统地址">
         <Input
           placeholder="请输入系统地址"
@@ -65,31 +86,23 @@ export const SystemSetting = ({ setting }) => {
           }}
         />
       </Form.Item>
-      <Form.Item label="系统标题">
+      <Form.Item label="站点图标（Favicon）">
         <Input
-          placeholder="请输入系统标题，将作为 head.title 显示"
-          value={systemTitle}
-          onChange={(e) => {
-            setSystemTitle(e.target.value);
-          }}
-        />
-      </Form.Item>
-      <Form.Item label="全局背景">
-        <Input
-          placeholder="请输入全局背景链接或选择文件"
+          placeholder="请输入 favicon 链接或选择文件"
           addonAfter={
             <FileImageOutlined
               onClick={() => {
-                setMode('bg');
+                setMode('favicon');
                 setVisible(true);
               }}
             />
           }
-          value={systemBg}
+          value={systemFavicon}
           onChange={(e) => {
-            setSystemBg(e.target.value);
+            setSystemFavicon(e.target.value);
           }}
         />
+        <Image width={30} src={systemFavicon} />
       </Form.Item>
       <Form.Item label="Logo">
         <Input
@@ -107,23 +120,25 @@ export const SystemSetting = ({ setting }) => {
             setSystemLogo(e.target.value);
           }}
         />
+        <Image width={100} src={systemLogo} />
       </Form.Item>
-      <Form.Item label="Favicon">
+      <Form.Item label="全局背景">
         <Input
-          placeholder="请输入 favicon 链接或选择文件"
+          placeholder="请输入全局背景链接或选择文件"
           addonAfter={
             <FileImageOutlined
               onClick={() => {
-                setMode('favicon');
+                setMode('bg');
                 setVisible(true);
               }}
             />
           }
-          value={systemFavicon}
+          value={systemBg}
           onChange={(e) => {
-            setSystemFavicon(e.target.value);
+            setSystemBg(e.target.value);
           }}
         />
+        <Image width={200} src={systemBg} />
       </Form.Item>
       <Form.Item label="系统通知">
         <Input.TextArea
