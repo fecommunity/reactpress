@@ -21,6 +21,10 @@ export class Setting {
 
   @ApiProperty()
   @Column({ type: 'text', default: null })
+  systemSubTitle: string; // 系统副标题
+
+  @ApiProperty()
+  @Column({ type: 'text', default: null })
   systemLogo: string; // 系统Logo
 
   @ApiProperty()
