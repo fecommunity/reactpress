@@ -7,6 +7,7 @@ export const UNPROTECTED_KEYS = [
   'systemUrl',
   'adminSystemUrl',
   'systemTitle',
+  'systemSubTitle',
   'systemBg',
   'systemLogo',
   'systemFavicon',
