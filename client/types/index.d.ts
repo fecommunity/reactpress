@@ -143,6 +143,7 @@ interface ISetting {
   i18n?: string; // 国际化
   systemUrl?: string; // 系统地址
   systemTitle?: string; // 系统标题
+  systemSubTitle?: string; // 系统副标题
   systemBg?: string; // 全局背景
   systemLogo?: string; // 系统 Logo
   systemFavicon?: string; // 系统 favicon

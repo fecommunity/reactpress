@@ -32,7 +32,7 @@ const Page: NextPage<IProps> = ({ page }) => {
       <ImageViewer containerSelector="#js-page-wrapper">
         <div id="js-page-wrapper" className={style.container}>
           <Helmet>
-            <title>{page.name + ' | ' + setting.systemTitle}</title>
+            <title>{page.name + ' - ' + setting.systemTitle}</title>
           </Helmet>
           <div
             style={{

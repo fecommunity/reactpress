@@ -8,7 +8,9 @@ export const Seo = () => {
 
   return (
     <Helmet>
-      <title>{setting.systemTitle}</title>
+      <title>
+        {setting.systemTitle}{setting.systemSubTitle ? `- ${setting.systemSubTitle}` : ''}
+      </title>
       <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover,maximum-scale=1" />
       <meta name="keyword" content={setting.seoKeyword} />
       <meta name="description" content={setting.seoDesc} />
