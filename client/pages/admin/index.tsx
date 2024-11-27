@@ -81,7 +81,7 @@ const Home: NextPage<IHomeProps> = ({ articles = [], comments: defaultComments =
             <Typography>
               <Title>
                 您好，{user.name}，欢迎使用
-                <a href="https://github.com/fecommnity/reactpress" target="_blank">
+                <a href="https://github.com/fecommnity/reactpress" target="_blank" rel='nofollow'>
                   ReactPress
                 </a>
                 ！
