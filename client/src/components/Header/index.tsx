@@ -14,6 +14,7 @@ import { useToggle } from '@/hooks/useToggle';
 import { getDocumentScrollTop } from '@/utils';
 
 import style from './index.module.scss';
+import { GitHub } from '../AboutUs';
 
 const NAV_LINKS = [
   {
@@ -160,6 +161,9 @@ export const Header = ({ setting, tags, pages, hasBg = false }) => {
               </li>
               <li className={style.toolWrapper}>
                 <Locales />
+              </li>
+              <li className={style.toolWrapper}>
+                <GitHub />
               </li>
             </ul>
             <Search tags={tags} visible={showSearch} onClose={toggleSearch} />
