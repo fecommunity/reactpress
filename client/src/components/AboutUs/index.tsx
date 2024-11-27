@@ -52,7 +52,7 @@ export const GitHub = () => {
           className={style.github}
           href="https://github.com/fecommunity/reactpress"
           target="_blank"
-          rel="noopener noreferrer"
+          rel="noopener noreferrer nofollow"
         >
           <GithubOutlined />
         </a>
