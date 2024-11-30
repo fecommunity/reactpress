@@ -1,5 +1,4 @@
 import { RightOutlined } from '@ant-design/icons';
-import { Footer } from '@components/Footer';
 import { Breadcrumb, Button } from 'antd';
 import cls from 'classnames';
 import { NextPage } from 'next';
@@ -144,7 +143,6 @@ const Page: NextPage<IProps> = ({ pId, book, otherBooks = [] }) => {
         }
         isRightNodeMobileHidden={false}
       />
-      <Footer className={style.footer} setting={setting} />
     </div>
   );
 };
@@ -163,7 +161,7 @@ Page.getInitialProps = async (ctx) => {
     pId,
     book,
     otherBooks: allBooks.filter((b) => b.id !== book.id),
-    needLayoutFooter: false,
+    needLayoutFooter: true,
     hasBg: true,
   };
 };
