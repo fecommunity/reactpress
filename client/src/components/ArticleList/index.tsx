@@ -46,13 +46,21 @@ export const ArticleList: React.FC<IProps> = ({ articles = [] }) => {
                 <Link href={`/article/[id]`} as={`/article/${article.id}`} scroll={false}>
                   <a aria-label={article.title} className={style.link}>
                     <header>
-                      <div className={style.title} title={article.title}>{article.title}</div>
+                      <div className={style.title} title={article.title}>
+                        {article.title}
+                      </div>
                       <div className={style.info}>
                         {article.category && categoryIndex >= 0 && (
-                          <Tag className={style.antBadge} color={getColorFromNumber(categoryIndex)}>
-                            <FolderOutlined />
-                            <span className={style.category}>{article.category?.label}</span>
-                          </Tag>
+                          <Link
+                            href={`/category/${article?.category?.value}`}
+                            as={`/category/${article?.category?.value}`}
+                            scroll={false}
+                          >
+                            <Tag className={style.antBadge} color={getColorFromNumber(categoryIndex)}>
+                              <FolderOutlined />
+                              <span className={style.category}>{article.category?.label}</span>
+                            </Tag>
+                          </Link>
                         )}
                       </div>
                     </header>
