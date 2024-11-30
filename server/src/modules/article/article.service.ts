@@ -325,8 +325,6 @@ export class ArticleService {
     const res = await this.articleRepository
       .createQueryBuilder('article')
       .where('article.title LIKE :keyword')
-      .orWhere('article.summary LIKE :keyword')
-      .orWhere('article.content LIKE :keyword')
       .setParameter('keyword', `%${keyword}%`)
       .getMany();
 
