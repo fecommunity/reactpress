@@ -11,9 +11,6 @@ import { GlobalContext } from '@/context/global';
 import { DoubleColumnLayout } from '@/layout/DoubleColumnLayout';
 import { KnowledgeProvider } from '@/providers/knowledge';
 
-import { Footer } from '@/components/Footer';
-import styles from '../index.module.scss';
-
 interface IHomeProps {
   books: IKnowledge[];
   total: number;
@@ -43,36 +40,33 @@ const Page: NextPage<IHomeProps> = ({ books: defaultBooks = [], total = 0 }) => 
   }, []);
 
   return (
-    <>
-      <DoubleColumnLayout
-        leftNode={
-          <>
-            <Helmet>
-              <title>{`${t('knowledge')} - ${setting.systemTitle}`}</title>
-            </Helmet>
-            <InfiniteScroll
-              pageStart={1}
-              loadMore={getArticles}
-              hasMore={page * pageSize < total}
-              loader={
-                <div className={'loading'} key={0}>
-                  {t('gettingKnowledge')}
-                </div>
-              }
-            >
-              <KnowledgeList knowledges={books} />
-            </InfiniteScroll>
-          </>
-        }
-        rightNode={
-          <div className={'sticky'}>
-            <ArticleRecommend mode="inline" />
-            <Categories categories={categories} />
-          </div>
-        }
-      />
-      <Footer className={styles.footer} setting={setting} />
-    </>
+    <DoubleColumnLayout
+      leftNode={
+        <>
+          <Helmet>
+            <title>{`${t('knowledge')} - ${setting.systemTitle}`}</title>
+          </Helmet>
+          <InfiniteScroll
+            pageStart={1}
+            loadMore={getArticles}
+            hasMore={page * pageSize < total}
+            loader={
+              <div className={'loading'} key={0}>
+                {t('gettingKnowledge')}
+              </div>
+            }
+          >
+            <KnowledgeList knowledges={books} />
+          </InfiniteScroll>
+        </>
+      }
+      rightNode={
+        <div className={'sticky'}>
+          <ArticleRecommend mode="inline" />
+          <Categories categories={categories} />
+        </div>
+      }
+    />
   );
 };
 
@@ -86,7 +80,7 @@ Page.getInitialProps = async () => {
   return {
     books,
     total,
-    needLayoutFooter: false,
+    needLayoutFooter: true,
   };
 };
 

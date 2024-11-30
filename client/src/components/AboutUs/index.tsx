@@ -112,26 +112,24 @@ export const ContactInfo = () => {
 const AboutUs = ({ setting, className = '', hasBg = false }: IProps) => {
   const t = useTranslations();
   return (
-    <footer>
-      <Card title={t('aboutUs')} className={style.card}>
-        <div className={style.wrapper}>
-          {setting?.systemFooterInfo && (
-            <div
-              className={style.copyright}
-              dangerouslySetInnerHTML={{
-                __html: setting.systemFooterInfo,
-              }}
-            ></div>
-          )}
-          <div className={cls(style.footer, className, hasBg && style.hasBg)}>
-            <div className={style.container}>
-              <Divider dashed />
-              <ContactInfo />
-            </div>
+    <Card title={t('aboutUs')} className={style.card}>
+      <div className={style.wrapper}>
+        {setting?.systemFooterInfo && (
+          <div
+            className={style.copyright}
+            dangerouslySetInnerHTML={{
+              __html: setting.systemFooterInfo,
+            }}
+          ></div>
+        )}
+        <div className={cls(style.footer, className, hasBg && style.hasBg)}>
+          <div className={style.container}>
+            <Divider dashed />
+            <ContactInfo />
           </div>
         </div>
-      </Card>
-    </footer>
+      </div>
+    </Card>
   );
 };
 
