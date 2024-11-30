@@ -5,6 +5,20 @@
     background-color: var(--bg-second) !important;
     box-shadow: none !important;
   }
+  a {
+    color: inherit;
+    text-decoration: none;
+  
+    &:hover {
+      color: var(--primary-color);
+    }
+  }
+
+  .wrapper {
+    height: fit-content;
+    max-height: 70vh;
+    overflow: scroll;
+  }
 }
 .inner {
   box-shadow: var(--box-shadow) !important;
