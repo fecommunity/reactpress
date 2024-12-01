@@ -1,3 +1,5 @@
+import { TAG_COLORS } from "@/constants";
+
 const colors = ['#52c41a', '#f5222d', '#1890ff', '#faad14', '#ff0064', '#722ed1'];
 
 export const getRandomColor = (() => {
@@ -150,7 +152,7 @@ export const scrollToBottom = (el: HTMLElement) => {
 
 
 export function getColorFromNumber(num) {
-  const colors = ['#dc3545', '#17a2b8', '#00b74a', '#fc651f', '#6c757d', '#f5c800', '#808695'];
+  const colors = ['#dc3545', '#17a2b8', '#00b74a', '#fc651f', '#6c757d', '#f5c800', '#808695'].concat(TAG_COLORS);
   const index = num % colors.length;
   return colors[index];
 }
