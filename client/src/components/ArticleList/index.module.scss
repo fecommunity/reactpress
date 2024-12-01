@@ -3,6 +3,7 @@
   border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
   margin-top: 1rem;
+  
 }
 
 .articleItem {
@@ -53,6 +54,12 @@
     }
   }
 
+  @media (max-width: 992px) {
+    .coverWrapper {
+      width: 180px;
+    }
+  }
+
   .badge {
     position: absolute;
     top: 20px;
@@ -100,7 +107,7 @@
 
   header {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
 
     .title {
       overflow: hidden;
