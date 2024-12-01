@@ -1,3 +1,14 @@
+# [1.3.0](https://github.com/fecommunity/easy-blog/compare/v1.2.0...v1.3.0) (2024-12-01)
+
+
+### Features
+
+* add system systemSubTitle setting config ([136f012](https://github.com/fecommunity/easy-blog/commit/136f01288cb9714092a2aa0dc01421817bb26b7d))
+* optimized the css style loading experience for homepage ([0e7761f](https://github.com/fecommunity/easy-blog/commit/0e7761fd28c1cac099ac15ddaa644a904aca8da4))
+* react helmet seo perfect ([848a5da](https://github.com/fecommunity/easy-blog/commit/848a5da2a60cbd4c0684d6607ad9df6eeaa2dd7b))
+
+
+
 # [1.2.0](https://github.com/fecommunity/easy-blog/compare/v1.1.0...v1.2.0) (2024-11-23)
 
 
