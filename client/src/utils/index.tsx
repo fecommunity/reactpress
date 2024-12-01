@@ -1,6 +1,23 @@
-import { TAG_COLORS } from "@/constants";
-
 const colors = ['#52c41a', '#f5222d', '#1890ff', '#faad14', '#ff0064', '#722ed1'];
+
+const tagColors = [
+  '#dc3545',
+  '#17a2b8',
+  '#00b74a',
+  '#fc651f',
+  '#6c757d',
+  '#f5c800',
+  '#808695',
+  '#2db7f5',
+  '#87d068',
+  '#108ee9',
+  '#52c41a',
+  '#f5222d',
+  '#1890ff',
+  '#faad14',
+  '#ff0064',
+  '#722ed1',
+];
 
 export const getRandomColor = (() => {
   const cache = {};
@@ -37,7 +54,6 @@ export function throttle(fn, threshhold) {
   };
 }
 
-
 export function elementInViewport(el) {
   let top = el.offsetTop;
   let left = el.offsetLeft;
@@ -70,7 +86,6 @@ export function download({ name, url }) {
   eleLink.click();
   document.body.removeChild(eleLink);
 }
-
 
 export const groupBy = function (data, condition) {
   if (!condition || !Array.isArray(data)) {
@@ -149,10 +164,7 @@ export const scrollToBottom = (el: HTMLElement) => {
   el.scrollTo(0, currentScrollTop + (scrollHeight - currentScrollTop - clientHeight));
 };
 
-
-
 export function getColorFromNumber(num) {
-  const colors = ['#dc3545', '#17a2b8', '#00b74a', '#fc651f', '#6c757d', '#f5c800', '#808695'].concat(TAG_COLORS);
-  const index = num % colors.length;
-  return colors[index];
+  const index = num % tagColors.length;
+  return tagColors[index];
 }
