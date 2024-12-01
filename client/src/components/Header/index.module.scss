@@ -139,6 +139,7 @@ $height: 64px;
     border: none;
     width: fit-content;
     display: flex;
+    min-width: calc(100% - 114px);
   }
 
   nav {
