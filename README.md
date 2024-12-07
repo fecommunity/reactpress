@@ -13,22 +13,27 @@
 [Issues](https://github.com/fecommunity/reactpress/issues) · [Pull Request](https://github.com/fecommunity/reactpress/pulls) · English · [中文](./README-zh_CN.md)
 
 
-**Blog Management**
+**Content Management**
 
-[![Blog Management](./public/admin.png)](https://gaoredu.com)
+[![Content Management](./public/admin.png)](https://blog.gaoredu.com)
 
-**Article Reading**
+**Home Page**
 
-[![Blog Management](./public/en-reading.png)](https://gaoredu.com)
+[![Home Page](./public/home.png)](https://blog.gaoredu.com)
+
+**Article Category**
+
+[![Article Category](./public/ipad.png)](https://blog.gaoredu.com)
 
 **Mobile Phone**
 
-<img src="./public/mobile.png" alt="Mobile Phone" width="500">
+[![Mobile Phone](./public/mobile.png)](https://blog.gaoredu.com)
+
 
 </div>
 
 
-## 🆚 Why ReactPress?
+## 🆚 Comparison
 
 **Comparison of ReactPress, WordPress, and VuePress**
 
