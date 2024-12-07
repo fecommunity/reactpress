@@ -88,5 +88,6 @@
   "useGithubToLogin": "Login with Github account",
   "loginTipMessage": "Please login, otherwise you will not be able to comment. If you need an account, you can go to the admin system to register",
   "rssSubscribe": "RSS Subscription",
-  "aboutUs": "About Us"
+  "aboutUs": "About Us",
+  "nav": "Navigation"
 }

@@ -1,0 +1,26 @@
+.navCardWrapper {
+  display: flex;
+  justify-content: space-between;
+  * {
+    background-color: var(--bg-box) !important;
+    border: none !important;
+  }
+
+  .card:not(:first-child) {
+    margin-top: 16px;
+  }
+
+  .menuWrapper {
+
+  }
+
+  .cardWrapper {
+    flex: 1;
+    padding-left: 16px;
+  }
+
+  .right {
+    flex: 1;
+    padding-left: 16px;
+  }
+}

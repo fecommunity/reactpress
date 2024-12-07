@@ -22,6 +22,10 @@ const NAV_LINKS = [
     locale: 'home',
   },
   {
+    path: '/nav',
+    locale: 'nav',
+  },
+  {
     path: '/knowledge',
     locale: 'knowledge',
   },
