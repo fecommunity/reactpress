@@ -15,15 +15,19 @@
 
 **内容管理**
 
-[![Blog Management](./public/admin.png)](https://gaoredu.com)
+[![内容管理](./public/admin.png)](https://blog.gaoredu.com)
 
-**文章阅读**
+**主页**
 
-[![Blog Management](./public/en-reading.png)](https://gaoredu.com)
+[![Home Page](./public/home.png)](https://blog.gaoredu.com)
+
+**文章分类**
+
+[![文章分类](./public/ipad.png)](https://blog.gaoredu.com)
 
 **移动端**
 
-<img src="./public/mobile.png" alt="Mobile Phone" width="500">
+[![Mobile Phone](./public/mobile.png)](https://blog.gaoredu.com)
 
 
 </div>
