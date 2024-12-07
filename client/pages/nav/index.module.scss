@@ -1,0 +1,12 @@
+.wrapper {
+  padding-top: 1rem;
+  padding-bottom: 2rem;
+}
+.search {
+  background-color: var(--bg-box) !important;
+  margin-bottom: 24px;
+  div:not(:last-child) {
+    border: none !important;
+    background-color: var(--bg-box) !important;
+  }
+}
