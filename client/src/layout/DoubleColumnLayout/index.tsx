@@ -7,7 +7,7 @@ import { useToggle } from '@/hooks/useToggle';
 import { getDocumentScrollTop } from '@/utils';
 
 import style from './index.module.scss';
-import SystemNotification from '@/components/SystemNotification';
+import SystemNotification from '@/components/Setting/SystemNotification';
 
 interface IProps {
   leftNode: React.ReactNode;
