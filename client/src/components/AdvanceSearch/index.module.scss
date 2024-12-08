@@ -1,6 +1,9 @@
 .wrapper {
   padding: 16px 24px !important;
 }
+.pop {
+  background-color: var(--bg-box) !important;
+}
 .searchWrapper {
   background-color: var(--bg-box) !important;
   .autoComplete {
@@ -10,7 +13,7 @@
       background-color: var(--bg-box) !important;
     }
   }
-  
+
   .searchCategory,
   .searchSubCategory {
     background-color: var(--bg-box) !important;
@@ -42,7 +45,6 @@
       }
     }
   }
-
 
   .searchInput {
     border-radius: 24px;
