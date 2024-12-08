@@ -1,37 +1,26 @@
-import { Input, AutoComplete, Flex, Button, Tabs, Spin } from 'antd';
-import Link from 'next/link';
+import { AutoComplete, Button, Input, Spin, Tabs } from 'antd';
 import { useTranslations } from 'next-intl';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { ListTrail } from '@/components/Animation/Trail';
 import { useAsyncLoading } from '@/hooks/useAsyncLoading';
 import { SearchProvider } from '@/providers/search';
-import { UserOutlined, SearchOutlined } from '@ant-design/icons';
+import { SearchOutlined } from '@ant-design/icons';
 
-import styles from './index.module.scss';
-import { jsonp } from '@/utils/jsonp';
 import { debounce } from '@/utils';
+import { jsonp } from '@/utils/jsonp';
+import styles from './index.module.scss';
+import { ArticleProvider } from '@/providers/article';
 
-const { Search: AntdSearch } = Input;
+interface CategoryItem {
+  label: string;
+  key: string;
+  url?: string;
+}
 
-const searchCategories = [
+const categories: CategoryItem[] = [
   {
     label: '站内',
     key: 'local',
-    subCategories: [
-      {
-        label: '工具111',
-        key: 'tools',
-      },
-      {
-        label: '工具2222',
-        key: 'tools111',
-      },
-    ],
-  },
-  {
-    label: '常用',
-    key: 'common',
   },
   {
     label: '搜索',
@@ -46,24 +35,103 @@ const searchCategories = [
     key: 'community',
   },
   {
-    label: '生活',
-    key: 'life',
-    subCategories: [
-      {
-        label: 'dadadada',
-        key: 'tools',
-      },
-      {
-        label: 'dadad',
-        key: 'tools111',
-      },
-    ],
-  },
-  {
     label: '求职',
     key: 'job',
   },
 ];
+
+const subCategories = {
+  search: [
+    {
+      label: '百度',
+      key: 'search-baidu',
+      url: 'https://www.baidu.com/s?wd=',
+    },
+    {
+      label: 'Bing',
+      key: 'search-bing',
+      url: 'https://cn.bing.com/search?q=',
+    },
+    {
+      label: 'Google',
+      key: 'search-google',
+      url: 'https://www.google.com/search?q=',
+    },
+    {
+      label: '搜狗',
+      key: 'search-sougou',
+      url: 'https://www.sogou.com/web?query=',
+    },
+  ],
+  tools: [
+    {
+      label: '权重查询',
+      key: 'tools-quanzhong',
+      url: 'https://rank.chinaz.com/all/',
+    },
+    {
+      label: 'SEO查询',
+      key: 'tools-seo',
+      url: 'https://seo.chinaz.com/',
+    },
+    {
+      label: '关键词查询',
+      key: 'tools-keyword',
+      url: 'https://www.5118.com/seo/newrelated/',
+    },
+  ],
+  community: [
+    {
+      label: 'Github',
+      key: 'community-github',
+      url: 'https://github.com/search?type=repositories&q=',
+    },
+    {
+      label: '掘金',
+      key: 'community-juejin',
+      url: 'https://juejin.cn/search?type=0&query=',
+    },
+    {
+      label: '知乎',
+      key: 'community-zhihu',
+      url: 'https://www.zhihu.com/search?type=content&q=',
+    },
+    {
+      label: '豆瓣',
+      key: 'community-douban',
+      url: 'https://www.douban.com/search?q=',
+    },
+  ],
+  job: [
+    {
+      label: 'BOSS直聘',
+      key: 'job-boss',
+      url: 'https://www.zhipin.com/web/geek/job?query=',
+    },
+    {
+      label: '智联招聘',
+      key: 'job-zhilian',
+      url: 'https://sou.zhaopin.com/jobs/searchresult.ashx?kw=',
+    },
+    {
+      label: '前程无优',
+      key: 'job-51job',
+      url: 'https://we.51job.com/pc/search?searchType=2&sortType=0&keyword=',
+    },
+    {
+      label: '拉钩网',
+      key: 'job-lagou',
+      url: 'https://www.lagou.com/jobs/list_',
+    },
+    {
+      label: '猎聘网',
+      key: 'job-liepin',
+      url: 'https://www.liepin.com/zhaopin/?key=',
+    },
+  ],
+};
+
+const defaultKeyWord = '高热度网';
 
 interface IProps {
   visible: boolean;
@@ -71,84 +139,28 @@ interface IProps {
   onClose: (arg: boolean) => void;
 }
 
-const Title: React.FC<Readonly<{ title?: string }>> = (props) => (
-  <Flex align="center" justify="space-between">
-    {props.title}
-    <a href="https://www.google.com/search?q=antd" target="_blank" rel="noopener noreferrer">
-      more
-    </a>
-  </Flex>
-);
-
-const renderItem = (title: string, count: number) => ({
-  key: title,
-  label: (
-    <Flex align="center" justify="space-between">
-      {title}
-      <span>
-        <UserOutlined /> {count}
-      </span>
-    </Flex>
-  ),
-});
-
-const options = [
-  {
-    label: <Title title="Libraries" />,
-    options: [renderItem('AntDesign', 10000), renderItem('AntDesign UI', 10600)],
-  },
-  {
-    label: <Title title="Solutions" />,
-    options: [renderItem('AntDesign UI FAQ', 60100), renderItem('AntDesign FAQ', 30010)],
-  },
-  {
-    label: <Title title="Articles" />,
-    options: [renderItem('AntDesign design language', 100000)],
-  },
-];
-
-export const AdvanceSearch: React.FC<IProps> = ({ visible = true, onClose }) => {
-  const ref = useRef(null);
-  const t = useTranslations();
-  const [category, setCategory] = useState(searchCategories?.[0]?.key);
+export const AdvanceSearch: React.FC<IProps> = (props) => {
+  const [category, setCategory] = useState(categories?.[0]?.key);
+  const [subCategory, setSubCategory] = useState(subCategories?.[0]?.key);
   const [options, setOptions] = useState<any[]>([]);
-  const subCategories = searchCategories
-    .filter((item) => item.key === category)
-    .map((item) => item.subCategories)
-    .flat();
-  const [searchArticles, loading] = useAsyncLoading(SearchProvider.searchArticles);
-  const [articles, setArticles] = useState<IArticle[]>([]);
-  const close = useCallback(() => {
-    onClose(false);
-  }, [onClose]);
-
-  const getArticles = useCallback(
-    (keyword) => {
-      if (!keyword) {
-        setArticles([]);
-        return;
-      }
-      searchArticles(keyword).then((res) => {
-        setArticles(res.filter((t) => t.status === 'publish'));
-      });
-    },
-    [searchArticles]
-  );
+  const [searchVal, setSearchVal] = useState();
 
   useEffect(() => {
-    if (!visible || !ref.current) {
-      return;
-    }
-    setTimeout(() => {
-      // 等待下一次事件循环触发
-      ref.current.focus();
-    }, 0);
-  }, [visible]);
+    setSubCategory(subCategories[category]?.[0]?.key);
+    fetchSuggestions(searchVal);
+  }, [category]);
 
-  const fetchSuggestions = debounce((keyword: string) => {
-    if (!keyword?.length) {
-      return setOptions([]);
+  const fetchLocalData = (keyword: string) => {
+    if (keyword?.length) {
+      return SearchProvider.searchArticles(keyword);
+    } else {
+      return ArticleProvider.getRecommend();
     }
+  };
+
+  const [searchArticles, loading] = useAsyncLoading(fetchLocalData);
+
+  const fetchSuggestions = (keyword: string) => {
     switch (category) {
       case 'local':
         return searchArticles(keyword).then((res) => {
@@ -156,7 +168,10 @@ export const AdvanceSearch: React.FC<IProps> = ({ visible = true, onClose }) => 
             .filter((t) => t.status === 'publish')
             .map((item) => ({
               label: item?.title,
-              key: item?.title,
+              value: item?.title,
+              description: item?.summary,
+              link: `/article/${item?.id}`,
+              data: item,
             }));
           setOptions(options);
         });
@@ -164,85 +179,96 @@ export const AdvanceSearch: React.FC<IProps> = ({ visible = true, onClose }) => 
         return jsonp(
           `https://suggestion.baidu.com/su`,
           {
-            wd: keyword,
+            wd: keyword || defaultKeyWord,
           },
           (res) => {
+            const data = subCategories[category]?.find((item) => item.key === subCategory);
             const options = (res?.s || []).map((item) => ({
+              link: data?.url ? `${data.url}${item}` : null,
               label: item,
-              key: item,
+              value: item,
             }));
             setOptions(options);
           }
         );
     }
-  }, 100);
+  };
+
+  const onValueChange = (val) => {
+    setSearchVal(val);
+    fetchSuggestions(val);
+  };
+
+  const handleSearch = () => {
+    const data = subCategories[category]?.find((item) => item.key === subCategory);
+    const link = data?.url ? `${data.url}${searchVal}` : null;
+    if (category === 'local') {
+      fetchSuggestions(searchVal);
+    } else {
+      window.open(link, '_blank');
+    }
+  };
+
+  const optionRender = (record, info) => {
+    const { label, value, data: { link, description, id } = {} as any } = record;
+
+    return (
+      <div
+        className={styles.searchItem}
+        onClick={(e) => {
+          !!link && window.open(link, '_blank');
+          e.stopPropagation();
+        }}
+        key={info?.index}
+      >
+        <div className={styles.title}>{label}</div>
+        <p className={styles.description} dangerouslySetInnerHTML={{ __html: description }} />
+      </div>
+    );
+  };
 
   return (
     <div className={styles.wrapper}>
       <div className={styles.bg}></div>
       <section className={styles.searchWrapper}>
         <Tabs
-          defaultActiveKey={category}
+          activeKey={category}
           className={styles.searchCategory}
           size="small"
-          items={searchCategories}
-          onChange={setCategory}
+          items={categories}
+          onChange={(val) => {
+            setCategory(val);
+          }}
         />
         <AutoComplete
           className={styles.autoComplete}
           options={options}
+          optionRender={optionRender}
           size="large"
-          key={category}
-          // onSearch={handleSearch}
-          onChange={fetchSuggestions}
+          onChange={onValueChange}
+          onFocus={() => fetchSuggestions(searchVal)}
           notFoundContent={loading ? <Spin size="small" /> : null}
-          // placeholder="输入搜索内容"
           popupClassName={styles.pop}
-          // allowClear
         >
           <Input
             size="large"
-            placeholder="input here"
+            placeholder={'请输入关键字搜索'}
             className={styles.searchInput}
-            suffix={<Button icon={<SearchOutlined style={{ fontSize: 24 }} />} type="text" />}
+            suffix={<Button icon={<SearchOutlined onClick={handleSearch} style={{ fontSize: 24 }} />} type="text" />}
           />
         </AutoComplete>
         <Tabs
-          // defaultActiveKey="1"
+          style={{ display: subCategories[category]?.length ? 'initial' : 'none' }}
+          activeKey={subCategory}
           className={styles.searchSubCategory}
           size="small"
-          items={subCategories}
-          // onChange={onChange}
+          items={subCategories[category]}
+          onChange={(value) => {
+            setSubCategory(value);
+            fetchSuggestions(searchVal);
+          }}
         />
       </section>
-
-      {/* <section className={styles.result}>
-        {articles.length ? (
-          <ul>
-            <ListTrail
-              length={articles.length}
-              options={{
-                config: { mass: 1, tension: 180, friction: 12, clamp: true },
-                opacity: loading ? 0 : 1,
-                height: loading ? 0 : 48,
-                from: { opacity: 0, height: 0 },
-              }}
-              renderItem={(index) => {
-                const article = articles[index];
-                return (
-                  <Link key={article.id} href={`/article/[id]`} as={`/article/${article.id}`} scroll={false}>
-                    <a aria-label={article.title} className={styles.item} onClick={close}>
-                      {article.title}
-                    </a>
-                  </Link>
-                );
-              }}
-            />
-          </ul>
-        ) : (
-          <p className="empty">{t('empty')}</p>
-        )}
-      </section> */}
     </div>
   );
 };
