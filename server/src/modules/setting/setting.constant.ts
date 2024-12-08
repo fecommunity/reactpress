@@ -17,4 +17,5 @@ export const UNPROTECTED_KEYS = [
   'seoDesc',
   'baiduAnalyticsId',
   'googleAnalyticsId',
+  'globalSetting'
 ];

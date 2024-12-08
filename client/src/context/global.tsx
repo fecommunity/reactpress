@@ -3,6 +3,7 @@ import React from 'react';
 export interface IGlobalContext {
   setting?: ISetting;
   i18n?: Record<string, unknown>;
+  globalSetting?: IGlobalConfig;
   locale?: string;
   locales?: Array<string>;
   pages?: IPage[];
