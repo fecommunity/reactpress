@@ -62,6 +62,7 @@ class MyApp extends App<IGlobalContext, unknown> {
       PageProvider.getAllPublisedPages(),
     ]);
     const i18n = safeJsonParse(setting.i18n);
+    const globalSetting = safeJsonParse(setting.globalSetting)?.[ctx?.locale];
     return {
       pageProps,
       setting,
@@ -69,6 +70,7 @@ class MyApp extends App<IGlobalContext, unknown> {
       categories,
       pages: pages[0] || [],
       i18n,
+      globalSetting,
       locales: Object.keys(i18n),
     };
   };
@@ -133,7 +135,7 @@ class MyApp extends App<IGlobalContext, unknown> {
   }
 
   render() {
-    const { Component, pageProps, i18n, locales, router, ...contextValue } = this.props;
+    const { Component, pageProps, i18n, globalSetting, locales, router, ...contextValue } = this.props;
     const locale = this.state.locale || router.locale;
     const { needLayoutFooter = true, hasBg = false } = pageProps;
     const message = i18n[locale] || {};
@@ -148,6 +150,7 @@ class MyApp extends App<IGlobalContext, unknown> {
           i18n,
           locale,
           locales,
+          globalSetting,
           theme: this.state.theme,
           collapsed: this.state.collapsed,
           changeLocale: this.changeLocale,
