@@ -1,152 +1,28 @@
 import { AutoComplete, Button, Input, Spin, Tabs } from 'antd';
-import { useTranslations } from 'next-intl';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import { useAsyncLoading } from '@/hooks/useAsyncLoading';
 import { SearchProvider } from '@/providers/search';
 import { SearchOutlined } from '@ant-design/icons';
 
-import { debounce } from '@/utils';
+import { GlobalContext } from '@/context/global';
+import { ArticleProvider } from '@/providers/article';
 import { jsonp } from '@/utils/jsonp';
 import styles from './index.module.scss';
-import { ArticleProvider } from '@/providers/article';
 
-interface CategoryItem {
-  label: string;
-  key: string;
-  url?: string;
-}
-
-const categories: CategoryItem[] = [
-  {
-    label: '站内',
-    key: 'local',
-  },
-  {
-    label: '搜索',
-    key: 'search',
-  },
-  {
-    label: '工具',
-    key: 'tools',
-  },
-  {
-    label: '社区',
-    key: 'community',
-  },
-  {
-    label: '求职',
-    key: 'job',
-  },
-];
-
-const subCategories = {
-  search: [
-    {
-      label: '百度',
-      key: 'search-baidu',
-      url: 'https://www.baidu.com/s?wd=',
-    },
-    {
-      label: 'Bing',
-      key: 'search-bing',
-      url: 'https://cn.bing.com/search?q=',
-    },
-    {
-      label: 'Google',
-      key: 'search-google',
-      url: 'https://www.google.com/search?q=',
-    },
-    {
-      label: '搜狗',
-      key: 'search-sougou',
-      url: 'https://www.sogou.com/web?query=',
-    },
-  ],
-  tools: [
-    {
-      label: '权重查询',
-      key: 'tools-quanzhong',
-      url: 'https://rank.chinaz.com/all/',
-    },
-    {
-      label: 'SEO查询',
-      key: 'tools-seo',
-      url: 'https://seo.chinaz.com/',
-    },
-    {
-      label: '关键词查询',
-      key: 'tools-keyword',
-      url: 'https://www.5118.com/seo/newrelated/',
-    },
-  ],
-  community: [
-    {
-      label: 'Github',
-      key: 'community-github',
-      url: 'https://github.com/search?type=repositories&q=',
-    },
-    {
-      label: '掘金',
-      key: 'community-juejin',
-      url: 'https://juejin.cn/search?type=0&query=',
-    },
-    {
-      label: '知乎',
-      key: 'community-zhihu',
-      url: 'https://www.zhihu.com/search?type=content&q=',
-    },
-    {
-      label: '豆瓣',
-      key: 'community-douban',
-      url: 'https://www.douban.com/search?q=',
-    },
-  ],
-  job: [
-    {
-      label: 'BOSS直聘',
-      key: 'job-boss',
-      url: 'https://www.zhipin.com/web/geek/job?query=',
-    },
-    {
-      label: '智联招聘',
-      key: 'job-zhilian',
-      url: 'https://sou.zhaopin.com/jobs/searchresult.ashx?kw=',
-    },
-    {
-      label: '前程无优',
-      key: 'job-51job',
-      url: 'https://we.51job.com/pc/search?searchType=2&sortType=0&keyword=',
-    },
-    {
-      label: '拉钩网',
-      key: 'job-lagou',
-      url: 'https://www.lagou.com/jobs/list_',
-    },
-    {
-      label: '猎聘网',
-      key: 'job-liepin',
-      url: 'https://www.liepin.com/zhaopin/?key=',
-    },
-  ],
-};
-
-const defaultKeyWord = '高热度网';
-
-interface IProps {
-  visible: boolean;
-  tags: ITag[];
-  onClose: (arg: boolean) => void;
-}
+interface IProps {}
 
 export const AdvanceSearch: React.FC<IProps> = (props) => {
+  const { globalSetting } = useContext(GlobalContext);
+  const { subCategories = {}, categories } = globalSetting?.navConfig || {};
   const [category, setCategory] = useState(categories?.[0]?.key);
-  const [subCategory, setSubCategory] = useState(subCategories?.[0]?.key);
+  const [subCategory, setSubCategory] = useState(subCategories?.[category]?.[0]?.key);
   const [options, setOptions] = useState<any[]>([]);
   const [searchVal, setSearchVal] = useState();
+  debugger
 
   useEffect(() => {
-    setSubCategory(subCategories[category]?.[0]?.key);
+    setSubCategory(subCategories?.[category]?.[0]?.key);
     fetchSuggestions(searchVal);
   }, [category]);
 
@@ -179,7 +55,7 @@ export const AdvanceSearch: React.FC<IProps> = (props) => {
         return jsonp(
           `https://suggestion.baidu.com/su`,
           {
-            wd: keyword || defaultKeyWord,
+            wd: keyword || '高热度网',
           },
           (res) => {
             const data = subCategories[category]?.find((item) => item.key === subCategory);

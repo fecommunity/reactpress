@@ -1,22 +1,37 @@
 .navCardWrapper {
   display: flex;
   justify-content: space-between;
-  * {
-    background-color: var(--bg-box) !important;
-    border: none !important;
-  }
+  position: relative;
 
   .card:not(:first-child) {
     margin-top: 16px;
   }
 
-  .menuWrapper {
-
-  }
-
   .cardWrapper {
     flex: 1;
-    padding-left: 16px;
+    * {
+      background-color: var(--bg-box) !important;
+      border: none !important;
+    }
+  }
+
+  .menuWrapper {
+    margin-right: 16px;
+    display: flex;
+    * {
+      background-color: var(--bg-box) !important;
+      border: none !important;
+    }
+    .menu {
+      height: 100%;
+    }
+
+    .button {
+      position: absolute;
+      bottom: 0;
+      background: none;
+      box-shadow: none;
+    }
   }
 
   .right {
