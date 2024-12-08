@@ -1,4 +1,4 @@
-import { Input, AutoComplete, Flex, Button, Tabs } from 'antd';
+import { Input, AutoComplete, Flex, Button, Tabs, Spin } from 'antd';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
@@ -9,13 +9,15 @@ import { SearchProvider } from '@/providers/search';
 import { UserOutlined, SearchOutlined } from '@ant-design/icons';
 
 import styles from './index.module.scss';
+import { jsonp } from '@/utils/jsonp';
+import { debounce } from '@/utils';
 
 const { Search: AntdSearch } = Input;
 
-const searchConfig = [
+const searchCategories = [
   {
     label: '站内',
-    key: 'inner',
+    key: 'local',
     subCategories: [
       {
         label: '工具111',
@@ -108,8 +110,9 @@ const options = [
 export const AdvanceSearch: React.FC<IProps> = ({ visible = true, onClose }) => {
   const ref = useRef(null);
   const t = useTranslations();
-  const [category, setCategory] = useState(searchConfig?.[0]?.key);
-  const subCategories = searchConfig
+  const [category, setCategory] = useState(searchCategories?.[0]?.key);
+  const [options, setOptions] = useState<any[]>([]);
+  const subCategories = searchCategories
     .filter((item) => item.key === category)
     .map((item) => item.subCategories)
     .flat();
@@ -142,10 +145,37 @@ export const AdvanceSearch: React.FC<IProps> = ({ visible = true, onClose }) => 
     }, 0);
   }, [visible]);
 
-  // const onSearchCategoryChange = useCallback((category) => {
-  //   setCategory(category);
-  //   console.log('category -->', category)
-  // }, []);
+  const fetchSuggestions = debounce((keyword: string) => {
+    if (!keyword?.length) {
+      return setOptions([]);
+    }
+    switch (category) {
+      case 'local':
+        return searchArticles(keyword).then((res) => {
+          const options = res
+            .filter((t) => t.status === 'publish')
+            .map((item) => ({
+              label: item?.title,
+              key: item?.title,
+            }));
+          setOptions(options);
+        });
+      default:
+        return jsonp(
+          `https://suggestion.baidu.com/su`,
+          {
+            wd: keyword,
+          },
+          (res) => {
+            const options = (res?.s || []).map((item) => ({
+              label: item,
+              key: item,
+            }));
+            setOptions(options);
+          }
+        );
+    }
+  }, 100);
 
   return (
     <div className={styles.wrapper}>
@@ -155,17 +185,19 @@ export const AdvanceSearch: React.FC<IProps> = ({ visible = true, onClose }) => 
           defaultActiveKey={category}
           className={styles.searchCategory}
           size="small"
-          items={searchConfig}
+          items={searchCategories}
           onChange={setCategory}
         />
         <AutoComplete
           className={styles.autoComplete}
           options={options}
           size="large"
+          key={category}
           // onSearch={handleSearch}
-          // onChange={fetchSuggestions}
-          // notFoundContent={loading ? <Spin size="small" /> : null}
+          onChange={fetchSuggestions}
+          notFoundContent={loading ? <Spin size="small" /> : null}
           // placeholder="输入搜索内容"
+          popupClassName={styles.pop}
           // allowClear
         >
           <Input
