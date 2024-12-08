@@ -1,3 +1,14 @@
+.searchItem {
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  &:hover {
+    color: var(--primary-color);
+  }
+  .description {
+    color: var(--second-text-color);
+  }
+}
 .wrapper {
   padding: 16px 24px !important;
 }
