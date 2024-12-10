@@ -132,7 +132,25 @@ $ pnpm run dev
 
 Email: admin@gaoredu.com
 
+## ❤️ 致谢
 
-## Star History
+ReactPress 项目深受以下开源项目的启发和帮助：
+
+- **[fantasticit]** - **[wipi]** - [[https://github.com/fantasticit/wipi](https://github.com/fantasticit/wipi)]
+
+- **[Lrunlin]** - **[blog]** - [[GitHub Repository Link 2](https://github.com/Lrunlin/blog)]
+
+- **[biaochenxuying]** - **[blog-react]** - [[https://github.com/biaochenxuying/blog-react](https://github.com/biaochenxuying/blog-react)]
+
+- **[MrXujiang]** - **[next-admin]** - [[https://github.com/MrXujiang/next-admin](https://github.com/MrXujiang/next-admin)]
+
+- **[lfb]** - **[nodejs-koa-blog]** - [[https://github.com/lfb/nodejs-koa-blog](https://github.com/lfb/nodejs-koa-blog)]
+
+……
+
+我们衷心感谢这些项目的作者和贡献者们！正是有了你们的努力和付出，才有了 ReactPress 项目的今天。
+
+
+## ✨ Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=fecommunity/reactpress&type=Date)](https://star-history.com/#fecommunity/reactpress&Date)
