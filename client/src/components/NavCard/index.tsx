@@ -8,6 +8,7 @@ export interface CategoryItem {
   label: string;
   key: string;
   icon?: React.ReactNode;
+  description?: string;
   type?: string;
   children?: CategoryItem[];
 }
