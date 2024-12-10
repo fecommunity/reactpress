@@ -19,7 +19,6 @@ export const AdvanceSearch: React.FC<IProps> = (props) => {
   const [subCategory, setSubCategory] = useState(subCategories?.[category]?.[0]?.key);
   const [options, setOptions] = useState<any[]>([]);
   const [searchVal, setSearchVal] = useState();
-  debugger
 
   useEffect(() => {
     setSubCategory(subCategories?.[category]?.[0]?.key);
@@ -77,8 +76,8 @@ export const AdvanceSearch: React.FC<IProps> = (props) => {
 
   const handleSearch = () => {
     const data = subCategories[category]?.find((item) => item.key === subCategory);
-    const link = data?.url ? `${data.url}${searchVal}` : null;
-    if (category === 'local') {
+    const link = data?.url ? `${data.url}${searchVal || '高热度网'}` : null;
+    if (category === 'local' || !!searchVal) {
       fetchSuggestions(searchVal);
     } else {
       window.open(link, '_blank');

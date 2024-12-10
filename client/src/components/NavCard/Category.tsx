@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import type { MenuProps } from 'antd';
 import { Button, Menu } from 'antd';
 import { CategoryItem } from '../NavCard';
@@ -12,13 +12,15 @@ import {
   MenuUnfoldOutlined,
   PieChartOutlined,
 } from '@ant-design/icons';
+import { GlobalContext } from '@/context/global';
 
 interface CategoryProps {
   dataSource: CategoryItem[];
 }
 
 const Category: React.FC<CategoryProps> = (props) => {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
+  const { theme } = useContext(GlobalContext);
 
   const items = useMemo(() => {
     return props.dataSource.map((item) => {
@@ -43,10 +45,10 @@ const Category: React.FC<CategoryProps> = (props) => {
         items={items}
         defaultSelectedKeys={['1']}
         defaultOpenKeys={['sub1']}
-        theme="dark"
+        theme={theme}
         inlineCollapsed={collapsed}
       />
-      <Button className={styles.button} type="primary" onClick={toggleCollapsed} style={{ marginBottom: 16 }}>
+      <Button className={styles.button} type="primary" onClick={toggleCollapsed} style={{ left: collapsed ? 16 : 4 }}>
         {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
       </Button>
     </div>
