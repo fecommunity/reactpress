@@ -7,6 +7,10 @@
     margin-top: 16px;
   }
 
+  .icon {
+    margin-right: 8px;
+  }
+
   .cardWrapper {
     flex: 1;
     * {
@@ -18,19 +22,18 @@
   .menuWrapper {
     margin-right: 16px;
     display: flex;
-    * {
-      background-color: var(--bg-box) !important;
-      border: none !important;
-    }
     .menu {
       height: 100%;
+      padding-top: 44px;
+      background-color: var(--bg-box) !important;
     }
 
     .button {
       position: absolute;
-      bottom: 0;
+      top: 12px;
       background: none;
       box-shadow: none;
+      color: var(--main-text-color);
     }
   }
 
