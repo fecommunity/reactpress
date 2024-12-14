@@ -96,7 +96,7 @@ export const Header = ({ setting, tags, pages, hasBg = false }) => {
       key: `${index}-${menu.label}`,
       label: (
         <Link href={'/page/[id]'} as={`/page/${menu.path}`} scroll={false}>
-          <a aria-label={menu.name}>{menu.name}</a>
+          <a aria-label={menu.name}>{t(menu.path) || menu.name}</a>
         </Link>
       ),
     }));
