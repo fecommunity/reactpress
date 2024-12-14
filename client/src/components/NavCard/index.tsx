@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Category from './Category';
 import styles from './index.module.scss';
 import NavCard from './NavCard';
-
+import { GlobalContext } from '@/context/global';
 
 export interface CategoryItem {
   label: string;
@@ -15,11 +15,12 @@ export interface CategoryItem {
 }
 
 interface NavCardProps {
-  dataSource: CategoryItem[];
+  dataSource?: CategoryItem[];
 }
 
 const NavCardPage: React.FC<NavCardProps> = (props) => {
-  const { dataSource } = props;
+  const { globalSetting } = useContext(GlobalContext);
+  const dataSource = props?.dataSource || globalSetting?.globalConfig?.urlConfig;
   return (
     <div className={styles.navCardWrapper}>
       <Category dataSource={dataSource} />
