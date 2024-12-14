@@ -1,6 +1,7 @@
 import { Tag } from 'antd';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
+import { TagOutlined } from '@ant-design/icons';
 
 import { getColorFromNumber } from '@/utils';
 import style from './index.module.scss';
@@ -12,6 +13,7 @@ export const Tags = ({ tags = [], needTitle = true, style: cssStyle = {} }) => {
     <div className={style.wrapper} style={cssStyle}>
       {needTitle && (
         <div className={style.title}>
+          <TagOutlined className={style.tagIcon} />
           <span>{t('tagTitle')}</span>
         </div>
       )}
