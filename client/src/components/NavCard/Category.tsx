@@ -37,16 +37,19 @@ const Category: React.FC<CategoryProps> = (props) => {
     setCollapsed(!collapsed);
   };
 
+  const onMenuChange = ({ key }) => {
+    document.getElementById(`nav-card-title-${key}`)?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <div className={styles.menuWrapper}>
       <Menu
         className={styles.menu}
         mode="vertical"
         items={items}
-        defaultSelectedKeys={['1']}
-        defaultOpenKeys={['sub1']}
         theme={theme}
         inlineCollapsed={collapsed}
+        onClick={onMenuChange}
       />
       <Button className={styles.button} type="primary" onClick={toggleCollapsed} style={{ left: collapsed ? 16 : 4 }}>
         {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}

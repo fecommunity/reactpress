@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { Card, List, Avatar } from 'antd';
-import styles from './index.module.scss';
+import { Avatar, Card, List } from 'antd';
+import React from 'react';
 import { CategoryItem } from '../NavCard';
+import styles from './index.module.scss';
 
 interface NavCardProps {
   dataSource: CategoryItem[];
@@ -9,9 +9,13 @@ interface NavCardProps {
 
 const NavCard: React.FC<NavCardProps> = (props) => {
   const { dataSource = [] } = props;
-  const [tabKey, setTabKey] = useState({});
 
-  const onTabChange = (key) => {};
+  const getIconUrl = (item) => {
+    if (item?.icon) {
+      return item.icon;
+    }
+    return `${item.url}/favicon.ico`;
+  }
 
   return (
     <div className={styles.cardWrapper}>
@@ -20,13 +24,11 @@ const NavCard: React.FC<NavCardProps> = (props) => {
           <Card
             className={styles.card}
             title={
-              <span>
+              <span id={`nav-card-title-${item.key}`}>
                 <span className={styles.icon}>{item.icon}</span>
                 <span className={styles.title}> {item.label}</span>
               </span>
             }
-            extra={<a href="#">More</a>}
-            onTabChange={onTabChange}
           >
             <List
               grid={{
@@ -42,9 +44,10 @@ const NavCard: React.FC<NavCardProps> = (props) => {
               renderItem={(item, index) => (
                 <List.Item>
                   <List.Item.Meta
-                    avatar={<Avatar src={`https://api.dicebear.com/7.x/miniavs/svg?seed=${index}`} />}
-                    title={<a href="https://ant.design">{item.label}</a>}
-                    description={item.description}
+                    avatar={<Avatar src={getIconUrl(item)} />}
+                    title={<a href={`/nav/${item.key}.html`} rel='nofollow'>{item.label}</a>}
+                    description={<p title={item.description} className={styles.description}>{item.description}</p>}
+                    className={styles.listItem}
                   />
                 </List.Item>
               )}

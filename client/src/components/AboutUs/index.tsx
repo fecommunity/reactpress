@@ -7,7 +7,7 @@ import style from './index.module.scss';
 
 interface IProps {
   setting: any;
-  className: string;
+  className?: string;
   hasBg?: boolean;
 }
 
