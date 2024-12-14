@@ -120,6 +120,25 @@ We warmly invite contributions from everyone. Before you get started, please tak
 
 You can also send me an email: admin@gaoredu.com
 
-## Star History
+## ❤️ Acknowledgments
+
+The ReactPress project has been greatly inspired and assisted by the following open-source projects:
+
+- **[fantasticit]** - **[wipi]** - [[https://github.com/fantasticit/wipi](https://github.com/fantasticit/wipi)]
+
+- **[Lrunlin]** - **[blog]** - [[GitHub Repository Link 2](https://github.com/Lrunlin/blog)]
+
+- **[biaochenxuying]** - **[blog-react]** - [[https://github.com/biaochenxuying/blog-react](https://github.com/biaochenxuying/blog-react)]
+
+- **[MrXujiang]** - **[next-admin]** - [[https://github.com/MrXujiang/next-admin](https://github.com/MrXujiang/next-admin)]
+
+- **[lfb]** - **[nodejs-koa-blog]** - [[https://github.com/lfb/nodejs-koa-blog](https://github.com/lfb/nodejs-koa-blog)]
+
+……
+
+We extend our heartfelt gratitude to the authors and contributors of these projects!
+
+
+## ✨ Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=fecommunity/reactpress&type=Date)](https://star-history.com/#fecommunity/reactpress&Date)
