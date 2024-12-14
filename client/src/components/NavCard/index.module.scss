@@ -19,6 +19,17 @@
     }
   }
 
+  .listItem {
+    .description {
+      height: 42px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 100%;
+      display: inline-block;
+      white-space: nowrap;
+    }
+  }
+
   .menuWrapper {
     margin-right: 16px;
     display: flex;
