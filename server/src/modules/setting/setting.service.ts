@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as merge from 'deepmerge';
 import { Repository } from 'typeorm';
 
-import { i18n, UNPROTECTED_KEYS } from './setting.constant';
+import { i18n, settings, UNPROTECTED_KEYS } from './setting.constant';
 import { Setting } from './setting.entity';
 
 @Injectable()
@@ -13,6 +13,7 @@ export class SettingService {
     private readonly settingRepository: Repository<Setting>
   ) {
     this.initI18n();
+    this.initGlobalConfig();
   }
 
   /**
@@ -28,6 +29,22 @@ export class SettingService {
       data = {};
     }
     target.i18n = JSON.stringify(merge({}, i18n, data));
+    await this.settingRepository.save(target);
+  }
+
+  /**
+   * 初始化时加载 nav 配置
+   */
+  async initGlobalConfig() {
+    const items = await this.settingRepository.find();
+    const target = (items && items[0]) || ({} as Setting);
+    let data = {};
+    try {
+      data = JSON.parse(target.globalSetting);
+    } catch (e) {
+      data = {};
+    }
+    target.globalSetting = JSON.stringify(merge({}, settings, data));
     await this.settingRepository.save(target);
   }
 
