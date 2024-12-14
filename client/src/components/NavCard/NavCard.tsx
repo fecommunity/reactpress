@@ -2,6 +2,7 @@ import { Avatar, Card, List } from 'antd';
 import React from 'react';
 import { CategoryItem } from '../NavCard';
 import styles from './index.module.scss';
+import { getIconByName } from '@/utils';
 
 interface NavCardProps {
   dataSource: CategoryItem[];
@@ -20,12 +21,13 @@ const NavCard: React.FC<NavCardProps> = (props) => {
   return (
     <div className={styles.cardWrapper}>
       {dataSource.map((item) => {
+        const Icon = getIconByName(item.icon);
         return (
           <Card
             className={styles.card}
             title={
               <span id={`nav-card-title-${item.key}`}>
-                <span className={styles.icon}>{item.icon}</span>
+                <span className={styles.icon}><Icon /></span>
                 <span className={styles.title}> {item.label}</span>
               </span>
             }

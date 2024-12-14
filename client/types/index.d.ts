@@ -23,6 +23,7 @@ interface IFile {
 
 interface IGlobalConfig {
   navConfig: NavSetting;
+  urlConfig: any[];
 }
 
 interface CategoryItem {
