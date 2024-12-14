@@ -29,6 +29,7 @@ const Home: NextPage<IProps> = ({ articles: defaultArticles = [], total, tag }) 
   const { setting, tags, categories } = useContext(GlobalContext);
   const [page, setPage] = useState(1);
   const [articles, setArticles] = useState<IArticle[]>(defaultArticles);
+  const bgImg = articles?.filter(article => article.cover)?.[0]?.cover;
 
   useEffect(() => {
     setArticles(defaultArticles);
@@ -56,7 +57,7 @@ const Home: NextPage<IProps> = ({ articles: defaultArticles = [], total, tag }) 
             <Helmet>
               <title>{`${tag.label} - ${t('tagTitle')} - ${setting.systemTitle}`}</title>
             </Helmet>
-            <div className={style.tagOrCategoryDetail}>
+            <div className={style.tagOrCategoryDetail} style={{ backgroundImage: `url(${bgImg})` }}>
               <p>
                 {t('yu')} <span>{tag.label}</span> {t('tagRelativeArticles')}
               </p>
