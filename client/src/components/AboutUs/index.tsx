@@ -1,4 +1,4 @@
-import Icon, { CommentOutlined, GithubOutlined, WechatOutlined } from '@ant-design/icons';
+import Icon, { CommentOutlined, GithubOutlined, WechatOutlined, ProfileOutlined } from '@ant-design/icons';
 import { Card, Divider, Popover } from 'antd';
 import cls from 'classnames';
 
@@ -7,7 +7,7 @@ import style from './index.module.scss';
 
 interface IProps {
   setting: any;
-  className: string;
+  className?: string;
   hasBg?: boolean;
 }
 
@@ -112,7 +112,15 @@ export const ContactInfo = () => {
 const AboutUs = ({ setting, className = '', hasBg = false }: IProps) => {
   const t = useTranslations();
   return (
-    <Card title={t('aboutUs')} className={style.card}>
+    <Card
+      title={
+        <span>
+          <ProfileOutlined className={style.aboutUsIcon} />
+          {t('aboutUs')}
+        </span>
+      }
+      className={style.card}
+    >
       <div className={style.wrapper}>
         {setting?.systemFooterInfo && (
           <div

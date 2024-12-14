@@ -1,3 +1,7 @@
+import * as AntdIcons from '@ant-design/icons';
+import React from 'react';
+
+
 const colors = ['#52c41a', '#f5222d', '#1890ff', '#faad14', '#ff0064', '#722ed1'];
 
 const tagColors = [
@@ -168,3 +172,12 @@ export function getColorFromNumber(num) {
   const index = num % tagColors.length;
   return tagColors[index];
 }
+
+
+export function getIconByName (name) {
+  if (React.isValidElement(name)) {
+    return name;
+  }
+  const IconComponent = AntdIcons?.[name] || null;
+  return IconComponent;
+};
