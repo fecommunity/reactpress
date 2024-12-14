@@ -9,7 +9,6 @@ import { Helmet } from 'react-helmet';
 import { ArticleRecommend } from '@/components/ArticleRecommend';
 import { GlobalContext } from '@/context/global';
 import { DoubleColumnLayout } from '@/layout/DoubleColumnLayout';
-import config from './config';
 
 import AboutUs from '@/components/AboutUs';
 import { Tags } from '@/components/Tags';
@@ -145,7 +144,8 @@ const Article: NextPage<IProps> = ({ article }) => {
 Article.getInitialProps = async (ctx) => {
   const { id } = ctx.query;
   const [siteKey] = typeof id === 'string' ? id.split('.') : id;
-  const urlItem = config.urlConfig
+  const { globalSetting } = useContext(GlobalContext);
+  const urlItem = globalSetting?.globalConfig?.urlConfig
     .map((item) => item.children)
     .flat()
     .find((item) => item.key === siteKey);
