@@ -10,7 +10,8 @@
   padding: 16px 0;
   margin-bottom: 1rem;
   text-align: center;
-  background: var(--bg-box);
+  background-size: cover;
+  height: 280px;
   border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
   i {
@@ -19,19 +20,15 @@
   }
   p {
     margin-bottom: 0;
+    color: var(--font-color-base);
     &:first-of-type {
-      margin-top: 0.5rem;
-      font-size: 1.5rem;
-      span {
-        font-size: 1.5rem;
-        color: var(--primary-color);
-      }
+      margin-top: 80px;
+      font-size: 2rem;
+      font-weight: 500;
     }
     &:last-of-type {
-      span {
-        font-size: 1.1rem;
-        color: var(--primary-color);
-      }
+      margin-top: 12px;
+      font-size: 1.5rem;
     }
   }
 }

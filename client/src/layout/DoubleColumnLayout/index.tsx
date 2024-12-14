@@ -7,7 +7,7 @@ import { useToggle } from '@/hooks/useToggle';
 import { getDocumentScrollTop } from '@/utils';
 
 import style from './index.module.scss';
-import SystemNotification from '@/components/SystemNotification';
+import SystemNotification from '@/components/Setting/SystemNotification';
 
 interface IProps {
   leftNode: React.ReactNode;
@@ -53,12 +53,17 @@ export const DoubleColumnLayout: React.FC<IProps> = ({
   useEffect(() => {
     const handler = (evt) => {
       const { id, isFxied, isFixedVisible, height } = evt.data;
+      const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
       if (id !== 'header-state') return;
       const el = $aside.current.querySelector('.sticky') as HTMLElement;
       if (!el) return;
-      el.style.position = isFxied ? 'fixed' : 'sticky';
-      el.style.marginTop = isFxied ? '0' : el.dataset.marginTop + 'px';
-      el.style.transform = `translateY(${isFixedVisible ? height : 0})`;
+      if (viewportHeight < 800) {
+        el.style.position = 'initial';
+      } else {
+        el.style.position = isFxied ? 'fixed' : 'sticky';
+        el.style.marginTop = isFxied ? '0' : el.dataset.marginTop + 'px';
+        el.style.transform = `translateY(${isFixedVisible ? height : 0})`;
+      }
     };
     window.addEventListener('message', handler);
 
