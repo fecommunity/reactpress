@@ -1,4 +1,4 @@
-import { SearchOutlined } from '@ant-design/icons';
+import { SearchOutlined, HomeOutlined, GlobalOutlined, BookOutlined, HistoryOutlined } from '@ant-design/icons';
 import { Menu } from 'antd';
 import cls from 'classnames';
 import Link from 'next/link';
@@ -20,18 +20,22 @@ const NAV_LINKS = [
   {
     path: '/',
     locale: 'home',
+    icon: <HomeOutlined />
   },
   {
     path: '/nav',
     locale: 'nav',
+    icon: <GlobalOutlined />
   },
   {
     path: '/knowledge',
     locale: 'knowledge',
+    icon: <BookOutlined />
   },
   {
     path: '/archives',
     locale: 'archives',
+    icon: <HistoryOutlined />
   },
 ];
 
@@ -86,6 +90,7 @@ export const Header = ({ setting, tags, pages, hasBg = false }) => {
         </Link>
       ),
       key: nav.path,
+      icon: nav.icon,
     }));
     const pageMenu = pages.map((menu, index) => ({
       key: `${index}-${menu.label}`,

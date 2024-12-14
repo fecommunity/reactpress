@@ -1,14 +1,14 @@
 import { ArticleList } from '@components/ArticleList';
 import { Spin } from 'antd';
 import cls from 'classnames';
-import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import React, { useCallback, useEffect, useState } from 'react';
+import Link from 'next/link';
+import React, { useEffect, useState } from 'react';
 
 import { LocaleTime } from '@/components/LocaleTime';
 import { useAsyncLoading } from '@/hooks/useAsyncLoading';
-import { useToggle } from '@/hooks/useToggle';
 import { ArticleProvider } from '@/providers/article';
+import { LikeOutlined } from '@ant-design/icons';
 
 import style from './index.module.scss';
 
@@ -36,6 +36,7 @@ export const ArticleRecommend: React.FC<IProps> = ({ mode = 'vertical', articleI
     <div className={cls(style.wrapper, mode === 'inline' && style.inline)}>
       {needTitle && (
         <div className={style.title}>
+          <LikeOutlined className={style.recommendIcon}/>
           <span>{t('recommendToReading')}</span>
         </div>
       )}

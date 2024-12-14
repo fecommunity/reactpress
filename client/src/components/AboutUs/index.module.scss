@@ -6,6 +6,10 @@
   border-top: 1px solid var(--border-color);
   text-align: left;
 
+  .aboutUsIcon {
+    margin-right: 8px;
+  }
+
   &.hasBg {
     color: var(--main-text-color);
     background: transparent;
