@@ -14,6 +14,7 @@
 
 # production
 /build
+lib
 
 # misc
 .DS_Store
@@ -35,5 +36,6 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
 
 yaml/dev.yaml
