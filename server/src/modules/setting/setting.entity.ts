@@ -13,6 +13,10 @@ export class Setting {
 
   @ApiProperty()
   @Column({ type: 'text', default: null })
+  globalSetting: string; // 导航设置
+
+  @ApiProperty()
+  @Column({ type: 'text', default: null })
   systemUrl: string; // 系统地址
 
   @ApiProperty()

@@ -90,5 +90,7 @@
   "useGithubToLogin": "使用 Github 账号登录",
   "loginTipMessage": "请登录账号，否则无法进行评论。",
   "rssSubscribe": "RSS 订阅",
-  "aboutUs": "关于我们"
+  "aboutUs": "关于我们",
+  "nav": "导航",
+  "suggestions": "建议"
 }

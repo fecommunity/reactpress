@@ -132,6 +132,10 @@ export const menus: {
         path: '/admin/setting?type=国际化设置',
       },
       {
+        title: '全局设置',
+        path: '/admin/setting?type=全局设置',
+      },
+      {
         title: '数据统计',
         path: '/admin/setting?type=数据统计',
       },

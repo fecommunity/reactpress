@@ -8,6 +8,7 @@ import { OSSSetting } from '@/components/Setting/OSSSetting';
 import { SEOSetting } from '@/components/Setting/SEOSetting';
 import { SMTPSetting } from '@/components/Setting/SMTPSetting';
 import { SystemSetting } from '@/components/Setting/SystemSetting';
+import { GlobalSetting } from '@/components/Setting/GlobalSetting';
 import { useSetting } from '@/hooks/useSetting';
 import { AdminLayout } from '@/layout/AdminLayout';
 
@@ -43,6 +44,10 @@ const Setting: NextPage<IProps> = ({ type: defaultType }) => {
     {
       label: 'OSS设置',
       content: <OSSSetting setting={setting} />,
+    },
+    {
+      label: '全局设置',
+      content: <GlobalSetting setting={setting} />,
     },
     {
       label: 'SMTP服务',

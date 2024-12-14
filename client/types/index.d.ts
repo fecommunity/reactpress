@@ -21,6 +21,24 @@ interface IFile {
   createAt: string;
 }
 
+interface IGlobalConfig {
+  navConfig: NavSetting;
+  urlConfig: any[];
+}
+
+interface CategoryItem {
+  label: string;
+  key: string;
+  url?: string;
+}
+
+interface NavSetting {
+  categories: CategoryItem[];
+  subCategories: {
+    [k: string]: CategoryItem[]
+  }
+}
+
 interface IArticle {
   id: string;
   title: string;
@@ -170,4 +188,5 @@ interface ISetting {
   smtpUser?: string; //  SMTP 用户
   smtpPass?: string; //  SMTP 授权码
   smtpFromUser?: string; // SMTP 发件人
+  globalSetting?: string; // 全局配置
 }
