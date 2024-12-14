@@ -10,6 +10,7 @@ export interface CategoryItem {
   icon?: React.ReactNode;
   description?: string;
   type?: string;
+  url?: string;
   children?: CategoryItem[];
 }
 

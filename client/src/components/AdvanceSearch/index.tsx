@@ -10,11 +10,13 @@ import { ArticleProvider } from '@/providers/article';
 import { jsonp } from '@/utils/jsonp';
 import styles from './index.module.scss';
 
-interface IProps {}
+interface IProps {
+  globalSetting?: any;
+}
 
 export const AdvanceSearch: React.FC<IProps> = (props) => {
   const { globalSetting } = useContext(GlobalContext);
-  const { subCategories = {}, categories } = globalSetting?.navConfig || {};
+  const { subCategories = {}, categories } = globalSetting?.navConfig || props.globalSetting || {};
   const [category, setCategory] = useState(categories?.[0]?.key);
   const [subCategory, setSubCategory] = useState(subCategories?.[category]?.[0]?.key);
   const [options, setOptions] = useState<any[]>([]);
