@@ -1,18 +1,12 @@
-import React, { useContext, useMemo, useState } from 'react';
-import type { MenuProps } from 'antd';
+import { GlobalContext } from '@/context/global';
+import {
+  MenuFoldOutlined,
+  MenuUnfoldOutlined
+} from '@ant-design/icons';
 import { Button, Menu } from 'antd';
+import React, { useContext, useMemo, useState } from 'react';
 import { CategoryItem } from '../NavCard';
 import styles from './index.module.scss';
-import {
-  AppstoreOutlined,
-  ContainerOutlined,
-  DesktopOutlined,
-  MailOutlined,
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  PieChartOutlined,
-} from '@ant-design/icons';
-import { GlobalContext } from '@/context/global';
 
 interface CategoryProps {
   dataSource: CategoryItem[];

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import styles from './index.module.scss';
+import React from 'react';
 import Category from './Category';
+import styles from './index.module.scss';
 import NavCard from './NavCard';
 
 
