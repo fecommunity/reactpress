@@ -50,6 +50,7 @@ $height: 64px;
     position: relative;
     display: flex;
     align-items: center;
+    height: 100%;
   }
 
   .logo {
@@ -139,6 +140,7 @@ $height: 64px;
     border: none;
     width: fit-content;
     display: flex;
+    min-width: 80px;
   }
 
   nav {
@@ -148,10 +150,14 @@ $height: 64px;
     flex: 1;
     justify-content: space-between;
     align-items: center;
+    height: 100%;
 
     > ul {
       position: relative;
       width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
 
       > li {
         display: inline-flex;
