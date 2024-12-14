@@ -5,7 +5,8 @@ import NavCard from '@/components/NavCard';
 import style from './index.module.scss';
 import { ArticleProvider } from '@/providers/article';
 import { CategoryProvider } from '@/providers/category';
-import settings from './config';
+import { useContext } from 'react';
+import { GlobalContext } from '@/context/global';
 
 interface IHomeProps {
   articles?: IArticle[];
@@ -13,15 +14,14 @@ interface IHomeProps {
 }
 
 const Page: NextPage<IHomeProps> = ({}) => {
-  const { urlConfig, navConfig } = settings || {};
   return (
     <div className={style.wrapper}>
       <div className="container">
         <div className={style.search}>
-          <AdvanceSearch globalSetting={navConfig} />
+          <AdvanceSearch />
         </div>
         <div className={style.content}>
-          <NavCard dataSource={urlConfig} />
+          <NavCard />
         </div>
       </div>
     </div>

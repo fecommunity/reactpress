@@ -7,6 +7,7 @@ import { Button, Menu } from 'antd';
 import React, { useContext, useMemo, useState } from 'react';
 import { CategoryItem } from '../NavCard';
 import styles from './index.module.scss';
+import { getIconByName } from '@/utils';
 
 interface CategoryProps {
   dataSource: CategoryItem[];
@@ -15,14 +16,16 @@ interface CategoryProps {
 const Category: React.FC<CategoryProps> = (props) => {
   const [collapsed, setCollapsed] = useState(true);
   const { theme } = useContext(GlobalContext);
+  const { dataSource = [] } = props;
 
   const items = useMemo(() => {
-    return props.dataSource.map((item) => {
+    return dataSource.map((item) => {
       const { label, key, icon } = item;
+      const Icon= getIconByName(icon);
       return {
         label,
         key,
-        icon,
+        icon: <Icon />,
       };
     });
   }, [props.dataSource]);
