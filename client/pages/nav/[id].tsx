@@ -142,7 +142,7 @@ const Article: NextPage<IProps> = ({ article }) => {
 };
 
 Article.getInitialProps = async (ctx) => {
-  const { id } = ctx.query;
+  const { id = '' } = ctx.query;
   const [siteKey] = typeof id === 'string' ? id.split('.') : id;
   const { globalSetting } = useContext(GlobalContext);
   const urlItem = globalSetting?.globalConfig?.urlConfig
