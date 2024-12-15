@@ -138,7 +138,7 @@ ReactPress 项目深受以下开源项目的启发和帮助：
 
 - **[fantasticit]** - **[wipi]** - [[https://github.com/fantasticit/wipi](https://github.com/fantasticit/wipi)]
 
-- **[Lrunlin]** - **[blog]** - [[GitHub Repository Link 2](https://github.com/Lrunlin/blog)]
+- **[Lrunlin]** - **[blog]** - [[https://github.com/Lrunlin/blog](https://github.com/Lrunlin/blog)]
 
 - **[biaochenxuying]** - **[blog-react]** - [[https://github.com/biaochenxuying/blog-react](https://github.com/biaochenxuying/blog-react)]
 
