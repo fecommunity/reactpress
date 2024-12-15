@@ -3,7 +3,7 @@ import { Alert, Breadcrumb, Button } from 'antd';
 import { NextPage } from 'next';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
-import { useContext } from 'react';
+import { useContext, useMemo } from 'react';
 import { Helmet } from 'react-helmet';
 
 import { ArticleRecommend } from '@/components/ArticleRecommend';
@@ -16,20 +16,37 @@ import style from './index.module.scss';
 const url = require('url');
 
 interface IProps {
-  article: {
-    id: string;
-    title: string;
-    cover: any;
-    summary: string;
-    tags?: any[];
-    publishAt?: string;
-    url?: string;
-  };
+  siteKey: string;
 }
 
-const Article: NextPage<IProps> = ({ article }) => {
+const Article: NextPage<IProps> = ({ siteKey }) => {
   const t = useTranslations();
-  const { setting, tags } = useContext(GlobalContext);
+  const { setting, tags, globalSetting } = useContext(GlobalContext);
+
+  const article = useMemo(() => {
+    const urlItem = globalSetting?.globalConfig?.urlConfig
+      .map((item) => item.children)
+      .flat()
+      .find((item) => item.key === siteKey);
+    return {
+      id: siteKey.toString(),
+      title: `${urlItem?.label}`,
+      cover: urlItem?.icon || `${urlItem.url}/favicon.ico`,
+      summary: urlItem?.description,
+      url: urlItem?.url,
+      publishAt: Date.now().toLocaleString(),
+      tags: [
+        {
+          label: '网址导航',
+          value: '',
+        },
+        {
+          label: urlItem?.label,
+          value: `${siteKey}`,
+        },
+      ],
+    };
+  }, [siteKey]);
 
   const Content = (
     <>
@@ -97,7 +114,7 @@ const Article: NextPage<IProps> = ({ article }) => {
               <div className={style.tagsWrap}>
                 {article.tags.map((tag) => {
                   return (
-                    <div className={style.tagWrapper} key={tag.id}>
+                    <div className={style.tagWrapper} key={tag.value}>
                       <div className={style.tag}>
                         <Link href={`/nav/${tag.value}`} scroll={false}>
                           <a aria-label={tag.label}>
@@ -142,32 +159,9 @@ const Article: NextPage<IProps> = ({ article }) => {
 };
 
 Article.getInitialProps = async (ctx) => {
-  const { id = '' } = ctx.query;
+  const { id } = ctx.query;
   const [siteKey] = typeof id === 'string' ? id.split('.') : id;
-  const { globalSetting } = useContext(GlobalContext);
-  const urlItem = globalSetting?.globalConfig?.urlConfig
-    .map((item) => item.children)
-    .flat()
-    .find((item) => item.key === siteKey);
-  const article = await Promise.resolve({
-    id: id.toString(),
-    title: `${urlItem?.label}`,
-    cover: urlItem?.icon || `${urlItem.url}/favicon.ico`,
-    summary: urlItem?.description,
-    url: urlItem?.url,
-    publishAt: Date.now().toLocaleString(),
-    tags: [
-      {
-        label: '网址导航',
-        value: '',
-      },
-      {
-        label: urlItem?.label,
-        value: `${siteKey}`,
-      },
-    ],
-  });
-  return { article };
+  return { siteKey };
 };
 
 export default Article;
