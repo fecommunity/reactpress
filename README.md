@@ -21,9 +21,9 @@
 
 [![Home Page](./public/home.png)](https://blog.gaoredu.com)
 
-**Article Category**
+**Navigation**
 
-[![Article Category](./public/ipad.png)](https://blog.gaoredu.com)
+[![Navigation](./public/ipad.png)](https://blog.gaoredu.com)
 
 **Mobile Phone**
 

@@ -21,9 +21,9 @@
 
 [![Home Page](./public/home.png)](https://blog.gaoredu.com)
 
-**文章分类**
+**导航**
 
-[![文章分类](./public/ipad.png)](https://blog.gaoredu.com)
+[![导航](./public/ipad.png)](https://blog.gaoredu.com)
 
 **移动端**
 
