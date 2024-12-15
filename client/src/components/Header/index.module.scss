@@ -145,6 +145,8 @@ $height: 64px;
     width: 100%;
     height: 100%;
     .menu {
+      width: 100%;
+      background-color: var(--bg-box);
       height: calc(100% - 12px);
     }
   }
@@ -205,10 +207,6 @@ $height: 64px;
       @media (max-width: 768px) {
         > li {
           text-align: center;
-
-          &:first-child {
-            margin-top: 24px;
-          }
         }
 
         .toolWrapper {
@@ -240,6 +238,7 @@ $height: 64px;
 
       > ul {
         width: 100%;
+        justify-content: space-between;
 
         > li {
           display: flex;
