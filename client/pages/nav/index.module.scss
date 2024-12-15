@@ -1,17 +1,17 @@
 .wrapper {
-  padding-top: 1rem;
   padding-bottom: 2rem;
 }
 .search {
   background-color: var(--bg-box) !important;
   margin-bottom: 24px;
+  margin-top: 16px;
   div:not(:last-child) {
     border: none !important;
     background-color: var(--bg-box) !important;
   }
 }
 .breadcrump {
-  margin-bottom: 8px;
+  margin-top: 8px;
 }
 .articleContent {
   line-height: 24px;

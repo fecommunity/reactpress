@@ -7,6 +7,7 @@ import { ArticleProvider } from '@/providers/article';
 import { CategoryProvider } from '@/providers/category';
 import { useContext } from 'react';
 import { GlobalContext } from '@/context/global';
+import SystemNotification from '@/components/Setting/SystemNotification';
 
 interface IHomeProps {
   articles?: IArticle[];
@@ -17,6 +18,7 @@ const Page: NextPage<IHomeProps> = ({}) => {
   return (
     <div className={style.wrapper}>
       <div className="container">
+        <SystemNotification />
         <div className={style.search}>
           <AdvanceSearch />
         </div>
