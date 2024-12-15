@@ -11,7 +11,7 @@ import { Search } from '@/components/Search';
 import { Theme } from '@/components/Theme';
 import { UserInfo } from '@/components/UserInfo';
 import { useToggle } from '@/hooks/useToggle';
-import { getDocumentScrollTop } from '@/utils';
+import { getDocumentScrollTop, getFirstLevelRoute } from '@/utils';
 
 import style from './index.module.scss';
 import { GitHub } from '../AboutUs';
@@ -20,22 +20,22 @@ const NAV_LINKS = [
   {
     path: '/',
     locale: 'home',
-    icon: <HomeOutlined />
+    icon: <HomeOutlined />,
   },
   {
     path: '/nav',
     locale: 'nav',
-    icon: <GlobalOutlined />
+    icon: <GlobalOutlined />,
   },
   {
     path: '/knowledge',
     locale: 'knowledge',
-    icon: <BookOutlined />
+    icon: <BookOutlined />,
   },
   {
     path: '/archives',
     locale: 'archives',
-    icon: <HistoryOutlined />
+    icon: <HistoryOutlined />,
   },
 ];
 
@@ -47,6 +47,7 @@ export const Header = ({ setting, tags, pages, hasBg = false }) => {
   const [affixVisible, setAffixVisible] = useToggle(false);
   const [visible, setVisible] = useToggle(false);
   const [showSearch, toggleSearch] = useToggle(false);
+  const mainPath = getFirstLevelRoute(asPath);
 
   useEffect(() => {
     const close = () => {
@@ -149,19 +150,18 @@ export const Header = ({ setting, tags, pages, hasBg = false }) => {
             <div className={style.stick}></div>
           </div>
 
-          <Menu
-            activeKey={asPath}
-            rootClassName={style.menu}
-            items={getMenuItems()}
-            mode="horizontal"
-            className={cls(visible ? style.active : false, style.menu)}
-          />
+          <div className={style.menuWrapper}>
+            <Menu
+              rootClassName={style.menu}
+              activeKey={mainPath}
+              items={getMenuItems()}
+              mode="horizontal"
+              className={cls(visible ? style.active : false, style.menu)}
+            />
+          </div>
 
           <nav className={cls(visible ? style.active : false)}>
             <ul>
-              <li className={style.toolWrapper}>
-                <UserInfo />
-              </li>
               <li className={style.toolWrapper}>
                 <SearchOutlined style={{ cursor: 'pointer' }} onClick={toggleSearch} />
               </li>
@@ -173,6 +173,9 @@ export const Header = ({ setting, tags, pages, hasBg = false }) => {
               </li>
               <li className={style.toolWrapper}>
                 <GitHub />
+              </li>
+              <li className={style.toolWrapper}>
+                <UserInfo />
               </li>
             </ul>
             <Search tags={tags} visible={showSearch} onClose={toggleSearch} />

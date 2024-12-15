@@ -15,6 +15,7 @@ import { CategoryProvider } from '@/providers/category';
 import AboutUs from '@/components/AboutUs';
 import { CategoryMenu } from '../index';
 import style from '../index.module.scss';
+import { defaultImgSrc } from '@/assets/LogoSvg';
 
 interface IProps {
   articles: IArticle[];
@@ -29,7 +30,7 @@ const Home: NextPage<IProps> = ({ articles: defaultArticles = [], total, categor
   const { setting, tags, categories } = useContext(GlobalContext);
   const [page, setPage] = useState(1);
   const [articles, setArticles] = useState<IArticle[]>(defaultArticles);
-  const bgImg = articles?.filter(article => article.cover)?.[0]?.cover;
+  const bgImg = articles?.filter((article) => article.cover)?.[0]?.cover || defaultImgSrc;
 
   useEffect(() => {
     setArticles(defaultArticles);
