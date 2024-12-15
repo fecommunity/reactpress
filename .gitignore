@@ -2,6 +2,7 @@ node_modules
 .DS_Store
 .idea
 .husky
+.next
 
 .env.prod
 *.local
@@ -10,9 +11,12 @@ node_modules
 *debug.log
 *.conf
 
+lib
 dist
 dist-ssr
 coverage
+logs
 test-results
-.pnpm-store
 tsconfig.tsbuildinfo
+.pnpm-store
+sitemap.xml
