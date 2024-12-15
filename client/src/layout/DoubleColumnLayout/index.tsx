@@ -18,6 +18,7 @@ interface IProps {
   minHeight?: string | number;
   likesProps?: LikesProps;
   showComment?: boolean;
+  topNode?: React.ReactNode;
 }
 
 export const DoubleColumnLayout: React.FC<IProps> = ({
@@ -29,6 +30,7 @@ export const DoubleColumnLayout: React.FC<IProps> = ({
   minHeight = '100vh',
   likesProps,
   showComment = false,
+  topNode
 }) => {
   const $aside = useRef<HTMLElement>();
   const [showWidge, toggleWidge] = useToggle(true);
@@ -76,6 +78,7 @@ export const DoubleColumnLayout: React.FC<IProps> = ({
     <div className={cls(style.outerWrap)} style={{ minHeight }}>
       <div className={cls('container')}>
         <SystemNotification />
+        {topNode}
         <div className={style.wrap}>
           {(likesProps || showComment) && (
             <div

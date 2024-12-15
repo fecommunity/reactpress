@@ -54,18 +54,6 @@ const Article: NextPage<IProps> = ({ siteKey }) => {
         <title>{(article?.title || t('unknownTitle')) + ' - ' + setting.systemTitle}</title>
       </Helmet>
       <div>
-        <div className="container">
-          <div className={style.breadcrump}>
-            <Breadcrumb>
-              <Breadcrumb.Item>
-                <Link href="/nav">
-                  <a aria-label="nav">{'导航'}</a>
-                </Link>
-              </Breadcrumb.Item>
-              <Breadcrumb.Item>{article.title}</Breadcrumb.Item>
-            </Breadcrumb>
-          </div>
-        </div>
         <article id="js-article-wrapper" className={style.articleWrap}>
           {/* S 文章 Seo 信息 */}
           {setting.systemUrl && (
@@ -147,6 +135,18 @@ const Article: NextPage<IProps> = ({ siteKey }) => {
   return (
     <DoubleColumnLayout
       leftNode={Content}
+      topNode={
+        <div className={style.breadcrump}>
+          <Breadcrumb>
+            <Breadcrumb.Item>
+              <Link href="/nav">
+                <a aria-label="nav">{'导航'}</a>
+              </Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>{article.title}</Breadcrumb.Item>
+          </Breadcrumb>
+        </div>
+      }
       rightNode={
         <div className={'sticky'}>
           <Tags tags={tags} />
