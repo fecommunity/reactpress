@@ -12,8 +12,7 @@ pnpm run build:config
 pnpm run build:server
 
 # 结束进程
-pm2 delete @reactpress/server
-pm2 delete @reactpress/client
+pm2 kill
 
 # 构建本地client
 pnpm run build:client
