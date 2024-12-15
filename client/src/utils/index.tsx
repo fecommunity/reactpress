@@ -199,5 +199,6 @@ export function getFirstLevelRoute(path) {
   const secondSlashIndex = path.indexOf('/', firstSlashIndex + 1);
 
   // 如果没有找到第二个斜杠，说明路径只有一级
-  return secondSlashIndex === -1 ? path : path.slice(0, secondSlashIndex);
+  const finalPath = secondSlashIndex === -1 ? path : path.slice(0, secondSlashIndex);
+  return finalPath || '/';
 }
