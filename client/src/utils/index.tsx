@@ -181,3 +181,23 @@ export function getIconByName (name) {
   const IconComponent = AntdIcons?.[name] || null;
   return IconComponent;
 };
+
+
+export function getFirstLevelRoute(path) {
+  // 确保路径以斜杠开头，如果不是则添加斜杠
+  if (!path.startsWith('/')) {
+    path = '/' + path;
+  }
+
+  // 去除路径末尾的斜杠（如果有的话）
+  if (path.endsWith('/')) {
+    path = path.slice(0, -1);
+  }
+
+  // 查找第一个斜杠之后和下一个斜杠（如果有）之前的部分
+  const firstSlashIndex = path.indexOf('/'); // 实际上这个索引在这里总是0
+  const secondSlashIndex = path.indexOf('/', firstSlashIndex + 1);
+
+  // 如果没有找到第二个斜杠，说明路径只有一级
+  return secondSlashIndex === -1 ? path : path.slice(0, secondSlashIndex);
+}
