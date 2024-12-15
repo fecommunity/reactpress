@@ -19,3 +19,4 @@ logs
 test-results
 tsconfig.tsbuildinfo
 .pnpm-store
+sitemap.xml
