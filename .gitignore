@@ -2,6 +2,7 @@ node_modules
 .DS_Store
 .idea
 .husky
+.next
 
 .env.prod
 *.local
@@ -10,14 +11,13 @@ node_modules
 *debug.log
 *.conf
 
+lib
 dist
 dist-ssr
 coverage
+logs
 test-results
-<<<<<<< Updated upstream
 .pnpm-store
 tsconfig.tsbuildinfo
-=======
-tsconfig.tsbuildinfo
 .pnpm-store
->>>>>>> Stashed changes
+sitemap.xml
