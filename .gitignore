@@ -10,6 +10,7 @@ node_modules
 *error.log
 *debug.log
 *.conf
+sitemap.xml
 
 lib
 dist
@@ -20,4 +21,3 @@ test-results
 .pnpm-store
 tsconfig.tsbuildinfo
 .pnpm-store
-sitemap.xml
