@@ -14,5 +14,10 @@ dist
 dist-ssr
 coverage
 test-results
+<<<<<<< Updated upstream
 .pnpm-store
 tsconfig.tsbuildinfo
+=======
+tsconfig.tsbuildinfo
+.pnpm-store
+>>>>>>> Stashed changes
