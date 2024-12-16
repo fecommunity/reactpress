@@ -3,7 +3,6 @@ import * as AliyunOSS from 'ali-oss';
 import { OssClient } from './oss-client';
 
 export class AliyunOssClient extends OssClient {
-  // eslint-disable-next-line class-methods-use-this
   private async buildClient() {
     const config = this.config;
     return new AliyunOSS({
