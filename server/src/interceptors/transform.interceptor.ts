@@ -10,7 +10,6 @@ interface Response<T> {
 
 @Injectable()
 export class TransformInterceptor<T> implements NestInterceptor<T, Response<T>> {
-  // eslint-disable-next-line class-methods-use-this
   intercept(context: ExecutionContext, next: CallHandler<T>): Observable<Response<T>> {
     return next.handle().pipe(
       map((data) => {
