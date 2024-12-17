@@ -51,7 +51,7 @@ const Article: NextPage<IProps> = ({ siteKey }) => {
   const Content = (
     <>
       <Helmet>
-        <title>{(article?.title || t('unknownTitle')) + ' - ' + setting.systemTitle}</title>
+        <title>{`${article?.title || t('unknownTitle')} - ${t('nav')} - ${setting.systemTitle}`}</title>
       </Helmet>
       <div>
         <article id="js-article-wrapper" className={style.articleWrap}>
