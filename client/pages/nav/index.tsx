@@ -2,12 +2,14 @@ import { NextPage } from 'next';
 
 import { AdvanceSearch } from '@/components/AdvanceSearch';
 import NavCard from '@/components/NavCard';
-import style from './index.module.scss';
+import SystemNotification from '@/components/Setting/SystemNotification';
 import { ArticleProvider } from '@/providers/article';
 import { CategoryProvider } from '@/providers/category';
+import style from './index.module.scss';
+import { Helmet } from 'react-helmet';
 import { useContext } from 'react';
 import { GlobalContext } from '@/context/global';
-import SystemNotification from '@/components/Setting/SystemNotification';
+import { useTranslations } from 'next-intl';
 
 interface IHomeProps {
   articles?: IArticle[];
@@ -15,8 +17,13 @@ interface IHomeProps {
 }
 
 const Page: NextPage<IHomeProps> = ({}) => {
+  const { setting } = useContext(GlobalContext);
+  const t = useTranslations();
   return (
     <div className={style.wrapper}>
+      <Helmet>
+        <title>{`${t('nav')} - ${t('categoryArticle')} - ${setting.systemTitle}`}</title>
+      </Helmet>
       <div className="container">
         <SystemNotification />
         <div className={style.search}>
