@@ -18,8 +18,8 @@ const SystemNotification: React.FC = () => {
       message={
         <div className={style.textLoop}>
           <TextLoop interval={5000}>
-            {notices.map((notice) => (
-              <span className={style.overflowEllipse} dangerouslySetInnerHTML={{ __html: notice }} />
+            {notices.map((notice, index) => (
+              <span key={index} className={style.overflowEllipse} dangerouslySetInnerHTML={{ __html: notice }} />
             ))}
           </TextLoop>
         </div>
