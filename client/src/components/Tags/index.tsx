@@ -1,5 +1,5 @@
 import { TagOutlined } from '@ant-design/icons';
-import { Tag } from 'antd';
+import { Tag, Flex } from 'antd';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 
@@ -55,15 +55,17 @@ export const Tags: FC<ITagsProps> = ({ tags = [], needTitle = true, style: cssSt
         </TagCloud>
       ) : (
         <ul className={style.tagWrapper}>
-          {tags.map((tag, index) => (
-            <Tag key={tag.id} color={getColorFromNumber(index)} className={style.item}>
-              <Link href={`/tag/[tag]`} as={`/tag/` + tag.value} scroll={false}>
-                <a aria-label={tag.label} className={style.link}>
-                  {tag.label} [{tag.articleCount}]
-                </a>
-              </Link>
-            </Tag>
-          ))}
+          <Flex wrap gap="small">
+            {tags.map((tag, index) => (
+              <Tag key={tag.id} color={getColorFromNumber(index)} className={style.item}>
+                <Link href={`/tag/[tag]`} as={`/tag/` + tag.value} scroll={false}>
+                  <a aria-label={tag.label} className={style.link}>
+                    {tag.label} [{tag.articleCount}]
+                  </a>
+                </Link>
+              </Tag>
+            ))}
+          </Flex>
         </ul>
       )}
     </div>
