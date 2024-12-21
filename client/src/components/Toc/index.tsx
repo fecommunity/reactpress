@@ -11,11 +11,16 @@ interface IToc {
   level: number;
   id: string;
   text: string;
+  hasHeader?: boolean;
 }
 
 const HEIGHT = 32;
 
-export const Toc: React.FC<{ tocs: Array<IToc>; maxHeight?: string | number }> = ({ tocs = [], maxHeight }) => {
+export const Toc: React.FC<{ tocs: Array<IToc>; maxHeight?: string | number; hasHeader: boolean }> = ({
+  tocs = [],
+  maxHeight,
+  hasHeader = true,
+}) => {
   const t = useTranslations();
   const ref = useRef<HTMLDivElement>();
   const [active, setActive] = useState(0);
@@ -50,8 +55,8 @@ export const Toc: React.FC<{ tocs: Array<IToc>; maxHeight?: string | number }> =
   }, [tocs]);
 
   return (
-    <div className={style.wrapper}>
-      <header>{t('toc')}</header>
+    <div className={cls(style.wrapper, !hasHeader && style.noHeader)}>
+      {hasHeader && <header>{t('toc')}</header>}
       <main>
         <div
           ref={ref}
