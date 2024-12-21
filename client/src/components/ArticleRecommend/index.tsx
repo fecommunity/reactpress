@@ -5,10 +5,9 @@ import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 
-import { LocaleTime } from '@/components/LocaleTime';
 import { useAsyncLoading } from '@/hooks/useAsyncLoading';
 import { ArticleProvider } from '@/providers/article';
-import { LikeOutlined } from '@ant-design/icons';
+import { LikeOutlined, EyeOutlined } from '@ant-design/icons';
 
 import style from './index.module.scss';
 
@@ -22,12 +21,14 @@ export const ArticleRecommend: React.FC<IProps> = ({ mode = 'vertical', articleI
   const t = useTranslations();
   const [getRecommend, loading] = useAsyncLoading(ArticleProvider.getRecommend, 150, true);
   const [fetched, setFetched] = useState('');
-  const [articles, setArticles] = useState([]);
+  const [articles, setArticles] = useState<IArticle[]>([]);
 
   useEffect(() => {
     if (fetched === articleId) return;
     getRecommend(articleId).then((res) => {
-      setArticles(res.slice(0, 6));
+      const articles = res.slice(0, 6);
+      articles.sort((a, b) => b.views - a.views);
+      setArticles(articles);
       setFetched(articleId);
     });
   }, [articleId, getRecommend, fetched]);
@@ -36,7 +37,7 @@ export const ArticleRecommend: React.FC<IProps> = ({ mode = 'vertical', articleI
     <div className={cls(style.wrapper, mode === 'inline' && style.inline)}>
       {needTitle && (
         <div className={style.title}>
-          <LikeOutlined className={style.recommendIcon}/>
+          <LikeOutlined className={style.recommendIcon} />
           <span>{t('recommendToReading')}</span>
         </div>
       )}
@@ -53,15 +54,17 @@ export const ArticleRecommend: React.FC<IProps> = ({ mode = 'vertical', articleI
             )
           ) : (
             <ul className={style.inlineWrapper}>
-              {articles.map((article) => {
+              {articles.map((article, index) => {
                 return (
                   <li key={article.id}>
                     <Link href={`/article/[id]`} as={`/article/${article.id}`} scroll={false}>
-                      <a>
-                        <span>{article.title}</span>
-                        {' · '}
-                        <span>
-                          <LocaleTime date={article.publishAt} timeago={true} />
+                      <a className={style.article} title={article.title}>
+                        <span className={style.articleTitle} data-num={index + 1}>
+                          <span>{article.title}</span>
+                        </span>
+                        <span className={style.views}>
+                          <EyeOutlined />
+                          <span className={style.number}>{article.views}</span>
                         </span>
                       </a>
                     </Link>

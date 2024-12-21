@@ -90,7 +90,7 @@ const Home: NextPage<IProps> = ({ articles: defaultArticles = [], total, categor
         rightNode={
           <div className="sticky">
             <ArticleRecommend mode="inline" />
-            <Tags tags={tags} />
+            <Tags tags={tags} animationMode />
             <AboutUs className={style.footer} setting={setting} />
           </div>
         }

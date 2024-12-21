@@ -113,8 +113,8 @@ const Home: NextPage<IHomeProps> = ({ articles: defaultArticles = [], recommende
         }
         rightNode={
           <div className="sticky">
-            <Tags tags={tags} />
             <ArticleRecommend mode="inline" />
+            <Tags tags={tags} animationMode />
             <AboutUs className={style.footer} setting={setting} />
           </div>
         }
