@@ -1,3 +1,24 @@
+# [1.5.0](https://github.com/fecommunity/easy-blog/compare/v1.4.0...v1.5.0) (2024-12-21)
+
+
+### Bug Fixes
+
+* adapt small screen content display issue ([84895c8](https://github.com/fecommunity/easy-blog/commit/84895c8341d34285068806d5908b2af358719f80))
+* add key for tex loop item ([e8a2e36](https://github.com/fecommunity/easy-blog/commit/e8a2e36f13d5031d845c3c3055374e5ff0446bc2))
+* nav config build error ([66acf46](https://github.com/fecommunity/easy-blog/commit/66acf46485f902aa0647b4886beb0701372b95c2))
+* nav query id undefined ([2d0bbd7](https://github.com/fecommunity/easy-blog/commit/2d0bbd78f4d73579039b3a9bf7c846fe2d976073))
+* route level default value ([4aae64e](https://github.com/fecommunity/easy-blog/commit/4aae64e86346052cb51e63e7c149853a6d8d8ae6))
+
+
+### Features
+
+* add animation tags cloud ([68b1a5b](https://github.com/fecommunity/easy-blog/commit/68b1a5b2fe73fafd7a9b282ed77f836aa7a76bf6))
+* add global config setting page ([c825425](https://github.com/fecommunity/easy-blog/commit/c82542540b20f423b3b3f3ba04ea5e48e2523f5c))
+* add nav page ([c6703c6](https://github.com/fecommunity/easy-blog/commit/c6703c6e3dea33a8cc226f1c02d9b5cac0ef827e))
+* optimized page interaction experience ([b0ac19a](https://github.com/fecommunity/easy-blog/commit/b0ac19ab31b6bcf0d8916aeb373e6fa7288303aa))
+
+
+
 # [1.4.0](https://github.com/fecommunity/easy-blog/compare/v1.3.0...v1.4.0) (2024-12-08)
 
 
