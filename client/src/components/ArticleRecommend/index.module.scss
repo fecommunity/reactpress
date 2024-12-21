@@ -23,6 +23,41 @@
   ul.inlineWrapper {
     padding: 0 1rem 1rem;
 
+    .article {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      .seqId {
+        display: inline-block;
+        width: 40px;
+        border-radius: 4px;
+        background-color: var(--primary-color);
+      }
+      .articleTitle {
+        flex: 1;
+        width: 100%;
+        display: inline-block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        &::before {
+          background-color: var(--primary-color);
+          color: #fff;
+          content: attr(data-num);
+          display: inline-block;
+          font-size: 14px;
+          line-height: 18px;
+          margin-right: 5px;
+          text-align: center;
+          width: 18px;
+        }
+      }
+      .views {
+        display: inline-block;
+        width: 54px;
+        color: var(--second-text-color);
+      }
+    }
+
     li {
       display: flex;
       flex-wrap: nowrap;
