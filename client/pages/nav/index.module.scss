@@ -5,6 +5,8 @@
   background-color: var(--bg-box) !important;
   margin-bottom: 24px;
   margin-top: 16px;
+  border-radius: var(--border-radius);
+
   div:not(:last-child) {
     border: none !important;
     background-color: var(--bg-box) !important;
