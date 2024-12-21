@@ -149,7 +149,7 @@ const Article: NextPage<IProps> = ({ siteKey }) => {
       }
       rightNode={
         <div className={'sticky'}>
-          <Tags tags={tags} />
+          <Tags tags={tags} animationMode />
           <AboutUs setting={setting} />
         </div>
       }

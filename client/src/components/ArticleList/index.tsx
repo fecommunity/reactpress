@@ -56,8 +56,7 @@ export const ArticleList: React.FC<IProps> = ({ articles = [] }) => {
                             as={`/category/${article?.category?.value}`}
                             scroll={false}
                           >
-                            <Tag className={style.antBadge} color={getColorFromNumber(categoryIndex)}>
-                              <FolderOutlined />
+                            <Tag className={style.antBadge} icon={<FolderOutlined />}>
                               <span className={style.category}>{article.category?.label}</span>
                             </Tag>
                           </Link>
