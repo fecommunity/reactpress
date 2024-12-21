@@ -180,17 +180,13 @@ const Page: NextPage<IProps> = ({ pId, id, book, chapter }) => {
                             {chapter.title}
                           </a>
                         </Link>
+                        {chapter.id === id && <Toc hasHeader={false} key={chapter.id} tocs={tocs} />}
                       </li>
                     );
                   })}
                 </ul>
               </main>
             </div>
-            {tocs && tocs.length ? (
-              <div className={style.infoWrapper}>
-                <Toc key={chapter.id} tocs={tocs} />
-              </div>
-            ) : null}
           </div>
         }
         likesProps={{
