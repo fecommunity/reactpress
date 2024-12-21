@@ -1,7 +1,7 @@
 {
   "name": "reactpress",
   "author": "fecommunity",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "scripts": {
     "clean": "pnpm clean:node_modules && pnpm clean:dist",
     "clean:node_modules": "npx rimraf ./node_modules ./**/node_modules",
