@@ -131,7 +131,6 @@
     background: var(--bg-box);
 
     > main {
-      max-height: 200px;
       overflow: auto;
       scroll-behavior: smooth;
       overscroll-behavior: contain;
@@ -161,7 +160,7 @@
           height: 32px;
           padding-right: 16px;
           padding-left: 12px;
-          font-size: 14px;
+          font-size: 16px;
           line-height: 20px;
           align-items: center;
           justify-content: space-between;

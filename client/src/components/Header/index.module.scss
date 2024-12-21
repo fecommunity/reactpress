@@ -5,7 +5,7 @@ $height: 64px;
   width: 100%;
   height: $height;
   transition: all 0.3s ease-in-out;
-  background-color: var(--bg-header);
+  background-color: var(--bg-box);
   backdrop-filter: blur(10px);
   z-index: 100;
 

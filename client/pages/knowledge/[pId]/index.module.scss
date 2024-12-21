@@ -1,6 +1,7 @@
 .wrapper {
   position: relative;
   height: 100%;
+  background-color: var(--bg-body);
 }
 
 .bg {
@@ -38,7 +39,6 @@
 
   .coverWrapper {
     width: 100%;
-    margin: 1rem auto;
     overflow: hidden;
     border-radius: var(--border-radius);
 
@@ -123,7 +123,7 @@
 
     &.bgMain {
       padding: 0.8rem;
-      background-color: var(--bg-second);
+      background-color: var(--bg-box);
       border-radius: var(--border-radius);
       box-shadow: var(--box-shadow);
     }
