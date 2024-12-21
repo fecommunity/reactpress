@@ -8,7 +8,7 @@ const antdVariablesFilePath = path.resolve(__dirname, './antd-custom.less');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  assetPrefix: config.CLIENT_ASSET_PREFIX,
+  assetPrefix: config.CLIENT_ASSET_PREFIX || '/',
   i18n: {
     locales,
     defaultLocale,
