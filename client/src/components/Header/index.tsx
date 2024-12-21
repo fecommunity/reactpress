@@ -11,7 +11,7 @@ import { Search } from '@/components/Search';
 import { Theme } from '@/components/Theme';
 import { UserInfo } from '@/components/UserInfo';
 import { useToggle } from '@/hooks/useToggle';
-import { getDocumentScrollTop, getFirstLevelRoute } from '@/utils';
+import { getDocumentScrollTop, getFirstLevelRoute, getIconByName } from '@/utils';
 
 import style from './index.module.scss';
 import { GitHub } from '../AboutUs';
@@ -93,14 +93,18 @@ export const Header = ({ setting, tags, pages, hasBg = false }) => {
       key: nav.path,
       icon: nav.icon,
     }));
-    const pageMenu = pages.map((menu, index) => ({
-      key: `${index}-${menu.label}`,
-      label: (
-        <Link href={'/page/[id]'} as={`/page/${menu.path}`} scroll={false}>
-          <a aria-label={menu.name}>{t(menu.path) || menu.name}</a>
-        </Link>
-      ),
-    }));
+    const pageMenu = pages.map((menu, index) => {
+      const Icon = getIconByName(menu.path);
+      return {
+        key: `${index}-${menu.label}`,
+        label: (
+          <Link href={'/page/[id]'} as={`/page/${menu.path}`} scroll={false}>
+            <a aria-label={menu.name}>{t(menu.path) || menu.name}</a>
+          </Link>
+        ),
+        icon: Icon ? <Icon /> : null
+      }
+    });
     return navMenu.concat(pageMenu);
   };
 

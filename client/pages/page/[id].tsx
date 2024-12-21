@@ -28,47 +28,45 @@ const Page: NextPage<IProps> = ({ page }) => {
   }, [page]);
 
   return (
-    <>
-      <ImageViewer containerSelector="#js-page-wrapper">
-        <div id="js-page-wrapper" className={style.container}>
-          <Helmet>
-            <title>{page.name + ' - ' + setting.systemTitle}</title>
-          </Helmet>
-          <div
-            style={{
-              backgroundColor: !setting.systemBg ? 'var(--bg-second)' : 'transparent',
-              borderBottom: !setting.systemBg ? '1px solid var(--border-color)' : 0,
-              paddingTop: 21,
-            }}
-          >
-            <div className="container">
-              {page.cover && (
-                <div className={style.coverWrapper}>
-                  <img src={page.cover} alt={t('articleCover') as string} />
-                </div>
-              )}
-              <div className={style.content}>
-                <MarkdownReader content={page.html} />
+    <ImageViewer containerSelector="#js-page-wrapper">
+      <div id="js-page-wrapper" className={style.container}>
+        <Helmet>
+          <title>{page.name + ' - ' + setting.systemTitle}</title>
+        </Helmet>
+        <div
+          style={{
+            backgroundColor: !setting.systemBg ? 'var(--bg-second)' : 'transparent',
+            borderBottom: !setting.systemBg ? '1px solid var(--border-color)' : 0,
+            paddingTop: 21,
+          }}
+        >
+          <div className="container">
+            {page.cover && (
+              <div className={style.coverWrapper}>
+                <img src={page.cover} alt={t('articleCover') as string} />
               </div>
-            </div>
-          </div>
-          <div className={style.commentAndArticleWrapper}>
-            <div className={style.comments}>
-              <p className={style.title}>{t('comment')}</p>
-              <div className={style.commentContainer}>
-                <Comment key={page.id} hostId={page.id} />
-              </div>
-            </div>
-            <div className={style.recmmendArticles}>
-              <p className={style.title}>{t('recommendToReading')}</p>
-              <div className={style.articleContainer}>
-                <ArticleRecommend articleId={null} needTitle={false} />
-              </div>
+            )}
+            <div className={style.content}>
+              <MarkdownReader content={page.html} />
             </div>
           </div>
         </div>
-      </ImageViewer>
-    </>
+        <div className={style.commentAndArticleWrapper}>
+          <div className={style.comments}>
+            <p className={style.title}>{t('comment')}</p>
+            <div className={style.commentContainer}>
+              <Comment key={page.id} hostId={page.id} />
+            </div>
+          </div>
+          <div className={style.recmmendArticles}>
+            <p className={style.title}>{t('recommendToReading')}</p>
+            <div className={style.articleContainer}>
+              <ArticleRecommend articleId={null} needTitle={false} />
+            </div>
+          </div>
+        </div>
+      </div>
+    </ImageViewer>
   );
 };
 
