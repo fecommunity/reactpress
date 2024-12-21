@@ -21,6 +21,7 @@
   p {
     margin-bottom: 0;
     color: var(--font-color-base);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
     &:first-of-type {
       margin-top: 80px;
       font-size: 2rem;
