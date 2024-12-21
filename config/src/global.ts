@@ -293,7 +293,7 @@ const urlConfig = [
   {
     key: 'front-end-dev',
     label: '编程开发',
-    icon: 'CodeTwoTone',
+    icon: 'CodeOutlined',
     children: [
       {
         key: 'github',
