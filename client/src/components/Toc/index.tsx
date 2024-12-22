@@ -16,7 +16,7 @@ interface IToc {
 
 const HEIGHT = 32;
 
-export const Toc: React.FC<{ tocs: Array<IToc>; maxHeight?: string | number; hasHeader: boolean }> = ({
+export const Toc: React.FC<{ tocs: Array<IToc>; maxHeight?: string | number; hasHeader?: boolean }> = ({
   tocs = [],
   maxHeight,
   hasHeader = true,

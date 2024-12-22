@@ -4,7 +4,7 @@ import { NextPage } from 'next';
 import { useTranslations } from 'next-intl';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
-import { Helmet } from 'react-helmet';
+import Head from 'next/head';
 
 import { ArticleRecommend } from '@/components/ArticleRecommend';
 import { GlobalContext } from '@/context/global';
@@ -43,9 +43,9 @@ const Page: NextPage<IHomeProps> = ({ books: defaultBooks = [], total = 0 }) => 
     <DoubleColumnLayout
       leftNode={
         <>
-          <Helmet>
+          <Head>
             <title>{`${t('knowledge')} - ${setting.systemTitle}`}</title>
-          </Helmet>
+          </Head>
           <InfiniteScroll
             pageStart={1}
             loadMore={getArticles}
@@ -70,7 +70,6 @@ const Page: NextPage<IHomeProps> = ({ books: defaultBooks = [], total = 0 }) => 
   );
 };
 
-// 服务端预取数据
 Page.getInitialProps = async () => {
   const [books, total] = await KnowledgeProvider.getKnowledges({
     page: 1,
