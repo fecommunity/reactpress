@@ -3,7 +3,7 @@ import { Tags } from '@components/Tags';
 import { NextPage } from 'next';
 import { useTranslations } from 'next-intl';
 import { useCallback, useContext, useEffect, useState } from 'react';
-import { Helmet } from 'react-helmet';
+import Head from 'next/head';
 import InfiniteScroll from 'react-infinite-scroller';
 
 import { ArticleRecommend } from '@/components/ArticleRecommend';
@@ -52,9 +52,9 @@ const Home: NextPage<IProps> = ({ articles: defaultArticles = [], total, categor
 
   return (
     <div className={style.wrapper}>
-      <Helmet>
+      <Head>
         <title>{`${category?.label} - ${t('categoryArticle')} - ${setting.systemTitle}`}</title>
-      </Helmet>
+      </Head>
       <DoubleColumnLayout
         leftNode={
           <>

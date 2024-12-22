@@ -24,6 +24,7 @@ const NavCard: React.FC<NavCardProps> = (props) => {
         const Icon = getIconByName(item.icon);
         return (
           <Card
+            key={item.key}
             className={styles.card}
             title={
               <span id={`nav-card-title-${item.key}`}>
