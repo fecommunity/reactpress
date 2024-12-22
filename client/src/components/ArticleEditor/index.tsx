@@ -5,7 +5,7 @@ import { Button, Dropdown, Input, Layout, Menu, message, Modal } from 'antd';
 import cls from 'classnames';
 import { default as Router } from 'next/router';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Helmet } from 'react-helmet';
+import Head from 'next/head';
 
 import { useSetting } from '@/hooks/useSetting';
 import { useToggle } from '@/hooks/useToggle';
@@ -178,9 +178,9 @@ export const ArticleEditor: React.FC<IProps> = ({ id: defaultId, article: defaul
 
   return (
     <div className={style.wrapper}>
-      <Helmet>
+      <Head>
         <title>{id ? `编辑文章 ${article.title ? '-' + article.title : ''}` : '新建文章'}</title>
-      </Helmet>
+      </Head>
       <header className={style.header}>
         <PageHeader
           backIcon={<Button size="small" icon={<CloseOutlined />} />}

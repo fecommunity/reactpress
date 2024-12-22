@@ -1,7 +1,7 @@
 import { NextPage } from 'next';
 import { useTranslations } from 'next-intl';
 import React, { useContext, useEffect } from 'react';
-import { Helmet } from 'react-helmet';
+import Head from 'next/head';
 
 import { ArticleRecommend } from '@/components/ArticleRecommend';
 import { Comment } from '@/components/Comment';
@@ -30,9 +30,9 @@ const Page: NextPage<IProps> = ({ page }) => {
   return (
     <ImageViewer containerSelector="#js-page-wrapper">
       <div id="js-page-wrapper" className={style.container}>
-        <Helmet>
+        <Head>
           <title>{page.name + ' - ' + setting.systemTitle}</title>
-        </Helmet>
+        </Head>
         <div
           style={{
             backgroundColor: !setting.systemBg ? 'var(--bg-second)' : 'transparent',
