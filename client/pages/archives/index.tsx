@@ -107,10 +107,10 @@ const Archives: NextPage<IProps> = ({ articles }) => {
   );
 };
 
-export async function getStaticProps({ params }) {
+Archives.getInitialProps = async () => {
   const articles = await ArticleProvider.getArchives();
+  return { articles, needLayoutFooter: false };
+};
 
-  return { props: { articles, needLayoutFooter: false } }
-}
 
 export default Archives;

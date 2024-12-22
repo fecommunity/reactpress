@@ -70,14 +70,17 @@ const Page: NextPage<IHomeProps> = ({ books: defaultBooks = [], total = 0 }) => 
   );
 };
 
-export async function getStaticProps() {
+Page.getInitialProps = async () => {
   const [books, total] = await KnowledgeProvider.getKnowledges({
     page: 1,
     pageSize,
     status: 'publish',
   });
-
-  return { props: { books, total, needLayoutFooter: true } };
-}
+  return {
+    books,
+    total,
+    needLayoutFooter: true,
+  };
+};
 
 export default Page;
