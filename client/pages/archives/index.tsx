@@ -107,10 +107,10 @@ const Archives: NextPage<IProps> = ({ articles }) => {
   );
 };
 
-// 服务端预取数据
-Archives.getInitialProps = async () => {
+export async function getStaticProps({ params }) {
   const articles = await ArticleProvider.getArchives();
-  return { articles, needLayoutFooter: false };
-};
+
+  return { props: { articles, needLayoutFooter: false } }
+}
 
 export default Archives;

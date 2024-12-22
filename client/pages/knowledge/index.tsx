@@ -70,18 +70,14 @@ const Page: NextPage<IHomeProps> = ({ books: defaultBooks = [], total = 0 }) => 
   );
 };
 
-// 服务端预取数据
-Page.getInitialProps = async () => {
+export async function getStaticProps() {
   const [books, total] = await KnowledgeProvider.getKnowledges({
     page: 1,
     pageSize,
     status: 'publish',
   });
-  return {
-    books,
-    total,
-    needLayoutFooter: true,
-  };
-};
+
+  return { props: { books, total, needLayoutFooter: true } };
+}
 
 export default Page;
