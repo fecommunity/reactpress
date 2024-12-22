@@ -6,7 +6,7 @@ import SystemNotification from '@/components/Setting/SystemNotification';
 import { ArticleProvider } from '@/providers/article';
 import { CategoryProvider } from '@/providers/category';
 import style from './index.module.scss';
-import { Helmet } from 'react-helmet';
+import Head from 'next/head';
 import { useContext } from 'react';
 import { GlobalContext } from '@/context/global';
 import { useTranslations } from 'next-intl';
@@ -21,9 +21,9 @@ const Page: NextPage<IHomeProps> = ({}) => {
   const t = useTranslations();
   return (
     <div className={style.wrapper}>
-      <Helmet>
+      <Head>
         <title>{`${t('nav')} - ${t('categoryArticle')} - ${setting.systemTitle}`}</title>
-      </Helmet>
+      </Head>
       <div className="container">
         <SystemNotification />
         <div className={style.search}>

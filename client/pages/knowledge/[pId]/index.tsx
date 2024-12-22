@@ -5,7 +5,7 @@ import { NextPage } from 'next';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { useCallback, useContext, useMemo } from 'react';
-import { Helmet } from 'react-helmet';
+import Head from 'next/head';
 
 import { ListTrail } from '@/components/Animation/Trail';
 import { KnowledgeList } from '@/components/KnowledgeList';
@@ -56,9 +56,9 @@ const Page: NextPage<IProps> = ({ pId, book, otherBooks = [] }) => {
         }
         leftNode={
           <div className={style.content}>
-            <Helmet>
+            <Head>
               <title>{`${book.title} - ${t('knowledge')} - ${setting.systemTitle}`}</title>
-            </Helmet>
+            </Head>
             <section className={cls(style.tocWrapper)}>
               <header>{book.title}</header>
               <main className={style.bgMain}>
