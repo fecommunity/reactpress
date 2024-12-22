@@ -1,3 +1,12 @@
+# [1.6.0](https://github.com/fecommunity/easy-blog/compare/v1.5.0...v1.6.0) (2024-12-22)
+
+
+### Features
+
+* knowledge page perfect ([#16](https://github.com/fecommunity/easy-blog/issues/16)) ([b9ae27d](https://github.com/fecommunity/easy-blog/commit/b9ae27d087b3b451668b3c0acb40359b20a089e2))
+
+
+
 # [1.5.0](https://github.com/fecommunity/easy-blog/compare/v1.4.0...v1.5.0) (2024-12-21)
 
 
