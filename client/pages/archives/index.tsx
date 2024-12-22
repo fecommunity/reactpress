@@ -3,7 +3,7 @@ import { NextPage } from 'next';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { useContext } from 'react';
-import { Helmet } from 'react-helmet';
+import Head from 'next/head';
 
 import { ListTrail } from '@/components/Animation/Trail';
 import { ArticleRecommend } from '@/components/ArticleRecommend';
@@ -70,9 +70,9 @@ const Archives: NextPage<IProps> = ({ articles }) => {
       <DoubleColumnLayout
         leftNode={
           <div className={style.content}>
-            <Helmet>
+            <Head>
               <title>{`${t('archives')} - ${setting.systemTitle}`}</title>
-            </Helmet>
+            </Head>
             <div className={style.summary}>
               <p>
                 <span>{t('archives')}</span>

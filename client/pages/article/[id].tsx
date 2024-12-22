@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { default as Router } from 'next/router';
 import { useTranslations } from 'next-intl';
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
-import { Helmet } from 'react-helmet';
+import Head from 'next/head';
 
 import { ArticleRecommend } from '@/components/ArticleRecommend';
 import { Comment } from '@/components/Comment';
@@ -82,9 +82,9 @@ const Article: NextPage<IProps> = ({ article }) => {
   const Content = (
     <>
       {checkPassWordModal}
-      <Helmet>
+      <Head>
         <title>{(article?.title || t('unknownTitle')) + ' - ' + setting.systemTitle}</title>
-      </Helmet>
+      </Head>
       <ImageViewer containerSelector="#js-article-wrapper">
         <article id="js-article-wrapper" className={style.articleWrap}>
           {/* S 文章 Seo 信息 */}

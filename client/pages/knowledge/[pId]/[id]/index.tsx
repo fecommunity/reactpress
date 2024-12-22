@@ -5,7 +5,7 @@ import { NextPage } from 'next';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { useContext, useEffect, useMemo } from 'react';
-import { Helmet } from 'react-helmet';
+import Head from 'next/head';
 
 import { Comment } from '@/components/Comment';
 import { ImageViewer } from '@/components/ImageViewer';
@@ -75,9 +75,9 @@ const Page: NextPage<IProps> = ({ pId, id, book, chapter }) => {
       <DoubleColumnLayout
         leftNode={
           <>
-            <Helmet>
+            <Head>
               <title>{`${book.title} - ${t('knowledge')} - ${setting.systemTitle}`}</title>
-            </Helmet>
+            </Head>
             <div className={cls(style.breadcrump)}>
               <Breadcrumb>
                 <Breadcrumb.Item>

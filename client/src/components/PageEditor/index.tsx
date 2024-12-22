@@ -5,7 +5,7 @@ import { PageHeader } from '@ant-design/pro-layout'
 import cls from 'classnames';
 import { default as Router } from 'next/router';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Helmet } from 'react-helmet';
+import Head from 'next/head';
 
 import { FileSelectDrawer } from '@/components/FileSelectDrawer';
 import { useSetting } from '@/hooks/useSetting';
@@ -157,9 +157,9 @@ export const PageEditor: React.FC<IProps> = ({ id: defaultId, page: defaultPage 
 
   return (
     <div className={style.wrapper}>
-      <Helmet>
+      <Head>
         <title>{id ? `编辑页面 ${page.name ? '-' + page.name : ''}` : '新建页面'}</title>
-      </Helmet>
+      </Head>
       <header className={style.header}>
         <PageHeader
           style={{
