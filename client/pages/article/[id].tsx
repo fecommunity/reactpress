@@ -30,6 +30,11 @@ const Article: NextPage<IProps> = ({ article }) => {
   const passwdRef = useRef(null);
   const [shouldCheckPassWord, setShouldCheckPassword] = useState(article && article.needPassword);
   const tocs = article && article.toc ? JSON.parse(article.toc) : [];
+  const keywords = [article.title]
+    .concat(article?.tags.map((tag) => tag?.label))
+    .concat(setting.seoKeyword?.split(','))
+    .filter(Boolean)
+    .join(',')
 
   // 检查文章密码
   const checkPassWord = useCallback(() => {
@@ -84,6 +89,8 @@ const Article: NextPage<IProps> = ({ article }) => {
       {checkPassWordModal}
       <Head>
         <title>{(article?.title || t('unknownTitle')) + ' - ' + setting.systemTitle}</title>
+        <meta name="description" content={article?.summary || setting?.seoDesc} />
+        <meta name="keywords" content={keywords} />
       </Head>
       <ImageViewer containerSelector="#js-article-wrapper">
         <article id="js-article-wrapper" className={style.articleWrap}>
