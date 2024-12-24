@@ -2,9 +2,9 @@ import { RightOutlined, TagOutlined } from '@ant-design/icons';
 import { Alert, Breadcrumb, Button } from 'antd';
 import { NextPage } from 'next';
 import { useTranslations } from 'next-intl';
+import Head from 'next/head';
 import Link from 'next/link';
 import { useContext, useMemo } from 'react';
-import Head from 'next/head';
 
 import { ArticleRecommend } from '@/components/ArticleRecommend';
 import { GlobalContext } from '@/context/global';
