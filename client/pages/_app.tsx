@@ -1,13 +1,12 @@
+import '@/theme/index.scss';
 import 'highlight.js/styles/atom-one-dark.css';
 import 'viewerjs/dist/viewer.css';
-import '@/theme/index.scss';
 
 import { NProgress } from '@components/NProgress';
 import { ConfigProvider, theme } from 'antd';
+import { IntlMessages, NextIntlProvider } from 'next-intl';
 import App from 'next/app';
 import { default as Router } from 'next/router';
-import { IntlMessages, NextIntlProvider } from 'next-intl';
-import React from 'react';
 
 import { Analytics } from '@/components/Analytics';
 import { FixAntdStyleTransition } from '@/components/FixAntdStyleTransition';
@@ -18,8 +17,8 @@ import { CategoryProvider } from '@/providers/category';
 import { PageProvider } from '@/providers/page';
 import { SettingProvider } from '@/providers/setting';
 import { TagProvider } from '@/providers/tag';
-import { safeJsonParse } from '@/utils/json';
 import { UserProvider } from '@/providers/user';
+import { safeJsonParse } from '@/utils/json';
 import { toLogin } from '@/utils/login';
 
 ConfigProvider.config({
@@ -38,11 +37,6 @@ Router.events.on('routeChangeComplete', () => {
     }
   }, 0);
 });
-
-enum Locale {
-  EN = 'en',
-  ZH = 'zh',
-}
 
 class MyApp extends App<IGlobalContext, unknown> {
   state = {
