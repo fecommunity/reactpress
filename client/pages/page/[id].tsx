@@ -1,7 +1,7 @@
 import { NextPage } from 'next';
 import { useTranslations } from 'next-intl';
-import React, { useContext, useEffect } from 'react';
 import Head from 'next/head';
+import { useContext, useEffect } from 'react';
 
 import { ArticleRecommend } from '@/components/ArticleRecommend';
 import { Comment } from '@/components/Comment';

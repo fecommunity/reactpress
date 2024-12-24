@@ -2,9 +2,9 @@ import { Categories } from '@components/Categories';
 import { KnowledgeList } from '@components/KnowledgeList';
 import { NextPage } from 'next';
 import { useTranslations } from 'next-intl';
+import Head from 'next/head';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
-import Head from 'next/head';
 
 import { ArticleRecommend } from '@/components/ArticleRecommend';
 import { GlobalContext } from '@/context/global';

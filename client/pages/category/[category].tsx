@@ -2,8 +2,8 @@ import { ArticleList } from '@components/ArticleList';
 import { Tags } from '@components/Tags';
 import { NextPage } from 'next';
 import { useTranslations } from 'next-intl';
-import { useCallback, useContext, useEffect, useState } from 'react';
 import Head from 'next/head';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 
 import { ArticleRecommend } from '@/components/ArticleRecommend';
@@ -12,10 +12,10 @@ import { DoubleColumnLayout } from '@/layout/DoubleColumnLayout';
 import { ArticleProvider } from '@/providers/article';
 import { CategoryProvider } from '@/providers/category';
 
+import { defaultImgSrc } from '@/assets/LogoSvg';
 import AboutUs from '@/components/AboutUs';
 import { CategoryMenu } from '../index';
 import style from '../index.module.scss';
-import { defaultImgSrc } from '@/assets/LogoSvg';
 
 interface IProps {
   articles: IArticle[];

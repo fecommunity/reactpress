@@ -1,6 +1,6 @@
 import { Button, Result } from 'antd';
-import { default as Router } from 'next/router';
 import { useTranslations } from 'next-intl';
+import { default as Router } from 'next/router';
 import React from 'react';
 
 const style = {

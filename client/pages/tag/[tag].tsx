@@ -3,9 +3,9 @@ import { Categories } from '@components/Categories';
 import { Tags } from '@components/Tags';
 import { NextPage } from 'next';
 import { useTranslations } from 'next-intl';
+import Head from 'next/head';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
-import Head from 'next/head';
 
 import { ArticleRecommend } from '@/components/ArticleRecommend';
 import { GlobalContext } from '@/context/global';
@@ -13,9 +13,9 @@ import { DoubleColumnLayout } from '@/layout/DoubleColumnLayout';
 import { ArticleProvider } from '@/providers/article';
 import { TagProvider } from '@/providers/tag';
 
+import { defaultImgSrc } from '@/assets/LogoSvg';
 import AboutUs from '@/components/AboutUs';
 import style from '../index.module.scss';
-import { defaultImgSrc } from '@/assets/LogoSvg';
 
 interface IProps {
   articles: IArticle[];

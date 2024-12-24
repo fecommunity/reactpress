@@ -3,9 +3,9 @@ import { Breadcrumb, Button } from 'antd';
 import cls from 'classnames';
 import { NextPage } from 'next';
 import { useTranslations } from 'next-intl';
+import Head from 'next/head';
 import Link from 'next/link';
 import { useCallback, useContext, useMemo } from 'react';
-import Head from 'next/head';
 
 import { ListTrail } from '@/components/Animation/Trail';
 import { KnowledgeList } from '@/components/KnowledgeList';

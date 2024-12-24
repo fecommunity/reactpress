@@ -1,11 +1,11 @@
 import { TagOutlined } from '@ant-design/icons';
 import { Form, Input, message, Modal } from 'antd';
 import { NextPage } from 'next';
+import { useTranslations } from 'next-intl';
+import Head from 'next/head';
 import Link from 'next/link';
 import { default as Router } from 'next/router';
-import { useTranslations } from 'next-intl';
-import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
-import Head from 'next/head';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 
 import { ArticleRecommend } from '@/components/ArticleRecommend';
 import { Comment } from '@/components/Comment';

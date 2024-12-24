@@ -1,8 +1,8 @@
 import { Spin } from 'antd';
 import { NextPage } from 'next';
-import Router from 'next/router';
 import { useTranslations } from 'next-intl';
-import React, { useContext, useEffect } from 'react';
+import Router from 'next/router';
+import { useContext, useEffect } from 'react';
 
 import { GlobalContext } from '@/context/global';
 import { UserProvider } from '@/providers/user';

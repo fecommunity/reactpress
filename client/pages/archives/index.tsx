@@ -1,9 +1,9 @@
 import { Categories } from '@components/Categories';
 import { NextPage } from 'next';
 import { useTranslations } from 'next-intl';
+import Head from 'next/head';
 import Link from 'next/link';
 import { useContext } from 'react';
-import Head from 'next/head';
 
 import { ListTrail } from '@/components/Animation/Trail';
 import { ArticleRecommend } from '@/components/ArticleRecommend';
