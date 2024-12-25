@@ -110,7 +110,7 @@ export const UserInfo: React.FC<{
         </Menu>
       }
     >
-      {user.avatar ? <Avatar size={28} src={user.avatar}></Avatar> : <Avatar size={28}>{user.name?.charAt(0)}</Avatar>}
+      {user.avatar ? <Avatar alt={user.name} size={28} src={user.avatar}></Avatar> : <Avatar size={28}>{user.name?.charAt(0)}</Avatar>}
     </Dropdown>
   ) : (
     <Button.Group>
