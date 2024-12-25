@@ -44,8 +44,11 @@ export class FileService {
     } else {
       // 本地上传
       url = await this.localUpload.putFile(filename, buffer);
+      // 上传的路径
+      const uploadUrl =
+        this.configService.get('SERVER_PUBLIC_UPLOAD_URL') || `${this.configService.get('SERVER_SITE_URL')}/public/uploads`;
       // 最终的地址
-      url = `${this.configService.get('SERVER_PUBLIC_UPLOAD_URL', '')}/${filename}`;
+      url = `${uploadUrl}/${filename}`;
     }
     const newFile = await this.fileRepository.create({
       originalname,

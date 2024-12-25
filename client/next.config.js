@@ -6,6 +6,14 @@ const withPWA = require('next-pwa');
 const { config, locales, defaultLocale } = require('@reactpress/config');
 const antdVariablesFilePath = path.resolve(__dirname, './antd-custom.less');
 
+const getServerApiUrl = () => {
+  if (config.SERVER_URL) {
+    return `${config.SERVER_SITE_URL}/api`;
+  } else {
+    return config.SERVER_API_URL || 'http://localhost:3002/api';
+  }
+};
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   assetPrefix: config.CLIENT_ASSET_PREFIX || '/',
@@ -14,7 +22,7 @@ const nextConfig = {
     defaultLocale,
   },
   env: {
-    SERVER_API_URL: config.SERVER_API_URL || 'http://localhost:3002/api',
+    SERVER_API_URL: getServerApiUrl(),
     GITHUB_CLIENT_ID: config.GITHUB_CLIENT_ID,
   },
   webpack: (config, { dev, isServer }) => {
