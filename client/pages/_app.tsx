@@ -21,12 +21,6 @@ import { UserProvider } from '@/providers/user';
 import { safeJsonParse } from '@/utils/json';
 import { toLogin } from '@/utils/login';
 
-ConfigProvider.config({
-  theme: {
-    primaryColor: '#f44336',
-  },
-});
-
 Router.events.on('routeChangeComplete', () => {
   setTimeout(() => {
     if (document.documentElement.scrollTop > 0) {

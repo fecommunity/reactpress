@@ -1,6 +1,6 @@
 import { Footer } from '@components/Footer';
 import { Header } from '@components/Header';
-import { BackTop } from 'antd';
+import { FloatButton } from 'antd';
 import React, { useContext, useEffect, useMemo } from 'react';
 
 import { Seo } from '@/components/Seo';
@@ -46,7 +46,7 @@ export const AppLayout: React.FC<IProps> = ({ children, needFooter = true, needH
         {children}
       </main>
       {systemBg && !hasBg && <div className={style.bg} style={{ backgroundImage: bg }}></div>}
-      <BackTop />
+      <FloatButton.BackTop />
       {needFooter && <Footer setting={setting} hasBg={customBg} />}
     </div>
   );
