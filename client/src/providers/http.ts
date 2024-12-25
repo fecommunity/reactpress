@@ -2,7 +2,7 @@ import { message } from 'antd';
 import axios, { AxiosResponse } from 'axios';
 
 export const httpProvider = axios.create({
-  baseURL: process.env.SERVER_API_URL,
+  baseURL: process.env.SERVER_API_URL || `${process.env.SERVER_SITE_URL}/api`,
   timeout: 60000,
 });
 
