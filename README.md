@@ -12,7 +12,6 @@
 
 [Issues](https://github.com/fecommunity/reactpress/issues) · [Pull Request](https://github.com/fecommunity/reactpress/pulls) · English · [中文](./README-zh_CN.md)
 
-
 **Content Management**
 
 [![Content Management](./public/admin.png)](https://blog.gaoredu.com)
@@ -29,30 +28,27 @@
 
 [![Mobile Phone](./public/mobile.png)](https://blog.gaoredu.com)
 
-
 </div>
-
 
 ## 🆚 Comparison
 
 **Comparison of ReactPress, WordPress, and VuePress**
 
-| **Feature**       | **ReactPress**                                           | **WordPress**                                             | **VuePress**                                     |
-|-------------------|----------------------------------------------------------|-----------------------------------------------------------|------------------------------------------------|
-| **Technology Stack** | React + NextJS + MySQL + NestJS                           | PHP + MySQL                                               | Vue.js                                       |
-| **Type**          | Open-source publishing platform / CMS                   | Open-source publishing platform / CMS                     | Static site generator / Documentation tool   |
-| **Front-end & Back-end Separation** | Supported                                            | Not supported (traditional approach)                      | Supported                                    |
-| **Component-based Development** | Supported                                            | Limited support (via plugins and themes)                | Supported                                    |
-| **Performance Optimization** | Virtual DOM, Code Splitting, Lazy Loading                | Plugin-dependent optimization                           | Static page generation, excellent performance |
-| **SEO Performance** | Excellent (SSR support)                                | Good                                                    | Outstanding (static pages)                   |
-| **Customizability** | High (fully customizable themes and styles)             | High (via plugins and themes)                           | Moderate (theme and component customization) |
-| **Extensibility**   | Strong (API interfaces, independent front-end and back-end extensions) | Strong (plugin extensions)                              | Moderate (plugin and theme extensions)       |
-| **User Interface**  | Modern, component-based design based on React          | User-friendly backend interface                           | Minimalist, optimized for technical documentation |
-| **Security**      | Depends on the security of the framework and database   | Depends on plugin and theme updates and maintenance       | Static site, high security                   |
-| **Application Scenarios** | Complex functionality, high concurrent access, SEO optimization needs | Quick website setup, content publishing, and management | Technical documentation, static blogs        |
-| **User Groups**   | Developers, technical teams，Personal blogs，small businesses               | Personal blogs, small businesses, startups                 | Technical documentation writers, developers  |
-| **Community Support** | Active and growing                                       | Very active, with a large user base                       | Supported by the Vue.js community            |
-
+| **Feature**                         | **ReactPress**                                                         | **WordPress**                                           | **VuePress**                                      |
+| ----------------------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------- | ------------------------------------------------- |
+| **Technology Stack**                | React + NextJS + MySQL + NestJS                                        | PHP + MySQL                                             | Vue.js                                            |
+| **Type**                            | Open-source publishing platform / CMS                                  | Open-source publishing platform / CMS                   | Static site generator / Documentation tool        |
+| **Front-end & Back-end Separation** | Supported                                                              | Not supported (traditional approach)                    | Supported                                         |
+| **Component-based Development**     | Supported                                                              | Limited support (via plugins and themes)                | Supported                                         |
+| **Performance Optimization**        | Virtual DOM, Code Splitting, Lazy Loading                              | Plugin-dependent optimization                           | Static page generation, excellent performance     |
+| **SEO Performance**                 | Excellent (SSR support)                                                | Good                                                    | Outstanding (static pages)                        |
+| **Customizability**                 | High (fully customizable themes and styles)                            | High (via plugins and themes)                           | Moderate (theme and component customization)      |
+| **Extensibility**                   | Strong (API interfaces, independent front-end and back-end extensions) | Strong (plugin extensions)                              | Moderate (plugin and theme extensions)            |
+| **User Interface**                  | Modern, component-based design based on React                          | User-friendly backend interface                         | Minimalist, optimized for technical documentation |
+| **Security**                        | Depends on the security of the framework and database                  | Depends on plugin and theme updates and maintenance     | Static site, high security                        |
+| **Application Scenarios**           | Complex functionality, high concurrent access, SEO optimization needs  | Quick website setup, content publishing, and management | Technical documentation, static blogs             |
+| **User Groups**                     | Developers, technical teams，Personal blogs，small businesses          | Personal blogs, small businesses, startups              | Technical documentation writers, developers       |
+| **Community Support**               | Active and growing                                                     | Very active, with a large user base                     | Supported by the Vue.js community                 |
 
 ## ✨ Features
 
@@ -112,7 +108,7 @@ Open your browser and visit http://127.0.0.1:3001
 
 ## 👥 Contributing
 
-We warmly invite contributions from everyone. Before you get started, please take a moment to review our [Contributing Guide](https://github.com/fecommunity/reactpress). Feel free to share your ideas through [Pull Requests](https://github.com/fecommunity/reactpress/pulls) or [GitHub Issues](https://github.com/fecommunity/reactpress/issues). If you're interested in enhancing our codebase, explore the [Development Instructions](https://github.com/fecommunity/reactpress/wiki/Development) and enjoy your coding journey! 
+We warmly invite contributions from everyone. Before you get started, please take a moment to review our [Contributing Guide](https://github.com/fecommunity/reactpress). Feel free to share your ideas through [Pull Requests](https://github.com/fecommunity/reactpress/pulls) or [GitHub Issues](https://github.com/fecommunity/reactpress/issues). If you're interested in enhancing our codebase, explore the [Development Instructions](https://github.com/fecommunity/reactpress/wiki/Development) and enjoy your coding journey!
 
 1. [GitHub Discussions](https://github.com/fecommunity/reactpress/discussions)
 2. [Stack Overflow](http://stackoverflow.com/questions/tagged/antd)（English）
@@ -137,7 +133,6 @@ The ReactPress project has been greatly inspired and assisted by the following o
 ……
 
 We extend our heartfelt gratitude to the authors and contributors of these projects!
-
 
 ## ✨ Star History
 
