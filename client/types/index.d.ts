@@ -35,8 +35,8 @@ interface CategoryItem {
 interface NavSetting {
   categories: CategoryItem[];
   subCategories: {
-    [k: string]: CategoryItem[]
-  }
+    [k: string]: CategoryItem[];
+  };
 }
 
 interface IArticle {
