@@ -78,12 +78,6 @@ importers:
       deep-equal:
         specifier: ^2.0.5
         version: 2.2.3
-      echarts:
-        specifier: ^4.6.0
-        version: 4.9.0
-      echarts-for-react:
-        specifier: ^2.0.15-beta.1
-        version: 2.0.16(echarts@4.9.0)(prop-types@15.8.1)(react@17.0.2)
       highlight.js:
         specifier: ^9.18.5
         version: 9.18.5
@@ -3488,16 +3482,6 @@ packages:
 
   ecdsa-sig-formatter@1.0.11:
     resolution: {integrity: sha512-nagl3RYrbNv6kQkeJIpt6NJZy8twLB/2vtz6yN9Z4vRKHN4/QZJIEbqohALSgwKdnksuY3k5Addp5lg8sVoVcQ==}
-
-  echarts-for-react@2.0.16:
-    resolution: {integrity: sha512-VmHCktay2qKt/+wpL/C7thbvIa7dYBEey0/U4Zaqo+qeA4wx+uiCd5NeCsPIhD/0Pv+2qqNswqiNiUCtcgccOw==}
-    peerDependencies:
-      echarts: ^3.0.0 || ^4.0.0
-      prop-types: ^15.5.7
-      react: '>=0.13.2 || ^0.14 || ^15.0.0 || >=16.0.0'
-
-  echarts@4.9.0:
-    resolution: {integrity: sha512-+ugizgtJ+KmsJyyDPxaw2Br5FqzuBnyOWwcxPKO6y0gc5caYcfnEUIlNStx02necw8jmKmTafmpHhGo4XDtEIA==}
 
   ee-first@1.1.1:
     resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
@@ -7164,9 +7148,6 @@ packages:
   sisteransi@1.0.5:
     resolution: {integrity: sha512-bLGGlR1QxBcynn2d5YmDX4MGjlZvy2MRBDRNHLJ8VI6l6+9FUiyTFNJ0IveOSP0bcXgVDPRcfGqA0pjaqUpfVg==}
 
-  size-sensor@1.0.2:
-    resolution: {integrity: sha512-2NCmWxY7A9pYKGXNBfteo4hy14gWu47rg5692peVMst6lQLPKrVjhY+UTEsPI5ceFRJSl3gVgMYaUi/hKuaiKw==}
-
   slash@2.0.0:
     resolution: {integrity: sha512-ZYKh3Wh2z1PpEXWr0MpSBZ0V6mZHAQfYevttO11c51CaWjGTaadiKZ+wVt1PbMlDV5qhMFslpZCemhwOK7C89A==}
     engines: {node: '>=6'}
@@ -8416,9 +8397,6 @@ packages:
 
   zen-observable@0.8.15:
     resolution: {integrity: sha512-PQ2PC7R9rslx84ndNBZB/Dkv8V8fZEpk83RLgXtYd0fwUgEjseMn1Dgajh2x6S8QbZAFa9p2qVCEuYZNgve0dQ==}
-
-  zrender@4.3.2:
-    resolution: {integrity: sha512-bIusJLS8c4DkIcdiK+s13HiQ/zjQQVgpNohtd8d94Y2DnJqgM1yjh/jpDb8DoL6hd7r8Awagw8e3qK/oLaWr3g==}
 
   zustand@3.7.2:
     resolution: {integrity: sha512-PIJDIZKtokhof+9+60cpockVOq05sJzHCriyvaLBmEJixseQ1a5Kdov6fWZfWOu5SK9c+FhH1jU0tntLxRJYMA==}
@@ -9704,7 +9682,9 @@ snapshots:
       source-map: 0.6.1
       string-length: 2.0.0
     transitivePeerDependencies:
+      - bufferutil
       - supports-color
+      - utf-8-validate
 
   '@jest/schemas@29.6.3':
     dependencies:
@@ -12587,18 +12567,6 @@ snapshots:
     dependencies:
       safe-buffer: 5.2.1
 
-  echarts-for-react@2.0.16(echarts@4.9.0)(prop-types@15.8.1)(react@17.0.2):
-    dependencies:
-      echarts: 4.9.0
-      fast-deep-equal: 2.0.1
-      prop-types: 15.8.1
-      react: 17.0.2
-      size-sensor: 1.0.2
-
-  echarts@4.9.0:
-    dependencies:
-      zrender: 4.3.2
-
   ee-first@1.1.1: {}
 
   ejs@3.1.10:
@@ -14453,7 +14421,9 @@ snapshots:
       pretty-format: 24.9.0
       throat: 4.1.0
     transitivePeerDependencies:
+      - bufferutil
       - supports-color
+      - utf-8-validate
 
   jest-leak-detector@24.9.0:
     dependencies:
@@ -17400,8 +17370,6 @@ snapshots:
 
   sisteransi@1.0.5: {}
 
-  size-sensor@1.0.2: {}
-
   slash@2.0.0: {}
 
   slash@3.0.0: {}
@@ -18795,8 +18763,6 @@ snapshots:
       zen-observable: 0.8.15
 
   zen-observable@0.8.15: {}
-
-  zrender@4.3.2: {}
 
   zustand@3.7.2(react@17.0.2):
     optionalDependencies:
