@@ -6,7 +6,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 
 import { LocaleTime } from '@/components/LocaleTime';
 import { PaginationTable } from '@/components/PaginationTable';
-import { ViewChart } from '@/components/ViewChart';
+// import { ViewChart } from '@/components/ViewChart';
 import { useAsyncLoading } from '@/hooks/useAsyncLoading';
 import { usePagination } from '@/hooks/usePagination';
 import { useSetting } from '@/hooks/useSetting';
@@ -275,7 +275,7 @@ const Page: NextPage = () => {
         >
           <div style={{ textAlign: 'center' }}>
             <Spin spinning={getViewsLoading}>
-              <ViewChart data={views} />
+              {/* <ViewChart data={views} /> */}
             </Spin>
           </div>
         </Modal>
