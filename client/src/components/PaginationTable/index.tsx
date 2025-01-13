@@ -8,14 +8,12 @@ import { ReturnProps } from '@/hooks/usePagination';
 
 import style from './index.module.scss';
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 interface IProps extends ReturnProps<object> {
   title?: React.ReactNode;
   showSelection?: boolean;
   renderLeftNode?: (arg: {
     hasSelected: boolean;
     selectedRowKeys: string[];
-    // eslint-disable-next-line @typescript-eslint/ban-types
     selectedRows: object[];
     resetSelectedRows: () => void;
   }) => React.ReactNode;
@@ -24,7 +22,6 @@ interface IProps extends ReturnProps<object> {
   scroll?: { x?: number; y?: number };
   searchFields: Array<IFieldItem>;
   showSearchLabel?: boolean;
-  // eslint-disable-next-line @typescript-eslint/ban-types
   columns?: Array<object> | ((resetSelectedRows) => Array<object>);
   customDataTable?: (data) => React.ReactNode;
 }
