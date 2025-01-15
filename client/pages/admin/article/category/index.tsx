@@ -1,8 +1,7 @@
-import { Form } from 'antd';
-import { Button, Card, Col, Input, message, Popconfirm, Row } from 'antd';
+import { Button, Card, Col, Form, Input, message, Popconfirm, Row } from 'antd';
 import cls from 'classnames';
 import { NextPage } from 'next';
-import React, { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import { AdminLayout } from '@/layout/AdminLayout';
 import { CategoryProvider } from '@/providers/category';
