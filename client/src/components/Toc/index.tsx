@@ -89,7 +89,7 @@ export const Toc: React.FC<{ tocs: Array<IToc>; maxHeight?: string | number; has
                     }
                     onClick={() => goto(toc)}
                   >
-                    <div  dangerouslySetInnerHTML={{ __html: toc.text }}/>
+                    <div className={style.tocText} title={toc.text} dangerouslySetInnerHTML={{ __html: toc.text }}/>
                   </div>
                 );
               }}
