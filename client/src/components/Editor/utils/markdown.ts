@@ -18,8 +18,9 @@ export const makeHtml = (value) => {
   return converter.makeHtml(value);
 };
 
-export function makeToc(html) {
-  const reg = /<h([\d]) id="([^<]+)">([^<]+)<\/h([\d])>/gi;
+
+export function makeToc(html: string) {
+  const reg = /<h([\d])\s+id="([^"]*)">(.*?)<\/h\1>/gi;
   let ret = null;
   const toc = [];
   while ((ret = reg.exec(html)) !== null) {
