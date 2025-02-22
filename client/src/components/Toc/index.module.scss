@@ -82,3 +82,8 @@
   border-radius: var(--border-radius);
   opacity: 0.5;
 }
+
+.tocText {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
