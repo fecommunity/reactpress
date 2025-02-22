@@ -103,7 +103,7 @@ $ pnpm run dev
 ## 🔗 链接
 
 - [首页](https://github.com/fecommunity/reactpress)
-- [高热度网](https://gaoredu.com)
+- [帮助文档](https://blog.gaoredu.com/knowledge/c7edfecf-4f47-4bd3-ba93-093e43cf5314/bef19159-4a6f-4343-b84e-b1a636b570f8)
 - [报告问题](https://github.com/fecommunity/reactpress/issues)
 - [参与共建](https://github.com/fecommunity/reactpress/pulls) 
 - [next.js 源码](https://github.com/vercel/next.js)
