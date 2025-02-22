@@ -100,7 +100,7 @@ Open your browser and visit http://127.0.0.1:3001
 ## 🔗 Links
 
 - [Home](https://github.com/fecommunity/reactpress)
-- [Easy Blog](https://gaoredu.com)
+- [ReactPress](https://blog.gaoredu.com/knowledge/c7edfecf-4f47-4bd3-ba93-093e43cf5314/bef19159-4a6f-4343-b84e-b1a636b570f8)
 - [Issues](https://github.com/fecommunity/reactpress/issues)
 - [Pull Request](https://github.com/fecommunity/reactpress/pulls)
 - [next.js](https://github.com/vercel/next.js)
