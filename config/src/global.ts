@@ -367,23 +367,20 @@ const zh = {
   globalConfig: {
     navConfig,
     urlConfig,
-  }
-}
+  },
+};
 
 // TODO： 后续这里转换为英文
 const en = {
   globalConfig: {
     navConfig,
     urlConfig,
-  }
-}
-
+  },
+};
 
 const globalSetting = {
   zh,
   en,
 };
 
-export {
-  globalSetting
-}
+export { globalSetting };
