@@ -5,3 +5,5 @@ packages:
   - 'client'
   # 服务器
   - 'server'
+  # 文档
+  - 'docs'
