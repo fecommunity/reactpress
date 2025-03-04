@@ -66,7 +66,8 @@
     "registerNow": "立即注册",
     "openAuth": "第三方登录",
     "areYouHasAccount": "已有账号？",
-    "loginNow": "立即登录"
+    "loginNow": "立即登录",
+    "toggleNeedSetInfo": "邮箱信息不完整，请完善个人资料。"
   },
   "loading": "加载中",
   "copySuccess": "复制成功",
