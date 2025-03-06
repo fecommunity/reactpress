@@ -14,6 +14,8 @@
     "build:config": "pnpm run --dir ./config build",
     "build:server": "pnpm run --dir ./server build",
     "build:client": "pnpm run --dir ./client build",
+    "build:docs": "pnpm run --dir ./docs build",
+    "deploy:docs": "pnpm run --dir ./docs deploy:surge",
     "deploy": "sh scripts/deploy.sh",
     "start": "concurrently 'pnpm:start:*'",
     "start:server": "pnpm run --dir ./server start",
