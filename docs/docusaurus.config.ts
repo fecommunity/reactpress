@@ -54,6 +54,8 @@ const config: Config = {
           onInlineTags: 'warn',
           onInlineAuthors: 'warn',
           onUntruncatedBlogPosts: 'warn',
+          blogSidebarTitle: 'ReactPress',
+          blogTitle: '更新日志'
         },
         theme: {
           customCss: [
