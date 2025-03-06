@@ -1,7 +1,7 @@
 ---
 sidebar_position: 1
-id: ReactPress
-sidebar_label: 什么是ReactPress ？
+id: intro
+title: 介绍
 ---
 
 ## 项目简介
@@ -92,7 +92,6 @@ $ pnpm run dev
 ## 👥 社区互助
 
 如果您在使用的过程中碰到问题，可以通过下面几个途径寻求帮助，同时我们也鼓励资深用户通过下面的途径给新人提供帮助。
-
 
 通过 WeChat 联系，可通过搜素微信号 `red_tea_v2` 或扫码加入 ，并备注来源。
 

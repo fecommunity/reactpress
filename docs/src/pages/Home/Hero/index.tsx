@@ -33,7 +33,7 @@ function Hero() {
         <h1 className={styles.title}>ReactPress</h1>
         <h2 className={styles.subtitle}>一个基于Next.js的博客&CMS系统。</h2>
         <div className={styles.buttonContainer}>
-          <a href="/docs/reactpress" className={styles.primaryButton}>
+          <a href="/docs/intro" className={styles.primaryButton}>
             入门指南
           </a>
           <a href="https://blog.gaoredu.com" target="_blank" className={styles.secondaryButton}>
