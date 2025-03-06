@@ -5,6 +5,8 @@ authors: [fecommunity]
 tags: [reactpress]
 ---
 
+<!--truncate-->
+
 # [1.6.0](https://github.com/fecommunity/reactpress/compare/v1.5.0...v1.6.0) (2024-12-21)
 
 
