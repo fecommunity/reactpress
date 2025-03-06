@@ -22,11 +22,11 @@ const Index = () => {
         <title>ReactPress - 一个基于Next.js的博客&CMS系统。</title>
         <meta
           property="og:title"
-          content="React Native · Learn once, write anywhere"
+          content="ReactPress - 一个基于Next.js的博客&CMS系统。"
         />
         <meta
           property="twitter:title"
-          content="React Native · Learn once, write anywhere"
+          content="ReactPress - 一个基于Next.js的博客&CMS系统。"
         />
       </Head>
       <Home />
