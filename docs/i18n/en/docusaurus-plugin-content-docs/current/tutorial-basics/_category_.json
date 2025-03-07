@@ -1,0 +1,8 @@
+{
+  "label": "基础教程",
+  "position": 2,
+  "link": {
+    "type": "generated-index",
+    "description": "ReactPress基础教程"
+  }
+}
