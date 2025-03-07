@@ -28,7 +28,7 @@ const config: Config = {
   // may want to replace "en" with "zh-Hans".
   i18n: {
     defaultLocale: 'zh',
-    locales: ['zh'],
+    locales: ['en', 'zh'],
   },
 
   presets: [
@@ -88,6 +88,10 @@ const config: Config = {
         },
         { to: '/blog', label: '博客', position: 'left' },
         { href: 'https://blog.gaoredu.com', label: 'Demo演示', position: 'left' },
+        {
+          type: 'localeDropdown',
+          position: 'right',
+        },
         {
           href: 'https://github.com/fecommunity/reactpress',
           label: 'GitHub',
