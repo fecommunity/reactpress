@@ -1,6 +1,6 @@
 ---
 slug: changelog
-title: ChangeLog
+title: Changelog
 authors: [fecommunity]
 tags: [reactpress]
 ---
