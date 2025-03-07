@@ -123,3 +123,9 @@ ReactPress 项目深受以下开源项目的启发和帮助：
 ……
 
 我们衷心感谢这些项目的作者和贡献者们！正是有了你们的努力和付出，才有了 ReactPress 项目的今天。
+
+
+
+## ✨ Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=fecommunity/reactpress&type=Date)](https://star-history.com/#fecommunity/reactpress&Date)
