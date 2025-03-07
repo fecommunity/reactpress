@@ -5,29 +5,21 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from 'react';
-
 import Head from '@docusaurus/Head';
-
-import Layout from '@theme/Layout';
-
 import Home from '@site/src/pages/Home';
+import Layout from '@theme/Layout';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 
 const Index = () => {
+  const { siteConfig } = useDocusaurusContext();
+  const title = `${siteConfig.title}-${siteConfig.tagline}`;
+
   return (
-    <Layout
-      description="A framework for building native apps using React"
-      wrapperClassName="homepage">
+    <Layout description="A framework for building native apps using React" wrapperClassName="homepage">
       <Head>
-        <title>ReactPress - 一个基于Next.js的博客&CMS系统。</title>
-        <meta
-          property="og:title"
-          content="ReactPress - 一个基于Next.js的博客&CMS系统。"
-        />
-        <meta
-          property="twitter:title"
-          content="ReactPress - 一个基于Next.js的博客&CMS系统。"
-        />
+        <title>{title}</title>
+        <meta property="og:title" content={title} />
+        <meta property="twitter:title" content={title} />
       </Head>
       <Home />
     </Layout>
