@@ -5,14 +5,14 @@
   },
   "sidebar.tutorialSidebar.category.基础教程": {
     "message": "Basic Tutorial",
-    "description": "The label for category Basic Tutorial in sidebar tutorialSidebar"
+    "description": "The label for category 基础教程 in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.基础教程.link.generated-index.description": {
     "message": "ReactPress Basic Tutorial",
-    "description": "The generated-index page description for category basic tutorial in sidebar tutorialSidebar"
+    "description": "The generated-index page description for category 基础教程 in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.进阶教程": {
     "message": "Advanced Tutorial",
-    "description": "The label for category Advanced Tutorial in sidebar tutorialSidebar"
+    "description": "The label for category 进阶教程 in sidebar tutorialSidebar"
   }
 }
