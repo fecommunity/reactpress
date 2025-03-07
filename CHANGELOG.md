@@ -1,3 +1,13 @@
+# [1.7.0](https://github.com/fecommunity/reactpress/compare/v1.6.0...v1.7.0) (2025-03-07)
+
+
+### Features
+
+* add reactpress docs ([002972b](https://github.com/fecommunity/reactpress/commit/002972b6194d13917d60de8dae019445739760cc))
+* release reactpress v1.6.0 ([9d75118](https://github.com/fecommunity/reactpress/commit/9d75118b7e19d85ab95b3e6f227f1b95cd95acb8))
+
+
+
 # [1.6.0](https://github.com/fecommunity/reactpress/compare/v1.5.0...v1.6.0) (2024-12-21)
 
 
