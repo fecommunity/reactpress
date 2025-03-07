@@ -8,6 +8,7 @@
 import React from 'react';
 
 import Features from '@site/src/components/Features';
+import Translate from '@docusaurus/Translate';
 
 import styles from './styles.module.css';
 
@@ -16,7 +17,9 @@ function CallToAction() {
     <div className={styles.wrapper}>
       <div className={styles.background} />
       <div className={styles.container}>
-        <h1 className={styles.title}>主要特性</h1>
+        <h1 className={styles.title}>
+          <Translate id="home.call.feature">主要特性</Translate>
+        </h1>
         <Features />
       </div>
     </div>
