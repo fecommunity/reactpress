@@ -326,7 +326,7 @@
     "message": "Interactive language and visual style based on the latest version of AntDesign component library v5."
   },
   "home.call.feature": {
-    "message": "Main Features"
+    "message": "Features"
   },
   "组件化": {
     "message": "Componentization"
@@ -359,7 +359,7 @@
     "message": "Support custom new pages, content comment management, and complete community interaction functions."
   },
   "多端适配": {
-    "message": "Multi terminal adaptation"
+    "message": "Multi Terminal Adaptation"
   },
   "完美适配电脑、平板、移动端H5页面。": {
     "message": "Perfectly compatible with H5 pages on computers, tablets, and mobile devices."
