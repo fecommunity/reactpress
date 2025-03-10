@@ -10,7 +10,7 @@ const config: Config = {
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
-  url: 'https://blog.gaoredu.com',
+  url: 'https://reactpress.surge.sh',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
@@ -56,7 +56,7 @@ const config: Config = {
           onInlineAuthors: 'warn',
           onUntruncatedBlogPosts: 'warn',
           blogSidebarTitle: 'ReactPress',
-          blogTitle: '更新日志'
+          blogTitle: '更新日志',
         },
         theme: {
           customCss: [
@@ -148,6 +148,9 @@ const config: Config = {
       theme: prismThemes.github,
       darkTheme: prismThemes.dracula,
     },
+    metadata: [
+      { name: 'keywords', content: 'reactpress, blog, cms, next.js, react, nest.js' },
+    ],
   } satisfies Preset.ThemeConfig,
 };
 
