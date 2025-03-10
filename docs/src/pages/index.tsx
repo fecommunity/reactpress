@@ -15,7 +15,7 @@ const Index = () => {
   const title = `${siteConfig.title}-${siteConfig.tagline}`;
 
   return (
-    <Layout description="A framework for building native apps using React" wrapperClassName="homepage">
+    <Layout description="A free CMS and blog system using Next.js." wrapperClassName="homepage">
       <Head>
         <title>{title}</title>
         <meta property="og:title" content={title} />
