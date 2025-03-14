@@ -5,7 +5,7 @@ title: Development
 
 
 ##  ⌨️  Local Development
-###Environmental preparation
+### Environmental preparation
 ```bash
 $ git clone --depth=1  https://github.com/fecommunity/reactpress.git
 $ cd reactpress
