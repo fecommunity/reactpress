@@ -16,7 +16,7 @@
     "@ant-design/pro-layout": "7.19.11",
     "@monaco-editor/react": "^4.6.0",
     "@reactpress/config": "workspace:^1.0.0",
-    "antd": "^5.23.0",
+    "antd": "^5.24.4",
     "array-move": "^3.0.1",
     "axios": "^0.23.0",
     "classnames": "^2.3.1",
