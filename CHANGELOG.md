@@ -1,3 +1,12 @@
+# [1.8.0](https://github.com/fecommunity/reactpress/compare/v1.7.0...v1.8.0) (2025-03-22)
+
+
+### Features
+
+* upgrade next version ([64cac4d](https://github.com/fecommunity/reactpress/commit/64cac4dcb9268a6bbb14fbbfe6995406638f7508))
+
+
+
 # [1.7.0](https://github.com/fecommunity/reactpress/compare/v1.6.0...v1.7.0) (2025-03-07)
 
 
