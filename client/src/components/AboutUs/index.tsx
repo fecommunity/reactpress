@@ -89,7 +89,7 @@ export const WeChat = () => {
 
 export const ContactInfo = () => {
   return (
-    <ul className={style.icons}>
+    <div className={style.icons}>
       <ul>
         <RSS />
 
@@ -105,7 +105,7 @@ export const ContactInfo = () => {
 
         <WeChat />
       </ul>
-    </ul>
+    </div>
   );
 };
 
