@@ -1,7 +1,6 @@
-import Icon, { CommentOutlined, GithubOutlined, WechatOutlined, ProfileOutlined } from '@ant-design/icons';
+import Icon, { CommentOutlined, GithubOutlined, ProfileOutlined, WechatOutlined } from '@ant-design/icons';
 import { Card, Divider, Popover } from 'antd';
 import cls from 'classnames';
-
 import { useTranslations } from 'next-intl';
 import style from './index.module.scss';
 
