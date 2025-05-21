@@ -1,10 +1,30 @@
+/**
+ * Header Component
+ * 
+ * This component represents the main navigation header of the application.
+ * It includes:
+ * - Logo
+ * - Navigation menu
+ * - Search functionality
+ * - Theme switcher
+ * - Language selector
+ * - User info
+ * - GitHub link
+ * 
+ * Features:
+ * - Responsive design with mobile menu
+ * - Sticky header with scroll behavior
+ * - Dynamic menu items based on pages
+ * - Search functionality
+ */
+
 import { SearchOutlined, HomeOutlined, GlobalOutlined, BookOutlined, HistoryOutlined } from '@ant-design/icons';
 import { Menu } from 'antd';
 import cls from 'classnames';
 import Link from 'next/link';
 import { default as Router, useRouter } from 'next/router';
 import { useTranslations } from 'next-intl';
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 
 import { Locales } from '@/components/Locales';
 import { Search } from '@/components/Search';
@@ -16,6 +36,7 @@ import { getDocumentScrollTop, getFirstLevelRoute, getIconByName } from '@/utils
 import style from './index.module.scss';
 import { GitHub } from '../AboutUs';
 
+// Navigation links configuration
 const NAV_LINKS = [
   {
     path: '/',
@@ -39,7 +60,20 @@ const NAV_LINKS = [
   },
 ];
 
-export const Header = ({ setting, tags, pages, hasBg = false }) => {
+interface HeaderProps {
+  setting: {
+    systemLogo: string;
+  };
+  tags: any[];
+  pages: Array<{
+    path: string;
+    label: string;
+    name: string;
+  }>;
+  hasBg?: boolean;
+}
+
+export const Header: React.FC<HeaderProps> = ({ setting, tags, pages, hasBg = false }) => {
   const t = useTranslations();
   const router = useRouter();
   const { asPath } = router;
@@ -49,6 +83,7 @@ export const Header = ({ setting, tags, pages, hasBg = false }) => {
   const [showSearch, toggleSearch] = useToggle(false);
   const mainPath = getFirstLevelRoute(asPath);
 
+  // Handle route change to close mobile menu
   useEffect(() => {
     const close = () => {
       if (visible) {
@@ -63,6 +98,7 @@ export const Header = ({ setting, tags, pages, hasBg = false }) => {
     };
   }, [setVisible, visible]);
 
+  // Handle scroll behavior for sticky header
   useEffect(() => {
     let beforeY = 0;
     let y = 0;
@@ -81,10 +117,11 @@ export const Header = ({ setting, tags, pages, hasBg = false }) => {
     };
   }, [setAffix, setAffixVisible]);
 
-  const getMenuItems = () => {
+  // Generate menu items for navigation
+  const menuItems = useMemo(() => {
     const navMenu = NAV_LINKS.map((nav) => ({
       label: (
-        <Link href={nav.path}>
+        <Link href={nav.path} key={nav.path}>
           <a aria-label={nav.locale}>
             <span>{t(nav.locale)}</span>
           </a>
@@ -93,12 +130,13 @@ export const Header = ({ setting, tags, pages, hasBg = false }) => {
       key: nav.path,
       icon: nav.icon,
     }));
+
     const pageMenu = pages.map((menu, index) => {
       const Icon = getIconByName(menu.path);
       return {
         key: `${index}-${menu.label}`,
         label: (
-          <Link href={'/page/[id]'} as={`/page/${menu.path}`} scroll={false}>
+          <Link href={'/page/[id]'} as={`/page/${menu.path}`} scroll={false} key={`${index}-${menu.label}`}>
             <a aria-label={menu.name}>{t(menu.path) || menu.name}</a>
           </Link>
         ),
@@ -106,8 +144,9 @@ export const Header = ({ setting, tags, pages, hasBg = false }) => {
       }
     });
     return navMenu.concat(pageMenu);
-  };
+  }, [pages, t]);
 
+  // Notify other components about header state
   useEffect(() => {
     window.postMessage(
       {
@@ -131,6 +170,7 @@ export const Header = ({ setting, tags, pages, hasBg = false }) => {
         )}
       >
         <div className={cls('container')}>
+          {/* Logo Section */}
           <div className={style.logo}>
             {/^http/.test(setting.systemLogo) ? (
               <Link href="/" scroll={false}>
@@ -145,29 +185,39 @@ export const Header = ({ setting, tags, pages, hasBg = false }) => {
             )}
           </div>
 
+          {/* Mobile Menu Trigger */}
           <div
             className={cls(style.mobileTrigger, visible ? style.active : false)}
             onClick={() => setVisible(!visible)}
+            role="button"
+            tabIndex={0}
+            aria-label="Toggle mobile menu"
           >
             <div className={style.stick}></div>
             <div className={style.stick}></div>
             <div className={style.stick}></div>
           </div>
 
+          {/* Navigation Menu */}
           <div className={style.menuWrapper}>
             <Menu
               rootClassName={style.menu}
               activeKey={mainPath}
-              items={getMenuItems()}
+              items={menuItems}
               mode="horizontal"
               className={cls(visible ? style.active : false, style.menu)}
             />
           </div>
 
+          {/* Right Side Tools */}
           <nav className={cls(visible ? style.active : false)}>
             <ul>
               <li className={style.toolWrapper}>
-                <SearchOutlined style={{ cursor: 'pointer' }} onClick={toggleSearch} />
+                <SearchOutlined 
+                  style={{ cursor: 'pointer' }} 
+                  onClick={toggleSearch}
+                  aria-label="Search"
+                />
               </li>
               <li className={style.toolWrapper}>
                 <Theme />
