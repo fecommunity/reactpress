@@ -24,7 +24,7 @@ $ pnpm i
 ├─ locales // 国际化文案
 ├─ public // 静态资源
 ├─ scripts // 构建脚本
-├─ server // 服务端带吗
+├─ server // 服务端代码
 └─ package.json
 ```
 
