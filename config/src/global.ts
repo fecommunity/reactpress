@@ -1,4 +1,20 @@
-const navConfig = {
+interface NavItem {
+  label: string;
+  key: string;
+  url?: string;
+  type?: string;
+  description?: string;
+  icon?: string;
+  title?: string;
+  children?: NavItem[];
+}
+
+interface NavConfig {
+  categories: NavItem[];
+  subCategories: Record<string, NavItem[]>;
+}
+
+const navConfig: NavConfig = {
   categories: [
     {
       label: '站内',
@@ -113,7 +129,14 @@ const navConfig = {
   },
 };
 
-const urlConfig = [
+interface UrlCategory {
+  key: string;
+  label: string;
+  icon: string;
+  children: NavItem[];
+}
+
+const urlConfig: UrlCategory[] = [
   {
     key: 'hot-site',
     label: '热门网址',
@@ -370,17 +393,33 @@ const zh = {
   },
 };
 
-// TODO： 后续这里转换为英文
-const en = {
+interface GlobalConfig {
+  navConfig: NavConfig;
+  urlConfig: UrlCategory[];
+}
+
+interface LanguageConfig {
+  globalConfig: GlobalConfig;
+}
+
+// TODO: 需要为英文环境创建专门的配置
+// 当前英文配置只是复制了中文配置，需要根据实际需求调整
+const en: LanguageConfig = {
   globalConfig: {
     navConfig,
     urlConfig,
   },
 };
 
-const globalSetting = {
+interface GlobalSetting {
+  zh: LanguageConfig;
+  en: LanguageConfig;
+}
+
+const globalSetting: GlobalSetting = {
   zh,
   en,
 };
 
+export type { GlobalSetting, LanguageConfig, GlobalConfig, NavConfig, NavItem, UrlCategory };
 export { globalSetting };
