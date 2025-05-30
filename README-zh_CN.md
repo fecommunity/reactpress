@@ -65,6 +65,10 @@
 - 📱 移动端：完美适配移动端H5页面
 - ...
 
+## 💻 系统架构
+
+[![ReactPress Architecture](./public/architecture.png)](https://blog.gaoredu.com)
+
 ## 🔥 在线示例
 
 [ReactPress Demo](https://blog.gaoredu.com/)
