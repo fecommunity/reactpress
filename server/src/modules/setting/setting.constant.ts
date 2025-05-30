@@ -3,7 +3,7 @@ import { messages, globalSetting } from '@reactpress/config';
 /**
  * 国际化配置
  */
-export const i18n = messages;
+export { messages as i18n };
 
 /**
  * 全局配置
