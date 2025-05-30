@@ -66,6 +66,11 @@ https://github.com/user-attachments/assets/594f2e92-7343-4885-a4b4-1d3216961fd4
 - 📷 Media Management: Supports local file upload and OSS file upload
 - ...
 
+
+## 💻 Architecture
+
+[![ReactPress Architecture](./public/architecture.png)](https://blog.gaoredu.com)
+
 ## 🔥 Live Demo
 
 [![ReactPress Demo](https://img.shields.io/badge/Try_Live_Demo-Online-green)](https://blog.gaoredu.com)
