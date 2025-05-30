@@ -1,7 +1,17 @@
 import * as fs from 'fs-extra';
 import * as path from 'path';
 
-function parseI18n(): { messages: Record<string, unknown>; locales: string[]; defaultLocale: string } {
+interface I18nMessages {
+  [key: string]: Record<string, string>;
+}
+
+interface I18nResult {
+  messages: I18nMessages;
+  locales: string[];
+  defaultLocale: string;
+}
+
+function parseI18n(): I18nResult {
   // 本地的国际化文案
   const localesDir = path.join(__dirname, '../../locales');
 
