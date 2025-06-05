@@ -34,7 +34,7 @@ const Article: NextPage<IProps> = ({ article }) => {
     .concat(article?.tags.map((tag) => tag?.label))
     .concat(setting.seoKeyword?.split(','))
     .filter(Boolean)
-    .join(',')
+    .join(',');
 
   // 检查文章密码
   const checkPassWord = useCallback(() => {
