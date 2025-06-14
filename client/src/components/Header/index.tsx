@@ -179,10 +179,19 @@ export const Header: React.FC<HeaderProps> = ({ setting, tags, pages, hasBg = fa
                 </a>
               </Link>
             ) : (
-              <Link href="/" scroll={false}>
-                <a aria-label="home" dangerouslySetInnerHTML={{ __html: setting.systemLogo }}></a>
-              </Link>
-            )}
+                <Link href="/" scroll={false}>
+                  {
+                    setting.systemLogo
+                      ?
+                      <a aria-label="home" dangerouslySetInnerHTML={{ __html: setting.systemLogo }}></a>
+                      :
+                      <a aria-label="home">
+                        <img height="36" src="/logo.png" alt="logo" />
+                      </a>
+                  }
+
+                </Link>
+              )}
           </div>
 
           {/* Mobile Menu Trigger */}
@@ -213,8 +222,8 @@ export const Header: React.FC<HeaderProps> = ({ setting, tags, pages, hasBg = fa
           <nav className={cls(visible ? style.active : false)}>
             <ul>
               <li className={style.toolWrapper}>
-                <SearchOutlined 
-                  style={{ cursor: 'pointer' }} 
+                <SearchOutlined
+                  style={{ cursor: 'pointer' }}
                   onClick={toggleSearch}
                   aria-label="Search"
                 />
