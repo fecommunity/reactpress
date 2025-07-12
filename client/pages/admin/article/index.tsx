@@ -7,7 +7,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { LocaleTime } from '@/components/LocaleTime';
 import { PaginationTable } from '@/components/PaginationTable';
 import { ViewChart } from '@/components/ViewChart';
-import { getRandomColor } from '@/constants';
+import { getRandomColor } from '@/utils';
 import { useAsyncLoading } from '@/hooks/useAsyncLoading';
 import { usePagination } from '@/hooks/usePagination';
 import { useSetting } from '@/hooks/useSetting';
