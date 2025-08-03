@@ -1,3 +1,12 @@
+# [1.10.0](https://github.com/fecommunity/reactpress/compare/v1.9.0...v1.10.0) (2025-08-03)
+
+
+### Features
+
+* add type defs for config ([d8a6fed](https://github.com/fecommunity/reactpress/commit/d8a6fed7bc13f74be0916f80497590c7e737fb86))
+
+
+
 # [1.9.0](https://github.com/fecommunity/reactpress/compare/v1.8.0...v1.9.0) (2025-05-21)
 
 
