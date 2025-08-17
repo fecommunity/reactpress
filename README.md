@@ -21,9 +21,10 @@
 
 [ReactPress Demo](https://blog.gaoredu.com/)
 
-- https://github.com/user-attachments/assets/594f2e92-7343-4885-a4b4-1d3216961fd4
+https://github.com/user-attachments/assets/594f2e92-7343-4885-a4b4-1d3216961fd4
 
-    [![ReactPress Demo](https://img.shields.io/badge/Try_Live_Demo-Online-green)](https://blog.gaoredu.com)
+
+[![ReactPress Demo](https://img.shields.io/badge/Try_Live_Demo-Online-green)](https://blog.gaoredu.com)
 
 
 
