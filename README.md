@@ -36,15 +36,6 @@ https://github.com/user-attachments/assets/594f2e92-7343-4885-a4b4-1d3216961fd4
 
 [![Home Page](./public/home.png)](https://blog.gaoredu.com)
 
-**Navigation**
-
-[![Navigation](./public/ipad.png)](https://blog.gaoredu.com)
-
-**Mobile Phone**
-
-[![Mobile Phone](./public/mobile.png)](https://blog.gaoredu.com)
-
-
 ## 🆚 Comparison
 
 **Comparison of ReactPress, WordPress, and VuePress**
