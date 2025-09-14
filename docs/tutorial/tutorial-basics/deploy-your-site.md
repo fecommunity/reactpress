@@ -50,7 +50,7 @@ pnpm run build
 
 # 启动进程
 pm2 delete @reactpress/server
-pm2 delete @reactpress/client
+pm2 delete @fecommunity/reactpress-client
 pnpm run pm2
 
 # 开机启动

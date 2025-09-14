@@ -45,7 +45,7 @@ pnpm install
 pnpm run build
 #Start process
 pm2 delete @reactpress/server
-pm2 delete @reactpress/client
+pm2 delete @fecommunity/reactpress-client
 pnpm run pm2
 #Power on and start up
 pm2 startup
