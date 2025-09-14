@@ -10,26 +10,52 @@ interface EnvConfig {
 }
 
 function parseEnv(): EnvConfig {
-  const localenv = path.resolve(__dirname, '../../.env');
-  const prodenv = path.resolve(__dirname, '../../.env.prod');
-
-  const envFiles = [
-    { path: prodenv, isProd: true },
-    { path: localenv, isProd: false }
+  // Try multiple possible paths for environment files
+  const possibleBasePaths = [
+    path.resolve(__dirname, '../../'), // From config/lib to project root
+    path.resolve(__dirname, '../../../'), // From node_modules to project root
+    path.resolve(__dirname, '../'), // From client directory to project root
+    process.cwd(), // Current working directory
+    path.resolve(process.cwd(), '../'), // From client directory to project root
   ];
-
-  const availableEnvFiles = envFiles.filter(({ path: envPath }) => fs.existsSync(envPath));
   
-  if (availableEnvFiles.length === 0) {
+  let foundEnvFiles: Array<{ path: string, isProd: boolean }> = [];
+  
+  // Search for .env files in all possible locations
+  for (const basePath of possibleBasePaths) {
+    const localenv = path.join(basePath, '.env');
+    const prodenv = path.join(basePath, '.env.prod');
+    
+    const envFiles = [
+      { path: prodenv, isProd: true },
+      { path: localenv, isProd: false }
+    ];
+    
+    const availableEnvFiles = envFiles.filter(({ path: envPath }) => fs.existsSync(envPath));
+    
+    if (availableEnvFiles.length > 0) {
+      foundEnvFiles = availableEnvFiles;
+      break; // Use the first location where we find env files
+    }
+  }
+  
+  if (foundEnvFiles.length === 0) {
+    // Show all possible paths in error message for debugging
+    const allPossiblePaths: string[] = [];
+    for (const basePath of possibleBasePaths) {
+      allPossiblePaths.push(path.join(basePath, '.env'));
+      allPossiblePaths.push(path.join(basePath, '.env.prod'));
+    }
+    
     throw new Error(
-      `No environment file found. Expected one of:\n` +
-      `- ${localenv}\n` +
-      `- ${prodenv}`
+      `No environment file found. Searched in these locations:\n` +
+      allPossiblePaths.map((p: string) => `- ${p}`).join('\n') +
+      `\n\nPlease create a .env file in your project root directory.`
     );
   }
 
-  const file = availableEnvFiles.find(({ isProd: prod }) => isProd === prod)?.path || 
-               availableEnvFiles[0].path;
+  const file = foundEnvFiles.find(({ isProd: prod }) => isProd === prod)?.path || 
+               foundEnvFiles[0].path;
   try {
     const envContent = fs.readFileSync(file, 'utf8');
     const config = dotenv.parse(envContent);

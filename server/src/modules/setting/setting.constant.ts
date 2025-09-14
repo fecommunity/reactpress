@@ -1,4 +1,4 @@
-import { messages, globalSetting } from '@reactpress/config';
+import { messages, globalSetting } from '@fecommunity/reactpress-config';
 
 /**
  * 国际化配置

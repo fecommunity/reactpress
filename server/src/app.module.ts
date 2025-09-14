@@ -1,5 +1,5 @@
 // 配置文件
-import { file as envFilePath } from '@reactpress/config';
+import { file as envFilePath } from '@fecommunity/reactpress-config';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
