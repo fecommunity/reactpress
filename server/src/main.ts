@@ -44,7 +44,7 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
 
   await app.listen(configService.get('SERVER_PORT', 3002));
-  await open(`http://localhost:${configService.get('CLIENT_PORT', 3001)}`)
+  await open(`http://localhost:${configService.get('SERVER_PORT', 3002)}/api`);
   console.log(`[ReactPress] 服务启动成功`);
 }
 
