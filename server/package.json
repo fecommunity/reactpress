@@ -1,12 +1,45 @@
 {
-  "name": "@reactpress/server",
-  "version": "1.0.0",
-  "description": "",
+  "name": "@fecommunity/reactpress-server",
+  "version": "1.0.0-beta.17",
+  "description": "ReactPress Server - NestJS-based backend API for ReactPress CMS",
   "author": "fecommunity",
   "license": "MIT",
+  "main": "dist/main.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "reactpress-server": "./bin/reactpress-server.js"
+  },
+  "files": [
+    "dist/**/*",
+    "public/**/*",
+    "bin/**/*",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "reactpress",
+    "server",
+    "nestjs",
+    "cms",
+    "blog",
+    "api",
+    "typescript"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fecommunity/reactpress.git",
+    "directory": "server"
+  },
+  "engines": {
+    "node": ">=16.5.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "prebuild": "rimraf dist",
-    "build": "nest build",
+    "build": "nest build && npm run copy-assets",
+    "copy-assets": "cp -r public dist/ 2>/dev/null || true",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "dev": "nest start --watch",
     "debug": "nest start --debug --watch",
@@ -17,10 +50,15 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@reactpress/config": "workspace:^1.0.0",
+    "@fecommunity/reactpress-config": "^1.0.0-beta.7",
+    "commander": "^9.4.1",
+    "chalk": "^4.1.2",
+    "inquirer": "^8.2.4",
+    "cross-env": "^7.0.3",
     "@nestjs/common": "^6.7.2",
     "@nestjs/config": "^0.6.3",
     "@nestjs/core": "^6.7.2",
@@ -36,7 +74,6 @@
     "body-parser": "^1.19.0",
     "class-transformer": "^0.2.3",
     "compression": "^1.7.4",
-    "cross-env": "^7.0.3",
     "date-fns": "^2.17.0",
     "deepmerge": "^4.2.2",
     "dotenv": "^8.2.0",
@@ -59,10 +96,12 @@
     "segment": "^0.1.3",
     "swagger-ui-express": "^4.1.6",
     "typeorm": "^0.2.22",
-    "ua-parser-js": "^0.7.28"
+    "ua-parser-js": "^0.7.28",
+    "open": "^8.2.1",
+    "express": "^4.18.2",
+    "@nestjs/cli": "^6.9.0"
   },
   "devDependencies": {
-    "@nestjs/cli": "^6.9.0",
     "@nestjs/schematics": "^6.7.0",
     "@nestjs/testing": "^6.7.1",
     "@types/express": "4.17.18",
@@ -85,8 +124,7 @@
     "ts-node": "^8.4.1",
     "tsconfig-paths": "^3.9.0",
     "tslint": "^5.20.0",
-    "typescript": "~4.1.6",
-    "open": "^8.2.1"
+    "typescript": "~4.1.6"
   },
   "jest": {
     "moduleFileExtensions": [
