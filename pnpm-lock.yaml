@@ -309,6 +309,9 @@ importers:
       '@fecommunity/reactpress-config':
         specifier: ^1.0.0-beta.7
         version: 1.0.0-beta.8
+      '@nestjs/cli':
+        specifier: ^6.9.0
+        version: 6.14.2(eslint@8.57.1)
       '@nestjs/common':
         specifier: ^6.7.2
         version: 6.11.11(reflect-metadata@0.1.14)(rxjs@6.6.7)
@@ -442,9 +445,6 @@ importers:
         specifier: ^0.7.28
         version: 0.7.39
     devDependencies:
-      '@nestjs/cli':
-        specifier: ^6.9.0
-        version: 6.14.2(eslint@8.57.1)
       '@nestjs/schematics':
         specifier: ^6.7.0
         version: 6.9.4(typescript@4.1.6)
@@ -15975,7 +15975,9 @@ snapshots:
       source-map: 0.6.1
       string-length: 2.0.0
     transitivePeerDependencies:
+      - bufferutil
       - supports-color
+      - utf-8-validate
 
   '@jest/schemas@29.6.3':
     dependencies:
@@ -22252,7 +22254,9 @@ snapshots:
       pretty-format: 24.9.0
       throat: 4.1.0
     transitivePeerDependencies:
+      - bufferutil
       - supports-color
+      - utf-8-validate
 
   jest-leak-detector@24.9.0:
     dependencies:
