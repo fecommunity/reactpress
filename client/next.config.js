@@ -3,7 +3,7 @@ const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const withPlugins = require('next-compose-plugins');
 const withLess = require('next-with-less');
 const withPWA = require('next-pwa');
-const { config, locales, defaultLocale } = require('@reactpress/config');
+const { config, locales, defaultLocale } = require('@fecommunity/reactpress-config');
 const antdVariablesFilePath = path.resolve(__dirname, './antd-custom.less');
 
 const getServerApiUrl = () => {
@@ -18,8 +18,8 @@ const getServerApiUrl = () => {
 const nextConfig = {
   assetPrefix: config.CLIENT_ASSET_PREFIX || '/',
   i18n: {
-    locales,
-    defaultLocale,
+    locales: locales && locales.length > 0 ? locales : ['zh', 'en'],
+    defaultLocale: defaultLocale || 'zh',
   },
   env: {
     SERVER_API_URL: getServerApiUrl(),
