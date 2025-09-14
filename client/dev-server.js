@@ -1,4 +1,4 @@
-const { config } = require('@reactpress/config');
+const { config } = require('@fecommunity/reactpress-config');
 const cli = require('next/dist/cli/next-dev');
 
 const port = config.CLIENT_PORT || 3001;

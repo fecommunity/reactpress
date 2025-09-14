@@ -1,6 +1,8 @@
 {
-  "name": "@reactpress/config",
-  "version": "1.0.0",
+  "name": "@fecommunity/reactpress-config",
+  "version": "1.0.0-beta.11",
+  "description": "ReactPress Configuration - Environment and i18n configuration for ReactPress",
+  "author": "fecommunity",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "exports": {
@@ -11,6 +13,14 @@
   },
   "sideEffects": false,
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fecommunity/reactpress.git",
+    "directory": "config"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsc --outDir lib --skipLibCheck --declaration"
   },
@@ -19,9 +29,11 @@
     "src"
   ],
   "dependencies": {
-    "dotenv": "^8.2.0"
+    "dotenv": "^8.2.0",
+    "fs-extra": "^10.0.0"
   },
   "devDependencies": {
-    "@types/node": "^12.7.5"
+    "@types/node": "^12.7.5",
+    "@types/fs-extra": "^9.0.0"
   }
 }

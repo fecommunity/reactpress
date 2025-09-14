@@ -20,12 +20,12 @@ function parseI18n(): I18nResult {
   }
 
   const files = fs.readdirSync(localesDir);
-  const messages = files.reduce((i18n, file) => {
+  const messages: I18nMessages = files.reduce((i18n, file) => {
     const language = file.replace(path.extname(file), '');
     const json = fs.readJsonSync(path.join(localesDir, file));
     i18n[language] = json;
     return i18n;
-  }, {});
+  }, {} as I18nMessages);
   const locales = Object.keys(messages);
   const defaultLocale = 'zh' in messages ? 'zh' : locales[0];
 
