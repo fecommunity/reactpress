@@ -9,9 +9,23 @@ interface EnvConfig {
   config: Record<string, string>;
 }
 
+// 获取项目根目录的函数
+function getProjectRoot(): string {
+  // 优先使用通过环境变量传递的原始工作目录
+  // 这是在 bin/reactpress-server.js 中设置的，表示用户执行 npx 命令的目录
+  if (process.env.REACTPRESS_ORIGINAL_CWD) {
+    return process.env.REACTPRESS_ORIGINAL_CWD;
+  }
+  
+  // 如果没有设置环境变量，则回退到当前工作目录
+  return process.cwd();
+}
+
 function parseEnv(): EnvConfig {
-  // Try multiple possible paths for environment files
+  // 使用改进的项目根目录查找
+  const projectRoot = getProjectRoot();
   const possibleBasePaths = [
+    projectRoot, // Project root directory
     path.resolve(__dirname, '../../'), // From config/lib to project root
     path.resolve(__dirname, '../../../'), // From node_modules to project root
     path.resolve(__dirname, '../'), // From client directory to project root

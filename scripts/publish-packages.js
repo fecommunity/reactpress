@@ -5,6 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const chalk = require('chalk');
 const inquirer = require('inquirer');
+const crypto = require('crypto');
 
 // Package build order (dependencies first)
 const packages = [
@@ -24,6 +25,73 @@ const packages = [
     description: 'Frontend application package'
   }
 ];
+
+// Generate a hash for a file or directory
+function generateHash(filePath) {
+  try {
+    if (fs.statSync(filePath).isDirectory()) {
+      const files = fs.readdirSync(filePath);
+      const hashes = files
+        .filter(file => !file.startsWith('.') && file !== 'node_modules' && file !== 'dist' && file !== '.next') // Ignore hidden files and build directories
+        .map(file => generateHash(path.join(filePath, file)))
+        .sort();
+      return crypto.createHash('md5').update(hashes.join('')).digest('hex');
+    } else {
+      const content = fs.readFileSync(filePath);
+      return crypto.createHash('md5').update(content).digest('hex');
+    }
+  } catch (error) {
+    return '';
+  }
+}
+
+// Get package content hash
+function getPackageHash(packagePath) {
+  const fullPath = path.join(process.cwd(), packagePath);
+  return generateHash(fullPath);
+}
+
+// Check if package has meaningful changes
+function hasMeaningfulChanges(packagePath, packageName) {
+  try {
+    // Create a hash file path to store previous hash in node_modules
+    const hashFilePath = path.join(process.cwd(), 'node_modules', '.publish-cache', `${packageName.replace('/', '_')}.hash`);
+    
+    // Generate current hash
+    const currentHash = getPackageHash(packagePath);
+    
+    // Check if we have a previous hash
+    if (fs.existsSync(hashFilePath)) {
+      const previousHash = fs.readFileSync(hashFilePath, 'utf8').trim();
+      return currentHash !== previousHash;
+    }
+    
+    // If no previous hash, consider it as having changes
+    return true;
+  } catch (error) {
+    console.log(chalk.yellow(`⚠️  Could not check changes for ${packageName}, assuming changes exist`));
+    return true;
+  }
+}
+
+// Save package hash
+function savePackageHash(packagePath, packageName) {
+  try {
+    const hashFilePath = path.join(process.cwd(), 'node_modules', '.publish-cache', `${packageName.replace('/', '_')}.hash`);
+    
+    // Ensure cache directory exists
+    const cacheDir = path.dirname(hashFilePath);
+    if (!fs.existsSync(cacheDir)) {
+      fs.mkdirSync(cacheDir, { recursive: true });
+    }
+    
+    // Generate and save current hash
+    const currentHash = getPackageHash(packagePath);
+    fs.writeFileSync(hashFilePath, currentHash);
+  } catch (error) {
+    console.log(chalk.yellow(`⚠️  Could not save hash for ${packageName}`));
+  }
+}
 
 // Get current versions
 function getCurrentVersion(packagePath) {
@@ -297,14 +365,37 @@ async function main() {
   
   if (action === 'build-all') {
     console.log(chalk.blue('🔨 Building all packages...\n'));
+    
+    // Track which packages actually need to be built
+    const packagesToBuild = [];
+    
+    // Check for meaningful changes in each package
     for (const pkg of packages) {
       if (fs.existsSync(path.join(process.cwd(), pkg.path))) {
-        buildPackage(pkg.path, pkg.name);
+        if (hasMeaningfulChanges(pkg.path, pkg.name)) {
+          packagesToBuild.push(pkg);
+          console.log(chalk.blue(`\n📦 ${pkg.name} has changes, will be built`));
+        } else {
+          console.log(chalk.gray(`\n⏭️  ${pkg.name} has no meaningful changes, skipping...`));
+        }
       } else {
         console.log(chalk.yellow(`⚠️  Package ${pkg.name} directory not found, skipping...`));
       }
     }
-    console.log(chalk.green('\n🎉 All packages built successfully!'));
+    
+    if (packagesToBuild.length === 0) {
+      console.log(chalk.green('\n✅ No packages have meaningful changes. Nothing to build!'));
+      return;
+    }
+    
+    // Build packages that have changes
+    for (const pkg of packagesToBuild) {
+      buildPackage(pkg.path, pkg.name);
+      // Save the hash after successful build
+      savePackageHash(pkg.path, pkg.name);
+    }
+    
+    console.log(chalk.green(`\n🎉 ${packagesToBuild.length} package(s) built successfully!`));
     return;
   }
   
@@ -320,6 +411,13 @@ async function main() {
         }))
       }
     ]);
+    
+    // Check if the selected package has meaningful changes
+    if (!hasMeaningfulChanges(selectedPackage.path, selectedPackage.name)) {
+      console.log(chalk.gray(`\n⏭️  ${selectedPackage.name} has no meaningful changes, skipping...`));
+      console.log(chalk.green('✅ Nothing to publish!'));
+      return;
+    }
     
     const { versionType } = await inquirer.prompt([
       {
@@ -378,6 +476,9 @@ async function main() {
       const tag = versionType === 'beta' ? 'beta' : 'latest';
       publishPackage(selectedPackage.path, selectedPackage.name, tag);
       
+      // Save the hash after successful publish
+      savePackageHash(selectedPackage.path, selectedPackage.name);
+      
       console.log(chalk.green(`\n🎉 ${selectedPackage.name} v${newVersion} published successfully!`));
     } finally {
       // Always restore workspace dependencies
@@ -419,13 +520,31 @@ async function main() {
       packageVersions[pkg.name] = currentVersion;
     });
     
-    // Process each package
+    // Track which packages actually need to be published
+    const packagesToPublish = [];
+    
+    // Check for meaningful changes in each package
     for (const pkg of packages) {
       if (!fs.existsSync(path.join(process.cwd(), pkg.path))) {
         console.log(chalk.yellow(`⚠️  Package ${pkg.name} directory not found, skipping...`));
         continue;
       }
       
+      if (hasMeaningfulChanges(pkg.path, pkg.name)) {
+        packagesToPublish.push(pkg);
+        console.log(chalk.blue(`\n📦 ${pkg.name} has changes, will be published`));
+      } else {
+        console.log(chalk.gray(`\n⏭️  ${pkg.name} has no meaningful changes, skipping...`));
+      }
+    }
+    
+    if (packagesToPublish.length === 0) {
+      console.log(chalk.green('\n✅ No packages have meaningful changes. Nothing to publish!'));
+      return;
+    }
+    
+    // Process each package that has changes
+    for (const pkg of packagesToPublish) {
       let newVersion;
       const currentVersion = getCurrentVersion(pkg.path);
       
@@ -456,13 +575,16 @@ async function main() {
           buildPackage(pkg.path, pkg.name);
         }
         publishPackage(pkg.path, pkg.name, tag);
+        
+        // Save the hash after successful publish
+        savePackageHash(pkg.path, pkg.name);
       } finally {
         // Always restore workspace dependencies
         restoreWorkspaceDependencies(pkg.path);
       }
     }
     
-    console.log(chalk.green(`\n🎉 All packages published with ${tag} tag!`));
+    console.log(chalk.green(`\n🎉 ${packagesToPublish.length} package(s) published with ${tag} tag!`));
     return;
   }
   
@@ -537,13 +659,31 @@ async function main() {
       return;
     }
     
-    // Update versions, build and publish
+    // Track which packages actually need to be published
+    const packagesToPublish = [];
+    
+    // Check for meaningful changes in each package
     for (const pkg of packages) {
       if (!fs.existsSync(path.join(process.cwd(), pkg.path))) {
         console.log(chalk.yellow(`⚠️  Package ${pkg.name} directory not found, skipping...`));
         continue;
       }
       
+      if (hasMeaningfulChanges(pkg.path, pkg.name)) {
+        packagesToPublish.push(pkg);
+        console.log(chalk.blue(`\n📦 ${pkg.name} has changes, will be published`));
+      } else {
+        console.log(chalk.gray(`\n⏭️  ${pkg.name} has no meaningful changes, skipping...`));
+      }
+    }
+    
+    if (packagesToPublish.length === 0) {
+      console.log(chalk.green('\n✅ No packages have meaningful changes. Nothing to publish!'));
+      return;
+    }
+    
+    // Update versions, build and publish only packages with changes
+    for (const pkg of packagesToPublish) {
       console.log(chalk.blue(`\n📦 Processing ${pkg.name}...`));
       
       // For publish-all, we use the same version for all packages
@@ -563,24 +703,26 @@ async function main() {
         // Determine tag based on version type and branch
         const tag = (versionType === 'beta' && !isMasterBranch) ? 'beta' : 'latest';
         publishPackage(pkg.path, pkg.name, tag);
+        
+        // Save the hash after successful publish
+        savePackageHash(pkg.path, pkg.name);
       } finally {
         // Always restore workspace dependencies
         restoreWorkspaceDependencies(pkg.path);
       }
     }
     
-    // Create GitHub release if on master
-    if (isMasterBranch) {
+    // Create GitHub release if on master and we actually published something
+    if (isMasterBranch && packagesToPublish.length > 0) {
       const tagName = `v${baseVersion}`;
       const releaseNotes = `Release ${baseVersion}\n\nPackages released:\n${Object.entries(packageVersions).map(([name, version]) => `- ${name}@${version}`).join('\n')}`;
       createGitHubRelease(tagName, releaseNotes);
     }
     
-    console.log(chalk.green(`\n🎉 All packages published successfully with version ${baseVersion}!`));
+    console.log(chalk.green(`\n🎉 ${packagesToPublish.length} package(s) published successfully with version ${baseVersion}!`));
     console.log(chalk.cyan('\n📋 Next steps:'));
     console.log(chalk.gray('1. Create a git tag: git tag v' + baseVersion));
     console.log(chalk.gray('2. Push changes: git push && git push --tags'));
-    console.log(chalk.gray('3. Create a GitHub release'));
   }
 }
 

@@ -58,29 +58,10 @@ function parseI18n(): I18nResult {
 }
 
 function findProjectRoot(): string {
-  // 查找项目根目录（包含package.json的目录）
-  let currentDir = __dirname;
-  
-  // 向上查找最多10层目录
-  for (let i = 0; i < 10; i++) {
-    const packageJsonPath = path.join(currentDir, 'package.json');
-    if (fs.existsSync(packageJsonPath)) {
-      try {
-        const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
-        // 检查是否是主项目package.json
-        if (packageJson.name === 'reactpress' || packageJson.workspaces) {
-          return currentDir;
-        }
-      } catch (e) {
-        // 解析失败，继续向上查找
-      }
-    }
-    const parentDir = path.dirname(currentDir);
-    // 如果已经到达文件系统根目录，停止查找
-    if (parentDir === currentDir) {
-      break;
-    }
-    currentDir = parentDir;
+  // 优先使用通过环境变量传递的原始工作目录
+  // 这是在 bin/reactpress-server.js 或 client/server.js 中设置的，表示用户执行命令的目录
+  if (process.env.REACTPRESS_ORIGINAL_CWD) {
+    return process.env.REACTPRESS_ORIGINAL_CWD;
   }
   
   // 如果找不到项目根目录，返回当前工作目录
