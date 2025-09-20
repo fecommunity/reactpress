@@ -1,6 +1,6 @@
 {
   "name": "@fecommunity/reactpress-server",
-  "version": "1.0.0-beta.26",
+  "version": "1.0.0-beta.29",
   "description": "ReactPress Server - NestJS-based backend API for ReactPress CMS",
   "author": "fecommunity",
   "license": "MIT",
