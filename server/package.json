@@ -71,7 +71,7 @@
     "@nestjs/jwt": "^6.1.1",
     "@nestjs/passport": "^6.1.1",
     "@nestjs/platform-express": "^6.11.5",
-    "@nestjs/swagger": "^4.7.15",
+    "@nestjs/swagger": "^4.8.2",
     "@nestjs/typeorm": "^6.2.0",
     "@types/express-serve-static-core": "^4.19.5",
     "ali-oss": "^6.5.1",
@@ -106,7 +106,8 @@
     "open": "^8.2.1",
     "express": "^4.18.2",
     "@nestjs/cli": "^6.9.0",
-    "pm2": "^5.2.0"
+    "pm2": "^5.2.0",
+    "swagger-themes": "^1.4.3"
   },
   "devDependencies": {
     "@nestjs/schematics": "^6.7.0",
