@@ -18,8 +18,8 @@ const getServerApiUrl = () => {
 const nextConfig = {
   assetPrefix: config.CLIENT_ASSET_PREFIX || '/',
   i18n: {
-    locales: locales && locales.length > 0 ? locales : ['zh', 'en'],
-    defaultLocale: defaultLocale || 'zh',
+    locales,
+    defaultLocale,
   },
   env: {
     SERVER_API_URL: getServerApiUrl(),
