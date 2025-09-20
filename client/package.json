@@ -1,6 +1,6 @@
 {
   "name": "@fecommunity/reactpress-client",
-  "version": "1.0.1-beta.3",
+  "version": "1.0.1-beta.5",
   "scripts": {
     "prebuild": "rimraf .next",
     "build": "next build",
