@@ -2401,6 +2401,9 @@ packages:
     resolution: {integrity: sha512-d9zaMRSTIKDLhctzH12MtXvJKSSUhaHcjV+2Z+GK+EEY7XKpP5yR4x+N3TAcHTcu963nIr+TMcCb4DBCYX1z6Q==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
 
+  '@fecommunity/reactpress-config@1.0.0-beta.8':
+    resolution: {integrity: sha512-IZrmWyOySrRNSt669CkkvHLuDTmwXbBLMc18Rcd3M9vPPO/ozL19fhLuX4CGsk8AZFNa/Y8/p16Vbe5qfSsmjQ==}
+
   '@formatjs/ecma402-abstract@1.11.4':
     resolution: {integrity: sha512-EBikYFp2JCdIfGEb5G9dyCkTGDmC57KSHhRQOC3aYxoPWVZvfWCDjZwkGYHN7Lis/fmuWl906bnNTJifDQ3sXw==}
 
@@ -16083,6 +16086,11 @@ snapshots:
       - supports-color
 
   '@eslint/js@8.57.1': {}
+
+  '@fecommunity/reactpress-config@1.0.0-beta.8':
+    dependencies:
+      dotenv: 8.6.0
+      fs-extra: 10.1.0
 
   '@formatjs/ecma402-abstract@1.11.4':
     dependencies:
