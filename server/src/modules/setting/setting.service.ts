@@ -22,7 +22,6 @@ export class SettingService {
   async initI18n() {
     try {
       // Log i18n constant for debugging
-      console.log('[SettingService] i18n constant keys:', Object.keys(i18n));
       const items = await this.settingRepository.find();
       const target = (items && items[0]) || ({} as Setting);
       
