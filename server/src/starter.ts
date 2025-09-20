@@ -6,46 +6,11 @@ import * as express from 'express';
 import * as rateLimit from 'express-rate-limit';
 import * as helmet from 'helmet';
 import { join } from 'path';
+import { SwaggerTheme, SwaggerThemeNameEnum } from 'swagger-themes';
 
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './filters/http-exception.filter';
 import { TransformInterceptor } from './interceptors/transform.interceptor';
-
-// 端口检测函数
-const checkPortAvailability = (port: number): Promise<boolean> => {
-  return new Promise((resolve) => {
-    const net = require('net');
-    const tester = net.createServer()
-      .once('error', () => resolve(false))
-      .once('listening', () => tester.once('close', () => resolve(true)).close())
-      .listen(port);
-  });
-};
-
-// 查找可用端口
-const findAvailableApplicationPort = async (startPort: number, maxAttempts = 10): Promise<number> => {
-  for (let i = 0; i < maxAttempts; i++) {
-    const portToTry = startPort + i;
-    if (await checkPortAvailability(portToTry)) {
-      return portToTry;
-    }
-  }
-  throw new Error(`No available ports found in range ${startPort}-${startPort + maxAttempts - 1}`);
-};
-
-// 等待端口可用
-const waitForPort = async (port: number, timeout = 30000): Promise<boolean> => {
-  const startTime = Date.now();
-  
-  while (Date.now() - startTime < timeout) {
-    if (await checkPortAvailability(port)) {
-      return true;
-    }
-    await new Promise(resolve => setTimeout(resolve, 500));
-  }
-  
-  return false;
-};
 
 export async function bootstrap() {
   try {
@@ -72,38 +37,52 @@ export async function bootstrap() {
     app.use(bodyParser.json({ limit: '10mb' }));
     app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
     
+    // 增强版 Swagger 配置
     const swaggerConfig = new DocumentBuilder()
-      .setTitle('ReactPress Open Api')
-      .setDescription('ReactPress Open Api Document')
-      .setVersion('1.0')
+      .setTitle('ReactPress API Documentation')
+      .setDescription('Comprehensive API documentation for ReactPress - A modern content management system built with NestJS')
+      .setVersion('2.0')
+      .setContact('ReactPress Team', 'https://github.com/fecommunity/reactpress', 'admin@gaoredu.com')
+      .setLicense('MIT', 'https://github.com/fecommunity/reactpress/blob/main/LICENSE')
+      .addServer(configService.get('SERVER_SITE_URL', 'http://localhost:3002'), 'API Server')
       .build();
+      
     const document = SwaggerModule.createDocument(app, swaggerConfig);
-    SwaggerModule.setup('api', app, document);
+    
+    // 使用 swagger-themes 提供专业主题
+    const theme = new SwaggerTheme();
+    
+    // 自定义 Swagger 设置
+    const options = {
+      customCss: theme.getBuffer(SwaggerThemeNameEnum.MATERIAL), // 应用主题
+      customSiteTitle: 'ReactPress API Documentation',
+      customfavIcon: '/public/favicon.png',
+      swaggerOptions: {
+        docExpansion: 'list',
+        filter: true,
+        showRequestDuration: true,
+        persistAuthorization: true, // 保持授权数据
+        displayOperationId: true,
+        operationsSorter: 'method', // 按方法排序
+        tagsSorter: 'alpha', // 按字母顺序排序标签
+      },
+      customCssUrl: '/public/swagger/custom.css', // 额外的自定义CSS
+    };
+    
+    // 设置 Swagger UI
+    SwaggerModule.setup('api', app, document, options);
 
     const configuredPort = configService.get('SERVER_PORT', 3002);
     
-    // 确保端口可用
-    const isPortAvailable = await checkPortAvailability(configuredPort);
-    if (!isPortAvailable) {
-      console.warn(`[ReactPress] Port ${configuredPort} is not available, waiting for it to be released...`);
-      const portReleased = await waitForPort(configuredPort);
-      
-      if (!portReleased) {
-        console.error(`[ReactPress] Port ${configuredPort} is still occupied after waiting`);
-        process.exit(1);
-      }
-    }
-    
     await app.listen(configuredPort);
     console.log(`[ReactPress] Application started on http://localhost:${configuredPort}`);
-    console.log(`[ReactPress] Please visit http://localhost:${configuredPort}/api manually`);
+    console.log(`[ReactPress] API Documentation available at http://localhost:${configuredPort}/api/docs`);
     
     return app;
     
   } catch (error) {
     console.error('[ReactPress] Failed to start application:', error);
     
-    // 提供友好的错误信息
     if (error.code === 'EADDRINUSE') {
       console.error('[ReactPress] Port is already in use. Please check for other running instances.');
       console.error('[ReactPress] You can change the port in your .env file or terminate the conflicting process.');
@@ -113,7 +92,6 @@ export async function bootstrap() {
   }
 }
 
-// 添加进程信号处理
 process.on('SIGINT', () => {
   console.log('\n[ReactPress] Application shutting down gracefully...');
   process.exit(0);
