@@ -15,6 +15,7 @@
     "dev:client": "pnpm run --dir ./client dev",
     "dev:docs": "pnpm run --dir ./docs dev",
     "build": "pnpm build:config && pnpm build:server && pnpm build:client",
+    "build:packages": "node scripts/build-packages.js",
     "build:config": "pnpm run --dir ./config build",
     "build:server": "pnpm run --dir ./server build",
     "build:client": "pnpm run --dir ./client build",
@@ -35,7 +36,8 @@
     "prepare": "husky",
     "precommit": "lint-staged",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s  -r 0",
-    "publish": "node scripts/publish-packages.js"
+    "publish": "node scripts/publish-packages.js",
+    "release": "node scripts/build-packages.js --publish"
   },
   "dependencies": {
     "chalk": "^4.1.2",
