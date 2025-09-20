@@ -1,20 +1,14 @@
 {
   "name": "@fecommunity/reactpress-client",
-  "version": "1.0.0-beta.3",
+  "version": "1.0.0-beta.21",
   "bin": {
     "reactpress-client": "./bin/reactpress-client.js"
   },
   "files": [
     ".next/**/*",
     "bin/**/*",
-    "pages/**/*",
-    "public/**/*",
-    "src/**/*",
-    "types/**/*",
     "next.config.js",
-    "next-sitemap.js",
-    "server.js",
-    "tsconfig.json"
+    "server.js"
   ],
   "scripts": {
     "prebuild": "rimraf .next",

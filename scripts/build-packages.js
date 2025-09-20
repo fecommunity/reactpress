@@ -4,6 +4,7 @@ const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 const chalk = require('chalk');
+const crypto = require('crypto');
 
 // Package build order (dependencies first)
 const packages = [
@@ -23,6 +24,73 @@ const packages = [
     description: 'Frontend application package'
   }
 ];
+
+// Generate a hash for a file or directory
+function generateHash(filePath) {
+  try {
+    if (fs.statSync(filePath).isDirectory()) {
+      const files = fs.readdirSync(filePath);
+      const hashes = files
+        .filter(file => !file.startsWith('.') && file !== 'node_modules' && file !== 'dist' && file !== '.next') // Ignore hidden files and build directories
+        .map(file => generateHash(path.join(filePath, file)))
+        .sort();
+      return crypto.createHash('md5').update(hashes.join('')).digest('hex');
+    } else {
+      const content = fs.readFileSync(filePath);
+      return crypto.createHash('md5').update(content).digest('hex');
+    }
+  } catch (error) {
+    return '';
+  }
+}
+
+// Get package content hash
+function getPackageHash(packagePath) {
+  const fullPath = path.join(process.cwd(), packagePath);
+  return generateHash(fullPath);
+}
+
+// Check if package has meaningful changes
+function hasMeaningfulChanges(packagePath, packageName) {
+  try {
+    // Create a hash file path to store previous hash in node_modules
+    const hashFilePath = path.join(process.cwd(), 'node_modules', '.build-cache', `${packageName.replace('/', '_')}.hash`);
+    
+    // Generate current hash
+    const currentHash = getPackageHash(packagePath);
+    
+    // Check if we have a previous hash
+    if (fs.existsSync(hashFilePath)) {
+      const previousHash = fs.readFileSync(hashFilePath, 'utf8').trim();
+      return currentHash !== previousHash;
+    }
+    
+    // If no previous hash, consider it as having changes
+    return true;
+  } catch (error) {
+    console.log(chalk.yellow(`⚠️  Could not check changes for ${packageName}, assuming changes exist`));
+    return true;
+  }
+}
+
+// Save package hash
+function savePackageHash(packagePath, packageName) {
+  try {
+    const hashFilePath = path.join(process.cwd(), 'node_modules', '.build-cache', `${packageName.replace('/', '_')}.hash`);
+    
+    // Ensure cache directory exists
+    const cacheDir = path.dirname(hashFilePath);
+    if (!fs.existsSync(cacheDir)) {
+      fs.mkdirSync(cacheDir, { recursive: true });
+    }
+    
+    // Generate and save current hash
+    const currentHash = getPackageHash(packagePath);
+    fs.writeFileSync(hashFilePath, currentHash);
+  } catch (error) {
+    console.log(chalk.yellow(`⚠️  Could not save hash for ${packageName}`));
+  }
+}
 
 // Get current versions
 function getCurrentVersion(packagePath) {
@@ -134,16 +202,36 @@ async function main() {
   console.log();
   
   try {
-    // Build packages in order
+    // Track which packages actually need to be built
+    const packagesToBuild = [];
+    
+    // Check for meaningful changes in each package
     for (const pkg of packages) {
       if (fs.existsSync(path.join(process.cwd(), pkg.path))) {
-        await buildPackage(pkg);
+        if (hasMeaningfulChanges(pkg.path, pkg.name)) {
+          packagesToBuild.push(pkg);
+          console.log(chalk.blue(`\n📦 ${pkg.name} has changes, will be built`));
+        } else {
+          console.log(chalk.gray(`\n⏭️  ${pkg.name} has no meaningful changes, skipping...`));
+        }
       } else {
         console.log(chalk.yellow(`⚠️  Package ${pkg.name} directory not found, skipping...`));
       }
     }
     
-    console.log(chalk.green('\n🎉 All packages built successfully!'));
+    if (packagesToBuild.length === 0) {
+      console.log(chalk.green('\n✅ No packages have meaningful changes. Nothing to build!'));
+      return;
+    }
+    
+    // Build packages that have changes
+    for (const pkg of packagesToBuild) {
+      await buildPackage(pkg);
+      // Save the hash after successful build
+      savePackageHash(pkg.path, pkg.name);
+    }
+    
+    console.log(chalk.green(`\n🎉 ${packagesToBuild.length} package(s) built successfully!`));
   } catch (error) {
     console.error(chalk.red('❌ Build failed:'), error);
     process.exit(1);

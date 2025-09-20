@@ -3,12 +3,17 @@
 /**
  * ReactPress Client CLI Entry Point
  * This script allows starting the ReactPress client via npx
+ * Supports both regular and PM2 startup modes
  */
 
 const path = require('path');
 const fs = require('fs');
 const { spawn, spawnSync } = require('child_process');
-const url = require('url');
+
+// Capture the original working directory where npx was executed
+// BUT prioritize the REACTPRESS_ORIGINAL_CWD environment variable if it exists
+// This ensures consistency when running via pnpm dev from root directory
+const originalCwd = process.env.REACTPRESS_ORIGINAL_CWD || process.cwd();
 
 // Get command line arguments
 const args = process.argv.slice(2);
@@ -28,7 +33,7 @@ Options:
   --help, -h   Show this help message
 
 Examples:
-  npx @fecommunity/reactpress-client          # Start client in development mode
+  npx @fecommunity/reactpress-client          # Start client normally
   npx @fecommunity/reactpress-client --pm2    # Start client with PM2
   npx @fecommunity/reactpress-client --help   # Show this help message
   `);
@@ -38,38 +43,7 @@ Examples:
 // Get the directory where this script is located
 const binDir = __dirname;
 const clientDir = path.join(binDir, '..');
-
-// Change to the client directory
-process.chdir(clientDir);
-
-// Try to load configuration
-let port = 3001;
-let clientSiteUrl = 'http://localhost:3001';
-
-try {
-  const { config } = require('@fecommunity/reactpress-config');
-  
-  // Extract port from CLIENT_SITE_URL or use CLIENT_PORT
-  if (config.CLIENT_SITE_URL) {
-    try {
-      const parsedUrl = url.parse(config.CLIENT_SITE_URL);
-      if (parsedUrl.port) {
-        port = parseInt(parsedUrl.port, 10);
-      } else if (parsedUrl.protocol === 'https:') {
-        port = 443;
-      } else {
-        port = 80;
-      }
-      clientSiteUrl = config.CLIENT_SITE_URL;
-    } catch (err) {
-      console.warn('[ReactPress Client] Failed to parse CLIENT_SITE_URL, using default port 3001');
-    }
-  } else if (config.CLIENT_PORT) {
-    port = parseInt(config.CLIENT_PORT, 10);
-  }
-} catch (err) {
-  console.warn('[ReactPress Client] Failed to load configuration, using default settings');
-}
+const nextDir = path.join(clientDir, '.next');
 
 // Function to check if PM2 is installed
 function isPM2Installed() {
@@ -115,7 +89,6 @@ function startWithPM2() {
   }
   
   // Check if the client is built
-  const nextDir = path.join(clientDir, '.next');
   if (!fs.existsSync(nextDir)) {
     console.log('[ReactPress Client] Client not built yet. Building...');
     
@@ -162,85 +135,56 @@ function startWithPM2() {
   });
 }
 
-// Function to start with regular Node.js
+// Function to start with regular Node.js (npm start)
 function startWithNode() {
-  // Check if we're in development or production mode
-  const isDev = process.env.NODE_ENV !== 'production';
-
-  if (isDev) {
-    // In development mode, start Next.js dev server
-    console.log('[ReactPress Client] Starting Next.js development server...');
+  // Check if the app is built
+  if (!fs.existsSync(nextDir)) {
+    console.log('[ReactPress Client] Client not built yet. Building...');
     
-    // Use Next.js CLI directly
-    const nextDev = spawn('npx', ['next', 'dev', '-p', port.toString()], {
+    // Try to build the client
+    const buildResult = spawnSync('npm', ['run', 'build'], {
       stdio: 'inherit',
       cwd: clientDir
     });
     
-    nextDev.on('close', (code) => {
-      console.log(`[ReactPress Client] Next.js dev server exited with code ${code}`);
-      process.exit(code);
-    });
-    
-    nextDev.on('error', (error) => {
-      console.error('[ReactPress Client] Failed to start Next.js dev server:', error);
+    if (buildResult.status !== 0) {
+      console.error('[ReactPress Client] Failed to build client');
       process.exit(1);
-    });
-  } else {
-    // In production mode, check if the app is built and start it
-    const nextDir = path.join(clientDir, '.next');
-    
-    if (!fs.existsSync(nextDir)) {
-      console.log('[ReactPress Client] Client not built yet. Building...');
-      
-      // Try to build the client
-      const buildResult = spawnSync('npm', ['run', 'build'], {
-        stdio: 'inherit',
-        cwd: clientDir
-      });
-      
-      if (buildResult.status !== 0) {
-        console.error('[ReactPress Client] Failed to build client');
-        process.exit(1);
-      }
     }
-    
-    console.log('[ReactPress Client] Starting Next.js production server...');
-    
-    // Start Next.js production server
-    const nextStart = spawn('npx', ['next', 'start', '-p', port.toString()], {
-      stdio: 'inherit',
-      cwd: clientDir
-    });
-    
-    nextStart.on('close', (code) => {
-      console.log(`[ReactPress Client] Next.js production server exited with code ${code}`);
-      process.exit(code);
-    });
-    
-    nextStart.on('error', (error) => {
-      console.error('[ReactPress Client] Failed to start Next.js production server:', error);
-      process.exit(1);
-    });
   }
-}
 
-console.log(`[ReactPress Client] Starting client on port ${port}...`);
+  // ONLY set the environment variable if it's not already set
+  // This preserves the value set by set-env.js when running pnpm dev from root
+  if (!process.env.REACTPRESS_ORIGINAL_CWD) {
+    process.env.REACTPRESS_ORIGINAL_CWD = originalCwd;
+  } else {
+    console.log(`[ReactPress Client] Using existing REACTPRESS_ORIGINAL_CWD: ${process.env.REACTPRESS_ORIGINAL_CWD}`);
+  }
+
+  // Change to the client directory
+  process.chdir(clientDir);
+
+  // Start with npm start
+  console.log('[ReactPress Client] Starting with npm start...');
+  const npmStart = spawn('npm', ['start'], {
+    stdio: 'inherit',
+    cwd: clientDir
+  });
+
+  npmStart.on('close', (code) => {
+    console.log(`[ReactPress Client] npm start process exited with code ${code}`);
+    process.exit(code);
+  });
+
+  npmStart.on('error', (error) => {
+    console.error('[ReactPress Client] Failed to start with npm start:', error);
+    process.exit(1);
+  });
+}
 
 // Main execution
 if (usePM2) {
   startWithPM2();
 } else {
   startWithNode();
-}
-
-// Try to automatically open browser after a short delay (only in dev mode and not with PM2)
-if (!usePM2 && process.env.NODE_ENV !== 'production') {
-  setTimeout(() => {
-    try {
-      require('open')(clientSiteUrl);
-    } catch (err) {
-      console.warn('[ReactPress Client] Failed to open browser automatically');
-    }
-  }, 3000);
 }

@@ -10,7 +10,7 @@
     "clean": "pnpm clean:node_modules && pnpm clean:dist",
     "clean:node_modules": "npx rimraf ./node_modules ./**/node_modules",
     "clean:dist": "npx rimraf ./dist ./**/dist",
-    "dev": "pnpm build:config && concurrently 'pnpm:dev:server' 'pnpm:dev:client'",
+    "dev": "node ./scripts/dev.js",
     "dev:server": "pnpm run --dir ./server dev",
     "dev:client": "pnpm run --dir ./client dev",
     "dev:docs": "pnpm run --dir ./docs dev",

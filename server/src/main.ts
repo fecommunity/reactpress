@@ -56,65 +56,6 @@ const findAvailablePort = async (startPort: number): Promise<number> => {
   throw new Error(`No available ports found in range ${startPort}-${startPort + MAX_PORT_ATTEMPTS - 1}`);
 };
 
-// 改进的进程终止函数（跨平台）
-const terminateProcessOnPort = async (port: number): Promise<boolean> => {
-  try {
-    if (process.platform === 'win32') {
-      // Windows 实现
-      const { exec } = require('child_process');
-      const { stdout } = await new Promise<any>((resolve, reject) => {
-        exec(`netstat -ano | findstr :${port}`, (error: any, stdout: any, stderr: any) => {
-          if (error) reject(error);
-          else resolve({ stdout, stderr });
-        });
-      });
-      
-      const lines = stdout.split('\n');
-      for (const line of lines) {
-        if (line.includes(`:${port}`)) {
-          const parts = line.trim().split(/\s+/);
-          const pid = parts[parts.length - 1];
-          
-          if (pid) {
-            await new Promise((resolve) => {
-              exec(`taskkill /PID ${pid} /F`, (error: any) => {
-                resolve(!error);
-              });
-            });
-            return true;
-          }
-        }
-      }
-      return false;
-    } else {
-      // Unix-like 系统
-      const { exec } = require('child_process');
-      const { stdout } = await new Promise<any>((resolve, reject) => {
-        exec(`lsof -ti:${port}`, (error: any, stdout: any, stderr: any) => {
-          if (error) resolve({ stdout: '', stderr });
-          else resolve({ stdout, stderr });
-        });
-      });
-      
-      if (stdout.trim()) {
-        const pids = stdout.trim().split('\n');
-        for (const pid of pids) {
-          await new Promise((resolve) => {
-            exec(`kill -9 ${pid}`, (error: any) => {
-              resolve(!error);
-            });
-          });
-        }
-        return true;
-      }
-      return false;
-    }
-  } catch (error) {
-    console.error('Error terminating process:', error);
-    return false;
-  }
-};
-
 // 安全关闭服务器
 const safelyCloseServer = async (): Promise<void> => {
   if (!serverState.server || serverState.isClosing) {
@@ -213,13 +154,19 @@ const main = async () => {
     const projectRoot = getProjectRoot();
     const envPath = join(projectRoot, '.env');
     
+    console.log(`[ReactPress] Checking for environment file at: ${envPath}`);
+    console.log(`[ReactPress] Project root determined to be: ${projectRoot}`);
+    
     if (fs.existsSync(envPath)) {
       console.log('[ReactPress] Environment file exists, starting main application');
       await startMainApplication();
       return;
     }
     
-    console.log('[ReactPress] Starting installation wizard');
+    console.log('[ReactPress] Environment file not found, starting installation wizard');
+    console.log('[ReactPress] Current working directory:', process.cwd());
+    console.log('[ReactPress] __dirname:', __dirname);
+    
     await runInstallationWizard();
     
   } catch (error) {
@@ -232,39 +179,17 @@ const main = async () => {
 
 // 获取项目根目录路径的函数
 const getProjectRoot = (): string => {
-  // 如果是通过npm包安装的，__dirname会指向node_modules中的路径
-  // 我们需要找到实际的项目根目录
-  
-  // 方法1: 检查是否存在package.json（项目根目录标识）
-  let currentDir = __dirname;
-  
-  // 向上查找最多5层目录
-  for (let i = 0; i < 5; i++) {
-    const packageJsonPath = join(currentDir, 'package.json');
-    if (fs.existsSync(packageJsonPath)) {
-      // 检查是否是根package.json（通过name字段判断）
-      try {
-        const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
-        if (packageJson.name === 'reactpress') {
-          return currentDir;
-        }
-      } catch (e) {
-        // 解析失败，继续向上查找
-      }
-    }
-    currentDir = dirname(currentDir);
+  // 优先使用通过环境变量传递的原始工作目录
+  // 这是在 bin/reactpress-server.js 中设置的，表示用户执行 npx 命令的目录
+  if (process.env.REACTPRESS_ORIGINAL_CWD) {
+    console.log(`[ReactPress] Using original working directory from npx execution: ${process.env.REACTPRESS_ORIGINAL_CWD}`);
+    return process.env.REACTPRESS_ORIGINAL_CWD;
   }
   
-  // 方法2: 如果找不到根package.json，则使用传统方式（server目录的上一级）
-  // 这适用于开发环境
-  const traditionalRoot = join(__dirname, '../../');
-  if (fs.existsSync(join(traditionalRoot, 'package.json'))) {
-    return traditionalRoot;
-  }
-  
-  // 方法3: 默认返回当前工作目录
-  // 这适用于npm包安装场景
-  return process.cwd();
+  // 如果没有设置环境变量，则回退到当前工作目录
+  const projectRoot = process.cwd();
+  console.log(`[ReactPress] Using current working directory as project root: ${projectRoot}`);
+  return projectRoot;
 };
 
 // 安装向导主函数
@@ -342,8 +267,7 @@ CLIENT_SITE_URL=${site.clientUrl || 'http://localhost:3001'}
 
 # Server Config
 SERVER_SITE_URL=${site.serverUrl || 'http://localhost:3002'}
-SERVER_PORT=${site.serverPort || 3002}
-SERVER_API_PREFIX=/api`.trim();
+`.trim();
         
         // 使用项目根目录路径创建.env文件
         const projectRoot = getProjectRoot();

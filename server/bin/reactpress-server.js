@@ -10,6 +10,11 @@ const path = require('path');
 const fs = require('fs');
 const { spawn, spawnSync } = require('child_process');
 
+// Capture the original working directory where npx was executed
+// BUT prioritize the REACTPRESS_ORIGINAL_CWD environment variable if it exists
+// This ensures consistency when running via pnpm dev from root directory
+const originalCwd = process.env.REACTPRESS_ORIGINAL_CWD || process.cwd();
+
 // Get command line arguments
 const args = process.argv.slice(2);
 const usePM2 = args.includes('--pm2');
@@ -165,6 +170,14 @@ function startWithNode() {
       console.error('[ReactPress Server] Failed to build server');
       process.exit(1);
     }
+  }
+
+  // ONLY set the environment variable if it's not already set
+  // This preserves the value set by set-env.js when running pnpm dev from root
+  if (!process.env.REACTPRESS_ORIGINAL_CWD) {
+    process.env.REACTPRESS_ORIGINAL_CWD = originalCwd;
+  } else {
+    console.log(`[ReactPress Server] Using existing REACTPRESS_ORIGINAL_CWD: ${process.env.REACTPRESS_ORIGINAL_CWD}`);
   }
 
   // Change to the server directory
