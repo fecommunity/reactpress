@@ -20,16 +20,38 @@ export class SettingService {
    * 初始化时加载 i18n 配置
    */
   async initI18n() {
-    const items = await this.settingRepository.find();
-    const target = (items && items[0]) || ({} as Setting);
-    let data = {};
     try {
-      data = JSON.parse(target.i18n);
-    } catch (e) {
-      data = {};
+      // Log i18n constant for debugging
+      console.log('[SettingService] i18n constant keys:', Object.keys(i18n));
+      const items = await this.settingRepository.find();
+      const target = (items && items[0]) || ({} as Setting);
+      
+      let data = {};
+      try {
+        if (target.i18n) {
+          data = JSON.parse(target.i18n);
+        }
+      } catch (e) {
+        console.warn('[SettingService] Error parsing i18n from DB:', e);
+        data = {};
+      }
+      
+      // Merge default i18n with data from DB
+      const mergedI18n = merge({}, i18n, data);
+      
+      // Only update if there's a change or if it's empty
+      const mergedI18nString = JSON.stringify(mergedI18n);
+      if (!target.i18n || target.i18n !== mergedI18nString) {
+        target.i18n = mergedI18nString;
+        await this.settingRepository.save(target);
+        console.log('[SettingService] i18n updated in database');
+      } else {
+        console.log('[SettingService] i18n already up to date');
+      }
+    } catch (error) {
+      console.error('[SettingService] Error in initI18n:', error);
+      throw error;
     }
-    target.i18n = JSON.stringify(merge({}, i18n, data));
-    await this.settingRepository.save(target);
   }
 
   /**
@@ -40,12 +62,19 @@ export class SettingService {
     const target = (items && items[0]) || ({} as Setting);
     let data = {};
     try {
-      data = JSON.parse(target.globalSetting);
+      if (target.globalSetting) {
+        data = JSON.parse(target.globalSetting);
+      }
     } catch (e) {
       data = {};
     }
-    target.globalSetting = JSON.stringify(merge({}, settings, data));
-    await this.settingRepository.save(target);
+    const mergedSettings = merge({}, settings, data);
+    const mergedSettingsString = JSON.stringify(mergedSettings);
+    
+    if (!target.globalSetting || target.globalSetting !== mergedSettingsString) {
+      target.globalSetting = mergedSettingsString;
+      await this.settingRepository.save(target);
+    }
   }
 
   /**

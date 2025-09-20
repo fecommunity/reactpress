@@ -60,7 +60,7 @@
     "pm2:status": "pm2 status reactpress-server"
   },
   "dependencies": {
-    "@fecommunity/reactpress-config": "^1.0.0-beta.7",
+    "@fecommunity/reactpress-config": "workspace:*",
     "commander": "^9.4.1",
     "chalk": "^4.1.2",
     "inquirer": "^8.2.4",
