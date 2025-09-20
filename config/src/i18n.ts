@@ -12,35 +12,10 @@ interface I18nResult {
 }
 
 function parseI18n(): I18nResult {
-  // 本地的国际化文案
-  // 尝试多种路径来确保在不同运行环境下都能找到locales目录
-  const possiblePaths = [
-    path.join(__dirname, '../../locales'),
-    path.join(__dirname, '../../../locales'),
-    path.join(__dirname, '../locales'),
-    path.join(process.cwd(), 'locales'),
-    path.join(process.cwd(), '../locales'),
-    path.join(process.cwd(), '../../locales')
-  ];
+  // Locales are now in the config package
+  const localesDir = path.join(__dirname, '../locales');
 
-  let localesDir = '';
-  for (const possiblePath of possiblePaths) {
-    if (fs.existsSync(possiblePath)) {
-      localesDir = possiblePath;
-      break;
-    }
-  }
-
-  if (!localesDir) {
-    // 如果在所有预期路径都找不到，则使用项目根目录的locales
-    const projectRoot = findProjectRoot();
-    const fallbackPath = path.join(projectRoot, 'locales');
-    if (fs.existsSync(fallbackPath)) {
-      localesDir = fallbackPath;
-    }
-  }
-
-  if (!localesDir) {
+  if (!fs.existsSync(localesDir)) {
     return { messages: {}, locales: [], defaultLocale: '' };
   }
 
@@ -55,17 +30,6 @@ function parseI18n(): I18nResult {
   const defaultLocale = 'zh' in messages ? 'zh' : locales[0];
 
   return { messages, locales, defaultLocale };
-}
-
-function findProjectRoot(): string {
-  // 优先使用通过环境变量传递的原始工作目录
-  // 这是在 bin/reactpress-server.js 或 client/server.js 中设置的，表示用户执行命令的目录
-  if (process.env.REACTPRESS_ORIGINAL_CWD) {
-    return process.env.REACTPRESS_ORIGINAL_CWD;
-  }
-  
-  // 如果找不到项目根目录，返回当前工作目录
-  return process.cwd();
 }
 
 export const { messages, locales, defaultLocale } = parseI18n();
