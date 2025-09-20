@@ -7,7 +7,11 @@ ReactPress Server - NestJS-based backend API for ReactPress CMS with WordPress-s
 ### Installation & Setup
 
 ```bash
+# Regular startup
 npx @fecommunity/reactpress-server
+
+# PM2 startup
+npx @fecommunity/reactpress-server --pm2
 ```
 
 That's it! The command will automatically:
@@ -25,6 +29,7 @@ That's it! The command will automatically:
 - 🔌 **Database auto-setup** - Creates MySQL database if it doesn't exist
 - 🎯 **Seamless flow** - From installation to running server in minutes
 - 📖 **Auto-documentation** - Swagger API docs available immediately
+- ⚡ **PM2 support** - Optional PM2 process management for production
 
 ### Requirements
 
@@ -49,6 +54,21 @@ npx @fecommunity/reactpress-server
 # In another terminal, start client
 npx @fecommunity/reactpress-client
 ```
+
+### PM2 Support
+
+ReactPress server supports PM2 process management for production deployments:
+
+```bash
+# Start with PM2
+npx @fecommunity/reactpress-server --pm2
+```
+
+PM2 features:
+- Automatic process restart on crash
+- Memory monitoring
+- Log management
+- Cluster mode support
 
 ### Configuration
 
@@ -84,6 +104,9 @@ npm install
 
 # Start development server
 npm run dev
+
+# Start with PM2 (development)
+npm run pm2:start
 ```
 
 ### Docker Support

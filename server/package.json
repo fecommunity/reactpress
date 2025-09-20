@@ -1,6 +1,6 @@
 {
   "name": "@fecommunity/reactpress-server",
-  "version": "1.0.0-beta.17",
+  "version": "1.0.0-beta.47",
   "description": "ReactPress Server - NestJS-based backend API for ReactPress CMS",
   "author": "fecommunity",
   "license": "MIT",
@@ -44,17 +44,23 @@
     "dev": "nest start --watch",
     "debug": "nest start --debug --watch",
     "start": "cross-env NODE_ENV=production node dist/main",
-    "pm2": "pm2 start npm --name @reactpress/server -- start",
+    "pm2": "pm2 start npm --name @fecommunity/reactpress-server -- start",
     "lint": "tslint -p tsconfig.json -c tslint.json",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "pm2:start": "pm2 start dist/main.js --name reactpress-server",
+    "pm2:stop": "pm2 stop reactpress-server",
+    "pm2:restart": "pm2 restart reactpress-server",
+    "pm2:delete": "pm2 delete reactpress-server",
+    "pm2:logs": "pm2 logs reactpress-server",
+    "pm2:status": "pm2 status reactpress-server"
   },
   "dependencies": {
-    "@fecommunity/reactpress-config": "^1.0.0-beta.7",
+    "@fecommunity/reactpress-config": "workspace:*",
     "commander": "^9.4.1",
     "chalk": "^4.1.2",
     "inquirer": "^8.2.4",
@@ -65,7 +71,7 @@
     "@nestjs/jwt": "^6.1.1",
     "@nestjs/passport": "^6.1.1",
     "@nestjs/platform-express": "^6.11.5",
-    "@nestjs/swagger": "^4.7.15",
+    "@nestjs/swagger": "^4.8.2",
     "@nestjs/typeorm": "^6.2.0",
     "@types/express-serve-static-core": "^4.19.5",
     "ali-oss": "^6.5.1",
@@ -99,7 +105,9 @@
     "ua-parser-js": "^0.7.28",
     "open": "^8.2.1",
     "express": "^4.18.2",
-    "@nestjs/cli": "^6.9.0"
+    "@nestjs/cli": "^6.9.0",
+    "pm2": "^5.2.0",
+    "swagger-themes": "^1.4.3"
   },
   "devDependencies": {
     "@nestjs/schematics": "^6.7.0",
