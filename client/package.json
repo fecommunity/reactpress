@@ -5,8 +5,8 @@
     "prebuild": "rimraf .next",
     "build": "next build",
     "postbuild": "next-sitemap",
-    "dev": "node dev-server.js",
-    "start": "cross-env NODE_ENV=production node prod-server.js",
+    "dev": "node server.js",
+    "start": "cross-env NODE_ENV=production node server.js",
     "pm2": "pm2 start npm --name @fecommunity/reactpress-client -- start"
   },
   "dependencies": {
