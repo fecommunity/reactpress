@@ -6,7 +6,6 @@ import * as express from 'express';
 import * as rateLimit from 'express-rate-limit';
 import * as helmet from 'helmet';
 import { join } from 'path';
-import * as open from 'open';
 
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './filters/http-exception.filter';
