@@ -12,8 +12,8 @@ interface I18nResult {
 }
 
 function parseI18n(): I18nResult {
-  // 本地的国际化文案
-  const localesDir = path.join(__dirname, '../../locales');
+  // Locales are now in the config package
+  const localesDir = path.join(__dirname, '../locales');
 
   if (!fs.existsSync(localesDir)) {
     return { messages: {}, locales: [], defaultLocale: '' };

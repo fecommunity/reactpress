@@ -1,0 +1,11 @@
+.swagger-ui div.topbar {
+  display: none !important;
+  padding: 0 !important;
+}
+
+
+.swagger-ui .scheme-container {
+    display: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}

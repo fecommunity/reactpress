@@ -1,6 +1,6 @@
 {
   "name": "@fecommunity/reactpress-config",
-  "version": "1.0.0-beta.11",
+  "version": "1.0.0-beta.34",
   "description": "ReactPress Configuration - Environment and i18n configuration for ReactPress",
   "author": "fecommunity",
   "main": "./lib/index.js",
@@ -26,14 +26,16 @@
   },
   "files": [
     "lib",
-    "src"
+    "src",
+    "locales"
   ],
   "dependencies": {
     "dotenv": "^8.2.0",
     "fs-extra": "^10.0.0"
   },
   "devDependencies": {
+    "@types/fs-extra": "^9.0.0",
     "@types/node": "^12.7.5",
-    "@types/fs-extra": "^9.0.0"
+    "typescript": "^5.9.2"
   }
 }

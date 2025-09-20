@@ -1,12 +1,22 @@
 {
   "name": "@fecommunity/reactpress-client",
-  "version": "1.0.1-beta.3",
+  "version": "1.0.0-beta.22",
+  "bin": {
+    "reactpress-client": "./bin/reactpress-client.js"
+  },
+  "files": [
+    ".next/**/*",
+    "bin/**/*",
+    "public/**/*",
+    "next.config.js",
+    "server.js"
+  ],
   "scripts": {
     "prebuild": "rimraf .next",
     "build": "next build",
     "postbuild": "next-sitemap",
-    "dev": "node dev-server.js",
-    "start": "cross-env NODE_ENV=production node prod-server.js",
+    "dev": "node server.js",
+    "start": "cross-env NODE_ENV=production node server.js",
     "pm2": "pm2 start npm --name @fecommunity/reactpress-client -- start"
   },
   "dependencies": {
@@ -15,7 +25,7 @@
     "@ant-design/icons": "^4.7.0",
     "@ant-design/pro-layout": "7.19.11",
     "@monaco-editor/react": "^4.6.0",
-    "@fecommunity/reactpress-config": "workspace:^1.0.0",
+    "@fecommunity/reactpress-config": "workspace:*",
     "antd": "^5.24.4",
     "array-move": "^3.0.1",
     "axios": "^0.23.0",
