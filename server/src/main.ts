@@ -1,5 +1,5 @@
 import * as fs from 'fs';
-import { join } from 'path';
+import { join, dirname } from 'path';
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
 import * as open from 'open';
@@ -189,33 +189,6 @@ const startServerWithState = (app: express.Express, port: number): Promise<void>
   });
 };
 
-// 启动主应用
-const startMainApplication = async (): Promise<void> => {
-  try {
-    console.log('[ReactPress] Starting main application...');
-    
-    // 确保安装服务器完全关闭
-    await safelyCloseServer();
-    
-    // 清除安装状态
-    global.isInstalling = false;
-    
-    // 延迟启动以确保端口释放
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // 动态导入以避免在安装阶段加载 NestJS
-    const { bootstrap } = await import('./starter');
-    if (typeof bootstrap === 'function') {
-      await bootstrap();
-    } else {
-      throw new Error('Bootstrap function not found');
-    }
-  } catch (error) {
-    console.error('[ReactPress] Failed to start main application:', error);
-    process.exit(1);
-  }
-};
-
 // 信号处理
 const setupSignalHandlers = () => {
   const shutdown = async (signal: string) => {
@@ -229,6 +202,69 @@ const setupSignalHandlers = () => {
   process.on('SIGINT', () => shutdown('SIGINT'));
   process.on('SIGTERM', () => shutdown('SIGTERM'));
   process.on('SIGHUP', () => shutdown('SIGHUP'));
+};
+
+// 主执行函数
+const main = async () => {
+  try {
+    setupSignalHandlers();
+    
+    // 获取项目根目录路径（考虑npm包场景）
+    const projectRoot = getProjectRoot();
+    const envPath = join(projectRoot, '.env');
+    
+    if (fs.existsSync(envPath)) {
+      console.log('[ReactPress] Environment file exists, starting main application');
+      await startMainApplication();
+      return;
+    }
+    
+    console.log('[ReactPress] Starting installation wizard');
+    await runInstallationWizard();
+    
+  } catch (error) {
+    console.error('[ReactPress] Fatal error:', error);
+    // 确保服务器被正确关闭
+    await safelyCloseServer();
+    process.exit(1);
+  }
+};
+
+// 获取项目根目录路径的函数
+const getProjectRoot = (): string => {
+  // 如果是通过npm包安装的，__dirname会指向node_modules中的路径
+  // 我们需要找到实际的项目根目录
+  
+  // 方法1: 检查是否存在package.json（项目根目录标识）
+  let currentDir = __dirname;
+  
+  // 向上查找最多5层目录
+  for (let i = 0; i < 5; i++) {
+    const packageJsonPath = join(currentDir, 'package.json');
+    if (fs.existsSync(packageJsonPath)) {
+      // 检查是否是根package.json（通过name字段判断）
+      try {
+        const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+        if (packageJson.name === 'reactpress') {
+          return currentDir;
+        }
+      } catch (e) {
+        // 解析失败，继续向上查找
+      }
+    }
+    currentDir = dirname(currentDir);
+  }
+  
+  // 方法2: 如果找不到根package.json，则使用传统方式（server目录的上一级）
+  // 这适用于开发环境
+  const traditionalRoot = join(__dirname, '../../');
+  if (fs.existsSync(join(traditionalRoot, 'package.json'))) {
+    return traditionalRoot;
+  }
+  
+  // 方法3: 默认返回当前工作目录
+  // 这适用于npm包安装场景
+  return process.cwd();
 };
 
 // 安装向导主函数
@@ -293,7 +329,7 @@ const runInstallationWizard = async (): Promise<void> => {
         await connection.execute('SELECT 1');
         await connection.end();
         
-        // 创建环境文件
+        // 创建环境文件到项目根目录
         const envContent = `# Database Config
 DB_HOST=${db.host || '127.0.0.1'}
 DB_PORT=${db.port || 3306}
@@ -309,7 +345,9 @@ SERVER_SITE_URL=${site.serverUrl || 'http://localhost:3002'}
 SERVER_PORT=${site.serverPort || 3002}
 SERVER_API_PREFIX=/api`.trim();
         
-        const envPath = join(__dirname, '../.env');
+        // 使用项目根目录路径创建.env文件
+        const projectRoot = getProjectRoot();
+        const envPath = join(projectRoot, '.env');
         fs.writeFileSync(envPath, envContent, 'utf8');
         
         res.json({ 
@@ -354,28 +392,31 @@ SERVER_API_PREFIX=/api`.trim();
   }
 };
 
-// 主执行函数
-const main = async () => {
+// 启动主应用
+const startMainApplication = async (): Promise<void> => {
   try {
-    setupSignalHandlers();
+    console.log('[ReactPress] Starting main application...');
     
-    const envPath = join(__dirname, '../.env');
-    if (fs.existsSync(envPath)) {
-      console.log('[ReactPress] Environment file exists, starting main application');
-      await startMainApplication();
-      return;
-    }
-    
-    console.log('[ReactPress] Starting installation wizard');
-    await runInstallationWizard();
-    
-  } catch (error) {
-    console.error('[ReactPress] Fatal error:', error);
-    // 确保服务器被正确关闭
+    // 确保安装服务器完全关闭
     await safelyCloseServer();
+    
+    // 清除安装状态
+    global.isInstalling = false;
+    
+    // 延迟启动以确保端口释放
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // 动态导入以避免在安装阶段加载 NestJS
+    const { bootstrap } = await import('./starter');
+    if (typeof bootstrap === 'function') {
+      await bootstrap();
+    } else {
+      throw new Error('Bootstrap function not found');
+    }
+  } catch (error) {
+    console.error('[ReactPress] Failed to start main application:', error);
     process.exit(1);
   }
 };
 
-// 启动应用
 main();
