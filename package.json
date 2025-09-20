@@ -1,5 +1,5 @@
 {
-  "name": "reactpress",
+  "name": "@fecommunity/reactpress",
   "author": "fecommunity",
   "version": "1.11.0",
   "bin": {
