@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReactPress › Installation</title>
+    <style>
+        /* 保持原有样式不变 */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f1f1f1; color: #444; line-height: 1.4; }
+        .wp-container { max-width: 600px; margin: 40px auto; background: #fff; border: 1px solid #ccd0d4; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+        .wp-header { background: #0073aa; color: #fff; padding: 24px; text-align: center; border-bottom: 1px solid #005a87; }
+        .wp-header h1 { font-size: 24px; font-weight: 400; margin-bottom: 8px; }
+        .wp-header p { font-size: 16px; opacity: 0.9; }
+        .wp-content { padding: 24px; }
+        .wp-step { display: none; }
+        .wp-step.active { display: block; }
+        .wp-step h2 { font-size: 22px; font-weight: 600; margin-bottom: 20px; color: #1d2327; }
+        .wp-description { background: #f0f6fc; border: 1px solid #c3e4f0; border-left: 4px solid #0073aa; padding: 12px 16px; margin-bottom: 20px; font-size: 14px; color: #0c4a6e; }
+        .wp-form-table { width: 100%; margin-bottom: 20px; }
+        .wp-form-table th { text-align: left; padding: 10px 0; width: 140px; vertical-align: top; font-weight: 600; color: #1d2327; }
+        .wp-form-table td { padding: 10px 0; }
+        .wp-form-table input[type="text"], .wp-form-table input[type="password"], .wp-form-table input[type="number"], .wp-form-table input[type="url"] { width: 100%; max-width: 320px; padding: 8px 12px; border: 1px solid #8c8f94; border-radius: 4px; font-size: 14px; line-height: 1.4; transition: border-color 0.15s ease-in-out; }
+        .wp-form-table input:focus { border-color: #0073aa; outline: 0; box-shadow: 0 0 0 1px #0073aa; }
+        .wp-form-table .description { font-size: 13px; color: #646970; margin-top: 4px; }
+        .wp-button { background: #0073aa; color: #fff; border: 1px solid #0073aa; padding: 8px 16px; font-size: 14px; font-weight: 600; border-radius: 3px; cursor: pointer; transition: all 0.15s ease-in-out; text-decoration: none; display: inline-block; }
+        .wp-button:hover { background: #005a87; border-color: #005a87; }
+        .wp-button:disabled { background: #f0f0f1; border-color: #dcdcde; color: #a7aaad; cursor: not-allowed; }
+        .wp-button.button-large { padding: 12px 24px; font-size: 16px; }
+        .wp-notice { border: 1px solid #c3c4c7; border-left-width: 4px; padding: 12px; margin: 16px 0; background: #fff; }
+        .wp-notice.notice-success { border-left-color: #00a32a; background: #f7fcf7; }
+        .wp-notice.notice-error { border-left-color: #d63638; background: #fcf2f2; }
+        .wp-notice p { margin: 0; font-size: 14px; }
+        .wp-progress { background: #f0f0f1; height: 4px; margin-bottom: 20px; }
+        .wp-progress-bar { background: #0073aa; height: 100%; transition: width 0.3s ease; }
+        .wp-loader { display: inline-block; width: 16px; height: 16px; border: 2px solid #f3f3f3; border-top: 2px solid #0073aa; border-radius: 50%; animation: wp-spin 1s linear infinite; margin-right: 8px; }
+        @keyframes wp-spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .wp-footer { background: #f6f7f7; border-top: 1px solid #c3c4c7; padding: 16px 24px; text-align: center; font-size: 13px; color: #646970; }
+        .text-center { text-align: center; }
+        .countdown-container { display: none; text-align: center; margin: 20px 0; }
+        .countdown-timer { font-weight: bold; color: #0073aa; }
+        
+        /* 新增重试按钮样式 */
+        .retry-button { 
+            background: #d63638; 
+            color: white; 
+            border: none; 
+            padding: 8px 16px; 
+            border-radius: 3px; 
+            cursor: pointer; 
+            margin-top: 10px; 
+        }
+        .retry-button:hover { 
+            background: #b32d2e; 
+        }
+    </style>
+</head>
+<body>
+    <div class="wp-container">
+        <div class="wp-header">
+            <h1>ReactPress</h1>
+            <p>5-Minute Installation</p>
+        </div>
+        
+        <div class="wp-progress">
+            <div class="wp-progress-bar" id="progressBar" style="width: 33%;"></div>
+        </div>
+        
+        <div class="wp-content">
+            <!-- Step 1: Database Configuration -->
+            <div class="wp-step active" id="step1">
+                <h2>Database Connection Information</h2>
+                
+                <div class="wp-description">
+                    You should have this information available from your web hosting provider. If you don't have it, contact them before continuing.
+                </div>
+                
+                <table class="wp-form-table">
+                    <tr>
+                        <th><label for="dbHost">Database Host</label></th>
+                        <td>
+                            <input type="text" id="dbHost" value="127.0.0.1" />
+                            <p class="description">Usually "localhost" or "127.0.0.1"</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><label for="dbPort">Database Port</label></th>
+                        <td>
+                            <input type="number" id="dbPort" value="3306" />
+                            <p class="description">Default MySQL port is 3306</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><label for="dbUser">Username</label></th>
+                        <td>
+                            <input type="text" id="dbUser" value="" placeholder="Database username" />
+                            <p class="description">Your MySQL username</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><label for="dbPassword">Password</label></th>
+                        <td>
+                            <input type="password" id="dbPassword" value="" placeholder="Database password" />
+                            <p class="description">Your MySQL password</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><label for="dbName">Database Name</label></th>
+                        <td>
+                            <input type="text" id="dbName" value="reactpress" />
+                            <p class="description">The name of the database you want to use with ReactPress</p>
+                        </td>
+                    </tr>
+                </table>
+                
+                <div id="dbResult"></div>
+                
+                <p class="text-center">
+                    <button class="wp-button button-large" onclick="testDatabase()" id="testBtn">
+                        Test Database Connection
+                    </button>
+                </p>
+            </div>
+            
+            <!-- Step 2: Site Configuration -->
+            <div class="wp-step" id="step2">
+                <h2>Site Information</h2>
+                
+                <div class="wp-description">
+                    Please provide the following information. Don't worry, you can always change these settings later.
+                </div>
+                
+                <table class="wp-form-table">
+                    <tr>
+                        <th><label for="clientUrl">Client Site URL</label></th>
+                        <td>
+                            <input type="url" id="clientUrl" value="http://localhost:3001" />
+                            <p class="description">The URL where your ReactPress frontend will be accessible</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><label for="serverUrl">API Server URL</label></th>
+                        <td>
+                            <input type="url" id="serverUrl" value="http://localhost:3002" />
+                            <p class="description">The URL where your ReactPress API server will run</p>
+                        </td>
+                    </tr>
+                </table>
+                
+                <div id="installResult"></div>
+                
+                <p class="text-center">
+                    <button class="wp-button button-large" onclick="installReactPress()" id="installBtn">
+                        Install & Start ReactPress
+                    </button>
+                </p>
+            </div>
+            
+            <!-- Step 3: Success -->
+            <div class="wp-step" id="step3">
+                <h2>🎉 Installation Complete!</h2>
+                
+                <div class="wp-notice notice-success">
+                    <p><strong>ReactPress has been installed successfully!</strong></p>
+                </div>
+                
+                <p>Your ReactPress server configuration has been saved. You can:</p>
+                
+                <ul style="margin: 16px 0 16px 20px;">
+                    <li>Close this browser window</li>
+                    <li>Restart the server by running <code>npx @fecommunity/reactpress-server</code> in your terminal</li>
+                    <li>Access your admin panel at <strong id="adminUrl">http://localhost:3001/admin</strong> (when client is running)</li>
+                </ul>
+                
+                <!-- 重定向状态显示 -->
+                <div class="wp-notice" id="redirectStatus">
+                    <p>Waiting for server to start...</p>
+                </div>
+                
+                <div class="text-center">
+                    <button class="wp-button" onclick="checkServerStatus()" id="checkStatusBtn">
+                        Check Server Status
+                    </button>
+                    <button class="retry-button" onclick="retryRedirect()" id="retryBtn" style="display: none;">
+                        Retry Connection
+                    </button>
+                </div>
+                
+                <div class="wp-description">
+                    <strong>Note:</strong> To start the server with your new configuration, run <code>npx @fecommunity/reactpress-server</code> in your terminal.
+                </div>
+            </div>
+        </div>
+        
+        <div class="wp-footer">
+            <p>Need help? <a href="https://github.com/fecommunity/reactpress/issues" target="_blank">ReactPress Documentation</a></p>
+        </div>
+    </div>
+    
+    <script>
+        // State management
+        let currentStep = 1;
+        const totalSteps = 3;
+        let isTestingConnection = false;
+        let countdownInterval = null;
+        let serverUrl = 'http://localhost:3002';
+        let redirectAttempts = 0;
+        const maxRedirectAttempts = 30; // 30秒超时
+        
+        // Update progress bar
+        function updateProgress() {
+            const progress = (currentStep / totalSteps) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+        
+        // Show a specific step
+        function showStep(step) {
+            document.querySelectorAll('.wp-step').forEach(s => s.classList.remove('active'));
+            document.getElementById('step' + step).classList.add('active');
+            currentStep = step;
+            updateProgress();
+        }
+        
+        // Show a notice message
+        function showNotice(message, type = 'error', containerId = 'dbResult') {
+            const container = document.getElementById(containerId);
+            container.innerHTML = `
+                <div class="wp-notice notice-${type}">
+                    <p>${message}</p>
+                </div>
+            `;
+        }
+        
+        // 检查服务器状态
+        async function checkServerStatus() {
+            const statusElement = document.getElementById('redirectStatus');
+            const checkBtn = document.getElementById('checkStatusBtn');
+            const retryBtn = document.getElementById('retryBtn');
+            
+            statusElement.innerHTML = '<p>Checking server status...</p>';
+            statusElement.className = 'wp-notice';
+            checkBtn.disabled = true;
+            
+            try {
+                const response = await fetch(`${serverUrl}/api`, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' },
+                    // 添加超时处理
+                    signal: AbortSignal.timeout(5000)
+                });
+                
+                if (response.ok) {
+                    statusElement.innerHTML = '<p>Server is running! Redirecting to API documentation...</p>';
+                    statusElement.className = 'wp-notice notice-success';
+                    
+                    // 服务器已启动，重定向到API页面
+                    setTimeout(() => {
+                        window.location.href = `${serverUrl}/api`;
+                    }, 1000);
+                } else {
+                    statusElement.innerHTML = '<p>Server responded but with an error. Please try again later.</p>';
+                    statusElement.className = 'wp-notice notice-error';
+                    retryBtn.style.display = 'inline-block';
+                }
+            } catch (error) {
+                statusElement.innerHTML = `<p>Cannot connect to server: ${error.message}. The server may still be starting up.</p>`;
+                statusElement.className = 'wp-notice notice-error';
+                retryBtn.style.display = 'inline-block';
+            } finally {
+                checkBtn.disabled = false;
+            }
+        }
+        
+        // 重试重定向
+        function retryRedirect() {
+            const retryBtn = document.getElementById('retryBtn');
+            retryBtn.style.display = 'none';
+            checkServerStatus();
+        }
+        
+        // 启动服务器状态检查
+        function startServerStatusCheck() {
+            // 每2秒检查一次服务器状态，最多尝试30次（60秒）
+            const checkInterval = setInterval(() => {
+                if (redirectAttempts >= maxRedirectAttempts) {
+                    clearInterval(checkInterval);
+                    const statusElement = document.getElementById('redirectStatus');
+                    statusElement.innerHTML = '<p>Server did not start in time. Please check your terminal for errors and try restarting the server manually.</p>';
+                    statusElement.className = 'wp-notice notice-error';
+                    document.getElementById('retryBtn').style.display = 'inline-block';
+                    return;
+                }
+                
+                fetch(`${serverUrl}/api`, { 
+                    method: 'HEAD',
+                    // 添加超时处理
+                    signal: AbortSignal.timeout(3000)
+                })
+                .then(response => {
+                    if (response.ok) {
+                        clearInterval(checkInterval);
+                        const statusElement = document.getElementById('redirectStatus');
+                        statusElement.innerHTML = '<p>Server is running! Redirecting to API documentation...</p>';
+                        statusElement.className = 'wp-notice notice-success';
+                        
+                        // 服务器已启动，重定向到API页面
+                        setTimeout(() => {
+                            window.location.href = `${serverUrl}/api`;
+                        }, 1000);
+                    }
+                })
+                .catch(() => {
+                    // 忽略错误，继续尝试
+                    redirectAttempts++;
+                    const statusElement = document.getElementById('redirectStatus');
+                    statusElement.innerHTML = `<p>Waiting for server to start... (${redirectAttempts}/${maxRedirectAttempts})</p>`;
+                });
+            }, 2000);
+        }
+        
+        // Validate database input fields
+        function validateDatabaseInputs() {
+            const host = document.getElementById('dbHost').value.trim();
+            const port = document.getElementById('dbPort').value.trim();
+            const user = document.getElementById('dbUser').value.trim();
+            const password = document.getElementById('dbPassword').value;
+            const database = document.getElementById('dbName').value.trim();
+            
+            if (!host || !port || !user || !database) {
+                showNotice('Please fill in all required fields.', 'error');
+                return false;
+            }
+            
+            if (isNaN(port) || port < 1 || port > 65535) {
+                showNotice('Please enter a valid port number (1-65535).', 'error');
+                return false;
+            }
+            
+            return { host, port, user, password, database };
+        }
+        
+        // Test database connection
+        async function testDatabase() {
+            if (isTestingConnection) return;
+            
+            const dbData = validateDatabaseInputs();
+            if (!dbData) return;
+            
+            isTestingConnection = true;
+            const testBtn = document.getElementById('testBtn');
+            const originalText = testBtn.innerHTML;
+            
+            testBtn.disabled = true;
+            testBtn.innerHTML = '<span class="wp-loader"></span>Testing connection...';
+            
+            try {
+                const response = await fetch('/test-db', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(dbData)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotice(result.message, 'success');
+                    setTimeout(() => {
+                        showStep(2);
+                    }, 1500);
+                } else {
+                    showNotice(result.message, 'error');
+                }
+            } catch (error) {
+                showNotice('Failed to connect to server. Please try again.', 'error');
+            } finally {
+                isTestingConnection = false;
+                testBtn.disabled = false;
+                testBtn.innerHTML = originalText;
+            }
+        }
+        
+        // Install ReactPress
+        async function installReactPress() {
+            const dbData = validateDatabaseInputs();
+            if (!dbData) {
+                showStep(1);
+                return;
+            }
+            
+            const clientUrl = document.getElementById('clientUrl').value.trim();
+            serverUrl = document.getElementById('serverUrl').value.trim();
+            
+            if (!clientUrl || !serverUrl) {
+                showNotice('Please fill in all site URLs.', 'error', 'installResult');
+                return;
+            }
+            
+            // 更新管理URL显示
+            document.getElementById('adminUrl').textContent = `${clientUrl}/admin`;
+            
+            const installBtn = document.getElementById('installBtn');
+            const originalText = installBtn.innerHTML;
+            
+            installBtn.disabled = true;
+            installBtn.innerHTML = '<span class="wp-loader"></span>Installing & Starting...';
+            
+            try {
+                const response = await fetch('/install', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        db: dbData,
+                        site: { clientUrl, serverUrl }
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showStep(3);
+                    // 启动服务器状态检查
+                    startServerStatusCheck();
+                } else {
+                    showNotice(result.message, 'error', 'installResult');
+                }
+            } catch (error) {
+                showNotice('Installation failed. Please try again.', 'error', 'installResult');
+            } finally {
+                installBtn.disabled = false;
+                installBtn.innerHTML = originalText;
+            }
+        }
+        
+        // Initialize the wizard
+        updateProgress();
+        document.getElementById('dbHost').focus();
+    </script>
+</body>
+</html>
