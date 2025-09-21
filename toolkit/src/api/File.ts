@@ -9,12 +9,7 @@
  * ---------------------------------------------------------------
  */
 
-import {
-  deleteByIdData,
-  findAllData,
-  findByIdData,
-  uploadFileData,
-} from '../types/data-contracts';
+import { IFile } from '../types/data-contracts';
 import { HttpClient, RequestParams } from './HttpClient';
 
 export class File<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
@@ -24,12 +19,12 @@ export class File<SecurityDataType = unknown> extends HttpClient<SecurityDataTyp
    * @tags File
    * @name uploadFile
    * @request POST:/file/upload
-   * @response `200` `uploadFileData` 上传文件
    */
   uploadFile = (params: RequestParams = {}) =>
-    this.request<uploadFileData, any>({
+    this.request<IFile[], any>({
       path: `/file/upload`,
       method: 'POST',
+      format: 'json',
       ...params,
     });
   /**
@@ -38,10 +33,9 @@ export class File<SecurityDataType = unknown> extends HttpClient<SecurityDataTyp
    * @tags File
    * @name findAll
    * @request GET:/file
-   * @response `200` `findAllData`
    */
   findAll = (params: RequestParams = {}) =>
-    this.request<findAllData, any>({
+    this.request<void, any>({
       path: `/file`,
       method: 'GET',
       ...params,
@@ -52,10 +46,9 @@ export class File<SecurityDataType = unknown> extends HttpClient<SecurityDataTyp
    * @tags File
    * @name findById
    * @request GET:/file/{id}
-   * @response `200` `findByIdData`
    */
   findById = (id: string, params: RequestParams = {}) =>
-    this.request<findByIdData, any>({
+    this.request<void, any>({
       path: `/file/${id}`,
       method: 'GET',
       ...params,
@@ -66,10 +59,9 @@ export class File<SecurityDataType = unknown> extends HttpClient<SecurityDataTyp
    * @tags File
    * @name deleteById
    * @request DELETE:/file/{id}
-   * @response `200` `deleteByIdData`
    */
   deleteById = (id: string, params: RequestParams = {}) =>
-    this.request<deleteByIdData, any>({
+    this.request<void, any>({
       path: `/file/${id}`,
       method: 'DELETE',
       ...params,

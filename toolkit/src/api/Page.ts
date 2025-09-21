@@ -9,14 +9,7 @@
  * ---------------------------------------------------------------
  */
 
-import {
-  createData,
-  deleteByIdData,
-  findAllData,
-  findByIdData,
-  updateByIdData,
-  updateViewsByIdData,
-} from '../types/data-contracts';
+import { IPage } from '../types/data-contracts';
 import { HttpClient, RequestParams } from './HttpClient';
 
 export class Page<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
@@ -26,12 +19,12 @@ export class Page<SecurityDataType = unknown> extends HttpClient<SecurityDataTyp
    * @tags Page
    * @name create
    * @request POST:/page
-   * @response `200` `createData` 创建页面
    */
   create = (params: RequestParams = {}) =>
-    this.request<createData, any>({
+    this.request<IPage[], any>({
       path: `/page`,
       method: 'POST',
+      format: 'json',
       ...params,
     });
   /**
@@ -40,10 +33,9 @@ export class Page<SecurityDataType = unknown> extends HttpClient<SecurityDataTyp
    * @tags Page
    * @name findAll
    * @request GET:/page
-   * @response `200` `findAllData`
    */
   findAll = (params: RequestParams = {}) =>
-    this.request<findAllData, any>({
+    this.request<void, any>({
       path: `/page`,
       method: 'GET',
       ...params,
@@ -54,10 +46,9 @@ export class Page<SecurityDataType = unknown> extends HttpClient<SecurityDataTyp
    * @tags Page
    * @name findById
    * @request GET:/page/{id}
-   * @response `200` `findByIdData`
    */
   findById = (id: string, params: RequestParams = {}) =>
-    this.request<findByIdData, any>({
+    this.request<void, any>({
       path: `/page/${id}`,
       method: 'GET',
       ...params,
@@ -68,10 +59,9 @@ export class Page<SecurityDataType = unknown> extends HttpClient<SecurityDataTyp
    * @tags Page
    * @name updateById
    * @request PATCH:/page/{id}
-   * @response `200` `updateByIdData`
    */
   updateById = (id: string, params: RequestParams = {}) =>
-    this.request<updateByIdData, any>({
+    this.request<void, any>({
       path: `/page/${id}`,
       method: 'PATCH',
       ...params,
@@ -82,10 +72,9 @@ export class Page<SecurityDataType = unknown> extends HttpClient<SecurityDataTyp
    * @tags Page
    * @name deleteById
    * @request DELETE:/page/{id}
-   * @response `200` `deleteByIdData`
    */
   deleteById = (id: string, params: RequestParams = {}) =>
-    this.request<deleteByIdData, any>({
+    this.request<void, any>({
       path: `/page/${id}`,
       method: 'DELETE',
       ...params,
@@ -96,10 +85,9 @@ export class Page<SecurityDataType = unknown> extends HttpClient<SecurityDataTyp
    * @tags Page
    * @name updateViewsById
    * @request POST:/page/{id}/views
-   * @response `200` `updateViewsByIdData`
    */
   updateViewsById = (id: string, params: RequestParams = {}) =>
-    this.request<updateViewsByIdData, any>({
+    this.request<void, any>({
       path: `/page/${id}/views`,
       method: 'POST',
       ...params,
