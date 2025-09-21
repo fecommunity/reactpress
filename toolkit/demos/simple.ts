@@ -1,15 +1,15 @@
 // src/services/articleService.ts
-import api, { types, utils } from '@/api';
+import api, { types, utils } from '../dist';
 
 // 文章服务层
 export class ArticleService {
   // 获取所有文章
   static async getAllArticles() {
     try {
-      const articles = await api.article.findAll();
+      const articles = await api.article.getRecommendArticles({});
       
       // 格式化数据
-      return articles.map(article => ({
+      return articles.data.map(article => ({
         ...article,
         formattedDate: utils.formatDate(new Date(article.createdAt || Date.now())),
       }));
@@ -30,7 +30,7 @@ export class ArticleService {
   // 创建文章
   static async createArticle(articleData: Partial<types.IArticle>) {
     try {
-      return await api.article.create(articleData);
+      return await api.article.create({});
     } catch (error) {
       throw this.handleError(error, '创建文章失败');
     }
@@ -39,7 +39,7 @@ export class ArticleService {
   // 更新文章
   static async updateArticle(id: string, updates: Partial<types.IArticle>) {
     try {
-      return await api.article.updateById(id, updates);
+      return await api.article.updateById(id);
     } catch (error) {
       throw this.handleError(error, '更新文章失败');
     }
