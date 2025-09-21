@@ -9,33 +9,45 @@
  * ---------------------------------------------------------------
  */
 
-import { IFile } from '../types/data-contracts';
+import {
+  IFileControllerDeleteByIdData,
+  IFileControllerFindAllData,
+  IFileControllerFindByIdData,
+  IFileControllerUploadFileData,
+} from '../types';
 import { HttpClient, RequestParams } from './HttpClient';
 
-export class File<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
+export class File<SecurityDataType = unknown> {
+  http: HttpClient<SecurityDataType>;
+
+  constructor(http: HttpClient<SecurityDataType>) {
+    this.http = http;
+  }
+
   /**
    * No description
    *
    * @tags File
-   * @name uploadFile
+   * @name FileControllerUploadFile
    * @request POST:/file/upload
+   * @response `200` `IFileControllerUploadFileData` 上传文件
    */
   uploadFile = (params: RequestParams = {}) =>
-    this.request<IFile[], any>({
+    this.http.request<IFileControllerUploadFileData, any>({
       path: `/file/upload`,
       method: 'POST',
-      format: 'json',
       ...params,
     });
   /**
    * No description
    *
    * @tags File
-   * @name findAll
+   * @name FileControllerFindAll
    * @request GET:/file
+   * @response `200` `IFileControllerFindAllData`
    */
   findAll = (params: RequestParams = {}) =>
-    this.request<void, any>({
+    this.http.request<IFileControllerFindAllData, any>({
       path: `/file`,
       method: 'GET',
       ...params,
@@ -44,11 +56,12 @@ export class File<SecurityDataType = unknown> extends HttpClient<SecurityDataTyp
    * No description
    *
    * @tags File
-   * @name findById
+   * @name FileControllerFindById
    * @request GET:/file/{id}
+   * @response `200` `IFileControllerFindByIdData`
    */
   findById = (id: string, params: RequestParams = {}) =>
-    this.request<void, any>({
+    this.http.request<IFileControllerFindByIdData, any>({
       path: `/file/${id}`,
       method: 'GET',
       ...params,
@@ -57,11 +70,12 @@ export class File<SecurityDataType = unknown> extends HttpClient<SecurityDataTyp
    * No description
    *
    * @tags File
-   * @name deleteById
+   * @name FileControllerDeleteById
    * @request DELETE:/file/{id}
+   * @response `200` `IFileControllerDeleteByIdData`
    */
   deleteById = (id: string, params: RequestParams = {}) =>
-    this.request<void, any>({
+    this.http.request<IFileControllerDeleteByIdData, any>({
       path: `/file/${id}`,
       method: 'DELETE',
       ...params,
