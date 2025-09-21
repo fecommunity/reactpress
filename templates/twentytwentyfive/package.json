@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "A modern blog template for ReactPress using Next.js Pages Router",
   "main": "index.js",
+  "bin": {
+    "create-reactpress-twentytwentyfive": "./bin/create-twentytwentyfive.js"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",

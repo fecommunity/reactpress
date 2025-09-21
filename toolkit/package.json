@@ -1,6 +1,6 @@
 {
   "name": "@fecommunity/reactpress-toolkit",
-  "version": "1.0.0-beta.2",
+  "version": "1.0.0",
   "main": "dist/index.js",
   "scripts": {
     "generate": "node scripts/generate-swagger.js",

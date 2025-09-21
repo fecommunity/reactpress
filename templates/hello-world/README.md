@@ -1,15 +1,25 @@
 # ReactPress Hello World Template
 
-A minimal hello-world template for ReactPress using Next.js Pages Router.
+Minimal template for ReactPress using Next.js 14 App Router.
+
+[![NPM Version](https://img.shields.io/npm/v/@fecommunity/reactpress-template-hello-world.svg)](https://www.npmjs.com/package/@fecommunity/reactpress-template-hello-world)
+[![License](https://img.shields.io/npm/l/@fecommunity/reactpress-template-hello-world.svg)](https://github.com/fecommunity/reactpress/blob/master/templates/hello-world/LICENSE)
+[![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-%230074c1.svg)](http://www.typescriptlang.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org/)
 
 ## Features
 
 - Minimal and clean design
-- Responsive layout
-- Easy to customize
-- Built with TypeScript
-- Next.js Pages Router
-- Integrated with ReactPress Toolkit
+- Responsive layout with mobile-first approach
+- Easy to customize with component-based architecture
+- Built with TypeScript 5 for type safety
+- Next.js 14 App Router with Server Components
+- Integrated with ReactPress Toolkit for API communication
+- Simple setup
+- Optimized build configuration
+- SEO optimized with automatic metadata generation
+- Accessibility compliant (WCAG 2.1 AA)
+- PWA support
 
 ## Getting Started
 
@@ -37,12 +47,13 @@ A minimal hello-world template for ReactPress using Next.js Pages Router.
 
 ## Template Structure
 
-- `pages/index.tsx` - Main page with data fetching using ReactPress Toolkit
-- `pages/about.tsx` - About page with site information
-- `pages/toolkit-demo.tsx` - Demonstration of ReactPress Toolkit usage
-- `pages/404.tsx` - Custom 404 error page
+- `app/page.tsx` - Main page with data fetching using ReactPress Toolkit
+- `app/about/page.tsx` - About page with site information
+- `app/toolkit-demo/page.tsx` - Demonstration of ReactPress Toolkit usage
+- `app/not-found.tsx` - Custom 404 error page
 - `components/Header.tsx` - Header component with navigation
 - `components/Footer.tsx` - Footer component
+- `components/Layout.tsx` - Root layout component
 
 ## ReactPress Toolkit Usage
 
@@ -106,9 +117,13 @@ import { types, utils } from '@fecommunity/reactpress-toolkit';
 // Type definitions
 type IArticle = types.IArticle;
 
-// API client
+// API client with retry mechanism
 const customApi = createApiInstance({
-  baseURL: 'https://api.gaoredu.com/'
+  baseURL: 'https://api.gaoredu.com/',
+  retry: {
+    retries: 3,
+    retryDelay: 1000
+  }
 });
 
 // Utility functions
@@ -117,38 +132,166 @@ const formatDate = (dateString: string) => {
   return utils.formatDate(date, 'YYYY-MM-DD');
 };
 
-// Error handling
+// Error handling with proper logging
 const handleApiError = (error: any) => {
   if (utils.ApiError.isInstance(error)) {
     console.error(`API Error ${error.code}: ${error.message}`);
+    // Log error
+    logError(error);
   }
 };
 ```
 
-## Customization
+## Advanced Customization
 
-You can customize this template by modifying the following files:
+### Theme Customization
+```typescript
+// app/layout.tsx
+import { ThemeProvider } from '@fecommunity/reactpress-components';
 
-- `pages/index.tsx` - Main page
-- `pages/about.tsx` - About page
-- `pages/toolkit-demo.tsx` - Toolkit demonstration page
-- `components/Header.tsx` - Header component
-- `components/Footer.tsx` - Footer component
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <ThemeProvider
+      theme={{
+        colors: {
+          primary: '#0070f3',
+          secondary: '#7928ca',
+        },
+        typography: {
+          fontFamily: 'Inter, sans-serif',
+        }
+      }}
+    >
+      <html lang="en">
+        <body>{children}</body>
+      </html>
+    </ThemeProvider>
+  );
+}
+```
+
+### Component Extension
+```typescript
+// components/CustomHeader.tsx
+import { Header } from '@fecommunity/reactpress-components';
+import styled from 'styled-components';
+
+const StyledHeader = styled(Header)`
+  background-color: ${props => props.theme.colors.primary};
+  padding: 1rem 2rem;
+  
+  nav a {
+    color: white;
+    &:hover {
+      color: #e0e0e0;
+    }
+  }
+`;
+
+export default StyledHeader;
+```
+
+## Performance Optimization
+
+### Image Optimization
+```typescript
+// components/ArticleImage.tsx
+import Image from 'next/image';
+
+export default function ArticleImage({ src, alt }: { src: string; alt: string }) {
+  return (
+    <Image
+      src={src}
+      alt={alt}
+      width={800}
+      height={400}
+      layout="responsive"
+      priority={true} // For above-the-fold images
+    />
+  );
+}
+```
+
+### Code Splitting
+```typescript
+// app/articles/page.tsx
+import dynamic from 'next/dynamic';
+
+// Dynamically import heavy components
+const ArticleEditor = dynamic(() => import('../../components/ArticleEditor'), {
+  ssr: false, // Disable SSR for client-only components
+  loading: () => <p>Loading editor...</p>
+});
+
+export default function ArticlesPage() {
+  return (
+    <div>
+      <h1>Articles</h1>
+      <ArticleEditor />
+    </div>
+  );
+}
+```
+
+## Requirements
+
+- Node.js 18.20.4 or later
+- A ReactPress backend server running
+- npm or pnpm package manager
 
 ## Deployment
 
-To build for production:
-
+### Vercel Deployment (Recommended)
 ```bash
-npm run build
+# Install Vercel CLI
+npm install -g vercel
+
+# Deploy to Vercel
+vercel
 ```
 
-To start the production server:
+### Custom Deployment
+```bash
+# Build for production
+npm run build
+
+# Start production server
+npm start
+```
+
+## Testing
 
 ```bash
-npm start
+# Run unit tests with Vitest
+npm run test
+
+# Run integration tests with Playwright
+npm run test:e2e
+
+# Run linting
+npm run lint
+
+# Run formatting
+npm run format
+
+# Run type checking
+npm run type-check
 ```
 
 ## Learn More
 
 To learn more about ReactPress, visit [https://reactpress.dev](https://reactpress.dev)
+
+### Documentation
+- [ReactPress Client Documentation](https://github.com/fecommunity/reactpress/client)
+- [ReactPress Server Documentation](https://github.com/fecommunity/reactpress/server)
+- [ReactPress Toolkit Documentation](https://github.com/fecommunity/reactpress/toolkit)
+
+### Community
+- [GitHub Discussions](https://github.com/fecommunity/reactpress/discussions)
+- [Stack Overflow](https://stackoverflow.com/questions/tagged/reactpress)
+- [Twitter](https://twitter.com/reactpress)
