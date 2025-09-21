@@ -57,7 +57,8 @@
     "pm2:restart": "pm2 restart reactpress-server",
     "pm2:delete": "pm2 delete reactpress-server",
     "pm2:logs": "pm2 logs reactpress-server",
-    "pm2:status": "pm2 status reactpress-server"
+    "pm2:status": "pm2 status reactpress-server",
+    "generate:swagger": "ts-node src/generate-swagger.ts"
   },
   "dependencies": {
     "@fecommunity/reactpress-config": "workspace:*",

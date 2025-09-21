@@ -7,3 +7,5 @@ packages:
   - 'server'
   # 文档
   - 'docs'
+  # 工具包
+  - 'toolkit'
