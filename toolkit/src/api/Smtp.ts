@@ -10,17 +10,17 @@
  */
 
 import { I_SMTP } from '../types/data-contracts';
-import { HttpClient, RequestParams } from './httpClient';
+import { HttpClient, RequestParams } from './HttpClient';
 
 export class Smtp<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
   /**
    * No description
    *
    * @tags Smtp
-   * @name create
+   * @name Smtpcreate
    * @request POST:/smtp
    */
-  create = (params: RequestParams = {}) =>
+  smtpcreate = (params: RequestParams = {}) =>
     this.request<I_SMTP[], any>({
       path: `/smtp`,
       method: 'POST',
@@ -31,10 +31,10 @@ export class Smtp<SecurityDataType = unknown> extends HttpClient<SecurityDataTyp
    * No description
    *
    * @tags Smtp
-   * @name findAll
+   * @name SmtpfindAll
    * @request GET:/smtp
    */
-  findAll = (params: RequestParams = {}) =>
+  smtpfindAll = (params: RequestParams = {}) =>
     this.request<void, any>({
       path: `/smtp`,
       method: 'GET',
@@ -44,10 +44,10 @@ export class Smtp<SecurityDataType = unknown> extends HttpClient<SecurityDataTyp
    * No description
    *
    * @tags Smtp
-   * @name deleteById
+   * @name SmtpdeleteById
    * @request DELETE:/smtp/{id}
    */
-  deleteById = (id: string, params: RequestParams = {}) =>
+  smtpdeleteById = (id: string, params: RequestParams = {}) =>
     this.request<void, any>({
       path: `/smtp/${id}`,
       method: 'DELETE',
