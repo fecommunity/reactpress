@@ -9,26 +9,86 @@
  * ---------------------------------------------------------------
  */
 
-import { HttpClient, RequestParams } from './http-client';
+import { ITag } from '../types/data-contracts';
+import { HttpClient, RequestParams } from './httpClient';
 
-export class Tag<SecurityDataType = unknown> {
-  http: HttpClient<SecurityDataType>;
-
-  constructor(http: HttpClient<SecurityDataType>) {
-    this.http = http;
-  }
-
+export class Tag<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
   /**
    * No description
    *
-   * @tags Article
-   * @name ArticleControllerFindArticlesByTag
-   * @request GET:/article/tag/{id}
-   * @response `200` `void`
+   * @tags Tag
+   * @name create
+   * @request POST:/tag
    */
-  articleControllerFindArticlesByTag = (id: string, params: RequestParams = {}) =>
-    this.http.request<void, any>({
-      path: `/article/tag/${id}`,
+  create = (params: RequestParams = {}) =>
+    this.request<ITag[], any>({
+      path: `/tag`,
+      method: 'POST',
+      format: 'json',
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Tag
+   * @name findAll
+   * @request GET:/tag
+   */
+  findAll = (params: RequestParams = {}) =>
+    this.request<void, any>({
+      path: `/tag`,
+      method: 'GET',
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Tag
+   * @name findById
+   * @request GET:/tag/{id}
+   */
+  findById = (id: string, params: RequestParams = {}) =>
+    this.request<void, any>({
+      path: `/tag/${id}`,
+      method: 'GET',
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Tag
+   * @name updateById
+   * @request PATCH:/tag/{id}
+   */
+  updateById = (id: string, params: RequestParams = {}) =>
+    this.request<void, any>({
+      path: `/tag/${id}`,
+      method: 'PATCH',
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Tag
+   * @name deleteById
+   * @request DELETE:/tag/{id}
+   */
+  deleteById = (id: string, params: RequestParams = {}) =>
+    this.request<void, any>({
+      path: `/tag/${id}`,
+      method: 'DELETE',
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Tag
+   * @name TagControllerGetArticleById
+   * @request GET:/tag/{id}/article
+   */
+  tagControllerGetArticleById = (id: string, params: RequestParams = {}) =>
+    this.request<void, any>({
+      path: `/tag/${id}/article`,
       method: 'GET',
       ...params,
     });
