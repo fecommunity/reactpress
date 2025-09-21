@@ -9,14 +9,7 @@
  * ---------------------------------------------------------------
  */
 
-import {
-  createData,
-  deleteByIdData,
-  findAllData,
-  findByIdData,
-  getArticleByIdData,
-  updateByIdData,
-} from '../types/data-contracts';
+import { ITag } from '../types/data-contracts';
 import { HttpClient, RequestParams } from './HttpClient';
 
 export class Tag<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
@@ -26,12 +19,12 @@ export class Tag<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @tags Tag
    * @name create
    * @request POST:/tag
-   * @response `200` `createData` 创建标签
    */
   create = (params: RequestParams = {}) =>
-    this.request<createData, any>({
+    this.request<ITag[], any>({
       path: `/tag`,
       method: 'POST',
+      format: 'json',
       ...params,
     });
   /**
@@ -40,10 +33,9 @@ export class Tag<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @tags Tag
    * @name findAll
    * @request GET:/tag
-   * @response `200` `findAllData`
    */
   findAll = (params: RequestParams = {}) =>
-    this.request<findAllData, any>({
+    this.request<void, any>({
       path: `/tag`,
       method: 'GET',
       ...params,
@@ -54,10 +46,9 @@ export class Tag<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @tags Tag
    * @name findById
    * @request GET:/tag/{id}
-   * @response `200` `findByIdData`
    */
   findById = (id: string, params: RequestParams = {}) =>
-    this.request<findByIdData, any>({
+    this.request<void, any>({
       path: `/tag/${id}`,
       method: 'GET',
       ...params,
@@ -68,10 +59,9 @@ export class Tag<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @tags Tag
    * @name updateById
    * @request PATCH:/tag/{id}
-   * @response `200` `updateByIdData`
    */
   updateById = (id: string, params: RequestParams = {}) =>
-    this.request<updateByIdData, any>({
+    this.request<void, any>({
       path: `/tag/${id}`,
       method: 'PATCH',
       ...params,
@@ -82,10 +72,9 @@ export class Tag<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @tags Tag
    * @name deleteById
    * @request DELETE:/tag/{id}
-   * @response `200` `deleteByIdData`
    */
   deleteById = (id: string, params: RequestParams = {}) =>
-    this.request<deleteByIdData, any>({
+    this.request<void, any>({
       path: `/tag/${id}`,
       method: 'DELETE',
       ...params,
@@ -96,10 +85,9 @@ export class Tag<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @tags Tag
    * @name getArticleById
    * @request GET:/tag/{id}/article
-   * @response `200` `getArticleByIdData`
    */
   getArticleById = (id: string, params: RequestParams = {}) =>
-    this.request<getArticleByIdData, any>({
+    this.request<void, any>({
       path: `/tag/${id}/article`,
       method: 'GET',
       ...params,

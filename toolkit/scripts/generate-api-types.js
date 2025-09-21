@@ -35,12 +35,6 @@ async function generateApiTypes() {
       httpClientType: 'axios',
       typePrefix: 'I',
       generateClient: true,
-      generateResponses: true,
-      extractRequestParams: true,
-      extractResponseBody: true,
-      extractRequestBody: true,
-      extractResponseHeaders: true,
-      generateResponseTypes: true,
       hooks: {
         onPrepareConfig: (currentConfiguration) => {
           const config = currentConfiguration.config;
