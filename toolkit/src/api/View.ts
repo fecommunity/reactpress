@@ -9,33 +9,46 @@
  * ---------------------------------------------------------------
  */
 
-import { IView } from '../types/data-contracts';
+import {
+  IViewControllerCreateData,
+  IViewControllerDeleteByIdData,
+  IViewControllerFindAllData,
+  IViewControllerFindByIdData,
+  IViewControllerFindByUrlData,
+} from '../types';
 import { HttpClient, RequestParams } from './HttpClient';
 
-export class View<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
+export class View<SecurityDataType = unknown> {
+  http: HttpClient<SecurityDataType>;
+
+  constructor(http: HttpClient<SecurityDataType>) {
+    this.http = http;
+  }
+
   /**
    * No description
    *
    * @tags View
-   * @name create
+   * @name ViewControllerCreate
    * @request POST:/view
+   * @response `200` `IViewControllerCreateData` 访问记录添加成功
    */
   create = (params: RequestParams = {}) =>
-    this.request<IView[], any>({
+    this.http.request<IViewControllerCreateData, any>({
       path: `/view`,
       method: 'POST',
-      format: 'json',
       ...params,
     });
   /**
    * No description
    *
    * @tags View
-   * @name findAll
+   * @name ViewControllerFindAll
    * @request GET:/view
+   * @response `200` `IViewControllerFindAllData`
    */
   findAll = (params: RequestParams = {}) =>
-    this.request<void, any>({
+    this.http.request<IViewControllerFindAllData, any>({
       path: `/view`,
       method: 'GET',
       ...params,
@@ -44,11 +57,12 @@ export class View<SecurityDataType = unknown> extends HttpClient<SecurityDataTyp
    * No description
    *
    * @tags View
-   * @name findByUrl
+   * @name ViewControllerFindByUrl
    * @request GET:/view/url
+   * @response `200` `IViewControllerFindByUrlData`
    */
   findByUrl = (params: RequestParams = {}) =>
-    this.request<void, any>({
+    this.http.request<IViewControllerFindByUrlData, any>({
       path: `/view/url`,
       method: 'GET',
       ...params,
@@ -57,11 +71,12 @@ export class View<SecurityDataType = unknown> extends HttpClient<SecurityDataTyp
    * No description
    *
    * @tags View
-   * @name findById
+   * @name ViewControllerFindById
    * @request GET:/view/{id}
+   * @response `200` `IViewControllerFindByIdData`
    */
   findById = (id: string, params: RequestParams = {}) =>
-    this.request<void, any>({
+    this.http.request<IViewControllerFindByIdData, any>({
       path: `/view/${id}`,
       method: 'GET',
       ...params,
@@ -70,11 +85,12 @@ export class View<SecurityDataType = unknown> extends HttpClient<SecurityDataTyp
    * No description
    *
    * @tags View
-   * @name deleteById
+   * @name ViewControllerDeleteById
    * @request DELETE:/view/{id}
+   * @response `200` `IViewControllerDeleteByIdData`
    */
   deleteById = (id: string, params: RequestParams = {}) =>
-    this.request<void, any>({
+    this.http.request<IViewControllerDeleteByIdData, any>({
       path: `/view/${id}`,
       method: 'DELETE',
       ...params,
