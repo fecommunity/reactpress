@@ -9,7 +9,13 @@
  * ---------------------------------------------------------------
  */
 
-import { ICategory } from '../types/data-contracts';
+import {
+  createData,
+  deleteByIdData,
+  findAllData,
+  findByIdData,
+  updateByIdData,
+} from '../types/data-contracts';
 import { HttpClient, RequestParams } from './HttpClient';
 
 export class Category<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
@@ -17,25 +23,26 @@ export class Category<SecurityDataType = unknown> extends HttpClient<SecurityDat
    * No description
    *
    * @tags Category
-   * @name Categorycreate
+   * @name create
    * @request POST:/category
+   * @response `200` `createData` 添加分类
    */
-  categorycreate = (params: RequestParams = {}) =>
-    this.request<ICategory[], any>({
+  create = (params: RequestParams = {}) =>
+    this.request<createData, any>({
       path: `/category`,
       method: 'POST',
-      format: 'json',
       ...params,
     });
   /**
    * No description
    *
    * @tags Category
-   * @name CategoryfindAll
+   * @name findAll
    * @request GET:/category
+   * @response `200` `findAllData`
    */
-  categoryfindAll = (params: RequestParams = {}) =>
-    this.request<void, any>({
+  findAll = (params: RequestParams = {}) =>
+    this.request<findAllData, any>({
       path: `/category`,
       method: 'GET',
       ...params,
@@ -44,11 +51,12 @@ export class Category<SecurityDataType = unknown> extends HttpClient<SecurityDat
    * No description
    *
    * @tags Category
-   * @name CategoryfindById
+   * @name findById
    * @request GET:/category/{id}
+   * @response `200` `findByIdData`
    */
-  categoryfindById = (id: string, params: RequestParams = {}) =>
-    this.request<void, any>({
+  findById = (id: string, params: RequestParams = {}) =>
+    this.request<findByIdData, any>({
       path: `/category/${id}`,
       method: 'GET',
       ...params,
@@ -57,11 +65,12 @@ export class Category<SecurityDataType = unknown> extends HttpClient<SecurityDat
    * No description
    *
    * @tags Category
-   * @name CategoryupdateById
+   * @name updateById
    * @request PATCH:/category/{id}
+   * @response `200` `updateByIdData`
    */
-  categoryupdateById = (id: string, params: RequestParams = {}) =>
-    this.request<void, any>({
+  updateById = (id: string, params: RequestParams = {}) =>
+    this.request<updateByIdData, any>({
       path: `/category/${id}`,
       method: 'PATCH',
       ...params,
@@ -70,11 +79,12 @@ export class Category<SecurityDataType = unknown> extends HttpClient<SecurityDat
    * No description
    *
    * @tags Category
-   * @name CategorydeleteById
+   * @name deleteById
    * @request DELETE:/category/{id}
+   * @response `200` `deleteByIdData`
    */
-  categorydeleteById = (id: string, params: RequestParams = {}) =>
-    this.request<void, any>({
+  deleteById = (id: string, params: RequestParams = {}) =>
+    this.request<deleteByIdData, any>({
       path: `/category/${id}`,
       method: 'DELETE',
       ...params,

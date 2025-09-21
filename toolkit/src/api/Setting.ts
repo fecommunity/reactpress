@@ -9,7 +9,7 @@
  * ---------------------------------------------------------------
  */
 
-import { ISetting } from '../types/data-contracts';
+import { findAllData, updateData } from '../types/data-contracts';
 import { HttpClient, RequestParams } from './HttpClient';
 
 export class Setting<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
@@ -17,25 +17,26 @@ export class Setting<SecurityDataType = unknown> extends HttpClient<SecurityData
    * No description
    *
    * @tags Setting
-   * @name Settingupdate
+   * @name update
    * @request POST:/setting
+   * @response `200` `updateData` 更新设置
    */
-  settingupdate = (params: RequestParams = {}) =>
-    this.request<ISetting[], any>({
+  update = (params: RequestParams = {}) =>
+    this.request<updateData, any>({
       path: `/setting`,
       method: 'POST',
-      format: 'json',
       ...params,
     });
   /**
    * No description
    *
    * @tags Setting
-   * @name SettingfindAll
+   * @name findAll
    * @request POST:/setting/get
+   * @response `200` `findAllData`
    */
-  settingfindAll = (params: RequestParams = {}) =>
-    this.request<void, any>({
+  findAll = (params: RequestParams = {}) =>
+    this.request<findAllData, any>({
       path: `/setting/get`,
       method: 'POST',
       ...params,
