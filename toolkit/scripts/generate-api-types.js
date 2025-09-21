@@ -35,6 +35,12 @@ async function generateApiTypes() {
       httpClientType: 'axios',
       typePrefix: 'I',
       generateClient: true,
+      generateResponses: true,
+      extractRequestParams: true,
+      extractResponseBody: true,
+      extractRequestBody: true,
+      extractResponseHeaders: true,
+      generateResponseTypes: true,
       hooks: {
         onPrepareConfig: (currentConfiguration) => {
           const config = currentConfiguration.config;
@@ -89,10 +95,10 @@ async function organizeGeneratedFiles() {
       } else if (file.includes('contract') || file === 'types.ts') {
         // 类型定义文件
         fs.moveSync(filePath, path.join(typesDir, file === 'types.ts' ? 'index.ts' : file), { overwrite: true });
-        console.log(`📄 移动类型文件: ${file} -> types/`);
+        console.log(`📄 移动类型文件: {file} -> types/`);
       } else {
         // 其他文件留在根目录
-        console.log(`📄 保留文件: ${file}`);
+        console.log(`📄 保留文件: {file}`);
       }
     }
   });
@@ -215,14 +221,15 @@ async function renameApiMethods() {
     const filePath = path.join(apiDir, file);
     let content = fs.readFileSync(filePath, 'utf8');
     
-    // 使用正则表达式匹配并重命名方法
+    // 使用更精确的正则表达式匹配并重命名方法
     // 匹配模式: 方法名以 Controller 开头，后面跟着大写字母
+    // 例如: articleControllerFindById -> findById
     content = content.replace(
       /(\w+)Controller([A-Z]\w+)/g,
-      (match, prefix, methodName) => {
+      (match, className, methodName) => {
         // 将方法名的首字母小写
         const newMethodName = methodName.charAt(0).toLowerCase() + methodName.slice(1);
-        return `${prefix}${newMethodName}`;
+        return newMethodName;
       }
     );
     
@@ -289,10 +296,17 @@ async function createMainIndex() {
   const mainIndexContent = `// Auto-generated API client
 // Generated from Swagger/OpenAPI specification
 
-export * from './api';
-export * from './types';
-export * from './utils';
+// 导出 API 实例
+export { default as api } from './api/ApiInstance';
+export * from './api/ApiInstance';
 
+// 导出类型定义
+export * as types from './types';
+
+// 导出工具函数
+export * as utils from './utils';
+
+// 默认导出 API 实例
 export { default } from './api/ApiInstance';
 `;
 
@@ -563,13 +577,14 @@ generateApiTypes()
     console.log('');
     console.log('💡 使用方法:');
     console.log('  1. 直接使用默认实例:');
-    console.log('     import api from \'@/api\';');
-    console.log('     api.article.findAll();');
+    console.log('     import api from \'@fe/toolkit\';');
+    console.log('     api.article.findById();');
     console.log('');
-    console.log('  2. 创建自定义实例:');
-    console.log('     import { createApiInstance } from \'@/api\';');
-    console.log('     const customApi = createApiInstance({ baseURL: \'https://api.example.com\' });');
-    console.log('     customApi.article.findAll();');
+    console.log('  2. 导入所有模块:');
+    console.log('     import { api, types, utils } from \'@fe/toolkit\';');
+    console.log('     const articles = await api.article.findAll();');
+    console.log('     const formattedDate = utils.formatDate(new Date());');
+    console.log('     const articleType: types.IArticle = { ... };');
   })
   .catch((error) => {
     console.error('❌ API 生成过程失败:', error.message);
