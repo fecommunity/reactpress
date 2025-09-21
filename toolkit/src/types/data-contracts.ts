@@ -196,3 +196,139 @@ export interface IView {
   /** @format date-time */
   updateAt: string;
 }
+
+export type IUserControllerFindAllData = IUser[];
+
+export type IUserControllerRegisterData = IUser[];
+
+export type IUserControllerUpdateData = IUser[];
+
+export type IUserControllerUpdatePasswordData = IUser[];
+
+export type IAuthControllerLoginData = any;
+
+export type IAuthControllerCreateBookData = any;
+
+export type IAuthControllerLoginWithGithubData = any;
+
+export type ISettingControllerUpdateData = ISetting[];
+
+export type ISettingControllerFindAllData = any;
+
+export type ISmtpControllerCreateData = I_SMTP[];
+
+export type ISmtpControllerFindAllData = any;
+
+export type ISmtpControllerDeleteByIdData = any;
+
+export type IFileControllerUploadFileData = IFile[];
+
+export type IFileControllerFindAllData = any;
+
+export type IFileControllerFindByIdData = any;
+
+export type IFileControllerDeleteByIdData = any;
+
+export type ITagControllerCreateData = ITag[];
+
+export type ITagControllerFindAllData = any;
+
+export type ITagControllerFindByIdData = any;
+
+export type ITagControllerUpdateByIdData = any;
+
+export type ITagControllerDeleteByIdData = any;
+
+export type ITagControllerGetArticleByIdData = any;
+
+export type IArticleControllerCreateData = IArticle[];
+
+export type IArticleControllerFindAllData = any;
+
+export type IArticleControllerFindArticlesByCategoryData = any;
+
+export type IArticleControllerFindArticlesByTagData = any;
+
+export type IArticleControllerGetRecommendArticlesData = any;
+
+export type IArticleControllerGetArchivesData = any;
+
+export type IArticleControllerRecommendData = any;
+
+export type IArticleControllerFindByIdData = any;
+
+export type IArticleControllerUpdateByIdData = any;
+
+export type IArticleControllerDeleteByIdData = any;
+
+export type IArticleControllerCheckPasswordData = any;
+
+export type IArticleControllerUpdateViewsByIdData = any;
+
+export type IArticleControllerUpdateLikesByIdData = any;
+
+export type ICategoryControllerCreateData = ICategory[];
+
+export type ICategoryControllerFindAllData = any;
+
+export type ICategoryControllerFindByIdData = any;
+
+export type ICategoryControllerUpdateByIdData = any;
+
+export type ICategoryControllerDeleteByIdData = any;
+
+export type IKnowledgeControllerCreateBookData = IKnowledge[];
+
+export type IKnowledgeControllerCreateChapterData = IKnowledge[];
+
+export type IKnowledgeControllerDeleteByIdData = any;
+
+export type IKnowledgeControllerUpdateByIdData = any;
+
+export type IKnowledgeControllerFindByIdData = any;
+
+export type IKnowledgeControllerFindAllData = any;
+
+export type IKnowledgeControllerUpdateViewsByIdData = any;
+
+export type IKnowledgeControllerUpdateLikesByIdData = any;
+
+export type ICommentControllerCreateData = IComment[];
+
+export type ICommentControllerFindAllData = any;
+
+export type ICommentControllerFindByIdData = any;
+
+export type ICommentControllerUpdateByIdData = any;
+
+export type ICommentControllerDeleteByIdData = any;
+
+export type ICommentControllerGetArticleCommentsData = any;
+
+export type IPageControllerCreateData = IPage[];
+
+export type IPageControllerFindAllData = any;
+
+export type IPageControllerFindByIdData = any;
+
+export type IPageControllerUpdateByIdData = any;
+
+export type IPageControllerDeleteByIdData = any;
+
+export type IPageControllerUpdateViewsByIdData = any;
+
+export type IViewControllerCreateData = IView[];
+
+export type IViewControllerFindAllData = any;
+
+export type IViewControllerFindByUrlData = any;
+
+export type IViewControllerFindByIdData = any;
+
+export type IViewControllerDeleteByIdData = any;
+
+export type ISearchControllerSearchArticleData = any;
+
+export type ISearchControllerFindAllData = any;
+
+export type ISearchControllerDeleteByIdData = any;

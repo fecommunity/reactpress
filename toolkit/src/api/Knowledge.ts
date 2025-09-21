@@ -9,7 +9,16 @@
  * ---------------------------------------------------------------
  */
 
-import { IKnowledge } from '../types/data-contracts';
+import {
+  createBookData,
+  createChapterData,
+  deleteByIdData,
+  findAllData,
+  findByIdData,
+  updateByIdData,
+  updateLikesByIdData,
+  updateViewsByIdData,
+} from '../types/data-contracts';
 import { HttpClient, RequestParams } from './HttpClient';
 
 export class Knowledge<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
@@ -17,39 +26,40 @@ export class Knowledge<SecurityDataType = unknown> extends HttpClient<SecurityDa
    * No description
    *
    * @tags Knowledge
-   * @name KnowledgecreateBook
+   * @name createBook
    * @request POST:/Knowledge/book
+   * @response `200` `createBookData` 创建知识库
    */
-  knowledgecreateBook = (params: RequestParams = {}) =>
-    this.request<IKnowledge[], any>({
+  createBook = (params: RequestParams = {}) =>
+    this.request<createBookData, any>({
       path: `/Knowledge/book`,
       method: 'POST',
-      format: 'json',
       ...params,
     });
   /**
    * No description
    *
    * @tags Knowledge
-   * @name KnowledgecreateChapter
+   * @name createChapter
    * @request POST:/Knowledge/chapter
+   * @response `200` `createChapterData` 创建知识章节
    */
-  knowledgecreateChapter = (params: RequestParams = {}) =>
-    this.request<IKnowledge[], any>({
+  createChapter = (params: RequestParams = {}) =>
+    this.request<createChapterData, any>({
       path: `/Knowledge/chapter`,
       method: 'POST',
-      format: 'json',
       ...params,
     });
   /**
    * No description
    *
    * @tags Knowledge
-   * @name KnowledgedeleteById
+   * @name deleteById
    * @request DELETE:/Knowledge/{id}
+   * @response `200` `deleteByIdData`
    */
-  knowledgedeleteById = (id: string, params: RequestParams = {}) =>
-    this.request<void, any>({
+  deleteById = (id: string, params: RequestParams = {}) =>
+    this.request<deleteByIdData, any>({
       path: `/Knowledge/${id}`,
       method: 'DELETE',
       ...params,
@@ -58,11 +68,12 @@ export class Knowledge<SecurityDataType = unknown> extends HttpClient<SecurityDa
    * No description
    *
    * @tags Knowledge
-   * @name KnowledgeupdateById
+   * @name updateById
    * @request PATCH:/Knowledge/{id}
+   * @response `200` `updateByIdData`
    */
-  knowledgeupdateById = (id: string, params: RequestParams = {}) =>
-    this.request<void, any>({
+  updateById = (id: string, params: RequestParams = {}) =>
+    this.request<updateByIdData, any>({
       path: `/Knowledge/${id}`,
       method: 'PATCH',
       ...params,
@@ -71,11 +82,12 @@ export class Knowledge<SecurityDataType = unknown> extends HttpClient<SecurityDa
    * No description
    *
    * @tags Knowledge
-   * @name KnowledgefindById
+   * @name findById
    * @request GET:/Knowledge/{id}
+   * @response `200` `findByIdData`
    */
-  knowledgefindById = (id: string, params: RequestParams = {}) =>
-    this.request<void, any>({
+  findById = (id: string, params: RequestParams = {}) =>
+    this.request<findByIdData, any>({
       path: `/Knowledge/${id}`,
       method: 'GET',
       ...params,
@@ -84,11 +96,12 @@ export class Knowledge<SecurityDataType = unknown> extends HttpClient<SecurityDa
    * No description
    *
    * @tags Knowledge
-   * @name KnowledgefindAll
+   * @name findAll
    * @request GET:/Knowledge
+   * @response `200` `findAllData`
    */
-  knowledgefindAll = (params: RequestParams = {}) =>
-    this.request<void, any>({
+  findAll = (params: RequestParams = {}) =>
+    this.request<findAllData, any>({
       path: `/Knowledge`,
       method: 'GET',
       ...params,
@@ -97,11 +110,12 @@ export class Knowledge<SecurityDataType = unknown> extends HttpClient<SecurityDa
    * No description
    *
    * @tags Knowledge
-   * @name KnowledgeupdateViewsById
+   * @name updateViewsById
    * @request POST:/Knowledge/{id}/views
+   * @response `200` `updateViewsByIdData`
    */
-  knowledgeupdateViewsById = (id: string, params: RequestParams = {}) =>
-    this.request<void, any>({
+  updateViewsById = (id: string, params: RequestParams = {}) =>
+    this.request<updateViewsByIdData, any>({
       path: `/Knowledge/${id}/views`,
       method: 'POST',
       ...params,
@@ -110,11 +124,12 @@ export class Knowledge<SecurityDataType = unknown> extends HttpClient<SecurityDa
    * No description
    *
    * @tags Knowledge
-   * @name KnowledgeupdateLikesById
+   * @name updateLikesById
    * @request POST:/Knowledge/{id}/likes
+   * @response `200` `updateLikesByIdData`
    */
-  knowledgeupdateLikesById = (id: string, params: RequestParams = {}) =>
-    this.request<void, any>({
+  updateLikesById = (id: string, params: RequestParams = {}) =>
+    this.request<updateLikesByIdData, any>({
       path: `/Knowledge/${id}/likes`,
       method: 'POST',
       ...params,

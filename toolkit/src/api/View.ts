@@ -9,7 +9,13 @@
  * ---------------------------------------------------------------
  */
 
-import { IView } from '../types/data-contracts';
+import {
+  createData,
+  deleteByIdData,
+  findAllData,
+  findByIdData,
+  findByUrlData,
+} from '../types/data-contracts';
 import { HttpClient, RequestParams } from './HttpClient';
 
 export class View<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
@@ -17,25 +23,26 @@ export class View<SecurityDataType = unknown> extends HttpClient<SecurityDataTyp
    * No description
    *
    * @tags View
-   * @name Viewcreate
+   * @name create
    * @request POST:/view
+   * @response `200` `createData` 访问记录添加成功
    */
-  viewcreate = (params: RequestParams = {}) =>
-    this.request<IView[], any>({
+  create = (params: RequestParams = {}) =>
+    this.request<createData, any>({
       path: `/view`,
       method: 'POST',
-      format: 'json',
       ...params,
     });
   /**
    * No description
    *
    * @tags View
-   * @name ViewfindAll
+   * @name findAll
    * @request GET:/view
+   * @response `200` `findAllData`
    */
-  viewfindAll = (params: RequestParams = {}) =>
-    this.request<void, any>({
+  findAll = (params: RequestParams = {}) =>
+    this.request<findAllData, any>({
       path: `/view`,
       method: 'GET',
       ...params,
@@ -44,11 +51,12 @@ export class View<SecurityDataType = unknown> extends HttpClient<SecurityDataTyp
    * No description
    *
    * @tags View
-   * @name ViewfindByUrl
+   * @name findByUrl
    * @request GET:/view/url
+   * @response `200` `findByUrlData`
    */
-  viewfindByUrl = (params: RequestParams = {}) =>
-    this.request<void, any>({
+  findByUrl = (params: RequestParams = {}) =>
+    this.request<findByUrlData, any>({
       path: `/view/url`,
       method: 'GET',
       ...params,
@@ -57,11 +65,12 @@ export class View<SecurityDataType = unknown> extends HttpClient<SecurityDataTyp
    * No description
    *
    * @tags View
-   * @name ViewfindById
+   * @name findById
    * @request GET:/view/{id}
+   * @response `200` `findByIdData`
    */
-  viewfindById = (id: string, params: RequestParams = {}) =>
-    this.request<void, any>({
+  findById = (id: string, params: RequestParams = {}) =>
+    this.request<findByIdData, any>({
       path: `/view/${id}`,
       method: 'GET',
       ...params,
@@ -70,11 +79,12 @@ export class View<SecurityDataType = unknown> extends HttpClient<SecurityDataTyp
    * No description
    *
    * @tags View
-   * @name ViewdeleteById
+   * @name deleteById
    * @request DELETE:/view/{id}
+   * @response `200` `deleteByIdData`
    */
-  viewdeleteById = (id: string, params: RequestParams = {}) =>
-    this.request<void, any>({
+  deleteById = (id: string, params: RequestParams = {}) =>
+    this.request<deleteByIdData, any>({
       path: `/view/${id}`,
       method: 'DELETE',
       ...params,

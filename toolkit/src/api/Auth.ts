@@ -9,6 +9,11 @@
  * ---------------------------------------------------------------
  */
 
+import {
+  createBookData,
+  loginData,
+  loginWithGithubData,
+} from '../types/data-contracts';
 import { HttpClient, RequestParams } from './HttpClient';
 
 export class Auth<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
@@ -16,11 +21,12 @@ export class Auth<SecurityDataType = unknown> extends HttpClient<SecurityDataTyp
    * No description
    *
    * @tags Auth
-   * @name Authlogin
+   * @name login
    * @request POST:/auth/login
+   * @response `200` `loginData`
    */
-  authlogin = (params: RequestParams = {}) =>
-    this.request<void, any>({
+  login = (params: RequestParams = {}) =>
+    this.request<loginData, any>({
       path: `/auth/login`,
       method: 'POST',
       ...params,
@@ -29,11 +35,12 @@ export class Auth<SecurityDataType = unknown> extends HttpClient<SecurityDataTyp
    * No description
    *
    * @tags Auth
-   * @name AuthcreateBook
+   * @name createBook
    * @request POST:/auth/admin
+   * @response `201` `createBookData`
    */
-  authcreateBook = (params: RequestParams = {}) =>
-    this.request<void, any>({
+  createBook = (params: RequestParams = {}) =>
+    this.request<createBookData, any>({
       path: `/auth/admin`,
       method: 'POST',
       ...params,
@@ -42,11 +49,12 @@ export class Auth<SecurityDataType = unknown> extends HttpClient<SecurityDataTyp
    * No description
    *
    * @tags Auth
-   * @name AuthloginWithGithub
+   * @name loginWithGithub
    * @request POST:/auth/github
+   * @response `201` `loginWithGithubData`
    */
-  authloginWithGithub = (params: RequestParams = {}) =>
-    this.request<void, any>({
+  loginWithGithub = (params: RequestParams = {}) =>
+    this.request<loginWithGithubData, any>({
       path: `/auth/github`,
       method: 'POST',
       ...params,

@@ -9,7 +9,7 @@
  * ---------------------------------------------------------------
  */
 
-import { I_SMTP } from '../types/data-contracts';
+import { createData, deleteByIdData, findAllData } from '../types/data-contracts';
 import { HttpClient, RequestParams } from './HttpClient';
 
 export class Smtp<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
@@ -17,25 +17,26 @@ export class Smtp<SecurityDataType = unknown> extends HttpClient<SecurityDataTyp
    * No description
    *
    * @tags Smtp
-   * @name Smtpcreate
+   * @name create
    * @request POST:/smtp
+   * @response `200` `createData` 发送邮件
    */
-  smtpcreate = (params: RequestParams = {}) =>
-    this.request<I_SMTP[], any>({
+  create = (params: RequestParams = {}) =>
+    this.request<createData, any>({
       path: `/smtp`,
       method: 'POST',
-      format: 'json',
       ...params,
     });
   /**
    * No description
    *
    * @tags Smtp
-   * @name SmtpfindAll
+   * @name findAll
    * @request GET:/smtp
+   * @response `200` `findAllData`
    */
-  smtpfindAll = (params: RequestParams = {}) =>
-    this.request<void, any>({
+  findAll = (params: RequestParams = {}) =>
+    this.request<findAllData, any>({
       path: `/smtp`,
       method: 'GET',
       ...params,
@@ -44,11 +45,12 @@ export class Smtp<SecurityDataType = unknown> extends HttpClient<SecurityDataTyp
    * No description
    *
    * @tags Smtp
-   * @name SmtpdeleteById
+   * @name deleteById
    * @request DELETE:/smtp/{id}
+   * @response `200` `deleteByIdData`
    */
-  smtpdeleteById = (id: string, params: RequestParams = {}) =>
-    this.request<void, any>({
+  deleteById = (id: string, params: RequestParams = {}) =>
+    this.request<deleteByIdData, any>({
       path: `/smtp/${id}`,
       method: 'DELETE',
       ...params,

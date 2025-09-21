@@ -9,7 +9,14 @@
  * ---------------------------------------------------------------
  */
 
-import { IComment } from '../types/data-contracts';
+import {
+  createData,
+  deleteByIdData,
+  findAllData,
+  findByIdData,
+  getArticleCommentsData,
+  updateByIdData,
+} from '../types/data-contracts';
 import { HttpClient, RequestParams } from './HttpClient';
 
 export class Comment<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
@@ -17,25 +24,26 @@ export class Comment<SecurityDataType = unknown> extends HttpClient<SecurityData
    * No description
    *
    * @tags Comment
-   * @name Commentcreate
+   * @name create
    * @request POST:/comment
+   * @response `200` `createData` 创建评论
    */
-  commentcreate = (params: RequestParams = {}) =>
-    this.request<IComment[], any>({
+  create = (params: RequestParams = {}) =>
+    this.request<createData, any>({
       path: `/comment`,
       method: 'POST',
-      format: 'json',
       ...params,
     });
   /**
    * No description
    *
    * @tags Comment
-   * @name CommentfindAll
+   * @name findAll
    * @request GET:/comment
+   * @response `200` `findAllData`
    */
-  commentfindAll = (params: RequestParams = {}) =>
-    this.request<void, any>({
+  findAll = (params: RequestParams = {}) =>
+    this.request<findAllData, any>({
       path: `/comment`,
       method: 'GET',
       ...params,
@@ -44,11 +52,12 @@ export class Comment<SecurityDataType = unknown> extends HttpClient<SecurityData
    * No description
    *
    * @tags Comment
-   * @name CommentfindById
+   * @name findById
    * @request GET:/comment/{id}
+   * @response `200` `findByIdData`
    */
-  commentfindById = (id: string, params: RequestParams = {}) =>
-    this.request<void, any>({
+  findById = (id: string, params: RequestParams = {}) =>
+    this.request<findByIdData, any>({
       path: `/comment/${id}`,
       method: 'GET',
       ...params,
@@ -57,11 +66,12 @@ export class Comment<SecurityDataType = unknown> extends HttpClient<SecurityData
    * No description
    *
    * @tags Comment
-   * @name CommentupdateById
+   * @name updateById
    * @request PATCH:/comment/{id}
+   * @response `200` `updateByIdData`
    */
-  commentupdateById = (id: string, params: RequestParams = {}) =>
-    this.request<void, any>({
+  updateById = (id: string, params: RequestParams = {}) =>
+    this.request<updateByIdData, any>({
       path: `/comment/${id}`,
       method: 'PATCH',
       ...params,
@@ -70,11 +80,12 @@ export class Comment<SecurityDataType = unknown> extends HttpClient<SecurityData
    * No description
    *
    * @tags Comment
-   * @name CommentdeleteById
+   * @name deleteById
    * @request DELETE:/comment/{id}
+   * @response `200` `deleteByIdData`
    */
-  commentdeleteById = (id: string, params: RequestParams = {}) =>
-    this.request<void, any>({
+  deleteById = (id: string, params: RequestParams = {}) =>
+    this.request<deleteByIdData, any>({
       path: `/comment/${id}`,
       method: 'DELETE',
       ...params,
@@ -83,11 +94,12 @@ export class Comment<SecurityDataType = unknown> extends HttpClient<SecurityData
    * No description
    *
    * @tags Comment
-   * @name CommentgetArticleComments
+   * @name getArticleComments
    * @request GET:/comment/host/{hostId}
+   * @response `200` `getArticleCommentsData`
    */
-  commentgetArticleComments = (hostId: string, params: RequestParams = {}) =>
-    this.request<void, any>({
+  getArticleComments = (hostId: string, params: RequestParams = {}) =>
+    this.request<getArticleCommentsData, any>({
       path: `/comment/host/${hostId}`,
       method: 'GET',
       ...params,

@@ -9,7 +9,12 @@
  * ---------------------------------------------------------------
  */
 
-import { IFile } from '../types/data-contracts';
+import {
+  deleteByIdData,
+  findAllData,
+  findByIdData,
+  uploadFileData,
+} from '../types/data-contracts';
 import { HttpClient, RequestParams } from './HttpClient';
 
 export class File<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
@@ -17,25 +22,26 @@ export class File<SecurityDataType = unknown> extends HttpClient<SecurityDataTyp
    * No description
    *
    * @tags File
-   * @name FileuploadFile
+   * @name uploadFile
    * @request POST:/file/upload
+   * @response `200` `uploadFileData` 上传文件
    */
-  fileuploadFile = (params: RequestParams = {}) =>
-    this.request<IFile[], any>({
+  uploadFile = (params: RequestParams = {}) =>
+    this.request<uploadFileData, any>({
       path: `/file/upload`,
       method: 'POST',
-      format: 'json',
       ...params,
     });
   /**
    * No description
    *
    * @tags File
-   * @name FilefindAll
+   * @name findAll
    * @request GET:/file
+   * @response `200` `findAllData`
    */
-  filefindAll = (params: RequestParams = {}) =>
-    this.request<void, any>({
+  findAll = (params: RequestParams = {}) =>
+    this.request<findAllData, any>({
       path: `/file`,
       method: 'GET',
       ...params,
@@ -44,11 +50,12 @@ export class File<SecurityDataType = unknown> extends HttpClient<SecurityDataTyp
    * No description
    *
    * @tags File
-   * @name FilefindById
+   * @name findById
    * @request GET:/file/{id}
+   * @response `200` `findByIdData`
    */
-  filefindById = (id: string, params: RequestParams = {}) =>
-    this.request<void, any>({
+  findById = (id: string, params: RequestParams = {}) =>
+    this.request<findByIdData, any>({
       path: `/file/${id}`,
       method: 'GET',
       ...params,
@@ -57,11 +64,12 @@ export class File<SecurityDataType = unknown> extends HttpClient<SecurityDataTyp
    * No description
    *
    * @tags File
-   * @name FiledeleteById
+   * @name deleteById
    * @request DELETE:/file/{id}
+   * @response `200` `deleteByIdData`
    */
-  filedeleteById = (id: string, params: RequestParams = {}) =>
-    this.request<void, any>({
+  deleteById = (id: string, params: RequestParams = {}) =>
+    this.request<deleteByIdData, any>({
       path: `/file/${id}`,
       method: 'DELETE',
       ...params,

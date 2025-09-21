@@ -9,6 +9,11 @@
  * ---------------------------------------------------------------
  */
 
+import {
+  deleteByIdData,
+  findAllData,
+  searchArticleData,
+} from '../types/data-contracts';
 import { HttpClient, RequestParams } from './HttpClient';
 
 export class Search<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
@@ -16,11 +21,12 @@ export class Search<SecurityDataType = unknown> extends HttpClient<SecurityDataT
    * No description
    *
    * @tags Search
-   * @name SearchsearchArticle
+   * @name searchArticle
    * @request GET:/search/article
+   * @response `200` `searchArticleData`
    */
-  searchsearchArticle = (params: RequestParams = {}) =>
-    this.request<void, any>({
+  searchArticle = (params: RequestParams = {}) =>
+    this.request<searchArticleData, any>({
       path: `/search/article`,
       method: 'GET',
       ...params,
@@ -29,11 +35,12 @@ export class Search<SecurityDataType = unknown> extends HttpClient<SecurityDataT
    * No description
    *
    * @tags Search
-   * @name SearchfindAll
+   * @name findAll
    * @request GET:/search
+   * @response `200` `findAllData`
    */
-  searchfindAll = (params: RequestParams = {}) =>
-    this.request<void, any>({
+  findAll = (params: RequestParams = {}) =>
+    this.request<findAllData, any>({
       path: `/search`,
       method: 'GET',
       ...params,
@@ -42,11 +49,12 @@ export class Search<SecurityDataType = unknown> extends HttpClient<SecurityDataT
    * No description
    *
    * @tags Search
-   * @name SearchdeleteById
+   * @name deleteById
    * @request DELETE:/search/{id}
+   * @response `200` `deleteByIdData`
    */
-  searchdeleteById = (id: string, params: RequestParams = {}) =>
-    this.request<void, any>({
+  deleteById = (id: string, params: RequestParams = {}) =>
+    this.request<deleteByIdData, any>({
       path: `/search/${id}`,
       method: 'DELETE',
       ...params,

@@ -9,7 +9,12 @@
  * ---------------------------------------------------------------
  */
 
-import { IUser } from '../types/data-contracts';
+import {
+  findAllData,
+  registerData,
+  updateData,
+  updatePasswordData,
+} from '../types/data-contracts';
 import { HttpClient, RequestParams } from './HttpClient';
 
 export class User<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
@@ -17,56 +22,57 @@ export class User<SecurityDataType = unknown> extends HttpClient<SecurityDataTyp
    * No description
    *
    * @tags User
-   * @name UserfindAll
+   * @name findAll
    * @request GET:/user
+   * @response `200` `findAllData` 获取用户列表
+   * @response `403` `void` 无权获取用户列表
    */
-  userfindAll = (params: RequestParams = {}) =>
-    this.request<IUser[], void>({
+  findAll = (params: RequestParams = {}) =>
+    this.request<findAllData, void>({
       path: `/user`,
       method: 'GET',
-      format: 'json',
       ...params,
     });
   /**
    * No description
    *
    * @tags User
-   * @name Userregister
+   * @name register
    * @request POST:/user/register
+   * @response `201` `registerData` 创建用户
    */
-  userregister = (params: RequestParams = {}) =>
-    this.request<IUser[], any>({
+  register = (params: RequestParams = {}) =>
+    this.request<registerData, any>({
       path: `/user/register`,
       method: 'POST',
-      format: 'json',
       ...params,
     });
   /**
    * No description
    *
    * @tags User
-   * @name Userupdate
+   * @name update
    * @request POST:/user/update
+   * @response `200` `updateData` 更新用户成功
    */
-  userupdate = (params: RequestParams = {}) =>
-    this.request<IUser[], any>({
+  update = (params: RequestParams = {}) =>
+    this.request<updateData, any>({
       path: `/user/update`,
       method: 'POST',
-      format: 'json',
       ...params,
     });
   /**
    * No description
    *
    * @tags User
-   * @name UserupdatePassword
+   * @name updatePassword
    * @request POST:/user/password
+   * @response `201` `updatePasswordData` 更新密码成功
    */
-  userupdatePassword = (params: RequestParams = {}) =>
-    this.request<IUser[], any>({
+  updatePassword = (params: RequestParams = {}) =>
+    this.request<updatePasswordData, any>({
       path: `/user/password`,
       method: 'POST',
-      format: 'json',
       ...params,
     });
 }
