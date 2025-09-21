@@ -9,17 +9,17 @@
  * ---------------------------------------------------------------
  */
 
-import { HttpClient, RequestParams } from './httpClient';
+import { HttpClient, RequestParams } from './HttpClient';
 
 export class Search<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
   /**
    * No description
    *
    * @tags Search
-   * @name SearchControllerSearchArticle
+   * @name SearchsearchArticle
    * @request GET:/search/article
    */
-  searchControllerSearchArticle = (params: RequestParams = {}) =>
+  searchsearchArticle = (params: RequestParams = {}) =>
     this.request<void, any>({
       path: `/search/article`,
       method: 'GET',
@@ -29,10 +29,10 @@ export class Search<SecurityDataType = unknown> extends HttpClient<SecurityDataT
    * No description
    *
    * @tags Search
-   * @name findAll
+   * @name SearchfindAll
    * @request GET:/search
    */
-  findAll = (params: RequestParams = {}) =>
+  searchfindAll = (params: RequestParams = {}) =>
     this.request<void, any>({
       path: `/search`,
       method: 'GET',
@@ -42,10 +42,10 @@ export class Search<SecurityDataType = unknown> extends HttpClient<SecurityDataT
    * No description
    *
    * @tags Search
-   * @name deleteById
+   * @name SearchdeleteById
    * @request DELETE:/search/{id}
    */
-  deleteById = (id: string, params: RequestParams = {}) =>
+  searchdeleteById = (id: string, params: RequestParams = {}) =>
     this.request<void, any>({
       path: `/search/${id}`,
       method: 'DELETE',
