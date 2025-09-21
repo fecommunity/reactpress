@@ -1,0 +1,27 @@
+{
+  "name": "@fecommunity/reactpress-template-hello-world",
+  "version": "1.0.0",
+  "description": "A minimal hello-world template for ReactPress using Next.js Pages Router",
+  "main": "index.js",
+  "bin": {
+    "create-reactpress-hello-world": "./bin/create-hello-world.js"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@fecommunity/reactpress-toolkit": "workspace:*",
+    "next": "^12.3.4",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "fs-extra": "^10.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "17.0.22",
+    "@types/react": "17.0.42",
+    "typescript": "4.6.2"
+  }
+}
