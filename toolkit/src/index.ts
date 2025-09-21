@@ -1,15 +1,15 @@
-// Auto-generated API client
-// Generated from Swagger/OpenAPI specification
 
-// 导出 API 实例
-export { default as api } from './api/ApiInstance';
-export * from './api/ApiInstance';
+// Main index file for ReactPress Toolkit
 
-// 导出类型定义
-export * as types from './types';
+// Export API instance and HTTP client
+export { api, http, createApiInstance } from './api/instance';
+export { HttpClient } from './api/HttpClient';
 
-// 导出工具函数
+// Export utility functions
 export * as utils from './utils';
 
-// 默认导出 API 实例
-export { default } from './api/ApiInstance';
+// Re-export types for convenience
+export * as types from './types';
+
+// Export default API instance
+export { api as default } from './api/instance';

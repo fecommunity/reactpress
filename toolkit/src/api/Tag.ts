@@ -9,33 +9,47 @@
  * ---------------------------------------------------------------
  */
 
-import { ITag } from '../types/data-contracts';
+import {
+  ITagControllerCreateData,
+  ITagControllerDeleteByIdData,
+  ITagControllerFindAllData,
+  ITagControllerFindByIdData,
+  ITagControllerGetArticleByIdData,
+  ITagControllerUpdateByIdData,
+} from '../types';
 import { HttpClient, RequestParams } from './HttpClient';
 
-export class Tag<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
+export class Tag<SecurityDataType = unknown> {
+  http: HttpClient<SecurityDataType>;
+
+  constructor(http: HttpClient<SecurityDataType>) {
+    this.http = http;
+  }
+
   /**
    * No description
    *
    * @tags Tag
-   * @name create
+   * @name TagControllerCreate
    * @request POST:/tag
+   * @response `200` `ITagControllerCreateData` 创建标签
    */
   create = (params: RequestParams = {}) =>
-    this.request<ITag[], any>({
+    this.http.request<ITagControllerCreateData, any>({
       path: `/tag`,
       method: 'POST',
-      format: 'json',
       ...params,
     });
   /**
    * No description
    *
    * @tags Tag
-   * @name findAll
+   * @name TagControllerFindAll
    * @request GET:/tag
+   * @response `200` `ITagControllerFindAllData`
    */
   findAll = (params: RequestParams = {}) =>
-    this.request<void, any>({
+    this.http.request<ITagControllerFindAllData, any>({
       path: `/tag`,
       method: 'GET',
       ...params,
@@ -44,11 +58,12 @@ export class Tag<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * No description
    *
    * @tags Tag
-   * @name findById
+   * @name TagControllerFindById
    * @request GET:/tag/{id}
+   * @response `200` `ITagControllerFindByIdData`
    */
   findById = (id: string, params: RequestParams = {}) =>
-    this.request<void, any>({
+    this.http.request<ITagControllerFindByIdData, any>({
       path: `/tag/${id}`,
       method: 'GET',
       ...params,
@@ -57,11 +72,12 @@ export class Tag<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * No description
    *
    * @tags Tag
-   * @name updateById
+   * @name TagControllerUpdateById
    * @request PATCH:/tag/{id}
+   * @response `200` `ITagControllerUpdateByIdData`
    */
   updateById = (id: string, params: RequestParams = {}) =>
-    this.request<void, any>({
+    this.http.request<ITagControllerUpdateByIdData, any>({
       path: `/tag/${id}`,
       method: 'PATCH',
       ...params,
@@ -70,11 +86,12 @@ export class Tag<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * No description
    *
    * @tags Tag
-   * @name deleteById
+   * @name TagControllerDeleteById
    * @request DELETE:/tag/{id}
+   * @response `200` `ITagControllerDeleteByIdData`
    */
   deleteById = (id: string, params: RequestParams = {}) =>
-    this.request<void, any>({
+    this.http.request<ITagControllerDeleteByIdData, any>({
       path: `/tag/${id}`,
       method: 'DELETE',
       ...params,
@@ -83,11 +100,12 @@ export class Tag<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * No description
    *
    * @tags Tag
-   * @name getArticleById
+   * @name TagControllerGetArticleById
    * @request GET:/tag/{id}/article
+   * @response `200` `ITagControllerGetArticleByIdData`
    */
   getArticleById = (id: string, params: RequestParams = {}) =>
-    this.request<void, any>({
+    this.http.request<ITagControllerGetArticleByIdData, any>({
       path: `/tag/${id}/article`,
       method: 'GET',
       ...params,
