@@ -7,3 +7,7 @@ packages:
   - 'server'
   # 文档
   - 'docs'
+  # 工具包
+  - 'toolkit'
+  # 模板
+  - 'templates/*'

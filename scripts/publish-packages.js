@@ -23,6 +23,21 @@ const packages = [
     name: '@fecommunity/reactpress-client',
     path: 'client', 
     description: 'Frontend application package'
+  },
+  {
+    name: '@fecommunity/reactpress-toolkit',
+    path: 'toolkit',
+    description: 'API client and utilities toolkit'
+  },
+  {
+    name: '@fecommunity/reactpress-template-hello-world',
+    path: 'templates/hello-world',
+    description: 'Hello World template for ReactPress'
+  },
+  {
+    name: '@fecommunity/reactpress-template-twentytwentyfive',
+    path: 'templates/twentytwentyfive',
+    description: 'Twenty Twenty Five blog template for ReactPress'
   }
 ];
 
@@ -264,6 +279,11 @@ function buildPackage(packagePath, packageName) {
       execSync('pnpm run prebuild && pnpm run build', { cwd: path.join(process.cwd(), packagePath), stdio: 'inherit' });
     } else if (packagePath === 'client') {
       execSync('pnpm run prebuild && pnpm run build', { cwd: path.join(process.cwd(), packagePath), stdio: 'inherit' });
+    } else if (packagePath === 'toolkit') {
+      execSync('pnpm run build', { cwd: path.join(process.cwd(), packagePath), stdio: 'inherit' });
+    } else if (packagePath === 'templates/hello-world' || packagePath === 'templates/twentytwentyfive') {
+      // Templates don't need to be built, just validate package.json
+      console.log(chalk.gray('  Templates do not require building, skipping...'));
     }
     console.log(chalk.green(`✅ ${packageName} built successfully`));
   } catch (error) {
@@ -715,7 +735,10 @@ async function main() {
     // Create GitHub release if on master and we actually published something
     if (isMasterBranch && packagesToPublish.length > 0) {
       const tagName = `v${baseVersion}`;
-      const releaseNotes = `Release ${baseVersion}\n\nPackages released:\n${Object.entries(packageVersions).map(([name, version]) => `- ${name}@${version}`).join('\n')}`;
+      const releaseNotes = `Release ${baseVersion}
+
+Packages released:
+${Object.entries(packageVersions).map(([name, version]) => `- ${name}@${version}`).join('\n')}`;
       createGitHubRelease(tagName, releaseNotes);
     }
     
