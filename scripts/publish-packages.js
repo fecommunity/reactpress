@@ -33,6 +33,11 @@ const packages = [
     name: '@fecommunity/reactpress-template-hello-world',
     path: 'templates/hello-world',
     description: 'Hello World template for ReactPress'
+  },
+  {
+    name: '@fecommunity/reactpress-template-twentytwentyfive',
+    path: 'templates/twentytwentyfive',
+    description: 'Twenty Twenty Five blog template for ReactPress'
   }
 ];
 
@@ -276,7 +281,7 @@ function buildPackage(packagePath, packageName) {
       execSync('pnpm run prebuild && pnpm run build', { cwd: path.join(process.cwd(), packagePath), stdio: 'inherit' });
     } else if (packagePath === 'toolkit') {
       execSync('pnpm run build', { cwd: path.join(process.cwd(), packagePath), stdio: 'inherit' });
-    } else if (packagePath === 'templates/hello-world') {
+    } else if (packagePath === 'templates/hello-world' || packagePath === 'templates/twentytwentyfive') {
       // Templates don't need to be built, just validate package.json
       console.log(chalk.gray('  Templates do not require building, skipping...'));
     }
