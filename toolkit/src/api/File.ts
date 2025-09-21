@@ -9,20 +9,20 @@
  * ---------------------------------------------------------------
  */
 
-import { ICategory } from '../types/data-contracts';
+import { IFile } from '../types/data-contracts';
 import { HttpClient, RequestParams } from './httpClient';
 
-export class Category<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
+export class File<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
   /**
    * No description
    *
-   * @tags Category
-   * @name create
-   * @request POST:/category
+   * @tags File
+   * @name FileControllerUploadFile
+   * @request POST:/file/upload
    */
-  create = (params: RequestParams = {}) =>
-    this.request<ICategory[], any>({
-      path: `/category`,
+  fileControllerUploadFile = (params: RequestParams = {}) =>
+    this.request<IFile[], any>({
+      path: `/file/upload`,
       method: 'POST',
       format: 'json',
       ...params,
@@ -30,52 +30,39 @@ export class Category<SecurityDataType = unknown> extends HttpClient<SecurityDat
   /**
    * No description
    *
-   * @tags Category
+   * @tags File
    * @name findAll
-   * @request GET:/category
+   * @request GET:/file
    */
   findAll = (params: RequestParams = {}) =>
     this.request<void, any>({
-      path: `/category`,
+      path: `/file`,
       method: 'GET',
       ...params,
     });
   /**
    * No description
    *
-   * @tags Category
+   * @tags File
    * @name findById
-   * @request GET:/category/{id}
+   * @request GET:/file/{id}
    */
   findById = (id: string, params: RequestParams = {}) =>
     this.request<void, any>({
-      path: `/category/${id}`,
+      path: `/file/${id}`,
       method: 'GET',
       ...params,
     });
   /**
    * No description
    *
-   * @tags Category
-   * @name updateById
-   * @request PATCH:/category/{id}
-   */
-  updateById = (id: string, params: RequestParams = {}) =>
-    this.request<void, any>({
-      path: `/category/${id}`,
-      method: 'PATCH',
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags Category
+   * @tags File
    * @name deleteById
-   * @request DELETE:/category/{id}
+   * @request DELETE:/file/{id}
    */
   deleteById = (id: string, params: RequestParams = {}) =>
     this.request<void, any>({
-      path: `/category/${id}`,
+      path: `/file/${id}`,
       method: 'DELETE',
       ...params,
     });

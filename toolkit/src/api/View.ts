@@ -9,20 +9,20 @@
  * ---------------------------------------------------------------
  */
 
-import { ICategory } from '../types/data-contracts';
+import { IView } from '../types/data-contracts';
 import { HttpClient, RequestParams } from './httpClient';
 
-export class Category<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
+export class View<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
   /**
    * No description
    *
-   * @tags Category
+   * @tags View
    * @name create
-   * @request POST:/category
+   * @request POST:/view
    */
   create = (params: RequestParams = {}) =>
-    this.request<ICategory[], any>({
-      path: `/category`,
+    this.request<IView[], any>({
+      path: `/view`,
       method: 'POST',
       format: 'json',
       ...params,
@@ -30,52 +30,52 @@ export class Category<SecurityDataType = unknown> extends HttpClient<SecurityDat
   /**
    * No description
    *
-   * @tags Category
+   * @tags View
    * @name findAll
-   * @request GET:/category
+   * @request GET:/view
    */
   findAll = (params: RequestParams = {}) =>
     this.request<void, any>({
-      path: `/category`,
+      path: `/view`,
       method: 'GET',
       ...params,
     });
   /**
    * No description
    *
-   * @tags Category
+   * @tags View
+   * @name ViewControllerFindByUrl
+   * @request GET:/view/url
+   */
+  viewControllerFindByUrl = (params: RequestParams = {}) =>
+    this.request<void, any>({
+      path: `/view/url`,
+      method: 'GET',
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags View
    * @name findById
-   * @request GET:/category/{id}
+   * @request GET:/view/{id}
    */
   findById = (id: string, params: RequestParams = {}) =>
     this.request<void, any>({
-      path: `/category/${id}`,
+      path: `/view/${id}`,
       method: 'GET',
       ...params,
     });
   /**
    * No description
    *
-   * @tags Category
-   * @name updateById
-   * @request PATCH:/category/{id}
-   */
-  updateById = (id: string, params: RequestParams = {}) =>
-    this.request<void, any>({
-      path: `/category/${id}`,
-      method: 'PATCH',
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags Category
+   * @tags View
    * @name deleteById
-   * @request DELETE:/category/{id}
+   * @request DELETE:/view/{id}
    */
   deleteById = (id: string, params: RequestParams = {}) =>
     this.request<void, any>({
-      path: `/category/${id}`,
+      path: `/view/${id}`,
       method: 'DELETE',
       ...params,
     });
