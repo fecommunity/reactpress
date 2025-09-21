@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 
 // 创建自定义 axios 实例
 export const createHttpClient = (baseURL?: string) => {
@@ -10,9 +10,9 @@ export const createHttpClient = (baseURL?: string) => {
     },
   });
 
-  // 请求拦截器
+  // 请求拦截器 - 修复类型错误
   instance.interceptors.request.use(
-    (config: AxiosRequestConfig) => {
+    (config: InternalAxiosRequestConfig) => {
       // 添加认证令牌
       const token = localStorage.getItem('auth_token');
       if (token && config.headers) {
