@@ -9,20 +9,20 @@
  * ---------------------------------------------------------------
  */
 
-import { ICategory } from '../types/data-contracts';
+import { IComment } from '../types/data-contracts';
 import { HttpClient, RequestParams } from './httpClient';
 
-export class Category<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
+export class Comment<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
   /**
    * No description
    *
-   * @tags Category
+   * @tags Comment
    * @name create
-   * @request POST:/category
+   * @request POST:/comment
    */
   create = (params: RequestParams = {}) =>
-    this.request<ICategory[], any>({
-      path: `/category`,
+    this.request<IComment[], any>({
+      path: `/comment`,
       method: 'POST',
       format: 'json',
       ...params,
@@ -30,53 +30,66 @@ export class Category<SecurityDataType = unknown> extends HttpClient<SecurityDat
   /**
    * No description
    *
-   * @tags Category
+   * @tags Comment
    * @name findAll
-   * @request GET:/category
+   * @request GET:/comment
    */
   findAll = (params: RequestParams = {}) =>
     this.request<void, any>({
-      path: `/category`,
+      path: `/comment`,
       method: 'GET',
       ...params,
     });
   /**
    * No description
    *
-   * @tags Category
+   * @tags Comment
    * @name findById
-   * @request GET:/category/{id}
+   * @request GET:/comment/{id}
    */
   findById = (id: string, params: RequestParams = {}) =>
     this.request<void, any>({
-      path: `/category/${id}`,
+      path: `/comment/${id}`,
       method: 'GET',
       ...params,
     });
   /**
    * No description
    *
-   * @tags Category
+   * @tags Comment
    * @name updateById
-   * @request PATCH:/category/{id}
+   * @request PATCH:/comment/{id}
    */
   updateById = (id: string, params: RequestParams = {}) =>
     this.request<void, any>({
-      path: `/category/${id}`,
+      path: `/comment/${id}`,
       method: 'PATCH',
       ...params,
     });
   /**
    * No description
    *
-   * @tags Category
+   * @tags Comment
    * @name deleteById
-   * @request DELETE:/category/{id}
+   * @request DELETE:/comment/{id}
    */
   deleteById = (id: string, params: RequestParams = {}) =>
     this.request<void, any>({
-      path: `/category/${id}`,
+      path: `/comment/${id}`,
       method: 'DELETE',
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Comment
+   * @name CommentControllerGetArticleComments
+   * @request GET:/comment/host/{hostId}
+   */
+  commentControllerGetArticleComments = (hostId: string, params: RequestParams = {}) =>
+    this.request<void, any>({
+      path: `/comment/host/${hostId}`,
+      method: 'GET',
       ...params,
     });
 }

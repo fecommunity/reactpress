@@ -9,25 +9,33 @@
  * ---------------------------------------------------------------
  */
 
-import { HttpClient, RequestParams } from './http-client';
+import { ISetting } from '../types/data-contracts';
+import { HttpClient, RequestParams } from './httpClient';
 
-export class Get<SecurityDataType = unknown> {
-  http: HttpClient<SecurityDataType>;
-
-  constructor(http: HttpClient<SecurityDataType>) {
-    this.http = http;
-  }
-
+export class Setting<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
   /**
    * No description
    *
    * @tags Setting
-   * @name SettingControllerFindAll
-   * @request POST:/setting/get
-   * @response `200` `void`
+   * @name SettingControllerUpdate
+   * @request POST:/setting
    */
-  settingControllerFindAll = (params: RequestParams = {}) =>
-    this.http.request<void, any>({
+  settingControllerUpdate = (params: RequestParams = {}) =>
+    this.request<ISetting[], any>({
+      path: `/setting`,
+      method: 'POST',
+      format: 'json',
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Setting
+   * @name findAll
+   * @request POST:/setting/get
+   */
+  findAll = (params: RequestParams = {}) =>
+    this.request<void, any>({
       path: `/setting/get`,
       method: 'POST',
       ...params,
