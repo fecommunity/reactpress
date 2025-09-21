@@ -1,7 +1,7 @@
 {
   "name": "@fecommunity/reactpress",
   "author": "fecommunity",
-  "version": "1.11.0",
+  "version": "2.0.0",
   "bin": {
     "reactpress-server": "./scripts/reactpress-server.js",
     "reactpress-client": "./scripts/reactpress-client.js"
