@@ -10,17 +10,17 @@
  */
 
 import { ISetting } from '../types/data-contracts';
-import { HttpClient, RequestParams } from './httpClient';
+import { HttpClient, RequestParams } from './HttpClient';
 
 export class Setting<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
   /**
    * No description
    *
    * @tags Setting
-   * @name SettingControllerUpdate
+   * @name Settingupdate
    * @request POST:/setting
    */
-  settingControllerUpdate = (params: RequestParams = {}) =>
+  settingupdate = (params: RequestParams = {}) =>
     this.request<ISetting[], any>({
       path: `/setting`,
       method: 'POST',
@@ -31,10 +31,10 @@ export class Setting<SecurityDataType = unknown> extends HttpClient<SecurityData
    * No description
    *
    * @tags Setting
-   * @name findAll
+   * @name SettingfindAll
    * @request POST:/setting/get
    */
-  findAll = (params: RequestParams = {}) =>
+  settingfindAll = (params: RequestParams = {}) =>
     this.request<void, any>({
       path: `/setting/get`,
       method: 'POST',

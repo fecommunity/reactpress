@@ -66,4 +66,9 @@ export class ApiError extends Error {
     super(message);
     this.name = 'ApiError';
   }
+  
+  // 检查是否为 ApiError 实例
+  static isInstance(error: any): error is ApiError {
+    return error instanceof ApiError;
+  }
 }

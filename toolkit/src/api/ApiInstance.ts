@@ -1,7 +1,7 @@
 // API 实例化文件
 // 自动生成，请勿手动修改
 
-import { HttpClient, HttpClientConfig } from './httpClient';
+import { HttpClient, HttpClientConfig } from './HttpClient';
 import { Article } from './Article';
 import { Auth } from './Auth';
 import { Category } from './Category';

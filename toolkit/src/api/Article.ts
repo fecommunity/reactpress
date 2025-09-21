@@ -10,17 +10,17 @@
  */
 
 import { IArticle } from '../types/data-contracts';
-import { HttpClient, RequestParams } from './httpClient';
+import { HttpClient, RequestParams } from './HttpClient';
 
 export class Article<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
   /**
    * No description
    *
    * @tags Article
-   * @name create
+   * @name Articlecreate
    * @request POST:/article
    */
-  create = (params: RequestParams = {}) =>
+  articlecreate = (params: RequestParams = {}) =>
     this.request<IArticle[], any>({
       path: `/article`,
       method: 'POST',
@@ -31,10 +31,10 @@ export class Article<SecurityDataType = unknown> extends HttpClient<SecurityData
    * No description
    *
    * @tags Article
-   * @name findAll
+   * @name ArticlefindAll
    * @request GET:/article
    */
-  findAll = (params: RequestParams = {}) =>
+  articlefindAll = (params: RequestParams = {}) =>
     this.request<void, any>({
       path: `/article`,
       method: 'GET',
@@ -44,10 +44,10 @@ export class Article<SecurityDataType = unknown> extends HttpClient<SecurityData
    * No description
    *
    * @tags Article
-   * @name findByCategory
+   * @name ArticlefindArticlesByCategory
    * @request GET:/article/category/{id}
    */
-  findByCategory = (id: string, params: RequestParams = {}) =>
+  articlefindArticlesByCategory = (id: string, params: RequestParams = {}) =>
     this.request<void, any>({
       path: `/article/category/${id}`,
       method: 'GET',
@@ -57,10 +57,10 @@ export class Article<SecurityDataType = unknown> extends HttpClient<SecurityData
    * No description
    *
    * @tags Article
-   * @name findByTag
+   * @name ArticlefindArticlesByTag
    * @request GET:/article/tag/{id}
    */
-  findByTag = (id: string, params: RequestParams = {}) =>
+  articlefindArticlesByTag = (id: string, params: RequestParams = {}) =>
     this.request<void, any>({
       path: `/article/tag/${id}`,
       method: 'GET',
@@ -70,10 +70,10 @@ export class Article<SecurityDataType = unknown> extends HttpClient<SecurityData
    * No description
    *
    * @tags Article
-   * @name getRecommendations
+   * @name ArticlegetRecommendArticles
    * @request GET:/article/all/recommend
    */
-  getRecommendations = (params: RequestParams = {}) =>
+  articlegetRecommendArticles = (params: RequestParams = {}) =>
     this.request<void, any>({
       path: `/article/all/recommend`,
       method: 'GET',
@@ -83,10 +83,10 @@ export class Article<SecurityDataType = unknown> extends HttpClient<SecurityData
    * No description
    *
    * @tags Article
-   * @name getArchives
+   * @name ArticlegetArchives
    * @request GET:/article/archives
    */
-  getArchives = (params: RequestParams = {}) =>
+  articlegetArchives = (params: RequestParams = {}) =>
     this.request<void, any>({
       path: `/article/archives`,
       method: 'GET',
@@ -96,10 +96,10 @@ export class Article<SecurityDataType = unknown> extends HttpClient<SecurityData
    * No description
    *
    * @tags Article
-   * @name recommend
+   * @name Articlerecommend
    * @request GET:/article/recommend
    */
-  recommend = (params: RequestParams = {}) =>
+  articlerecommend = (params: RequestParams = {}) =>
     this.request<void, any>({
       path: `/article/recommend`,
       method: 'GET',
@@ -109,10 +109,10 @@ export class Article<SecurityDataType = unknown> extends HttpClient<SecurityData
    * No description
    *
    * @tags Article
-   * @name findById
+   * @name ArticlefindById
    * @request GET:/article/{id}
    */
-  findById = (id: string, params: RequestParams = {}) =>
+  articlefindById = (id: string, params: RequestParams = {}) =>
     this.request<void, any>({
       path: `/article/${id}`,
       method: 'GET',
@@ -122,10 +122,10 @@ export class Article<SecurityDataType = unknown> extends HttpClient<SecurityData
    * No description
    *
    * @tags Article
-   * @name updateById
+   * @name ArticleupdateById
    * @request PATCH:/article/{id}
    */
-  updateById = (id: string, params: RequestParams = {}) =>
+  articleupdateById = (id: string, params: RequestParams = {}) =>
     this.request<void, any>({
       path: `/article/${id}`,
       method: 'PATCH',
@@ -135,10 +135,10 @@ export class Article<SecurityDataType = unknown> extends HttpClient<SecurityData
    * No description
    *
    * @tags Article
-   * @name deleteById
+   * @name ArticledeleteById
    * @request DELETE:/article/{id}
    */
-  deleteById = (id: string, params: RequestParams = {}) =>
+  articledeleteById = (id: string, params: RequestParams = {}) =>
     this.request<void, any>({
       path: `/article/${id}`,
       method: 'DELETE',
@@ -148,10 +148,10 @@ export class Article<SecurityDataType = unknown> extends HttpClient<SecurityData
    * No description
    *
    * @tags Article
-   * @name checkPassword
+   * @name ArticlecheckPassword
    * @request POST:/article/{id}/checkPassword
    */
-  checkPassword = (id: string, params: RequestParams = {}) =>
+  articlecheckPassword = (id: string, params: RequestParams = {}) =>
     this.request<void, any>({
       path: `/article/${id}/checkPassword`,
       method: 'POST',
@@ -161,10 +161,10 @@ export class Article<SecurityDataType = unknown> extends HttpClient<SecurityData
    * No description
    *
    * @tags Article
-   * @name updateViews
+   * @name ArticleupdateViewsById
    * @request POST:/article/{id}/views
    */
-  updateViews = (id: string, params: RequestParams = {}) =>
+  articleupdateViewsById = (id: string, params: RequestParams = {}) =>
     this.request<void, any>({
       path: `/article/${id}/views`,
       method: 'POST',
@@ -174,10 +174,10 @@ export class Article<SecurityDataType = unknown> extends HttpClient<SecurityData
    * No description
    *
    * @tags Article
-   * @name updateLikes
+   * @name ArticleupdateLikesById
    * @request POST:/article/{id}/likes
    */
-  updateLikes = (id: string, params: RequestParams = {}) =>
+  articleupdateLikesById = (id: string, params: RequestParams = {}) =>
     this.request<void, any>({
       path: `/article/${id}/likes`,
       method: 'POST',

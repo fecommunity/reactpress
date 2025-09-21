@@ -138,3 +138,6 @@ export class HttpClient<SecurityDataType = unknown> {
     });
   };
 }
+
+
+export default HttpClient;

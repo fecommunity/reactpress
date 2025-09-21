@@ -38,7 +38,7 @@ async function generateApiTypes() {
       hooks: {
         onPrepareConfig: (currentConfiguration) => {
           const config = currentConfiguration.config;
-          config.fileNames.httpClient = 'httpClient'; // http客户端文件名
+          config.fileNames.httpClient = 'HttpClient'; // 使用大驼峰命名
           return { ...currentConfiguration, config };
         },
       },
@@ -82,7 +82,7 @@ async function organizeGeneratedFiles() {
 
     if (file.endsWith('.ts')) {
       // 根据文件名判断文件类型
-      if (file === 'httpClient.ts' || file === 'api-client.ts' || /[A-Z]/.test(file[0])) {
+      if (file === 'HttpClient.ts' || file === 'ApiClient.ts' || /[A-Z]/.test(file[0])) {
         // API 文件：首字母大写的文件或特定的客户端文件
         fs.moveSync(filePath, path.join(apiDir, file), { overwrite: true });
         console.log(`📄 移动 API 文件: ${file} -> api/`);
@@ -128,7 +128,7 @@ async function organizeGeneratedFiles() {
 async function fixHttpClient() {
   console.log('🔧 修复 HttpClient 类...');
   
-  const httpClientPath = path.join(CONFIG.output, 'api', 'httpClient.ts');
+  const httpClientPath = path.join(CONFIG.output, 'api', 'HttpClient.ts');
   
   if (fs.existsSync(httpClientPath)) {
     let content = fs.readFileSync(httpClientPath, 'utf8');
@@ -140,10 +140,15 @@ async function fixHttpClient() {
     content = content.replace(/interface ApiConfig/, 'interface HttpClientConfig');
     content = content.replace(/ApiConfig<SecurityDataType>/g, 'HttpClientConfig<SecurityDataType>');
     
+    // 添加默认导出
+    if (!content.includes('export default HttpClient')) {
+      content += '\n\nexport default HttpClient;\n';
+    }
+    
     fs.writeFileSync(httpClientPath, content);
     console.log('✅ HttpClient 修复完成');
   } else {
-    console.log('⚠️  httpClient.ts 文件不存在，跳过修复');
+    console.log('⚠️  HttpClient.ts 文件不存在，跳过修复');
   }
 }
 
@@ -164,6 +169,12 @@ async function fixApiImports() {
     content = content.replace(
       /from '\.\/data-contracts'/g,
       "from '../types/data-contracts'"
+    );
+    
+    // 修复 HttpClient 导入路径
+    content = content.replace(
+      /from '\.\/httpClient'/g,
+      "from './HttpClient'"
     );
     
     // 修复其他可能的类型导入
@@ -196,36 +207,24 @@ async function renameApiMethods() {
   const apiFiles = fs.readdirSync(apiDir).filter(file => 
     file.endsWith('.ts') && 
     file !== 'index.ts' && 
-    file !== 'httpClient.ts' &&
+    file !== 'HttpClient.ts' &&
     /[A-Z]/.test(file[0]) // 首字母大写的文件
   );
-  
-  // 定义方法名映射
-  const methodNameMap = {
-    'ControllerCreate': 'create',
-    'ControllerFindAll': 'findAll',
-    'ControllerFindById': 'findById',
-    'ControllerUpdateById': 'updateById',
-    'ControllerDeleteById': 'deleteById',
-    'ControllerFindArticlesByCategory': 'findByCategory',
-    'ControllerFindArticlesByTag': 'findByTag',
-    'ControllerGetRecommendArticles': 'getRecommendations',
-    'ControllerGetArchives': 'getArchives',
-    'ControllerRecommend': 'recommend',
-    'ControllerCheckPassword': 'checkPassword',
-    'ControllerUpdateViewsById': 'updateViews',
-    'ControllerUpdateLikesById': 'updateLikes'
-  };
   
   for (const file of apiFiles) {
     const filePath = path.join(apiDir, file);
     let content = fs.readFileSync(filePath, 'utf8');
     
-    // 重命名方法
-    for (const [oldSuffix, newName] of Object.entries(methodNameMap)) {
-      const regex = new RegExp(`(\\w+)${oldSuffix}`, 'g');
-      content = content.replace(regex, newName);
-    }
+    // 使用正则表达式匹配并重命名方法
+    // 匹配模式: 方法名以 Controller 开头，后面跟着大写字母
+    content = content.replace(
+      /(\w+)Controller([A-Z]\w+)/g,
+      (match, prefix, methodName) => {
+        // 将方法名的首字母小写
+        const newMethodName = methodName.charAt(0).toLowerCase() + methodName.slice(1);
+        return `${prefix}${newMethodName}`;
+      }
+    );
     
     // 写入修复后的内容
     fs.writeFileSync(filePath, content);
@@ -264,7 +263,7 @@ async function createApiIndex() {
   const apiDir = path.join(CONFIG.output, 'api');
   
   // 获取所有 API 文件
-  const apiFiles = fs.readdirSync(apiDir).filter(file => file.endsWith('.ts') && file !== 'index.ts' && file !== 'api-instance.ts');
+  const apiFiles = fs.readdirSync(apiDir).filter(file => file.endsWith('.ts') && file !== 'index.ts' && file !== 'ApiInstance.ts');
   
   let indexContent = '// API 客户端索引\n// 自动生成，请勿手动修改\n\n';
   
@@ -275,8 +274,8 @@ async function createApiIndex() {
   });
   
   // 添加 HttpClient 导出
-  indexContent += `\nexport { default as HttpClient } from './httpClient';\n`;
-  indexContent += `export type { HttpClientConfig } from './httpClient';\n`;
+  indexContent += `\nexport { default as HttpClient } from './HttpClient';\n`;
+  indexContent += `export type { HttpClientConfig } from './HttpClient';\n`;
   
   // 写入索引文件
   fs.writeFileSync(path.join(apiDir, 'index.ts'), indexContent);
@@ -294,7 +293,7 @@ export * from './api';
 export * from './types';
 export * from './utils';
 
-export { default } from './api/api-instance';
+export { default } from './api/ApiInstance';
 `;
 
   fs.writeFileSync(path.join(CONFIG.output, 'index.ts'), mainIndexContent);
@@ -307,12 +306,12 @@ async function createApiInstance() {
   
   const apiDir = path.join(CONFIG.output, 'api');
   
-  // 获取所有 API 文件（排除 index.ts 和 httpClient.ts）
+  // 获取所有 API 文件（排除 index.ts 和 HttpClient.ts）
   const apiFiles = fs.readdirSync(apiDir).filter(file => 
     file.endsWith('.ts') && 
     file !== 'index.ts' && 
-    file !== 'httpClient.ts' && 
-    file !== 'api-instance.ts' &&
+    file !== 'HttpClient.ts' && 
+    file !== 'ApiInstance.ts' &&
     /[A-Z]/.test(file[0]) // 首字母大写的文件
   );
   
@@ -339,7 +338,7 @@ async function createApiInstance() {
   const apiInstanceContent = `// API 实例化文件
 // 自动生成，请勿手动修改
 
-import { HttpClient, HttpClientConfig } from './httpClient';
+import { HttpClient, HttpClientConfig } from './HttpClient';
 ${imports}
 
 export interface ApiConfig<SecurityDataType = unknown> extends HttpClientConfig<SecurityDataType> {
@@ -371,15 +370,16 @@ export const api = createApiInstance();
 export default api;
 `;
 
-  fs.writeFileSync(path.join(apiDir, 'api-instance.ts'), apiInstanceContent);
+  // 使用大驼峰命名
+  fs.writeFileSync(path.join(apiDir, 'ApiInstance.ts'), apiInstanceContent);
   console.log('✅ API 实例化文件已创建');
   
-  // 更新 API 索引文件，添加对 api-instance.ts 的导出
+  // 更新 API 索引文件，添加对 ApiInstance.ts 的导出
   const apiIndexPath = path.join(apiDir, 'index.ts');
   let apiIndexContent = fs.readFileSync(apiIndexPath, 'utf8');
   
-  apiIndexContent += '\n// API 实例化\nexport * from \'./api-instance\';\n';
-  apiIndexContent += 'export { default as api } from \'./api-instance\';\n';
+  apiIndexContent += '\n// API 实例化\nexport * from \'./ApiInstance\';\n';
+  apiIndexContent += 'export { default as api } from \'./ApiInstance\';\n';
   
   fs.writeFileSync(apiIndexPath, apiIndexContent);
   console.log('✅ 更新 API 索引文件');
@@ -390,8 +390,8 @@ async function generateUtils() {
   const utilsDir = path.join(CONFIG.output, 'utils');
   fs.ensureDirSync(utilsDir);
 
-  // HTTP 客户端配置
-  const httpUtilsContent = `import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+  // HTTP 客户端配置 - 修复类型错误
+  const httpUtilsContent = `import axios, { AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 
 // 创建自定义 axios 实例
 export const createHttpClient = (baseURL?: string) => {
@@ -403,9 +403,9 @@ export const createHttpClient = (baseURL?: string) => {
     },
   });
 
-  // 请求拦截器
+  // 请求拦截器 - 修复类型错误
   instance.interceptors.request.use(
-    (config: AxiosRequestConfig) => {
+    (config: InternalAxiosRequestConfig) => {
       // 添加认证令牌
       const token = localStorage.getItem('auth_token');
       if (token && config.headers) {
@@ -512,6 +512,11 @@ export class ApiError extends Error {
     super(message);
     this.name = 'ApiError';
   }
+  
+  // 检查是否为 ApiError 实例
+  static isInstance(error: any): error is ApiError {
+    return error instanceof ApiError;
+  }
 }
 `;
 
@@ -550,7 +555,8 @@ generateApiTypes()
     console.log('🎉 API 生成过程完成!');
     console.log('📁 生成的文件结构:');
     console.log('  - src/api/           # API 客户端');
-    console.log('  - src/api/api-instance.ts # API 实例化文件');
+    console.log('  - src/api/ApiInstance.ts # API 实例化文件');
+    console.log('  - src/api/HttpClient.ts  # HTTP 客户端');
     console.log('  - src/types/         # 类型定义');
     console.log('  - src/utils/         # 工具函数');
     console.log('  - src/index.ts       # 主入口文件');

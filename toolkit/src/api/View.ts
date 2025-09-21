@@ -10,17 +10,17 @@
  */
 
 import { IView } from '../types/data-contracts';
-import { HttpClient, RequestParams } from './httpClient';
+import { HttpClient, RequestParams } from './HttpClient';
 
 export class View<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
   /**
    * No description
    *
    * @tags View
-   * @name create
+   * @name Viewcreate
    * @request POST:/view
    */
-  create = (params: RequestParams = {}) =>
+  viewcreate = (params: RequestParams = {}) =>
     this.request<IView[], any>({
       path: `/view`,
       method: 'POST',
@@ -31,10 +31,10 @@ export class View<SecurityDataType = unknown> extends HttpClient<SecurityDataTyp
    * No description
    *
    * @tags View
-   * @name findAll
+   * @name ViewfindAll
    * @request GET:/view
    */
-  findAll = (params: RequestParams = {}) =>
+  viewfindAll = (params: RequestParams = {}) =>
     this.request<void, any>({
       path: `/view`,
       method: 'GET',
@@ -44,10 +44,10 @@ export class View<SecurityDataType = unknown> extends HttpClient<SecurityDataTyp
    * No description
    *
    * @tags View
-   * @name ViewControllerFindByUrl
+   * @name ViewfindByUrl
    * @request GET:/view/url
    */
-  viewControllerFindByUrl = (params: RequestParams = {}) =>
+  viewfindByUrl = (params: RequestParams = {}) =>
     this.request<void, any>({
       path: `/view/url`,
       method: 'GET',
@@ -57,10 +57,10 @@ export class View<SecurityDataType = unknown> extends HttpClient<SecurityDataTyp
    * No description
    *
    * @tags View
-   * @name findById
+   * @name ViewfindById
    * @request GET:/view/{id}
    */
-  findById = (id: string, params: RequestParams = {}) =>
+  viewfindById = (id: string, params: RequestParams = {}) =>
     this.request<void, any>({
       path: `/view/${id}`,
       method: 'GET',
@@ -70,10 +70,10 @@ export class View<SecurityDataType = unknown> extends HttpClient<SecurityDataTyp
    * No description
    *
    * @tags View
-   * @name deleteById
+   * @name ViewdeleteById
    * @request DELETE:/view/{id}
    */
-  deleteById = (id: string, params: RequestParams = {}) =>
+  viewdeleteById = (id: string, params: RequestParams = {}) =>
     this.request<void, any>({
       path: `/view/${id}`,
       method: 'DELETE',

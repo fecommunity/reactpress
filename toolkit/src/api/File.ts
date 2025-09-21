@@ -10,17 +10,17 @@
  */
 
 import { IFile } from '../types/data-contracts';
-import { HttpClient, RequestParams } from './httpClient';
+import { HttpClient, RequestParams } from './HttpClient';
 
 export class File<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
   /**
    * No description
    *
    * @tags File
-   * @name FileControllerUploadFile
+   * @name FileuploadFile
    * @request POST:/file/upload
    */
-  fileControllerUploadFile = (params: RequestParams = {}) =>
+  fileuploadFile = (params: RequestParams = {}) =>
     this.request<IFile[], any>({
       path: `/file/upload`,
       method: 'POST',
@@ -31,10 +31,10 @@ export class File<SecurityDataType = unknown> extends HttpClient<SecurityDataTyp
    * No description
    *
    * @tags File
-   * @name findAll
+   * @name FilefindAll
    * @request GET:/file
    */
-  findAll = (params: RequestParams = {}) =>
+  filefindAll = (params: RequestParams = {}) =>
     this.request<void, any>({
       path: `/file`,
       method: 'GET',
@@ -44,10 +44,10 @@ export class File<SecurityDataType = unknown> extends HttpClient<SecurityDataTyp
    * No description
    *
    * @tags File
-   * @name findById
+   * @name FilefindById
    * @request GET:/file/{id}
    */
-  findById = (id: string, params: RequestParams = {}) =>
+  filefindById = (id: string, params: RequestParams = {}) =>
     this.request<void, any>({
       path: `/file/${id}`,
       method: 'GET',
@@ -57,10 +57,10 @@ export class File<SecurityDataType = unknown> extends HttpClient<SecurityDataTyp
    * No description
    *
    * @tags File
-   * @name deleteById
+   * @name FiledeleteById
    * @request DELETE:/file/{id}
    */
-  deleteById = (id: string, params: RequestParams = {}) =>
+  filedeleteById = (id: string, params: RequestParams = {}) =>
     this.request<void, any>({
       path: `/file/${id}`,
       method: 'DELETE',

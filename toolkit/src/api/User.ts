@@ -10,17 +10,17 @@
  */
 
 import { IUser } from '../types/data-contracts';
-import { HttpClient, RequestParams } from './httpClient';
+import { HttpClient, RequestParams } from './HttpClient';
 
 export class User<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
   /**
    * No description
    *
    * @tags User
-   * @name findAll
+   * @name UserfindAll
    * @request GET:/user
    */
-  findAll = (params: RequestParams = {}) =>
+  userfindAll = (params: RequestParams = {}) =>
     this.request<IUser[], void>({
       path: `/user`,
       method: 'GET',
@@ -31,10 +31,10 @@ export class User<SecurityDataType = unknown> extends HttpClient<SecurityDataTyp
    * No description
    *
    * @tags User
-   * @name UserControllerRegister
+   * @name Userregister
    * @request POST:/user/register
    */
-  userControllerRegister = (params: RequestParams = {}) =>
+  userregister = (params: RequestParams = {}) =>
     this.request<IUser[], any>({
       path: `/user/register`,
       method: 'POST',
@@ -45,10 +45,10 @@ export class User<SecurityDataType = unknown> extends HttpClient<SecurityDataTyp
    * No description
    *
    * @tags User
-   * @name UserControllerUpdate
+   * @name Userupdate
    * @request POST:/user/update
    */
-  userControllerUpdate = (params: RequestParams = {}) =>
+  userupdate = (params: RequestParams = {}) =>
     this.request<IUser[], any>({
       path: `/user/update`,
       method: 'POST',
@@ -59,10 +59,10 @@ export class User<SecurityDataType = unknown> extends HttpClient<SecurityDataTyp
    * No description
    *
    * @tags User
-   * @name UserControllerUpdatePassword
+   * @name UserupdatePassword
    * @request POST:/user/password
    */
-  userControllerUpdatePassword = (params: RequestParams = {}) =>
+  userupdatePassword = (params: RequestParams = {}) =>
     this.request<IUser[], any>({
       path: `/user/password`,
       method: 'POST',

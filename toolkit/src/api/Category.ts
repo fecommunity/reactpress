@@ -10,17 +10,17 @@
  */
 
 import { ICategory } from '../types/data-contracts';
-import { HttpClient, RequestParams } from './httpClient';
+import { HttpClient, RequestParams } from './HttpClient';
 
 export class Category<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
   /**
    * No description
    *
    * @tags Category
-   * @name create
+   * @name Categorycreate
    * @request POST:/category
    */
-  create = (params: RequestParams = {}) =>
+  categorycreate = (params: RequestParams = {}) =>
     this.request<ICategory[], any>({
       path: `/category`,
       method: 'POST',
@@ -31,10 +31,10 @@ export class Category<SecurityDataType = unknown> extends HttpClient<SecurityDat
    * No description
    *
    * @tags Category
-   * @name findAll
+   * @name CategoryfindAll
    * @request GET:/category
    */
-  findAll = (params: RequestParams = {}) =>
+  categoryfindAll = (params: RequestParams = {}) =>
     this.request<void, any>({
       path: `/category`,
       method: 'GET',
@@ -44,10 +44,10 @@ export class Category<SecurityDataType = unknown> extends HttpClient<SecurityDat
    * No description
    *
    * @tags Category
-   * @name findById
+   * @name CategoryfindById
    * @request GET:/category/{id}
    */
-  findById = (id: string, params: RequestParams = {}) =>
+  categoryfindById = (id: string, params: RequestParams = {}) =>
     this.request<void, any>({
       path: `/category/${id}`,
       method: 'GET',
@@ -57,10 +57,10 @@ export class Category<SecurityDataType = unknown> extends HttpClient<SecurityDat
    * No description
    *
    * @tags Category
-   * @name updateById
+   * @name CategoryupdateById
    * @request PATCH:/category/{id}
    */
-  updateById = (id: string, params: RequestParams = {}) =>
+  categoryupdateById = (id: string, params: RequestParams = {}) =>
     this.request<void, any>({
       path: `/category/${id}`,
       method: 'PATCH',
@@ -70,10 +70,10 @@ export class Category<SecurityDataType = unknown> extends HttpClient<SecurityDat
    * No description
    *
    * @tags Category
-   * @name deleteById
+   * @name CategorydeleteById
    * @request DELETE:/category/{id}
    */
-  deleteById = (id: string, params: RequestParams = {}) =>
+  categorydeleteById = (id: string, params: RequestParams = {}) =>
     this.request<void, any>({
       path: `/category/${id}`,
       method: 'DELETE',

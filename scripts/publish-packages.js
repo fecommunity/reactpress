@@ -23,6 +23,11 @@ const packages = [
     name: '@fecommunity/reactpress-client',
     path: 'client', 
     description: 'Frontend application package'
+  },
+  {
+    name: '@fecommunity/reactpress-toolkit',
+    path: 'toolkit',
+    description: 'API client and utilities toolkit'
   }
 ];
 
@@ -264,6 +269,8 @@ function buildPackage(packagePath, packageName) {
       execSync('pnpm run prebuild && pnpm run build', { cwd: path.join(process.cwd(), packagePath), stdio: 'inherit' });
     } else if (packagePath === 'client') {
       execSync('pnpm run prebuild && pnpm run build', { cwd: path.join(process.cwd(), packagePath), stdio: 'inherit' });
+    } else if (packagePath === 'toolkit') {
+      execSync('pnpm run build', { cwd: path.join(process.cwd(), packagePath), stdio: 'inherit' });
     }
     console.log(chalk.green(`✅ ${packageName} built successfully`));
   } catch (error) {
