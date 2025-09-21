@@ -37,7 +37,8 @@
     "precommit": "lint-staged",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s  -r 0",
     "publish": "node scripts/publish-packages.js",
-    "release": "node scripts/build-packages.js --publish"
+    "release": "node scripts/build-packages.js --publish",
+    "generate:api-types": "node scripts/generate-api-types.js"
   },
   "dependencies": {
     "chalk": "^4.1.2",

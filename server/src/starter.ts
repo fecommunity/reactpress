@@ -76,7 +76,7 @@ export async function bootstrap() {
     
     await app.listen(configuredPort);
     console.log(`[ReactPress] Application started on http://localhost:${configuredPort}`);
-    console.log(`[ReactPress] API Documentation available at http://localhost:${configuredPort}/api/docs`);
+    console.log(`[ReactPress] API Documentation available at http://localhost:${configuredPort}/api`);
     
     return app;
     
