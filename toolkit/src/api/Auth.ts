@@ -9,25 +9,44 @@
  * ---------------------------------------------------------------
  */
 
-import { HttpClient, RequestParams } from './http-client';
+import { HttpClient, RequestParams } from './httpClient';
 
-export class Github<SecurityDataType = unknown> {
-  http: HttpClient<SecurityDataType>;
-
-  constructor(http: HttpClient<SecurityDataType>) {
-    this.http = http;
-  }
-
+export class Auth<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
+  /**
+   * No description
+   *
+   * @tags Auth
+   * @name AuthControllerLogin
+   * @request POST:/auth/login
+   */
+  authControllerLogin = (params: RequestParams = {}) =>
+    this.request<void, any>({
+      path: `/auth/login`,
+      method: 'POST',
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Auth
+   * @name createBook
+   * @request POST:/auth/admin
+   */
+  createBook = (params: RequestParams = {}) =>
+    this.request<void, any>({
+      path: `/auth/admin`,
+      method: 'POST',
+      ...params,
+    });
   /**
    * No description
    *
    * @tags Auth
    * @name AuthControllerLoginWithGithub
    * @request POST:/auth/github
-   * @response `201` `void`
    */
   authControllerLoginWithGithub = (params: RequestParams = {}) =>
-    this.http.request<void, any>({
+    this.request<void, any>({
       path: `/auth/github`,
       method: 'POST',
       ...params,

@@ -9,20 +9,20 @@
  * ---------------------------------------------------------------
  */
 
-import { ICategory } from '../types/data-contracts';
+import { I_SMTP } from '../types/data-contracts';
 import { HttpClient, RequestParams } from './httpClient';
 
-export class Category<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
+export class Smtp<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
   /**
    * No description
    *
-   * @tags Category
+   * @tags Smtp
    * @name create
-   * @request POST:/category
+   * @request POST:/smtp
    */
   create = (params: RequestParams = {}) =>
-    this.request<ICategory[], any>({
-      path: `/category`,
+    this.request<I_SMTP[], any>({
+      path: `/smtp`,
       method: 'POST',
       format: 'json',
       ...params,
@@ -30,52 +30,26 @@ export class Category<SecurityDataType = unknown> extends HttpClient<SecurityDat
   /**
    * No description
    *
-   * @tags Category
+   * @tags Smtp
    * @name findAll
-   * @request GET:/category
+   * @request GET:/smtp
    */
   findAll = (params: RequestParams = {}) =>
     this.request<void, any>({
-      path: `/category`,
+      path: `/smtp`,
       method: 'GET',
       ...params,
     });
   /**
    * No description
    *
-   * @tags Category
-   * @name findById
-   * @request GET:/category/{id}
-   */
-  findById = (id: string, params: RequestParams = {}) =>
-    this.request<void, any>({
-      path: `/category/${id}`,
-      method: 'GET',
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags Category
-   * @name updateById
-   * @request PATCH:/category/{id}
-   */
-  updateById = (id: string, params: RequestParams = {}) =>
-    this.request<void, any>({
-      path: `/category/${id}`,
-      method: 'PATCH',
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags Category
+   * @tags Smtp
    * @name deleteById
-   * @request DELETE:/category/{id}
+   * @request DELETE:/smtp/{id}
    */
   deleteById = (id: string, params: RequestParams = {}) =>
     this.request<void, any>({
-      path: `/category/${id}`,
+      path: `/smtp/${id}`,
       method: 'DELETE',
       ...params,
     });

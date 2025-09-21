@@ -99,9 +99,13 @@ async function createMainIndex() {
   const mainIndexContent = `// Auto-generated API client
 // Generated from Swagger/OpenAPI specification
 
-export * from './api';
-export * from './types';
-export * from './utils';
+import * as api from './api';
+import * as types from './types';
+import * as utils from './utils';
+
+
+export { api, types, utils }
+
 `;
 
   fs.writeFileSync(path.join(SRC_DIR, 'index.ts'), mainIndexContent);
