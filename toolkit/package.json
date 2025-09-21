@@ -1,10 +1,14 @@
 {
-  "name": "@fecommunity/reactpress-tookit",
-  "version": "1.0.0-beta.0",
+  "name": "@fecommunity/reactpress-toolkit",
+  "version": "1.0.0-beta.1",
   "main": "index.js",
   "scripts": {
-    "generate": "node scripts/generate-swagger.js"
+    "generate": "node scripts/generate-swagger.js",
+    "build": "tsc"
   },
+  "files": [
+    "dist"
+  ],
   "keywords": [],
   "author": "",
   "license": "ISC",
