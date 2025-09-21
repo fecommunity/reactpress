@@ -53,7 +53,10 @@ export class HttpClient<SecurityDataType = unknown> {
   private format?: ResponseType;
 
   constructor({ securityWorker, secure, format, ...axiosConfig }: HttpClientConfig<SecurityDataType> = {}) {
-    this.instance = axios.create({ ...axiosConfig, baseURL: axiosConfig.baseURL || 'http://localhost:3002' });
+    this.instance = axios.create({ 
+      ...axiosConfig, 
+      baseURL: axiosConfig.baseURL || (typeof window !== 'undefined' ? '' : 'http://localhost:3002')
+    });
     this.secure = secure;
     this.format = format;
     this.securityWorker = securityWorker;
@@ -117,6 +120,9 @@ export class HttpClient<SecurityDataType = unknown> {
     const requestParams = this.mergeRequestParams(params, secureParams);
     const responseFormat = format || this.format || undefined;
 
+    // Add /api prefix to all paths
+    const apiPath = path.startsWith('/api') ? path : `/api${path}`;
+
     if (type === ContentType.FormData && body && body !== null && typeof body === 'object') {
       body = this.createFormData(body as Record<string, unknown>);
     }
@@ -134,7 +140,7 @@ export class HttpClient<SecurityDataType = unknown> {
       params: query,
       responseType: responseFormat,
       data: body,
-      url: path,
+      url: apiPath,
     });
   };
 }

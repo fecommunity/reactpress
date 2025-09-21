@@ -9,3 +9,5 @@ packages:
   - 'docs'
   # 工具包
   - 'toolkit'
+  # 模板
+  - 'templates/*'
