@@ -9,33 +9,40 @@
  * ---------------------------------------------------------------
  */
 
-import { I_SMTP } from '../types/data-contracts';
+import { ISmtpControllerCreateData, ISmtpControllerDeleteByIdData, ISmtpControllerFindAllData } from '../types';
 import { HttpClient, RequestParams } from './HttpClient';
 
-export class Smtp<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
+export class Smtp<SecurityDataType = unknown> {
+  http: HttpClient<SecurityDataType>;
+
+  constructor(http: HttpClient<SecurityDataType>) {
+    this.http = http;
+  }
+
   /**
    * No description
    *
    * @tags Smtp
-   * @name create
+   * @name SmtpControllerCreate
    * @request POST:/smtp
+   * @response `200` `ISmtpControllerCreateData` 发送邮件
    */
   create = (params: RequestParams = {}) =>
-    this.request<I_SMTP[], any>({
+    this.http.request<ISmtpControllerCreateData, any>({
       path: `/smtp`,
       method: 'POST',
-      format: 'json',
       ...params,
     });
   /**
    * No description
    *
    * @tags Smtp
-   * @name findAll
+   * @name SmtpControllerFindAll
    * @request GET:/smtp
+   * @response `200` `ISmtpControllerFindAllData`
    */
   findAll = (params: RequestParams = {}) =>
-    this.request<void, any>({
+    this.http.request<ISmtpControllerFindAllData, any>({
       path: `/smtp`,
       method: 'GET',
       ...params,
@@ -44,11 +51,12 @@ export class Smtp<SecurityDataType = unknown> extends HttpClient<SecurityDataTyp
    * No description
    *
    * @tags Smtp
-   * @name deleteById
+   * @name SmtpControllerDeleteById
    * @request DELETE:/smtp/{id}
+   * @response `200` `ISmtpControllerDeleteByIdData`
    */
   deleteById = (id: string, params: RequestParams = {}) =>
-    this.request<void, any>({
+    this.http.request<ISmtpControllerDeleteByIdData, any>({
       path: `/smtp/${id}`,
       method: 'DELETE',
       ...params,

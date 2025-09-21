@@ -89,9 +89,9 @@ The toolkit provides clients for all ReactPress backend modules:
 You can create a custom API instance with specific configuration:
 
 ```typescript
-import { createApiInstance } from '@fecommunity/reactpress-toolkit';
+import { api } from '@fecommunity/reactpress-toolkit';
 
-const customApi = createApiInstance({
+const customApi = api.createApiInstance({
   baseURL: 'https://api.yourdomain.com',
   timeout: 5000,
   // ... other axios configuration options
