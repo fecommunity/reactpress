@@ -2,10 +2,6 @@
   "name": "@fecommunity/reactpress",
   "author": "fecommunity",
   "version": "2.0.0",
-  "bin": {
-    "reactpress-server": "./scripts/reactpress-server.js",
-    "reactpress-client": "./scripts/reactpress-client.js"
-  },
   "scripts": {
     "clean": "pnpm clean:node_modules && pnpm clean:dist",
     "clean:node_modules": "npx rimraf ./node_modules ./**/node_modules",
@@ -20,6 +16,7 @@
     "build:server": "pnpm run --dir ./server build",
     "build:client": "pnpm run --dir ./client build",
     "build:docs": "pnpm run --dir ./docs build",
+    "build:toolkit": "pnpm run --dir ./toolkit build",
     "deploy:docs": "pnpm run --dir ./docs deploy:surge",
     "deploy": "sh scripts/deploy.sh",
     "start": "concurrently 'pnpm:start:*'",
