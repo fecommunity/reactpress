@@ -24,7 +24,7 @@ try {
 
   // Step 3: Generate TypeScript definitions directly to client/src
   console.log('2️⃣ Generating TypeScript definitions to client/src...');
-  execSync('node scripts/generate-api-types.js', { stdio: 'inherit' });
+  execSync('node scripts/generate-api.js', { stdio: 'inherit' });
   console.log('✅ TypeScript definitions generated successfully!\n');
 
   // Step 4: Clean up - remove swagger.json from server directory

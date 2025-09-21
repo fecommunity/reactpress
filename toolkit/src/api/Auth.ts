@@ -9,18 +9,30 @@
  * ---------------------------------------------------------------
  */
 
+import {
+  IAuthControllerCreateBookData,
+  IAuthControllerLoginData,
+  IAuthControllerLoginWithGithubData,
+} from '../types';
 import { HttpClient, RequestParams } from './HttpClient';
 
-export class Auth<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
+export class Auth<SecurityDataType = unknown> {
+  http: HttpClient<SecurityDataType>;
+
+  constructor(http: HttpClient<SecurityDataType>) {
+    this.http = http;
+  }
+
   /**
    * No description
    *
    * @tags Auth
-   * @name login
+   * @name AuthControllerLogin
    * @request POST:/auth/login
+   * @response `200` `IAuthControllerLoginData`
    */
   login = (params: RequestParams = {}) =>
-    this.request<void, any>({
+    this.http.request<IAuthControllerLoginData, any>({
       path: `/auth/login`,
       method: 'POST',
       ...params,
@@ -29,11 +41,12 @@ export class Auth<SecurityDataType = unknown> extends HttpClient<SecurityDataTyp
    * No description
    *
    * @tags Auth
-   * @name createBook
+   * @name AuthControllerCreateBook
    * @request POST:/auth/admin
+   * @response `201` `IAuthControllerCreateBookData`
    */
   createBook = (params: RequestParams = {}) =>
-    this.request<void, any>({
+    this.http.request<IAuthControllerCreateBookData, any>({
       path: `/auth/admin`,
       method: 'POST',
       ...params,
@@ -42,11 +55,12 @@ export class Auth<SecurityDataType = unknown> extends HttpClient<SecurityDataTyp
    * No description
    *
    * @tags Auth
-   * @name loginWithGithub
+   * @name AuthControllerLoginWithGithub
    * @request POST:/auth/github
+   * @response `201` `IAuthControllerLoginWithGithubData`
    */
   loginWithGithub = (params: RequestParams = {}) =>
-    this.request<void, any>({
+    this.http.request<IAuthControllerLoginWithGithubData, any>({
       path: `/auth/github`,
       method: 'POST',
       ...params,

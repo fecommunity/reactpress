@@ -9,33 +9,54 @@
  * ---------------------------------------------------------------
  */
 
-import { IArticle } from '../types/data-contracts';
+import {
+  IArticleControllerCheckPasswordData,
+  IArticleControllerCreateData,
+  IArticleControllerDeleteByIdData,
+  IArticleControllerFindAllData,
+  IArticleControllerFindArticlesByCategoryData,
+  IArticleControllerFindArticlesByTagData,
+  IArticleControllerFindByIdData,
+  IArticleControllerGetArchivesData,
+  IArticleControllerGetRecommendArticlesData,
+  IArticleControllerRecommendData,
+  IArticleControllerUpdateByIdData,
+  IArticleControllerUpdateLikesByIdData,
+  IArticleControllerUpdateViewsByIdData,
+} from '../types';
 import { HttpClient, RequestParams } from './HttpClient';
 
-export class Article<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
+export class Article<SecurityDataType = unknown> {
+  http: HttpClient<SecurityDataType>;
+
+  constructor(http: HttpClient<SecurityDataType>) {
+    this.http = http;
+  }
+
   /**
    * No description
    *
    * @tags Article
-   * @name create
+   * @name ArticleControllerCreate
    * @request POST:/article
+   * @response `200` `IArticleControllerCreateData` 创建文章
    */
   create = (params: RequestParams = {}) =>
-    this.request<IArticle[], any>({
+    this.http.request<IArticleControllerCreateData, any>({
       path: `/article`,
       method: 'POST',
-      format: 'json',
       ...params,
     });
   /**
    * No description
    *
    * @tags Article
-   * @name findAll
+   * @name ArticleControllerFindAll
    * @request GET:/article
+   * @response `200` `IArticleControllerFindAllData`
    */
   findAll = (params: RequestParams = {}) =>
-    this.request<void, any>({
+    this.http.request<IArticleControllerFindAllData, any>({
       path: `/article`,
       method: 'GET',
       ...params,
@@ -44,11 +65,12 @@ export class Article<SecurityDataType = unknown> extends HttpClient<SecurityData
    * No description
    *
    * @tags Article
-   * @name findArticlesByCategory
+   * @name ArticleControllerFindArticlesByCategory
    * @request GET:/article/category/{id}
+   * @response `200` `IArticleControllerFindArticlesByCategoryData`
    */
   findArticlesByCategory = (id: string, params: RequestParams = {}) =>
-    this.request<void, any>({
+    this.http.request<IArticleControllerFindArticlesByCategoryData, any>({
       path: `/article/category/${id}`,
       method: 'GET',
       ...params,
@@ -57,11 +79,12 @@ export class Article<SecurityDataType = unknown> extends HttpClient<SecurityData
    * No description
    *
    * @tags Article
-   * @name findArticlesByTag
+   * @name ArticleControllerFindArticlesByTag
    * @request GET:/article/tag/{id}
+   * @response `200` `IArticleControllerFindArticlesByTagData`
    */
   findArticlesByTag = (id: string, params: RequestParams = {}) =>
-    this.request<void, any>({
+    this.http.request<IArticleControllerFindArticlesByTagData, any>({
       path: `/article/tag/${id}`,
       method: 'GET',
       ...params,
@@ -70,11 +93,12 @@ export class Article<SecurityDataType = unknown> extends HttpClient<SecurityData
    * No description
    *
    * @tags Article
-   * @name getRecommendArticles
+   * @name ArticleControllerGetRecommendArticles
    * @request GET:/article/all/recommend
+   * @response `200` `IArticleControllerGetRecommendArticlesData`
    */
   getRecommendArticles = (params: RequestParams = {}) =>
-    this.request<void, any>({
+    this.http.request<IArticleControllerGetRecommendArticlesData, any>({
       path: `/article/all/recommend`,
       method: 'GET',
       ...params,
@@ -83,11 +107,12 @@ export class Article<SecurityDataType = unknown> extends HttpClient<SecurityData
    * No description
    *
    * @tags Article
-   * @name getArchives
+   * @name ArticleControllerGetArchives
    * @request GET:/article/archives
+   * @response `200` `IArticleControllerGetArchivesData`
    */
   getArchives = (params: RequestParams = {}) =>
-    this.request<void, any>({
+    this.http.request<IArticleControllerGetArchivesData, any>({
       path: `/article/archives`,
       method: 'GET',
       ...params,
@@ -96,11 +121,12 @@ export class Article<SecurityDataType = unknown> extends HttpClient<SecurityData
    * No description
    *
    * @tags Article
-   * @name recommend
+   * @name ArticleControllerRecommend
    * @request GET:/article/recommend
+   * @response `200` `IArticleControllerRecommendData`
    */
   recommend = (params: RequestParams = {}) =>
-    this.request<void, any>({
+    this.http.request<IArticleControllerRecommendData, any>({
       path: `/article/recommend`,
       method: 'GET',
       ...params,
@@ -109,11 +135,12 @@ export class Article<SecurityDataType = unknown> extends HttpClient<SecurityData
    * No description
    *
    * @tags Article
-   * @name findById
+   * @name ArticleControllerFindById
    * @request GET:/article/{id}
+   * @response `200` `IArticleControllerFindByIdData`
    */
   findById = (id: string, params: RequestParams = {}) =>
-    this.request<void, any>({
+    this.http.request<IArticleControllerFindByIdData, any>({
       path: `/article/${id}`,
       method: 'GET',
       ...params,
@@ -122,11 +149,12 @@ export class Article<SecurityDataType = unknown> extends HttpClient<SecurityData
    * No description
    *
    * @tags Article
-   * @name updateById
+   * @name ArticleControllerUpdateById
    * @request PATCH:/article/{id}
+   * @response `200` `IArticleControllerUpdateByIdData`
    */
   updateById = (id: string, params: RequestParams = {}) =>
-    this.request<void, any>({
+    this.http.request<IArticleControllerUpdateByIdData, any>({
       path: `/article/${id}`,
       method: 'PATCH',
       ...params,
@@ -135,11 +163,12 @@ export class Article<SecurityDataType = unknown> extends HttpClient<SecurityData
    * No description
    *
    * @tags Article
-   * @name deleteById
+   * @name ArticleControllerDeleteById
    * @request DELETE:/article/{id}
+   * @response `200` `IArticleControllerDeleteByIdData`
    */
   deleteById = (id: string, params: RequestParams = {}) =>
-    this.request<void, any>({
+    this.http.request<IArticleControllerDeleteByIdData, any>({
       path: `/article/${id}`,
       method: 'DELETE',
       ...params,
@@ -148,11 +177,12 @@ export class Article<SecurityDataType = unknown> extends HttpClient<SecurityData
    * No description
    *
    * @tags Article
-   * @name checkPassword
+   * @name ArticleControllerCheckPassword
    * @request POST:/article/{id}/checkPassword
+   * @response `200` `IArticleControllerCheckPasswordData`
    */
   checkPassword = (id: string, params: RequestParams = {}) =>
-    this.request<void, any>({
+    this.http.request<IArticleControllerCheckPasswordData, any>({
       path: `/article/${id}/checkPassword`,
       method: 'POST',
       ...params,
@@ -161,11 +191,12 @@ export class Article<SecurityDataType = unknown> extends HttpClient<SecurityData
    * No description
    *
    * @tags Article
-   * @name updateViewsById
+   * @name ArticleControllerUpdateViewsById
    * @request POST:/article/{id}/views
+   * @response `200` `IArticleControllerUpdateViewsByIdData`
    */
   updateViewsById = (id: string, params: RequestParams = {}) =>
-    this.request<void, any>({
+    this.http.request<IArticleControllerUpdateViewsByIdData, any>({
       path: `/article/${id}/views`,
       method: 'POST',
       ...params,
@@ -174,11 +205,12 @@ export class Article<SecurityDataType = unknown> extends HttpClient<SecurityData
    * No description
    *
    * @tags Article
-   * @name updateLikesById
+   * @name ArticleControllerUpdateLikesById
    * @request POST:/article/{id}/likes
+   * @response `200` `IArticleControllerUpdateLikesByIdData`
    */
   updateLikesById = (id: string, params: RequestParams = {}) =>
-    this.request<void, any>({
+    this.http.request<IArticleControllerUpdateLikesByIdData, any>({
       path: `/article/${id}/likes`,
       method: 'POST',
       ...params,

@@ -1,24 +1,15 @@
-// API 客户端索引
-// 自动生成，请勿手动修改
+// Auto-generated API module index
 
-export * from './Article';
-export * from './Auth';
-export * from './Category';
-export * from './Comment';
-export * from './File';
-export * from './HttpClient';
-export * from './Knowledge';
-export * from './Page';
-export * from './Search';
-export * from './Setting';
-export * from './Smtp';
-export * from './Tag';
-export * from './User';
-export * from './View';
-
-export { default as HttpClient } from './HttpClient';
-export type { HttpClientConfig } from './HttpClient';
-
-// API 实例化
-export * from './ApiInstance';
-export { default as api } from './ApiInstance';
+export { Article } from './Article';
+export { Auth } from './Auth';
+export { Category } from './Category';
+export { Comment } from './Comment';
+export { File } from './File';
+export { Knowledge } from './Knowledge';
+export { Page } from './Page';
+export { Search } from './Search';
+export { Setting } from './Setting';
+export { Smtp } from './Smtp';
+export { Tag } from './Tag';
+export { User } from './User';
+export { View } from './View';

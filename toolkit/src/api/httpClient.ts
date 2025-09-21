@@ -9,7 +9,7 @@
  * ---------------------------------------------------------------
  */
 
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, HeadersDefaults, ResponseType } from 'axios';
+import axios, { AxiosInstance, AxiosRequestConfig, HeadersDefaults, ResponseType } from 'axios';
 
 export type QueryParamsType = Record<string | number, any>;
 
@@ -30,7 +30,7 @@ export interface FullRequestParams extends Omit<AxiosRequestConfig, 'data' | 'pa
 
 export type RequestParams = Omit<FullRequestParams, 'body' | 'method' | 'query' | 'path'>;
 
-export interface HttpClientConfig<SecurityDataType = unknown> extends Omit<AxiosRequestConfig, 'data' | 'cancelToken'> {
+export interface ApiConfig<SecurityDataType = unknown> extends Omit<AxiosRequestConfig, 'data' | 'cancelToken'> {
   securityWorker?: (
     securityData: SecurityDataType | null
   ) => Promise<AxiosRequestConfig | void> | AxiosRequestConfig | void;
@@ -48,15 +48,12 @@ export enum ContentType {
 export class HttpClient<SecurityDataType = unknown> {
   public instance: AxiosInstance;
   private securityData: SecurityDataType | null = null;
-  public securityWorker?: HttpClientConfig<SecurityDataType>['securityWorker'];
+  private securityWorker?: ApiConfig<SecurityDataType>['securityWorker'];
   private secure?: boolean;
   private format?: ResponseType;
 
-  constructor({ securityWorker, secure, format, ...axiosConfig }: HttpClientConfig<SecurityDataType> = {}) {
-    this.instance = axios.create({ 
-      ...axiosConfig, 
-      baseURL: axiosConfig.baseURL || (typeof window !== 'undefined' ? '' : 'http://localhost:3002')
-    });
+  constructor({ securityWorker, secure, format, ...axiosConfig }: ApiConfig<SecurityDataType> = {}) {
+    this.instance = axios.create({ ...axiosConfig, baseURL: axiosConfig.baseURL || 'http://localhost:3002' });
     this.secure = secure;
     this.format = format;
     this.securityWorker = securityWorker;
@@ -111,7 +108,7 @@ export class HttpClient<SecurityDataType = unknown> {
     format,
     body,
     ...params
-  }: FullRequestParams): Promise<AxiosResponse<T>> => {
+  }: FullRequestParams): Promise<T> => {
     const secureParams =
       ((typeof secure === 'boolean' ? secure : this.secure) &&
         this.securityWorker &&
@@ -119,9 +116,6 @@ export class HttpClient<SecurityDataType = unknown> {
       {};
     const requestParams = this.mergeRequestParams(params, secureParams);
     const responseFormat = format || this.format || undefined;
-
-    // Add /api prefix to all paths
-    const apiPath = path.startsWith('/api') ? path : `/api${path}`;
 
     if (type === ContentType.FormData && body && body !== null && typeof body === 'object') {
       body = this.createFormData(body as Record<string, unknown>);
@@ -131,19 +125,18 @@ export class HttpClient<SecurityDataType = unknown> {
       body = JSON.stringify(body);
     }
 
-    return this.instance.request({
-      ...requestParams,
-      headers: {
-        ...(requestParams.headers || {}),
-        ...(type && type !== ContentType.FormData ? { 'Content-Type': type } : {}),
-      },
-      params: query,
-      responseType: responseFormat,
-      data: body,
-      url: apiPath,
-    });
+    return this.instance
+      .request({
+        ...requestParams,
+        headers: {
+          ...(requestParams.headers || {}),
+          ...(type && type !== ContentType.FormData ? { 'Content-Type': type } : {}),
+        },
+        params: query,
+        responseType: responseFormat,
+        data: body,
+        url: path,
+      })
+      .then((response) => response.data);
   };
 }
-
-
-export default HttpClient;

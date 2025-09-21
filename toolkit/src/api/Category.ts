@@ -9,33 +9,46 @@
  * ---------------------------------------------------------------
  */
 
-import { ICategory } from '../types/data-contracts';
+import {
+  ICategoryControllerCreateData,
+  ICategoryControllerDeleteByIdData,
+  ICategoryControllerFindAllData,
+  ICategoryControllerFindByIdData,
+  ICategoryControllerUpdateByIdData,
+} from '../types';
 import { HttpClient, RequestParams } from './HttpClient';
 
-export class Category<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
+export class Category<SecurityDataType = unknown> {
+  http: HttpClient<SecurityDataType>;
+
+  constructor(http: HttpClient<SecurityDataType>) {
+    this.http = http;
+  }
+
   /**
    * No description
    *
    * @tags Category
-   * @name create
+   * @name CategoryControllerCreate
    * @request POST:/category
+   * @response `200` `ICategoryControllerCreateData` 添加分类
    */
   create = (params: RequestParams = {}) =>
-    this.request<ICategory[], any>({
+    this.http.request<ICategoryControllerCreateData, any>({
       path: `/category`,
       method: 'POST',
-      format: 'json',
       ...params,
     });
   /**
    * No description
    *
    * @tags Category
-   * @name findAll
+   * @name CategoryControllerFindAll
    * @request GET:/category
+   * @response `200` `ICategoryControllerFindAllData`
    */
   findAll = (params: RequestParams = {}) =>
-    this.request<void, any>({
+    this.http.request<ICategoryControllerFindAllData, any>({
       path: `/category`,
       method: 'GET',
       ...params,
@@ -44,11 +57,12 @@ export class Category<SecurityDataType = unknown> extends HttpClient<SecurityDat
    * No description
    *
    * @tags Category
-   * @name findById
+   * @name CategoryControllerFindById
    * @request GET:/category/{id}
+   * @response `200` `ICategoryControllerFindByIdData`
    */
   findById = (id: string, params: RequestParams = {}) =>
-    this.request<void, any>({
+    this.http.request<ICategoryControllerFindByIdData, any>({
       path: `/category/${id}`,
       method: 'GET',
       ...params,
@@ -57,11 +71,12 @@ export class Category<SecurityDataType = unknown> extends HttpClient<SecurityDat
    * No description
    *
    * @tags Category
-   * @name updateById
+   * @name CategoryControllerUpdateById
    * @request PATCH:/category/{id}
+   * @response `200` `ICategoryControllerUpdateByIdData`
    */
   updateById = (id: string, params: RequestParams = {}) =>
-    this.request<void, any>({
+    this.http.request<ICategoryControllerUpdateByIdData, any>({
       path: `/category/${id}`,
       method: 'PATCH',
       ...params,
@@ -70,11 +85,12 @@ export class Category<SecurityDataType = unknown> extends HttpClient<SecurityDat
    * No description
    *
    * @tags Category
-   * @name deleteById
+   * @name CategoryControllerDeleteById
    * @request DELETE:/category/{id}
+   * @response `200` `ICategoryControllerDeleteByIdData`
    */
   deleteById = (id: string, params: RequestParams = {}) =>
-    this.request<void, any>({
+    this.http.request<ICategoryControllerDeleteByIdData, any>({
       path: `/category/${id}`,
       method: 'DELETE',
       ...params,

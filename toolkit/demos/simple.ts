@@ -1,15 +1,15 @@
 // src/services/articleService.ts
-import api, { types, utils } from '../dist';
+import api, { types, utils, http, HttpClient, createApiInstance } from '../dist';
 
 // 文章服务层
 export class ArticleService {
   // 获取所有文章
   static async getAllArticles() {
     try {
-      const articles = await api.article.getRecommendArticles({});
-      
+      const articles = await api.article.checkPassword('test');
+
       // 格式化数据
-      return articles.data.map(article => ({
+      return articles.data.map((article) => ({
         ...article,
         formattedDate: utils.formatDate(new Date(article.createdAt || Date.now())),
       }));
@@ -59,7 +59,7 @@ export class ArticleService {
     if (utils.ApiError.isInstance(error)) {
       return error;
     }
-    
-    return new utils.ApiError(500, defaultMessage, error);
+
+    return new utils.ApiError(defaultMessage, 500, error);
   }
 }
