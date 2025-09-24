@@ -11,7 +11,7 @@ process.env.REACTPRESS_ORIGINAL_CWD = currentWorkingDir;
 console.log(`设置 REACTPRESS_ORIGINAL_CWD: ${currentWorkingDir}`);
 
 // 执行构建命令
-const build = spawn('pnpm', ['build:config'], {
+const build = spawn('pnpm', ['build:toolkit'], {
   stdio: 'inherit',
   shell: true
 });

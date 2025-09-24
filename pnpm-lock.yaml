@@ -69,9 +69,9 @@ importers:
       '@ant-design/pro-layout':
         specifier: 7.19.11
         version: 7.19.11(antd@5.24.4(date-fns@2.30.0)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
-      '@fecommunity/reactpress-config':
+      '@fecommunity/reactpress-toolkit':
         specifier: workspace:*
-        version: link:../config
+        version: link:../toolkit
       '@monaco-editor/react':
         specifier: ^4.6.0
         version: 4.6.0(monaco-editor@0.52.0)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
@@ -102,6 +102,9 @@ importers:
       echarts-for-react:
         specifier: ^3.0.2
         version: 3.0.2(echarts@5.6.0)(react@17.0.2)
+      fs-extra:
+        specifier: ^10.0.0
+        version: 10.1.0
       highlight.js:
         specifier: ^9.18.5
         version: 9.18.5
@@ -245,25 +248,6 @@ importers:
         specifier: 4.6.2
         version: 4.6.2
 
-  config:
-    dependencies:
-      dotenv:
-        specifier: ^8.2.0
-        version: 8.6.0
-      fs-extra:
-        specifier: ^10.0.0
-        version: 10.1.0
-    devDependencies:
-      '@types/fs-extra':
-        specifier: ^9.0.0
-        version: 9.0.13
-      '@types/node':
-        specifier: ^12.7.5
-        version: 12.20.55
-      typescript:
-        specifier: ^5.9.2
-        version: 5.9.2
-
   docs:
     dependencies:
       '@docusaurus/core':
@@ -309,9 +293,9 @@ importers:
 
   server:
     dependencies:
-      '@fecommunity/reactpress-config':
+      '@fecommunity/reactpress-toolkit':
         specifier: workspace:*
-        version: link:../config
+        version: link:../toolkit
       '@nestjs/cli':
         specifier: ^6.9.0
         version: 6.14.2(eslint@8.57.1)
@@ -603,6 +587,12 @@ importers:
       axios:
         specifier: ^1.12.2
         version: 1.12.2
+      dotenv:
+        specifier: ^8.6.0
+        version: 8.6.0
+      fs-extra:
+        specifier: ^10.0.0
+        version: 10.1.0
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
@@ -610,6 +600,9 @@ importers:
         specifier: ^12.0.4
         version: 12.0.4(encoding@0.1.13)
     devDependencies:
+      '@types/fs-extra':
+        specifier: ^9.0.13
+        version: 9.0.13
       '@types/node':
         specifier: ^24.5.2
         version: 24.5.2
@@ -12113,11 +12106,6 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
-  typescript@5.9.2:
-    resolution: {integrity: sha512-CWBzXQrc/qOkhidw1OzBTQuYRbfyxDXJMVJ1XNwUHGROVmuaeiEm3OslpZ1RV96d7SKKjZKrSJu3+t/xlw3R9A==}
-    engines: {node: '>=14.17'}
-    hasBin: true
-
   ua-parser-js@0.7.39:
     resolution: {integrity: sha512-IZ6acm6RhQHNibSt7+c09hhvsKy9WUr4DVbeq9U8o71qxyYtJpQeDxQnMrVqnIFMLcQjHO0I9wgfO2vIahht4w==}
     hasBin: true
@@ -16664,7 +16652,9 @@ snapshots:
       source-map: 0.6.1
       string-length: 2.0.0
     transitivePeerDependencies:
+      - bufferutil
       - supports-color
+      - utf-8-validate
 
   '@jest/schemas@29.6.3':
     dependencies:
@@ -17829,7 +17819,7 @@ snapshots:
 
   '@types/fs-extra@9.0.13':
     dependencies:
-      '@types/node': 12.20.55
+      '@types/node': 24.5.2
 
   '@types/glob@7.2.0':
     dependencies:
@@ -23299,7 +23289,9 @@ snapshots:
       pretty-format: 24.9.0
       throat: 4.1.0
     transitivePeerDependencies:
+      - bufferutil
       - supports-color
+      - utf-8-validate
 
   jest-leak-detector@24.9.0:
     dependencies:
@@ -29042,8 +29034,6 @@ snapshots:
   typescript@4.8.4: {}
 
   typescript@5.6.3: {}
-
-  typescript@5.9.2: {}
 
   ua-parser-js@0.7.39: {}
 

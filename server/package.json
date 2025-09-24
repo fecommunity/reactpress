@@ -61,7 +61,7 @@
     "generate:swagger": "ts-node src/generate-swagger.ts"
   },
   "dependencies": {
-    "@fecommunity/reactpress-config": "workspace:*",
+    "@fecommunity/reactpress-toolkit": "workspace:*",
     "commander": "^9.4.1",
     "chalk": "^4.1.2",
     "inquirer": "^8.2.4",

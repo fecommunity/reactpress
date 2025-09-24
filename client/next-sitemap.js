@@ -1,4 +1,4 @@
-const { config } = require('@fecommunity/reactpress-config');
+const { config } = require('@fecommunity/reactpress-toolkit');
 
 module.exports = {
   siteUrl: config.CLIENT_SITE_URL,
