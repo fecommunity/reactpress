@@ -451,7 +451,7 @@ importers:
         specifier: ^24.0.18
         version: 24.9.1
       '@types/node':
-        specifier: ^12.20.55
+        specifier: ^12.7.5
         version: 12.20.55
       '@types/supertest':
         specifier: ^2.0.8
@@ -16652,7 +16652,9 @@ snapshots:
       source-map: 0.6.1
       string-length: 2.0.0
     transitivePeerDependencies:
+      - bufferutil
       - supports-color
+      - utf-8-validate
 
   '@jest/schemas@29.6.3':
     dependencies:
@@ -16677,7 +16679,9 @@ snapshots:
       jest-runner: 24.9.0
       jest-runtime: 24.9.0
     transitivePeerDependencies:
+      - bufferutil
       - supports-color
+      - utf-8-validate
 
   '@jest/transform@24.9.0':
     dependencies:
@@ -17801,7 +17805,7 @@ snapshots:
 
   '@types/express-serve-static-core@4.19.5':
     dependencies:
-      '@types/node': 12.20.55
+      '@types/node': 17.0.22
       '@types/qs': 6.9.16
       '@types/range-parser': 1.2.7
       '@types/send': 0.17.4
