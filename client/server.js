@@ -1,4 +1,4 @@
-const { config } = require('@fecommunity/reactpress-config');
+const { config } = require('@fecommunity/reactpress-toolkit');
 const cliProd = require('next/dist/cli/next-start');
 const cliDev = require('next/dist/cli/next-dev');
 const open = require('open');

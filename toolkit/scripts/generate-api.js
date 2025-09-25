@@ -50,7 +50,6 @@ async function generateApiTypes() {
   try {
     // 确保输出目录存在
     fs.ensureDirSync(CONFIG.output);
-    fs.ensureDirSync(CONFIG.utilsDir);
     fs.ensureDirSync(CONFIG.typesDir);
     fs.ensureDirSync(CONFIG.apiDir);
 
@@ -103,6 +102,23 @@ async function generateApiTypes() {
 // 组织生成的文件
 async function organizeGeneratedFiles() {
   console.log('📁 开始组织生成的文件...');
+  
+  // 只删除并重新生成 api 和 types 目录中的文件
+  // 删除 types 目录中的文件
+  if (fs.existsSync(CONFIG.typesDir)) {
+    const typeFiles = fs.readdirSync(CONFIG.typesDir);
+    typeFiles.forEach(file => {
+      fs.removeSync(path.join(CONFIG.typesDir, file));
+    });
+  }
+  
+  // 删除 api 目录中的文件（除了 utils 目录）
+  if (fs.existsSync(CONFIG.apiDir)) {
+    const apiFiles = fs.readdirSync(CONFIG.apiDir);
+    apiFiles.forEach(file => {
+      fs.removeSync(path.join(CONFIG.apiDir, file));
+    });
+  }
   
   // 移动类型定义文件
   if (fs.existsSync(path.join(CONFIG.output, 'data-contracts.ts'))) {
@@ -207,104 +223,41 @@ ${apiExports ? `\nexport {\n${apiExports}};` : ''}
 `;
   fs.writeFileSync(path.join(CONFIG.apiDir, 'instance.ts'), apiInstanceFile);
   
-  // 创建工具函数
-  await createUtilityFunctions();
-  
-  // 创建主索引文件
-  await createMainIndexFile();
+  // 创建主索引文件（只更新 api 和 types 的导出）
+  await updateMainIndexFile();
   
   console.log('✅ 文件组织完成!');
 }
 
-// 创建工具函数
-async function createUtilityFunctions() {
-  const utilsContent = `
-// Utility functions for ReactPress Toolkit
-
-/**
- * Format a date to the specified format
- * @param date - Date to format
- * @param format - Format string (default: YYYY-MM-DD)
- * @returns Formatted date string
- */
-export function formatDate(date: Date, format: string = 'YYYY-MM-DD'): string {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
+// 更新主索引文件（保持其他导出不变）
+async function updateMainIndexFile() {
+  // 读取现有的主索引文件内容
+  const mainIndexPath = path.join(CONFIG.output, 'index.ts');
+  let mainIndexContent = '';
   
-  return format
-    .replace('YYYY', String(year))
-    .replace('MM', month)
-    .replace('DD', day);
-}
+  // 获取当前时间戳
+  const now = new Date();
+  const generationTime = now.toLocaleString();
+  
+  // 创建或更新主索引文件以匹配指定的结构
+  mainIndexContent = `// Automatically generated API toolkit for ReactPress
+// Do not manually modify this file
+// Generated at: ${generationTime}
 
-/**
- * Deep clone an object
- * @param obj - Object to clone
- * @returns Cloned object
- */
-export function deepClone<T>(obj: T): T {
-  return JSON.parse(JSON.stringify(obj));
-}
+import { http as httpInstance, api, createApiInstance } from './api/instance';
+import * as types from './types';
+import * as utils from './utils';
+import * as config from './config';
 
-/**
- * Check if an error is an API error
- * @param error - Error to check
- * @returns True if it's an API error
- */
-export function isApiError(error: any): boolean {
-  return error && error.response && error.response.data;
-}
+const http = {
+  ...httpInstance,
+  createApiInstance,
+};
 
-/**
- * API Error class
- */
-export class ApiError extends Error {
-  public code: number;
-  public details: any;
-
-  constructor(message: string, code: number = 500, details: any = null) {
-    super(message);
-    this.name = 'ApiError';
-    this.code = code;
-    this.details = details;
-  }
-
-  /**
-   * Check if an object is an instance of ApiError
-   * @param error - Error to check
-   * @returns True if it's an ApiError instance
-   */
-  static isInstance(error: any): error is ApiError {
-    return error instanceof ApiError || 
-           (error && error.name === 'ApiError' && error.code !== undefined);
-  }
-}
+export { api, types, utils, config, http };
 `;
   
-  fs.writeFileSync(path.join(CONFIG.utilsDir, 'index.ts'), utilsContent);
-}
-
-// 创建主索引文件
-async function createMainIndexFile() {
-  const mainIndexContent = `
-// Main index file for ReactPress Toolkit
-
-// Export API instance and HTTP client
-export { api, http, createApiInstance } from './api/instance';
-export { HttpClient } from './api/HttpClient';
-
-// Export utility functions
-export * as utils from './utils';
-
-// Re-export types for convenience
-export * as types from './types';
-
-// Export default API instance
-export { api as default } from './api/instance';
-`;
-  
-  fs.writeFileSync(path.join(CONFIG.output, 'index.ts'), mainIndexContent);
+  fs.writeFileSync(mainIndexPath, mainIndexContent);
 }
 
 // 清理临时文件

@@ -16,6 +16,7 @@
   [![Next.js](https://img.shields.io/badge/Next.js-14-black?style=flat-square)](https://nextjs.org/)
   [![NestJS](https://img.shields.io/badge/NestJS-10-red?style=flat-square)](https://nestjs.com/)
   [![Deploy](https://img.shields.io/badge/Deploy-Vercel-blue?style=flat-square)](https://vercel.com/new/clone?repository-url=https://github.com/fecommunity/reactpress)
+  [![CI](https://github.com/fecommunity/reactpress/actions/workflows/npm-publish.yml/badge.svg)](https://github.com/fecommunity/reactpress/actions/workflows/npm-publish.yml)
 
   <p>
     <a href="https://github.com/fecommunity/reactpress/issues">Report Bug</a>
@@ -28,72 +29,62 @@
 
 ## 🌟 Modern Publishing Platform
 
-**ReactPress 2.0** is a modern, full-stack publishing platform that empowers developers and content creators to build professional blogs, websites, and content management systems with ease and flexibility. Built with modern web technologies including React 18, Next.js 14, NestJS 10, and TypeScript 5, it offers an excellent development experience and user experience.
+**ReactPress 2.0** is a full-stack publishing platform built with modern web technologies. It enables developers and content creators to build professional blogs, websites, and content management systems with minimal setup.
 
 [![ReactPress Poster](./public/poster.png)](https://gaoredu.com)
 
 ## ✨ Key Features
 
-### ⚡ High Performance
-- **App Router Architecture** with Server Components for optimal SSR
-- **Automatic Code Splitting** and lazy loading for efficient resource management
-- **Image Optimization** with Next.js 14 Image component and automatic format selection
-
-### 🎨 Advanced Theme Customization
-- **Dynamic Theme Switching** with seamless light/dark mode transitions
-- **Component-Level Customization** through modular architecture
-- **CSS-in-JS** with styled-components for maintainable styling
-
-### 🚀 5-Minute Quick Installation
+### ⚡ 5-Minute Installation
 - **Zero-Configuration Setup** with intelligent defaults
-- **WordPress-Style Installation Wizard** for intuitive setup experience
+- **WordPress-Style Installation Wizard** for intuitive setup
 - **Auto-Database Provisioning** with automatic schema migration
-- **One-Command Startup** for development environments
 
-### 🔧 Independent Service Architecture
-- **Modular Design** with decoupled client and server packages
-- **Standalone Client Deployment** for headless CMS integration
-- **Independent Server Operation** with RESTful API exposure
+### 🎨 Advanced Customization
+- **Dynamic Theme Switching** with light/dark mode
+- **Component-Level Customization** through modular architecture
+- **Internationalization** support (Chinese & English)
 
-### 🔐 Security Features
-- **JWT Authentication** with refresh token support
-- **Rate Limiting** with adaptive throttling
-- **Input Validation** with Zod schema validation
-- **Helmet.js** for comprehensive HTTP security headers
-- **CSRF Protection** for form security
+### 🔧 Unified Development Experience
+- **Monorepo Architecture** with modular packages
+- **TypeScript** for type safety across frontend and backend
+- **PM2 Process Management** for production deployments
 
-### 🌍 Globalization & Accessibility
-- **Multi-Language Support** with RTL language support
-- **WCAG 2.1 AA Compliance** for accessibility standards
-- **SEO Optimization** with automatic sitemap generation
+### 🚀 Modern Technology Stack
+- **Frontend**: React 18 + Next.js 14 App Router
+- **Backend**: NestJS 10 with modular architecture
+- **Database**: MySQL with TypeORM
+- **UI**: Ant Design v5 components
 
 ## 📸 Screenshots
 
-### Installation
-[![Installation](./public/install.png)](https://blog.gaoredu.com)
+### Installation Wizard
+[![Installation](./public/install.png)](https://gaoredu.com)
 
 ### Content Management Dashboard
-[![Content Management](./public/admin.png)](https://blog.gaoredu.com)
+[![Admin Dashboard](./public/admin.png)](https://gaoredu.com)
 
-### Elegant Home Page
-[![Home Page](./public/home.png)](https://blog.gaoredu.com)
-
-
-## 🆚 Modern Technology Comparison
-
-| Feature | ReactPress 2.0 | WordPress | VuePress |
-|--------|------------|-----------|----------|
-| **Technology Stack** | React 18 + Next.js 14 + NestJS 10 + MySQL 8 | PHP 8 + MySQL 8 | Vue 3 + Vite |
-| **Performance** | ⚡ App Router, Server Components | ⚠️ Plugin Dependent | ✅ Static Generation |
-| **Developer Experience** | ✅ TypeScript 5, Modern Tooling | ⚠️ PHP Legacy | ✅ Vue Ecosystem |
-| **Customization** | 🎨 Component-Based Architecture | 🧩 Plugin-Based | 📄 Theme-Based |
-| **Security** | 🔐 JWT, Rate Limiting, Helmet.js | ⚠️ Plugin Vulnerabilities | 🔒 Static Site |
-| **Deployment** | 🚀 Vercel, PM2, Process Managers | 🐳 Traditional Hosting | 📦 Static Deployment |
-| **Scalability** | 📈 Horizontal Scaling Ready | ⚠️ Vertical Scaling | ✅ CDN Optimized |
+### Demo Site
+[![Demo](./public/demo.png)](https://gaoredu.com)
 
 ## 🚀 Quick Start
 
-### 🏁 5-Minute Server Installation
+### 🏁 Installation Options
+
+#### Option 1: Unified CLI (Recommended)
+```bash
+# Install ReactPress globally
+npm install -g @fecommunity/reactpress
+
+# Launch installation wizard
+reactpress server install
+
+# Start services
+reactpress server start
+reactpress client
+```
+
+#### Option 2: Independent Services
 ```bash
 # Install and start ReactPress server
 npx @fecommunity/reactpress-server
@@ -102,30 +93,18 @@ npx @fecommunity/reactpress-server
 npx @fecommunity/reactpress-client
 ```
 
-## 💻 System Architecture
-
-[![ReactPress Architecture](./public/architecture.png)](https://blog.gaoredu.com)
-
-ReactPress 2.0 implements a **modular architecture** with clearly separated concerns:
-
-- **Frontend**: Next.js 14 App Router with Server Components for optimal performance
-- **Backend**: NestJS 10 with modular architecture for maintainable logic
-- **Database**: MySQL 8 with TypeORM 0.3 for data persistence
-- **API Layer**: Auto-generated TypeScript SDK with OpenAPI 3.0 specification
-
-
 ## 📦 Packages & Components
 
-ReactPress is organized as a **monorepo with modular packages** and templates:
+ReactPress is organized as a **monorepo with modular packages**:
 
 ### Core Packages
 
 | Package | Description | Version |
 |---------|-------------|---------|
+| [`@fecommunity/reactpress`](.) | Main CLI and unified entry point | 2.0.0 |
 | [`@fecommunity/reactpress-client`](./client) | Next.js 14 frontend application | 1.0.0 |
 | [`@fecommunity/reactpress-server`](./server) | NestJS 10 backend API | 1.0.0 |
 | [`@fecommunity/reactpress-toolkit`](./toolkit) | Auto-generated API client SDK | 1.0.0 |
-| [`@fecommunity/reactpress-config`](./config) | Shared configuration files | 1.0.0 |
 
 ### Templates
 
@@ -133,114 +112,6 @@ ReactPress is organized as a **monorepo with modular packages** and templates:
 |----------|-------------|--------------|
 | [`hello-world`](./templates/hello-world) | Minimal template for rapid prototyping | `@fecommunity/reactpress-template-hello-world` |
 | [`twentytwentyfive`](./templates/twentytwentyfive) | Feature-rich blog template | `@fecommunity/reactpress-template-twentytwentyfive` |
-
-## 📦 Package Details
-
-### 🖥️ Client (`@fecommunity/reactpress-client`)
-
-The ReactPress Client is a modern, responsive frontend application built with Next.js 14 that serves as the user interface for the ReactPress CMS platform.
-
-**Key Features:**
-- Modern UI/UX with Ant Design v5
-- Responsive design for all devices
-- Internationalization support (Chinese & English)
-- Dark/light theme switching with system preference detection
-- Built-in markdown editor with live preview
-- Analytics dashboard with metrics
-- Media management system with drag-and-drop upload
-- PWA support for native app experience
-
-**Quick Start:**
-```bash
-npx @fecommunity/reactpress-client
-```
-
-### 🛠️ Server (`@fecommunity/reactpress-server`)
-
-The ReactPress Server is a backend API built with NestJS 10 that powers the ReactPress CMS platform with a simple installation process.
-
-**Key Features:**
-- Zero-command installation with auto-configuration
-- Auto-database setup with migration support
-- JWT authentication with refresh token support
-- Comprehensive RESTful APIs with OpenAPI 3.0 documentation
-- Swagger API documentation with interactive testing
-- PM2 process management support for production
-- Rate limiting with adaptive throttling
-- Input validation with Zod schema validation
-
-**Quick Start:**
-```bash
-npx @fecommunity/reactpress-server
-```
-
-### 🧰 Toolkit (`@fecommunity/reactpress-toolkit`)
-
-Auto-generated TypeScript API client toolkit for seamless integration with ReactPress backend services.
-
-**Key Features:**
-- Strongly-typed API clients for all modules
-- TypeScript definitions for all data models
-- Utility functions for common operations
-- Built-in authentication and error handling
-- Automatic retry mechanisms for failed requests
-- Request/response interceptors for logging and metrics
-
-**Usage:**
-```typescript
-import { api, types, utils } from '@fecommunity/reactpress-toolkit';
-
-// Fetch articles with automatic error handling
-const articles = await api.article.findAll();
-
-// Type-safe data handling
-const article: types.IArticle = {
-  id: '1',
-  title: 'Sample Article',
-  // ... other properties
-};
-
-// Utility functions with proper error handling
-const formattedDate = utils.formatDate(new Date());
-```
-
-### 📐 Templates
-
-ReactPress provides ready-to-use templates for rapid development:
-
-#### Hello World Template (`@fecommunity/reactpress-template-hello-world`)
-
-A minimal template to get you started quickly with ReactPress.
-
-**Features:**
-- Clean, minimal design
-- TypeScript support with strict type checking
-- Integrated with ReactPress Toolkit for API communication
-- Responsive layout with mobile-first approach
-- Easy customization with component-based architecture
-
-**Quick Start:**
-```bash
-npx @fecommunity/reactpress-template-hello-world my-blog
-```
-
-#### Twenty Twenty Five Template (`@fecommunity/reactpress-template-twentytwentyfive`)
-
-A feature-rich blog template with a modern design inspired by WordPress themes.
-
-**Features:**
-- Clean, responsive design
-- Server-side rendering for better SEO and performance
-- Pre-built pages for articles, categories, and tags
-- Integrated search functionality with fuzzy matching
-- TypeScript support with strict type checking
-- Integrated with ReactPress Toolkit for API communication
-- Responsive layout with mobile-first approach
-
-**Quick Start:**
-```bash
-npx @fecommunity/reactpress-template-twentytwentyfive my-blog
-```
 
 ## 🔧 Configuration
 
@@ -259,7 +130,6 @@ CLIENT_SITE_URL=http://localhost:3001
 
 # Server Config
 SERVER_SITE_URL=http://localhost:3002
-
 ```
 
 ## 🚀 Deployment Options
@@ -288,30 +158,24 @@ pnpm run build
 pnpm run start
 ```
 
-## 📚 Documentation
-
-- [Getting Started Guide](https://github.com/fecommunity/reactpress/wiki)
-- [API Documentation](https://github.com/fecommunity/reactpress/wiki/API-Documentation)
-- [Deployment Guide](https://github.com/fecommunity/reactpress/wiki/Deployment)
-- [Customization Guide](https://github.com/fecommunity/reactpress/wiki/Customization)
-- [Security Best Practices](https://github.com/fecommunity/reactpress/wiki/Security)
-- [Performance Optimization](https://github.com/fecommunity/reactpress/wiki/Performance)
-
-## 👥 Community & Support
-
-- [GitHub Issues](https://github.com/fecommunity/reactpress/issues) - Bug reports and feature requests
-- [GitHub Discussions](https://github.com/fecommunity/reactpress/discussions) - Community discussions and Q&A
-- [Stack Overflow](https://stackoverflow.com/questions/tagged/reactpress) - Technical questions
-
 ## 🤝 Contributing
 
 We welcome contributions of all kinds! Whether it's bug fixes, new features, documentation improvements, or translations, your help is appreciated.
 
+### 📋 Development Setup
+
 1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+2. Clone your fork: `git clone https://github.com/your-username/reactpress.git`
+3. Install dependencies: `pnpm install`
+4. Start development servers: `pnpm run dev`
+
+### 📦 Publishing
+
+To publish packages to npm:
+
+1. Ensure you're logged into npm: `pnpm login`
+2. Run the publish script: `pnpm run publish`
+3. Follow the interactive prompts to select packages and version increments
 
 Please read our [Contributing Guide](https://github.com/fecommunity/reactpress/blob/master/CONTRIBUTING.md) for details on our code of conduct and development process.
 

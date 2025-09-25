@@ -21,7 +21,6 @@ export class SettingService {
    */
   async initI18n() {
     try {
-      // Log i18n constant for debugging
       const items = await this.settingRepository.find();
       const target = (items && items[0]) || ({} as Setting);
       

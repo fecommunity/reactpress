@@ -1,12 +1,12 @@
 import { GetStaticPaths, GetStaticProps } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
-import { createApiInstance } from '@fecommunity/reactpress-toolkit';
+import { http } from '@fecommunity/reactpress-toolkit';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 
 // Create a custom API instance with the desired baseURL
-const customApi = createApiInstance({
+const customApi = http.createApiInstance({
   baseURL: 'https://api.gaoredu.com/'
 });
 

@@ -70,10 +70,10 @@ This template demonstrates how to use all aspects of the ReactPress Toolkit:
 ### 1. API Client Usage
 
 ```typescript
-import { createApiInstance } from '@fecommunity/reactpress-toolkit';
+import { http } from '@fecommunity/reactpress-toolkit';
 
 // Create a custom API instance with retry mechanism
-const customApi = createApiInstance({
+const customApi = http.createApiInstance({
   baseURL: 'https://api.gaoredu.com/',
   retry: {
     retries: 3,
@@ -121,14 +121,14 @@ if (utils.ApiError.isInstance(error)) {
 ### 4. Advanced Usage Example
 
 ```typescript
-import { createApiInstance } from '@fecommunity/reactpress-toolkit';
+import { http } from '@fecommunity/reactpress-toolkit';
 import { types, utils } from '@fecommunity/reactpress-toolkit';
 
 // Type definitions
 type IArticle = types.IArticle;
 
 // API client with interceptors
-const customApi = createApiInstance({
+const customApi = http.createApiInstance({
   baseURL: 'https://api.gaoredu.com/',
   interceptors: {
     request: (config) => {
