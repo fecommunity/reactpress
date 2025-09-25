@@ -2,9 +2,18 @@
   "name": "@fecommunity/reactpress-toolkit",
   "version": "1.0.0",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./api": "./dist/api/index.js",
+    "./api/instance": "./dist/api/instance.js",
+    "./types": "./dist/types/index.js",
+    "./utils": "./dist/utils/index.js",
+    "./config": "./dist/config/index.js"
+  },
   "scripts": {
     "generate": "node scripts/generate-swagger.js",
-    "build": "tsc"
+    "build": "tsc && cp -r src/locales dist/"
   },
   "files": [
     "dist"
@@ -15,10 +24,13 @@
   "description": "",
   "dependencies": {
     "axios": "^1.12.2",
+    "dotenv": "^8.6.0",
+    "fs-extra": "^10.0.0",
     "lodash": "^4.17.21",
     "swagger-typescript-api": "^12.0.4"
   },
   "devDependencies": {
-    "@types/node": "^24.5.2"
+    "@types/fs-extra": "^9.0.13",
+    "@types/node": "^17.0.22"
   }
 }
