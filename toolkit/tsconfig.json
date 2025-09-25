@@ -10,6 +10,7 @@
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "node"
   },
+  "baseUrl": "./",
   "include": [
     "src/**/*"
   ],
