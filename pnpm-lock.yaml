@@ -69,9 +69,9 @@ importers:
       '@ant-design/pro-layout':
         specifier: 7.19.11
         version: 7.19.11(antd@5.24.4(date-fns@2.30.0)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
-      '@fecommunity/reactpress-config':
+      '@fecommunity/reactpress-toolkit':
         specifier: workspace:*
-        version: link:../config
+        version: link:../toolkit
       '@monaco-editor/react':
         specifier: ^4.6.0
         version: 4.6.0(monaco-editor@0.52.0)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
@@ -102,6 +102,9 @@ importers:
       echarts-for-react:
         specifier: ^3.0.2
         version: 3.0.2(echarts@5.6.0)(react@17.0.2)
+      fs-extra:
+        specifier: ^10.0.0
+        version: 10.1.0
       highlight.js:
         specifier: ^9.18.5
         version: 9.18.5
@@ -245,25 +248,6 @@ importers:
         specifier: 4.6.2
         version: 4.6.2
 
-  config:
-    dependencies:
-      dotenv:
-        specifier: ^8.2.0
-        version: 8.6.0
-      fs-extra:
-        specifier: ^10.0.0
-        version: 10.1.0
-    devDependencies:
-      '@types/fs-extra':
-        specifier: ^9.0.0
-        version: 9.0.13
-      '@types/node':
-        specifier: ^12.7.5
-        version: 12.20.55
-      typescript:
-        specifier: ^5.9.2
-        version: 5.9.2
-
   docs:
     dependencies:
       '@docusaurus/core':
@@ -309,9 +293,9 @@ importers:
 
   server:
     dependencies:
-      '@fecommunity/reactpress-config':
+      '@fecommunity/reactpress-toolkit':
         specifier: workspace:*
-        version: link:../config
+        version: link:../toolkit
       '@nestjs/cli':
         specifier: ^6.9.0
         version: 6.14.2(eslint@8.57.1)
@@ -336,9 +320,6 @@ importers:
       '@nestjs/swagger':
         specifier: ^4.8.2
         version: 4.8.2(@nestjs/common@6.11.11(reflect-metadata@0.1.14)(rxjs@6.6.7))(@nestjs/core@6.11.11(@nestjs/common@6.11.11(reflect-metadata@0.1.14)(rxjs@6.6.7))(encoding@0.1.13)(reflect-metadata@0.1.14)(rxjs@6.6.7))(class-transformer@0.2.3)(class-validator@0.13.2)(reflect-metadata@0.1.14)(swagger-ui-express@4.6.3(express@4.21.2))
-      '@nestjs/typeorm':
-        specifier: ^6.2.0
-        version: 6.3.4(@nestjs/common@6.11.11(reflect-metadata@0.1.14)(rxjs@6.6.7))(@nestjs/core@6.11.11(@nestjs/common@6.11.11(reflect-metadata@0.1.14)(rxjs@6.6.7))(encoding@0.1.13)(reflect-metadata@0.1.14)(rxjs@6.6.7))(reflect-metadata@0.1.14)(rxjs@6.6.7)(typeorm@0.2.45(mysql2@3.12.0))
       '@types/express-serve-static-core':
         specifier: ^4.19.5
         version: 4.19.5
@@ -448,7 +429,7 @@ importers:
         specifier: ^4.1.6
         version: 4.6.3(express@4.21.2)
       typeorm:
-        specifier: ^0.2.22
+        specifier: ^0.2.45
         version: 0.2.45(mysql2@3.12.0)
       ua-parser-js:
         specifier: ^0.7.28
@@ -460,6 +441,9 @@ importers:
       '@nestjs/testing':
         specifier: ^6.7.1
         version: 6.11.11(@nestjs/common@6.11.11(reflect-metadata@0.1.14)(rxjs@6.6.7))(@nestjs/core@6.11.11(@nestjs/common@6.11.11(reflect-metadata@0.1.14)(rxjs@6.6.7))(encoding@0.1.13)(reflect-metadata@0.1.14)(rxjs@6.6.7))
+      '@nestjs/typeorm':
+        specifier: ^6.3.4
+        version: 6.3.4(@nestjs/common@6.11.11(reflect-metadata@0.1.14)(rxjs@6.6.7))(@nestjs/core@6.11.11(@nestjs/common@6.11.11(reflect-metadata@0.1.14)(rxjs@6.6.7))(encoding@0.1.13)(reflect-metadata@0.1.14)(rxjs@6.6.7))(reflect-metadata@0.1.14)(rxjs@6.6.7)(typeorm@0.2.45(mysql2@3.12.0))
       '@types/express':
         specifier: 4.17.18
         version: 4.17.18
@@ -467,7 +451,7 @@ importers:
         specifier: ^24.0.18
         version: 24.9.1
       '@types/node':
-        specifier: ^12.7.5
+        specifier: ^12.20.55
         version: 12.20.55
       '@types/supertest':
         specifier: ^2.0.8
@@ -603,6 +587,12 @@ importers:
       axios:
         specifier: ^1.12.2
         version: 1.12.2
+      dotenv:
+        specifier: ^8.6.0
+        version: 8.6.0
+      fs-extra:
+        specifier: ^10.0.0
+        version: 10.1.0
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
@@ -610,9 +600,12 @@ importers:
         specifier: ^12.0.4
         version: 12.0.4(encoding@0.1.13)
     devDependencies:
+      '@types/fs-extra':
+        specifier: ^9.0.13
+        version: 9.0.13
       '@types/node':
-        specifier: ^24.5.2
-        version: 24.5.2
+        specifier: ^17.0.22
+        version: 17.0.22
 
 packages:
 
@@ -12113,11 +12106,6 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
-  typescript@5.9.2:
-    resolution: {integrity: sha512-CWBzXQrc/qOkhidw1OzBTQuYRbfyxDXJMVJ1XNwUHGROVmuaeiEm3OslpZ1RV96d7SKKjZKrSJu3+t/xlw3R9A==}
-    engines: {node: '>=14.17'}
-    hasBin: true
-
   ua-parser-js@0.7.39:
     resolution: {integrity: sha512-IZ6acm6RhQHNibSt7+c09hhvsKy9WUr4DVbeq9U8o71qxyYtJpQeDxQnMrVqnIFMLcQjHO0I9wgfO2vIahht4w==}
     hasBin: true
@@ -16620,7 +16608,7 @@ snapshots:
     dependencies:
       '@jest/fake-timers': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 24.5.2
+      '@types/node': 17.0.22
       jest-mock: 29.7.0
 
   '@jest/fake-timers@24.9.0':
@@ -16635,7 +16623,7 @@ snapshots:
     dependencies:
       '@jest/types': 29.6.3
       '@sinonjs/fake-timers': 10.3.0
-      '@types/node': 24.5.2
+      '@types/node': 17.0.22
       jest-message-util: 29.7.0
       jest-mock: 29.7.0
       jest-util: 29.7.0
@@ -16689,9 +16677,7 @@ snapshots:
       jest-runner: 24.9.0
       jest-runtime: 24.9.0
     transitivePeerDependencies:
-      - bufferutil
       - supports-color
-      - utf-8-validate
 
   '@jest/transform@24.9.0':
     dependencies:
@@ -16724,7 +16710,7 @@ snapshots:
     dependencies:
       '@types/istanbul-lib-coverage': 2.0.6
       '@types/istanbul-reports': 3.0.4
-      '@types/node': 24.5.2
+      '@types/node': 17.0.22
       '@types/yargs': 15.0.19
       chalk: 4.1.2
 
@@ -16733,7 +16719,7 @@ snapshots:
       '@jest/schemas': 29.6.3
       '@types/istanbul-lib-coverage': 2.0.6
       '@types/istanbul-reports': 3.0.4
-      '@types/node': 24.5.2
+      '@types/node': 17.0.22
       '@types/yargs': 17.0.33
       chalk: 4.1.2
 
@@ -17772,20 +17758,20 @@ snapshots:
   '@types/body-parser@1.19.5':
     dependencies:
       '@types/connect': 3.4.38
-      '@types/node': 24.5.2
+      '@types/node': 17.0.22
 
   '@types/bonjour@3.5.13':
     dependencies:
-      '@types/node': 24.5.2
+      '@types/node': 17.0.22
 
   '@types/connect-history-api-fallback@1.5.4':
     dependencies:
       '@types/express-serve-static-core': 4.19.5
-      '@types/node': 24.5.2
+      '@types/node': 17.0.22
 
   '@types/connect@3.4.38':
     dependencies:
-      '@types/node': 24.5.2
+      '@types/node': 17.0.22
 
   '@types/cookiejar@2.1.5': {}
 
@@ -17829,12 +17815,12 @@ snapshots:
 
   '@types/fs-extra@9.0.13':
     dependencies:
-      '@types/node': 12.20.55
+      '@types/node': 17.0.22
 
   '@types/glob@7.2.0':
     dependencies:
       '@types/minimatch': 5.1.2
-      '@types/node': 24.5.2
+      '@types/node': 17.0.22
 
   '@types/gtag.js@0.0.12': {}
 
@@ -17852,7 +17838,7 @@ snapshots:
 
   '@types/http-proxy@1.17.16':
     dependencies:
-      '@types/node': 24.5.2
+      '@types/node': 17.0.22
 
   '@types/istanbul-lib-coverage@2.0.6': {}
 
@@ -17879,7 +17865,7 @@ snapshots:
 
   '@types/jsonwebtoken@8.3.7':
     dependencies:
-      '@types/node': 24.5.2
+      '@types/node': 17.0.22
 
   '@types/mdast@4.0.4':
     dependencies:
@@ -17899,7 +17885,7 @@ snapshots:
 
   '@types/node-forge@1.3.11':
     dependencies:
-      '@types/node': 24.5.2
+      '@types/node': 17.0.22
 
   '@types/node@12.20.55': {}
 
@@ -17908,6 +17894,7 @@ snapshots:
   '@types/node@24.5.2':
     dependencies:
       undici-types: 7.12.0
+    optional: true
 
   '@types/normalize-package-data@2.4.4': {}
 
@@ -17958,13 +17945,13 @@ snapshots:
 
   '@types/resolve@1.17.1':
     dependencies:
-      '@types/node': 24.5.2
+      '@types/node': 17.0.22
 
   '@types/retry@0.12.0': {}
 
   '@types/sax@1.2.7':
     dependencies:
-      '@types/node': 24.5.2
+      '@types/node': 17.0.22
 
   '@types/scheduler@0.23.0': {}
 
@@ -17973,7 +17960,7 @@ snapshots:
   '@types/send@0.17.4':
     dependencies:
       '@types/mime': 1.3.5
-      '@types/node': 24.5.2
+      '@types/node': 17.0.22
 
   '@types/serve-index@1.9.4':
     dependencies:
@@ -17982,12 +17969,12 @@ snapshots:
   '@types/serve-static@1.15.7':
     dependencies:
       '@types/http-errors': 2.0.4
-      '@types/node': 24.5.2
+      '@types/node': 17.0.22
       '@types/send': 0.17.4
 
   '@types/sockjs@0.3.36':
     dependencies:
-      '@types/node': 24.5.2
+      '@types/node': 17.0.22
 
   '@types/source-list-map@0.1.6': {}
 
@@ -17999,7 +17986,7 @@ snapshots:
     dependencies:
       '@types/cookiejar': 2.1.5
       '@types/methods': 1.1.4
-      '@types/node': 24.5.2
+      '@types/node': 17.0.22
       form-data: 4.0.0
 
   '@types/supertest@2.0.16':
@@ -18024,14 +18011,14 @@ snapshots:
 
   '@types/webpack-sources@3.2.3':
     dependencies:
-      '@types/node': 24.5.2
+      '@types/node': 17.0.22
       '@types/source-list-map': 0.1.6
       source-map: 0.7.4
 
   '@types/webpack@4.41.5':
     dependencies:
       '@types/anymatch': 3.0.0
-      '@types/node': 24.5.2
+      '@types/node': 17.0.22
       '@types/tapable': 2.2.7
       '@types/uglify-js': 3.17.5
       '@types/webpack-sources': 3.2.3
@@ -18041,7 +18028,7 @@ snapshots:
 
   '@types/ws@8.5.14':
     dependencies:
-      '@types/node': 24.5.2
+      '@types/node': 17.0.22
 
   '@types/yargs-parser@21.0.3': {}
 
@@ -19549,7 +19536,7 @@ snapshots:
 
   chrome-launcher@0.15.2:
     dependencies:
-      '@types/node': 24.5.2
+      '@types/node': 17.0.22
       escape-string-regexp: 4.0.0
       is-wsl: 2.2.0
       lighthouse-logger: 1.4.2
@@ -19560,7 +19547,7 @@ snapshots:
 
   chromium-edge-launcher@0.2.0:
     dependencies:
-      '@types/node': 24.5.2
+      '@types/node': 17.0.22
       escape-string-regexp: 4.0.0
       is-wsl: 2.2.0
       lighthouse-logger: 1.4.2
@@ -21413,7 +21400,7 @@ snapshots:
 
   eval@0.1.8:
     dependencies:
-      '@types/node': 24.5.2
+      '@types/node': 17.0.22
       require-like: 0.1.2
 
   event-emitter@0.3.5:
@@ -23254,7 +23241,7 @@ snapshots:
       '@jest/environment': 29.7.0
       '@jest/fake-timers': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 24.5.2
+      '@types/node': 17.0.22
       jest-mock: 29.7.0
       jest-util: 29.7.0
 
@@ -23299,7 +23286,9 @@ snapshots:
       pretty-format: 24.9.0
       throat: 4.1.0
     transitivePeerDependencies:
+      - bufferutil
       - supports-color
+      - utf-8-validate
 
   jest-leak-detector@24.9.0:
     dependencies:
@@ -23345,7 +23334,7 @@ snapshots:
   jest-mock@29.7.0:
     dependencies:
       '@jest/types': 29.6.3
-      '@types/node': 24.5.2
+      '@types/node': 17.0.22
       jest-util: 29.7.0
 
   jest-pnp-resolver@1.2.3(jest-resolve@24.9.0):
@@ -23466,7 +23455,7 @@ snapshots:
   jest-util@29.7.0:
     dependencies:
       '@jest/types': 29.6.3
-      '@types/node': 24.5.2
+      '@types/node': 17.0.22
       chalk: 4.1.2
       ci-info: 3.9.0
       graceful-fs: 4.2.11
@@ -23509,19 +23498,19 @@ snapshots:
 
   jest-worker@26.6.2:
     dependencies:
-      '@types/node': 24.5.2
+      '@types/node': 17.0.22
       merge-stream: 2.0.0
       supports-color: 7.2.0
 
   jest-worker@27.5.1:
     dependencies:
-      '@types/node': 24.5.2
+      '@types/node': 17.0.22
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
   jest-worker@29.7.0:
     dependencies:
-      '@types/node': 24.5.2
+      '@types/node': 17.0.22
       jest-util: 29.7.0
       merge-stream: 2.0.0
       supports-color: 8.1.1
@@ -29043,8 +29032,6 @@ snapshots:
 
   typescript@5.6.3: {}
 
-  typescript@5.9.2: {}
-
   ua-parser-js@0.7.39: {}
 
   uglify-js@3.19.3:
@@ -29057,7 +29044,8 @@ snapshots:
       has-symbols: 1.0.3
       which-boxed-primitive: 1.0.2
 
-  undici-types@7.12.0: {}
+  undici-types@7.12.0:
+    optional: true
 
   unescape@1.0.1:
     dependencies:

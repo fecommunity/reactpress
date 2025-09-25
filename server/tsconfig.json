@@ -10,7 +10,12 @@
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
-    "incremental": true
+    "incremental": true,
+    "typeRoots": ["./node_modules/@types"],
+    "paths": {
+      "@fecommunity/reactpress-toolkit": ["../toolkit/dist"],
+      "@fecommunity/reactpress-toolkit/*": ["../toolkit/dist/*"]
+    }
   },
   "exclude": ["node_modules", "dist"]
 }

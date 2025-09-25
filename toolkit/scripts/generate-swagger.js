@@ -2,7 +2,7 @@ const { execSync } = require('child_process');
 const { unlinkSync, existsSync } = require('fs');
 const { join } = require('path');
 
-console.log('🚀 Starting full API types generation process...\n');
+console.log('🚀 Starting API types generation process...\n');
 
 try {
   // Step 1: Enter server directory and generate swagger.json
@@ -22,8 +22,9 @@ try {
   }
   console.log('✅ Using swagger.json from server directory!\n');
 
-  // Step 3: Generate TypeScript definitions directly to client/src
-  console.log('2️⃣ Generating TypeScript definitions to client/src...');
+  // Step 3: Generate TypeScript definitions (only updates api and types directories)
+  console.log('📝 Note: Only api and types directories will be regenerated. Other src files will remain untouched.\n');
+  console.log('2️⃣ Generating TypeScript definitions (api and types only)...');
   execSync('node scripts/generate-api.js', { stdio: 'inherit' });
   console.log('✅ TypeScript definitions generated successfully!\n');
 
@@ -38,8 +39,8 @@ try {
   
   console.log('✅ Cleanup completed!\n');
 
-  console.log('🎉 Full generation process completed successfully!');
-  console.log('📁 Generated files are available in client/src/');
+  console.log('🎉 API generation process completed successfully!');
+  console.log('📁 Only api and types directories were updated. Other src files remain untouched.');
 
 } catch (error) {
   console.error('❌ Error during generation process:', error.message);
