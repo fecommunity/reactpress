@@ -1,5 +1,5 @@
 // 配置文件
-import { file as envFilePath } from '@fecommunity/reactpress-config';
+import { config } from '@fecommunity/reactpress-toolkit';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -45,7 +45,7 @@ import { ViewModule } from './modules/view/view.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true, envFilePath: [envFilePath] }),
+    ConfigModule.forRoot({ isGlobal: true, envFilePath: [config.file] }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
