@@ -1,7 +1,7 @@
 {
   "name": "@fecommunity/reactpress",
   "author": "fecommunity",
-  "version": "2.0.0-beta.0",
+  "version": "2.0.1",
   "description": "ReactPress - A full-stack CMS built with React, Next.js, and NestJS",
   "keywords": [
     "reactpress",
