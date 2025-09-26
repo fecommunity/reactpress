@@ -1,15 +1,15 @@
+// Automatically generated API toolkit for ReactPress
+// Do not manually modify this file
+// Generated at: 9/25/2025, 9:47:27 PM
 
-// Main index file for ReactPress Toolkit
+import { http as httpInstance, api, createApiInstance } from './api/instance';
+import * as types from './types';
+import * as utils from './utils';
+import * as config from './config';
 
-// Export API instance and HTTP client
-export { api, http, createApiInstance } from './api/instance';
-export { HttpClient } from './api/HttpClient';
+const http = {
+  ...httpInstance,
+  createApiInstance,
+};
 
-// Export utility functions
-export * as utils from './utils';
-
-// Re-export types for convenience
-export * as types from './types';
-
-// Export default API instance
-export { api as default } from './api/instance';
+export { api, types, utils, config, http };
