@@ -1,7 +1,7 @@
 {
   "name": "@fecommunity/reactpress",
   "author": "fecommunity",
-  "version": "2.0.0",
+  "version": "2.0.0-beta.0",
   "description": "ReactPress - A full-stack CMS built with React, Next.js, and NestJS",
   "keywords": [
     "reactpress",
@@ -13,9 +13,12 @@
     "typescript"
   ],
   "bin": {
-    "reactpress": "./bin/reactpress.js",
+    "reactpress": "./scripts/reactpress.js",
     "reactpress-server": "./scripts/reactpress-server.js",
     "reactpress-client": "./client/bin/reactpress-client.js"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "files": [
     "bin/**/*",
