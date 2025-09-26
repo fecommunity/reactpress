@@ -42,7 +42,7 @@ pnpm add @fecommunity/reactpress-toolkit
 ### Using the Default API Instance
 
 ```typescript
-import api from '@fecommunity/reactpress-toolkit';
+import { api } from '@fecommunity/reactpress-toolkit';
 
 // Get all articles
 const articles = await api.article.findAll();
@@ -74,32 +74,14 @@ const article: types.IArticle = {
 const formattedDate = utils.formatDate(new Date());
 ```
 
-## API Modules
-
-The toolkit provides clients for all ReactPress backend modules:
-
-- `api.article` - Article management
-- `api.auth` - Authentication services
-- `api.category` - Category management
-- `api.comment` - Comment system
-- `api.file` - File management
-- `api.knowledge` - Knowledge base
-- `api.page` - Page management
-- `api.search` - Search functionality
-- `api.setting` - System settings
-- `api.smtp` - SMTP services
-- `api.tag` - Tag management
-- `api.user` - User management
-- `api.view` - View analytics
-
 ## Configuration
 
 You can create a custom API instance with specific configuration:
 
 ```typescript
-import { api } from '@fecommunity/reactpress-toolkit';
+import { http } from '@fecommunity/reactpress-toolkit';
 
-const customApi = api.createApiInstance({
+const customApi = http.createApiInstance({
   baseURL: 'https://api.yourdomain.com',
   timeout: 10000,
   // ... other axios configuration options
@@ -113,10 +95,10 @@ const articles = await customApi.article.findAll();
 
 ### Automatic Retry Mechanisms
 ```typescript
-import { api } from '@fecommunity/reactpress-toolkit';
+import { http } from '@fecommunity/reactpress-toolkit';
 
 // Configure retry settings
-const customApi = api.createApiInstance({
+const customApi = http.createApiInstance({
   baseURL: 'https://api.yourdomain.com',
   retry: {
     retries: 3,
@@ -130,9 +112,9 @@ const customApi = api.createApiInstance({
 
 ### Request/Response Interceptors
 ```typescript
-import { api } from '@fecommunity/reactpress-toolkit';
+import { http } from '@fecommunity/reactpress-toolkit';
 
-const monitoredApi = api.createApiInstance({
+const monitoredApi = http.createApiInstance({
   baseURL: 'https://api.yourdomain.com',
   interceptors: {
     request: (config) => {
@@ -151,10 +133,10 @@ const monitoredApi = api.createApiInstance({
 
 ### Authentication Handling
 ```typescript
-import { api, utils } from '@fecommunity/reactpress-toolkit';
+import { http, api, utils } from '@fecommunity/reactpress-toolkit';
 
 // Automatic token refresh
-const secureApi = api.createApiInstance({
+const secureApi = http.createApiInstance({
   baseURL: 'https://api.yourdomain.com',
   auth: {
     tokenRefresh: async (refreshToken) => {

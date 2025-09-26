@@ -2,6 +2,28 @@
   "name": "@fecommunity/reactpress",
   "author": "fecommunity",
   "version": "2.0.0",
+  "description": "ReactPress - A full-stack CMS built with React, Next.js, and NestJS",
+  "keywords": [
+    "reactpress",
+    "cms",
+    "blog",
+    "react",
+    "nextjs",
+    "nestjs",
+    "typescript"
+  ],
+  "bin": {
+    "reactpress": "./bin/reactpress.js",
+    "reactpress-server": "./scripts/reactpress-server.js",
+    "reactpress-client": "./client/bin/reactpress-client.js"
+  },
+  "files": [
+    "bin/**/*",
+    "scripts/**/*",
+    "client/bin/**/*",
+    "server/bin/**/*",
+    "CONTRIBUTING.md"
+  ],
   "scripts": {
     "clean": "pnpm clean:node_modules && pnpm clean:dist",
     "clean:node_modules": "npx rimraf ./node_modules ./**/node_modules",
@@ -10,13 +32,12 @@
     "dev:server": "pnpm run --dir ./server dev",
     "dev:client": "pnpm run --dir ./client dev",
     "dev:docs": "pnpm run --dir ./docs dev",
-    "build": "pnpm build:config && pnpm build:server && pnpm build:client",
+    "build": "pnpm build:toolkit && pnpm build:server && pnpm build:client",
     "build:packages": "node scripts/build-packages.js",
-    "build:config": "pnpm run --dir ./config build",
+    "build:toolkit": "pnpm run --dir ./toolkit build",
     "build:server": "pnpm run --dir ./server build",
     "build:client": "pnpm run --dir ./client build",
     "build:docs": "pnpm run --dir ./docs build",
-    "build:toolkit": "pnpm run --dir ./toolkit build",
     "deploy:docs": "pnpm run --dir ./docs deploy:surge",
     "deploy": "sh scripts/deploy.sh",
     "start": "concurrently 'pnpm:start:*'",
