@@ -10,9 +10,9 @@ const crypto = require('crypto');
 // Package build order (dependencies first)
 const packages = [
   {
-    name: '@fecommunity/reactpress-config',
-    path: 'config',
-    description: 'Configuration management package'
+    name: '@fecommunity/reactpress',
+    path: '.',
+    description: 'Main ReactPress package'
   },
   {
     name: '@fecommunity/reactpress-server', 
@@ -66,8 +66,31 @@ function getPackageHash(packagePath) {
   return generateHash(fullPath);
 }
 
-// Check if package has meaningful changes
-function hasMeaningfulChanges(packagePath, packageName) {
+// Check if package has meaningful changes (for build)
+function hasMeaningfulChangesForBuild(packagePath, packageName) {
+  try {
+    // Create a hash file path to store previous hash in node_modules
+    const hashFilePath = path.join(process.cwd(), 'node_modules', '.build-cache', `${packageName.replace('/', '_')}.hash`);
+    
+    // Generate current hash
+    const currentHash = getPackageHash(packagePath);
+    
+    // Check if we have a previous hash
+    if (fs.existsSync(hashFilePath)) {
+      const previousHash = fs.readFileSync(hashFilePath, 'utf8').trim();
+      return currentHash !== previousHash;
+    }
+    
+    // If no previous hash, consider it as having changes
+    return true;
+  } catch (error) {
+    console.log(chalk.yellow(`⚠️  Could not check changes for ${packageName}, assuming changes exist`));
+    return true;
+  }
+}
+
+// Check if package has meaningful changes (for publish)
+function hasMeaningfulChangesForPublish(packagePath, packageName) {
   try {
     // Create a hash file path to store previous hash in node_modules
     const hashFilePath = path.join(process.cwd(), 'node_modules', '.publish-cache', `${packageName.replace('/', '_')}.hash`);
@@ -89,8 +112,27 @@ function hasMeaningfulChanges(packagePath, packageName) {
   }
 }
 
-// Save package hash
-function savePackageHash(packagePath, packageName) {
+// Save package hash (for build)
+function savePackageHashForBuild(packagePath, packageName) {
+  try {
+    const hashFilePath = path.join(process.cwd(), 'node_modules', '.build-cache', `${packageName.replace('/', '_')}.hash`);
+    
+    // Ensure cache directory exists
+    const cacheDir = path.dirname(hashFilePath);
+    if (!fs.existsSync(cacheDir)) {
+      fs.mkdirSync(cacheDir, { recursive: true });
+    }
+    
+    // Generate and save current hash
+    const currentHash = getPackageHash(packagePath);
+    fs.writeFileSync(hashFilePath, currentHash);
+  } catch (error) {
+    console.log(chalk.yellow(`⚠️  Could not save hash for ${packageName}`));
+  }
+}
+
+// Save package hash (for publish)
+function savePackageHashForPublish(packagePath, packageName) {
   try {
     const hashFilePath = path.join(process.cwd(), 'node_modules', '.publish-cache', `${packageName.replace('/', '_')}.hash`);
     
@@ -209,8 +251,67 @@ function updateVersion(packagePath, newVersion) {
   console.log(chalk.green(`✅ Version updated from ${oldVersion} to ${newVersion}`));
 }
 
+// Fix workspace dependencies for build
+function fixWorkspaceDependenciesForBuild(packagePath) {
+  console.log(chalk.blue(`🔧 Fixing workspace dependencies for build: ${packagePath}...`));
+  
+  const pkgPath = path.join(process.cwd(), packagePath, 'package.json');
+  const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
+  
+  // Fix dependencies
+  const depTypes = ['dependencies', 'devDependencies', 'peerDependencies'];
+  
+  depTypes.forEach(depType => {
+    if (pkg[depType]) {
+      Object.keys(pkg[depType]).forEach(depName => {
+        // Check if it's a workspace dependency
+        if (pkg[depType][depName] === 'workspace:*' || pkg[depType][depName].startsWith('workspace:')) {
+          // For build purposes, we'll use the file: protocol to reference local packages
+          const depPackage = packages.find(p => p.name === depName);
+          if (depPackage) {
+            console.log(chalk.gray(`  Replacing ${depName} workspace dependency with file reference`));
+            pkg[depType][depName] = `file:../${depPackage.path}`;
+          }
+        }
+      });
+    }
+  });
+  
+  // Write the updated package.json
+  fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + '\n');
+  console.log(chalk.green(`✅ Workspace dependencies fixed for build: ${packagePath}`));
+}
+
+// Restore workspace dependencies after build
+function restoreWorkspaceDependenciesAfterBuild(packagePath) {
+  console.log(chalk.blue(`🔄 Restoring workspace dependencies after build: ${packagePath}...`));
+  
+  const pkgPath = path.join(process.cwd(), packagePath, 'package.json');
+  const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
+  
+  // Restore dependencies
+  const depTypes = ['dependencies', 'devDependencies', 'peerDependencies'];
+  
+  depTypes.forEach(depType => {
+    if (pkg[depType]) {
+      Object.keys(pkg[depType]).forEach(depName => {
+        // Check if this is one of our internal packages referenced with file:
+        const depPackage = packages.find(p => p.name === depName);
+        if (depPackage && pkg[depType][depName].startsWith('file:')) {
+          console.log(chalk.gray(`  Restoring ${depName} to workspace dependency`));
+          pkg[depType][depName] = 'workspace:*';
+        }
+      });
+    }
+  });
+  
+  // Write the updated package.json
+  fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + '\n');
+  console.log(chalk.green(`✅ Workspace dependencies restored after build: ${packagePath}`));
+}
+
 // Fix workspace dependencies for publish
-function fixWorkspaceDependencies(packagePath, packageVersions) {
+function fixWorkspaceDependenciesForPublish(packagePath, packageVersions) {
   console.log(chalk.blue(`🔧 Fixing workspace dependencies for publish: ${packagePath}...`));
   
   const pkgPath = path.join(process.cwd(), packagePath, 'package.json');
@@ -241,7 +342,7 @@ function fixWorkspaceDependencies(packagePath, packageVersions) {
 }
 
 // Restore workspace dependencies after publish
-function restoreWorkspaceDependencies(packagePath) {
+function restoreWorkspaceDependenciesAfterPublish(packagePath) {
   console.log(chalk.blue(`🔄 Restoring workspace dependencies for ${packagePath}...`));
   
   const pkgPath = path.join(process.cwd(), packagePath, 'package.json');
@@ -269,25 +370,33 @@ function restoreWorkspaceDependencies(packagePath) {
 }
 
 // Build package
-function buildPackage(packagePath, packageName) {
-  console.log(chalk.blue(`\n🔨 Building ${packageName}...`));
+function buildPackage(pkg) {
+  console.log(chalk.blue(`\n🔨 Building ${pkg.name} (${pkg.description})...`));
   
   try {
-    if (packagePath === 'config') {
-      execSync('pnpm run build', { cwd: path.join(process.cwd(), packagePath), stdio: 'inherit' });
-    } else if (packagePath === 'server') {
-      execSync('pnpm run prebuild && pnpm run build', { cwd: path.join(process.cwd(), packagePath), stdio: 'inherit' });
-    } else if (packagePath === 'client') {
-      execSync('pnpm run prebuild && pnpm run build', { cwd: path.join(process.cwd(), packagePath), stdio: 'inherit' });
-    } else if (packagePath === 'toolkit') {
-      execSync('pnpm run build', { cwd: path.join(process.cwd(), packagePath), stdio: 'inherit' });
-    } else if (packagePath === 'templates/hello-world' || packagePath === 'templates/twentytwentyfive') {
-      // Templates don't need to be built, just validate package.json
-      console.log(chalk.gray('  Templates do not require building, skipping...'));
+    // Fix workspace dependencies for build
+    fixWorkspaceDependenciesForBuild(pkg.path);
+    
+    try {
+      if (pkg.path === 'config') {
+        execSync('pnpm run build', { cwd: path.join(process.cwd(), pkg.path), stdio: 'inherit' });
+      } else if (pkg.path === 'server') {
+        execSync('pnpm run prebuild && pnpm run build', { cwd: path.join(process.cwd(), pkg.path), stdio: 'inherit' });
+      } else if (pkg.path === 'client') {
+        execSync('pnpm run prebuild && pnpm run build', { cwd: path.join(process.cwd(), pkg.path), stdio: 'inherit' });
+      } else if (pkg.path === 'toolkit') {
+        execSync('pnpm run build', { cwd: path.join(process.cwd(), pkg.path), stdio: 'inherit' });
+      } else if (pkg.path === 'templates/hello-world' || pkg.path === 'templates/twentytwentyfive') {
+        // Templates don't need to be built, just validate package.json
+        console.log(chalk.gray('  Templates do not require building, skipping...'));
+      }
+      console.log(chalk.green(`✅ ${pkg.name} built successfully`));
+    } finally {
+      // Always restore workspace dependencies
+      restoreWorkspaceDependenciesAfterBuild(pkg.path);
     }
-    console.log(chalk.green(`✅ ${packageName} built successfully`));
   } catch (error) {
-    console.log(chalk.red(`❌ Failed to build ${packageName}`));
+    console.log(chalk.red(`❌ Failed to build ${pkg.name}`));
     throw error;
   }
 }
@@ -342,8 +451,57 @@ function checkEnvironment() {
   return true;
 }
 
-// Main function
-async function main() {
+// Build packages function
+async function buildPackages() {
+  console.log(chalk.blue('🏗️  ReactPress Package Builder\n'));
+  
+  // Show current versions
+  console.log(chalk.cyan('📋 Current package versions:'));
+  packages.forEach(pkg => {
+    const version = getCurrentVersion(pkg.path);
+    console.log(chalk.gray(`  ${pkg.name}: ${version}`));
+  });
+  console.log();
+  
+  try {
+    // Track which packages actually need to be built
+    const packagesToBuild = [];
+    
+    // Check for meaningful changes in each package
+    for (const pkg of packages) {
+      if (fs.existsSync(path.join(process.cwd(), pkg.path))) {
+        if (hasMeaningfulChangesForBuild(pkg.path, pkg.name)) {
+          packagesToBuild.push(pkg);
+          console.log(chalk.blue(`\n📦 ${pkg.name} has changes, will be built`));
+        } else {
+          console.log(chalk.gray(`\n⏭️  ${pkg.name} has no meaningful changes, skipping...`));
+        }
+      } else {
+        console.log(chalk.yellow(`⚠️  Package ${pkg.name} directory not found, skipping...`));
+      }
+    }
+    
+    if (packagesToBuild.length === 0) {
+      console.log(chalk.green('\n✅ No packages have meaningful changes. Nothing to build!'));
+      return;
+    }
+    
+    // Build packages that have changes
+    for (const pkg of packagesToBuild) {
+      await buildPackage(pkg);
+      // Save the hash after successful build
+      savePackageHashForBuild(pkg.path, pkg.name);
+    }
+    
+    console.log(chalk.green(`\n🎉 ${packagesToBuild.length} package(s) built successfully!`));
+  } catch (error) {
+    console.error(chalk.red('❌ Build failed:'), error);
+    process.exit(1);
+  }
+}
+
+// Publish packages function
+async function publishPackages() {
   // Check if called with --no-build flag
   const noBuild = process.argv.includes('--no-build');
   
@@ -392,7 +550,7 @@ async function main() {
     // Check for meaningful changes in each package
     for (const pkg of packages) {
       if (fs.existsSync(path.join(process.cwd(), pkg.path))) {
-        if (hasMeaningfulChanges(pkg.path, pkg.name)) {
+        if (hasMeaningfulChangesForPublish(pkg.path, pkg.name)) {
           packagesToBuild.push(pkg);
           console.log(chalk.blue(`\n📦 ${pkg.name} has changes, will be built`));
         } else {
@@ -410,9 +568,9 @@ async function main() {
     
     // Build packages that have changes
     for (const pkg of packagesToBuild) {
-      buildPackage(pkg.path, pkg.name);
+      buildPackage(pkg);
       // Save the hash after successful build
-      savePackageHash(pkg.path, pkg.name);
+      savePackageHashForPublish(pkg.path, pkg.name);
     }
     
     console.log(chalk.green(`\n🎉 ${packagesToBuild.length} package(s) built successfully!`));
@@ -433,7 +591,7 @@ async function main() {
     ]);
     
     // Check if the selected package has meaningful changes
-    if (!hasMeaningfulChanges(selectedPackage.path, selectedPackage.name)) {
+    if (!hasMeaningfulChangesForPublish(selectedPackage.path, selectedPackage.name)) {
       console.log(chalk.gray(`\n⏭️  ${selectedPackage.name} has no meaningful changes, skipping...`));
       console.log(chalk.green('✅ Nothing to publish!'));
       return;
@@ -483,13 +641,13 @@ async function main() {
     packageVersions[selectedPackage.name] = newVersion;
     
     // Fix workspace dependencies before publishing
-    fixWorkspaceDependencies(selectedPackage.path, packageVersions);
+    fixWorkspaceDependenciesForPublish(selectedPackage.path, packageVersions);
     
     try {
       updateVersion(selectedPackage.path, newVersion);
       // Only build if not disabled
       if (!noBuild) {
-        buildPackage(selectedPackage.path, selectedPackage.name);
+        buildPackage(selectedPackage);
       }
       
       // Determine tag based on version type
@@ -497,12 +655,12 @@ async function main() {
       publishPackage(selectedPackage.path, selectedPackage.name, tag);
       
       // Save the hash after successful publish
-      savePackageHash(selectedPackage.path, selectedPackage.name);
+      savePackageHashForPublish(selectedPackage.path, selectedPackage.name);
       
       console.log(chalk.green(`\n🎉 ${selectedPackage.name} v${newVersion} published successfully!`));
     } finally {
       // Always restore workspace dependencies
-      restoreWorkspaceDependencies(selectedPackage.path);
+      restoreWorkspaceDependenciesAfterPublish(selectedPackage.path);
     }
     
     return;
@@ -550,7 +708,7 @@ async function main() {
         continue;
       }
       
-      if (hasMeaningfulChanges(pkg.path, pkg.name)) {
+      if (hasMeaningfulChangesForPublish(pkg.path, pkg.name)) {
         packagesToPublish.push(pkg);
         console.log(chalk.blue(`\n📦 ${pkg.name} has changes, will be published`));
       } else {
@@ -586,21 +744,21 @@ async function main() {
       packageVersions[pkg.name] = newVersion;
       
       // Fix workspace dependencies before publishing
-      fixWorkspaceDependencies(pkg.path, packageVersions);
+      fixWorkspaceDependenciesForPublish(pkg.path, packageVersions);
       
       try {
         updateVersion(pkg.path, newVersion);
         // Only build if not disabled
         if (!noBuild) {
-          buildPackage(pkg.path, pkg.name);
+          buildPackage(pkg);
         }
         publishPackage(pkg.path, pkg.name, tag);
         
         // Save the hash after successful publish
-        savePackageHash(pkg.path, pkg.name);
+        savePackageHashForPublish(pkg.path, pkg.name);
       } finally {
         // Always restore workspace dependencies
-        restoreWorkspaceDependencies(pkg.path);
+        restoreWorkspaceDependenciesAfterPublish(pkg.path);
       }
     }
     
@@ -689,7 +847,7 @@ async function main() {
         continue;
       }
       
-      if (hasMeaningfulChanges(pkg.path, pkg.name)) {
+      if (hasMeaningfulChangesForPublish(pkg.path, pkg.name)) {
         packagesToPublish.push(pkg);
         console.log(chalk.blue(`\n📦 ${pkg.name} has changes, will be published`));
       } else {
@@ -711,13 +869,13 @@ async function main() {
       packageVersions[pkg.name] = pkgVersion;
       
       // Fix workspace dependencies before publishing
-      fixWorkspaceDependencies(pkg.path, packageVersions);
+      fixWorkspaceDependenciesForPublish(pkg.path, packageVersions);
       
       try {
         updateVersion(pkg.path, pkgVersion);
         // Only build if not disabled
         if (!noBuild) {
-          buildPackage(pkg.path, pkg.name);
+          buildPackage(pkg);
         }
         
         // Determine tag based on version type and branch
@@ -725,10 +883,10 @@ async function main() {
         publishPackage(pkg.path, pkg.name, tag);
         
         // Save the hash after successful publish
-        savePackageHash(pkg.path, pkg.name);
+        savePackageHashForPublish(pkg.path, pkg.name);
       } finally {
         // Always restore workspace dependencies
-        restoreWorkspaceDependencies(pkg.path);
+        restoreWorkspaceDependenciesAfterPublish(pkg.path);
       }
     }
     
@@ -749,7 +907,39 @@ ${Object.entries(packageVersions).map(([name, version]) => `- ${name}@${version}
   }
 }
 
+// Main function
+async function main() {
+  // Check command line arguments
+  const args = process.argv.slice(2);
+  
+  if (args.includes('--publish')) {
+    // When called with --publish, start the publish process
+    console.log(chalk.blue('🏗️  ReactPress Package Builder\n'));
+    
+    // Show current versions
+    console.log(chalk.cyan('📋 Current package versions:'));
+    packages.forEach(pkg => {
+      const version = getCurrentVersion(pkg.path);
+      console.log(chalk.gray(`  ${pkg.name}: ${version}`));
+    });
+    console.log();
+    
+    // Start the publish process
+    await publishPackages();
+  } else if (args.includes('--build')) {
+    // When called with --build, just build packages
+    await buildPackages();
+  } else {
+    // Default behavior - show help
+    console.log(chalk.blue('🏗️  ReactPress CLI\n'));
+    console.log('Usage:');
+    console.log('  node scripts/reactpress-cli.js --build    Build all packages');
+    console.log('  node scripts/reactpress-cli.js --publish  Publish packages (interactive)');
+    console.log('');
+  }
+}
+
 main().catch(error => {
-  console.error(chalk.red('❌ Publishing failed:'), error);
+  console.error(chalk.red('❌ Operation failed:'), error);
   process.exit(1);
 });
