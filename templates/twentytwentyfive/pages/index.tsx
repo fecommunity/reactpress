@@ -2,13 +2,13 @@ import { GetStaticProps } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { createApiInstance } from '@fecommunity/reactpress-toolkit';
+import { http } from '@fecommunity/reactpress-toolkit';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import TagsCloud from '../components/TagsCloud';
 
 // Create a custom API instance with the desired baseURL
-const customApi = createApiInstance({
+const customApi = http.createApiInstance({
   baseURL: 'https://api.gaoredu.com/'
 });
 
