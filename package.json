@@ -60,8 +60,7 @@
     "prepare": "husky",
     "precommit": "lint-staged",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s  -r 0",
-    "release": "node scripts/reactpress-publish.js --publish",
-    "generate:api-types": "node scripts/generate-api-types.js"
+    "release": "node scripts/reactpress-publish.js --publish"
   },
   "dependencies": {
     "chalk": "^4.1.2",
