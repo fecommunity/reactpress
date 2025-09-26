@@ -18,7 +18,7 @@
     "reactpress-client": "./client/bin/reactpress-client.js"
   },
   "publishConfig": {
-    "access": "public"
+    "@fecommunity:registry": "https://npm.pkg.github.com"
   },
   "files": [
     "bin/**/*",
