@@ -1,3 +1,17 @@
+## [2.0.1](https://github.com/fecommunity/reactpress/compare/v2.0.0...v2.0.1) (2025-09-26)
+
+
+### Bug Fixes
+
+* correct HttpClient filename case sensitivity ([7dd892a](https://github.com/fecommunity/reactpress/commit/7dd892a8d5b05a3ab24eaf73577848eb25b06450))
+
+
+### Features
+
+* add config for toolkit package ([0ed839d](https://github.com/fecommunity/reactpress/commit/0ed839d4667d671ea06b088c0bac5a2890680445))
+
+
+
 # [2.0.0](https://github.com/fecommunity/reactpress/compare/v1.10.0...v2.0.0) (2025-09-21)
 
 
