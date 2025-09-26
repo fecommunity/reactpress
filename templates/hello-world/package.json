@@ -1,6 +1,6 @@
 {
   "name": "@fecommunity/reactpress-template-hello-world",
-  "version": "1.0.0",
+  "version": "1.0.0-beta.3",
   "description": "A minimal hello-world template for ReactPress using Next.js Pages Router",
   "main": "index.js",
   "bin": {
