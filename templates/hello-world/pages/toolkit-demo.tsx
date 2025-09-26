@@ -1,12 +1,12 @@
 import { GetStaticProps } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
-import { types, utils, createApiInstance } from '@fecommunity/reactpress-toolkit';
+import { http, api, types, utils } from '@fecommunity/reactpress-toolkit';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
 // Create a custom API instance with the desired baseURL
-const customApi = createApiInstance({
+const customApi = http.createApiInstance({
   baseURL: 'https://api.gaoredu.com/',
 });
 
@@ -65,7 +65,7 @@ export default function ToolkitDemo({ articles, categories, tags, stats }: Toolk
             <div className="features-grid">
               <div className="feature-card">
                 <h3 className="feature-title">API Client</h3>
-                <p className="feature-description">Use createApiInstance() to create custom API clients</p>
+                <p className="feature-description">Use http.createApiInstance() to create custom API clients</p>
               </div>
               <div className="feature-card">
                 <h3 className="feature-title">Types</h3>

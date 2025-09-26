@@ -1,7 +1,7 @@
 import * as fs from 'fs-extra';
 import * as path from 'path';
 
-interface I18nMessages {
+export interface I18nMessages {
   [key: string]: Record<string, string>;
 }
 
@@ -12,7 +12,7 @@ interface I18nResult {
 }
 
 function parseI18n(): I18nResult {
-  // Locales are now in the config package
+  // Locales are now in the dist directory, one level up from config
   const localesDir = path.join(__dirname, '../locales');
 
   if (!fs.existsSync(localesDir)) {
@@ -20,7 +20,7 @@ function parseI18n(): I18nResult {
   }
 
   const files = fs.readdirSync(localesDir);
-  const messages: I18nMessages = files.reduce((i18n, file) => {
+  const messages: I18nMessages = files.reduce((i18n: I18nMessages, file: string) => {
     const language = file.replace(path.extname(file), '');
     const json = fs.readJsonSync(path.join(localesDir, file));
     i18n[language] = json;
