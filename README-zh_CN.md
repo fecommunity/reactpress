@@ -13,8 +13,8 @@
   [![NPM Version](https://img.shields.io/npm/v/@fecommunity/reactpress.svg?style=flat-square)](https://www.npmjs.com/package/@fecommunity/reactpress)
   [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/fecommunity/reactpress/pulls)
   [![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-%230074c1.svg?style=flat-square)](http://www.typescriptlang.org/)
-  [![Next.js](https://img.shields.io/badge/Next.js-14-black?style=flat-square)](https://nextjs.org/)
-  [![NestJS](https://img.shields.io/badge/NestJS-10-red?style=flat-square)](https://nestjs.com/)
+  [![Next.js](https://img.shields.io/badge/Next.js-12-black?style=flat-square)](https://nextjs.org/)
+  [![NestJS](https://img.shields.io/badge/NestJS-6-red?style=flat-square)](https://nestjs.com/)
   [![Deploy](https://img.shields.io/badge/Deploy-Vercel-blue?style=flat-square)](https://vercel.com/new/clone?repository-url=https://github.com/fecommunity/reactpress)
   [![CI](https://github.com/fecommunity/reactpress/actions/workflows/npm-publish.yml/badge.svg)](https://github.com/fecommunity/reactpress/actions/workflows/npm-publish.yml)
 
@@ -51,8 +51,8 @@
 - **PM2 进程管理**，用于生产部署
 
 ### 🚀 现代技术栈
-- **前端**：React 18 + Next.js 14 App Router
-- **后端**：NestJS 10 模块化架构
+- **前端**：React 17 + Next.js 12 Pages Router
+- **后端**：NestJS 6 模块化架构
 - **数据库**：MySQL + TypeORM
 - **UI**：Ant Design v5 组件
 
@@ -68,6 +68,11 @@
 [![演示](./public/demo.png)](https://gaoredu.com)
 
 ## 🚀 快速开始
+
+### 📋 前置要求
+- Node.js >= 16.5.0
+- MySQL 数据库
+- pnpm 包管理器
 
 ### 🏁 安装选项
 
@@ -102,8 +107,8 @@ ReactPress 组织为**具有模块化包的 monorepo**：
 | 包 | 描述 | 版本 |
 |---------|-------------|---------|
 | [`@fecommunity/reactpress`](.) | 主 CLI 和统一入口点 | 2.0.0 |
-| [`@fecommunity/reactpress-client`](./client) | Next.js 14 前端应用 | 1.0.0 |
-| [`@fecommunity/reactpress-server`](./server) | NestJS 10 后端 API | 1.0.0 |
+| [`@fecommunity/reactpress-client`](./client) | Next.js 12 前端应用 | 1.0.0 |
+| [`@fecommunity/reactpress-server`](./server) | NestJS 6 后端 API | 1.0.0 |
 | [`@fecommunity/reactpress-toolkit`](./toolkit) | 自动生成的 API 客户端 SDK | 1.0.0 |
 
 ### 模板
@@ -174,7 +179,7 @@ pnpm run start
 要将包发布到 npm：
 
 1. 确保您已登录 npm：`pnpm login`
-2. 运行发布脚本：`pnpm run publish`
+2. 运行发布脚本：`pnpm run release`
 3. 按照交互式提示选择包和版本增量
 
 请阅读我们的[贡献指南](https://github.com/fecommunity/reactpress/blob/master/CONTRIBUTING.md)了解我们的行为准则和开发流程详情。
