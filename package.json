@@ -1,7 +1,7 @@
 {
   "name": "@fecommunity/reactpress",
   "author": "fecommunity",
-  "version": "2.0.0-beta-4",
+  "version": "2.0.0-beta-4-beta.1",
   "description": "ReactPress - A full-stack CMS built with React, Next.js, and NestJS",
   "keywords": [
     "reactpress",
@@ -17,9 +17,6 @@
     "reactpress-server": "./server/bin/reactpress-server.js",
     "reactpress-client": "./client/bin/reactpress-client.js"
   },
-  "publishConfig": {
-    "@fecommunity:registry": "https://npm.pkg.github.com"
-  },
   "files": [
     "bin/**/*",
     "scripts/**/*",
@@ -27,9 +24,6 @@
     "server/bin/**/*",
     "CONTRIBUTING.md"
   ],
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
-  },
   "scripts": {
     "clean": "pnpm clean:node_modules && pnpm clean:dist",
     "clean:node_modules": "npx rimraf ./node_modules ./**/node_modules",
