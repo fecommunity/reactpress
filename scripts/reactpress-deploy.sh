@@ -43,3 +43,5 @@ pm2 startup || log "Failed to setup PM2 startup script"
 pm2 save || error_exit "Failed to save PM2 configuration"
 
 log "Deployment completed successfully!"
+
+exit 0
