@@ -1,6 +1,6 @@
 {
   "name": "@fecommunity/reactpress-template-twentytwentyfive",
-  "version": "1.0.0-beta.3",
+  "version": "1.0.0-beta.4",
   "description": "A modern blog template for ReactPress using Next.js Pages Router",
   "main": "index.js",
   "bin": {
