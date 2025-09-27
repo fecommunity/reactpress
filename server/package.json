@@ -1,6 +1,6 @@
 {
   "name": "@fecommunity/reactpress-server",
-  "version": "1.0.0-beta.3",
+  "version": "1.0.0-beta.16",
   "description": "ReactPress Server - NestJS-based backend API for ReactPress CMS",
   "author": "fecommunity",
   "license": "MIT",
@@ -32,9 +32,6 @@
   },
   "engines": {
     "node": ">=16.5.0"
-  },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
   },
   "scripts": {
     "prebuild": "rimraf dist",
