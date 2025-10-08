@@ -81,12 +81,9 @@
 # Install ReactPress globally
 npm install -g @fecommunity/reactpress
 
-# Launch installation wizard
-reactpress server install
-
 # Start services
 reactpress server start
-reactpress client
+reactpress client start
 ```
 
 #### Option 2: Independent Services
@@ -96,6 +93,50 @@ npx @fecommunity/reactpress-server
 
 # Install and run client independently
 npx @fecommunity/reactpress-client
+```
+
+## 📟 Command Line Interface (CLI)
+
+ReactPress provides a unified command-line interface for managing both server and client components.
+
+### Unified CLI Commands
+
+After installing ReactPress globally, you can use the `reactpress` command:
+
+```bash
+# Show help
+reactpress --help
+
+# Start the server
+reactpress server start
+
+# Start the client
+reactpress client start
+
+# Start server with PM2
+reactpress server start --pm2
+
+# Start client with PM2
+reactpress client start --pm2
+```
+
+
+### Individual Package Commands
+
+You can also use the individual package commands directly:
+
+```bash
+# Start server
+npx @fecommunity/reactpress-server
+
+# Start client
+npx @fecommunity/reactpress-client
+
+# Start server with PM2
+npx @fecommunity/reactpress-server --pm2
+
+# Start client with PM2
+npx @fecommunity/reactpress-client --pm2
 ```
 
 ## 📦 Packages & Components
@@ -152,6 +193,10 @@ npx @fecommunity/reactpress-server --pm2
 
 # Start ReactPress client with PM2
 npx @fecommunity/reactpress-client --pm2
+
+# Or use the unified CLI
+reactpress server start --pm2
+reactpress client start --pm2
 ```
 
 ### Traditional Deployment (Self-Managed)
