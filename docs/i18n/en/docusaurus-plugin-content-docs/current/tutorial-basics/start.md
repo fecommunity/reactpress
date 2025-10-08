@@ -17,14 +17,16 @@ $ pnpm i
 
 The code structure of the project is as follows:
 ```shell
-∝ - client//interface code
-∝ - config//configuration file
-∝ - Locales//International Copywriting
-∝ - public//static resources
-∝ - scripts//Build scripts
-Does the server//server come with it
+├─ client // Next.js based frontend client
+├─ server // NestJS based backend API service
+├─ toolkit // TypeScript API client toolkit
+├─ templates // Template files
+├─ scripts // Build scripts
+├─ docs // Documentation
 └─ package.json
 ```
+
+ReactPress 2.0 adopts a monorepo structure, separating the frontend, backend, and toolkit into independent packages that can be developed and deployed separately.
 
 ### Configuration file
 
