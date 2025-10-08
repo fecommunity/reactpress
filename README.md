@@ -13,8 +13,8 @@
   [![NPM Version](https://img.shields.io/npm/v/@fecommunity/reactpress.svg?style=flat-square)](https://www.npmjs.com/package/@fecommunity/reactpress)
   [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/fecommunity/reactpress/pulls)
   [![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-%230074c1.svg?style=flat-square)](http://www.typescriptlang.org/)
-  [![Next.js](https://img.shields.io/badge/Next.js-14-black?style=flat-square)](https://nextjs.org/)
-  [![NestJS](https://img.shields.io/badge/NestJS-10-red?style=flat-square)](https://nestjs.com/)
+  [![Next.js](https://img.shields.io/badge/Next.js-12-black?style=flat-square)](https://nextjs.org/)
+  [![NestJS](https://img.shields.io/badge/NestJS-6-red?style=flat-square)](https://nestjs.com/)
   [![Deploy](https://img.shields.io/badge/Deploy-Vercel-blue?style=flat-square)](https://vercel.com/new/clone?repository-url=https://github.com/fecommunity/reactpress)
   [![CI](https://github.com/fecommunity/reactpress/actions/workflows/npm-publish.yml/badge.svg)](https://github.com/fecommunity/reactpress/actions/workflows/npm-publish.yml)
 
@@ -51,8 +51,8 @@
 - **PM2 Process Management** for production deployments
 
 ### 🚀 Modern Technology Stack
-- **Frontend**: React 18 + Next.js 14 App Router
-- **Backend**: NestJS 10 with modular architecture
+- **Frontend**: React 17 + Next.js 12 Pages Router
+- **Backend**: NestJS 6 with modular architecture
 - **Database**: MySQL with TypeORM
 - **UI**: Ant Design v5 components
 
@@ -68,6 +68,11 @@
 [![Demo](./public/demo.png)](https://gaoredu.com)
 
 ## 🚀 Quick Start
+
+### 📋 Prerequisites
+- Node.js >= 16.5.0
+- MySQL database
+- pnpm package manager
 
 ### 🏁 Installation Options
 
@@ -102,8 +107,8 @@ ReactPress is organized as a **monorepo with modular packages**:
 | Package | Description | Version |
 |---------|-------------|---------|
 | [`@fecommunity/reactpress`](.) | Main CLI and unified entry point | 2.0.0 |
-| [`@fecommunity/reactpress-client`](./client) | Next.js 14 frontend application | 1.0.0 |
-| [`@fecommunity/reactpress-server`](./server) | NestJS 10 backend API | 1.0.0 |
+| [`@fecommunity/reactpress-client`](./client) | Next.js 12 frontend application | 1.0.0 |
+| [`@fecommunity/reactpress-server`](./server) | NestJS 6 backend API | 1.0.0 |
 | [`@fecommunity/reactpress-toolkit`](./toolkit) | Auto-generated API client SDK | 1.0.0 |
 
 ### Templates
@@ -174,7 +179,7 @@ We welcome contributions of all kinds! Whether it's bug fixes, new features, doc
 To publish packages to npm:
 
 1. Ensure you're logged into npm: `pnpm login`
-2. Run the publish script: `pnpm run publish`
+2. Run the publish script: `pnpm run release`
 3. Follow the interactive prompts to select packages and version increments
 
 Please read our [Contributing Guide](https://github.com/fecommunity/reactpress/blob/master/CONTRIBUTING.md) for details on our code of conduct and development process.
