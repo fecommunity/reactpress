@@ -19,14 +19,16 @@ $ pnpm i
 项目的代码结构如下：
 
 ```shell
-├─ client // 界面代码
-├─ config // 配置文件
-├─ locales // 国际化文案
-├─ public // 静态资源
+├─ client // 基于 Next.js 的前端客户端
+├─ server // 基于 NestJS 的后端 API 服务
+├─ toolkit // TypeScript API 客户端工具包
+├─ templates // 模板文件
 ├─ scripts // 构建脚本
-├─ server // 服务端代码
+├─ docs // 文档
 └─ package.json
 ```
+
+ReactPress 2.0 采用了 monorepo 结构，将前端、后端和工具包分离为独立的包，可以独立开发和部署。
 
 
 ### 配置文件

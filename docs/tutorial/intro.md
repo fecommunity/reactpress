@@ -46,6 +46,16 @@ title: 介绍
 
 [ReactPress Demo](https://blog.gaoredu.com/)
 
+## 📦 NPM 包
+
+ReactPress 2.0 提供了三个核心 NPM 包，可以独立使用或组合使用：
+
+- [@fecommunity/reactpress-client](./tutorial-extras/client-package) - 基于 Next.js 的前端客户端
+- [@fecommunity/reactpress-server](./tutorial-extras/server-package) - 基于 NestJS 的后端 API 服务
+- [@fecommunity/reactpress-toolkit](./tutorial-extras/toolkit-package) - TypeScript API 客户端工具包
+
+每个包都有详细的使用文档，可以在进阶教程中找到。
+
 ## ⌨️ 本地开发
 
 ### 环境准备
