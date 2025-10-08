@@ -81,12 +81,9 @@
 # 全局安装 ReactPress
 npm install -g @fecommunity/reactpress
 
-# 启动安装向导
-reactpress server install
-
 # 启动服务
 reactpress server start
-reactpress client
+reactpress client start
 ```
 
 #### 选项 2：独立服务
@@ -96,6 +93,50 @@ npx @fecommunity/reactpress-server
 
 # 独立安装并运行客户端
 npx @fecommunity/reactpress-client
+```
+
+## 📟 命令行界面 (CLI)
+
+ReactPress 提供了一个统一的命令行界面来管理服务器和客户端组件。
+
+### 统一 CLI 命令
+
+全局安装 ReactPress 后，您可以使用 `reactpress` 命令：
+
+```bash
+# 显示帮助
+reactpress --help
+
+# 启动服务器
+reactpress server start
+
+# 启动客户端
+reactpress client start
+
+# 使用 PM2 启动服务器
+reactpress server start --pm2
+
+# 使用 PM2 启动客户端
+reactpress client start --pm2
+```
+
+
+### 独立包命令
+
+您也可以直接使用各个包的命令：
+
+```bash
+# 启动服务器
+npx @fecommunity/reactpress-server
+
+# 启动客户端
+npx @fecommunity/reactpress-client
+
+# 使用 PM2 启动服务器
+npx @fecommunity/reactpress-server --pm2
+
+# 使用 PM2 启动客户端
+npx @fecommunity/reactpress-client --pm2
 ```
 
 ## 📦 包与组件
@@ -152,6 +193,10 @@ npx @fecommunity/reactpress-server --pm2
 
 # 使用 PM2 启动 ReactPress 客户端
 npx @fecommunity/reactpress-client --pm2
+
+# 或者使用统一 CLI
+reactpress server start --pm2
+reactpress client start --pm2
 ```
 
 ### 传统部署（自托管）
