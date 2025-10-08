@@ -29,7 +29,6 @@ DB_DATABASE=reactpress // 数据库
 $ pnpm run build
 ```
 
-
 ### 启动服务
 ```bash
 $ pnpm run pm2
@@ -37,9 +36,23 @@ $ pnpm run pm2
 
 至此，ReactPress 服务就启动成功了。
 
+### 独立包部署
+
+ReactPress 2.0 支持独立部署各个包：
+
+```bash
+# 仅部署服务器端
+npx @fecommunity/reactpress-server --pm2
+
+# 仅部署客户端
+npx @fecommunity/reactpress-client --pm2
+```
+
+有关每个包的详细部署信息，请参阅[进阶教程](../tutorial-extras/client-package)。
+
 ### 代码更新启动
 当ReactPress代码更新后，可以按照如下Shell重新启动服务：
-```js
+```bash
 # 更新代码
 git checkout master
 git pull
@@ -49,14 +62,13 @@ pnpm install
 pnpm run build
 
 # 启动进程
-pm2 delete @reactpress/server
-pm2 delete @fecommunity/reactpress-client
+pm2 delete reactpress-server
+pm2 delete reactpress-client
 pnpm run pm2
 
 # 开机启动
 pm2 startup
 pm2 save
-
 ```
 
 以上就是ReactPress生成环境的完整部署流程。

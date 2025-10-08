@@ -75,6 +75,16 @@ $ pnpm run dev
 
 Open your browser and visit http://127.0.0.1:3001
 
+## 📦 NPM Packages
+
+ReactPress 2.0 provides three core NPM packages that can be used independently or in combination:
+
+- [@fecommunity/reactpress-client](./tutorial-extras/client-package) - Next.js based frontend client
+- [@fecommunity/reactpress-server](./tutorial-extras/server-package) - NestJS based backend API service
+- [@fecommunity/reactpress-toolkit](./tutorial-extras/toolkit-package) - TypeScript API client toolkit
+
+Each package has detailed documentation that can be found in the advanced tutorials.
+
 ## 🔗 Links
 
 - [Home](https://github.com/fecommunity/reactpress)
