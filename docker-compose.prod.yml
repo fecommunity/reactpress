@@ -2,34 +2,43 @@ version: '3.8'
 
 services:
   db:
-    image: mysql:8.0
+    image: mysql:5.7
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: reactpress
-      MYSQL_USER: reactpress
-      MYSQL_PASSWORD: reactpress
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+      MYSQL_DATABASE: ${DB_DATABASE:-reactpress}
+      MYSQL_USER: ${DB_USER:-reactpress}
+      MYSQL_PASSWORD: ${DB_PASSWD:-reactpress}
     volumes:
       - db_data:/var/lib/mysql
 
   server:
-    image: fecommunity/reactpress-server:latest
+    build: 
+      context: ./server
+      dockerfile: Dockerfile
     restart: always
     depends_on:
       - db
     environment:
       - NODE_ENV=production
-      - DB_HOST=db
-      - DB_PORT=3306
-      - DB_USER=reactpress
-      - DB_PASSWD=reactpress
-      - DB_DATABASE=reactpress
+      - DB_HOST=${DB_HOST:-db}
+      - DB_PORT=${DB_PORT:-3306}
+      - DB_USER=${DB_USER:-reactpress}
+      - DB_PASSWD=${DB_PASSWD:-reactpress}
+      - DB_DATABASE=${DB_DATABASE:-reactpress}
+      - CLIENT_SITE_URL=${CLIENT_SITE_URL:-http://localhost:3001}
+      - SERVER_SITE_URL=${SERVER_SITE_URL:-http://localhost:3002}
 
   client:
-    image: fecommunity/reactpress-client:latest
+    build:
+      context: ./client
+      dockerfile: Dockerfile
     restart: always
     depends_on:
       - server
+    environment:
+      - CLIENT_SITE_URL=${CLIENT_SITE_URL:-http://localhost:3001}
+      - SERVER_SITE_URL=${SERVER_SITE_URL:-http://localhost:3002}
 
   nginx:
     image: nginx:alpine
