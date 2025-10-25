@@ -1,0 +1,15 @@
+.git
+.gitignore
+README.md
+.dockerignore
+docker-compose.prod.yml
+node_modules
+npm-debug.log
+*.log
+.env
+.env.local
+.docs
+.husky
+scripts/
+public/
+docs/
