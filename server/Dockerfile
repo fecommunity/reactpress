@@ -1,4 +1,4 @@
-# Use Node.js 18 as the base image to match pnpm requirements
+# Use Node.js 18 as the base image
 FROM node:18-alpine
 
 # Set working directory
@@ -7,28 +7,32 @@ WORKDIR /app
 # Install pnpm globally
 RUN npm install -g pnpm
 
-# Copy package files
-COPY package.json ./
-
-# Install dependencies
-RUN pnpm install --frozen-lockfile
-
-# Copy source code
+# Copy ALL files from the project root
 COPY . .
 
-# Build the application
+# Debug: Show what files were copied
+RUN echo "=== Files in /app ===" && ls -la
+RUN echo "=== pnpm-lock.yaml exists? ===" && test -f pnpm-lock.yaml && echo "YES" || echo "NO"
+RUN echo "=== pnpm-workspace.yaml exists? ===" && test -f pnpm-workspace.yaml && echo "YES" || echo "NO"
+RUN echo "=== server/package.json exists? ===" && test -f server/package.json && echo "YES" || echo "NO"
+
+# Install dependencies - ALWAYS use --no-frozen-lockfile to avoid issues
+RUN pnpm install --no-frozen-lockfile
+
+# Build the server application
+WORKDIR /app/server
 RUN pnpm run build
 
 # Expose port
 EXPOSE 3002
 
 # Create a non-root user
-RUN addgroup -g 1001 -S nodejs
-RUN adduser -S nextjs -u 1001
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S nestjs -u 1001
 
 # Change ownership of the app directory
-RUN chown -R nextjs:nodejs /app
-USER nextjs
+RUN chown -R nestjs:nodejs /app
+USER nestjs
 
 # Start the application
 CMD ["pnpm", "run", "start"]
