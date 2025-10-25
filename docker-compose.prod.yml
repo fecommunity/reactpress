@@ -1,8 +1,7 @@
-version: '3.8'
-
 services:
   db:
     image: mysql:5.7
+    container_name: reactpress_db
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
@@ -11,37 +10,42 @@ services:
       MYSQL_PASSWORD: ${DB_PASSWD:-reactpress}
     volumes:
       - db_data:/var/lib/mysql
+    networks:
+      - reactpress-network
 
   server:
     build: 
-      context: ./server
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: server/Dockerfile
+    container_name: reactpress_server
     restart: always
     depends_on:
       - db
     environment:
       - NODE_ENV=production
       - DB_HOST=${DB_HOST:-db}
-      - DB_PORT=${DB_PORT:-3306}
       - DB_USER=${DB_USER:-reactpress}
       - DB_PASSWD=${DB_PASSWD:-reactpress}
       - DB_DATABASE=${DB_DATABASE:-reactpress}
-      - CLIENT_SITE_URL=${CLIENT_SITE_URL:-http://localhost:3001}
-      - SERVER_SITE_URL=${SERVER_SITE_URL:-http://localhost:3002}
+    networks:
+      - reactpress-network
 
   client:
     build:
-      context: ./client
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: client/Dockerfile
+    container_name: reactpress_client
     restart: always
     depends_on:
       - server
     environment:
-      - CLIENT_SITE_URL=${CLIENT_SITE_URL:-http://localhost:3001}
-      - SERVER_SITE_URL=${SERVER_SITE_URL:-http://localhost:3002}
+      - NODE_ENV=production
+    networks:
+      - reactpress-network
 
   nginx:
     image: nginx:alpine
+    container_name: reactpress_nginx
     ports:
       - "8080:80"
     depends_on:
@@ -49,6 +53,12 @@ services:
       - server
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - reactpress-network
 
 volumes:
   db_data:
+
+networks:
+  reactpress-network:
+    driver: bridge
