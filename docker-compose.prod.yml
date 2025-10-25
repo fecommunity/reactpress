@@ -8,11 +8,16 @@ services:
       MYSQL_DATABASE: ${DB_DATABASE:-reactpress}
       MYSQL_USER: ${DB_USER:-reactpress}
       MYSQL_PASSWORD: ${DB_PASSWD:-reactpress}
+    command: 
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-authentication-plugin=mysql_native_password
     volumes:
       - db_data:/var/lib/mysql
+      - ./mysql.cnf:/etc/mysql/conf.d/charset.cnf  # 可选：使用配置文件
     networks:
       - reactpress-network
-
+      
   server:
     build: 
       context: .
