@@ -10,7 +10,7 @@ const getServerApiUrl = () => {
   if (config.SERVER_URL) {
     return `${config.SERVER_SITE_URL}/api`;
   } else {
-    return config.SERVER_API_URL || 'http://localhost:3002/api';
+    return config.SERVER_API_URL || `${process.env.SERVER_SITE_URL}/api` || 'http://localhost:3002/api';
   }
 };
 
