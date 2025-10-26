@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   db:
     image: mysql:5.7
@@ -14,10 +16,9 @@ services:
       - --default-authentication-plugin=mysql_native_password
     volumes:
       - db_data:/var/lib/mysql
-      - ./mysql.cnf:/etc/mysql/conf.d/charset.cnf  # 可选：使用配置文件
     networks:
       - reactpress-network
-      
+
   server:
     build: 
       context: .
@@ -28,10 +29,15 @@ services:
       - db
     environment:
       - NODE_ENV=production
-      - DB_HOST=${DB_HOST:-db}
+      # 覆盖环境变量，使用 Docker 服务名
+      - DB_HOST=db
+      - SERVER_SITE_URL=http://server:3002
+      # 保留原有的环境变量引用
       - DB_USER=${DB_USER:-reactpress}
       - DB_PASSWD=${DB_PASSWD:-reactpress}
       - DB_DATABASE=${DB_DATABASE:-reactpress}
+    ports:
+      - "3002:3002"
     networks:
       - reactpress-network
 
@@ -45,6 +51,11 @@ services:
       - server
     environment:
       - NODE_ENV=production
+      # 覆盖环境变量，使用 Docker 服务名
+      - DB_HOST=db
+      - SERVER_SITE_URL=http://server:3002
+    ports:
+      - "3001:3001"
     networks:
       - reactpress-network
 
