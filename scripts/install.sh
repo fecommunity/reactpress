@@ -81,20 +81,21 @@ clone_repository() {
 setup_environment() {
     log "Setting up comprehensive environment configuration..."
     
-    # Create main .env file
+    # Create main .env file with all necessary variables
     cat > .env << 'EOF'
 # ReactPress Production Environment
 # Database Configuration
 MYSQL_ROOT_PASSWORD=root
+DB_HOST=db
+DB_PORT=3306
 DB_DATABASE=reactpress
 DB_USER=reactpress
 DB_PASSWD=reactpress
-DB_HOST=db
-DB_PORT=3306
 
 # Application URLs
 CLIENT_SITE_URL=http://localhost:3001
 SERVER_SITE_URL=http://localhost:3002
+SERVER_API_URL=http://nginx/api
 
 # Nginx Configuration
 NGINX_HOST=localhost
