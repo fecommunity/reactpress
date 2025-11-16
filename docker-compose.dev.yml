@@ -1,0 +1,65 @@
+services:
+  db:
+    image: mysql:5.7
+    container_name: reactpress_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+      MYSQL_DATABASE: ${DB_DATABASE:-reactpress}
+      MYSQL_USER: ${DB_USER:-reactpress}
+      MYSQL_PASSWORD: ${DB_PASSWD:-reactpress}
+    command: 
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-authentication-plugin=mysql_native_password
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - reactpress-network
+    healthcheck:
+      test: ["CMD", "mysql", "-u", "root", "-proot", "-e", "SELECT 1"]
+      timeout: 20s
+      retries: 10
+      start_period: 30s
+      interval: 30s
+    ports:
+      - "3306:3306"
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
+
+  nginx:
+    image: nginx:alpine
+    container_name: reactpress_nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx.dev.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - reactpress-network
+    depends_on:
+      - db
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+        reservations:
+          memory: 64M
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/"]
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+      interval: 30s
+
+volumes:
+  db_data:
+
+networks:
+  reactpress-network:
+    driver: bridge
