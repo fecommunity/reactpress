@@ -13,7 +13,7 @@
   },
   "scripts": {
     "generate": "node scripts/generate-swagger.js",
-    "build": "ls -la src/api/ && tsc && cp -r src/locales dist/"
+    "build": "tsc && cp -r src/locales dist/"
   },
   "files": [
     "dist"

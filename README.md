@@ -178,6 +178,30 @@ CLIENT_SITE_URL=http://localhost:3001
 SERVER_SITE_URL=http://localhost:3002
 ```
 
+## 🚀 Development Workflow
+
+### Docker Development Environment
+
+```bash
+# Start the development environment
+pnpm docker:dev
+
+# Or use the enhanced commands
+pnpm docker:dev:start   # Start services
+pnpm docker:dev:stop    # Stop services
+pnpm docker:dev:restart # Restart services
+pnpm docker:dev:status  # Check service status
+pnpm docker:dev:logs    # View service logs
+```
+
+The development environment includes:
+- MySQL database (port 3306)
+- Nginx reverse proxy (port 8080)
+- Client development server (port 3001)
+- Server development server (port 3002)
+
+Access your application at: http://localhost:8080
+
 ## 🚀 Deployment Options
 
 ### Deploy with Vercel (Recommended for Startups)
