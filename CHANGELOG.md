@@ -1,3 +1,13 @@
+# [2.0.0-beta-4-beta.1](https://github.com/fecommunity/reactpress/compare/v2.0.1...v2.0.0-beta-4-beta.1) (2025-11-16)
+
+
+### Features
+
+* optimize docker development ([e0dfa36](https://github.com/fecommunity/reactpress/commit/e0dfa360e5d754d9ab9c22939e7754907abfe6e5))
+* support docker deploy [to [#26](https://github.com/fecommunity/reactpress/issues/26)] ([9eafb4a](https://github.com/fecommunity/reactpress/commit/9eafb4a093278a717d98bbd52583a5624f7fa30d))
+
+
+
 ## [2.0.1](https://github.com/fecommunity/reactpress/compare/v2.0.0...v2.0.1) (2025-09-26)
 
 
