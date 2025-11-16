@@ -1,8 +1,24 @@
 import { message } from 'antd';
 import axios, { AxiosResponse } from 'axios';
 
+// 最小化修复：确保正确的baseURL
+const getBaseURL = () => {
+  // 首先检查环境变量
+  if (process.env.SERVER_API_URL) {
+    return process.env.SERVER_API_URL;
+  }
+  
+  // 检查SERVER_SITE_URL环境变量并构造API URL
+  if (process.env.SERVER_SITE_URL) {
+    return `${process.env.SERVER_SITE_URL}/api`;
+  }
+  
+  // 最后回退到默认值
+  return 'http://localhost:3002/api';
+};
+
 export const httpProvider = axios.create({
-  baseURL: process.env.SERVER_API_URL || `${process.env.SERVER_SITE_URL}/api`,
+  baseURL: getBaseURL(),
   timeout: 60000,
 });
 
