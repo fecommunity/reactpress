@@ -14,6 +14,16 @@ error_exit() {
     exit 1
 }
 
+# Check if repository is already cloned
+if [ ! -d ".git" ]; then
+    log "Cloning repository..."
+    # Assuming the script is in the root of the repo, this would be adjusted based on actual needs
+    # For now, we'll assume the script is run from within the repo
+    log "WARNING: This script should be run from within the cloned repository"
+else
+    log "Repository already cloned, proceeding with update..."
+fi
+
 log "Starting deployment process..."
 
 # Update code
@@ -43,5 +53,7 @@ pm2 startup || log "Failed to setup PM2 startup script"
 pm2 save || error_exit "Failed to save PM2 configuration"
 
 log "Deployment completed successfully!"
+log "Frontend available at http://localhost:3001"
+log "Backend API available at http://localhost:3002"
 
 exit 0
