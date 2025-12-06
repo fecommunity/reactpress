@@ -1,5 +1,5 @@
 <div align="center">
-  <a href="https://gaoredu.com" title="ReactPress">
+  <a href="https://blog.gaoredu.com" title="ReactPress">
     <img height="180" src="./public/logo.png" alt="ReactPress Logo">
   </a>
 
@@ -31,7 +31,7 @@
 
 **ReactPress 2.0** is a full-stack publishing platform built with modern web technologies. It enables developers and content creators to build professional blogs, websites, and content management systems with minimal setup.
 
-[![ReactPress Poster](./public/poster.png)](https://gaoredu.com)
+[![ReactPress Poster](./public/poster.png)](https://blog.gaoredu.com)
 
 ## ✨ Key Features
 
@@ -59,13 +59,13 @@
 ## 📸 Screenshots
 
 ### Installation Wizard
-[![Installation](./public/install.png)](https://gaoredu.com)
+[![Installation](./public/install.png)](https://blog.gaoredu.com)
 
 ### Content Management Dashboard
-[![Admin Dashboard](./public/admin.png)](https://gaoredu.com)
+[![Admin Dashboard](./public/admin.png)](https://blog.gaoredu.com)
 
 ### Demo Site
-[![Demo](./public/demo.png)](https://gaoredu.com)
+[![Demo](./public/demo.png)](https://blog.gaoredu.com)
 
 ## 🚀 Quick Start
 
