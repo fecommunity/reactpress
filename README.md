@@ -34,15 +34,19 @@
 
 ## 🎯 Why Choose ReactPress?
 
-### 🔄 Architectural Advantages
-- **Unified Backend Service**: A single NestJS backend supporting multiple independent Next.js frontend applications
-- **Modular Design**: Completely decoupled frontend and backend for flexible deployment and scaling
-- **Type Safety**: Full-stack TypeScript support with automatic type synchronization
+ReactPress is engineered for developers who require both the publishing power of a traditional CMS and the modern, component-driven workflow of a full-stack JavaScript framework.
 
-### ⚡ Development Efficiency
-- **5-Minute Quick Start**: From zero to deployment in just 5 minutes
-- **Automated Configuration**: Intelligent defaults reduce decision fatigue
-- **Ready-to-Use Components**: Rich CMS functionality components, ready out of the box
+| Dimension | VuePress | WordPress | **ReactPress** |
+| :--- | :--- | :--- | :--- |
+| **Core Paradigm** | Static Site Generator (SSG) for content-centric sites | Monolithic, server-rendered CMS with a coupled frontend | **Decoupled, API-first publishing platform** |
+| **Primary Tech Stack** | Vue, Vite, Markdown | PHP, jQuery, Classic Themes | **React, Next.js (SSG/SSR), NestJS, TypeORM** |
+| **Architectural Model** | Build-time static generation; each site is a separate build | Tightly integrated theme/plugin system on a shared runtime | **Headless backend with fully independent, deployable frontends** |
+| **State & Data Flow** | Pre-rendered static data, content committed as code | Dynamic runtime state, database-driven with admin UI | **Centralized API (REST/GraphQL) consumed by one or many client applications** |
+| **Deployment Target** | Static file hosts (CDN, Vercel, Netlify) | PHP-compatible web servers (Apache/Nginx) | **Anywhere: backend on Node/PM2/Docker, frontends on any static or Node host** |
+| **Styling & UI** | Scoped CSS, theme-level overrides | PHP templates, theme stylesheets, inline styles | **Component-scoped CSS-in-JS, design token system, fully themeable** |
+| **Extensibility Model** | Custom themes and plugins (Vue components) | PHP hooks, actions, filters, and plugins | **Modular NestJS services, React component libraries, and build plugins** |
+| **Development Experience** | Vue-focused, markdown-driven, simple CLI | File editors, browser-based customizer, legacy codebase | **Type-safe full-stack IDE support, CLI toolchain, and hot-reload** |
+| **Ideal Use Case** | Documentation, technical blogs, marketing sites | Blogs, business websites, e-commerce (with WooCommerce) | **Scalable content platforms, multi-brand sites, and custom publisher workflows** |
 
 ## ✨ Core Features
 
