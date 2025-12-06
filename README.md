@@ -14,7 +14,6 @@
   [![Next.js](https://img.shields.io/badge/Next.js-12-black?style=flat-square)](https://nextjs.org/)
   [![NestJS](https://img.shields.io/badge/NestJS-6-red?style=flat-square)](https://nestjs.com/)
   [![Deploy](https://img.shields.io/badge/Deploy-Vercel-blue?style=flat-square)](https://vercel.com/new/clone?repository-url=https://github.com/fecommunity/reactpress)
-  [![CI](https://github.com/fecommunity/reactpress/actions/workflows/npm-publish.yml/badge.svg)](https://github.com/fecommunity/reactpress/actions/workflows/npm-publish.yml)
 
   <p>
     <a href="https://github.com/fecommunity/reactpress/issues">Report Bug</a>
@@ -27,9 +26,9 @@
 
 ## ✨ Philosophy: One backend, all your fronts.
 
-**ReactPress** is a modern full-stack publishing platform built on the architectural philosophy of **"One Backend, all your fronts."**. It enables React developers to focus on frontend development while rapidly building professional-grade blogs, websites, and content management systems.
+**ReactPress** is a modern full-stack publishing platform built on the architectural philosophy of **"One Backend, all your fronts."**. It enables developers to focus on frontend development while rapidly building professional-grade blogs, websites, and content management systems.
 
-> A backend solution that empowers React developers to easily build full-stack applications.
+> A backend solution that empowers developers to easily build full-stack applications.
 
 [![ReactPress Poster](./public/poster.png)](https://blog.gaoredu.com)
 
