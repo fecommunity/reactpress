@@ -28,7 +28,7 @@
 
 **ReactPress** is a modern full-stack publishing platform built on the architectural philosophy of **"One Backend, all your fronts."**. It enables developers to focus on frontend development while rapidly building professional-grade blogs, websites, and content management systems.
 
-> A backend solution that empowers developers to easily build full-stack applications.
+> A solution that empowers developers to easily build full-stack applications.
 
 [![ReactPress Poster](./public/poster.png)](https://blog.gaoredu.com)
 
