@@ -3,8 +3,6 @@
     <img height="180" src="./public/logo.png" alt="ReactPress Logo">
   </a>
 
-  <h1>ReactPress 2.0</h1>
-
   <p align="center">
     <em>Modern Full-Stack Publishing Platform Built with React, Next.js, and NestJS</em>
   </p>
@@ -27,52 +25,66 @@
   </p>
 </div>
 
-## 🌟 Modern Publishing Platform
+## ✨ Philosophy: One backend, all your fronts.
 
-**ReactPress 2.0** is a full-stack publishing platform built with modern web technologies. It enables developers and content creators to build professional blogs, websites, and content management systems with minimal setup.
+**ReactPress** is a modern full-stack publishing platform built on the architectural philosophy of **"One Backend, all your fronts."**. It enables React developers to focus on frontend development while rapidly building professional-grade blogs, websites, and content management systems.
+
+> A backend solution that empowers React developers to easily build full-stack applications.
 
 [![ReactPress Poster](./public/poster.png)](https://blog.gaoredu.com)
 
-## ✨ Key Features
+## 🎯 Why Choose ReactPress?
 
-### ⚡ 5-Minute Installation
-- **Zero-Configuration Setup** with intelligent defaults
-- **WordPress-Style Installation Wizard** for intuitive setup
-- **Auto-Database Provisioning** with automatic schema migration
+### 🔄 Architectural Advantages
+- **Unified Backend Service**: A single NestJS backend supporting multiple independent Next.js frontend applications
+- **Modular Design**: Completely decoupled frontend and backend for flexible deployment and scaling
+- **Type Safety**: Full-stack TypeScript support with automatic type synchronization
 
-### 🎨 Advanced Customization
-- **Dynamic Theme Switching** with light/dark mode
-- **Component-Level Customization** through modular architecture
-- **Internationalization** support (Chinese & English)
+### ⚡ Development Efficiency
+- **5-Minute Quick Start**: From zero to deployment in just 5 minutes
+- **Automated Configuration**: Intelligent defaults reduce decision fatigue
+- **Ready-to-Use Components**: Rich CMS functionality components, ready out of the box
+
+## ✨ Core Features
+
+### ⚡ Rapid Deployment
+- **Zero-Configuration Setup**: Based on intelligent defaults
+- **WordPress-Style Installation Wizard**: Intuitive initialization process
+- **Auto-Database Configuration**: Automatic database migrations
+
+### 🎨 Deep Customization
+- **Dynamic Theme Switching**: Support for light/dark modes
+- **Component-Level Customization**: Modular architecture supports fine-grained customization
+- **Internationalization Support**: Chinese and English interfaces
 
 ### 🔧 Unified Development Experience
-- **Monorepo Architecture** with modular packages
-- **TypeScript** for type safety across frontend and backend
-- **PM2 Process Management** for production deployments
+- **Monorepo Architecture**: Modular package management
+- **Full-Stack TypeScript**: Type safety across frontend and backend
+- **PM2 Process Management**: Production deployment solution
 
 ### 🚀 Modern Technology Stack
 - **Frontend**: React 17 + Next.js 12 Pages Router
-- **Backend**: NestJS 6 with modular architecture
-- **Database**: MySQL with TypeORM
-- **UI**: Ant Design v5 components
+- **Backend**: NestJS 6 + Modular Architecture
+- **Database**: MySQL + TypeORM
+- **UI Components**: Ant Design v5
 
-## 📸 Screenshots
+## 📸 Feature Preview
 
 ### Installation Wizard
-[![Installation](./public/install.png)](https://blog.gaoredu.com)
+[![Installation Wizard](./public/install.png)](https://blog.gaoredu.com)
 
 ### Content Management Dashboard
 [![Admin Dashboard](./public/admin.png)](https://blog.gaoredu.com)
 
 ### Demo Site
-[![Demo](./public/demo.png)](https://blog.gaoredu.com)
+[![Demo Site](./public/demo.png)](https://blog.gaoredu.com)
 
 ## 🚀 Quick Start
 
 ### 📋 Prerequisites
 - Node.js >= 16.5.0
-- MySQL database
-- pnpm package manager
+- MySQL Database
+- pnpm Package Manager
 
 ### 🏁 Installation Options
 
@@ -120,7 +132,6 @@ reactpress server start --pm2
 reactpress client start --pm2
 ```
 
-
 ### Individual Package Commands
 
 You can also use the individual package commands directly:
@@ -139,18 +150,18 @@ npx @fecommunity/reactpress-server --pm2
 npx @fecommunity/reactpress-client --pm2
 ```
 
-## 📦 Packages & Components
+## 📦 Package Structure & Components
 
-ReactPress is organized as a **monorepo with modular packages**:
+ReactPress uses a **Modular Monorepo Architecture**:
 
 ### Core Packages
 
 | Package | Description | Version |
 |---------|-------------|---------|
 | [`@fecommunity/reactpress`](.) | Main CLI and unified entry point | 2.0.0 |
-| [`@fecommunity/reactpress-client`](./client) | Next.js 12 frontend application | 1.0.0 |
-| [`@fecommunity/reactpress-server`](./server) | NestJS 6 backend API | 1.0.0 |
-| [`@fecommunity/reactpress-toolkit`](./toolkit) | Auto-generated API client SDK | 1.0.0 |
+| [`@fecommunity/reactpress-client`](./client) | Next.js 12 Frontend Application | 1.0.0 |
+| [`@fecommunity/reactpress-server`](./server) | NestJS 6 Backend API | 1.0.0 |
+| [`@fecommunity/reactpress-toolkit`](./toolkit) | Auto-generated API Client SDK | 1.0.0 |
 
 ### Templates
 
@@ -164,17 +175,17 @@ ReactPress is organized as a **monorepo with modular packages**:
 Create a `.env` file in the root directory for local development:
 
 ```env
-# Database Config
+# Database Configuration
 DB_HOST=127.0.0.1
 DB_PORT=3306
 DB_USER=reactpress
 DB_PASSWD=reactpress
 DB_DATABASE=reactpress
 
-# Client Config
+# Client Configuration
 CLIENT_SITE_URL=http://localhost:3001
 
-# Server Config
+# Server Configuration
 SERVER_SITE_URL=http://localhost:3002
 ```
 
@@ -195,10 +206,10 @@ pnpm docker:dev:logs    # View service logs
 ```
 
 The development environment includes:
-- MySQL database (port 3306)
-- Nginx reverse proxy (port 8080)
-- Client development server (port 3001)
-- Server development server (port 3002)
+- MySQL Database (port 3306)
+- Nginx Reverse Proxy (port 8080)
+- Client Development Server (port 3001)
+- Server Development Server (port 3002)
 
 Access your application at: http://localhost:8080
 
@@ -257,9 +268,9 @@ Please read our [Contributing Guide](https://github.com/fecommunity/reactpress/b
 
 ReactPress is inspired by and built upon the work of many amazing open-source projects:
 
-- [Next.js](https://github.com/vercel/next.js) - React framework
-- [NestJS](https://github.com/nestjs/nest) - Progressive Node.js framework
-- [Ant Design](https://github.com/ant-design/ant-design) - UI design language
+- [Next.js](https://github.com/vercel/next.js) - React Framework
+- [NestJS](https://github.com/nestjs/nest) - Progressive Node.js Framework
+- [Ant Design](https://github.com/ant-design/ant-design) - UI Design Language
 - [TypeORM](https://github.com/typeorm/typeorm) - ORM for TypeScript and JavaScript
 
 We're grateful to the authors and contributors of these projects for their excellent work.
