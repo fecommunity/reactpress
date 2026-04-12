@@ -1,10 +1,12 @@
+
 <div align="center">
   <a href="https://blog.gaoredu.com" title="ReactPress">
     <img height="180" src="./public/logo.png" alt="ReactPress Logo">
   </a>
 
   <p align="center">
-    <em>Modern Full-Stack Publishing Platform Built with React, Next.js, and NestJS</em>
+    <strong>Modern Full-Stack Publishing Platform</strong><br />
+    Built with React, Next.js, and NestJS
   </p>
 
   [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/fecommunity/reactpress/blob/master/LICENSE)
@@ -24,70 +26,80 @@
   </p>
 </div>
 
-## ✨ Philosophy: One backend, all your fronts.
+---
 
-**ReactPress** is a modern full-stack publishing platform built on the architectural philosophy of **"One Backend, all your fronts."**. It enables developers to focus on frontend development while rapidly building professional-grade blogs, websites, and content management systems.
+## ✨ Philosophy: One Backend, All Your Fronts.
 
-> A solution that empowers developers to easily build full-stack applications.
+**ReactPress** is a modern full‑stack publishing platform built on the principle of **“One Backend, All Your Fronts.”** It enables developers to focus on frontend development while rapidly building professional‑grade blogs, websites, and content management systems.
+
+> A solution that empowers developers to easily build full‑stack applications.
 
 [![ReactPress Poster](./public/poster.png)](https://blog.gaoredu.com)
 
+---
+
 ## 🎯 Why Choose ReactPress?
 
-ReactPress is engineered for developers who require both the publishing power of a traditional CMS and the modern, component-driven workflow of a full-stack JavaScript framework.
+ReactPress is engineered for developers who need the publishing power of a traditional CMS combined with the component‑driven workflow of a modern full‑stack JavaScript framework.
 
 | Dimension | VuePress | WordPress | **ReactPress** |
 | :--- | :--- | :--- | :--- |
-| **Core Paradigm** | Static Site Generator (SSG) for content-centric sites | Monolithic, server-rendered CMS with a coupled frontend | **Decoupled, API-first publishing platform** |
+| **Core Paradigm** | Static Site Generator (SSG) for content‑centric sites | Monolithic, server‑rendered CMS with a coupled frontend | **Decoupled, API‑first publishing platform** |
 | **Primary Tech Stack** | Vue, Vite, Markdown | PHP, jQuery, Classic Themes | **React, Next.js (SSG/SSR), NestJS, TypeORM** |
-| **Architectural Model** | Build-time static generation; each site is a separate build | Tightly integrated theme/plugin system on a shared runtime | **Headless backend with fully independent, deployable frontends** |
-| **State & Data Flow** | Pre-rendered static data, content committed as code | Dynamic runtime state, database-driven with admin UI | **Centralized API (REST/GraphQL) consumed by one or many client applications** |
-| **Deployment Target** | Static file hosts (CDN, Vercel, Netlify) | PHP-compatible web servers (Apache/Nginx) | **Anywhere: backend on Node/PM2/Docker, frontends on any static or Node host** |
-| **Styling & UI** | Scoped CSS, theme-level overrides | PHP templates, theme stylesheets, inline styles | **Component-scoped CSS-in-JS, design token system, fully themeable** |
+| **Architectural Model** | Build‑time static generation; each site is a separate build | Tightly integrated theme/plugin system on a shared runtime | **Headless backend with fully independent, deployable frontends** |
+| **State & Data Flow** | Pre‑rendered static data, content committed as code | Dynamic runtime state, database‑driven with admin UI | **Centralized API (REST/GraphQL) consumed by one or many clients** |
+| **Deployment Target** | Static file hosts (CDN, Vercel, Netlify) | PHP‑compatible web servers (Apache/Nginx) | **Anywhere: backend on Node/PM2/Docker, frontends on any static or Node host** |
+| **Styling & UI** | Scoped CSS, theme‑level overrides | PHP templates, theme stylesheets, inline styles | **Component‑scoped CSS‑in‑JS, design token system, fully themeable** |
 | **Extensibility Model** | Custom themes and plugins (Vue components) | PHP hooks, actions, filters, and plugins | **Modular NestJS services, React component libraries, and build plugins** |
-| **Development Experience** | Vue-focused, markdown-driven, simple CLI | File editors, browser-based customizer, legacy codebase | **Type-safe full-stack IDE support, CLI toolchain, and hot-reload** |
-| **Ideal Use Case** | Documentation, technical blogs, marketing sites | Blogs, business websites, e-commerce (with WooCommerce) | **Scalable content platforms, multi-brand sites, and custom publisher workflows** |
+| **Development Experience** | Vue‑focused, markdown‑driven, simple CLI | File editors, browser‑based customizer, legacy codebase | **Type‑safe full‑stack IDE support, CLI toolchain, and hot‑reload** |
+| **Ideal Use Case** | Documentation, technical blogs, marketing sites | Blogs, business websites, e‑commerce (with WooCommerce) | **Scalable content platforms, multi‑brand sites, custom publisher workflows** |
+
+---
 
 ## ✨ Core Features
 
 ### ⚡ Rapid Deployment
-- **Zero-Configuration Setup**: Based on intelligent defaults
-- **WordPress-Style Installation Wizard**: Intuitive initialization process
-- **Auto-Database Configuration**: Automatic database migrations
+- **Zero‑Configuration Setup** – based on intelligent defaults
+- **WordPress‑Style Installation Wizard** – intuitive initialization process
+- **Auto‑Database Configuration** – automatic database migrations
 
 ### 🎨 Deep Customization
-- **Dynamic Theme Switching**: Support for light/dark modes
-- **Component-Level Customization**: Modular architecture supports fine-grained customization
-- **Internationalization Support**: Chinese and English interfaces
+- **Dynamic Theme Switching** – support for light/dark modes
+- **Component‑Level Customization** – modular architecture enables fine‑grained control
+- **Internationalization Support** – Chinese and English interfaces
 
 ### 🔧 Unified Development Experience
-- **Monorepo Architecture**: Modular package management
-- **Full-Stack TypeScript**: Type safety across frontend and backend
-- **PM2 Process Management**: Production deployment solution
+- **Monorepo Architecture** – modular package management
+- **Full‑Stack TypeScript** – type safety across frontend and backend
+- **PM2 Process Management** – production‑ready deployment solution
 
 ### 🚀 Modern Technology Stack
-- **Frontend**: React 17 + Next.js 12 Pages Router
-- **Backend**: NestJS 6 + Modular Architecture
-- **Database**: MySQL + TypeORM
-- **UI Components**: Ant Design v5
+- **Frontend** – React 17 + Next.js 12 (Pages Router)
+- **Backend** – NestJS 6 + modular architecture
+- **Database** – MySQL + TypeORM
+- **UI Components** – Ant Design v5
+
+---
 
 ## 📸 Feature Preview
 
 ### Installation Wizard
 [![Installation Wizard](./public/install.png)](https://blog.gaoredu.com)
 
-### Content Management Dashboard
+### Admin Dashboard
 [![Admin Dashboard](./public/admin.png)](https://blog.gaoredu.com)
 
 ### Demo Site
 [![Demo Site](./public/demo.png)](https://blog.gaoredu.com)
 
+---
+
 ## 🚀 Quick Start
 
 ### 📋 Prerequisites
 - Node.js >= 16.5.0
-- MySQL Database
-- pnpm Package Manager
+- MySQL database
+- `pnpm` package manager
 
 ### 🏁 Installation Options
 
@@ -110,13 +122,13 @@ npx @fecommunity/reactpress-server
 npx @fecommunity/reactpress-client
 ```
 
+---
+
 ## 📟 Command Line Interface (CLI)
 
-ReactPress provides a unified command-line interface for managing both server and client components.
+ReactPress provides a unified CLI for managing both server and client components.
 
 ### Unified CLI Commands
-
-After installing ReactPress globally, you can use the `reactpress` command:
 
 ```bash
 # Show help
@@ -137,8 +149,6 @@ reactpress client start --pm2
 
 ### Individual Package Commands
 
-You can also use the individual package commands directly:
-
 ```bash
 # Start server
 npx @fecommunity/reactpress-server
@@ -153,6 +163,8 @@ npx @fecommunity/reactpress-server --pm2
 npx @fecommunity/reactpress-client --pm2
 ```
 
+---
+
 ## 📦 Package Structure & Components
 
 ReactPress uses a **Modular Monorepo Architecture**:
@@ -162,16 +174,18 @@ ReactPress uses a **Modular Monorepo Architecture**:
 | Package | Description | Version |
 |---------|-------------|---------|
 | [`@fecommunity/reactpress`](.) | Main CLI and unified entry point | 2.0.0 |
-| [`@fecommunity/reactpress-client`](./client) | Next.js 12 Frontend Application | 1.0.0 |
-| [`@fecommunity/reactpress-server`](./server) | NestJS 6 Backend API | 1.0.0 |
-| [`@fecommunity/reactpress-toolkit`](./toolkit) | Auto-generated API Client SDK | 1.0.0 |
+| [`@fecommunity/reactpress-client`](./client) | Next.js 12 frontend application | 1.0.0 |
+| [`@fecommunity/reactpress-server`](./server) | NestJS 6 backend API | 1.0.0 |
+| [`@fecommunity/reactpress-toolkit`](./toolkit) | Auto‑generated API client SDK | 1.0.0 |
 
 ### Templates
 
 | Template | Description | Package Name |
-|----------|-------------|--------------|
+|----------|-------------|---------------|
 | [`hello-world`](./templates/hello-world) | Minimal template for rapid prototyping | `@fecommunity/reactpress-template-hello-world` |
-| [`twentytwentyfive`](./templates/twentytwentyfive) | Feature-rich blog template | `@fecommunity/reactpress-template-twentytwentyfive` |
+| [`twentytwentyfive`](./templates/twentytwentyfive) | Feature‑rich blog template | `@fecommunity/reactpress-template-twentytwentyfive` |
+
+---
 
 ## 🔧 Configuration
 
@@ -192,6 +206,8 @@ CLIENT_SITE_URL=http://localhost:3001
 SERVER_SITE_URL=http://localhost:3002
 ```
 
+---
+
 ## 🚀 Development Workflow
 
 ### Docker Development Environment
@@ -200,7 +216,7 @@ SERVER_SITE_URL=http://localhost:3002
 # Start the development environment
 pnpm docker:dev
 
-# Or use the enhanced commands
+# Or use enhanced commands
 pnpm docker:dev:start   # Start services
 pnpm docker:dev:stop    # Stop services
 pnpm docker:dev:restart # Restart services
@@ -214,7 +230,9 @@ The development environment includes:
 - Client Development Server (port 3001)
 - Server Development Server (port 3002)
 
-Access your application at: http://localhost:8080
+Access your application at: `http://localhost:8080`
+
+---
 
 ## 🚀 Deployment Options
 
@@ -237,7 +255,7 @@ reactpress server start --pm2
 reactpress client start --pm2
 ```
 
-### Traditional Deployment (Self-Managed)
+### Traditional Deployment (Self‑Managed)
 ```bash
 # Build for production
 pnpm run build
@@ -246,9 +264,11 @@ pnpm run build
 pnpm run start
 ```
 
+---
+
 ## 🤝 Contributing
 
-We welcome contributions of all kinds! Whether it's bug fixes, new features, documentation improvements, or translations, your help is appreciated.
+We welcome contributions of all kinds! Bug fixes, new features, documentation improvements, and translations are all appreciated.
 
 ### 📋 Development Setup
 
@@ -257,26 +277,30 @@ We welcome contributions of all kinds! Whether it's bug fixes, new features, doc
 3. Install dependencies: `pnpm install`
 4. Start development servers: `pnpm run dev`
 
-### 📦 Publishing
+### 📦 Publishing Packages
 
 To publish packages to npm:
 
-1. Ensure you're logged into npm: `pnpm login`
+1. Ensure you're logged in: `pnpm login`
 2. Run the publish script: `pnpm run release`
 3. Follow the interactive prompts to select packages and version increments
 
 Please read our [Contributing Guide](https://github.com/fecommunity/reactpress/blob/master/CONTRIBUTING.md) for details on our code of conduct and development process.
 
+---
+
 ## ❤️ Acknowledgments
 
-ReactPress is inspired by and built upon the work of many amazing open-source projects:
+ReactPress is inspired by and built upon the work of many amazing open‑source projects:
 
-- [Next.js](https://github.com/vercel/next.js) - React Framework
-- [NestJS](https://github.com/nestjs/nest) - Progressive Node.js Framework
-- [Ant Design](https://github.com/ant-design/ant-design) - UI Design Language
-- [TypeORM](https://github.com/typeorm/typeorm) - ORM for TypeScript and JavaScript
+- [Next.js](https://github.com/vercel/next.js) – React Framework
+- [NestJS](https://github.com/nestjs/nest) – Progressive Node.js Framework
+- [Ant Design](https://github.com/ant-design/ant-design) – UI Design Language
+- [TypeORM](https://github.com/typeorm/typeorm) – ORM for TypeScript and JavaScript
 
 We're grateful to the authors and contributors of these projects for their excellent work.
+
+---
 
 ## 📈 Star History
 
