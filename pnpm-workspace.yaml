@@ -1,7 +1,7 @@
 packages:
   # 客户端
   - 'client'
-  # 服务器
+  # API（薄封装，依赖 reactpress-cli）
   - 'server'
   # 文档
   - 'docs'
