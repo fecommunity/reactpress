@@ -1,10 +1,11 @@
 const { generateApi } = require('swagger-typescript-api');
 const path = require('path');
 const fs = require('fs-extra');
+const { getSwaggerInputPath } = require('./resolve-swagger-input');
 
 // 配置常量
 const CONFIG = {
-  input: path.resolve(__dirname, '../../server/public/swagger.json'),
+  input: getSwaggerInputPath(),
   output: path.resolve(__dirname, '../src'),
   templates: path.resolve(__dirname, '../node_modules/swagger-typescript-api/templates/base'),
   utilsDir: path.resolve(__dirname, '../src/utils'),

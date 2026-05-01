@@ -5,7 +5,7 @@ const fs = require('fs-extra');
 
 // 配置常量
 const CONFIG = {
-  input: path.resolve(__dirname, '../../server/public/swagger.json'),
+  input: require('./resolve-swagger-input').getSwaggerInputPath(),
   output: path.resolve(__dirname, '../src'),
   templates: path.resolve(__dirname, '../node_modules/swagger-typescript-api/templates/base'),
 };

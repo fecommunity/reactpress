@@ -1,99 +1,123 @@
 #!/usr/bin/env node
 
 /**
- * ReactPress CLI - Unified entry point for ReactPress commands
- * This script allows users to run reactpress commands after installing the package globally
+ * ReactPress CLI — unified entry for monorepo development.
+ * Server lifecycle is delegated to @fecommunity/reactpress-cli; client stays local.
  */
 
 const { Command } = require('commander');
-const { spawn } = require('child_process');
+const { spawn, spawnSync } = require('child_process');
 const path = require('path');
 const chalk = require('chalk');
+const serverBin = path.join(rootDir, 'server', 'bin', 'reactpress-server.js');
 
-// Create the CLI program
-const program = new Command();
-
-// Get the directory where this script is located
 const binDir = __dirname;
 const rootDir = path.join(binDir, '..');
 
-// Server command with subcommands
-const serverCmd = program
-  .command('server')
-  .description('Manage the ReactPress server');
+const program = new Command();
+
+function runReactpressCli(args, options = {}) {
+  const result = spawnSync('pnpm', ['exec', 'reactpress-cli', ...args], {
+    cwd: options.cwd || rootDir,
+    stdio: 'inherit',
+    env: {
+      ...process.env,
+      REACTPRESS_ORIGINAL_CWD: process.env.REACTPRESS_ORIGINAL_CWD || process.cwd(),
+    },
+  });
+  if (result.status !== 0) {
+    process.exit(result.status ?? 1);
+  }
+}
+
+function spawnNodeScript(scriptPath, args = [], options = {}) {
+  const child = spawn(process.execPath, [scriptPath, ...args], {
+    stdio: 'inherit',
+    cwd: options.cwd || rootDir,
+    env: {
+      ...process.env,
+      REACTPRESS_ORIGINAL_CWD: process.env.REACTPRESS_ORIGINAL_CWD || process.cwd(),
+      ...options.env,
+    },
+  });
+  child.on('error', (error) => {
+    console.error(chalk.red('[ReactPress CLI]'), error);
+    process.exit(1);
+  });
+  child.on('close', (code) => process.exit(code ?? 0));
+}
+
+const serverCmd = program.command('server').description('Manage the ReactPress API (via reactpress-cli)');
 
 serverCmd
   .command('start')
-  .description('Start the ReactPress server (equivalent to running npx @fecommunity/reactpress-server)')
+  .description('Start the API server (server/ wrapper → reactpress-cli or --pm2)')
   .option('--pm2', 'Start server with PM2 process manager')
   .action((options) => {
-    const serverScript = path.join(rootDir, 'server', 'bin', 'reactpress-server.js');
-    
-    let args = [];
-    if (options.pm2) {
-      args.push('--pm2');
-    }
-    
-    const serverProcess = spawn('node', [serverScript, ...args], {
-      stdio: 'inherit'
-    });
-    
-    serverProcess.on('error', (error) => {
-      console.error(chalk.red('[ReactPress CLI] Failed to start server:'), error);
-      process.exit(1);
-    });
+    const args = options.pm2 ? ['--pm2'] : [];
+    spawnNodeScript(serverBin, args);
   });
 
-// Client command with subcommands
-const clientCmd = program
-  .command('client')
-  .description('Manage the ReactPress client');
+serverCmd
+  .command('stop')
+  .description('Stop the API server')
+  .option('--database', 'Also stop embedded database container')
+  .action((options) => {
+    const args = ['stop'];
+    if (options.database) args.push('--database');
+    runReactpressCli(args);
+  });
+
+serverCmd
+  .command('restart')
+  .description('Restart the API server')
+  .action(() => runReactpressCli(['restart']));
+
+serverCmd
+  .command('status')
+  .description('Show API and database status')
+  .action(() => runReactpressCli(['status']));
+
+const clientCmd = program.command('client').description('Manage the ReactPress client');
 
 clientCmd
   .command('start')
-  .description('Start the ReactPress client (equivalent to running npx @fecommunity/reactpress-client)')
+  .description('Start the ReactPress client')
   .option('--pm2', 'Start client with PM2 process manager')
   .action((options) => {
     const clientScript = path.join(rootDir, 'client', 'bin', 'reactpress-client.js');
-    
-    let args = [];
-    if (options.pm2) {
-      args.push('--pm2');
-    }
-    
-    const clientProcess = spawn('node', [clientScript, ...args], {
-      stdio: 'inherit'
-    });
-    
-    clientProcess.on('error', (error) => {
-      console.error(chalk.red('[ReactPress CLI] Failed to start client:'), error);
-      process.exit(1);
-    });
+    const args = options.pm2 ? ['--pm2'] : [];
+    spawnNodeScript(clientScript, args);
   });
 
-// Set the version from package.json
+program
+  .command('init')
+  .description('Initialize ReactPress in the current project (delegates to reactpress-cli)')
+  .argument('[directory]', 'Project directory', '.')
+  .option('-f, --force', 'Overwrite existing configuration')
+  .action((directory, options) => {
+    const args = ['init', directory];
+    if (options.force) args.push('--force');
+    runReactpressCli(args);
+  });
+
 const packageJson = require(path.join(rootDir, 'package.json'));
 program.version(packageJson.version);
 
-// Configure help text
 program.on('--help', () => {
   console.log('');
   console.log('Examples:');
-  console.log('  $ reactpress server start     # Start the ReactPress server');
-  console.log('  $ reactpress client start     # Start the ReactPress client');
-  console.log('  $ reactpress server start --pm2     # Start server with PM2');
-  console.log('  $ reactpress client start --pm2     # Start client with PM2');
+  console.log('  $ reactpress init .              # Initialize .reactpress/config.json + .env');
+  console.log('  $ reactpress server start        # Start API (reactpress-cli start)');
+  console.log('  $ reactpress server start --pm2  # Start API with PM2');
+  console.log('  $ reactpress client start        # Start Next.js client');
+  console.log('  $ pnpm dev                       # Build toolkit + API + client');
   console.log('');
-  console.log('Note: The "start" command is implicit in the individual bin scripts.');
-  console.log('The CLI provides a consistent interface for all commands.');
-  console.log('');
-  console.log('For more information, visit: https://github.com/fecommunity/reactpress');
+  console.log('API backend: server/ thin wrapper → @fecommunity/reactpress-cli bundled Nest server.');
 });
 
-// Parse the command line arguments
 program.parse(process.argv);
 
-// If no command is provided, show help
 if (!process.argv.slice(2).length) {
   program.outputHelp();
 }
