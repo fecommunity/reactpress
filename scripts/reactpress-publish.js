@@ -15,9 +15,9 @@ const packages = [
     description: 'Main ReactPress package'
   },
   {
-    name: '@fecommunity/reactpress-server', 
+    name: '@fecommunity/reactpress-server',
     path: 'server',
-    description: 'Backend API server package'
+    description: 'API server wrapper (runtime from @fecommunity/reactpress-cli)'
   },
   {
     name: '@fecommunity/reactpress-client',
@@ -381,7 +381,7 @@ function buildPackage(pkg) {
       if (pkg.path === 'config') {
         execSync('pnpm run build', { cwd: path.join(process.cwd(), pkg.path), stdio: 'inherit' });
       } else if (pkg.path === 'server') {
-        execSync('pnpm run prebuild && pnpm run build', { cwd: path.join(process.cwd(), pkg.path), stdio: 'inherit' });
+        execSync('pnpm run build', { cwd: path.join(process.cwd(), pkg.path), stdio: 'inherit' });
       } else if (pkg.path === 'client') {
         execSync('pnpm run prebuild && pnpm run build', { cwd: path.join(process.cwd(), pkg.path), stdio: 'inherit' });
       } else if (pkg.path === 'toolkit') {
@@ -933,8 +933,8 @@ async function main() {
     // Default behavior - show help
     console.log(chalk.blue('🏗️  ReactPress CLI\n'));
     console.log('Usage:');
-    console.log('  node scripts/reactpress-cli.js --build    Build all packages');
-    console.log('  node scripts/reactpress-cli.js --publish  Publish packages (interactive)');
+    console.log('  node scripts/reactpress-publish.js --build    Build all packages');
+    console.log('  node scripts/reactpress-publish.js --publish  Publish packages (interactive)');
     console.log('');
   }
 }
