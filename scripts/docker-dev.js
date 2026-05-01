@@ -128,12 +128,14 @@ switch (command) {
           }
           
           console.log('[ReactPress] Toolkit built successfully.');
-          console.log('[ReactPress] Starting client and server in development mode...');
+          console.log('[ReactPress] Starting client and API (reactpress-cli) in development mode...');
           console.log('[ReactPress] Access your application at: http://localhost:8080');
           
           // 执行并发命令
           const concurrently = spawn('npx', [
             'concurrently',
+            '-n', 'api,web',
+            '-c', 'blue,green',
             'pnpm:dev:server',
             'pnpm:dev:client'
           ], {

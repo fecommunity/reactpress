@@ -1,8 +1,11 @@
+const path = require('path');
+const { getBundledServerMain } = require('./lib/bundled-server-path');
+
 module.exports = {
   apps: [
     {
       name: 'reactpress-server',
-      script: './dist/main.js',
+      script: getBundledServerMain(),
       instances: 1,
       autorestart: true,
       watch: false,

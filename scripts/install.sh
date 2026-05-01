@@ -55,6 +55,14 @@ check_dependencies() {
     if ! docker info > /dev/null 2>&1; then
         error "Docker daemon is not running. Please start Docker and run this script again."
     fi
+
+    if ! command -v node &> /dev/null; then
+        error "Node.js >= 18 is required for @fecommunity/reactpress-cli. See https://nodejs.org/"
+    fi
+
+    if ! command -v pnpm &> /dev/null; then
+        error "pnpm is required. Install: npm install -g pnpm"
+    fi
     
     log "All dependencies found!"
 }
@@ -122,18 +130,7 @@ NEXT_PUBLIC_SITE_URL=http://localhost:8080
 NODE_ENV=production
 EOF
 
-    # Create server-specific .env file  
-    cat > server/.env << 'EOF'
-# Server Environment Variables
-DB_HOST=db
-DB_PORT=3306
-DB_USER=reactpress
-DB_PASSWD=reactpress
-DB_DATABASE=reactpress
-NODE_ENV=production
-PORT=3002
-CORS_ORIGIN=http://client:3001
-EOF
+    # API 由 @fecommunity/reactpress-cli 管理（.reactpress/config.json + 根目录 .env）
 
     # Create toolkit-specific .env file to prevent build errors
     mkdir -p toolkit
@@ -170,9 +167,9 @@ server {
         proxy_connect_timeout 300;
     }
     
-    # Server API (NestJS)
+    # Server API (host: reactpress-cli start)
     location /api/ {
-        proxy_pass http://server:3002;
+        proxy_pass http://host.docker.internal:3002/;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
@@ -339,6 +336,22 @@ EOF
     if [ ! -f "server/package.json" ]; then
         error "server/package.json not found"
     fi
+
+    if ! grep -q '@fecommunity/reactpress-cli' server/package.json 2>/dev/null; then
+        error "server/package.json must depend on @fecommunity/reactpress-cli"
+    fi
+}
+
+# Install deps and start API via reactpress-cli on the host
+start_api_via_cli() {
+    log "Installing Node dependencies..."
+    pnpm install || error "pnpm install failed"
+
+    log "Initializing ReactPress (reactpress-cli init)..."
+    pnpm exec reactpress-cli init . --force 2>/dev/null || pnpm exec reactpress-cli init .
+
+    log "Starting API (reactpress-cli start)..."
+    pnpm exec reactpress-cli start || warn "reactpress-cli start failed — ensure port 3002 is free and Docker MySQL (db) is reachable"
 }
 
 # Create optimized Dockerfiles that handle environment files properly
@@ -399,55 +412,7 @@ USER nextjs
 CMD ["pnpm", "run", "start"]
 EOF
 
-    # Server Dockerfile
-    cat > server/Dockerfile << 'EOF'
-# Use Node.js 18 as the base image
-FROM node:18-alpine
-
-# Set working directory
-WORKDIR /app
-
-# Install pnpm globally
-RUN npm install -g pnpm
-
-# Copy ALL files from the project root (including .env files)
-COPY . .
-
-# Debug: Show environment files
-RUN echo "=== Environment Files ===" && \
-    find . -name ".env*" | head -10
-
-# Install all dependencies
-RUN pnpm install --no-frozen-lockfile
-
-# Build toolkit first with environment safety
-RUN echo "=== Building Toolkit ===" && \
-    cd toolkit && \
-    pnpm run build || (echo "Toolkit build failed, creating basic structure..." && \
-    mkdir -p dist && \
-    echo 'exports.config = {}; exports.messages = {}; exports.emptyConfig = {}; exports.emptyMessages = {};' > dist/index.js && \
-    echo 'export const config = {}; export const messages = {}; export const emptyConfig = {}; export const emptyMessages = {};' > dist/index.d.ts)
-
-# Build server application
-WORKDIR /app/server
-RUN pnpm run build
-
-# Expose port
-EXPOSE 3002
-
-# Create a non-root user
-RUN addgroup -g 1001 -S nodejs && \
-    adduser -S nestjs -u 1001
-
-# Change ownership of the app directory
-RUN chown -R nestjs:nodejs /app
-USER nestjs
-
-# Start the application
-CMD ["pnpm", "run", "start"]
-EOF
-
-    log "Dockerfiles updated with comprehensive environment handling"
+    log "Dockerfiles updated (API runs on host via reactpress-cli, not in a server container)"
 }
 
 # Clean Docker cache
@@ -489,13 +454,13 @@ build_and_start_services() {
     
     while [ $elapsed -lt $wait_time ]; do
         running_count=$($DOCKER_COMPOSE_CMD -f docker-compose.prod.yml ps --services --filter "status=running" | wc -l)
-        if [ "$running_count" -eq 4 ]; then
-            log "✅ All 4 services are running!"
+        if [ "$running_count" -ge 3 ]; then
+            log "✅ Docker services are running (db, client, nginx)!"
             break
         fi
         sleep 10
         elapsed=$((elapsed + 10))
-        log "Waited ${elapsed}s for services... ($running_count/4 running)"
+        log "Waited ${elapsed}s for services... ($running_count/3+ running)"
     done
     
     if [ $elapsed -ge $wait_time ]; then
@@ -518,6 +483,9 @@ deploy_full_application() {
     
     # Update Dockerfiles
     update_dockerfiles
+
+    # API on host (before nginx proxies /api to host.docker.internal:3002)
+    start_api_via_cli
     
     # Build and start services
     build_and_start_services
@@ -545,7 +513,7 @@ show_help() {
     echo "  Or run: ./install.sh [directory]"
     echo ""
     echo "This script automatically handles environment file issues and provides"
-    echo "a complete ReactPress installation with MySQL, NestJS server, Next.js client, and nginx."
+    echo "a complete ReactPress installation with MySQL, reactpress-cli API, Next.js client, and nginx."
     echo ""
     echo "Access your application at: http://localhost:8080"
 }

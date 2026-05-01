@@ -28,8 +28,11 @@
     "clean": "pnpm clean:node_modules && pnpm clean:dist",
     "clean:node_modules": "npx rimraf ./node_modules ./**/node_modules",
     "clean:dist": "npx rimraf ./dist ./**/dist",
+    "init": "pnpm exec reactpress-cli init .",
+    "init:force": "pnpm exec reactpress-cli init . --force",
     "dev": "node ./scripts/reactpress-dev.js",
     "dev:server": "pnpm run --dir ./server dev",
+    "dev:api": "pnpm run dev:server",
     "dev:client": "pnpm run --dir ./client dev",
     "dev:docs": "pnpm run --dir ./docs dev",
     "docker:dev": "node ./scripts/docker-dev.js",
@@ -39,22 +42,27 @@
     "docker:dev:status": "node ./scripts/docker-dev.js status",
     "docker:dev:logs": "node ./scripts/docker-dev.js logs",
     "build": "pnpm build:toolkit && pnpm build:server && pnpm build:client",
-    "build:packages": "node scripts/reactpress-cli.js --build",
+    "build:packages": "node scripts/reactpress-publish.js --build",
     "build:toolkit": "pnpm run --dir ./toolkit build",
     "build:server": "pnpm run --dir ./server build",
     "build:client": "pnpm run --dir ./client build",
     "build:docs": "pnpm run --dir ./docs build",
     "deploy:docs": "pnpm run --dir ./docs deploy:surge",
     "deploy": "sh scripts/deploy.sh",
-    "start": "concurrently 'pnpm:start:*'",
+    "start": "concurrently -n api,web -c blue,green \"pnpm run start:server\" \"pnpm run start:client\"",
     "start:server": "pnpm run --dir ./server start",
+    "start:api": "pnpm run start:server",
     "start:client": "pnpm run --dir ./client start",
+    "stop": "pnpm exec reactpress-cli stop",
+    "restart": "pnpm exec reactpress-cli restart",
+    "status": "pnpm exec reactpress-cli status",
     "pm2": "pnpm run pm2:server && pnpm run pm2:client",
     "pm2:server": "pnpm run --dir ./server pm2",
+    "pm2:api": "pnpm run pm2:server",
     "pm2:client": "pnpm run --dir ./client pm2",
     "lint": "concurrently 'pnpm:lint:*'",
     "lint:client": "eslint --fix './client/**/*.{ts,tsx,js,jsx}'",
-    "lint:server": "eslint --fix './server/./**/*.{ts,js}'",
+    "lint:server": "node -e \"console.log('server: no local TS sources (see @fecommunity/reactpress-cli)')\"",
     "format": "concurrently 'pnpm:format:*'",
     "format:js": "prettier --write --parser typescript './**/*.{ts,tsx,js,jsx}'",
     "prepare": "husky",
@@ -77,9 +85,10 @@
     "rimraf": "^3.0.2"
   },
   "engines": {
-    "node": ">=16.5.0"
+    "node": ">=18.0.0"
   },
   "devDependencies": {
+    "@fecommunity/reactpress-cli": "^0.1.0",
     "husky": "^7.0.4",
     "lint-staged": "^12.4.1",
     "prettier": "^2.3.2",
@@ -88,9 +97,6 @@
   "lint-staged": {
     "*.{ts,tsx,js,jsx,.css,.scss}": "prettier --write",
     "./client/**/*.{ts,tsx,js,jsx}": [
-      "eslint --fix"
-    ],
-    "./server/src/**/*.{ts,js}": [
       "eslint --fix"
     ],
     "./config/**/*.{ts,tsx,js,jsx}": [

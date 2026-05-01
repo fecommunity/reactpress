@@ -25,6 +25,8 @@ build.on('close', (code) => {
   // 执行并发命令
   const concurrently = spawn('npx', [
     'concurrently',
+    '-n', 'api,web',
+    '-c', 'blue,green',
     'pnpm:dev:server',
     'pnpm:dev:client'
   ], {
