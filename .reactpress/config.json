@@ -1,7 +1,7 @@
 {
   "version": 1,
   "database": {
-    "mode": "embedded-docker",
+    "mode": "external",
     "containerName": "reactpress_cli_db"
   },
   "server": {
