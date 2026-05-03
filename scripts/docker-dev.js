@@ -136,7 +136,7 @@ switch (command) {
             'concurrently',
             '-n', 'api,web',
             '-c', 'blue,green',
-            'pnpm:dev:server',
+            'pnpm:dev:api',
             'pnpm:dev:client'
           ], {
             stdio: 'inherit',

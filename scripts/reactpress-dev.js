@@ -91,9 +91,8 @@ async function startDev() {
   const serverUrl = loadServerSiteUrl();
 
   console.log('[reactpress] 正在启动 API（首次可能需安装内置服务端依赖，请稍候）…');
-  apiChild = spawn('pnpm', ['dev:server'], {
+  apiChild = spawn(process.execPath, [path.join(__dirname, 'reactpress-api-dev.js')], {
     stdio: 'inherit',
-    shell: true,
     cwd: currentWorkingDir,
   });
 
