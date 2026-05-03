@@ -328,17 +328,13 @@ EOF
         info "toolkit/package.json already exists"
     fi
     
-    # Check client and server packages
+    # Check client package and CLI dependency at repo root
     if [ ! -f "client/package.json" ]; then
         error "client/package.json not found"
     fi
-    
-    if [ ! -f "server/package.json" ]; then
-        error "server/package.json not found"
-    fi
 
-    if ! grep -q '@fecommunity/reactpress-cli' server/package.json 2>/dev/null; then
-        error "server/package.json must depend on @fecommunity/reactpress-cli"
+    if ! grep -q '@fecommunity/reactpress-cli' package.json 2>/dev/null; then
+        error "Root package.json must depend on @fecommunity/reactpress-cli"
     fi
 }
 
