@@ -15,11 +15,6 @@ const packages = [
     description: 'Main ReactPress package'
   },
   {
-    name: '@fecommunity/reactpress-server',
-    path: 'server',
-    description: 'API server wrapper (runtime from @fecommunity/reactpress-cli)'
-  },
-  {
     name: '@fecommunity/reactpress-client',
     path: 'client', 
     description: 'Frontend application package'
@@ -379,8 +374,6 @@ function buildPackage(pkg) {
     
     try {
       if (pkg.path === 'config') {
-        execSync('pnpm run build', { cwd: path.join(process.cwd(), pkg.path), stdio: 'inherit' });
-      } else if (pkg.path === 'server') {
         execSync('pnpm run build', { cwd: path.join(process.cwd(), pkg.path), stdio: 'inherit' });
       } else if (pkg.path === 'client') {
         execSync('pnpm run prebuild && pnpm run build', { cwd: path.join(process.cwd(), pkg.path), stdio: 'inherit' });
