@@ -70,28 +70,24 @@
 ## 🚀 快速开始
 
 ### 📋 前置要求
-- Node.js >= 16.5.0
-- MySQL 数据库
+- Node.js >= 18.0.0
+- MySQL 数据库（或通过 `reactpress-cli init` 使用 Docker）
 - pnpm 包管理器
 
-### 🏁 安装选项
+### 🏁 本仓库开发（Monorepo）
 
-#### 选项 1：统一 CLI（推荐）
 ```bash
-# 全局安装 ReactPress
-npm install -g @fecommunity/reactpress
-
-# 启动服务
-reactpress server start
-reactpress client start
+pnpm install
+pnpm run init      # 首次：生成 .reactpress/config.json + .env
+pnpm run dev       # API (3002) + 前端 (3001)
 ```
 
-#### 选项 2：独立服务
-```bash
-# 安装并启动 ReactPress 服务器
-npx @fecommunity/reactpress-server
+### 🏁 终端用户项目（仅 CLI）
 
-# 独立安装并运行客户端
+```bash
+npm install -g @fecommunity/reactpress-cli
+reactpress-cli init .
+reactpress-cli start
 npx @fecommunity/reactpress-client
 ```
 
@@ -121,22 +117,14 @@ reactpress client start --pm2
 ```
 
 
-### 独立包命令
-
-您也可以直接使用各个包的命令：
+### API 与客户端命令
 
 ```bash
-# 启动服务器
-npx @fecommunity/reactpress-server
-
-# 启动客户端
+pnpm exec reactpress-cli start
+pnpm exec reactpress-cli stop
 npx @fecommunity/reactpress-client
-
-# 使用 PM2 启动服务器
-npx @fecommunity/reactpress-server --pm2
-
-# 使用 PM2 启动客户端
-npx @fecommunity/reactpress-client --pm2
+pnpm run pm2:api
+pnpm run pm2:client
 ```
 
 ## 📦 包与组件
@@ -147,10 +135,10 @@ ReactPress 组织为**具有模块化包的 monorepo**：
 
 | 包 | 描述 | 版本 |
 |---------|-------------|---------|
-| [`@fecommunity/reactpress`](.) | 主 CLI 和统一入口点 | 2.0.0 |
+| [`@fecommunity/reactpress`](.) | Monorepo 元包与开发脚本 | 2.0.0 |
+| [`@fecommunity/reactpress-cli`](https://github.com/fecommunity/reactpress-cli) | **API 运行时**（init/start/stop） | npm |
 | [`@fecommunity/reactpress-client`](./client) | Next.js 12 前端应用 | 1.0.0 |
-| [`@fecommunity/reactpress-server`](./server) | NestJS 6 后端 API | 1.0.0 |
-| [`@fecommunity/reactpress-toolkit`](./toolkit) | 自动生成的 API 客户端 SDK | 1.0.0 |
+| [`@fecommunity/reactpress-toolkit`](./toolkit) | OpenAPI 生成的 API SDK | 1.0.0 |
 
 ### 模板
 
@@ -189,7 +177,7 @@ SERVER_SITE_URL=http://localhost:3002
 npm install -g pm2
 
 # 使用 PM2 启动 ReactPress 服务器
-npx @fecommunity/reactpress-server --pm2
+pnpm run pm2:api
 
 # 使用 PM2 启动 ReactPress 客户端
 npx @fecommunity/reactpress-client --pm2

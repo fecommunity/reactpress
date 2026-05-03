@@ -59,8 +59,8 @@ ReactPress is engineered for developers who need the publishing power of a tradi
 ## ✨ Core Features
 
 ### ⚡ Rapid Deployment
-- **Zero‑Configuration Setup** – based on intelligent defaults
-- **WordPress‑Style Installation Wizard** – intuitive initialization process
+- **Zero‑Configuration Setup** – `reactpress-cli init` generates config and `.env`
+- **CLI‑Managed API** – database and Nest API via `@fecommunity/reactpress-cli`
 - **Auto‑Database Configuration** – automatic database migrations
 
 ### 🎨 Deep Customization
@@ -97,28 +97,30 @@ ReactPress is engineered for developers who need the publishing power of a tradi
 ## 🚀 Quick Start
 
 ### 📋 Prerequisites
-- Node.js >= 16.5.0
-- MySQL database
+- Node.js >= 18.0.0
+- MySQL database (or Docker via `reactpress-cli init`)
 - `pnpm` package manager
 
-### 🏁 Installation Options
+### 🏁 Quick Start (Monorepo / Product Repo)
 
-#### Option 1: Unified CLI (Recommended)
 ```bash
-# Install ReactPress globally
-npm install -g @fecommunity/reactpress
+git clone https://github.com/fecommunity/reactpress.git
+cd reactpress
+pnpm install
 
-# Start services
-reactpress server start
-reactpress client start
+# Initialize .reactpress/config.json + .env (first time)
+pnpm run init
+
+# API (3002) + Web (3001)
+pnpm run dev
 ```
 
-#### Option 2: Independent Services
-```bash
-# Install and start ReactPress server
-npx @fecommunity/reactpress-server
+### 🏁 End‑User Project (CLI Only)
 
-# Install and run client independently
+```bash
+npm install -g @fecommunity/reactpress-cli
+reactpress-cli init .
+reactpress-cli start
 npx @fecommunity/reactpress-client
 ```
 
@@ -147,20 +149,20 @@ reactpress server start --pm2
 reactpress client start --pm2
 ```
 
-### Individual Package Commands
+### API & Client Commands
 
 ```bash
-# Start server
-npx @fecommunity/reactpress-server
+# API lifecycle (reactpress-cli)
+pnpm exec reactpress-cli start
+pnpm exec reactpress-cli stop
+pnpm exec reactpress-cli status
 
-# Start client
+# Client only
 npx @fecommunity/reactpress-client
 
-# Start server with PM2
-npx @fecommunity/reactpress-server --pm2
-
-# Start client with PM2
-npx @fecommunity/reactpress-client --pm2
+# Production PM2
+pnpm run pm2:api    # bundled API via CLI package
+pnpm run pm2:client
 ```
 
 ---
@@ -173,10 +175,10 @@ ReactPress uses a **Modular Monorepo Architecture**:
 
 | Package | Description | Version |
 |---------|-------------|---------|
-| [`@fecommunity/reactpress`](.) | Main CLI and unified entry point | 2.0.0 |
+| [`@fecommunity/reactpress`](.) | Monorepo meta + dev scripts | 2.0.0 |
+| [`@fecommunity/reactpress-cli`](https://github.com/fecommunity/reactpress-cli) | **API runtime** (init/start/stop, bundled Nest) | npm |
 | [`@fecommunity/reactpress-client`](./client) | Next.js 12 frontend application | 1.0.0 |
-| [`@fecommunity/reactpress-server`](./server) | NestJS 6 backend API | 1.0.0 |
-| [`@fecommunity/reactpress-toolkit`](./toolkit) | Auto‑generated API client SDK | 1.0.0 |
+| [`@fecommunity/reactpress-toolkit`](./toolkit) | OpenAPI‑generated API client SDK | 1.0.0 |
 
 ### Templates
 
@@ -228,7 +230,7 @@ The development environment includes:
 - MySQL Database (port 3306)
 - Nginx Reverse Proxy (port 8080)
 - Client Development Server (port 3001)
-- Server Development Server (port 3002)
+- API via reactpress-cli (port 3002)
 
 Access your application at: `http://localhost:8080`
 
@@ -244,13 +246,11 @@ Access your application at: `http://localhost:8080`
 # Install PM2 globally
 npm install -g pm2
 
-# Start ReactPress server with PM2
-npx @fecommunity/reactpress-server --pm2
+# Start API and client with PM2
+pnpm run pm2:api
+pnpm run pm2:client
 
-# Start ReactPress client with PM2
-npx @fecommunity/reactpress-client --pm2
-
-# Or use the unified CLI
+# Or use the unified reactpress CLI
 reactpress server start --pm2
 reactpress client start --pm2
 ```
