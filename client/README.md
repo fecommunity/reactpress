@@ -56,10 +56,10 @@ Perfect for:
 - Microfrontend architecture
 
 ### Full ReactPress Stack
-Use with ReactPress server for complete CMS solution:
+Use with ReactPress API for complete CMS solution:
 ```bash
-# Start server first
-npx @fecommunity/reactpress-server
+# Start API first
+pnpm exec reactpress-cli start
 
 # In another terminal, start client
 npx @fecommunity/reactpress-client

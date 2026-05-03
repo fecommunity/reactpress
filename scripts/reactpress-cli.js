@@ -2,14 +2,13 @@
 
 /**
  * ReactPress CLI — unified entry for monorepo development.
- * Server lifecycle is delegated to @fecommunity/reactpress-cli; client stays local.
+ * API lifecycle is delegated to @fecommunity/reactpress-cli; client stays local.
  */
 
 const { Command } = require('commander');
 const { spawn, spawnSync } = require('child_process');
 const path = require('path');
 const chalk = require('chalk');
-const serverBin = path.join(rootDir, 'server', 'bin', 'reactpress-server.js');
 
 const binDir = __dirname;
 const rootDir = path.join(binDir, '..');
@@ -51,11 +50,14 @@ const serverCmd = program.command('server').description('Manage the ReactPress A
 
 serverCmd
   .command('start')
-  .description('Start the API server (server/ wrapper → reactpress-cli or --pm2)')
-  .option('--pm2', 'Start server with PM2 process manager')
+  .description('Start the API server (reactpress-cli start, or --pm2 for production)')
+  .option('--pm2', 'Start API with PM2 process manager')
   .action((options) => {
-    const args = options.pm2 ? ['--pm2'] : [];
-    spawnNodeScript(serverBin, args);
+    if (options.pm2) {
+      spawnNodeScript(path.join(rootDir, 'scripts', 'reactpress-api-pm2.js'));
+      return;
+    }
+    runReactpressCli(['start']);
   });
 
 serverCmd
@@ -113,7 +115,7 @@ program.on('--help', () => {
   console.log('  $ reactpress client start        # Start Next.js client');
   console.log('  $ pnpm dev                       # Build toolkit + API + client');
   console.log('');
-  console.log('API backend: server/ thin wrapper → @fecommunity/reactpress-cli bundled Nest server.');
+  console.log('API backend: @fecommunity/reactpress-cli bundled Nest server.');
 });
 
 program.parse(process.argv);
