@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "skipLibCheck": true,
+    "target": "es2017",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "typeRoots": ["./node_modules/@types"],
+    "paths": {
+      "@fecommunity/reactpress-toolkit": ["../toolkit/dist"],
+      "@fecommunity/reactpress-toolkit/*": ["../toolkit/dist/*"]
+    }
+  },
+  "exclude": ["node_modules", "dist"]
+}

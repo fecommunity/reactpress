@@ -1,100 +1,10 @@
 {
-  "name": "@fecommunity/reactpress",
-  "author": "fecommunity",
-  "version": "2.0.0-beta-4-beta.1",
-  "description": "ReactPress — Web CMS product monorepo (client + toolkit); API via @fecommunity/reactpress-cli",
-  "keywords": [
-    "reactpress",
-    "cms",
-    "blog",
-    "react",
-    "nextjs",
-    "nestjs",
-    "typescript"
-  ],
-  "bin": {
-    "reactpress": "./scripts/reactpress-cli.js",
-    "reactpress-client": "./client/bin/reactpress-client.js"
-  },
-  "files": [
-    "bin/**/*",
-    "scripts/**/*",
-    "client/bin/**/*",
-    "CONTRIBUTING.md"
-  ],
+  "name": "reactpress-site",
+  "private": true,
+  "version": "1.0.0",
+  "description": "ReactPress CMS & Blog site",
   "scripts": {
-    "clean": "pnpm clean:node_modules && pnpm clean:dist",
-    "clean:node_modules": "npx rimraf ./node_modules ./**/node_modules",
-    "clean:dist": "npx rimraf ./dist ./**/dist",
-    "init": "pnpm exec reactpress-cli init .",
-    "init:force": "pnpm exec reactpress-cli init . --force",
-    "dev": "node ./scripts/reactpress-dev.js",
-    "dev:api": "node ./scripts/reactpress-api-dev.js",
-    "dev:client": "pnpm run --dir ./client dev",
-    "dev:docs": "pnpm run --dir ./docs dev",
-    "docker:dev": "node ./scripts/docker-dev.js",
-    "docker:dev:start": "node ./scripts/docker-dev.js start",
-    "docker:dev:stop": "node ./scripts/docker-dev.js stop",
-    "docker:dev:restart": "node ./scripts/docker-dev.js restart",
-    "docker:dev:status": "node ./scripts/docker-dev.js status",
-    "docker:dev:logs": "node ./scripts/docker-dev.js logs",
-    "build": "pnpm build:toolkit && pnpm build:client",
-    "build:packages": "node scripts/reactpress-publish.js --build",
-    "build:toolkit": "pnpm run --dir ./toolkit build",
-    "build:client": "pnpm run --dir ./client build",
-    "build:docs": "pnpm run --dir ./docs build",
-    "deploy:docs": "pnpm run --dir ./docs deploy:surge",
-    "deploy": "sh scripts/deploy.sh",
-    "start": "concurrently -n api,web -c blue,green \"pnpm run start:api\" \"pnpm run start:client\"",
-    "start:api": "pnpm exec reactpress-cli start",
-    "start:client": "pnpm run --dir ./client start",
-    "stop": "pnpm exec reactpress-cli stop",
-    "restart": "pnpm exec reactpress-cli restart",
-    "status": "pnpm exec reactpress-cli status",
-    "pm2": "pnpm run pm2:api && pnpm run pm2:client",
-    "pm2:api": "node ./scripts/reactpress-api-pm2.js",
-    "pm2:client": "pnpm run --dir ./client pm2",
-    "lint": "concurrently 'pnpm:lint:*'",
-    "lint:client": "eslint --fix './client/**/*.{ts,tsx,js,jsx}'",
-    "format": "concurrently 'pnpm:format:*'",
-    "format:js": "prettier --write --parser typescript './**/*.{ts,tsx,js,jsx}'",
-    "prepare": "husky",
-    "precommit": "lint-staged",
-    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s  -r 0",
-    "release": "node scripts/reactpress-publish.js --publish"
-  },
-  "dependencies": {
-    "chalk": "^4.1.2",
-    "commander": "^9.4.1",
-    "concurrently": "^7.0.0",
-    "conventional-changelog-cli": "^3.0.0",
-    "cross-env": "^7.0.3",
-    "dotenv": "^17.2.3",
-    "express": "^5.1.0",
-    "fs-extra": "^10.0.0",
-    "inquirer": "^8.2.4",
-    "mysql2": "^3.12.0",
-    "open": "^8.2.1",
-    "rimraf": "^3.0.2"
-  },
-  "engines": {
-    "node": ">=18.0.0"
-  },
-  "devDependencies": {
-    "@fecommunity/reactpress-cli": "^0.1.0",
-    "husky": "^7.0.4",
-    "lint-staged": "^12.4.1",
-    "prettier": "^2.3.2",
-    "typescript": "~4.1.6"
-  },
-  "lint-staged": {
-    "*.{ts,tsx,js,jsx,.css,.scss}": "prettier --write",
-    "./client/**/*.{ts,tsx,js,jsx}": [
-      "eslint --fix"
-    ],
-    "./config/**/*.{ts,tsx,js,jsx}": [
-      "eslint --fix"
-    ]
-  },
-  "packageManager": "pnpm@10.12.1+sha512.f0dda8580f0ee9481c5c79a1d927b9164f2c478e90992ad268bbb2465a736984391d6333d2c327913578b2804af33474ca554ba29c04a8b13060a717675ae3ac"
+    "start": "reactpress-cli start",
+    "stop": "reactpress-cli stop"
+  }
 }

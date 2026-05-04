@@ -111,9 +111,11 @@ pnpm install
 # Initialize .reactpress/config.json + .env (first time)
 pnpm run init
 
-# API (3002) + Web (3001)
+# API from server/ (3002) + Web (3001)
 pnpm run dev
 ```
+
+See [README-zh_CN.md](./README-zh_CN.md) for the full dev/deploy workflow (Chinese).
 
 ### 🏁 End‑User Project (CLI Only)
 
@@ -152,10 +154,10 @@ reactpress client start --pm2
 ### API & Client Commands
 
 ```bash
-# API lifecycle (reactpress-cli)
-pnpm exec reactpress-cli start
-pnpm exec reactpress-cli stop
-pnpm exec reactpress-cli status
+# API lifecycle (monorepo server/)
+pnpm run start:api
+pnpm run stop
+pnpm run status
 
 # Client only
 npx @fecommunity/reactpress-client
@@ -176,8 +178,9 @@ ReactPress uses a **Modular Monorepo Architecture**:
 | Package | Description | Version |
 |---------|-------------|---------|
 | [`@fecommunity/reactpress`](.) | Monorepo meta + dev scripts | 2.0.0 |
-| [`@fecommunity/reactpress-cli`](https://github.com/fecommunity/reactpress-cli) | **API runtime** (init/start/stop, bundled Nest) | npm |
+| [`@fecommunity/reactpress-server`](./server) | **NestJS API** (developed and deployed from this repo) | 1.0.0 |
 | [`@fecommunity/reactpress-client`](./client) | Next.js 12 frontend application | 1.0.0 |
+| [`@fecommunity/reactpress-cli`](https://github.com/fecommunity/reactpress-cli) | Project init & Docker DB (optional) | npm |
 | [`@fecommunity/reactpress-toolkit`](./toolkit) | OpenAPI‑generated API client SDK | 1.0.0 |
 
 ### Templates
