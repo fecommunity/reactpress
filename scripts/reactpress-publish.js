@@ -15,8 +15,13 @@ const packages = [
     description: 'Main ReactPress package'
   },
   {
+    name: '@fecommunity/reactpress-server',
+    path: 'server',
+    description: 'NestJS backend API'
+  },
+  {
     name: '@fecommunity/reactpress-client',
-    path: 'client', 
+    path: 'client',
     description: 'Frontend application package'
   },
   {

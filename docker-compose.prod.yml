@@ -19,7 +19,7 @@ services:
     networks:
       - reactpress-network
 
-  # API 由宿主机上的 @fecommunity/reactpress-cli 提供（pnpm exec reactpress-cli start）
+  # API 由宿主机 monorepo server/ 提供（pnpm run start:api 或 pm2:api）
   # nginx 通过 host.docker.internal:3002 转发 /api
 
   client:
