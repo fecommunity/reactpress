@@ -74,15 +74,25 @@
 - MySQL 数据库（或通过 `reactpress-cli init` 使用 Docker）
 - pnpm 包管理器
 
-### 🏁 本仓库开发（Monorepo）
+### 🏁 本仓库开发（Monorepo，含 server/）
 
 ```bash
 pnpm install
-pnpm run init      # 首次：生成 .reactpress/config.json + .env
-pnpm run dev       # API (3002) + 前端 (3001)
+pnpm run init          # 首次：.reactpress/config.json + .env（可用 Docker MySQL）
+pnpm run docker:dev    # 可选：仅起 MySQL + nginx 代理
+pnpm run dev           # 构建 toolkit → API 热更新 (3002) → 前端 (3001)
 ```
 
-### 🏁 终端用户项目（仅 CLI）
+| 命令 | 说明 |
+|------|------|
+| `pnpm dev` | 一键本地全栈（推荐） |
+| `pnpm dev:api` | 仅 API（`server/` nest watch） |
+| `pnpm dev:client` | 仅 Next.js 前端 |
+| `pnpm build` | 生产构建：toolkit → server → client |
+| `pnpm start` | 生产模式同时起 API + 前端 |
+| `pnpm run status` | 查看 API 进程与 HTTP 健康 |
+
+### 🏁 终端用户项目（仅 CLI，不含本仓 server 源码）
 
 ```bash
 npm install -g @fecommunity/reactpress-cli
@@ -120,11 +130,22 @@ reactpress client start --pm2
 ### API 与客户端命令
 
 ```bash
-pnpm exec reactpress-cli start
-pnpm exec reactpress-cli stop
-npx @fecommunity/reactpress-client
+# API（本仓 server/）
+pnpm run start:api
+pnpm run stop
+pnpm run restart
+pnpm run status
+
+# 或统一 CLI
+reactpress server start
+reactpress client start
+
+# 生产 PM2
 pnpm run pm2:api
 pnpm run pm2:client
+
+# 初始化 / Docker 数据库（仍用 reactpress-cli）
+pnpm run init
 ```
 
 ## 📦 包与组件
@@ -136,9 +157,10 @@ ReactPress 组织为**具有模块化包的 monorepo**：
 | 包 | 描述 | 版本 |
 |---------|-------------|---------|
 | [`@fecommunity/reactpress`](.) | Monorepo 元包与开发脚本 | 2.0.0 |
-| [`@fecommunity/reactpress-cli`](https://github.com/fecommunity/reactpress-cli) | **API 运行时**（init/start/stop） | npm |
+| [`@fecommunity/reactpress-server`](./server) | **NestJS API**（本仓开发与部署） | 1.0.0 |
 | [`@fecommunity/reactpress-client`](./client) | Next.js 12 前端应用 | 1.0.0 |
 | [`@fecommunity/reactpress-toolkit`](./toolkit) | OpenAPI 生成的 API SDK | 1.0.0 |
+| [`@fecommunity/reactpress-cli`](https://github.com/fecommunity/reactpress-cli) | 项目初始化与 Docker DB（可选） | npm |
 
 ### 模板
 
@@ -147,9 +169,43 @@ ReactPress 组织为**具有模块化包的 monorepo**：
 | [`hello-world`](./templates/hello-world) | 用于快速原型设计的最小模板 | `@fecommunity/reactpress-template-hello-world` |
 | [`twentytwentyfive`](./templates/twentytwentyfive) | 功能丰富的博客模板 | `@fecommunity/reactpress-template-twentytwentyfive` |
 
+## 🛠 研发流程
+
+```mermaid
+flowchart LR
+  subgraph init [首次]
+    A[pnpm install] --> B[pnpm init]
+    B --> C[.env + .reactpress/config.json]
+  end
+  subgraph dev [日常开发]
+    D[pnpm dev] --> E[toolkit build]
+    E --> F[server nest watch :3002]
+    F --> G[client next dev :3001]
+  end
+  subgraph ship [上线]
+    H[pnpm build] --> I[pnpm deploy 或 pm2]
+  end
+  init --> dev
+  dev --> ship
+```
+
+**改 API 契约后同步前端类型：**
+
+```bash
+pnpm run generate:swagger   # 从 server 生成 swagger.json
+pnpm run build:toolkit      # 重新生成 toolkit 的 api/types
+```
+
+**Docker 本地（MySQL + 反向代理）：**
+
+```bash
+pnpm docker:dev:start    # MySQL :3306，入口 http://localhost:8080
+pnpm docker:dev:stop
+```
+
 ## 🔧 配置
 
-在根目录中创建 `.env` 文件用于本地开发：
+在根目录中创建 `.env` 文件用于本地开发（`pnpm init` 可自动生成）：
 
 ```env
 # 数据库配置
@@ -171,29 +227,34 @@ SERVER_SITE_URL=http://localhost:3002
 ### 使用 Vercel 部署（推荐）
 [![使用 Vercel 部署](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/fecommunity/reactpress)
 
-### PM2 部署（推荐）
+### PM2 部署（推荐，自托管）
+
 ```bash
-# 全局安装 PM2
-npm install -g pm2
-
-# 使用 PM2 启动 ReactPress 服务器
-pnpm run pm2:api
-
-# 使用 PM2 启动 ReactPress 客户端
-npx @fecommunity/reactpress-client --pm2
-
-# 或者使用统一 CLI
-reactpress server start --pm2
-reactpress client start --pm2
+pnpm install
+pnpm run build
+pnpm run pm2          # API + 前端
+pm2 save
 ```
 
-### 传统部署（自托管）
-```bash
-# 构建生产版本
-pnpm run build
+或使用一键脚本（在服务器仓库根目录）：
 
-# 启动生产服务器
-pnpm run start
+```bash
+sh scripts/deploy.sh
+```
+
+### 传统部署（前台进程）
+
+```bash
+pnpm run build
+pnpm run start        # concurrently: API + client
+```
+
+### Docker 生产（DB + 前端容器，API 在宿主机）
+
+```bash
+pnpm run build
+pnpm run start:api    # 或 pm2:api，监听 3002
+docker compose -f docker-compose.prod.yml up -d
 ```
 
 ## 🤝 贡献

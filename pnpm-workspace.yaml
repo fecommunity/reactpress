@@ -1,4 +1,6 @@
 packages:
+  # 后端 API
+  - 'server'
   # 客户端
   - 'client'
   # 文档

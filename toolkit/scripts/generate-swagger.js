@@ -9,7 +9,7 @@ const bundledServerDir = getBundledServerPathForGenerate();
 const swaggerPath = getSwaggerInputPath();
 
 try {
-  console.log('1️⃣ Generating Swagger JSON via @fecommunity/reactpress-cli bundled server...');
+  console.log('1️⃣ Generating Swagger JSON from monorepo server/ …');
   try {
     execSync('npm run generate:swagger', { cwd: bundledServerDir, stdio: 'inherit' });
     console.log('✅ Swagger JSON generated successfully!\n');
@@ -19,7 +19,7 @@ try {
 
   if (!existsSync(swaggerPath)) {
     console.error(`❌ No swagger.json at ${swaggerPath}`);
-    console.error('   Ensure @fecommunity/reactpress-cli is installed (pnpm install).');
+    console.error('   Run: pnpm run generate:swagger (requires server/ and .env).');
     process.exit(1);
   }
   console.log(`✅ Using swagger.json from ${swaggerPath}\n`);
