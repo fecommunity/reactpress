@@ -15,10 +15,10 @@ const {
   getServerDir,
   isUsingMonorepoServer,
 } = require('./bundled-server-path');
+const { ensureProjectEnvironment } = require('./reactpress-bootstrap');
 
 const projectRoot = process.env.REACTPRESS_ORIGINAL_CWD || getMonorepoRoot();
 const pidFile = path.join(projectRoot, '.reactpress', 'server.pid');
-const configPath = path.join(projectRoot, '.reactpress', 'config.json');
 
 process.env.REACTPRESS_ORIGINAL_CWD = projectRoot;
 
@@ -36,16 +36,14 @@ function loadServerSiteUrl() {
   return 'http://localhost:3002';
 }
 
-function ensureConfig() {
-  if (fs.existsSync(configPath)) {
+async function ensureConfig() {
+  try {
+    await ensureProjectEnvironment(projectRoot);
     return true;
+  } catch (err) {
+    console.error('[reactpress] 环境准备失败:', err.message || err);
+    return false;
   }
-  console.warn('[reactpress] 未找到 .reactpress/config.json，正在执行 reactpress-cli init …');
-  const init = spawnSync('pnpm', ['exec', 'reactpress-cli', 'init', '.'], {
-    cwd: projectRoot,
-    stdio: 'inherit',
-  });
-  return init.status === 0;
 }
 
 function readPid() {
@@ -132,8 +130,8 @@ async function waitForApi(url, timeoutMs = 120_000) {
   return false;
 }
 
-function startApi({ wait = true } = {}) {
-  if (!ensureConfig()) {
+async function startApi({ wait = true } = {}) {
+  if (!(await ensureConfig())) {
     process.exit(1);
   }
 
