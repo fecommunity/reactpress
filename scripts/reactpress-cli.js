@@ -112,7 +112,7 @@ program.on('--help', () => {
   console.log('  $ reactpress server start        # Local Nest API (server/)');
   console.log('  $ reactpress server start --pm2  # PM2 production API');
   console.log('  $ reactpress client start        # Next.js client');
-  console.log('  $ pnpm dev                       # toolkit + API + client');
+  console.log('  $ pnpm dev                       # 零配置: env + DB + toolkit + API + client');
   console.log('');
   console.log('API backend: monorepo server/ (NestJS). Init/DB: @fecommunity/reactpress-cli.');
 });

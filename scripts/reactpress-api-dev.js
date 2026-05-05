@@ -5,28 +5,15 @@
  */
 
 const { spawn, spawnSync } = require('child_process');
-const path = require('path');
-const fs = require('fs');
 const {
   getMonorepoRoot,
   isUsingMonorepoServer,
 } = require('./bundled-server-path');
+const { ensureProjectEnvironment } = require('./reactpress-bootstrap');
 
 const projectRoot = process.env.REACTPRESS_ORIGINAL_CWD || getMonorepoRoot();
-const configPath = path.join(projectRoot, '.reactpress', 'config.json');
 
 process.env.REACTPRESS_ORIGINAL_CWD = projectRoot;
-
-if (!fs.existsSync(configPath)) {
-  console.warn('[reactpress] 未找到 .reactpress/config.json，正在执行 reactpress-cli init …');
-  const init = spawnSync('pnpm', ['exec', 'reactpress-cli', 'init', '.'], {
-    cwd: projectRoot,
-    stdio: 'inherit',
-  });
-  if (init.status !== 0) {
-    process.exit(init.status ?? 1);
-  }
-}
 
 let apiChild;
 
@@ -42,34 +29,49 @@ function stopApi() {
   }
 }
 
-if (isUsingMonorepoServer()) {
-  console.log('[reactpress] 开发模式: server/ (nest start --watch)');
-  apiChild = spawn('pnpm', ['run', '--dir', './server', 'dev'], {
-    cwd: projectRoot,
-    stdio: 'inherit',
-    shell: true,
-    env: {
-      ...process.env,
-      REACTPRESS_ORIGINAL_CWD: projectRoot,
-    },
-  });
-} else {
-  console.log('[reactpress] 开发模式: reactpress-cli（未找到 server/src）');
-  const start = spawnSync('pnpm', ['exec', 'reactpress-cli', 'start'], {
-    cwd: projectRoot,
-    stdio: 'inherit',
-  });
-  if (start.status !== 0) {
-    process.exit(start.status ?? 1);
+function startApiProcess() {
+  if (isUsingMonorepoServer()) {
+    console.log('[reactpress] 开发模式: server/ (nest start --watch)');
+    apiChild = spawn('pnpm', ['run', '--dir', './server', 'dev'], {
+      cwd: projectRoot,
+      stdio: 'inherit',
+      shell: true,
+      env: {
+        ...process.env,
+        REACTPRESS_ORIGINAL_CWD: projectRoot,
+      },
+    });
+  } else {
+    console.log('[reactpress] 开发模式: reactpress-cli（未找到 server/src）');
+    const start = spawnSync('pnpm', ['exec', 'reactpress-cli', 'start'], {
+      cwd: projectRoot,
+      stdio: 'inherit',
+    });
+    if (start.status !== 0) {
+      process.exit(start.status ?? 1);
+    }
+    console.log('[reactpress] API 已由 reactpress-cli 启动。');
+    process.stdin.resume();
+    return;
   }
-  console.log('[reactpress] API 已由 reactpress-cli 启动。');
-  process.stdin.resume();
+
+  if (apiChild) {
+    apiChild.on('close', (code) => {
+      process.exit(code ?? 0);
+    });
+    console.log('[reactpress] 按 Ctrl+C 停止 API 与前端。');
+    console.log('[reactpress] 单独停止 API: pnpm run stop');
+  }
 }
 
-if (apiChild) {
-  apiChild.on('close', (code) => {
-    process.exit(code ?? 0);
-  });
+async function prepareAndStart() {
+  try {
+    await ensureProjectEnvironment(projectRoot);
+  } catch (err) {
+    console.error('[reactpress] 环境准备失败:', err.message || err);
+    process.exit(1);
+  }
+  startApiProcess();
 }
 
 process.on('SIGINT', () => {
@@ -82,7 +84,4 @@ process.on('SIGTERM', () => {
   process.exit(0);
 });
 
-if (apiChild) {
-  console.log('[reactpress] 按 Ctrl+C 停止 API 与前端。');
-  console.log('[reactpress] 单独停止 API: pnpm run stop');
-}
+prepareAndStart();
