@@ -108,12 +108,11 @@ git clone https://github.com/fecommunity/reactpress.git
 cd reactpress
 pnpm install
 
-# Initialize .reactpress/config.json + .env (first time)
-pnpm run init
-
-# API from server/ (3002) + Web (3001)
+# Zero-config: auto-creates .reactpress + .env + Docker MySQL, then API + Web
 pnpm run dev
 ```
+
+Requires **Node.js ≥ 18** and **Docker** (for embedded MySQL). Optional: `pnpm run init` to prepare env without starting dev servers.
 
 See [README-zh_CN.md](./README-zh_CN.md) for the full dev/deploy workflow (Chinese).
 

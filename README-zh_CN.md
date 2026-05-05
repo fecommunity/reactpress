@@ -78,10 +78,10 @@
 
 ```bash
 pnpm install
-pnpm run init          # 首次：.reactpress/config.json + .env（可用 Docker MySQL）
-pnpm run docker:dev    # 可选：仅起 MySQL + nginx 代理
-pnpm run dev           # 构建 toolkit → API 热更新 (3002) → 前端 (3001)
+pnpm run dev           # 零配置：自动 init + Docker MySQL + toolkit + API (3002) + 前端 (3001)
 ```
+
+可选：`pnpm run init` 仅准备环境不启动服务；`pnpm run docker:dev` 使用独立 compose 起 MySQL + nginx。
 
 | 命令 | 说明 |
 |------|------|
