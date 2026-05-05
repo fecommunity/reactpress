@@ -2,6 +2,7 @@ const { spawn } = require('child_process');
 const fs = require('fs');
 const http = require('http');
 const path = require('path');
+const { ensureProjectEnvironment } = require('./reactpress-bootstrap');
 
 const currentWorkingDir = process.cwd();
 process.env.REACTPRESS_ORIGINAL_CWD = currentWorkingDir;
@@ -132,20 +133,35 @@ async function startDev() {
   });
 }
 
-const build = spawn('pnpm', ['build:toolkit'], {
-  stdio: 'inherit',
-  shell: true,
-});
-
-build.on('close', (code) => {
-  if (code !== 0) {
-    console.error(`构建失败，退出码: ${code}`);
-    process.exit(code);
+async function runDev() {
+  try {
+    await ensureProjectEnvironment(currentWorkingDir);
+  } catch (err) {
+    console.error('[reactpress] 环境准备失败:', err.message || err);
+    process.exit(1);
   }
 
-  startDev().catch((err) => {
-    console.error('[reactpress] 启动失败:', err);
-    shutdown('SIGINT');
-    process.exit(1);
+  await new Promise((resolve, reject) => {
+    const build = spawn('pnpm', ['build:toolkit'], {
+      stdio: 'inherit',
+      shell: true,
+      cwd: currentWorkingDir,
+    });
+
+    build.on('close', (code) => {
+      if (code !== 0) {
+        reject(new Error(`toolkit 构建失败，退出码: ${code}`));
+        return;
+      }
+      resolve();
+    });
   });
+
+  await startDev();
+}
+
+runDev().catch((err) => {
+  console.error('[reactpress] 启动失败:', err.message || err);
+  shutdown('SIGINT');
+  process.exit(1);
 });
