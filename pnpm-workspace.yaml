@@ -1,4 +1,6 @@
 packages:
+  # CLI 工具链
+  - 'cli'
   # 后端 API
   - 'server'
   # 客户端
