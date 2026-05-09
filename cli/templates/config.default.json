@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "database": {
+    "mode": "embedded-docker",
+    "containerName": "reactpress_cli_db"
+  },
+  "server": {
+    "port": 3002,
+    "clientUrl": "http://localhost:3001",
+    "serverUrl": "http://localhost:3002"
+  }
+}
