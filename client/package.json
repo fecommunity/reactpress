@@ -50,6 +50,7 @@
     "next-sitemap": "^1.6.102",
     "next-with-less": "^2.0.5",
     "nprogress": "^0.2.0",
+    "open": "^8.4.2",
     "preact": "^10.5.14",
     "qrcode-svg": "^1.1.0",
     "react": "17.0.2",
