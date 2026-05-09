@@ -1,0 +1,27 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: reactpress_cli_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-reactpress_root}
+      MYSQL_DATABASE: ${DB_DATABASE:-reactpress}
+      MYSQL_USER: ${DB_USER:-reactpress}
+      MYSQL_PASSWORD: ${DB_PASSWD:-reactpress}
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-authentication-plugin=mysql_native_password
+    volumes:
+      - reactpress_cli_db_data:/var/lib/mysql
+    ports:
+      - "${DB_PORT:-3306}:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD:-reactpress_root}"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+
+volumes:
+  reactpress_cli_db_data:
