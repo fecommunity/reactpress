@@ -1,18 +1,30 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { ApiKeyModule } from '../api-key/api-key.module';
 import { AuthModule } from '../auth/auth.module';
 import { CategoryModule } from '../category/category.module';
 import { TagModule } from '../tag/tag.module';
 import { UserModule } from '../user/user.module';
+import { WebhookModule } from '../webhook/webhook.module';
+import { ArticleRevision } from './article-revision.entity';
 import { ArticleController } from './article.controller';
 import { Article } from './article.entity';
 import { ArticleService } from './article.service';
+import { ScheduledPublishService } from './scheduled-publish.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Article]), CategoryModule, TagModule, UserModule, AuthModule],
+  imports: [
+    TypeOrmModule.forFeature([Article, ArticleRevision]),
+    CategoryModule,
+    TagModule,
+    UserModule,
+    AuthModule,
+    ApiKeyModule,
+    WebhookModule,
+  ],
   exports: [ArticleService],
-  providers: [ArticleService],
+  providers: [ArticleService, ScheduledPublishService],
   controllers: [ArticleController],
 })
 export class ArticleModule {}

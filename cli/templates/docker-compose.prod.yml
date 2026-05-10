@@ -1,0 +1,56 @@
+# ReactPress 3.0 生产部署示例
+# 用法: 复制到项目根目录，按需修改环境变量后 docker compose -f docker-compose.prod.yml up -d
+
+services:
+  db:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWD:-reactpress}
+      MYSQL_DATABASE: ${DB_DATABASE:-reactpress}
+    volumes:
+      - reactpress_mysql_data:/var/lib/mysql
+    ports:
+      - '${DB_PORT:-3306}:3306'
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    image: node:20-alpine
+    restart: unless-stopped
+    working_dir: /app
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWD: ${DB_PASSWD:-reactpress}
+      DB_DATABASE: ${DB_DATABASE:-reactpress}
+      SERVER_PORT: 3002
+      SERVER_SITE_URL: http://localhost:3002
+      SERVER_API_PREFIX: /api
+    ports:
+      - '3002:3002'
+    command: sh -c "npm i -g @fecommunity/reactpress-cli@3 && reactpress-cli start --api-only"
+    # 生产建议挂载已 init 的项目目录，或使用自定义镜像内置 dist
+
+  client:
+    image: node:20-alpine
+    restart: unless-stopped
+    depends_on:
+      - api
+    environment:
+      CLIENT_SITE_URL: http://localhost:3001
+      SERVER_SITE_URL: http://api:3002
+    ports:
+      - '3001:3001'
+    command: sh -c "npm i -g @fecommunity/reactpress-client@3 && reactpress-client start"
+
+volumes:
+  reactpress_mysql_data:
