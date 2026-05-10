@@ -1,0 +1,86 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master, develop]
+  pull_request:
+    branches: [main, master, develop]
+
+jobs:
+  build-and-smoke:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: reactpress
+          MYSQL_DATABASE: reactpress
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build toolkit
+        run: pnpm run build:toolkit
+
+      - name: Build server
+        run: pnpm run build:server
+
+      - name: Create test .env
+        run: |
+          cat > .env <<'EOF'
+          DB_HOST=127.0.0.1
+          DB_PORT=3306
+          DB_USER=root
+          DB_PASSWD=reactpress
+          DB_DATABASE=reactpress
+          SERVER_PORT=3002
+          SERVER_SITE_URL=http://127.0.0.1:3002
+          SERVER_API_PREFIX=/api
+          CLIENT_SITE_URL=http://127.0.0.1:3001
+          EOF
+
+      - name: Start API and smoke health
+        env:
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_USER: root
+          DB_PASSWD: reactpress
+          DB_DATABASE: reactpress
+          SERVER_PORT: 3002
+          SERVER_SITE_URL: http://127.0.0.1:3002
+          SERVER_API_PREFIX: /api
+        run: |
+          node server/dist/main.js &
+          echo $! > /tmp/reactpress-api.pid
+          for i in $(seq 1 45); do
+            if node scripts/smoke-api-health.mjs; then
+              kill "$(cat /tmp/reactpress-api.pid)" 2>/dev/null || true
+              exit 0
+            fi
+            sleep 2
+          done
+          kill "$(cat /tmp/reactpress-api.pid)" 2>/dev/null || true
+          echo "API health smoke failed"
+          exit 1
+
+      - name: CLI doctor (offline checks)
+        run: node cli/bin/reactpress.js doctor || true

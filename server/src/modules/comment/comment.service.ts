@@ -8,6 +8,7 @@ import { ArticleService } from '../article/article.service';
 import { SettingService } from '../setting/setting.service';
 import { SMTPService } from '../smtp/smtp.service';
 import { UserService } from '../user/user.service';
+import { WebhookService } from '../webhook/webhook.service';
 import { Comment } from './comment.entity';
 import { getNewCommentHTML, getReplyCommentHTML } from './html';
 
@@ -22,7 +23,8 @@ export class CommentService {
     private readonly articleService: ArticleService,
     private readonly smtpService: SMTPService,
     private readonly settingService: SettingService,
-    private readonly userService: UserService
+    private readonly userService: UserService,
+    private readonly webhookService: WebhookService
   ) {}
 
   /**
@@ -69,6 +71,13 @@ export class CommentService {
         console.log(e);
       }
     }
+
+    await this.webhookService.dispatch('comment.created', {
+      id: newComment.id,
+      hostId: newComment.hostId,
+      name: newComment.name,
+      email: newComment.email,
+    });
 
     return newComment;
   }

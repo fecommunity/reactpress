@@ -5,6 +5,8 @@ import { Repository } from 'typeorm';
 import { dateFormat } from '../../utils/date.util';
 import { CategoryService } from '../category/category.service';
 import { TagService } from '../tag/tag.service';
+import { WebhookService } from '../webhook/webhook.service';
+import { ArticleRevision } from './article-revision.entity';
 import { Article } from './article.entity';
 import { extractProtectedArticle } from './article.util';
 
@@ -18,9 +20,35 @@ export class ArticleService {
   constructor(
     @InjectRepository(Article)
     private readonly articleRepository: Repository<Article>,
+    @InjectRepository(ArticleRevision)
+    private readonly revisionRepository: Repository<ArticleRevision>,
     private readonly tagService: TagService,
-    private readonly categoryService: CategoryService
+    private readonly categoryService: CategoryService,
+    private readonly webhookService: WebhookService
   ) {}
+
+  private async saveRevision(article: Article) {
+    const revision = this.revisionRepository.create({
+      articleId: article.id,
+      article,
+      title: article.title,
+      content: article.content,
+      html: article.html,
+      status: article.status,
+    });
+    await this.revisionRepository.save(revision);
+  }
+
+  private async notifyPublished(article: Article, extra: Record<string, unknown> = {}) {
+    if (article.status !== 'publish') return;
+    await this.webhookService.dispatch('article.published', {
+      id: article.id,
+      title: article.title,
+      status: article.status,
+      publishAt: article.publishAt,
+      ...extra,
+    });
+  }
 
   /**
    * 创建文章
@@ -51,6 +79,7 @@ export class ArticleService {
       needPassword: !!article.password,
     });
     await this.articleRepository.save(newArticle);
+    await this.notifyPublished(newArticle);
     return newArticle;
   }
 
@@ -258,6 +287,7 @@ export class ArticleService {
    */
   async updateById(id, article: Partial<Article>): Promise<Article> {
     const oldArticle = await this.articleRepository.findOne(id);
+    await this.saveRevision(oldArticle);
     let { tags, category, status } = article; // eslint-disable-line prefer-const
 
     if (tags) {
@@ -266,12 +296,15 @@ export class ArticleService {
 
     const existCategory = await this.categoryService.findById(category);
 
+    const becomingPublish = oldArticle.status === 'draft' && status === 'publish';
     const newArticle = {
       ...article,
       views: oldArticle.views,
       category: existCategory,
       needPassword: !!article.password,
-      publishAt: oldArticle.status === 'draft' && status === 'publish' ? dateFormat() : oldArticle.publishAt,
+      publishAt: becomingPublish ? dateFormat() : oldArticle.publishAt,
+      scheduledPublishAt:
+        status === 'publish' ? null : article.scheduledPublishAt ?? oldArticle.scheduledPublishAt,
     };
 
     if (tags) {
@@ -279,7 +312,35 @@ export class ArticleService {
     }
 
     const updatedArticle = await this.articleRepository.merge(oldArticle, newArticle);
-    return this.articleRepository.save(updatedArticle);
+    const saved = await this.articleRepository.save(updatedArticle);
+    if (becomingPublish) {
+      await this.notifyPublished(saved);
+    }
+    return saved;
+  }
+
+  async listRevisions(articleId: string) {
+    return this.revisionRepository.find({
+      where: { articleId },
+      order: { createAt: 'DESC' },
+      take: 50,
+    });
+  }
+
+  async restoreRevision(articleId: string, revisionId: string) {
+    const revision = await this.revisionRepository.findOne(revisionId);
+    if (!revision || revision.articleId !== articleId) {
+      throw new HttpException('修订记录不存在', HttpStatus.NOT_FOUND);
+    }
+    const article = await this.articleRepository.findOne(articleId);
+    await this.saveRevision(article);
+    const restored = await this.articleRepository.merge(article, {
+      title: revision.title,
+      content: revision.content,
+      html: revision.html,
+      status: revision.status,
+    });
+    return this.articleRepository.save(restored);
   }
 
   /**
