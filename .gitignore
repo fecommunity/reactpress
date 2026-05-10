@@ -12,6 +12,7 @@ node_modules
 sitemap.xml
 
 lib
+!cli/lib
 dist
 dist-ssr
 coverage

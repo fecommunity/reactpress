@@ -15,6 +15,8 @@ const { runApiDev } = require('../lib/api-dev');
 const { runLifecycleCommand } = require('../lib/lifecycle');
 const { runDockerCommand } = require('../lib/docker');
 const { printUnifiedStatus } = require('../lib/status');
+const { runDoctor } = require('../lib/doctor');
+const { runDbBackup } = require('../lib/db-backup');
 const { runBuild } = require('../lib/build');
 const { startApiWithPm2 } = require('../lib/pm2');
 const { runNodeScript, runReactpressCli } = require('../lib/spawn');
@@ -181,6 +183,29 @@ program
   });
 
 program
+  .command('doctor')
+  .description('诊断环境：Node、Docker、端口、数据库、API 健康')
+  .action(async () => {
+    const code = await runDoctor(ensureOriginalCwd());
+    process.exit(code);
+  });
+
+const dbCmd = program.command('db').description('数据库运维');
+
+dbCmd
+  .command('backup')
+  .description('使用 mysqldump 备份当前项目数据库')
+  .option('-o, --output <file>', '输出 SQL 文件路径')
+  .action(async (options) => {
+    try {
+      await runDbBackup(ensureOriginalCwd(), options.output);
+    } catch (err) {
+      console.error(chalk.red('[reactpress]'), err.message || err);
+      process.exit(1);
+    }
+  });
+
+program
   .command('publish')
   .description('构建并发布 npm 包 (交互式)')
   .option('--build', '仅构建所有包')
@@ -226,6 +251,7 @@ program.on('--help', () => {
   console.log('  reactpress init --force     重新初始化配置');
   console.log('  reactpress server start     启动 API');
   console.log('  reactpress status           综合状态');
+  console.log('  reactpress doctor           环境诊断');
   console.log('  reactpress docker start     Docker + 全栈');
   console.log('  reactpress publish          发布 npm 包');
   console.log('');

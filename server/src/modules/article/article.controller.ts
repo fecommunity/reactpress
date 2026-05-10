@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
   HttpCode,
   HttpStatus,
@@ -15,6 +16,8 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
+import { ApiKeyGuard } from '../api-key/api-key.guard';
+import { ApiKeyService } from '../api-key/api-key.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Roles, RolesGuard } from '../auth/roles.guard';
 import { User } from '../user/user.entity';
@@ -28,7 +31,7 @@ import { ArticleService } from './article.service';
 export class ArticleController {
   constructor(
     private readonly articleService: ArticleService,
-
+    private readonly apiKeyService: ApiKeyService,
     private readonly jwtService: JwtService,
     private readonly userService: UserService
   ) {}
@@ -52,6 +55,33 @@ export class ArticleController {
   @HttpCode(HttpStatus.OK)
   findAll(@Query() queryParams) {
     return this.articleService.findAll(queryParams);
+  }
+
+  /**
+   * Headless 只读列表（需 X-API-Key，read 权限）
+   */
+  @Get('headless/list')
+  @UseGuards(ApiKeyGuard)
+  @HttpCode(HttpStatus.OK)
+  findHeadless(@Request() req, @Query() queryParams) {
+    if (!this.apiKeyService.hasScope(req.apiKey, 'read')) {
+      throw new ForbiddenException('API Key 缺少 read 权限');
+    }
+    return this.articleService.findAll({ ...queryParams, status: 'publish' });
+  }
+
+  @Get(':id/revisions')
+  @Roles('admin')
+  @UseGuards(JwtAuthGuard)
+  listRevisions(@Param('id') id: string) {
+    return this.articleService.listRevisions(id);
+  }
+
+  @Post(':id/revisions/:revisionId/restore')
+  @Roles('admin')
+  @UseGuards(JwtAuthGuard)
+  restoreRevision(@Param('id') id: string, @Param('revisionId') revisionId: string) {
+    return this.articleService.restoreRevision(id, revisionId);
   }
 
   /**
