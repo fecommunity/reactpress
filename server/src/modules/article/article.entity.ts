@@ -85,6 +85,10 @@ export class Article {
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   publishAt: Date; // 发布日期
 
+  @ApiProperty({ description: '定时发布时间（草稿状态下生效）' })
+  @Column({ type: 'timestamp', nullable: true })
+  scheduledPublishAt: Date;
+
   @ApiProperty()
   @CreateDateColumn({
     type: 'datetime',

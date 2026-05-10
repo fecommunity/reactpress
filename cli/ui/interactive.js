@@ -9,6 +9,7 @@ const { runApiDev } = require('../lib/api-dev');
 const { runLifecycleCommand } = require('../lib/lifecycle');
 const { runDockerCommand } = require('../lib/docker');
 const { printUnifiedStatus } = require('../lib/status');
+const { runDoctor } = require('../lib/doctor');
 const { runBuild } = require('../lib/build');
 const { runNodeScript } = require('../lib/spawn');
 const { getClientBin } = require('../lib/paths');
@@ -18,6 +19,7 @@ const MENU_ACTIONS = [
   { name: '零配置开发 (env + DB + API + 前端)', value: 'dev' },
   { name: '初始化项目 (.reactpress + .env + 数据库)', value: 'init' },
   { name: '查看项目状态', value: 'status' },
+  { name: '环境诊断 (doctor)', value: 'doctor' },
   new inquirer.Separator(),
   { name: '仅启动 API (开发 watch)', value: 'dev:api' },
   { name: '仅启动前端', value: 'dev:client' },
@@ -50,6 +52,11 @@ async function runMenuAction(action, projectRoot) {
     case 'status':
       await printUnifiedStatus(projectRoot);
       return true;
+    case 'doctor': {
+      const code = await runDoctor(projectRoot);
+      if (code !== 0) process.exit(code);
+      return true;
+    }
     case 'dev:api':
       await runApiDev(projectRoot);
       return false;

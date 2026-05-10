@@ -47,7 +47,7 @@ ReactPress is engineered for developers who need the publishing power of a tradi
 | **Core Paradigm** | Static Site Generator (SSG) for content‑centric sites | Monolithic, server‑rendered CMS with a coupled frontend | **Decoupled, API‑first publishing platform** |
 | **Primary Tech Stack** | Vue, Vite, Markdown | PHP, jQuery, Classic Themes | **React, Next.js (SSG/SSR), NestJS, TypeORM** |
 | **Architectural Model** | Build‑time static generation; each site is a separate build | Tightly integrated theme/plugin system on a shared runtime | **Headless backend with fully independent, deployable frontends** |
-| **State & Data Flow** | Pre‑rendered static data, content committed as code | Dynamic runtime state, database‑driven with admin UI | **Centralized API (REST/GraphQL) consumed by one or many clients** |
+| **State & Data Flow** | Pre‑rendered static data, content committed as code | Dynamic runtime state, database‑driven with admin UI | **Centralized REST API consumed by one or many clients** |
 | **Deployment Target** | Static file hosts (CDN, Vercel, Netlify) | PHP‑compatible web servers (Apache/Nginx) | **Anywhere: backend on Node/PM2/Docker, frontends on any static or Node host** |
 | **Styling & UI** | Scoped CSS, theme‑level overrides | PHP templates, theme stylesheets, inline styles | **Component‑scoped CSS‑in‑JS, design token system, fully themeable** |
 | **Extensibility Model** | Custom themes and plugins (Vue components) | PHP hooks, actions, filters, and plugins | **Modular NestJS services, React component libraries, and build plugins** |
@@ -59,8 +59,8 @@ ReactPress is engineered for developers who need the publishing power of a tradi
 ## ✨ Core Features
 
 ### ⚡ Rapid Deployment
-- **Zero‑Configuration Setup** – `reactpress-cli init` generates config and `.env`
-- **CLI‑Managed API** – database and Nest API via `@fecommunity/reactpress-cli`
+- **Zero‑Configuration Setup** – `reactpress init` generates config and `.env`
+- **One global package** – `@fecommunity/reactpress` runs API + admin + site via `reactpress dev`
 - **Auto‑Database Configuration** – automatic database migrations
 
 ### 🎨 Deep Customization
@@ -98,8 +98,20 @@ ReactPress is engineered for developers who need the publishing power of a tradi
 
 ### 📋 Prerequisites
 - Node.js >= 18.0.0
-- MySQL database (or Docker via `reactpress-cli init`)
-- `pnpm` package manager
+- Docker (embedded MySQL by default) or external MySQL
+- `pnpm` (monorepo contributors only)
+
+### 🏁 Quick Start (End Users — one package)
+
+```bash
+npm i -g @fecommunity/reactpress@3
+mkdir my-blog && cd my-blog
+reactpress init
+reactpress dev
+# → http://localhost:3001  ·  /admin  ·  API http://localhost:3002/api
+```
+
+No subcommand? Run `reactpress` for the interactive menu. Troubleshooting: `reactpress doctor` · `reactpress status`.
 
 ### 🏁 Quick Start (Monorepo / Product Repo)
 
@@ -116,16 +128,10 @@ Requires **Node.js ≥ 18** and **Docker** (for embedded MySQL). Optional: `pnpm
 
 See [README-zh_CN.md](./README-zh_CN.md) for the full dev/deploy workflow (Chinese).
 
-### 🏁 End‑User Project (CLI Only)
-
-```bash
-npm install -g @fecommunity/reactpress-cli
-reactpress-cli init .
-reactpress-cli start
-npx @fecommunity/reactpress-client
-```
+Upgrading from 2.x? See the [2.x → 3.0 migration guide](./docs/migration-2-to-3.md).
 
 ---
+
 
 ## 📟 Command Line Interface (CLI)
 
@@ -176,10 +182,10 @@ ReactPress uses a **Modular Monorepo Architecture**:
 
 | Package | Description | Version |
 |---------|-------------|---------|
-| [`@fecommunity/reactpress`](.) | Monorepo meta + dev scripts | 2.0.0 |
-| [`@fecommunity/reactpress-server`](./server) | **NestJS API** (developed and deployed from this repo) | 1.0.0 |
-| [`@fecommunity/reactpress-client`](./client) | Next.js 12 frontend application | 1.0.0 |
-| [`@fecommunity/reactpress-cli`](https://github.com/fecommunity/reactpress-cli) | Project init & Docker DB (optional) | npm |
+| [`@fecommunity/reactpress`](./cli) | **Main package** — global `reactpress` command | 3.0.0 |
+| [`@fecommunity/reactpress-client`](./client) | Next.js frontend (advanced: client-only deploy) | 3.0.0 |
+| [`@fecommunity/reactpress-server`](./server) | NestJS API (**deprecated** — use bundled API in main package) | 3.0.0 |
+| [`@fecommunity/reactpress-cli`](./cli) | **Deprecated alias** of main package | 3.0.0 |
 | [`@fecommunity/reactpress-toolkit`](./toolkit) | OpenAPI‑generated API client SDK | 1.0.0 |
 
 ### Templates

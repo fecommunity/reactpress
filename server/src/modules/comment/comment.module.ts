@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { ArticleModule } from '../article/article.module';
 import { AuthModule } from '../auth/auth.module';
+import { WebhookModule } from '../webhook/webhook.module';
 import { SettingModule } from '../setting/setting.module';
 import { SMTPModule } from '../smtp/smtp.module';
 import { UserModule } from '../user/user.module';
@@ -11,7 +12,15 @@ import { Comment } from './comment.entity';
 import { CommentService } from './comment.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Comment]), AuthModule, ArticleModule, SettingModule, SMTPModule, UserModule],
+  imports: [
+    TypeOrmModule.forFeature([Comment]),
+    AuthModule,
+    ArticleModule,
+    SettingModule,
+    SMTPModule,
+    UserModule,
+    WebhookModule,
+  ],
   providers: [CommentService],
   controllers: [CommentController],
 })
