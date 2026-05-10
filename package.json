@@ -1,7 +1,7 @@
 {
-  "name": "reactpress-site",
+  "name": "reactpress",
+  "version": "3.0.0",
   "private": true,
-  "version": "1.0.0",
   "description": "ReactPress CMS & Blog site",
   "bin": {
     "reactpress": "./cli/bin/reactpress.js"
@@ -12,7 +12,7 @@
     "dev": "node ./cli/bin/reactpress.js dev",
     "dev:api": "node ./cli/bin/reactpress.js dev --api-only",
     "dev:client": "node ./cli/bin/reactpress.js dev --client-only",
-    "dev:server": "pnpm run --dir ./server dev",
+    "dev:server": "echo '[deprecated] 请使用 pnpm dev:api 或 reactpress dev --api-only' && pnpm run dev:api",
     "dev:docs": "pnpm run --dir ./docs dev",
     "docker:dev": "node ./cli/bin/reactpress.js docker start",
     "docker:dev:start": "node ./cli/bin/reactpress.js docker start",
@@ -35,10 +35,12 @@
     "publish:packages": "node ./cli/bin/reactpress.js publish --publish",
     "publish:build": "node ./cli/bin/reactpress.js publish --build",
     "prepare": "husky",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "test:smoke": "node scripts/smoke-api-health.mjs",
+    "test:benchmark": "node scripts/benchmark-cold-start.mjs"
   },
   "dependencies": {
-    "@fecommunity/reactpress-cli": "workspace:*"
+    "@fecommunity/reactpress": "workspace:*"
   },
   "devDependencies": {
     "husky": "^7.0.4",

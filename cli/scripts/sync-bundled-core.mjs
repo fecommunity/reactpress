@@ -58,6 +58,9 @@ function main() {
       fs.copyFileSync(src, path.join(cliRoot, file));
     }
   }
+
+  const distPkg = path.join(cliRoot, 'dist', 'package.json');
+  fs.writeFileSync(distPkg, JSON.stringify({ type: 'module' }, null, 2) + '\n');
 }
 
 main();

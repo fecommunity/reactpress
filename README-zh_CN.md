@@ -3,7 +3,7 @@
     <img height="180" src="./public/logo.png" alt="ReactPress 标志">
   </a>
 
-  <h1>ReactPress 2.0</h1>
+  <h1>ReactPress 3.0</h1>
 
   <p align="center">
     <em>基于 React、Next.js 和 NestJS 构建的现代化全栈发布平台</em>
@@ -29,14 +29,14 @@
 
 ## 🌟 现代化发布平台
 
-**ReactPress 2.0** 是一个现代化的全栈发布平台，使开发者和内容创作者能够轻松构建专业博客、网站和内容管理系统。
+**ReactPress 3.0** 是一个现代化的全栈发布平台：装一个包、敲一条命令，一分钟拥有自己的 CMS。
 
 [![ReactPress 海报](./public/poster.png)](https://gaoredu.com)
 
 ## ✨ 主要特性
 
-### ⚡ 5分钟快速安装
-- **零配置设置**，具有智能默认值
+### ⚡ 一分钟零配置起站
+- **`reactpress init` + `reactpress dev`**，自动生成配置与 `.env`
 - **WordPress 式安装向导**，提供直观的设置体验
 - **自动数据库配置**，具有自动模式迁移
 
@@ -71,8 +71,22 @@
 
 ### 📋 前置要求
 - Node.js >= 18.0.0
-- MySQL 数据库（或通过 `reactpress-cli init` 使用 Docker）
-- pnpm 包管理器
+- Docker（默认嵌入式 MySQL）或外部 MySQL
+- pnpm（仅本仓库贡献者需要）
+
+### 🏁 终端用户（唯一入口）
+
+```bash
+npm i -g @fecommunity/reactpress@3
+mkdir my-blog && cd my-blog
+reactpress init
+reactpress dev
+# 前台 http://localhost:3001  ·  管理端 /admin  ·  API /api/health
+```
+
+无参数运行 `reactpress` 进入交互菜单。排错：`reactpress doctor`、`reactpress status`。
+
+从 2.x 升级见 [迁移指南](./docs/migration-2-to-3.md)。
 
 ### 🏁 本仓库开发（Monorepo，含 server/）
 
@@ -91,15 +105,6 @@ pnpm run dev           # 零配置：自动 init + Docker MySQL + toolkit + API 
 | `pnpm build` | 生产构建：toolkit → server → client |
 | `pnpm start` | 生产模式同时起 API + 前端 |
 | `pnpm run status` | 查看 API 进程与 HTTP 健康 |
-
-### 🏁 终端用户项目（仅 CLI，不含本仓 server 源码）
-
-```bash
-npm install -g @fecommunity/reactpress-cli
-reactpress-cli init .
-reactpress-cli start
-npx @fecommunity/reactpress-client
-```
 
 ## 📟 命令行界面 (CLI)
 
@@ -144,8 +149,9 @@ reactpress client start
 pnpm run pm2:api
 pnpm run pm2:client
 
-# 初始化 / Docker 数据库（仍用 reactpress-cli）
+# 零配置初始化
 pnpm run init
+reactpress doctor
 ```
 
 ## 📦 包与组件

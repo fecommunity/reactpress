@@ -41,7 +41,7 @@ export async function bootstrap() {
     const swaggerConfig = new DocumentBuilder()
       .setTitle('ReactPress API Documentation')
       .setDescription('Comprehensive API documentation for ReactPress - A modern content management system built with NestJS')
-      .setVersion('2.0')
+      .setVersion('3.0')
       .setContact('ReactPress Team', 'https://github.com/fecommunity/reactpress', 'admin@gaoredu.com')
       .setLicense('MIT', 'https://github.com/fecommunity/reactpress/blob/main/LICENSE')
       .addServer(configService.get('SERVER_SITE_URL', 'http://localhost:3002'), 'API Server')
