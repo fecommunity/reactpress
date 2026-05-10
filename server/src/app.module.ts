@@ -42,6 +42,12 @@ import { UserModule } from './modules/user/user.module';
 import { View } from './modules/view/view.entity';
 // 访问统计模块
 import { ViewModule } from './modules/view/view.module';
+import { ApiKey } from './modules/api-key/api-key.entity';
+import { ApiKeyModule } from './modules/api-key/api-key.module';
+import { ArticleRevision } from './modules/article/article-revision.entity';
+import { HealthModule } from './modules/health/health.module';
+import { Webhook } from './modules/webhook/webhook.entity';
+import { WebhookModule } from './modules/webhook/webhook.module';
 
 @Module({
   imports: [
@@ -51,7 +57,23 @@ import { ViewModule } from './modules/view/view.module';
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
         type: 'mysql',
-        entities: [User, File, Knowledge, Article, Category, Tag, Comment, Setting, SMTP, Page, View, Search],
+        entities: [
+          User,
+          File,
+          Knowledge,
+          Article,
+          ArticleRevision,
+          Category,
+          Tag,
+          Comment,
+          Setting,
+          SMTP,
+          Page,
+          View,
+          Search,
+          ApiKey,
+          Webhook,
+        ],
         host: configService.get('DB_HOST', '0.0.0.0'),
         port: configService.get<number>('DB_PORT', 3306),
         username: configService.get('DB_USER', 'root'),
@@ -75,6 +97,9 @@ import { ViewModule } from './modules/view/view.module';
     PageModule,
     ViewModule,
     SearchModule,
+    HealthModule,
+    ApiKeyModule,
+    WebhookModule,
   ],
   controllers: [],
   providers: [],

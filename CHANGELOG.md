@@ -1,3 +1,13 @@
+# [3.0.0](https://github.com/fecommunity/reactpress/compare/v2.0.1...v3.0.0) (2026-05-17)
+
+### Platform 3.0 — CLI-first Headless
+
+* **CLI**: 主包更名为 `@fecommunity/reactpress`；`reactpress dev` 就绪后输出前台/admin/API/Swagger 链接；`doctor`/`dev` 失败含可操作建议；`reactpress-cli` bin deprecated
+* **Headless**: `GET /api/health`；API Key（`X-API-Key` + `/api/article/headless/list`）；Webhook（`article.published`、`comment.created`，HMAC 签名 + 3 次重试）
+* **内容**: 文章定时发布（`scheduledPublishAt`）；文章修订历史与回滚
+* **运维**: `cli/templates/docker-compose.prod.yml` 生产示例；`scripts/benchmark-cold-start.mjs` 二次冷启动验收
+* **Breaking**: `@fecommunity/reactpress-server` deprecated；主推 `@fecommunity/reactpress@3`；迁移见 [docs/migration-2-to-3.md](./docs/migration-2-to-3.md)
+
 # [2.0.0-beta-4-beta.1](https://github.com/fecommunity/reactpress/compare/v2.0.1...v2.0.0-beta-4-beta.1) (2025-11-16)
 
 

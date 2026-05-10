@@ -1,7 +1,7 @@
 {
-  "name": "@fecommunity/reactpress-cli",
-  "version": "0.2.0",
-  "description": "ReactPress CLI — init, dev, build, deploy, publish",
+  "name": "@fecommunity/reactpress",
+  "version": "3.0.0",
+  "description": "ReactPress 3.0 — 零配置 CMS：一个包、一条命令 reactpress",
   "author": "fecommunity",
   "license": "MIT",
   "repository": {
@@ -20,7 +20,7 @@
   },
   "bin": {
     "reactpress": "./bin/reactpress.js",
-    "reactpress-cli": "./dist/index.js"
+    "reactpress-cli": "./bin/reactpress-cli-shim.js"
   },
   "main": "./bin/reactpress.js",
   "files": [
@@ -42,12 +42,18 @@
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
+  "optionalDependencies": {
+    "mysql2": "^3.12.0"
+  },
   "dependencies": {
     "chalk": "^4.1.2",
     "commander": "^9.4.1",
     "concurrently": "^7.0.0",
+    "cross-spawn": "^7.0.3",
+    "fs-extra": "^11.2.0",
     "inquirer": "^8.2.4",
-    "open": "^8.2.1"
+    "open": "^8.2.1",
+    "ora": "^5.4.1"
   },
   "devDependencies": {
     "@fecommunity/reactpress-cli-core": "npm:@fecommunity/reactpress-cli@0.1.0"
