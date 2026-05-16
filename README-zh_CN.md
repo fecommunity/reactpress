@@ -33,10 +33,20 @@
 
 [![ReactPress 海报](./public/poster.png)](https://gaoredu.com)
 
+## ✨ 3.0 新特性
+
+| 重点 | 说明 |
+|------|------|
+| **零配置** | `init` + `dev`，默认 Docker MySQL，无需手写 `.env` |
+| **唯一入口** | `npm i -g @fecommunity/reactpress@3`，命令统一 `reactpress` |
+| **极致 DX** | 交互菜单、`doctor`、`status`、dev 成功链接提示 |
+
+[3.0 文档](./docs/tutorial/tutorial-extras/reactpress-3-0.md) · [2.x 迁移](./docs/migration-2-to-3.md)
+
 ## ✨ 主要特性
 
 ### ⚡ 一分钟零配置起站
-- **`reactpress init` + `reactpress dev`**，自动生成配置与 `.env`
+- **`reactpress init` + `reactpress dev`**，自动生成 `.reactpress/config.json` 与 `.env`
 - **WordPress 式安装向导**，提供直观的设置体验
 - **自动数据库配置**，具有自动模式迁移
 
@@ -108,51 +118,21 @@ pnpm run dev           # 零配置：自动 init + Docker MySQL + toolkit + API 
 
 ## 📟 命令行界面 (CLI)
 
-ReactPress 提供了一个统一的命令行界面来管理服务器和客户端组件。
-
-### 统一 CLI 命令
-
-全局安装 ReactPress 后，您可以使用 `reactpress` 命令：
-
 ```bash
-# 显示帮助
-reactpress --help
-
-# 启动服务器
-reactpress server start
-
-# 启动客户端
-reactpress client start
-
-# 使用 PM2 启动服务器
-reactpress server start --pm2
-
-# 使用 PM2 启动客户端
-reactpress client start --pm2
+npm i -g @fecommunity/reactpress@3
 ```
 
+| 命令 | 说明 |
+|------|------|
+| `reactpress` | 交互式菜单 |
+| `reactpress init` | 零配置初始化 |
+| `reactpress dev` | 全栈开发 |
+| `reactpress dev --api-only` | 仅 API（Headless） |
+| `reactpress doctor` | 环境诊断 |
+| `reactpress status` | 运行状态 |
+| `reactpress start` | 生产启动 |
 
-### API 与客户端命令
-
-```bash
-# API（本仓 server/）
-pnpm run start:api
-pnpm run stop
-pnpm run restart
-pnpm run status
-
-# 或统一 CLI
-reactpress server start
-reactpress client start
-
-# 生产 PM2
-pnpm run pm2:api
-pnpm run pm2:client
-
-# 零配置初始化
-pnpm run init
-reactpress doctor
-```
+本仓贡献者：`pnpm dev` 等同 `reactpress dev`。
 
 ## 📦 包与组件
 
@@ -162,11 +142,11 @@ ReactPress 组织为**具有模块化包的 monorepo**：
 
 | 包 | 描述 | 版本 |
 |---------|-------------|---------|
-| [`@fecommunity/reactpress`](.) | Monorepo 元包与开发脚本 | 2.0.0 |
-| [`@fecommunity/reactpress-server`](./server) | **NestJS API**（本仓开发与部署） | 1.0.0 |
-| [`@fecommunity/reactpress-client`](./client) | Next.js 12 前端应用 | 1.0.0 |
-| [`@fecommunity/reactpress-toolkit`](./toolkit) | OpenAPI 生成的 API SDK | 1.0.0 |
-| [`@fecommunity/reactpress-cli`](https://github.com/fecommunity/reactpress-cli) | 项目初始化与 Docker DB（可选） | npm |
+| [`@fecommunity/reactpress`](./cli) | **3.0 主包** — 全局 `reactpress`，内置 API | 3.0.0 |
+| [`@fecommunity/reactpress-client`](./client) | 进阶：仅部署前台 | 3.0.0 |
+| [`@fecommunity/reactpress-server`](./server) | **Deprecated** — 请用主包内置 API | 3.0.0 |
+| [`@fecommunity/reactpress-toolkit`](./toolkit) | OpenAPI 生成的 API SDK | 3.0.0 |
+| [`@fecommunity/reactpress-cli`](./cli) | **Deprecated 别名** | 3.0.0 |
 
 ### 模板
 
@@ -211,22 +191,7 @@ pnpm docker:dev:stop
 
 ## 🔧 配置
 
-在根目录中创建 `.env` 文件用于本地开发（`pnpm init` 可自动生成）：
-
-```env
-# 数据库配置
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_USER=reactpress
-DB_PASSWD=reactpress
-DB_DATABASE=reactpress
-
-# 客户端配置
-CLIENT_SITE_URL=http://localhost:3001
-
-# 服务器配置
-SERVER_SITE_URL=http://localhost:3002
-```
+3.0 以 **`.reactpress/config.json`** 为准，`.env` 由 CLI 同步。执行 `reactpress init` 后一般无需手改。详见 [配置说明](./docs/tutorial/tutorial-extras/config-intro.md)。
 
 ## 🚀 部署选项
 

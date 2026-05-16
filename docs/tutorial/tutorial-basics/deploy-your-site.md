@@ -3,72 +3,79 @@ sidebar_position: 5
 title: 生产环境部署
 ---
 
+## 3.0 推荐：全局 CLI
+
+已在服务器安装 Node ≥ 18 与 Docker（或外部 MySQL）时：
+
+```bash
+npm i -g @fecommunity/reactpress@3
+cd /path/to/your-site   # 含 .reactpress/ 的项目目录
+reactpress init         # 若尚未初始化
+reactpress build        # 按需构建
+reactpress start        # 生产模式启动 API + 前台
+```
+
+或使用仓库提供的生产 compose 示例（DB + 前端容器，API 在宿主机）：
+
+```bash
+reactpress build
+reactpress start:api    # 或 pm2 管理 API
+docker compose -f docker-compose.prod.yml up -d
+```
+
+数据库备份：`reactpress db backup`。
+
+---
+
+## Monorepo 自托管部署
+
 ### 环境准备
-```bash
-$ git clone --depth=1 https://github.com/fecommnity/reactpress.git
-$ cd reactpress
-$ npm i -g pnpm
-$ pnpm i
-```
-
-### 配置文件
-
-项目启动后会加载根目录下的 `.env` 配置文件，请确保MySQL数据库服务和下面的配置保持一致，并提前创建好 `reactpress` 数据库
-
-```js
-DB_HOST=127.0.0.1 // 数据库地址
-DB_PORT=3306 // 端口
-DB_USER=reactpress // 用户名
-DB_PASSWD=reactpress // 密码
-DB_DATABASE=reactpress // 数据库
-```
-
-环境准备好后，执行启动命令：
 
 ```bash
-$ pnpm run build
+git clone --depth=1 https://github.com/fecommunity/reactpress.git
+cd reactpress
+npm i -g pnpm
+pnpm install
 ```
 
-### 启动服务
+配置由 `pnpm init` 或 `reactpress init` 生成；生产前请确认 `.reactpress/config.json` 与 `.env` 中的数据库与 URL。
+
+### 构建与启动
+
 ```bash
-$ pnpm run pm2
+pnpm run build
+pnpm run pm2          # API + 前台
+pm2 save
+pm2 startup           # 可选：开机自启
 ```
 
-至此，ReactPress 服务就启动成功了。
-
-### 独立包部署
-
-ReactPress 2.0 支持独立部署各个包：
+或使用一键脚本（在仓库根目录）：
 
 ```bash
-# 仅部署服务器端
-npx @fecommunity/reactpress-server --pm2
-
-# 仅部署客户端
-npx @fecommunity/reactpress-client --pm2
+sh scripts/deploy.sh
 ```
 
-有关每个包的详细部署信息，请参阅[进阶教程](../tutorial-extras/client-package)。
+### 代码更新
 
-### 代码更新启动
-当ReactPress代码更新后，可以按照如下Shell重新启动服务：
 ```bash
-# 更新代码
-git checkout master
 git pull
-
-# 安装依赖&构建
 pnpm install
 pnpm run build
-
-# 启动进程
-pm2 delete reactpress-server
-pm2 delete reactpress-client
-pnpm run pm2
-
-# 开机启动
-pm2 startup
-pm2 save
+pm2 restart all       # 或 pnpm run pm2
 ```
 
-以上就是ReactPress生成环境的完整部署流程。
+---
+
+## 进阶：独立包部署
+
+3.0 默认使用 **`@fecommunity/reactpress` 内置 API**。仅在需要单独部署前台或连接远程 API 时参考：
+
+| 场景 | 命令 |
+|------|------|
+| 全栈 | `reactpress start` |
+| 仅 API | `reactpress dev --api-only` / `reactpress server start` |
+| 仅前台 | `reactpress dev --client-only` 或 [@fecommunity/reactpress-client](../tutorial-extras/client-package) |
+
+`@fecommunity/reactpress-server` 已 deprecated，请勿作为新项目的生产入口。
+
+更多说明见 [ReactPress 3.0 平台版](../tutorial-extras/reactpress-3-0.md) 与 [Docker 部署](../tutorial-extras/docker-deployment.md)。
