@@ -1,0 +1,31 @@
+/* 首页全局增强 */
+
+.homepage :global(.main-wrapper) {
+  background: var(--home-hero-floor-background-bottom);
+}
+
+.homepage :global(.navbar) {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: none;
+  transition: background 0.25s ease, border-color 0.25s ease;
+}
+
+html[data-theme='light'] .homepage :global(.navbar) {
+  border-bottom-color: var(--home-border);
+  background: rgba(255, 255, 255, 0.88);
+}
+
+html[data-theme='dark'] .homepage :global(.navbar) {
+  background: rgba(15, 17, 24, 0.78);
+}
+
+.homepage :global(footer.footer) {
+  border-top: 1px solid var(--home-border);
+}
+
+/* Hero → Highlights 过渡 */
+.homepage :global(.main-wrapper > main) {
+  overflow-x: hidden;
+}
