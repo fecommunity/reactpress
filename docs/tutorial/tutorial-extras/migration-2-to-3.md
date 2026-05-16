@@ -1,10 +1,15 @@
-# ReactPress 2.x → 3.0 迁移指南
+---
+sidebar_position: 6
+title: 2.x → 3.0 迁移
+---
 
-> 站点文档副本：[docs/tutorial/tutorial-extras/migration-2-to-3.md](./docs/tutorial/tutorial-extras/migration-2-to-3.md) · [3.0 平台版说明](./docs/tutorial/tutorial-extras/reactpress-3-0.md)
+# ReactPress 2.x → 3.0 迁移指南
 
 ## 概述
 
 3.0「平台版」以 **`@fecommunity/reactpress`** 为唯一推荐入口：全局命令 `reactpress`，内置 API，零配置 `init` + `dev`。独立安装的 `@fecommunity/reactpress-server`、以 `reactpress-cli` 为主路径的用法均已 deprecated。
+
+完整 3.0 说明见 [ReactPress 3.0 平台版](./reactpress-3-0.md)。
 
 ## 命令对照
 
@@ -63,6 +68,5 @@ curl http://localhost:3002/api/health
 
 ## 获取帮助
 
-- [ReactPress 3.0 平台版（文档站）](./docs/tutorial/tutorial-extras/reactpress-3-0.md)
-- [3.0 发布方案（仓库内）](../3.0.md)
+- [ReactPress 3.0 平台版](./reactpress-3-0.md)
 - [GitHub Issues](https://github.com/fecommunity/reactpress/issues)
