@@ -3,52 +3,91 @@ sidebar_position: 1
 title: 本地开发
 ---
 
+## 两种开发方式
 
-## ⌨️ 本地开发
+ReactPress 3.0 提供两条路径，按你的场景选择其一即可。
+
+| 场景 | 方式 | 前置 |
+|------|------|------|
+| **建站 / 试用（推荐）** | 全局 `reactpress` | Node ≥ 18、Docker |
+| **贡献 monorepo** | 仓库内 `pnpm dev` | Node ≥ 18、Docker、pnpm |
+
+---
+
+## 方式一：全局 CLI（3.0 推荐）
+
+无需克隆本仓库，任意空目录即可：
+
+```bash
+npm i -g @fecommunity/reactpress@3
+mkdir my-blog && cd my-blog
+reactpress init
+reactpress dev
+```
+
+| 服务 | 地址 |
+|------|------|
+| 前台 | http://localhost:3001 |
+| 管理端 | http://localhost:3001/admin |
+| API | http://localhost:3002/api |
+| 健康检查 | http://localhost:3002/api/health |
+
+`init` 会生成 `.reactpress/config.json`、`.env` 与 Docker MySQL，一般**无需手改** `.env`。
+
+常用命令：
+
+```bash
+reactpress              # 交互菜单
+reactpress doctor       # 环境诊断
+reactpress status       # 运行状态
+reactpress dev --api-only      # 仅 API（Headless）
+reactpress dev --client-only   # 仅前台
+```
+
+更多说明见 [ReactPress 3.0 平台版](../tutorial-extras/reactpress-3-0.md)。
+
+---
+
+## 方式二：Monorepo 本仓开发
 
 ### 环境准备
+
 ```bash
-$ git clone --depth=1 https://github.com/fecommunity/reactpress.git
-$ cd reactpress
-$ npm i -g pnpm
-$ pnpm i
+git clone --depth=1 https://github.com/fecommunity/reactpress.git
+cd reactpress
+npm i -g pnpm
+pnpm install
 ```
 
 ### 文件结构
 
-项目的代码结构如下：
-
 ```shell
-├─ client // 基于 Next.js 的前端客户端
-├─ server // 基于 NestJS 的后端 API 服务
-├─ toolkit // TypeScript API 客户端工具包
-├─ templates // 模板文件
-├─ scripts // 构建脚本
-├─ docs // 文档
+├─ client      # Next.js 前台
+├─ server      # NestJS API（本仓开发用）
+├─ cli         # @fecommunity/reactpress 发布物
+├─ toolkit     # OpenAPI 生成的 TS SDK
+├─ templates   # 项目模板
 └─ package.json
 ```
 
-ReactPress 2.0 采用了 monorepo 结构，将前端、后端和工具包分离为独立的包，可以独立开发和部署。
-
-
-### 配置文件
-
-项目启动后会加载根目录下的 `.env` 配置文件，请确保MySQL数据库服务和下面的配置保持一致，并提前创建好 `reactpress` 数据库
-
-```js
-DB_HOST=127.0.0.1 // 数据库地址
-DB_PORT=3306 // 端口
-DB_USER=reactpress // 用户名
-DB_PASSWD=reactpress // 密码
-DB_DATABASE=reactpress // 数据库
-```
-
-
 ### 启动
-环境准备好后，执行启动命令：
 
 ```bash
-$ pnpm run dev
+pnpm run dev
 ```
 
-打开浏览器访问 http://127.0.0.1:3001
+等价于全局 `reactpress dev`：自动检查环境、构建 toolkit、启动 API（3002）与前台（3001）。
+
+可选：
+
+```bash
+pnpm run init          # 仅准备 .reactpress + .env，不启动服务
+pnpm run dev:api       # 仅 API
+pnpm run dev:client    # 仅前台
+```
+
+### 配置说明
+
+默认由 `pnpm dev` / `reactpress init` 生成 `.env`。高级场景可编辑 **`.reactpress/config.json`**，再执行 `reactpress config --apply`。详见 [项目配置项](../tutorial-extras/config-intro.md)。
+
+打开浏览器访问 `http://127.0.0.1:3001`。

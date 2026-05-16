@@ -6,7 +6,9 @@ title: Introduction
 
 ## Introduction
 
-`ReactPress` is an open-source publishing platform developed using the React. Users can set up their own blogs and websites on servers that support React and MySQL databases. `ReactPress` can also be used as a content management system (CMS).
+`ReactPress` is an open-source publishing platform built with React. Users can run blogs and websites on servers with React and MySQL, or use it as a CMS.
+
+**ReactPress 3.0** ships as a single global package: `npm i -g @fecommunity/reactpress@3`, then `reactpress init` and `reactpress dev` in any empty folder. See [ReactPress 3.0 Platform](./tutorial-extras/reactpress-3-0.md).
 
 ## 🆚 Comparison
 
