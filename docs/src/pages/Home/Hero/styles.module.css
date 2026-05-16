@@ -1,34 +1,91 @@
-/**
- * Copyright (c) Meta Platforms, Inc. and affiliates.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- */
-
 .container {
-  height: 900px;
-}
-
-.backgroundContainer {
-  position: absolute;
-  z-index: -1;
-  overflow: hidden;
-  width: 100%;
-}
-
-.socialLinks {
+  position: relative;
   display: flex;
+  flex-direction: column;
+  min-height: clamp(680px, 88vh, 860px);
+  overflow: hidden;
+}
+
+.mesh {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.orb1,
+.orb2,
+.orb3 {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.45;
+  animation: orbDrift 14s ease-in-out infinite;
+}
+
+.orb1 {
+  width: 380px;
+  height: 380px;
+  top: -60px;
+  left: 8%;
+  background: radial-gradient(circle, #bd34fe 0%, transparent 70%);
+}
+
+.orb2 {
+  width: 320px;
+  height: 320px;
+  top: 12%;
+  right: 6%;
+  background: radial-gradient(circle, #41d1ff 0%, transparent 70%);
+  animation-delay: -5s;
+}
+
+.orb3 {
+  width: 260px;
+  height: 260px;
+  bottom: 28%;
+  left: 38%;
+  background: radial-gradient(circle, #087ea4 0%, transparent 70%);
+  animation-delay: -9s;
+  opacity: 0.35;
+}
+
+@keyframes orbDrift {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(16px, -10px) scale(1.03);
+  }
+}
+
+/* 底部场景层：网格 + 设备 + 地面，固定在容器下方，不被内容遮挡 */
+.scene {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: flex-end;
-  gap: 1rem;
-  margin-top: 1rem;
-  margin-right: 1rem;
+  height: min(52%, 420px);
+  min-height: 300px;
+  pointer-events: none;
 }
 
 .gridBackground {
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  height: 600px;
+  width: 100%;
+  height: 380px;
+  opacity: 0.9;
+  mask-image: linear-gradient(to bottom, transparent 0%, black 18%, black 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 18%, black 100%);
 }
 
 .devices {
@@ -37,157 +94,285 @@
   justify-content: center;
   align-items: flex-end;
   width: 100%;
-  height: 100%;
-  z-index: 1;
-  top: -100px;
-  left: -20px;
+  bottom: 48px;
+  left: 0;
+  opacity: 0.82;
+  transform: translateY(0);
+  animation: devicesFade 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both;
+}
+
+@keyframes devicesFade {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 0.82;
+    transform: translateY(0);
+  }
 }
 
 .floorBackground {
   display: flex;
   justify-content: center;
   width: 100vw;
-  height: 300px;
-  position: relative;
-  top: -4px;
+  height: 220px;
+  flex-shrink: 0;
   background: linear-gradient(
       to bottom,
-      var(--home-hero-floor-background) 0%,
-      var(--home-hero-floor-background-bottom)
+      transparent 0%,
+      var(--home-hero-floor-background-bottom) 88%
     ),
     var(--home-hero-floor-background-bottom);
 }
 
-.svgContent {
-  position: absolute;
+.content {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem 1.25rem 0;
+  /* 为底部场景预留空间，避免文案与终端压住封面 */
+  margin-bottom: min(48%, 400px);
+  text-align: center;
+}
+
+.intro {
+  max-width: 42rem;
+  width: 100%;
+  animation: contentEnter 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes contentEnter {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .logo {
-  margin-bottom: 1rem;
-  animation: rotate 3s infinite linear;
+  margin-bottom: 0.65rem;
+  transition: transform 0.25s ease, filter 0.25s ease;
+  filter: drop-shadow(0 0 16px rgba(65, 209, 255, 0.3));
 }
 
+.logo:hover {
+  transform: scale(1.05);
+  filter: drop-shadow(0 0 24px rgba(189, 52, 254, 0.4));
+}
 
-@keyframes rotate {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem 0.75rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  row-gap: 0.5rem;
+}
+
+.githubWrap {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  min-height: 28px;
+  line-height: 1;
 }
 
 .title {
-  font-size: 40px;
-  margin-bottom: 0.5rem;
-  margin-top: 1.5rem;
-  background: -webkit-linear-gradient(120deg, #bd34fe 30%, #41d1ff);
+  font-size: clamp(2rem, 4.8vw, 2.85rem);
+  margin: 0;
+  background: linear-gradient(120deg, #bd34fe 0%, #41d1ff 45%, #087ea4 100%);
+  background-size: 200% auto;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+  animation: titleShine 5s linear infinite;
+}
+
+@keyframes titleShine {
+  to {
+    background-position: 200% center;
+  }
+}
+
+.badge {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 0.22rem 0.55rem;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #41d1ff, #bd34fe);
+  color: #0a0c12;
+  -webkit-text-fill-color: #0a0c12;
+  box-shadow: 0 3px 14px rgba(65, 209, 255, 0.35);
 }
 
 .subtitle {
-  font-weight: 500;
+  font-weight: 400;
   color: var(--home-secondary-text);
-  font-size: 28px;
-  animation: flicker 2s infinite;
+  font-size: clamp(0.92rem, 2.2vw, 1.08rem);
+  line-height: 1.55;
+  max-width: 36rem;
+  margin: 0.65rem auto 0;
 }
 
-.subtitle:hover { 
-  font-weight: 600;
-}
-
-.content {
-  position: relative;
-  top: 120px;
+.actions {
+  margin-top: 1.5rem;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  text-align: center;
-  z-index: 1;
+  gap: 1.1rem;
 }
 
 .buttonContainer {
   display: flex;
-  gap: 1rem;
-  margin-top: 1rem;
+  gap: 0.65rem;
   flex-wrap: wrap;
   justify-content: center;
 }
 
-.primaryButton {
-  background-color: var(--home-button-primary);
-  color: var(--home-button-primary-text);
+.primaryButton,
+.secondaryButton,
+.ghostButton {
   border: none;
-  padding: 10px 24px;
+  padding: 10px 22px;
   border-radius: 99rem;
-  font-weight: bold;
-  font-size: 17px;
-  display: flex;
+  font-weight: 600;
+  font-size: 0.92rem;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.35rem;
+  text-decoration: none !important;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.primaryButton {
+  background: linear-gradient(135deg, #087ea4 0%, #41d1ff 100%);
+  color: #fff !important;
+  box-shadow: 0 4px 20px rgba(8, 126, 164, 0.32);
 }
 
 .primaryButton:hover {
-  color: var(--home-button-primary-text);
-  background-color: var(--home-button-primary-hover);
+  color: #fff !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(65, 209, 255, 0.4);
 }
 
 .secondaryButton {
-  border: none;
-  padding: 10px 24px;
-  border-radius: 99rem;
-  font-weight: bold;
-  font-size: 17px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.35rem;
-  color: var(--home-button-secondary-text);
+  color: var(--home-button-secondary-text) !important;
   border: 1px solid var(--home-button-secondary-border);
-  background-color: var(--home-button-secondary);
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(8px);
+}
+
+html[data-theme='light'] .secondaryButton {
+  background: rgba(255, 255, 255, 0.85);
 }
 
 .secondaryButton:hover {
-  background-color: var(--home-button-secondary-hover);
-  color: var(--home-button-secondary-text);
+  transform: translateY(-2px);
+  border-color: var(--home-button-primary);
+  color: var(--home-button-primary) !important;
+}
+
+.ghostButton {
+  color: #bd34fe !important;
+  background: transparent;
+  border: 1px solid rgba(189, 52, 254, 0.4);
+}
+
+.ghostButton:hover {
+  transform: translateY(-2px);
+  background: rgba(189, 52, 254, 0.08);
+  box-shadow: 0 4px 16px rgba(189, 52, 254, 0.18);
+}
+
+.cliWrap {
+  width: 100%;
+  max-width: 560px;
+  animation: cliEnter 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.12s both;
+}
+
+@keyframes cliEnter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orb1,
+  .orb2,
+  .orb3 {
+    animation: none;
+  }
+
+  .title {
+    animation: none;
+  }
+
+  .intro,
+  .cliWrap,
+  .devices {
+    animation: none;
+  }
 }
 
 @media (max-width: 600px) {
-  .largeFormatDevices {
-    display: none;
+  .container {
+    min-height: 640px;
+  }
+
+  .content {
+    padding-top: 1.75rem;
+    margin-bottom: min(50%, 340px);
+  }
+
+  .devices {
+    bottom: 32px;
+    opacity: 0.65;
+  }
+
+  @keyframes devicesFade {
+    to {
+      opacity: 0.65;
+    }
+  }
+
+  .primaryButton,
+  .secondaryButton,
+  .ghostButton {
+    width: 100%;
+    max-width: 280px;
+  }
+
+  .actions {
+    margin-top: 1.25rem;
+    gap: 0.9rem;
   }
 }
 
 @media (max-width: 450px) {
-  .content {
-    top: 50px;
+  .gridBackground {
+    height: 280px;
   }
 
-  .primaryButton,
-  .secondaryButton {
-    width: calc(100% - 2rem);
-  }
-}
-
-.githubButton {
-  display: flex;
-  align-items: center;
-  > img {
-    width: 140px;
-  }
-}
-
-@keyframes flicker {
-  0%{
-      opacity: 1;
-  }
-  50%{
-      opacity: 0.5;
-  }
-  100%{
-      opacity: 1;
+  .scene {
+    min-height: 260px;
   }
 }
