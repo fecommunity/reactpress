@@ -3,19 +3,34 @@ sidebar_position: 2
 title: Client Package 使用指南
 ---
 
+:::info 3.0 说明
+
+新用户请优先使用 **`reactpress dev`**（全栈，含前台 + 管理端 + API）。本包适用于**仅部署前台**、连接远程 API 的进阶场景。
+
+```bash
+npm i -g @fecommunity/reactpress@3
+reactpress dev --client-only
+```
+
+:::
+
 # @fecommunity/reactpress-client 使用指南
 
-ReactPress Client 是一个基于 Next.js 14 的响应式前端应用程序，作为 ReactPress CMS 平台的用户界面。它提供了现代化的 UI 设计、直观的导航和内容管理功能。
+ReactPress Client 是基于 Next.js 的前端应用，作为 ReactPress CMS 的用户界面。
 
 ## 快速开始
 
 ### 安装和设置
 
 ```bash
-# 常规启动
-npx @fecommunity/reactpress-client
+# 3.0 推荐（全栈）
+reactpress dev
 
-# 生产环境使用 PM2 启动
+# 仅前台（需已有 API）
+reactpress dev --client-only
+
+# 独立包（进阶）
+npx @fecommunity/reactpress-client
 npx @fecommunity/reactpress-client --pm2
 ```
 
