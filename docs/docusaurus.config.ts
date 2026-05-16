@@ -6,7 +6,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
   title: 'ReactPress',
-  tagline: '一个基于Next.js的博客&CMS系统',
+  tagline: '装一个包，一分钟拥有自己的 CMS · ReactPress 3.0',
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here

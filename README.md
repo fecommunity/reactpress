@@ -56,12 +56,24 @@ ReactPress is engineered for developers who need the publishing power of a tradi
 
 ---
 
+## ✨ What's New in 3.0
+
+**ReactPress 3.0 (Platform)** — one package, one command, your CMS in about a minute.
+
+| Pillar | What you get |
+|--------|----------------|
+| **Zero config** | `reactpress init` + `reactpress dev` — no hand-written `.env`, embedded Docker MySQL by default |
+| **Single entry** | `npm i -g @fecommunity/reactpress@3` → `reactpress` for init / dev / build / deploy |
+| **Great DX** | Interactive menu, `doctor`, `status`, actionable errors, dev success URLs |
+
+[3.0 docs](./docs/tutorial/tutorial-extras/reactpress-3-0.md) · [Migration from 2.x](./docs/migration-2-to-3.md)
+
 ## ✨ Core Features
 
 ### ⚡ Rapid Deployment
-- **Zero‑Configuration Setup** – `reactpress init` generates config and `.env`
+- **Zero‑Configuration Setup** – `reactpress init` generates `.reactpress/config.json` and `.env`
 - **One global package** – `@fecommunity/reactpress` runs API + admin + site via `reactpress dev`
-- **Auto‑Database Configuration** – automatic database migrations
+- **Auto‑Database Configuration** – Docker MySQL + migrations out of the box
 
 ### 🎨 Deep Customization
 - **Dynamic Theme Switching** – support for light/dark modes
@@ -135,42 +147,23 @@ Upgrading from 2.x? See the [2.x → 3.0 migration guide](./docs/migration-2-to-
 
 ## 📟 Command Line Interface (CLI)
 
-ReactPress provides a unified CLI for managing both server and client components.
-
-### Unified CLI Commands
+Install once, use everywhere:
 
 ```bash
-# Show help
-reactpress --help
-
-# Start the server
-reactpress server start
-
-# Start the client
-reactpress client start
-
-# Start server with PM2
-reactpress server start --pm2
-
-# Start client with PM2
-reactpress client start --pm2
+npm i -g @fecommunity/reactpress@3
 ```
 
-### API & Client Commands
+| Command | Description |
+|---------|-------------|
+| `reactpress` | Interactive menu |
+| `reactpress init` | Zero-config project setup |
+| `reactpress dev` | Full stack (API + site + admin) |
+| `reactpress dev --api-only` | API only (Headless) |
+| `reactpress doctor` | Environment diagnostics |
+| `reactpress status` | Service status summary |
+| `reactpress start` | Production lifecycle |
 
-```bash
-# API lifecycle (monorepo server/)
-pnpm run start:api
-pnpm run stop
-pnpm run status
-
-# Client only
-npx @fecommunity/reactpress-client
-
-# Production PM2
-pnpm run pm2:api    # bundled API via CLI package
-pnpm run pm2:client
-```
+Monorepo contributors: `pnpm dev` is equivalent to `reactpress dev`.
 
 ---
 
@@ -186,7 +179,7 @@ ReactPress uses a **Modular Monorepo Architecture**:
 | [`@fecommunity/reactpress-client`](./client) | Next.js frontend (advanced: client-only deploy) | 3.0.0 |
 | [`@fecommunity/reactpress-server`](./server) | NestJS API (**deprecated** — use bundled API in main package) | 3.0.0 |
 | [`@fecommunity/reactpress-cli`](./cli) | **Deprecated alias** of main package | 3.0.0 |
-| [`@fecommunity/reactpress-toolkit`](./toolkit) | OpenAPI‑generated API client SDK | 1.0.0 |
+| [`@fecommunity/reactpress-toolkit`](./toolkit) | OpenAPI‑generated API client SDK | 3.0.0 |
 
 ### Templates
 
@@ -199,22 +192,7 @@ ReactPress uses a **Modular Monorepo Architecture**:
 
 ## 🔧 Configuration
 
-Create a `.env` file in the root directory for local development:
-
-```env
-# Database Configuration
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_USER=reactpress
-DB_PASSWD=reactpress
-DB_DATABASE=reactpress
-
-# Client Configuration
-CLIENT_SITE_URL=http://localhost:3001
-
-# Server Configuration
-SERVER_SITE_URL=http://localhost:3002
-```
+3.0 uses **`.reactpress/config.json`** as the source of truth; `.env` is synced by the CLI. Run `reactpress init` — you usually do not need to edit `.env` manually. See [config docs](./docs/tutorial/tutorial-extras/config-intro.md).
 
 ---
 
@@ -251,16 +229,10 @@ Access your application at: `http://localhost:8080`
 
 ### PM2 Deployment (Recommended for Production)
 ```bash
-# Install PM2 globally
-npm install -g pm2
-
-# Start API and client with PM2
-pnpm run pm2:api
-pnpm run pm2:client
-
-# Or use the unified reactpress CLI
-reactpress server start --pm2
-reactpress client start --pm2
+npm i -g @fecommunity/reactpress@3 pm2
+reactpress build
+reactpress start
+# Or in monorepo: pnpm run build && pnpm run pm2
 ```
 
 ### Traditional Deployment (Self‑Managed)

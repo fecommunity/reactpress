@@ -3,6 +3,12 @@ sidebar_position: 5
 title: ReactPress 2.0 架构
 ---
 
+:::info 历史文档
+
+**ReactPress 3.0** 已改为单包入口 `@fecommunity/reactpress`，内置 API。新用户请阅读 [ReactPress 3.0 平台版](./reactpress-3-0.md)；从 2.x 升级见 [迁移指南](./migration-2-to-3.md)。
+
+:::
+
 # ReactPress 2.0 架构详解
 
 ReactPress 2.0 采用了现代化的架构设计，基于 monorepo 结构将项目分解为三个独立但相互协作的核心包。这种设计提供了更好的可维护性、可扩展性和部署灵活性。

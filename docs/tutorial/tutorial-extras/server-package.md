@@ -3,19 +3,35 @@ sidebar_position: 3
 title: Server Package 使用指南
 ---
 
+:::warning Deprecated（3.0）
+
+`@fecommunity/reactpress-server` 在 3.0 已 **deprecated**。请使用主包：
+
+```bash
+npm i -g @fecommunity/reactpress@3
+reactpress dev              # 全栈（内置 API）
+reactpress dev --api-only   # 仅 API
+reactpress start            # 生产
+```
+
+详见 [ReactPress 3.0 平台版](./reactpress-3-0.md)。下文保留 2.x 多包部署参考。
+
+:::
+
 # @fecommunity/reactpress-server 使用指南
 
-ReactPress Server 是一个基于 NestJS 10 的后端 API，为 ReactPress CMS 平台提供动力。它提供了 RESTful API 用于内容管理、用户认证、媒体处理等功能。通过其简单的安装过程，提供了流畅的设置体验。
+ReactPress Server 是一个基于 NestJS 的后端 API，为 ReactPress CMS 平台提供动力。3.0 起 API 已内置 `@fecommunity/reactpress`，独立 server 包仅作兼容。
 
-## 快速开始
+## 快速开始（2.x / 兼容）
 
 ### 安装和设置
 
 ```bash
-# 常规启动
-npx @fecommunity/reactpress-server
+# 3.0 推荐
+reactpress dev --api-only
 
-# 生产环境使用 PM2 启动
+# 2.x 兼容（不推荐新用户）
+npx @fecommunity/reactpress-server
 npx @fecommunity/reactpress-server --pm2
 ```
 
