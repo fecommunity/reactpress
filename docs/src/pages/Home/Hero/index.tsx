@@ -1,27 +1,27 @@
-/**
- * Copyright (c) Meta Platforms, Inc. and affiliates.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- */
-
 import React from 'react';
-
+import Link from '@docusaurus/Link';
 import Logo from '@site/src/pages/Home/Logo';
-
 import GridBackground from '@site/src/pages/Home/Hero/GridBackground';
 import FloorBackground from '@site/src/pages/Home/Hero/FloorBackground';
 import Devices from '@site/src/pages/Home/Hero/Devices';
+import CliCommandBlock from '@site/src/components/CliCommandBlock';
 import styles from './styles.module.css';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Translate from '@docusaurus/Translate';
+import GitHubButton from 'react-github-btn';
 
 function Hero() {
   const { siteConfig } = useDocusaurusContext();
 
   return (
-    <div className={styles.container}>
-      <div className={styles.backgroundContainer}>
+    <header className={styles.container}>
+      <div className={styles.mesh} aria-hidden>
+        <span className={styles.orb1} />
+        <span className={styles.orb2} />
+        <span className={styles.orb3} />
+      </div>
+
+      <div className={styles.scene} aria-hidden>
         <div className={styles.gridBackground}>
           <GridBackground />
         </div>
@@ -32,25 +32,55 @@ function Hero() {
           <FloorBackground />
         </div>
       </div>
+
       <div className={styles.content}>
-        <Logo className={styles.logo} />
-        <h1 className={styles.title}>{siteConfig.title}</h1>
-        <h2 className={styles.subtitle}>
-          <Translate id="home.hero.subTitle">一个基于Next.js的博客&CMS系统。</Translate>
-        </h2>
-        <div className={styles.buttonContainer}>
-          <a href="/docs/intro" className={styles.primaryButton}>
-            <Translate id="home.hero.intro">入门指南</Translate>
-          </a>
-          <a href="https://blog.gaoredu.com" target="_blank" className={styles.secondaryButton}>
-            <Translate id="home.hero.try">试用一下</Translate>
-          </a>
-          <a href="https://github.com/fecommunity/reactpress" target="_blank" className={styles.githubButton}>
-            <img src="https://img.shields.io/github/stars/fecommunity/reactpress?color=green&style=social" />
-          </a>
+        <div className={styles.intro}>
+          <Logo className={styles.logo} />
+          <div className={styles.titleRow}>
+            <h1 className={styles.title}>{siteConfig.title}</h1>
+            <span className={styles.badge}>3.0</span>
+            <span className={styles.githubWrap}>
+              <GitHubButton
+                href="https://github.com/fecommunity/reactpress"
+                data-size="large"
+                data-show-count="true"
+                aria-label="Star fecommunity/reactpress on GitHub">
+                Star
+              </GitHubButton>
+            </span>
+          </div>
+          <p className={styles.subtitle}>
+            <Translate id="home.hero.subTitle">
+              装一个包，一分钟拥有自己的 CMS — 基于 React、Next.js 与 NestJS 的全栈发布平台。
+            </Translate>
+          </p>
+
+          <div className={styles.actions}>
+            <div className={styles.buttonContainer}>
+              <Link className={styles.primaryButton} to="/docs/intro">
+                <Translate id="home.hero.intro">快速开始</Translate>
+              </Link>
+              <Link
+                className={styles.secondaryButton}
+                to="/docs/tutorial-extras/reactpress-3-0">
+                <Translate id="home.hero.whatsNew">3.0 新特性</Translate>
+              </Link>
+              <a
+                href="https://blog.gaoredu.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.ghostButton}>
+                <Translate id="home.hero.try">在线演示</Translate>
+              </a>
+            </div>
+
+            <div className={styles.cliWrap}>
+              <CliCommandBlock variant="hero" showHint={false} />
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </header>
   );
 }
 
