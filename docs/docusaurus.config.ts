@@ -62,6 +62,7 @@ const config: Config = {
           customCss: [
             require.resolve('./src/css/customTheme.scss'),
             require.resolve('./src/css/index.scss'),
+            require.resolve('./src/css/homepage.scss'),
             require.resolve('./src/css/showcase.scss'),
             require.resolve('./src/css/versions.scss'),
           ],
