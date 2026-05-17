@@ -51,7 +51,7 @@ function Hero() {
           </div>
           <p className={styles.subtitle}>
             <Translate id="home.hero.subTitle">
-              装一个包，一分钟拥有自己的 CMS — 基于 React、Next.js 与 NestJS 的全栈发布平台。
+              装一个包，一分钟拥有自己的 CMS。
             </Translate>
           </p>
 

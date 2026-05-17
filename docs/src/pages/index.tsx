@@ -16,7 +16,7 @@ const Index = () => {
   const title = `${siteConfig.title} · ${siteConfig.tagline}`;
   const description = translate({
     message:
-      'ReactPress 3.0：装一个包、一分钟拥有自己的 CMS。基于 React、Next.js 与 NestJS 的全栈发布平台，零配置 init + dev。',
+      'ReactPress 3.0：装一个包、一分钟拥有自己的 CMS。零配置安装，开箱即用的博客与内容发布平台。',
     id: 'home.meta.description',
   });
 
