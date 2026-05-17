@@ -91,7 +91,7 @@ When `dev` is ready, open the URLs printed in the terminal:
 
 Install, initialize, start dev, and open your site — all from the terminal:
 
-[ReactPress CLI](https://github.com/user-attachments/assets/bd8eb5aa-eda5-4058-91f6-de28fe6c3921)
+![ReactPress CLI demo](./public/usage.gif)
 
 ### Screenshots
 
