@@ -230,24 +230,44 @@ docker compose -f docker-compose.prod.yml up -d
 
 ## 🤝 贡献
 
-我们欢迎各种形式的贡献！无论是错误修复、新功能、文档改进还是翻译，您的帮助都受到赞赏。
+**衷心感谢**每一位帮助 ReactPress 成长的朋友——无论是代码、文档、Issue、反馈还是早期灵感，我们都铭记于心。
 
-### 📋 开发设置
+<table>
+  <tbody>
+    <tr>
+      <td align="center" width="12.5%"><a href="https://github.com/fecommunity"><img src="https://github.com/fecommunity.png?s=72" width="72" height="72" style="border-radius:50%" alt="fecommunity"/><br/><sub><b>FECommunity</b></sub></a></td>
+      <td align="center" width="12.5%"><a href="https://github.com/want2sleeep"><img src="https://github.com/want2sleeep.png?s=72" width="72" height="72" style="border-radius:50%" alt="want2sleeep"/><br/><sub><b>SleepSheep</b></sub></a></td>
+      <td align="center" width="12.5%"><a href="https://github.com/fantasticit"><img src="https://github.com/fantasticit.png?s=72" width="72" height="72" style="border-radius:50%" alt="fantasticit"/><br/><sub><b>fantasticit</b></sub></a></td>
+      <td align="center" width="12.5%"><a href="https://github.com/chenbo29"><img src="https://github.com/chenbo29.png?s=72" width="72" height="72" style="border-radius:50%" alt="chenbo29"/><br/><sub><b>chenbo29</b></sub></a></td>
+      <td align="center" width="12.5%"><a href="https://github.com/redteav2"><img src="https://github.com/redteav2.png?s=72" width="72" height="72" style="border-radius:50%" alt="redteav2"/><br/><sub><b>redteav2</b></sub></a></td>
+      <td align="center" width="12.5%"><a href="https://github.com/trashken"><img src="https://github.com/trashken.png?s=72" width="72" height="72" style="border-radius:50%" alt="trashken"/><br/><sub><b>trashken</b></sub></a></td>
+      <td align="center" width="12.5%"><a href="https://github.com/franz007"><img src="https://github.com/franz007.png?s=72" width="72" height="72" style="border-radius:50%" alt="franz007"/><br/><sub><b>franz007</b></sub></a></td>
+      <td align="center" width="12.5%"><a href="https://github.com/funtime1"><img src="https://github.com/funtime1.png?s=72" width="72" height="72" style="border-radius:50%" alt="funtime1"/><br/><sub><b>funtime1</b></sub></a></td>
+    </tr>
+    <tr>
+      <td align="center" width="12.5%"><a href="https://github.com/scottdeift"><img src="https://github.com/scottdeift.png?s=72" width="72" height="72" style="border-radius:50%" alt="scottdeift"/><br/><sub><b>scottdeift</b></sub></a></td>
+      <td align="center" width="12.5%"><a href="https://github.com/TwoDollars666"><img src="https://github.com/TwoDollars666.png?s=72" width="72" height="72" style="border-radius:50%" alt="TwoDollars666"/><br/><sub><b>TwoDollars666</b></sub></a></td>
+      <td align="center" width="12.5%"><a href="https://github.com/Xiaonan2020"><img src="https://github.com/Xiaonan2020.png?s=72" width="72" height="72" style="border-radius:50%" alt="Xiaonan2020"/><br/><sub><b>Xiaonan2020</b></sub></a></td>
+      <td align="center" width="12.5%"><a href="https://github.com/gaoredu"><img src="https://avatars.githubusercontent.com/u/190012690?s=72" width="72" height="72" style="border-radius:50%" alt="gaoredu"/><br/><sub><b>redtea</b></sub></a></td>
+      <td align="center" width="12.5%"><a href="https://github.com/fecommunity"><img src="https://avatars.githubusercontent.com/u/55874467?s=72" width="72" height="72" style="border-radius:50%" alt="m0_37981569"/><br/><sub><b>m0_37981569</b></sub></a></td>
+      <td align="center" width="12.5%"></td>
+      <td align="center" width="12.5%"></td>
+      <td align="center" width="12.5%"></td>
+    </tr>
+  </tbody>
+</table>
 
-1. Fork 仓库
-2. 克隆您的 fork：`git clone https://github.com/your-username/reactpress.git`
-3. 安装依赖：`pnpm install`
-4. 启动开发服务器：`pnpm run dev`
+**欢迎一起参与。** 我们期待你在错误修复、新功能、文档与翻译等方面的帮助：
+
+1. Fork 仓库并克隆到本地
+2. 安装依赖：`pnpm install`
+3. 启动开发：`pnpm run dev`
+
+有价值的贡献会在本 README 中署名展示——PR 合并后，你的头像与 GitHub 主页将出现在上方列表中。详见[贡献指南](https://github.com/fecommunity/reactpress/blob/master/CONTRIBUTING.md)。
 
 ### 📦 发布
 
-要将包发布到 npm：
-
-1. 确保您已登录 npm：`pnpm login`
-2. 运行发布脚本：`pnpm run release`
-3. 按照交互式提示选择包和版本增量
-
-请阅读我们的[贡献指南](https://github.com/fecommunity/reactpress/blob/master/CONTRIBUTING.md)了解我们的行为准则和开发流程详情。
+维护者发布 npm 包：`pnpm login` → `pnpm run release`，按提示选择包与版本号。
 
 ## ❤️ 致谢
 
