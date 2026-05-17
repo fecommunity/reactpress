@@ -91,11 +91,7 @@ When `dev` is ready, open the URLs printed in the terminal:
 
 Install, initialize, start dev, and open your site — all from the terminal:
 
-<p align="center">
-  <video src="./public/usage.webm" controls width="100%">
-    <a href="./public/usage.webm">Download the usage demo (WebM)</a>
-  </video>
-</p>
+[ReactPress CLI](https://github.com/user-attachments/assets/7e9e5cdb-5fe0-4f89-a610-6d0aff060f5d)
 
 ### Screenshots
 

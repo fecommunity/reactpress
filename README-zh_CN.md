@@ -114,11 +114,7 @@ pnpm run dev    # 自动 init + Docker MySQL + toolkit + API (3002) + 前端 (30
 
 从安装到 `init`、`dev` 并打开站点，全程在终端完成：
 
-<p align="center">
-  <video src="./public/usage.webm" controls width="100%">
-    <a href="./public/usage.webm">下载使用演示视频（WebM）</a>
-  </video>
-</p>
+[ReactPress CLI](https://github.com/user-attachments/assets/7e9e5cdb-5fe0-4f89-a610-6d0aff060f5d)
 
 ### 界面截图
 
