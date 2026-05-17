@@ -1,5 +1,6 @@
 const { spawn } = require('child_process');
 const path = require('path');
+const { runBuild } = require('./build');
 const { ensureProjectEnvironment } = require('./bootstrap');
 const { loadServerSiteUrl, loadClientSiteUrl, waitForHttp } = require('./http');
 const { printDevReadyBanner } = require('./dev-banner');
@@ -30,20 +31,7 @@ function shutdown(signal = 'SIGINT') {
 }
 
 async function buildToolkit(projectRoot) {
-  return new Promise((resolve, reject) => {
-    const build = spawn('pnpm', ['build:toolkit'], {
-      stdio: 'inherit',
-      shell: true,
-      cwd: projectRoot,
-    });
-    build.on('close', (code) => {
-      if (code !== 0) {
-        reject(new Error(t('dev.toolkitFailed', { code })));
-        return;
-      }
-      resolve();
-    });
-  });
+  await runBuild('toolkit', projectRoot);
 }
 
 async function startDevStack(projectRoot) {

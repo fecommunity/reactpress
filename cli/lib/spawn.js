@@ -14,6 +14,7 @@ function runSync(command, args, options = {}) {
       REACTPRESS_LANG: process.env.REACTPRESS_LANG || resolveLocale(),
       REACTPRESS_ORIGINAL_CWD:
         options.cwd || process.env.REACTPRESS_ORIGINAL_CWD || process.cwd(),
+      ...options.env,
     },
     shell: options.shell ?? false,
   });
