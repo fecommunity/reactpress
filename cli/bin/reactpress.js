@@ -127,7 +127,7 @@ clientCmd
 program
   .command('build')
   .description(t('cli.build.description'))
-  .option('-t, --target <target>', 'toolkit | server | client | docs | all', 'all')
+  .option('-t, --target <target>', t('cli.build.target'), 'all')
   .action(async (options) => {
     try {
       await runBuild(options.target, ensureOriginalCwd());
@@ -254,6 +254,7 @@ program.on('--help', () => {
   console.log(t('cli.help.status'));
   console.log(t('cli.help.doctor'));
   console.log(t('cli.help.docker'));
+  console.log(t('cli.help.build'));
   console.log(t('cli.help.publish'));
   console.log('');
 });
