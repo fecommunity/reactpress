@@ -1,8 +1,36 @@
 import { themes as prismThemes } from 'prism-react-renderer';
-import type { Config } from '@docusaurus/types';
+import type { Config, Plugin } from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
+
+/**
+ * Docusaurus 3.7 builds client/server in parallel; CleanWebpackPlugin may delete
+ * `build/__server/server.bundle.js` before SSG. Disable stale-asset cleanup on client.
+ * See https://github.com/facebook/docusaurus/pull/11037 (removed in newer versions).
+ */
+function preserveServerBundlePlugin(): Plugin {
+  return {
+    name: 'preserve-server-bundle-on-clean',
+    configureWebpack(config, isServer) {
+      if (isServer) {
+        return undefined;
+      }
+      for (const plugin of config.plugins ?? []) {
+        if (
+          plugin &&
+          typeof plugin === 'object' &&
+          plugin.constructor.name === 'CleanWebpackPlugin' &&
+          'cleanStaleWebpackAssets' in plugin
+        ) {
+          (plugin as {cleanStaleWebpackAssets: boolean}).cleanStaleWebpackAssets =
+            false;
+        }
+      }
+      return undefined;
+    },
+  };
+}
 
 const config: Config = {
   title: 'ReactPress',
@@ -70,7 +98,7 @@ const config: Config = {
       } satisfies Preset.Options,
     ],
   ],
-  plugins: ['docusaurus-plugin-sass'],
+  plugins: ['docusaurus-plugin-sass', preserveServerBundlePlugin],
   themeConfig: {
     // Replace with your project's social card
     image: 'img/docusaurus-social-card.jpg',
