@@ -114,7 +114,7 @@ pnpm run dev    # 自动 init + Docker MySQL + toolkit + API (3002) + 前端 (30
 
 从安装到 `init`、`dev` 并打开站点，全程在终端完成：
 
-[ReactPress CLI](https://github.com/user-attachments/assets/7e9e5cdb-5fe0-4f89-a610-6d0aff060f5d)
+[ReactPress CLI](https://github.com/user-attachments/assets/bd8eb5aa-eda5-4058-91f6-de28fe6c3921)
 
 ### 界面截图
 
