@@ -8,7 +8,7 @@ tags: [reactpress, release]
 
 <!--truncate-->
 
-## [3.0.0](https://github.com/fecommunity/reactpress/compare/v2.0.1...v3.0.0) (2026-05-17)
+## [3.0.0](https://github.com/fecommunity/reactpress/compare/v2.0.2...v3.0.0) (2026-05-17)
 
 **ReactPress 3.0 Platform** — one package, one command, your CMS in about a minute.
 
