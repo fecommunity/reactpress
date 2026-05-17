@@ -311,10 +311,10 @@
     "description": "The title of the tag list page"
   },
   "home.meta.description": {
-    "message": "ReactPress 3.0: one npm package, one minute to your own CMS. Full-stack publishing on React, Next.js, and NestJS with zero-config init + dev."
+    "message": "ReactPress 3.0: one package, one minute to your own CMS. Zero-config install for blogs and content publishing."
   },
   "home.hero.subTitle": {
-    "message": "One package, one minute to your own CMS — a full-stack publishing platform on React, Next.js, and NestJS."
+    "message": "One package, one minute to your own CMS."
   },
   "home.hero.intro": {
     "message": "Get Started"
@@ -344,7 +344,7 @@
     "message": "Copy command: {line}"
   },
   "home.cli.hint": {
-    "message": "After global install, run reactpress init — zero-config site in about a minute"
+    "message": "After global install, initialize in an empty folder — your site is ready in about a minute"
   },
   "home.highlights.title": {
     "message": "3.0 highlights"
@@ -389,19 +389,19 @@
     "message": "Zero-config setup"
   },
   "home.highlight.zero.desc": {
-    "message": "init + dev auto-generates config and .env with Docker MySQL by default — no manual env files."
+    "message": "Two commands set up your site and database — no manual environment configuration."
   },
   "home.highlight.cli.title": {
-    "message": "Single CLI entry"
+    "message": "One command line tool"
   },
   "home.highlight.cli.desc": {
-    "message": "Install @fecommunity/reactpress@3 globally; init, dev, doctor, and status in one tool."
+    "message": "After a global install, initialize, develop, self-check, and view status from the terminal."
   },
   "home.highlight.dx.title": {
-    "message": "Diagnosable DX"
+    "message": "Easy to get started"
   },
   "home.highlight.dx.desc": {
-    "message": "Interactive menus, doctor checks, status output, and direct links after dev succeeds."
+    "message": "Interactive guides, environment checks, and status tips — open your site and admin right after startup."
   },
   "home.quickstart.title": {
     "message": "Your CMS in one minute"
@@ -422,7 +422,7 @@
     "message": "Platform capabilities"
   },
   "home.call.subtitle": {
-    "message": "From personal blogs to team content sites — publishing and governance out of the box."
+    "message": "From personal blogs to team content sites — publish, manage, and collaborate out of the box."
   },
   "home.call.cta": {
     "message": "Read full documentation"
@@ -431,55 +431,70 @@
     "message": "Zero-config setup"
   },
   "home.feature.zero.desc": {
-    "message": "reactpress init and dev generate config, .env, and embedded MySQL with a WordPress-style installer."
+    "message": "Installer-style flow auto-configures your site and database — as familiar as setting up a popular blog platform."
   },
   "home.feature.cli.title": {
-    "message": "Unified CLI"
+    "message": "All-in-one CLI"
   },
   "home.feature.cli.desc": {
-    "message": "doctor health checks, status output, interactive menus, and direct links after dev succeeds."
+    "message": "Environment checks, status output, interactive menus, and direct links right after startup."
   },
   "home.feature.ui.title": {
-    "message": "Componentized UI"
+    "message": "Modern interface"
   },
   "home.feature.ui.desc": {
-    "message": "Modern admin and front-end on Ant Design 5 with light/dark theme support."
+    "message": "Modern admin and public site with light/dark theme support."
   },
   "home.feature.content.title": {
     "message": "Content & authoring"
   },
   "home.feature.content.desc": {
-    "message": "Built-in Markdown editor; articles, categories, tags, pages, comments, and media (local / OSS)."
+    "message": "Built-in Markdown editor; articles, categories, tags, pages, comments, and media in one place."
   },
   "home.feature.headless.title": {
-    "message": "Headless API"
+    "message": "Open integrations"
   },
   "home.feature.headless.desc": {
-    "message": "API keys, webhooks, health checks, and toolkit SDK for integrations and automation."
+    "message": "Open APIs, access keys, and event callbacks for external systems and automation."
   },
   "home.feature.i18n.title": {
     "message": "Internationalization"
   },
   "home.feature.i18n.desc": {
-    "message": "Chinese/English UI, SSR-friendly, responsive on desktop, tablet, and mobile."
+    "message": "Chinese/English UI, comfortable on desktop, tablet, and mobile."
   },
   "零配置起站": {
     "message": "Zero-config setup"
   },
+  "两条命令自动完成安装与数据库准备，无需手工配置环境。": {
+    "message": "Two commands set up your site and database — no manual environment configuration."
+  },
   "init + dev 自动生成配置与 .env，默认 Docker MySQL，无需手写环境变量。": {
-    "message": "init + dev auto-generates config and .env with Docker MySQL by default — no manual env files."
+    "message": "Two commands set up your site and database — no manual environment configuration."
+  },
+  "一条命令搞定": {
+    "message": "One command line tool"
   },
   "唯一 CLI 入口": {
-    "message": "Single CLI entry"
+    "message": "One command line tool"
+  },
+  "全局安装后，初始化、开发、自检与状态查看都在命令行里完成。": {
+    "message": "After a global install, initialize, develop, self-check, and view status from the terminal."
   },
   "全局安装 @fecommunity/reactpress@3，init / dev / doctor / status 一条命令搞定。": {
-    "message": "Install @fecommunity/reactpress@3 globally; init, dev, doctor, and status in one tool."
+    "message": "After a global install, initialize, develop, self-check, and view status from the terminal."
+  },
+  "上手更省心": {
+    "message": "Easy to get started"
   },
   "可诊断的开发体验": {
-    "message": "Diagnosable DX"
+    "message": "Easy to get started"
+  },
+  "交互式引导、环境自检与运行状态提示，启动成功即可打开前台与后台。": {
+    "message": "Interactive guides, environment checks, and status tips — open your site and admin right after startup."
   },
   "交互式菜单、doctor 自检、status 状态与 dev 成功后的直达链接提示。": {
-    "message": "Interactive menus, doctor checks, status output, and direct links after dev succeeds."
+    "message": "Interactive guides, environment checks, and status tips — open your site and admin right after startup."
   },
   "一分钟拥有自己的 CMS": {
     "message": "Your CMS in one minute"
@@ -499,14 +514,20 @@
   "平台能力一览": {
     "message": "Platform capabilities"
   },
+  "从个人博客到团队内容站，发布、管理与协作，开箱即用。": {
+    "message": "From personal blogs to team content sites — publish, manage, and collaborate out of the box."
+  },
   "从个人博客到团队内容站，ReactPress 提供开箱即用的发布与治理能力。": {
-    "message": "From personal blogs to team content sites — publishing and governance out of the box."
+    "message": "From personal blogs to team content sites — publish, manage, and collaborate out of the box."
   },
   "阅读完整文档": {
     "message": "Read full documentation"
   },
+  "装一个包，一分钟拥有自己的 CMS。": {
+    "message": "One package, one minute to your own CMS."
+  },
   "装一个包，一分钟拥有自己的 CMS — 基于 React、Next.js 与 NestJS 的全栈发布平台。": {
-    "message": "One package, one minute to your own CMS — a full-stack publishing platform on React, Next.js, and NestJS."
+    "message": "One package, one minute to your own CMS."
   },
   "快速开始": {
     "message": "Get Started"
@@ -517,40 +538,73 @@
   "在线演示": {
     "message": "Live Demo"
   },
+  "安装向导式流程，自动完成配置与数据库，像安装常用博客程序一样简单。": {
+    "message": "Installer-style flow auto-configures your site and database — as familiar as setting up a popular blog platform."
+  },
   "reactpress init 与 dev 自动生成配置、.env 与嵌入式 MySQL，WordPress 式安装向导。": {
-    "message": "reactpress init and dev generate config, .env, and embedded MySQL with a WordPress-style installer."
+    "message": "Installer-style flow auto-configures your site and database — as familiar as setting up a popular blog platform."
+  },
+  "命令行一站式": {
+    "message": "All-in-one CLI"
   },
   "统一 CLI": {
-    "message": "Unified CLI"
+    "message": "All-in-one CLI"
+  },
+  "环境自检、运行状态查看，交互式菜单与启动成功后的直达链接。": {
+    "message": "Environment checks, status output, interactive menus, and direct links right after startup."
   },
   "doctor 环境自检、status 运行状态，交互式菜单与 dev 成功后的直达链接。": {
-    "message": "doctor health checks, status output, interactive menus, and direct links after dev succeeds."
+    "message": "Environment checks, status output, interactive menus, and direct links right after startup."
+  },
+  "现代界面": {
+    "message": "Modern interface"
   },
   "组件化 UI": {
-    "message": "Componentized UI"
+    "message": "Modern interface"
+  },
+  "现代化管理后台与前台，支持亮/暗主题切换。": {
+    "message": "Modern admin and public site with light/dark theme support."
   },
   "基于 Ant Design 5 的现代化后台与前台，支持亮/暗主题切换。": {
-    "message": "Modern admin and front-end on Ant Design 5 with light/dark theme support."
+    "message": "Modern admin and public site with light/dark theme support."
   },
   "创作与内容": {
     "message": "Content & authoring"
   },
+  "内置 Markdown 编辑器，文章、分类、标签、页面、评论与媒体管理一应俱全。": {
+    "message": "Built-in Markdown editor; articles, categories, tags, pages, comments, and media in one place."
+  },
   "内置 Markdown 编辑器，文章、分类、标签、页面、评论与媒体（本地上传 / OSS）。": {
-    "message": "Built-in Markdown editor; articles, categories, tags, pages, comments, and media (local / OSS)."
+    "message": "Built-in Markdown editor; articles, categories, tags, pages, comments, and media in one place."
+  },
+  "开放集成": {
+    "message": "Open integrations"
   },
   "Headless API": {
-    "message": "Headless API"
+    "message": "Open integrations"
+  },
+  "开放接口、访问密钥与事件回调，便于对接外部系统与自动化流程。": {
+    "message": "Open APIs, access keys, and event callbacks for external systems and automation."
   },
   "API Key、Webhook、健康检查与 toolkit SDK，便于对接外部系统与自动化。": {
-    "message": "API keys, webhooks, health checks, and toolkit SDK for integrations and automation."
+    "message": "Open APIs, access keys, and event callbacks for external systems and automation."
   },
   "国际化": {
     "message": "Internationalization"
   },
-  "中英文界面切换，SSR 友好，适配桌面、平板与移动端。": {
-    "message": "Chinese/English UI, SSR-friendly, responsive on desktop, tablet, and mobile."
+  "中英文界面切换，在电脑、平板与手机上均可舒适使用。": {
+    "message": "Chinese/English UI, comfortable on desktop, tablet, and mobile."
+  },
+  "ReactPress 3.0：装一个包、一分钟拥有自己的 CMS。零配置安装，开箱即用的博客与内容发布平台。": {
+    "message": "ReactPress 3.0: one package, one minute to your own CMS. Zero-config install for blogs and content publishing."
   },
   "ReactPress 3.0：装一个包、一分钟拥有自己的 CMS。基于 React、Next.js 与 NestJS 的全栈发布平台，零配置 init + dev。": {
-    "message": "ReactPress 3.0: one npm package, one minute to your own CMS. Full-stack publishing on React, Next.js, and NestJS with zero-config init + dev."
+    "message": "ReactPress 3.0: one package, one minute to your own CMS. Zero-config install for blogs and content publishing."
+  },
+  "全局安装后，在空目录初始化，约 1 分钟即可零配置起站": {
+    "message": "After global install, initialize in an empty folder — your site is ready in about a minute"
+  },
+  "全局安装后执行 reactpress init，约 1 分钟零配置起站": {
+    "message": "After global install, initialize in an empty folder — your site is ready in about a minute"
   }
 }

@@ -14,23 +14,23 @@ const items: HighlightItem[] = [
     icon: '⚡',
     title: translate({ message: '零配置起站', id: 'home.highlight.zero.title' }),
     description: translate({
-      message: 'init + dev 自动生成配置与 .env，默认 Docker MySQL，无需手写环境变量。',
+      message: '两条命令自动完成安装与数据库准备，无需手工配置环境。',
       id: 'home.highlight.zero.desc',
     }),
   },
   {
     icon: '📦',
-    title: translate({ message: '唯一 CLI 入口', id: 'home.highlight.cli.title' }),
+    title: translate({ message: '一条命令搞定', id: 'home.highlight.cli.title' }),
     description: translate({
-      message: '全局安装 @fecommunity/reactpress@3，init / dev / doctor / status 一条命令搞定。',
+      message: '全局安装后，初始化、开发、自检与状态查看都在命令行里完成。',
       id: 'home.highlight.cli.desc',
     }),
   },
   {
     icon: '🩺',
-    title: translate({ message: '可诊断的开发体验', id: 'home.highlight.dx.title' }),
+    title: translate({ message: '上手更省心', id: 'home.highlight.dx.title' }),
     description: translate({
-      message: '交互式菜单、doctor 自检、status 状态与 dev 成功后的直达链接提示。',
+      message: '交互式引导、环境自检与运行状态提示，启动成功即可打开前台与后台。',
       id: 'home.highlight.dx.desc',
     }),
   },
