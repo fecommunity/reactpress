@@ -1,21 +1,17 @@
 <div align="center">
-  <a href="https://gaoredu.com" title="ReactPress">
+  <a href="https://blog.gaoredu.com" title="ReactPress">
     <img height="180" src="./public/logo.png" alt="ReactPress 标志">
   </a>
 
-  <h1>ReactPress 3.0</h1>
-
   <p align="center">
-    <em>基于 React、Next.js 和 NestJS 构建的现代化全栈发布平台</em>
+    <strong>现代化发布平台 — 约一分钟即可上线</strong><br />
+    全局安装一个包，两条命令，站点、管理端与 API 即可就绪。
   </p>
 
   [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/fecommunity/reactpress/blob/master/LICENSE)
   [![NPM Version](https://img.shields.io/npm/v/@fecommunity/reactpress.svg?style=flat-square)](https://www.npmjs.com/package/@fecommunity/reactpress)
   [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/fecommunity/reactpress/pulls)
   [![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-%230074c1.svg?style=flat-square)](http://www.typescriptlang.org/)
-  [![Next.js](https://img.shields.io/badge/Next.js-12-black?style=flat-square)](https://nextjs.org/)
-  [![NestJS](https://img.shields.io/badge/NestJS-6-red?style=flat-square)](https://nestjs.com/)
-  [![Deploy](https://img.shields.io/badge/Deploy-Vercel-blue?style=flat-square)](https://vercel.com/new/clone?repository-url=https://github.com/fecommunity/reactpress)
   [![CI](https://github.com/fecommunity/reactpress/actions/workflows/npm-publish.yml/badge.svg)](https://github.com/fecommunity/reactpress/actions/workflows/npm-publish.yml)
 
   <p>
@@ -24,91 +20,85 @@
     <a href="https://github.com/fecommunity/reactpress/issues">请求功能</a>
     ·
     <a href="./README.md">English Documentation</a>
+    ·
+    <a href="https://blog.gaoredu.com">在线演示</a>
   </p>
 </div>
 
-## 🌟 现代化发布平台
+---
 
-**ReactPress 3.0** 是一个现代化的全栈发布平台：装一个包、敲一条命令，一分钟拥有自己的 CMS。
+## 目录
 
-[![ReactPress 海报](./public/poster.png)](https://gaoredu.com)
+- [什么是 ReactPress？](#什么是-reactpress)
+- [快速开始](#快速开始)
+- [演示](#演示)
+- [核心亮点](#核心亮点)
+- [CLI 命令](#cli-命令)
+- [仓库结构](#仓库结构)
+- [本地研发](#本地研发)
+- [配置](#配置)
+- [部署](#部署)
+- [贡献](#贡献)
 
-## ✨ 3.0 新特性
+---
 
-| 重点 | 说明 |
-|------|------|
-| **零配置** | `init` + `dev`，默认 Docker MySQL，无需手写 `.env` |
-| **唯一入口** | `npm i -g @fecommunity/reactpress@3`，命令统一 `reactpress` |
-| **极致 DX** | 交互菜单、`doctor`、`status`、dev 成功链接提示 |
+## 什么是 ReactPress？
 
-[3.0 文档](./docs/tutorial/tutorial-extras/reactpress-3-0.md) · [2.x 迁移](./docs/migration-2-to-3.md)
+**ReactPress 3.0** 是基于 React、Next.js 与 NestJS 的现代化全栈发布平台。安装 CLI 后执行 `init` 与 `dev`，即可获得前台站点、管理后台与 API，无需手写复杂配置或手动接数据库。
 
-## ✨ 主要特性
+> **一个内容中心，多种呈现方式。** 在同一后台发布内容，通过 Web、管理端或自建应用（API）展示。
 
-### ⚡ 一分钟零配置起站
-- **`reactpress init` + `reactpress dev`**，自动生成 `.reactpress/config.json` 与 `.env`
-- **WordPress 式安装向导**，提供直观的设置体验
-- **自动数据库配置**，具有自动模式迁移
+[![ReactPress 海报](./public/poster.png)](https://blog.gaoredu.com)
 
-### 🎨 高级定制
-- **动态主题切换**，支持亮/暗模式
-- **组件级定制**，通过模块化架构实现
-- **国际化支持**（中文和英文）
+[3.0 文档](./docs/tutorial/tutorial-extras/reactpress-3-0.md) · [从 2.x 升级](./docs/migration-2-to-3.md)
 
-### 🔧 统一开发体验
-- **Monorepo 架构**，具有模块化包
-- **TypeScript**，为前端和后端提供类型安全
-- **PM2 进程管理**，用于生产部署
+---
 
-### 🚀 现代技术栈
-- **前端**：React 17 + Next.js 12 Pages Router
-- **后端**：NestJS 6 模块化架构
-- **数据库**：MySQL + TypeORM
-- **UI**：Ant Design v5 组件
+## 快速开始
 
-## 📸 截图
+### 环境要求
 
-### 安装向导
-[![安装界面](./public/install.png)](https://gaoredu.com)
+| 项目 | 说明 |
+| :--- | :--- |
+| **Node.js ≥ 18** | 运行 CLI 必需 |
+| **Docker** | 推荐 — 默认通过容器启动 MySQL |
+| **MySQL** | 可选 — 可改用自有数据库实例 |
+| **pnpm** | 仅在本仓库内开发时需要 |
 
-### 内容管理仪表板
-[![管理仪表板](./public/admin.png)](https://gaoredu.com)
+### 终端用户（推荐）
 
-### 演示站点
-[![演示](./public/demo.png)](https://gaoredu.com)
-
-## 🚀 快速开始
-
-### 📋 前置要求
-- Node.js >= 18.0.0
-- Docker（默认嵌入式 MySQL）或外部 MySQL
-- pnpm（仅本仓库贡献者需要）
-
-### 🏁 终端用户（唯一入口）
+通过 npm 全局安装，在任意目录初始化项目：
 
 ```bash
 npm i -g @fecommunity/reactpress@3
 mkdir my-blog && cd my-blog
 reactpress init
 reactpress dev
-# 前台 http://localhost:3001  ·  管理端 /admin  ·  API /api/health
 ```
 
-无参数运行 `reactpress` 进入交互菜单。排错：`reactpress doctor`、`reactpress status`。
+`dev` 启动成功后，按终端提示打开：
 
-从 2.x 升级见 [迁移指南](./docs/migration-2-to-3.md)。
+| 服务 | 典型地址 |
+| :--- | :--- |
+| 前台站点 | `http://localhost:3001` |
+| 管理后台 | `http://localhost:3001/admin` |
+| API 健康检查 | `http://localhost:3002/api/health` |
 
-### 🏁 本仓库开发（Monorepo，含 server/）
+**常用技巧：** 无参数运行 `reactpress` 进入交互菜单；异常时用 `reactpress doctor`、`reactpress status` 排查。
+
+### 本仓库开发（Monorepo）
+
+若你要修改本仓库源码（而非仅使用已发布的 npm 包）：
 
 ```bash
 pnpm install
-pnpm run dev           # 零配置：自动 init + Docker MySQL + toolkit + API (3002) + 前端 (3001)
+pnpm run dev    # 自动 init + Docker MySQL + toolkit + API (3002) + 前端 (3001)
 ```
 
-可选：`pnpm run init` 仅准备环境不启动服务；`pnpm run docker:dev` 使用独立 compose 起 MySQL + nginx。
+可选：`pnpm run init` 仅准备环境不启动服务；`pnpm run docker:dev` 用独立 compose 启动 MySQL + nginx。
 
 | 命令 | 说明 |
-|------|------|
+| :--- | :--- |
 | `pnpm dev` | 一键本地全栈（推荐） |
 | `pnpm dev:api` | 仅 API（`server/` nest watch） |
 | `pnpm dev:client` | 仅 Next.js 前端 |
@@ -116,46 +106,96 @@ pnpm run dev           # 零配置：自动 init + Docker MySQL + toolkit + API 
 | `pnpm start` | 生产模式同时起 API + 前端 |
 | `pnpm run status` | 查看 API 进程与 HTTP 健康 |
 
-## 📟 命令行界面 (CLI)
+---
+
+## 演示
+
+### 使用演示视频
+
+从安装到 `init`、`dev` 并打开站点，全程在终端完成：
+
+<p align="center">
+  <video src="./public/usage.webm" controls width="100%">
+    <a href="./public/usage.webm">下载使用演示视频（WebM）</a>
+  </video>
+</p>
+
+### 界面截图
+
+| 安装向导 | 管理后台 | 演示站点 |
+| :---: | :---: | :---: |
+| [![安装界面](./public/install.png)](https://blog.gaoredu.com) | [![管理仪表板](./public/admin.png)](https://blog.gaoredu.com) | [![演示站点](./public/demo.png)](https://blog.gaoredu.com) |
+
+---
+
+## 核心亮点
+
+| 方向 | 说明 |
+| :--- | :--- |
+| **快速起站** | `init` + `dev`，引导式安装，自动数据库与模式迁移 |
+| **内容管理** | 文章、页面、媒体库、站点设置；类 WordPress 安装向导 |
+| **个性化** | 主题、亮/暗模式；从 hello-world 到完整博客模板 |
+| **灵活架构** | 一体化本地开发、Headless（`--api-only`）、生产部署 |
+| **开发体验** | 交互菜单、`doctor`、`status`、dev 成功后的链接提示 |
+
+**技术栈概览：** 前端 React 17 + Next.js 12；后端 NestJS 6 + TypeORM + MySQL；UI 为 Ant Design v5；Monorepo + TypeScript 全栈类型安全。
+
+### 与其他方案对比
+
+| | 传统 CMS | 静态站点生成器 | **ReactPress** |
+| :--- | :--- | :--- | :--- |
+| **上手成本** | 服务器、插件、手工配置 | 每个站点独立仓库与构建 | **一条 CLI，约 1 分钟可用 CMS** |
+| **内容工作流** | 后台 + 耦合主题 | Git 中的 Markdown | **后台 + 可选代码优先流程** |
+| **前端自由度** | 主题/插件生态 | 构建时固定 | **内容中心解耦，前端自选** |
+| **适用场景** | 通用博客与企业站 | 文档与营销页 | **博客、多站点内容、定制发布流程** |
+
+---
+
+## CLI 命令
 
 ```bash
 npm i -g @fecommunity/reactpress@3
 ```
 
 | 命令 | 说明 |
-|------|------|
+| :--- | :--- |
 | `reactpress` | 交互式菜单 |
-| `reactpress init` | 零配置初始化 |
-| `reactpress dev` | 全栈开发 |
+| `reactpress init` | 初始化项目（生成配置与 `.env`） |
+| `reactpress dev` | 本地全栈开发 |
 | `reactpress dev --api-only` | 仅 API（Headless） |
 | `reactpress doctor` | 环境诊断 |
 | `reactpress status` | 运行状态 |
-| `reactpress start` | 生产启动 |
+| `reactpress build` | 生产构建 |
+| `reactpress start` | 启动生产构建 |
 
-本仓贡献者：`pnpm dev` 等同 `reactpress dev`。
+本仓贡献者：`pnpm dev` 行为与 `reactpress dev` 等价。更多见 [配置说明](./docs/tutorial/tutorial-extras/config-intro.md)。
 
-## 📦 包与组件
+---
 
-ReactPress 组织为**具有模块化包的 monorepo**：
+## 仓库结构
+
+ReactPress 以 **Monorepo** 组织，主要包与模板如下。
 
 ### 核心包
 
-| 包 | 描述 | 版本 |
-|---------|-------------|---------|
-| [`@fecommunity/reactpress`](./cli) | **3.0 主包** — 全局 `reactpress`，内置 API | 3.0.0 |
-| [`@fecommunity/reactpress-client`](./client) | 进阶：仅部署前台 | 3.0.0 |
-| [`@fecommunity/reactpress-server`](./server) | **Deprecated** — 请用主包内置 API | 3.0.0 |
-| [`@fecommunity/reactpress-toolkit`](./toolkit) | OpenAPI 生成的 API SDK | 3.0.0 |
-| [`@fecommunity/reactpress-cli`](./cli) | **Deprecated 别名** | 3.0.0 |
+| 包 | 说明 |
+| :--- | :--- |
+| [`@fecommunity/reactpress`](./cli) | **3.0 主包** — 全局命令 `reactpress`，内置 API |
+| [`@fecommunity/reactpress-client`](./client) | 进阶：仅部署前台 |
+| [`@fecommunity/reactpress-toolkit`](./toolkit) | 由 OpenAPI 生成的 API SDK |
+| `@fecommunity/reactpress-server` | **已弃用** — 请使用主包内置 API |
+| `@fecommunity/reactpress-cli` | **已弃用别名** |
 
 ### 模板
 
-| 模板 | 描述 | 包名 |
-|----------|-------------|--------------|
-| [`hello-world`](./templates/hello-world) | 用于快速原型设计的最小模板 | `@fecommunity/reactpress-template-hello-world` |
-| [`twentytwentyfive`](./templates/twentytwentyfive) | 功能丰富的博客模板 | `@fecommunity/reactpress-template-twentytwentyfive` |
+| 模板 | 说明 |
+| :--- | :--- |
+| [`hello-world`](./templates/hello-world) | 最小可运行模板，适合快速验证 |
+| [`twentytwentyfive`](./templates/twentytwentyfive) | 功能完整的博客模板 |
 
-## 🛠 研发流程
+---
+
+## 本地研发
 
 ```mermaid
 flowchart LR
@@ -175,7 +215,7 @@ flowchart LR
   dev --> ship
 ```
 
-**改 API 契约后同步前端类型：**
+**修改 API 后同步前端类型：**
 
 ```bash
 pnpm run generate:swagger   # 从 server 生成 swagger.json
@@ -189,16 +229,21 @@ pnpm docker:dev:start    # MySQL :3306，入口 http://localhost:8080
 pnpm docker:dev:stop
 ```
 
-## 🔧 配置
+---
 
-3.0 以 **`.reactpress/config.json`** 为准，`.env` 由 CLI 同步。执行 `reactpress init` 后一般无需手改。详见 [配置说明](./docs/tutorial/tutorial-extras/config-intro.md)。
+## 配置
 
-## 🚀 部署选项
+3.0 以 **`.reactpress/config.json`** 为准，`.env` 由 CLI 在 `init` 时同步生成，一般无需手改。详见 [配置说明](./docs/tutorial/tutorial-extras/config-intro.md)。
 
-### 使用 Vercel 部署（推荐）
+---
+
+## 部署
+
+### Vercel（一键）
+
 [![使用 Vercel 部署](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/fecommunity/reactpress)
 
-### PM2 部署（推荐，自托管）
+### PM2（自托管推荐）
 
 ```bash
 pnpm install
@@ -207,13 +252,9 @@ pnpm run pm2          # API + 前端
 pm2 save
 ```
 
-或使用一键脚本（在服务器仓库根目录）：
+或使用仓库根目录一键脚本：`sh scripts/deploy.sh`
 
-```bash
-sh scripts/deploy.sh
-```
-
-### 传统部署（前台进程）
+### 传统进程方式
 
 ```bash
 pnpm run build
@@ -228,9 +269,13 @@ pnpm run start:api    # 或 pm2:api，监听 3002
 docker compose -f docker-compose.prod.yml up -d
 ```
 
-## 🤝 贡献
+终端用户也可使用全局 CLI：`reactpress build` → `reactpress start`（见 [README.md](./README.md)）。
 
-**衷心感谢**每一位帮助 ReactPress 成长的朋友——无论是代码、文档、Issue、反馈还是早期灵感，我们都铭记于心。
+---
+
+## 贡献
+
+**衷心感谢**每一位帮助 ReactPress 成长的朋友——无论是代码、文档、Issue、反馈还是早期灵感。
 
 <table>
   <tbody>
@@ -257,29 +302,24 @@ docker compose -f docker-compose.prod.yml up -d
   </tbody>
 </table>
 
-**欢迎一起参与。** 我们期待你在错误修复、新功能、文档与翻译等方面的帮助：
+**欢迎一起参与。**
 
 1. Fork 仓库并克隆到本地
-2. 安装依赖：`pnpm install`
-3. 启动开发：`pnpm run dev`
+2. `pnpm install`
+3. `pnpm run dev`
 
-有价值的贡献会在本 README 中署名展示——PR 合并后，你的头像与 GitHub 主页将出现在上方列表中。详见[贡献指南](https://github.com/fecommunity/reactpress/blob/master/CONTRIBUTING.md)。
+PR 合并后，贡献者头像将展示于上方列表。详见[贡献指南](https://github.com/fecommunity/reactpress/blob/master/CONTRIBUTING.md)。
 
-### 📦 发布
+**维护者发布 npm 包：** `pnpm login` → `pnpm run release`，按提示选择包与版本号。
 
-维护者发布 npm 包：`pnpm login` → `pnpm run release`，按提示选择包与版本号。
+---
 
-## ❤️ 致谢
+## 致谢
 
-ReactPress 受到许多优秀开源项目的启发和构建：
+ReactPress 受益于 [Next.js](https://github.com/vercel/next.js)、[NestJS](https://github.com/nestjs/nest)、[Ant Design](https://github.com/ant-design/ant-design) 与 [TypeORM](https://github.com/typeorm/typeorm) 等优秀开源项目，感谢所有维护者与贡献者。
 
-- [Next.js](https://github.com/vercel/next.js) - React 框架
-- [NestJS](https://github.com/nestjs/nest) - 渐进式 Node.js 框架
-- [Ant Design](https://github.com/ant-design/ant-design) - UI 设计语言
-- [TypeORM](https://github.com/typeorm/typeorm) - TypeScript 和 JavaScript 的 ORM
+---
 
-我们感谢这些项目的作者和贡献者的出色工作。
-
-## 📈 Star 历史
+## Star 历史
 
 [![Star History Chart](https://api.star-history.com/svg?repos=fecommunity/reactpress&type=Date)](https://star-history.com/#fecommunity/reactpress&Date)

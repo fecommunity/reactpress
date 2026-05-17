@@ -5,7 +5,7 @@
 
   <p align="center">
     <strong>Your publishing platform — live in about a minute</strong><br />
-    One install. One command. Site, admin, and API ready to go.
+    One global install. Two commands. Site, admin, and API ready to go.
   </p>
 
   [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/fecommunity/reactpress/blob/master/LICENSE)
@@ -25,66 +25,42 @@
 
 ---
 
-## What is ReactPress?
+## Table of contents
 
-**ReactPress** is a modern publishing platform for blogs, company sites, and content-driven products. Install once, run `init` and `dev`, and you get a public site, a full admin console, and an API — without wrestling with setup files or manual database wiring.
-
-> **One backend, many fronts.** Publish from one place; present your content on the web, in admin, or through your own apps.
-
-[![ReactPress Poster](./public/poster.png)](https://blog.gaoredu.com)
+- [What is ReactPress?](#what-is-reactpress)
+- [Quick start](#quick-start)
+- [See it in action](#see-it-in-action)
+- [Highlights](#highlights)
+- [CLI reference](#cli-reference)
+- [Deploy](#deploy)
+- [Develop this repository](#develop-this-repository)
+- [Contributing](#contributing)
 
 ---
 
-## Highlights
+## What is ReactPress?
 
-| | |
-| :--- | :--- |
-| **Go live in minutes** | `reactpress init` then `reactpress dev` — guided setup, automatic database, URLs printed when ready |
-| **Publish & manage** | Posts, pages, media, and site settings from a familiar admin |
-| **Make it yours** | Themes, light/dark mode, templates from minimal hello-world to full blog |
-| **Run your way** | All-in-one local dev, API-only headless mode, or production deploy |
-| **Built-in DX** | Interactive menu, `doctor`, `status`, and clear error guidance |
+**ReactPress** is a modern publishing platform for blogs, company sites, and content-driven products. Install the CLI once, run `init` and `dev`, and you get a public site, admin console, and API — without hand-writing config files or wiring a database yourself.
+
+> **One backend, many fronts.** Publish in one place; show content on the web, in admin, or through your own apps via the API.
+
+[![ReactPress Poster](./public/poster.png)](https://blog.gaoredu.com)
 
 [3.0 overview](./docs/tutorial/tutorial-extras/reactpress-3-0.md) · [Upgrade from 2.x](./docs/migration-2-to-3.md)
 
 ---
 
-## Why ReactPress?
-
-| | Traditional CMS | Static site tools | **ReactPress** |
-| :--- | :--- | :--- | :--- |
-| **Getting started** | Server, plugins, manual config | Repo + build per site | **One CLI, ~1 minute to a working CMS** |
-| **Content workflow** | Admin UI, coupled themes | Markdown in git | **Admin UI + optional code-first workflows** |
-| **Flexibility** | Theme/plugin ecosystem | Fixed at build time | **Decoupled: one content hub, your choice of frontends** |
-| **Fit** | General blogs & business sites | Docs & marketing pages | **Blogs, multi-site content, custom publisher flows** |
-
----
-
-## Features
-
-**Launch fast** — guided first run, one-command dev, database handled for a typical start.
-
-**Publish with confidence** — rich content management, media library, roles and workflow from the admin.
-
-**Make it yours** — themes and appearance (including light/dark), starter templates, headless API when you need a custom frontend.
-
-**Operate in production** — `build` / `start` from the same CLI, `doctor` and `status` for diagnostics, deploy via cloud button, process manager, or your own hosting.
-
----
-
-## See it in action
-
-### Admin dashboard
-[![Admin Dashboard](./public/admin.png)](https://blog.gaoredu.com)
-
-### Demo site
-[![Demo Site](./public/demo.png)](https://blog.gaoredu.com)
-
----
-
 ## Quick start
 
-**You need:** Node.js 18+ and Docker (for the default bundled database), or your own MySQL.
+### Prerequisites
+
+| Requirement | Notes |
+| :--- | :--- |
+| **Node.js 18+** | Required for the CLI |
+| **Docker** | Recommended — default bundled MySQL runs in a container |
+| **MySQL** | Optional — use your own instance instead of Docker |
+
+### Install and run
 
 ```bash
 npm i -g @fecommunity/reactpress@3
@@ -93,30 +69,81 @@ reactpress init
 reactpress dev
 ```
 
-When dev is ready, open the URLs shown in the terminal (site, `/admin`, and API health).
+When `dev` is ready, open the URLs printed in the terminal:
 
-- Run `reactpress` with no args for the interactive menu
-- Run `reactpress doctor` or `reactpress status` if something doesn’t look right
+| Service | Typical URL |
+| :--- | :--- |
+| Public site | `http://localhost:3001` |
+| Admin | `http://localhost:3001/admin` |
+| API health | `http://localhost:3002/api/health` |
 
-**Contributing to this repo?** See [README-zh_CN.md](./README-zh_CN.md) for the full local dev and deploy workflow.
+### Tips
 
-**Upgrading from 2.x?** [Migration guide](./docs/migration-2-to-3.md)
+- Run `reactpress` with no arguments for the interactive menu.
+- Run `reactpress doctor` or `reactpress status` if something does not look right.
+- Upgrading from 2.x? See the [migration guide](./docs/migration-2-to-3.md).
 
 ---
 
-## CLI essentials
+## See it in action
 
-| Command | What it does |
+### Usage demo
+
+Install, initialize, start dev, and open your site — all from the terminal:
+
+<p align="center">
+  <video src="./public/usage.webm" controls width="100%">
+    <a href="./public/usage.webm">Download the usage demo (WebM)</a>
+  </video>
+</p>
+
+### Screenshots
+
+| Admin dashboard | Demo site |
+| :---: | :---: |
+| [![Admin Dashboard](./public/admin.png)](https://blog.gaoredu.com) | [![Demo Site](./public/demo.png)](https://blog.gaoredu.com) |
+
+---
+
+## Highlights
+
+| Topic | What you get |
+| :--- | :--- |
+| **Go live fast** | `init` + `dev` — guided setup, automatic database, URLs when ready |
+| **Publish & manage** | Posts, pages, media, and site settings from the admin |
+| **Customize** | Themes, light/dark mode, templates from minimal hello-world to full blog |
+| **Flexible runtime** | All-in-one local dev, API-only headless mode, or production deploy |
+| **Developer experience** | Interactive menu, `doctor`, `status`, and clear error messages |
+
+### How it compares
+
+| | Traditional CMS | Static generators | **ReactPress** |
+| :--- | :--- | :--- | :--- |
+| **Getting started** | Server, plugins, manual setup | Repo + build per site | **One CLI, ~1 minute to a working CMS** |
+| **Content** | Admin UI, coupled themes | Markdown in git | **Admin UI + optional code-first workflows** |
+| **Frontends** | Theme/plugin ecosystem | Fixed at build time | **One content hub, your choice of presentation** |
+| **Best for** | General blogs & business sites | Docs & marketing pages | **Blogs, multi-site content, custom publishing flows** |
+
+---
+
+## CLI reference
+
+```bash
+npm i -g @fecommunity/reactpress@3
+```
+
+| Command | Description |
 | :--- | :--- |
 | `reactpress` | Interactive menu |
-| `reactpress init` | Set up a new project |
+| `reactpress init` | Set up a new project (config + `.env`) |
 | `reactpress dev` | Run site + admin + API locally |
-| `reactpress dev --api-only` | API only (for custom frontends) |
+| `reactpress dev --api-only` | API only — for custom frontends |
 | `reactpress doctor` | Check your environment |
-| `reactpress status` | See what’s running |
-| `reactpress build` / `reactpress start` | Production build and run |
+| `reactpress status` | See what is running |
+| `reactpress build` | Production build |
+| `reactpress start` | Run production build |
 
-Full reference: [documentation](https://blog.gaoredu.com) · [Configuration](./docs/tutorial/tutorial-extras/config-intro.md)
+More: [documentation](https://blog.gaoredu.com) · [Configuration](./docs/tutorial/tutorial-extras/config-intro.md)
 
 ---
 
@@ -130,13 +157,24 @@ reactpress build
 reactpress start
 ```
 
-More deployment patterns are covered in [README-zh_CN.md](./README-zh_CN.md) and the [docs](./docs/tutorial/intro.md).
+For PM2, Docker, and monorepo deployment details, see [README-zh_CN.md](./README-zh_CN.md) and the [docs](./docs/tutorial/intro.md).
+
+---
+
+## Develop this repository
+
+This repo is a **monorepo** (CLI, client, server, toolkit, templates). If you are contributing code here — not just using the published npm package — use **pnpm** and follow the full workflow in [README-zh_CN.md](./README-zh_CN.md):
+
+```bash
+pnpm install
+pnpm run dev
+```
 
 ---
 
 ## Contributing
 
-**Thank you** to everyone who has helped shape ReactPress — through code, documentation, issues, feedback, and early inspiration. We’re grateful for your time and care.
+**Thank you** to everyone who has helped shape ReactPress — through code, documentation, issues, feedback, and early inspiration.
 
 <table>
   <tbody>
@@ -163,19 +201,19 @@ More deployment patterns are covered in [README-zh_CN.md](./README-zh_CN.md) and
   </tbody>
 </table>
 
-**You’re welcome to join us.** We’d love your help with bug fixes, features, docs, and translations:
+**You are welcome to join us.**
 
 1. Fork and clone the repo
 2. `pnpm install`
 3. `pnpm run dev`
 
-Meaningful contributions are credited on this README — your avatar and GitHub profile will appear in the list above after your PR is merged. See the [Contributing Guide](https://github.com/fecommunity/reactpress/blob/master/CONTRIBUTING.md) for workflow and guidelines.
+Meaningful contributions are credited here after your PR is merged. See the [Contributing Guide](https://github.com/fecommunity/reactpress/blob/master/CONTRIBUTING.md).
 
 ---
 
 ## Acknowledgments
 
-ReactPress stands on the shoulders of many excellent open-source communities — including [Next.js](https://github.com/vercel/next.js), [NestJS](https://github.com/nestjs/nest), [Ant Design](https://github.com/ant-design/ant-design), and [TypeORM](https://github.com/typeorm/typeorm). Thank you to everyone who builds and maintains the tools we rely on.
+ReactPress builds on [Next.js](https://github.com/vercel/next.js), [NestJS](https://github.com/nestjs/nest), [Ant Design](https://github.com/ant-design/ant-design), and [TypeORM](https://github.com/typeorm/typeorm). Thank you to everyone who maintains the tools we rely on.
 
 ---
 
