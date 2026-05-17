@@ -338,13 +338,19 @@
     "message": "Copied!"
   },
   "home.cli.copyAll.aria": {
-    "message": "Copy install command"
+    "message": "Copy quick start commands"
   },
   "home.cli.copyLine.aria": {
     "message": "Copy command: {line}"
   },
   "home.cli.hint": {
-    "message": "After global install, initialize in an empty folder — your site is ready in about a minute"
+    "message": "Copy all commands and paste into your terminal to get started"
+  },
+  "home.cli.running": {
+    "message": "Running"
+  },
+  "home.cli.terminal.aria": {
+    "message": "ReactPress quick start command demo"
   },
   "home.highlights.title": {
     "message": "3.0 highlights"
