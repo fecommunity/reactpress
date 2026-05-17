@@ -35,16 +35,17 @@
 
 ---
 
-## What you can do
+## Highlights
 
-| Capability | What it means for you |
+| | |
 | :--- | :--- |
-| **Go live in minutes** | Guided setup, automatic database, local URLs printed when ready |
-| **Publish & manage content** | Posts, pages, media, and site settings from a familiar admin |
-| **Brand your site** | Themes, light/dark mode, templates from minimal to full blog |
-| **Speak your audience’s language** | Built-in Chinese and English interfaces |
+| **Go live in minutes** | `reactpress init` then `reactpress dev` — guided setup, automatic database, URLs printed when ready |
+| **Publish & manage** | Posts, pages, media, and site settings from a familiar admin |
+| **Make it yours** | Themes, light/dark mode, templates from minimal hello-world to full blog |
 | **Run your way** | All-in-one local dev, API-only headless mode, or production deploy |
-| **Stay confident** | Built-in health checks, status, and clear error guidance |
+| **Built-in DX** | Interactive menu, `doctor`, `status`, and clear error guidance |
+
+[3.0 overview](./docs/tutorial/tutorial-extras/reactpress-3-0.md) · [Upgrade from 2.x](./docs/migration-2-to-3.md)
 
 ---
 
@@ -59,39 +60,15 @@
 
 ---
 
-## ReactPress 3.0 at a glance
+## Features
 
-| | |
-| :--- | :--- |
-| **Zero hassle setup** | `reactpress init` then `reactpress dev` — environment prepared for you |
-| **Single entry point** | One global package, one `reactpress` command for the full lifecycle |
-| **Thoughtful DX** | Interactive menu, `doctor`, `status`, and actionable messages when something’s wrong |
+**Launch fast** — guided first run, one-command dev, database handled for a typical start.
 
-[3.0 overview](./docs/tutorial/tutorial-extras/reactpress-3-0.md) · [Upgrade from 2.x](./docs/migration-2-to-3.md)
+**Publish with confidence** — rich content management, media library, roles and workflow from the admin.
 
----
+**Make it yours** — themes and appearance (including light/dark), starter templates, headless API when you need a custom frontend.
 
-## Core capabilities
-
-### Launch fast
-- **Guided first run** — installation wizard walks you through site basics
-- **One command dev** — site, admin, and API up together
-- **Database handled** — no manual schema or connection juggling for a typical start
-
-### Publish with confidence
-- **Rich content management** — create and organize what readers see
-- **Media library** — upload and reuse assets from the admin
-- **Roles & workflow** — manage the site without touching low-level config
-
-### Make it yours
-- **Themes & appearance** — switch look and feel, including light/dark
-- **Starter templates** — from minimal hello-world to a full blog layout
-- **Extend when you need to** — headless API mode for custom frontends
-
-### Operate in production
-- **Build & start** — production lifecycle from the same CLI
-- **Diagnostics** — `doctor` and `status` when you need to see what’s running
-- **Deploy options** — cloud button, process manager, or your own hosting
+**Operate in production** — `build` / `start` from the same CLI, `doctor` and `status` for diagnostics, deploy via cloud button, process manager, or your own hosting.
 
 ---
 
@@ -159,19 +136,46 @@ More deployment patterns are covered in [README-zh_CN.md](./README-zh_CN.md) and
 
 ## Contributing
 
-We welcome bug fixes, features, docs, and translations.
+**Thank you** to everyone who has helped shape ReactPress — through code, documentation, issues, feedback, and early inspiration. We’re grateful for your time and care.
+
+<table>
+  <tbody>
+    <tr>
+      <td align="center" width="12.5%"><a href="https://github.com/fecommunity"><img src="https://github.com/fecommunity.png?s=72" width="72" height="72" style="border-radius:50%" alt="fecommunity"/><br/><sub><b>FECommunity</b></sub></a></td>
+      <td align="center" width="12.5%"><a href="https://github.com/want2sleeep"><img src="https://github.com/want2sleeep.png?s=72" width="72" height="72" style="border-radius:50%" alt="want2sleeep"/><br/><sub><b>SleepSheep</b></sub></a></td>
+      <td align="center" width="12.5%"><a href="https://github.com/fantasticit"><img src="https://github.com/fantasticit.png?s=72" width="72" height="72" style="border-radius:50%" alt="fantasticit"/><br/><sub><b>fantasticit</b></sub></a></td>
+      <td align="center" width="12.5%"><a href="https://github.com/chenbo29"><img src="https://github.com/chenbo29.png?s=72" width="72" height="72" style="border-radius:50%" alt="chenbo29"/><br/><sub><b>chenbo29</b></sub></a></td>
+      <td align="center" width="12.5%"><a href="https://github.com/redteav2"><img src="https://github.com/redteav2.png?s=72" width="72" height="72" style="border-radius:50%" alt="redteav2"/><br/><sub><b>redteav2</b></sub></a></td>
+      <td align="center" width="12.5%"><a href="https://github.com/trashken"><img src="https://github.com/trashken.png?s=72" width="72" height="72" style="border-radius:50%" alt="trashken"/><br/><sub><b>trashken</b></sub></a></td>
+      <td align="center" width="12.5%"><a href="https://github.com/franz007"><img src="https://github.com/franz007.png?s=72" width="72" height="72" style="border-radius:50%" alt="franz007"/><br/><sub><b>franz007</b></sub></a></td>
+      <td align="center" width="12.5%"><a href="https://github.com/funtime1"><img src="https://github.com/funtime1.png?s=72" width="72" height="72" style="border-radius:50%" alt="funtime1"/><br/><sub><b>funtime1</b></sub></a></td>
+    </tr>
+    <tr>
+      <td align="center" width="12.5%"><a href="https://github.com/scottdeift"><img src="https://github.com/scottdeift.png?s=72" width="72" height="72" style="border-radius:50%" alt="scottdeift"/><br/><sub><b>scottdeift</b></sub></a></td>
+      <td align="center" width="12.5%"><a href="https://github.com/TwoDollars666"><img src="https://github.com/TwoDollars666.png?s=72" width="72" height="72" style="border-radius:50%" alt="TwoDollars666"/><br/><sub><b>TwoDollars666</b></sub></a></td>
+      <td align="center" width="12.5%"><a href="https://github.com/Xiaonan2020"><img src="https://github.com/Xiaonan2020.png?s=72" width="72" height="72" style="border-radius:50%" alt="Xiaonan2020"/><br/><sub><b>Xiaonan2020</b></sub></a></td>
+      <td align="center" width="12.5%"><a href="https://github.com/gaoredu"><img src="https://avatars.githubusercontent.com/u/190012690?s=72" width="72" height="72" style="border-radius:50%" alt="gaoredu"/><br/><sub><b>redtea</b></sub></a></td>
+      <td align="center" width="12.5%"><a href="https://github.com/fecommunity"><img src="https://avatars.githubusercontent.com/u/55874467?s=72" width="72" height="72" style="border-radius:50%" alt="m0_37981569"/><br/><sub><b>m0_37981569</b></sub></a></td>
+      <td align="center" width="12.5%"></td>
+      <td align="center" width="12.5%"></td>
+      <td align="center" width="12.5%"></td>
+    </tr>
+  </tbody>
+</table>
+
+**You’re welcome to join us.** We’d love your help with bug fixes, features, docs, and translations:
 
 1. Fork and clone the repo
 2. `pnpm install`
 3. `pnpm run dev`
 
-See [Contributing Guide](https://github.com/fecommunity/reactpress/blob/master/CONTRIBUTING.md) for details.
+Meaningful contributions are credited on this README — your avatar and GitHub profile will appear in the list above after your PR is merged. See the [Contributing Guide](https://github.com/fecommunity/reactpress/blob/master/CONTRIBUTING.md) for workflow and guidelines.
 
 ---
 
 ## Acknowledgments
 
-ReactPress stands on the shoulders of many excellent open-source communities. Thank you to everyone who builds and maintains the tools we rely on.
+ReactPress stands on the shoulders of many excellent open-source communities — including [Next.js](https://github.com/vercel/next.js), [NestJS](https://github.com/nestjs/nest), [Ant Design](https://github.com/ant-design/ant-design), and [TypeORM](https://github.com/typeorm/typeorm). Thank you to everyone who builds and maintains the tools we rely on.
 
 ---
 
