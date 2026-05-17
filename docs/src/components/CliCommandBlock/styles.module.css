@@ -95,6 +95,9 @@
 
 .toolbarTitle {
   flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   font-size: 0.75rem;
   font-weight: 500;
   color: rgba(255, 255, 255, 0.4);
@@ -145,11 +148,44 @@
   padding: 0;
 }
 
+.bodyAnimated {
+  min-height: 11.5rem;
+}
+
+.terminalScroll {
+  max-height: 13.5rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+}
+
+.terminalScroll::-webkit-scrollbar {
+  width: 5px;
+}
+
+.terminalScroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+
 .commandRow {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.5rem;
-  padding: 0.7rem 0.9rem;
+  padding: 0.45rem 0.9rem;
+}
+
+.commandRow:first-child {
+  padding-top: 0.65rem;
+}
+
+.commandRow:last-child {
+  padding-bottom: 0.65rem;
+}
+
+.commandRow + .commandRow {
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
 }
 
 .prompt {
@@ -171,6 +207,111 @@
   padding: 0;
   text-align: left;
   word-break: break-all;
+}
+
+.cursor {
+  display: inline-block;
+  width: 0.5em;
+  height: 1em;
+  margin-left: 1px;
+  vertical-align: text-bottom;
+  background: #74e68f;
+  animation: cursorBlink 1s step-end infinite;
+}
+
+@keyframes cursorBlink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.outputRow,
+.successRow {
+  padding: 0.2rem 0.9rem 0.2rem 1.65rem;
+  animation: lineIn 0.28s ease both;
+}
+
+.outputRow:first-of-type,
+.successRow:first-of-type {
+  padding-top: 0.15rem;
+}
+
+@keyframes lineIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.outputText {
+  display: block;
+  font-family: var(--ifm-font-family-monospace);
+  font-size: clamp(0.72rem, 1.8vw, 0.82rem);
+  color: rgba(255, 255, 255, 0.48);
+  line-height: 1.45;
+}
+
+.successText {
+  display: block;
+  font-family: var(--ifm-font-family-monospace);
+  font-size: clamp(0.72rem, 1.8vw, 0.82rem);
+  color: #74e68f;
+  line-height: 1.5;
+}
+
+.successRow:first-of-type .successText {
+  font-weight: 600;
+  margin-top: 0.15rem;
+}
+
+.toolbarStatus {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #74e68f;
+  padding: 0.12rem 0.45rem;
+  border-radius: 999px;
+  background: rgba(116, 230, 143, 0.12);
+  border: 1px solid rgba(116, 230, 143, 0.28);
+  animation: statusIn 0.35s ease both;
+}
+
+@keyframes statusIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.dotLive {
+  box-shadow: 0 0 0 2px rgba(40, 200, 64, 0.35);
+  animation: dotPulse 2s ease-in-out infinite;
+}
+
+@keyframes dotPulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+
+.wrapper[data-ready] .glow {
+  opacity: 0.85;
 }
 
 .hint {
@@ -198,6 +339,14 @@
   }
 
   .hero .panel {
+    animation: none;
+  }
+
+  .cursor,
+  .outputRow,
+  .successRow,
+  .toolbarStatus,
+  .dotLive {
     animation: none;
   }
 }
