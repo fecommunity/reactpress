@@ -17,7 +17,7 @@ function CallToAction() {
           </h2>
           <p className={styles.subtitle}>
             <Translate id="home.call.subtitle">
-              从个人博客到团队内容站，ReactPress 提供开箱即用的发布与治理能力。
+              从个人博客到团队内容站，发布、管理与协作，开箱即用。
             </Translate>
           </p>
         </header>

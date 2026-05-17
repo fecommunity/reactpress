@@ -127,7 +127,7 @@ export default function CliCommandBlock({
         {showHint && (
           <p className={styles.hint}>
             <Translate id="home.cli.hint">
-              全局安装后执行 reactpress init，约 1 分钟零配置起站
+              全局安装后，在空目录初始化，约 1 分钟即可零配置起站
             </Translate>
           </p>
         )}
