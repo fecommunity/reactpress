@@ -2,3 +2,8 @@ reactpress:
   label: ReactPress
   permalink: /reactpress
   description: ReactPress description
+
+release:
+  label: Release
+  permalink: /release
+  description: Version releases
