@@ -1,0 +1,9 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Cursor Agent 默认会在提交信息末尾追加 Co-authored-by，GitHub 会将其计为贡献者
+COMMIT_MSG_FILE=$1
+if [ -f "$COMMIT_MSG_FILE" ]; then
+  grep -v '^Co-authored-by: Cursor <cursoragent@cursor.com>$' "$COMMIT_MSG_FILE" > "${COMMIT_MSG_FILE}.tmp" &&
+    mv "${COMMIT_MSG_FILE}.tmp" "$COMMIT_MSG_FILE"
+fi

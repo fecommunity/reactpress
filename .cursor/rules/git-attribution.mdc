@@ -1,0 +1,10 @@
+---
+description: Git 提交与 PR 归因规则，避免 Cursor 出现在 GitHub Contributors
+alwaysApply: true
+---
+
+# Git 提交归因
+
+- 禁止在 commit message、PR 描述或代码注释中添加 `Co-authored-by: Cursor`、`Made-with: Cursor` 或任何 Cursor 相关 trailer。
+- 使用 `git commit` 时仅使用仓库维护者本人的 `user.name` / `user.email`。
+- 若需代写提交说明，不要附带 Cursor 共同作者行。
