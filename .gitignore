@@ -3,6 +3,7 @@ node_modules
 .idea
 .next
 
+.env
 .env.prod
 .reactpress/
 *.local
