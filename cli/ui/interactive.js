@@ -10,7 +10,7 @@ const { runLifecycleCommand } = require('../lib/lifecycle');
 const { runDockerCommand } = require('../lib/docker');
 const { printUnifiedStatus } = require('../lib/status');
 const { runDoctor } = require('../lib/doctor');
-const { runBuild } = require('../lib/build');
+const { runBuild, TARGETS } = require('../lib/build');
 const { runNodeScript } = require('../lib/spawn');
 const { getClientBin } = require('../lib/paths');
 const { loadClientSiteUrl } = require('../lib/http');
@@ -79,9 +79,25 @@ async function runMenuAction(action, projectRoot) {
       if (code !== 0) process.exit(code);
       return true;
     }
-    case 'build':
-      await runBuild('all', projectRoot);
+    case 'build': {
+      const buildChoices = TARGETS.map((target) => ({
+        name:
+          target === 'all'
+            ? t('menu.buildAll')
+            : t(`build.label.${target}`),
+        value: target,
+      }));
+      const { target } = await inquirer.prompt([
+        {
+          type: 'list',
+          name: 'target',
+          message: t('menu.buildTarget'),
+          choices: buildChoices,
+        },
+      ]);
+      await runBuild(target, projectRoot);
       return true;
+    }
     case 'docker:start':
       await runDockerCommand('start', projectRoot);
       return false;
