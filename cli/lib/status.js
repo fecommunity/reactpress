@@ -37,7 +37,7 @@ async function printUnifiedStatus(projectRoot = ensureOriginalCwd()) {
     checkHealth(healthUrl),
   ]);
 
-  const apiSource = isUsingMonorepoServer()
+  const apiSource = isUsingMonorepoServer(projectRoot)
     ? t('status.apiSource.monorepo')
     : t('status.apiSource.bundle');
 
