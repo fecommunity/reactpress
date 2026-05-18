@@ -1,13 +1,19 @@
 const fs = require('fs');
 const path = require('path');
-const { getMonorepoRoot } = require('./root');
+const { ensureOriginalCwd, getMonorepoRoot } = require('./root');
 
-function getMonorepoServerDir() {
-  return path.join(getMonorepoRoot(), 'server');
+function resolveProjectRoot(projectRoot) {
+  return path.resolve(projectRoot || ensureOriginalCwd());
 }
 
-function hasMonorepoServerSource() {
-  return fs.existsSync(path.join(getMonorepoServerDir(), 'src', 'main.ts'));
+function getMonorepoServerDir(projectRoot) {
+  return path.join(resolveProjectRoot(projectRoot), 'server');
+}
+
+function hasMonorepoServerSource(projectRoot) {
+  return fs.existsSync(
+    path.join(getMonorepoServerDir(projectRoot), 'src', 'main.ts')
+  );
 }
 
 function getCliPackageRoot() {
@@ -28,42 +34,69 @@ function getBundledServerDir() {
   return path.join(getCliPackageRoot(), 'server');
 }
 
-function getServerDir() {
-  if (hasMonorepoServerSource()) {
-    return getMonorepoServerDir();
+function hasBundledServerBuild() {
+  return fs.existsSync(path.join(getBundledServerDir(), 'dist', 'main.js'));
+}
+
+function getServerDir(projectRoot) {
+  if (hasMonorepoServerSource(projectRoot)) {
+    return getMonorepoServerDir(projectRoot);
   }
   return getBundledServerDir();
 }
 
-function getServerBin() {
-  return path.join(getServerDir(), 'bin', 'reactpress-server.js');
+function getServerBin(projectRoot) {
+  return path.join(getServerDir(projectRoot), 'bin', 'reactpress-server.js');
 }
 
-function getSwaggerPath() {
-  return path.join(getServerDir(), 'public', 'swagger.json');
+function getSwaggerPath(projectRoot) {
+  return path.join(getServerDir(projectRoot), 'public', 'swagger.json');
 }
 
-function getServerMain() {
-  return path.join(getServerDir(), 'dist', 'main.js');
+function getServerMain(projectRoot) {
+  return path.join(getServerDir(projectRoot), 'dist', 'main.js');
 }
 
-function isUsingMonorepoServer() {
-  return hasMonorepoServerSource();
+function isUsingMonorepoServer(projectRoot) {
+  return hasMonorepoServerSource(projectRoot);
 }
 
-function getClientBin() {
-  return path.join(getMonorepoRoot(), 'client', 'bin', 'reactpress-client.js');
+function canStartLocalApi(projectRoot) {
+  return (
+    isUsingMonorepoServer(projectRoot) ||
+    hasBundledServerBuild()
+  );
+}
+
+function getClientBin(projectRoot) {
+  const binPath = path.join(
+    resolveProjectRoot(projectRoot),
+    'client',
+    'bin',
+    'reactpress-client.js'
+  );
+  if (!fs.existsSync(binPath)) {
+    const err = new Error(
+      `Client entry not found: ${binPath}. Run from a ReactPress monorepo root or use reactpress dev --client-only with a remote API.`
+    );
+    err.code = 'REACTPRESS_CLIENT_NOT_FOUND';
+    throw err;
+  }
+  return binPath;
 }
 
 function getPidFile(projectRoot) {
-  return path.join(projectRoot, '.reactpress', 'server.pid');
+  return path.join(resolveProjectRoot(projectRoot), '.reactpress', 'server.pid');
 }
 
 module.exports = {
   getMonorepoRoot,
+  resolveProjectRoot,
   getMonorepoServerDir,
   hasMonorepoServerSource,
+  hasBundledServerBuild,
   isUsingMonorepoServer,
+  canStartLocalApi,
   getCliPackageRoot,
   getBundledServerDir,
   getServerDir,
