@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const { pathToFileURL } = require('url');
-const { getMonorepoRoot, isMonorepoCheckout } = require('./root');
+const { ensureOriginalCwd, isMonorepoCheckout } = require('./root');
 const { getCliPackageRoot } = require('./paths');
 const { t } = require('./i18n');
 
@@ -68,7 +68,7 @@ async function initMonorepoProject(projectRoot, { force = false } = {}) {
   };
 }
 
-async function ensureProjectEnvironment(projectRoot = getMonorepoRoot()) {
+async function ensureProjectEnvironment(projectRoot = ensureOriginalCwd()) {
   const root = path.resolve(projectRoot);
   const { setProjectCwd } = await importCliModule('utils/cli-context.js');
   setProjectCwd(root);

@@ -1,3 +1,5 @@
+const fs = require('fs');
+const path = require('path');
 const chalk = require('chalk');
 const { runSync } = require('./spawn');
 const { ensureOriginalCwd } = require('./root');
@@ -21,6 +23,60 @@ const BUILD_STEPS = {
 const TARGETS = Object.keys(BUILD_STEPS);
 
 const buildChildEnv = { REACTPRESS_BUILD_ACTIVE: '1' };
+
+function readPackageScripts(packageJsonPath) {
+  try {
+    const pkg = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+    return pkg.scripts || {};
+  } catch {
+    return {};
+  }
+}
+
+/** Prefer workspace package scripts over root package.json aliases. */
+function resolveBuildInvocation(script, projectRoot) {
+  const root = path.resolve(projectRoot);
+
+  if (script === 'build:toolkit') {
+    const toolkitDir = path.join(root, 'toolkit');
+    if (fs.existsSync(path.join(toolkitDir, 'package.json'))) {
+      return { command: 'pnpm', args: ['run', 'build'], cwd: toolkitDir };
+    }
+    const rootScripts = readPackageScripts(path.join(root, 'package.json'));
+    if (rootScripts['build:toolkit']) {
+      return { command: 'pnpm', args: ['run', 'build:toolkit'], cwd: root };
+    }
+    return null;
+  }
+
+  if (script === 'build:server') {
+    const serverDir = path.join(root, 'server');
+    if (fs.existsSync(path.join(serverDir, 'package.json'))) {
+      return { command: 'pnpm', args: ['run', 'build'], cwd: serverDir };
+    }
+  }
+
+  if (script === 'build:client') {
+    const clientDir = path.join(root, 'client');
+    if (fs.existsSync(path.join(clientDir, 'package.json'))) {
+      return { command: 'pnpm', args: ['run', 'build'], cwd: clientDir };
+    }
+  }
+
+  if (script === 'build:docs') {
+    const docsDir = path.join(root, 'docs');
+    if (fs.existsSync(path.join(docsDir, 'package.json'))) {
+      return { command: 'pnpm', args: ['run', 'build'], cwd: docsDir };
+    }
+  }
+
+  const rootScripts = readPackageScripts(path.join(root, 'package.json'));
+  if (rootScripts[script]) {
+    return { command: 'pnpm', args: ['run', script], cwd: root };
+  }
+
+  return null;
+}
 
 async function runBuild(target = 'all', projectRoot = ensureOriginalCwd()) {
   if (process.env.REACTPRESS_BUILD_ACTIVE === '1') {
@@ -55,8 +111,18 @@ async function runBuild(target = 'all', projectRoot = ensureOriginalCwd()) {
     const stepStarted = Date.now();
 
     console.log(t('build.step', { current, total, label }));
+
+    const invocation = resolveBuildInvocation(script, projectRoot);
+    if (!invocation) {
+      console.log(chalk.yellow(t('build.stepSkipped', { label })));
+      continue;
+    }
+
     try {
-      runSync('pnpm', ['run', script], { cwd: projectRoot, env: buildChildEnv });
+      runSync(invocation.command, invocation.args, {
+        cwd: invocation.cwd,
+        env: buildChildEnv,
+      });
     } catch (err) {
       console.error(chalk.red(t('build.stepFailed', { current, total, label })));
       throw err;
@@ -72,4 +138,9 @@ async function runBuild(target = 'all', projectRoot = ensureOriginalCwd()) {
   }
 }
 
-module.exports = { runBuild, TARGETS, BUILD_STEPS };
+module.exports = {
+  runBuild,
+  TARGETS,
+  BUILD_STEPS,
+  resolveBuildInvocation,
+};

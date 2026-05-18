@@ -1,14 +1,15 @@
-const { spawn, spawnSync } = require('child_process');
+const { spawn } = require('child_process');
 const { ensureProjectEnvironment } = require('./bootstrap');
 const { loadServerSiteUrl, waitForHttp } = require('./http');
 const {
   getServerBin,
   getServerDir,
   isUsingMonorepoServer,
+  canStartLocalApi,
   getPidFile,
 } = require('./paths');
 const { readPid, isProcessRunning, clearPidFile, writePid } = require('./process');
-const { getMonorepoRoot } = require('./root');
+const { ensureOriginalCwd } = require('./root');
 const { t } = require('./i18n');
 
 async function ensureConfig(projectRoot) {
@@ -46,18 +47,19 @@ async function startApi(projectRoot, { wait = true } = {}) {
   }
   clearPidFile(projectRoot);
 
-  if (!isUsingMonorepoServer()) {
-    console.warn(t('lifecycle.noServerSrc'));
-    const start = spawnSync('pnpm', ['exec', 'reactpress-cli', 'start'], {
-      cwd: projectRoot,
-      stdio: 'inherit',
-    });
-    return start.status ?? 1;
+  if (!canStartLocalApi(projectRoot)) {
+    console.error(t('lifecycle.noServerAvailable'));
+    return 1;
   }
 
-  console.log(t('lifecycle.startingLocalApi'));
-  const child = spawn(process.execPath, [getServerBin()], {
-    cwd: getServerDir(),
+  if (isUsingMonorepoServer(projectRoot)) {
+    console.log(t('lifecycle.startingLocalApi'));
+  } else {
+    console.log(t('lifecycle.startingBundledApi'));
+  }
+
+  const child = spawn(process.execPath, [getServerBin(projectRoot)], {
+    cwd: getServerDir(projectRoot),
     detached: true,
     stdio: 'ignore',
     env: {
@@ -90,7 +92,7 @@ async function statusApi(projectRoot) {
   const { isHttpResponding } = require('./http');
   const httpOk = await isHttpResponding(serverUrl);
 
-  const source = isUsingMonorepoServer()
+  const source = isUsingMonorepoServer(projectRoot)
     ? t('lifecycle.source.monorepo')
     : t('lifecycle.source.bundle');
 
@@ -119,7 +121,7 @@ async function statusApi(projectRoot) {
   );
 }
 
-async function runLifecycleCommand(command, projectRoot = process.env.REACTPRESS_ORIGINAL_CWD || getMonorepoRoot()) {
+async function runLifecycleCommand(command, projectRoot = ensureOriginalCwd()) {
   switch (command) {
     case 'start':
       return startApi(projectRoot, { wait: true });
@@ -127,22 +129,9 @@ async function runLifecycleCommand(command, projectRoot = process.env.REACTPRESS
       return startApi(projectRoot, { wait: false });
     case 'stop':
       stopApi(projectRoot);
-      if (!isUsingMonorepoServer()) {
-        spawnSync('pnpm', ['exec', 'reactpress-cli', 'stop'], {
-          cwd: projectRoot,
-          stdio: 'inherit',
-        });
-      }
       return 0;
     case 'restart':
       stopApi(projectRoot);
-      if (!isUsingMonorepoServer()) {
-        spawnSync('pnpm', ['exec', 'reactpress-cli', 'restart'], {
-          cwd: projectRoot,
-          stdio: 'inherit',
-        });
-        return 0;
-      }
       return startApi(projectRoot, { wait: true });
     case 'status':
       await statusApi(projectRoot);
