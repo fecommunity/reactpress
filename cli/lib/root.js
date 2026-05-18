@@ -1,9 +1,17 @@
 const fs = require('fs');
 const path = require('path');
 
-/** Monorepo root (parent of cli/) */
+/**
+ * Install root: monorepo checkout (repo root) or published @fecommunity/reactpress package root.
+ * cli/lib -> ../.. when pnpm-workspace.yaml exists; published lib/ -> .. only.
+ */
 function getMonorepoRoot() {
-  return path.resolve(__dirname, '../..');
+  const packageRoot = path.resolve(__dirname, '..');
+  const parentOfPackage = path.resolve(__dirname, '../..');
+  if (fs.existsSync(path.join(parentOfPackage, 'pnpm-workspace.yaml'))) {
+    return parentOfPackage;
+  }
+  return packageRoot;
 }
 
 function getProjectRoot() {
