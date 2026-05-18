@@ -8,7 +8,7 @@
 const { Command } = require('commander');
 const path = require('path');
 const chalk = require('chalk');
-const { ensureOriginalCwd, getMonorepoRoot } = require('../lib/root');
+const { ensureOriginalCwd } = require('../lib/root');
 const { ensureProjectEnvironment, initMonorepoProject } = require('../lib/bootstrap');
 const { runDev } = require('../lib/dev');
 const { runApiDev } = require('../lib/api-dev');
@@ -24,7 +24,7 @@ const { getClientBin } = require('../lib/paths');
 const { runInteractiveLoop } = require('../ui/interactive');
 const { t } = require('../lib/i18n');
 
-const rootPkg = require(path.join(getMonorepoRoot(), 'package.json'));
+const rootPkg = require(path.join(__dirname, '..', 'package.json'));
 
 const program = new Command();
 

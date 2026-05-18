@@ -5,9 +5,9 @@ const { t } = require('./i18n');
 
 function startApiWithPm2(projectRoot = ensureOriginalCwd()) {
   return new Promise((resolve, reject) => {
-    const child = spawn(process.execPath, [getServerBin(), '--pm2'], {
+    const child = spawn(process.execPath, [getServerBin(projectRoot), '--pm2'], {
       stdio: 'inherit',
-      cwd: getServerDir(),
+      cwd: getServerDir(projectRoot),
       env: {
         ...process.env,
         REACTPRESS_ORIGINAL_CWD: projectRoot,

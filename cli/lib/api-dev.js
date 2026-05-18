@@ -1,8 +1,14 @@
-const { spawn, spawnSync } = require('child_process');
+const { spawn } = require('child_process');
 const path = require('path');
 const { ensureProjectEnvironment } = require('./bootstrap');
-const { isUsingMonorepoServer } = require('./paths');
-const { getMonorepoRoot } = require('./root');
+const {
+  getServerBin,
+  getServerDir,
+  isUsingMonorepoServer,
+  canStartLocalApi,
+} = require('./paths');
+const { stopApi } = require('./lifecycle');
+const { ensureOriginalCwd } = require('./root');
 const { t } = require('./i18n');
 
 let apiChild;
@@ -11,16 +17,13 @@ function stopApiDev(projectRoot) {
   if (apiChild && !apiChild.killed) {
     apiChild.kill('SIGTERM');
   }
-  if (!isUsingMonorepoServer()) {
-    spawnSync('pnpm', ['exec', 'reactpress-cli', 'stop'], {
-      cwd: projectRoot,
-      stdio: 'inherit',
-    });
+  if (!isUsingMonorepoServer(projectRoot)) {
+    stopApi(projectRoot);
   }
 }
 
 function startApiDev(projectRoot) {
-  if (isUsingMonorepoServer()) {
+  if (isUsingMonorepoServer(projectRoot)) {
     console.log(t('apiDev.modeServer'));
     apiChild = spawn('pnpm', ['run', '--dir', './server', 'dev'], {
       cwd: projectRoot,
@@ -31,18 +34,19 @@ function startApiDev(projectRoot) {
         REACTPRESS_ORIGINAL_CWD: projectRoot,
       },
     });
-  } else {
-    console.log(t('apiDev.modeCli'));
-    const start = spawnSync('pnpm', ['exec', 'reactpress-cli', 'start'], {
-      cwd: projectRoot,
+  } else if (canStartLocalApi(projectRoot)) {
+    console.log(t('apiDev.modeBundled'));
+    apiChild = spawn(process.execPath, [getServerBin(projectRoot)], {
+      cwd: getServerDir(projectRoot),
       stdio: 'inherit',
+      env: {
+        ...process.env,
+        REACTPRESS_ORIGINAL_CWD: projectRoot,
+      },
     });
-    if (start.status !== 0) {
-      process.exit(start.status ?? 1);
-    }
-    console.log(t('apiDev.startedByCli'));
-    process.stdin.resume();
-    return;
+  } else {
+    console.error(t('lifecycle.noServerAvailable'));
+    process.exit(1);
   }
 
   if (apiChild) {
@@ -54,7 +58,7 @@ function startApiDev(projectRoot) {
   }
 }
 
-async function runApiDev(projectRoot = process.env.REACTPRESS_ORIGINAL_CWD || getMonorepoRoot()) {
+async function runApiDev(projectRoot = ensureOriginalCwd()) {
   try {
     await ensureProjectEnvironment(projectRoot);
   } catch (err) {

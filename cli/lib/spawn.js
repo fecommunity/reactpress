@@ -1,13 +1,13 @@
 const { spawn, spawnSync } = require('child_process');
 const path = require('path');
 const chalk = require('chalk');
-const { getMonorepoRoot } = require('./root');
+const { ensureOriginalCwd } = require('./root');
 const { getCliPackageRoot } = require('./paths');
 const { t, resolveLocale } = require('./i18n');
 
 function runSync(command, args, options = {}) {
   const result = spawnSync(command, args, {
-    cwd: options.cwd || getMonorepoRoot(),
+    cwd: options.cwd || ensureOriginalCwd(),
     stdio: 'inherit',
     env: {
       ...process.env,
@@ -32,7 +32,7 @@ function runNodeScript(scriptPath, args = [], options = {}) {
   return new Promise((resolve, reject) => {
     const child = spawn(process.execPath, [scriptPath, ...args], {
       stdio: 'inherit',
-      cwd: options.cwd || getMonorepoRoot(),
+      cwd: options.cwd || ensureOriginalCwd(),
       env: {
         ...process.env,
         REACTPRESS_LANG: process.env.REACTPRESS_LANG || resolveLocale(),
