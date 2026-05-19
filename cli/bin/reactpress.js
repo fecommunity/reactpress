@@ -8,6 +8,7 @@
 const { Command } = require('commander');
 const path = require('path');
 const chalk = require('chalk');
+const { brand, divider } = require('../ui/theme');
 const { ensureOriginalCwd } = require('../lib/root');
 const { ensureProjectEnvironment, initMonorepoProject } = require('../lib/bootstrap');
 const { runDev } = require('../lib/dev');
@@ -248,16 +249,22 @@ program
 
 program.on('--help', () => {
   console.log('');
-  console.log(chalk.gray(t('cli.help.examples')));
-  console.log(t('cli.help.interactive'));
-  console.log(t('cli.help.dev'));
-  console.log(t('cli.help.init'));
-  console.log(t('cli.help.server'));
-  console.log(t('cli.help.status'));
-  console.log(t('cli.help.doctor'));
-  console.log(t('cli.help.docker'));
-  console.log(t('cli.help.build'));
-  console.log(t('cli.help.publish'));
+  console.log(brand.bold(t('cli.help.examples')));
+  console.log(divider(40));
+  const lines = [
+    t('cli.help.interactive'),
+    t('cli.help.dev'),
+    t('cli.help.init'),
+    t('cli.help.server'),
+    t('cli.help.status'),
+    t('cli.help.doctor'),
+    t('cli.help.docker'),
+    t('cli.help.build'),
+    t('cli.help.publish'),
+  ];
+  for (const line of lines) {
+    console.log(brand.dim(line));
+  }
   console.log('');
 });
 

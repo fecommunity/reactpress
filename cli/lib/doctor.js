@@ -2,7 +2,18 @@ const fs = require('fs');
 const net = require('net');
 const path = require('path');
 const { execSync } = require('child_process');
-const chalk = require('chalk');
+const ora = require('ora');
+const {
+  brand,
+  icon,
+  ok,
+  warn,
+  divider,
+  sectionHeader,
+  terminalWidth,
+  gradientText,
+  palette,
+} = require('../ui/theme');
 const { getHealthUrl, checkHealth } = require('./http');
 const { isDockerRunning } = require('./docker');
 const { envFileStatus } = require('./status');
@@ -162,6 +173,21 @@ function checkPnpm() {
   }
 }
 
+async function runCheckWithSpinner(name, run) {
+  const spinner = ora({
+    text: t('doctor.checking', { name }),
+    color: 'magenta',
+    spinner: 'dots',
+  }).start();
+  const result = await run();
+  if (result.ok) {
+    spinner.stop();
+  } else {
+    spinner.stop();
+  }
+  return result;
+}
+
 async function runDoctor(projectRoot) {
   const env = envFileStatus(projectRoot);
   const checks = [
@@ -189,29 +215,47 @@ async function runDoctor(projectRoot) {
     { name: t('doctor.check.api'), run: () => checkApiHealth(projectRoot) },
   ];
 
-  console.log('');
-  console.log(chalk.bold.cyan('  ReactPress Doctor'));
-  console.log(chalk.gray(t('doctor.project', { path: projectRoot })));
-  console.log(chalk.gray('  ─────────────────────────────────────'));
+  const w = Math.min(terminalWidth() - 4, 52);
+  const results = [];
+  const fixes = [];
 
-  let failed = 0;
+  console.log('');
+  console.log(
+    `  ${gradientText(t('doctor.title'), [palette.primary, palette.accent], { bold: true })}  ${brand.dim(t('doctor.subtitle'))}`
+  );
+  console.log(`  ${brand.dim(t('doctor.project', { path: projectRoot }))}`);
+  console.log(`  ${divider(w)}`);
+
   for (const { name, run } of checks) {
-    const result = await run();
-    const icon = result.ok ? chalk.green('✓') : chalk.red('✗');
-    console.log(`  ${icon} ${chalk.bold(name)}  ${result.message}`);
+    const result = await runCheckWithSpinner(name, run);
+    results.push({ name, ...result });
+    const mark = result.ok ? icon.ok : icon.fail;
+    const msgColor = result.ok ? brand.dim : brand.warn;
+    console.log(`  ${mark}  ${brand.bold(name)}  ${msgColor(result.message)}`);
     if (!result.ok && result.fix) {
-      console.log(chalk.yellow(`      → ${result.fix}`));
-      failed += 1;
-    } else if (!result.ok) {
-      failed += 1;
+      fixes.push({ name, fix: result.fix });
     }
   }
 
-  console.log(chalk.gray('  ─────────────────────────────────────'));
+  const passed = results.filter((r) => r.ok).length;
+  const failed = results.length - passed;
+
+  console.log(`  ${divider(w)}`);
+  console.log(
+    `  ${brand.dim(t('doctor.summary', { passed, failed, total: results.length }))}`
+  );
+
   if (failed === 0) {
-    console.log(chalk.green(t('doctor.allPass')));
+    console.log(`  ${ok(t('doctor.allPass'))}`);
   } else {
-    console.log(chalk.yellow(t('doctor.failed', { count: failed })));
+    console.log(`  ${warn(t('doctor.failed', { count: failed }))}`);
+    if (fixes.length) {
+      console.log('');
+      console.log(sectionHeader(t('doctor.fixesHeader')));
+      for (const { name, fix } of fixes) {
+        console.log(`    ${brand.primary('→')}  ${brand.dim(name)}  ${brand.warn(fix)}`);
+      }
+    }
   }
   console.log('');
   return failed === 0 ? 0 : 1;
