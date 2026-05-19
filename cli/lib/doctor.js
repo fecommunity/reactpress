@@ -16,6 +16,7 @@ const {
 } = require('../ui/theme');
 const { getHealthUrl, checkHealth } = require('./http');
 const { isDockerRunning } = require('./docker');
+const { checkNginx } = require('./nginx');
 const { envFileStatus } = require('./status');
 const { t } = require('./i18n');
 
@@ -210,6 +211,7 @@ async function runDoctor(projectRoot) {
       }),
     },
     { name: 'Docker', run: () => checkDocker() },
+    { name: t('doctor.check.nginx'), run: () => checkNginx(projectRoot) },
     { name: t('doctor.check.ports'), run: () => checkPorts(projectRoot) },
     { name: t('doctor.check.database'), run: () => checkDatabase(projectRoot) },
     { name: t('doctor.check.api'), run: () => checkApiHealth(projectRoot) },

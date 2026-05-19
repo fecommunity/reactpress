@@ -45,6 +45,9 @@ reactpress dev
 | `reactpress server start` | 启动 API（等待 HTTP 就绪），支持 `--pm2` / `--bg` |
 | `reactpress server stop / restart / status` | API 生命周期管理 |
 | `reactpress docker up / down / status / logs` | 嵌入式 MySQL + nginx 容器管理 |
+| `reactpress nginx up / down / reload / open` | Nginx 反向代理（统一入口 `http://localhost:8080`） |
+| `reactpress nginx ensure` | 生成默认 `nginx.dev.conf` / `nginx.conf`（缺失时） |
+| `reactpress nginx up --prod` | 生产 compose 的 nginx（仅 monorepo） |
 | `reactpress build [-t <target>]` | 生产构建，target = `toolkit` / `server` / `client` / `docs` / `all` |
 | `reactpress start` | 生产模式：同时启动 API 与前端 |
 | `reactpress status` | 项目、API、前端、Docker 综合状态 |
