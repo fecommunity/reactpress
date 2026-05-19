@@ -7,6 +7,15 @@ const chalk = require('chalk');
 const inquirer = require('inquirer');
 const crypto = require('crypto');
 const { t } = require('./i18n');
+const { getMonorepoRoot } = require('./root');
+
+function getWorkspaceRoot() {
+  const root = getMonorepoRoot();
+  if (fs.existsSync(path.join(root, 'pnpm-workspace.yaml'))) {
+    return root;
+  }
+  return process.cwd();
+}
 
 function getPackages() {
   return [
@@ -67,7 +76,7 @@ function generateHash(filePath) {
 
 // Get package content hash
 function getPackageHash(packagePath) {
-  const fullPath = path.join(process.cwd(), packagePath);
+  const fullPath = path.join(getWorkspaceRoot(), packagePath);
   return generateHash(fullPath);
 }
 
@@ -75,7 +84,7 @@ function getPackageHash(packagePath) {
 function hasMeaningfulChangesForBuild(packagePath, packageName) {
   try {
     // Create a hash file path to store previous hash in node_modules
-    const hashFilePath = path.join(process.cwd(), 'node_modules', '.build-cache', `${packageName.replace('/', '_')}.hash`);
+    const hashFilePath = path.join(getWorkspaceRoot(), 'node_modules', '.build-cache', `${packageName.replace('/', '_')}.hash`);
     
     // Generate current hash
     const currentHash = getPackageHash(packagePath);
@@ -98,7 +107,7 @@ function hasMeaningfulChangesForBuild(packagePath, packageName) {
 function hasMeaningfulChangesForPublish(packagePath, packageName) {
   try {
     // Create a hash file path to store previous hash in node_modules
-    const hashFilePath = path.join(process.cwd(), 'node_modules', '.publish-cache', `${packageName.replace('/', '_')}.hash`);
+    const hashFilePath = path.join(getWorkspaceRoot(), 'node_modules', '.publish-cache', `${packageName.replace('/', '_')}.hash`);
     
     // Generate current hash
     const currentHash = getPackageHash(packagePath);
@@ -120,7 +129,7 @@ function hasMeaningfulChangesForPublish(packagePath, packageName) {
 // Save package hash (for build)
 function savePackageHashForBuild(packagePath, packageName) {
   try {
-    const hashFilePath = path.join(process.cwd(), 'node_modules', '.build-cache', `${packageName.replace('/', '_')}.hash`);
+    const hashFilePath = path.join(getWorkspaceRoot(), 'node_modules', '.build-cache', `${packageName.replace('/', '_')}.hash`);
     
     // Ensure cache directory exists
     const cacheDir = path.dirname(hashFilePath);
@@ -139,7 +148,7 @@ function savePackageHashForBuild(packagePath, packageName) {
 // Save package hash (for publish)
 function savePackageHashForPublish(packagePath, packageName) {
   try {
-    const hashFilePath = path.join(process.cwd(), 'node_modules', '.publish-cache', `${packageName.replace('/', '_')}.hash`);
+    const hashFilePath = path.join(getWorkspaceRoot(), 'node_modules', '.publish-cache', `${packageName.replace('/', '_')}.hash`);
     
     // Ensure cache directory exists
     const cacheDir = path.dirname(hashFilePath);
@@ -158,7 +167,7 @@ function savePackageHashForPublish(packagePath, packageName) {
 // Get current versions
 function getCurrentVersion(packagePath) {
   try {
-    const pkgPath = path.join(process.cwd(), packagePath, 'package.json');
+    const pkgPath = path.join(getWorkspaceRoot(), packagePath, 'package.json');
     const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
     return pkg.version;
   } catch (error) {
@@ -168,10 +177,12 @@ function getCurrentVersion(packagePath) {
 
 // Increment version based on type
 function incrementVersion(version, type) {
-  const parts = version.split('-')[0].split('.');
-  const major = parseInt(parts[0]);
-  const minor = parseInt(parts[1]);
-  const patch = parseInt(parts[2]);
+  const base = String(version).split('-')[0];
+  const parts = base.split('.').map((p) => parseInt(p, 10));
+  while (parts.length < 3) parts.push(0);
+  const major = Number.isFinite(parts[0]) ? parts[0] : 0;
+  const minor = Number.isFinite(parts[1]) ? parts[1] : 0;
+  const patch = Number.isFinite(parts[2]) ? parts[2] : 0;
   
   switch (type) {
     case 'major':
@@ -246,7 +257,7 @@ function getNextAvailableVersion(packageName, currentVersion, versionType) {
 function updateVersion(packagePath, newVersion) {
   console.log(chalk.blue(`\n✏️  Updating version to ${newVersion}...`));
   
-  const pkgPath = path.join(process.cwd(), packagePath, 'package.json');
+  const pkgPath = path.join(getWorkspaceRoot(), packagePath, 'package.json');
   const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
   
   const oldVersion = pkg.version;
@@ -260,7 +271,7 @@ function updateVersion(packagePath, newVersion) {
 function fixWorkspaceDependenciesForBuild(packagePath) {
   console.log(chalk.blue(`🔧 Fixing workspace dependencies for build: ${packagePath}...`));
   
-  const pkgPath = path.join(process.cwd(), packagePath, 'package.json');
+  const pkgPath = path.join(getWorkspaceRoot(), packagePath, 'package.json');
   const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
   
   // Fix dependencies
@@ -291,7 +302,7 @@ function fixWorkspaceDependenciesForBuild(packagePath) {
 function restoreWorkspaceDependenciesAfterBuild(packagePath) {
   console.log(chalk.blue(`🔄 Restoring workspace dependencies after build: ${packagePath}...`));
   
-  const pkgPath = path.join(process.cwd(), packagePath, 'package.json');
+  const pkgPath = path.join(getWorkspaceRoot(), packagePath, 'package.json');
   const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
   
   // Restore dependencies
@@ -319,7 +330,7 @@ function restoreWorkspaceDependenciesAfterBuild(packagePath) {
 function fixWorkspaceDependenciesForPublish(packagePath, packageVersions) {
   console.log(chalk.blue(`🔧 Fixing workspace dependencies for publish: ${packagePath}...`));
   
-  const pkgPath = path.join(process.cwd(), packagePath, 'package.json');
+  const pkgPath = path.join(getWorkspaceRoot(), packagePath, 'package.json');
   const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
   
   // Fix dependencies
@@ -350,7 +361,7 @@ function fixWorkspaceDependenciesForPublish(packagePath, packageVersions) {
 function restoreWorkspaceDependenciesAfterPublish(packagePath) {
   console.log(chalk.blue(`🔄 Restoring workspace dependencies for ${packagePath}...`));
   
-  const pkgPath = path.join(process.cwd(), packagePath, 'package.json');
+  const pkgPath = path.join(getWorkspaceRoot(), packagePath, 'package.json');
   const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
   
   // Restore dependencies
@@ -383,15 +394,22 @@ function buildPackage(pkg) {
     fixWorkspaceDependenciesForBuild(pkg.path);
     
     try {
-      if (pkg.path === 'config') {
-        execSync('pnpm run build', { cwd: path.join(process.cwd(), pkg.path), stdio: 'inherit' });
+      const pkgDir = path.join(getWorkspaceRoot(), pkg.path);
+      if (pkg.path === 'cli') {
+        execSync('node scripts/sync-bundled-core.mjs', { cwd: pkgDir, stdio: 'inherit' });
+        if (fs.existsSync(path.join(pkgDir, 'server', 'package.json'))) {
+          execSync('pnpm run build', { cwd: path.join(pkgDir, 'server'), stdio: 'inherit' });
+        }
+      } else if (pkg.path === 'server') {
+        execSync('pnpm run build', { cwd: pkgDir, stdio: 'inherit' });
       } else if (pkg.path === 'client') {
-        execSync('pnpm run prebuild && pnpm run build', { cwd: path.join(process.cwd(), pkg.path), stdio: 'inherit' });
+        execSync('pnpm run prebuild && pnpm run build', { cwd: pkgDir, stdio: 'inherit' });
       } else if (pkg.path === 'toolkit') {
-        execSync('pnpm run build', { cwd: path.join(process.cwd(), pkg.path), stdio: 'inherit' });
+        execSync('pnpm run build', { cwd: pkgDir, stdio: 'inherit' });
       } else if (pkg.path === 'templates/hello-world' || pkg.path === 'templates/twentytwentyfive') {
-        // Templates don't need to be built, just validate package.json
         console.log(chalk.gray('  Templates do not require building, skipping...'));
+      } else if (fs.existsSync(path.join(pkgDir, 'package.json'))) {
+        execSync('pnpm run build', { cwd: pkgDir, stdio: 'inherit' });
       }
       console.log(chalk.green(`✅ ${pkg.name} built successfully`));
     } finally {
@@ -410,7 +428,7 @@ function publishPackage(packagePath, packageName, tag = 'latest') {
   
   try {
     const command = `pnpm publish --access public --tag ${tag} --registry https://registry.npmjs.org --no-git-checks`;
-    execSync(command, { cwd: path.join(process.cwd(), packagePath), stdio: 'inherit' });
+    execSync(command, { cwd: path.join(getWorkspaceRoot(), packagePath), stdio: 'inherit' });
     console.log(chalk.green(`✅ ${packageName} published successfully!`));
   } catch (error) {
     console.log(chalk.red(`❌ Failed to publish ${packageName}`));
@@ -472,7 +490,7 @@ async function buildPackages() {
     
     // Check for meaningful changes in each package
     for (const pkg of packages) {
-      if (fs.existsSync(path.join(process.cwd(), pkg.path))) {
+      if (fs.existsSync(path.join(getWorkspaceRoot(), pkg.path))) {
         if (hasMeaningfulChangesForBuild(pkg.path, pkg.name)) {
           packagesToBuild.push(pkg);
           console.log(chalk.blue(`\n📦 ${pkg.name} has changes, will be built`));
@@ -552,7 +570,7 @@ async function publishPackages() {
     
     // Check for meaningful changes in each package
     for (const pkg of packages) {
-      if (fs.existsSync(path.join(process.cwd(), pkg.path))) {
+      if (fs.existsSync(path.join(getWorkspaceRoot(), pkg.path))) {
         if (hasMeaningfulChangesForPublish(pkg.path, pkg.name)) {
           packagesToBuild.push(pkg);
           console.log(chalk.blue(`\n📦 ${pkg.name} has changes, will be built`));
@@ -569,17 +587,15 @@ async function publishPackages() {
       return;
     }
     
-    // Build packages that have changes
     for (const pkg of packagesToBuild) {
-      buildPackage(pkg);
-      // Save the hash after successful build
+      await buildPackage(pkg);
       savePackageHashForPublish(pkg.path, pkg.name);
     }
-    
+
     console.log(chalk.green(`\n🎉 ${packagesToBuild.length} package(s) built successfully!`));
     return;
   }
-  
+
   if (action === 'publish-one') {
     const { selectedPackage } = await inquirer.prompt([
       {
@@ -706,7 +722,7 @@ async function publishPackages() {
     
     // Check for meaningful changes in each package
     for (const pkg of packages) {
-      if (!fs.existsSync(path.join(process.cwd(), pkg.path))) {
+      if (!fs.existsSync(path.join(getWorkspaceRoot(), pkg.path))) {
         console.log(chalk.yellow(`⚠️  Package ${pkg.name} directory not found, skipping...`));
         continue;
       }
@@ -845,7 +861,7 @@ async function publishPackages() {
     
     // Check for meaningful changes in each package
     for (const pkg of packages) {
-      if (!fs.existsSync(path.join(process.cwd(), pkg.path))) {
+      if (!fs.existsSync(path.join(getWorkspaceRoot(), pkg.path))) {
         console.log(chalk.yellow(`⚠️  Package ${pkg.name} directory not found, skipping...`));
         continue;
       }

@@ -8,9 +8,42 @@ const {
   canStartLocalApi,
   getPidFile,
 } = require('./paths');
+const net = require('net');
 const { readPid, isProcessRunning, clearPidFile, writePid } = require('./process');
 const { ensureOriginalCwd } = require('./root');
 const { t } = require('./i18n');
+
+function parseServerPort(projectRoot) {
+  try {
+    const url = new URL(loadServerSiteUrl(projectRoot));
+    return Number(url.port) || 3002;
+  } catch {
+    return 3002;
+  }
+}
+
+function isPortBusy(port, host = '127.0.0.1') {
+  return new Promise((resolve) => {
+    const socket = net.createConnection({ port, host }, () => {
+      socket.destroy();
+      resolve(true);
+    });
+    socket.on('error', () => resolve(false));
+    socket.setTimeout(800, () => {
+      socket.destroy();
+      resolve(false);
+    });
+  });
+}
+
+async function waitForPortFree(port, timeoutMs = 8000) {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    if (!(await isPortBusy(port))) return true;
+    await new Promise((r) => setTimeout(r, 200));
+  }
+  return false;
+}
 
 async function ensureConfig(projectRoot) {
   try {
@@ -132,6 +165,8 @@ async function runLifecycleCommand(command, projectRoot = ensureOriginalCwd()) {
       return 0;
     case 'restart':
       stopApi(projectRoot);
+      await waitForPortFree(parseServerPort(projectRoot));
+      await new Promise((r) => setTimeout(r, 400));
       return startApi(projectRoot, { wait: true });
     case 'status':
       await statusApi(projectRoot);
