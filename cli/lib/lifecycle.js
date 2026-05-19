@@ -1,4 +1,5 @@
 const { spawn } = require('child_process');
+const ora = require('ora');
 const { ensureProjectEnvironment } = require('./bootstrap');
 const { loadServerSiteUrl, waitForHttp } = require('./http');
 const {
@@ -110,12 +111,17 @@ async function startApi(projectRoot, { wait = true } = {}) {
   }
 
   const serverUrl = loadServerSiteUrl(projectRoot);
+  const spinner = ora({
+    text: t('dev.waitingApi', { url: serverUrl }),
+    color: 'magenta',
+    spinner: 'dots',
+  }).start();
   const ready = await waitForHttp(serverUrl);
   if (!ready) {
-    console.error(t('lifecycle.apiTimeout120', { url: serverUrl }));
+    spinner.fail(t('lifecycle.apiTimeout120', { url: serverUrl }));
     return 1;
   }
-  console.log(t('lifecycle.apiReady', { url: serverUrl }));
+  spinner.succeed(t('lifecycle.apiReady', { url: serverUrl }));
   return 0;
 }
 

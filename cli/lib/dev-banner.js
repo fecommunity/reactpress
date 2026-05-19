@@ -1,4 +1,15 @@
-const chalk = require('chalk');
+const {
+  brand,
+  icon,
+  ok,
+  divider,
+  padRight,
+  terminalWidth,
+  gradientText,
+  palette,
+  pulseBar,
+  statusLights,
+} = require('../ui/theme');
 const {
   loadClientSiteUrl,
   loadServerSiteUrl,
@@ -20,20 +31,41 @@ function getDevUrls(projectRoot) {
   };
 }
 
+function urlLine(key, url, { underline = true } = {}) {
+  const keyCol = brand.muted(padRight(key, 10));
+  const value = underline ? brand.accent.underline(url) : brand.dim(url);
+  return `  ${brand.accent('▸ ')}${keyCol}  ${value}`;
+}
+
 function printDevReadyBanner(projectRoot, { apiOnly = false } = {}) {
   const urls = getDevUrls(projectRoot);
+  const w = Math.min(terminalWidth() - 4, 56);
+
   console.log('');
-  console.log(chalk.bold.green(t('devBanner.ready')));
-  console.log(chalk.gray('  ─────────────────────────────────────────'));
+  console.log(
+    `  ${icon.ok}  ${gradientText(t('devBanner.ready'), [palette.green, palette.accent], { bold: true })}  ${statusLights('online')}`
+  );
+  console.log(`  ${brand.primary('╔' + '═'.repeat(w) + '╗')}`);
+
   if (!apiOnly) {
-    console.log(`  ${chalk.cyan(t('devBanner.site'))}     ${chalk.underline(urls.site)}`);
-    console.log(`  ${chalk.cyan(t('devBanner.admin'))}   ${chalk.underline(urls.admin)}`);
+    console.log(urlLine(t('devBanner.site'), urls.site));
+    console.log(urlLine(t('devBanner.admin'), urls.admin));
   }
-  console.log(`  ${chalk.cyan('API')}      ${chalk.underline(urls.api)}`);
-  console.log(`  ${chalk.cyan('Swagger')}  ${chalk.underline(urls.swagger)}`);
-  console.log(`  ${chalk.cyan(t('devBanner.health'))} ${urls.health}`);
-  console.log(chalk.gray('  ─────────────────────────────────────────'));
-  console.log(chalk.gray(t('devBanner.hint')));
+  console.log(urlLine(t('devBanner.api'), urls.api));
+  console.log(urlLine(t('devBanner.swagger'), urls.swagger));
+  console.log(urlLine(t('devBanner.health'), urls.health, { underline: false }));
+
+  const pulseWidth = Math.min(20, w - 4);
+  if (pulseWidth > 6) {
+    console.log(
+      `  ${brand.muted('  ')}${pulseBar(pulseWidth, pulseWidth)}  ${brand.success(t('devBanner.allSystemsGo'))}`
+    );
+  }
+
+  console.log(`  ${brand.primary('╚' + '═'.repeat(w) + '╝')}`);
+  console.log(
+    `  ${brand.dim(t('devBanner.hint'))}  ${brand.muted('·')}  ${brand.dim(t('devBanner.shortcuts'))}`
+  );
   console.log('');
 }
 

@@ -1,5 +1,6 @@
 const { spawn } = require('child_process');
 const path = require('path');
+const ora = require('ora');
 const { runBuild } = require('./build');
 const { ensureProjectEnvironment } = require('./bootstrap');
 const { loadServerSiteUrl, loadClientSiteUrl, waitForHttp } = require('./http');
@@ -60,17 +61,21 @@ function spawnApi(projectRoot) {
 
 async function waitForApiReady(projectRoot) {
   const serverUrl = loadServerSiteUrl(projectRoot);
-  console.log(t('dev.waitingApi', { url: serverUrl }));
+  const spinner = ora({
+    text: t('dev.waitingApi', { url: serverUrl }),
+    color: 'magenta',
+    spinner: 'dots',
+  }).start();
   const ready = await waitForHttp(serverUrl, API_READY_TIMEOUT_MS);
   if (!ready) {
-    console.error(t('dev.apiTimeout', { seconds: API_READY_TIMEOUT_MS / 1000 }));
+    spinner.fail(t('dev.apiTimeout', { seconds: API_READY_TIMEOUT_MS / 1000 }));
     shutdown('SIGINT');
     process.exit(1);
   }
+  spinner.succeed(t('dev.apiReady'));
 }
 
 function spawnClient(projectRoot) {
-  console.log(t('dev.apiReady'));
   webChild = spawn('pnpm', ['run', '--dir', './client', 'dev'], {
     stdio: 'inherit',
     shell: true,
