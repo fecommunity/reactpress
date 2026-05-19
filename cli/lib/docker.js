@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const { spawn, execSync, spawnSync } = require('child_process');
+const ora = require('ora');
 const { ensureOriginalCwd } = require('./root');
 const { detectProjectType, hasClient } = require('./project-type');
 const { t } = require('./i18n');
@@ -103,10 +104,15 @@ function resolveDbCredentialsFromEnv(projectRoot) {
 }
 
 async function waitForMysql(projectRoot, maxAttempts = 30) {
-  console.log(t('docker.waitingMysql'));
   const ctx = resolveComposeContext(projectRoot);
   const container = resolveDbContainerName(ctx, projectRoot);
   const { user, password } = resolveDbCredentialsFromEnv(projectRoot);
+
+  const spinner = ora({
+    text: t('docker.waitingMysql'),
+    color: 'magenta',
+    spinner: 'dots',
+  }).start();
 
   let attempts = 0;
   while (attempts < maxAttempts) {
@@ -116,16 +122,14 @@ async function waitForMysql(projectRoot, maxAttempts = 30) {
       { stdio: 'ignore' }
     );
     if (probe.status === 0) {
-      console.log(t('docker.mysqlReady'));
+      spinner.succeed(t('docker.mysqlReady'));
       return true;
     }
     attempts += 1;
-    if (attempts % 5 === 0) {
-      console.log(t('docker.waitingMysqlProgress', { attempts, max: maxAttempts }));
-    }
+    spinner.text = t('docker.waitingMysqlProgress', { attempts, max: maxAttempts });
     await new Promise((r) => setTimeout(r, 1000));
   }
-  console.error(t('docker.mysqlTimeout'));
+  spinner.fail(t('docker.mysqlTimeout'));
   return false;
 }
 

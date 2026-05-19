@@ -15,6 +15,7 @@ const REQUIRED_SHIPPED = [
   'lib/project-type.js',
   'ui/interactive.js',
   'ui/banner.js',
+  'ui/theme.js',
   'dist/index.js',
   'templates/env.default',
   'templates/config.default.json',
