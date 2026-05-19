@@ -8,7 +8,7 @@ const { isDockerRunning, pickDockerComposeCommand } = require('./docker');
 const { t } = require('./i18n');
 
 const NGINX_CONTAINER = 'reactpress_nginx';
-const DEFAULT_NGINX_PORT = 8080;
+const DEFAULT_NGINX_PORT = 80;
 
 function resolveNginxMode(options = {}) {
   return options.prod ? 'prod' : 'dev';
@@ -48,7 +48,8 @@ function resolveNginxPort(projectRoot) {
 }
 
 function nginxEntryUrl(projectRoot) {
-  return `http://localhost:${resolveNginxPort(projectRoot)}`;
+  const port = resolveNginxPort(projectRoot);
+  return port === 80 ? 'http://localhost' : `http://localhost:${port}`;
 }
 
 /**

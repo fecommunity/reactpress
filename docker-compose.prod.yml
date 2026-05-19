@@ -42,7 +42,7 @@ services:
     image: nginx:alpine
     container_name: reactpress_nginx
     ports:
-      - "8080:80"
+      - "${NGINX_PORT:-80}:80"
     depends_on:
       - client
     extra_hosts:
