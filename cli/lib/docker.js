@@ -182,6 +182,35 @@ async function dockerStartWithDev(projectRoot) {
   });
 }
 
+/**
+ * Run mysqldump inside the compose `db` container (MySQL image ships mysqldump).
+ * Used when the host has no `mysqldump` binary but Docker DB is running.
+ *
+ * @returns {{ ok: true, stdout: string } | { ok: false, stderr: string }}
+ */
+function mysqldumpFromDbContainer(projectRoot, { user, password, database }) {
+  const ctx = resolveComposeContext(projectRoot);
+  if (!fs.existsSync(ctx.composeFile)) {
+    return { ok: false, stderr: 'compose file missing' };
+  }
+  if (!isDockerRunning()) {
+    return { ok: false, stderr: 'docker not running' };
+  }
+  const container = resolveDbContainerName(ctx, projectRoot);
+  const res = spawnSync(
+    'docker',
+    ['exec', container, 'mysqldump', `-u${user}`, `-p${password}`, database],
+    { encoding: 'utf8', maxBuffer: 50 * 1024 * 1024 }
+  );
+  if (res.error) {
+    return { ok: false, stderr: res.error.message };
+  }
+  if (res.status !== 0) {
+    return { ok: false, stderr: res.stderr || res.stdout || `exit ${res.status}` };
+  }
+  return { ok: true, stdout: res.stdout };
+}
+
 async function runDockerCommand(command, projectRoot = ensureOriginalCwd(), extraArgs = []) {
   const ctx = resolveComposeContext(projectRoot);
   switch (command) {
@@ -229,4 +258,5 @@ module.exports = {
   isDockerRunning,
   resolveComposeContext,
   pickDockerComposeCommand,
+  mysqldumpFromDbContainer,
 };

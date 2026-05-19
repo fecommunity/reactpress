@@ -172,7 +172,9 @@ const STRINGS = {
     'bootstrap.dbReady': 'Database is ready',
     'db.backup.to': 'Backing up database to {path}',
     'db.backup.done': 'Backup complete',
-    'db.backup.fail': 'mysqldump failed; ensure MySQL client is installed and .env is correct',
+    'db.backup.viaDocker': 'mysqldump not on PATH; using mysqldump inside the db container…',
+    'db.backup.fail':
+      'mysqldump failed; install a MySQL client (e.g. brew install mysql-client), or ensure Docker db is running for automatic container backup',
     'common.done': 'Done',
     'common.yes': 'yes',
     'common.no': 'no',
@@ -485,7 +487,9 @@ const STRINGS = {
     'bootstrap.dbReady': '数据库已就绪',
     'db.backup.to': '备份数据库到 {path}',
     'db.backup.done': '备份完成',
-    'db.backup.fail': 'mysqldump 失败，请确认已安装 MySQL 客户端且 .env 正确',
+    'db.backup.viaDocker': '本机未找到 mysqldump，改用 Docker 内 db 容器的 mysqldump…',
+    'db.backup.fail':
+      'mysqldump 失败：请安装 MySQL 客户端（如 brew install mysql-client），或确保 Docker 数据库已运行以便自动在容器内备份',
     'common.done': '完成',
     'common.yes': '是',
     'common.no': '否',
