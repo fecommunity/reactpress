@@ -1,6 +1,6 @@
 {
   "name": "@fecommunity/reactpress-client",
-  "version": "3.0.0",
+  "version": "3.0.4",
   "bin": {
     "reactpress-client": "./bin/reactpress-client.js"
   },
