@@ -36,6 +36,8 @@
     "publish:build": "node ./cli/bin/reactpress.js publish --build",
     "prepare": "husky",
     "precommit": "lint-staged",
+    "test": "pnpm --dir cli test",
+    "test:cli": "pnpm --dir cli test",
     "test:smoke": "node scripts/smoke-api-health.mjs",
     "test:benchmark": "node scripts/benchmark-cold-start.mjs"
   },

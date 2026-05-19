@@ -64,6 +64,16 @@ async function checkPorts(projectRoot) {
   const env = parseEnv(projectRoot);
   const apiPort = parseInt(env.SERVER_PORT || '3002', 10);
   const clientPort = parseInt(env.CLIENT_PORT || '3001', 10);
+
+  const healthUrl = getHealthUrl(projectRoot);
+  const apiHealth = await checkHealth(healthUrl);
+  if (apiHealth.ok) {
+    return {
+      ok: true,
+      message: t('doctor.portOk', { apiPort, clientPort }),
+    };
+  }
+
   const [apiBusy, clientBusy] = await Promise.all([checkPort(apiPort), checkPort(clientPort)]);
   const issues = [];
   if (apiBusy) issues.push(t('doctor.portApiBusy', { port: apiPort }));

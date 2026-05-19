@@ -50,13 +50,13 @@ function getHealthUrl(projectRoot) {
   return `${base}${prefix}/health`;
 }
 
-function checkHealth(url, timeoutMs = 3000) {
+function probeHttp(url, timeoutMs = 3000) {
   return new Promise((resolve) => {
     let parsed;
     try {
       parsed = new URL(url);
     } catch {
-      resolve({ ok: false });
+      resolve({ ok: false, statusCode: 0, data: null });
       return;
     }
     const port = parsed.port || (parsed.protocol === 'https:' ? 443 : 80);
@@ -87,11 +87,46 @@ function checkHealth(url, timeoutMs = 3000) {
     );
     req.on('timeout', () => {
       req.destroy();
-      resolve({ ok: false });
+      resolve({ ok: false, statusCode: 0, data: null });
     });
-    req.on('error', () => resolve({ ok: false }));
+    req.on('error', () => resolve({ ok: false, statusCode: 0, data: null }));
     req.end();
   });
+}
+
+/**
+ * Health probe: prefers `/api/health` JSON; falls back to API prefix (e.g. Swagger)
+ * for older bundled servers that omit the health route.
+ */
+async function checkHealth(url, timeoutMs = 3000) {
+  const primary = await probeHttp(url, timeoutMs);
+  if (primary.ok) return primary;
+
+  if (primary.statusCode === 404 || primary.statusCode === 0) {
+    try {
+      const parsed = new URL(url);
+      const prefix = parsed.pathname.replace(/\/health\/?$/, '') || '/api';
+      const candidates = [
+        `${parsed.origin}${prefix}/`,
+        `${parsed.origin}${prefix}`,
+        parsed.origin,
+      ];
+      for (const fallback of candidates) {
+        const alt = await probeHttp(fallback, timeoutMs);
+        if (alt.statusCode === 200) {
+          return {
+            ok: true,
+            statusCode: 200,
+            data: { status: 'ok', database: 'unknown' },
+          };
+        }
+      }
+    } catch {
+      // ignore
+    }
+  }
+
+  return primary;
 }
 
 function isHttpResponding(url, timeoutMs = 2000) {
