@@ -21,6 +21,7 @@ const { runDev } = require('../lib/dev');
 const { runApiDev } = require('../lib/api-dev');
 const { runLifecycleCommand } = require('../lib/lifecycle');
 const { runDockerCommand } = require('../lib/docker');
+const { runNginxCommand } = require('../lib/nginx');
 const { printUnifiedStatus } = require('../lib/status');
 const { runDoctor } = require('../lib/doctor');
 const { runBuild, TARGETS } = require('../lib/build');
@@ -106,6 +107,9 @@ function getMenuActions(project) {
 
   items.push(
     menuSection(t('menu.section.tools')),
+    choice('menu.nginxUp', 'nginx:up', 'menu.hint.nginxUp'),
+    choice('menu.nginxOpen', 'nginx:open', 'menu.hint.nginxOpen'),
+    choice('menu.nginxReload', 'nginx:reload', 'menu.hint.nginxReload'),
     choice('menu.openAdmin', 'open:admin', 'menu.hint.openAdmin')
   );
 
@@ -287,6 +291,17 @@ async function runMenuAction(action, projectRoot, project) {
       await withSpinner(t('docker.stopping'), async () => {
         await runDockerCommand('down', projectRoot);
       });
+      return true;
+    case 'nginx:up':
+      await withSpinner(t('cli.nginx.up'), async () => {
+        await runNginxCommand('up', projectRoot);
+      });
+      return true;
+    case 'nginx:open':
+      await runNginxCommand('open', projectRoot);
+      return true;
+    case 'nginx:reload':
+      await runNginxCommand('reload', projectRoot);
       return true;
     case 'open:admin': {
       const url = loadClientSiteUrl(projectRoot);

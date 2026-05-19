@@ -74,6 +74,15 @@ function startDockerServices(projectRoot) {
   if (!isDockerRunning()) {
     throw new Error(t('docker.notRunning'));
   }
+  try {
+    const { ensureNginxConfig } = require('./nginx');
+    const { configPath, created } = ensureNginxConfig(projectRoot, { mode: 'dev' });
+    if (created) {
+      console.log(t('nginx.configCreated', { path: configPath }));
+    }
+  } catch (err) {
+    console.warn(t('nginx.ensureWarn', { message: err.message || err }));
+  }
   const ctx = resolveComposeContext(projectRoot);
   const result = runCompose(['up', '-d'], ctx);
   if (result.status !== 0) {
