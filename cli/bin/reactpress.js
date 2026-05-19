@@ -212,19 +212,16 @@ program
   .option('--build', t('cli.publish.build'))
   .option('--publish', t('cli.publish.publish'))
   .action(async (options) => {
-    const prev = process.argv.slice();
-    const args = [process.argv[0], process.argv[1]];
-    if (options.build) args.push('--build');
-    else if (options.publish) args.push('--publish');
-    else args.push('--publish');
-    process.argv = args;
     try {
-      await require('../lib/publish').main();
+      const publish = require('../lib/publish');
+      if (options.build) {
+        await publish.buildPackages();
+        return;
+      }
+      await publish.publishPackages();
     } catch (err) {
       console.error(chalk.red('[reactpress]'), err.message || err);
       process.exit(1);
-    } finally {
-      process.argv = prev;
     }
   });
 
@@ -233,9 +230,14 @@ program
   .description(t('cli.start.description'))
   .action(async () => {
     const projectRoot = ensureOriginalCwd();
-    const { spawn } = require('child_process');
+    const { hasClient } = require('../lib/project-type');
     const code = await runLifecycleCommand('start', projectRoot);
     if (code !== 0) process.exit(code);
+    if (!hasClient(projectRoot)) {
+      console.log(t('dev.standaloneHint'));
+      return;
+    }
+    const { spawn } = require('child_process');
     const child = spawn('pnpm', ['run', '--dir', './client', 'start'], {
       stdio: 'inherit',
       shell: true,

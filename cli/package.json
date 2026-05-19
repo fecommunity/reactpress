@@ -35,6 +35,7 @@
     "LICENSE"
   ],
   "scripts": {
+    "test": "node --test tests",
     "prepare": "node scripts/sync-bundled-core.mjs",
     "prepack": "node scripts/sync-bundled-core.mjs"
   },

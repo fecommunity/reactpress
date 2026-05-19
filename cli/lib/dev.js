@@ -5,14 +5,19 @@ const { ensureProjectEnvironment } = require('./bootstrap');
 const { loadServerSiteUrl, loadClientSiteUrl, waitForHttp } = require('./http');
 const { printDevReadyBanner } = require('./dev-banner');
 const { ensureOriginalCwd } = require('./root');
+const { detectProjectType, hasClient, hasToolkit } = require('./project-type');
 const { t } = require('./i18n');
 
 const CLIENT_READY_TIMEOUT_MS = 120_000;
-
 const API_READY_TIMEOUT_MS = 180_000;
 
 function formatDevFailureHint() {
-  return [t('dev.nextSteps'), t('dev.nextDoctor'), t('dev.nextDocker'), t('dev.nextEnv')].join('\n');
+  return [
+    t('dev.nextSteps'),
+    t('dev.nextDoctor'),
+    t('dev.nextDocker'),
+    t('dev.nextEnv'),
+  ].join('\n');
 }
 
 let apiChild;
@@ -22,22 +27,17 @@ let shuttingDown = false;
 function shutdown(signal = 'SIGINT') {
   if (shuttingDown) return;
   shuttingDown = true;
-  if (webChild && !webChild.killed) {
-    webChild.kill(signal);
-  }
-  if (apiChild && !apiChild.killed) {
-    apiChild.kill(signal);
-  }
+  if (webChild && !webChild.killed) webChild.kill(signal);
+  if (apiChild && !apiChild.killed) apiChild.kill(signal);
 }
 
 async function buildToolkit(projectRoot) {
+  if (!hasToolkit(projectRoot)) return;
   await runBuild('toolkit', projectRoot);
 }
 
-async function startDevStack(projectRoot) {
-  const serverUrl = loadServerSiteUrl(projectRoot);
+function spawnApi(projectRoot) {
   const apiDevRunner = path.join(__dirname, 'api-dev-runner.js');
-
   console.log(t('dev.startingApi'));
   apiChild = spawn(process.execPath, [apiDevRunner], {
     stdio: 'inherit',
@@ -53,24 +53,23 @@ async function startDevStack(projectRoot) {
       process.exit(code ?? 0);
       return;
     }
-    if (webChild && !webChild.killed) {
-      webChild.kill('SIGINT');
-    }
+    if (webChild && !webChild.killed) webChild.kill('SIGINT');
     process.exit(code ?? 1);
   });
+}
 
+async function waitForApiReady(projectRoot) {
+  const serverUrl = loadServerSiteUrl(projectRoot);
   console.log(t('dev.waitingApi', { url: serverUrl }));
   const ready = await waitForHttp(serverUrl, API_READY_TIMEOUT_MS);
   if (!ready) {
-    console.error(
-      t('dev.apiTimeout', { seconds: API_READY_TIMEOUT_MS / 1000 }),
-    );
+    console.error(t('dev.apiTimeout', { seconds: API_READY_TIMEOUT_MS / 1000 }));
     shutdown('SIGINT');
     process.exit(1);
   }
+}
 
-  printDevReadyBanner(projectRoot, { apiOnly: true });
-
+function spawnClient(projectRoot) {
   console.log(t('dev.apiReady'));
   webChild = spawn('pnpm', ['run', '--dir', './client', 'dev'], {
     stdio: 'inherit',
@@ -87,17 +86,29 @@ async function startDevStack(projectRoot) {
         t('dev.clientSlow', {
           seconds: CLIENT_READY_TIMEOUT_MS / 1000,
           url: clientUrl,
-        }),
+        })
       );
     }
   });
 
   webChild.on('close', (code) => {
-    if (!shuttingDown) {
-      shutdown('SIGINT');
-    }
+    if (!shuttingDown) shutdown('SIGINT');
     process.exit(code ?? 0);
   });
+}
+
+async function startDevStack(projectRoot) {
+  const includeClient = hasClient(projectRoot);
+
+  spawnApi(projectRoot);
+  await waitForApiReady(projectRoot);
+  printDevReadyBanner(projectRoot, { apiOnly: !includeClient });
+
+  if (!includeClient) {
+    console.log(t('dev.standaloneHint'));
+    return;
+  }
+  spawnClient(projectRoot);
 }
 
 async function runDev(projectRoot = ensureOriginalCwd()) {
@@ -106,9 +117,7 @@ async function runDev(projectRoot = ensureOriginalCwd()) {
 
   try {
     const result = await ensureProjectEnvironment(projectRoot);
-    if (result.message) {
-      console.log(`[reactpress] ${result.message}`);
-    }
+    if (result.message) console.log(`[reactpress] ${result.message}`);
   } catch (err) {
     console.error(t('dev.envFailed'), err.message || err);
     console.error(formatDevFailureHint());
@@ -119,4 +128,9 @@ async function runDev(projectRoot = ensureOriginalCwd()) {
   await startDevStack(projectRoot);
 }
 
-module.exports = { runDev, buildToolkit, startDevStack };
+module.exports = {
+  runDev,
+  buildToolkit,
+  startDevStack,
+  detectProjectType,
+};
