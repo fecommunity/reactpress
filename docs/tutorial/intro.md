@@ -2,6 +2,8 @@
 sidebar_position: 1
 id: intro
 title: 介绍
+description: ReactPress 开源发布平台与 CMS：基于 React、Next.js、NestJS，一条命令零配置起站。
+keywords: [reactpress, cms, 博客, next.js, react]
 ---
 
 ## 项目简介

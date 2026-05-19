@@ -1,5 +1,6 @@
 ---
 title: Markdown page example
+unlisted: true
 ---
 
 # Markdown page example
