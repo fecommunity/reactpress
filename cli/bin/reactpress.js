@@ -8,12 +8,14 @@
 const { Command } = require('commander');
 const path = require('path');
 const chalk = require('chalk');
+const { brand, divider } = require('../ui/theme');
 const { ensureOriginalCwd } = require('../lib/root');
 const { ensureProjectEnvironment, initMonorepoProject } = require('../lib/bootstrap');
 const { runDev } = require('../lib/dev');
 const { runApiDev } = require('../lib/api-dev');
 const { runLifecycleCommand } = require('../lib/lifecycle');
 const { runDockerCommand } = require('../lib/docker');
+const { runNginxCommand } = require('../lib/nginx');
 const { printUnifiedStatus } = require('../lib/status');
 const { runDoctor } = require('../lib/doctor');
 const { runDbBackup } = require('../lib/db-backup');
@@ -176,6 +178,102 @@ dockerCmd
     await runDockerCommand('logs', ensureOriginalCwd(), service ? [service] : []);
   });
 
+const nginxCmd = program.command('nginx').description(t('cli.nginx.description'));
+
+function nginxActionOptions(cmd) {
+  return cmd.option('--prod', t('cli.nginx.prod')).option('-f, --force', t('cli.nginx.force'));
+}
+
+nginxActionOptions(nginxCmd.command('ensure').description(t('cli.nginx.ensure'))).action(async (options) => {
+  try {
+    await runNginxCommand('ensure', ensureOriginalCwd(), [], options);
+  } catch (err) {
+    console.error(chalk.red('[reactpress]'), err.message || err);
+    process.exit(1);
+  }
+});
+
+nginxActionOptions(nginxCmd.command('up').description(t('cli.nginx.up'))).action(async (options) => {
+  try {
+    await runNginxCommand('up', ensureOriginalCwd(), [], options);
+  } catch (err) {
+    console.error(chalk.red('[reactpress]'), err.message || err);
+    process.exit(1);
+  }
+});
+
+nginxCmd
+  .command('down')
+  .alias('stop')
+  .description(t('cli.nginx.down'))
+  .option('--prod', t('cli.nginx.prod'))
+  .action(async (options) => {
+    try {
+      await runNginxCommand('down', ensureOriginalCwd(), [], options);
+    } catch (err) {
+      console.error(chalk.red('[reactpress]'), err.message || err);
+      process.exit(1);
+    }
+  });
+
+nginxActionOptions(nginxCmd.command('restart').description(t('cli.nginx.restart'))).action(async (options) => {
+  try {
+    await runNginxCommand('restart', ensureOriginalCwd(), [], options);
+  } catch (err) {
+    console.error(chalk.red('[reactpress]'), err.message || err);
+    process.exit(1);
+  }
+});
+
+nginxCmd
+  .command('status')
+  .description(t('cli.nginx.status'))
+  .option('--prod', t('cli.nginx.prod'))
+  .action(async (options) => {
+    try {
+      await runNginxCommand('status', ensureOriginalCwd(), [], options);
+    } catch (err) {
+      console.error(chalk.red('[reactpress]'), err.message || err);
+      process.exit(1);
+    }
+  });
+
+nginxCmd.command('logs').description(t('cli.nginx.logs')).action(async () => {
+  try {
+    await runNginxCommand('logs', ensureOriginalCwd());
+  } catch (err) {
+    console.error(chalk.red('[reactpress]'), err.message || err);
+    process.exit(1);
+  }
+});
+
+nginxCmd.command('test').description(t('cli.nginx.test')).action(async () => {
+  try {
+    await runNginxCommand('test', ensureOriginalCwd());
+  } catch (err) {
+    console.error(chalk.red('[reactpress]'), err.message || err);
+    process.exit(1);
+  }
+});
+
+nginxCmd.command('reload').description(t('cli.nginx.reload')).action(async () => {
+  try {
+    await runNginxCommand('reload', ensureOriginalCwd());
+  } catch (err) {
+    console.error(chalk.red('[reactpress]'), err.message || err);
+    process.exit(1);
+  }
+});
+
+nginxCmd.command('open').description(t('cli.nginx.open')).action(async () => {
+  try {
+    await runNginxCommand('open', ensureOriginalCwd());
+  } catch (err) {
+    console.error(chalk.red('[reactpress]'), err.message || err);
+    process.exit(1);
+  }
+});
+
 program
   .command('status')
   .description(t('cli.status.description'))
@@ -248,16 +346,23 @@ program
 
 program.on('--help', () => {
   console.log('');
-  console.log(chalk.gray(t('cli.help.examples')));
-  console.log(t('cli.help.interactive'));
-  console.log(t('cli.help.dev'));
-  console.log(t('cli.help.init'));
-  console.log(t('cli.help.server'));
-  console.log(t('cli.help.status'));
-  console.log(t('cli.help.doctor'));
-  console.log(t('cli.help.docker'));
-  console.log(t('cli.help.build'));
-  console.log(t('cli.help.publish'));
+  console.log(brand.bold(t('cli.help.examples')));
+  console.log(divider(40));
+  const lines = [
+    t('cli.help.interactive'),
+    t('cli.help.dev'),
+    t('cli.help.init'),
+    t('cli.help.server'),
+    t('cli.help.status'),
+    t('cli.help.doctor'),
+    t('cli.help.docker'),
+    t('cli.help.nginx'),
+    t('cli.help.build'),
+    t('cli.help.publish'),
+  ];
+  for (const line of lines) {
+    console.log(brand.dim(line));
+  }
   console.log('');
 });
 

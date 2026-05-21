@@ -6,13 +6,14 @@
  */
 
 import Head from '@docusaurus/Head';
-import Home from '@site/src/pages/Home';
+import Home from '@site/src/components/Home';
 import Layout from '@theme/Layout';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import { translate } from '@docusaurus/Translate';
 
 const Index = () => {
-  const { siteConfig } = useDocusaurusContext();
+  const {siteConfig} = useDocusaurusContext();
+  const canonicalUrl = `${siteConfig.url}${siteConfig.baseUrl}`.replace(/\/$/, '') + '/';
   const title = `${siteConfig.title} · ${siteConfig.tagline}`;
   const description = translate({
     message:
@@ -24,8 +25,12 @@ const Index = () => {
     <Layout title={siteConfig.title} description={description} wrapperClassName="homepage">
       <Head>
         <title>{title}</title>
+        <link rel="canonical" href={canonicalUrl} />
         <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:url" content={canonicalUrl} />
         <meta property="twitter:title" content={title} />
+        <meta property="twitter:description" content={description} />
         <meta name="description" content={description} />
       </Head>
       <Home />

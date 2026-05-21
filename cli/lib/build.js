@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
-const chalk = require('chalk');
+const ora = require('ora');
+const { brand, icon, ok, warn, label, chip } = require('../ui/theme');
 const { runSync } = require('./spawn');
 const { ensureOriginalCwd } = require('./root');
 const { t } = require('./i18n');
@@ -78,6 +79,10 @@ function resolveBuildInvocation(script, projectRoot) {
   return null;
 }
 
+function stepBadge(current, total) {
+  return chip(`${current}/${total}`, brand.primary);
+}
+
 async function runBuild(target = 'all', projectRoot = ensureOriginalCwd()) {
   if (process.env.REACTPRESS_BUILD_ACTIVE === '1') {
     throw new Error(t('build.recursive'));
@@ -96,8 +101,10 @@ async function runBuild(target = 'all', projectRoot = ensureOriginalCwd()) {
   const total = steps.length;
   const buildStarted = Date.now();
 
+  console.log('');
   if (total > 1) {
-    console.log(t('build.plan', { total }));
+    console.log(label(t('build.plan', { total })));
+    console.log('');
   }
 
   for (let i = 0; i < steps.length; i++) {
@@ -107,16 +114,21 @@ async function runBuild(target = 'all', projectRoot = ensureOriginalCwd()) {
     }
 
     const current = i + 1;
-    const label = t(labelKey);
+    const stepLabel = t(labelKey);
     const stepStarted = Date.now();
-
-    console.log(t('build.step', { current, total, label }));
+    const badge = stepBadge(current, total);
 
     const invocation = resolveBuildInvocation(script, projectRoot);
     if (!invocation) {
-      console.log(chalk.yellow(t('build.stepSkipped', { label })));
+      console.log(`  ${badge}  ${warn(t('build.stepSkipped', { label: stepLabel }))}`);
       continue;
     }
+
+    const spinner = ora({
+      text: `${badge}  ${t('build.step', { current, total, label: stepLabel })}`,
+      color: 'magenta',
+      spinner: 'dots',
+    }).start();
 
     try {
       runSync(invocation.command, invocation.args, {
@@ -124,18 +136,22 @@ async function runBuild(target = 'all', projectRoot = ensureOriginalCwd()) {
         env: buildChildEnv,
       });
     } catch (err) {
-      console.error(chalk.red(t('build.stepFailed', { current, total, label })));
+      spinner.fail(`${badge}  ${t('build.stepFailed', { current, total, label: stepLabel })}`);
       throw err;
     }
 
     const seconds = ((Date.now() - stepStarted) / 1000).toFixed(1);
-    console.log(chalk.green(t('build.stepDone', { current, total, label, seconds })));
+    spinner.succeed(
+      `${badge}  ${ok(t('build.stepDone', { current, total, label: stepLabel, seconds }))}`
+    );
   }
 
   if (total > 1) {
     const totalSeconds = ((Date.now() - buildStarted) / 1000).toFixed(1);
-    console.log(chalk.green(t('build.done', { seconds: totalSeconds })));
+    console.log('');
+    console.log(`  ${icon.spark}  ${ok(t('build.done', { seconds: totalSeconds }))}`);
   }
+  console.log('');
 }
 
 module.exports = {

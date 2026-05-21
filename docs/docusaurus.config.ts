@@ -51,6 +51,11 @@ const config: Config = {
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
 
+  headTags: [
+    {tagName: 'meta', attributes: {property: 'og:type', content: 'website'}},
+    {tagName: 'meta', attributes: {property: 'og:site_name', content: 'ReactPress'}},
+  ],
+
   // Even if you don't use internationalization, you can use this field to set
   // useful metadata like html lang. For example, if your site is Chinese, you
   // may want to replace "en" with "zh-Hans".
@@ -63,6 +68,40 @@ const config: Config = {
     [
       '@docusaurus/preset-classic',
       {
+        sitemap: {
+          lastmod: 'date',
+          changefreq: 'weekly',
+          priority: 0.5,
+          ignorePatterns: ['/tags/**', '/markdown-page'],
+          filename: 'sitemap.xml',
+          createSitemapItems: async (params) => {
+            const {defaultCreateSitemapItems, ...rest} = params;
+            const items = await defaultCreateSitemapItems(rest);
+            return items
+              .filter((item) => !item.url.includes('/markdown-page'))
+              .map((item) => {
+                const pathname = new URL(item.url).pathname;
+                if (pathname === '/' || pathname === '/zh/') {
+                  return {...item, priority: 1.0, changefreq: 'daily' as const};
+                }
+                if (pathname.endsWith('/docs/intro')) {
+                  return {...item, priority: 0.9};
+                }
+                if (pathname.includes('/blog/changelog')) {
+                  return {...item, priority: 0.8};
+                }
+                if (
+                  pathname.includes('/blog/archive') ||
+                  pathname.includes('/blog/authors') ||
+                  pathname.endsWith('/blog/tags') ||
+                  pathname.includes('/blog/tags/')
+                ) {
+                  return {...item, priority: 0.3};
+                }
+                return item;
+              });
+          },
+        },
         docs: {
           path: './tutorial',
           sidebarPath: './sidebars.ts',
@@ -178,7 +217,14 @@ const config: Config = {
       darkTheme: prismThemes.dracula,
     },
     metadata: [
-      { name: 'keywords', content: 'reactpress, blog, cms, next.js, react, nest.js' },
+      {
+        name: 'keywords',
+        content:
+          'reactpress, blog, cms, next.js, react, nest.js, headless cms, content management, 博客, 内容管理',
+      },
+      {name: 'robots', content: 'index, follow, max-image-preview:large'},
+      {name: 'googlebot', content: 'index, follow'},
+      {name: 'twitter:card', content: 'summary_large_image'},
     ],
   } satisfies Preset.ThemeConfig,
 };
