@@ -1,6 +1,16 @@
 const fs = require('fs');
 const path = require('path');
-const chalk = require('chalk');
+const {
+  brand,
+  icon,
+  divider,
+  padRight,
+  statusPill,
+  sectionHeader,
+  terminalWidth,
+  gradientText,
+  palette,
+} = require('../ui/theme');
 const {
   loadServerSiteUrl,
   loadClientSiteUrl,
@@ -25,6 +35,10 @@ function envFileStatus(projectRoot) {
   };
 }
 
+function fieldRow(label, value) {
+  return `    ${brand.muted(padRight(label, 10))}  ${value}`;
+}
+
 async function printUnifiedStatus(projectRoot = ensureOriginalCwd()) {
   const env = envFileStatus(projectRoot);
   const apiUrl = loadServerSiteUrl(projectRoot);
@@ -41,67 +55,77 @@ async function printUnifiedStatus(projectRoot = ensureOriginalCwd()) {
     ? t('status.apiSource.monorepo')
     : t('status.apiSource.bundle');
 
+  const w = Math.min(terminalWidth() - 4, 52);
+  const httpOn = { on: t('status.apiOnline'), off: t('status.apiOffline') };
+
   console.log('');
-  console.log(chalk.bold.cyan(t('status.title')));
-  console.log(chalk.gray('  ─────────────────────────────────────'));
-  console.log(t('status.dir', { path: projectRoot }));
-  console.log(t('status.apiSource', { source: apiSource }));
+  console.log(`  ${gradientText(t('status.title'), [palette.primary, palette.accent], { bold: true })}`);
+  console.log(`  ${divider(w)}`);
+
+  console.log(sectionHeader(t('status.section.project')));
+  console.log(fieldRow(t('status.field.dir'), brand.dim(projectRoot)));
+  console.log(fieldRow(t('status.field.source'), brand.accent(apiSource)));
   console.log(
-    `  ${chalk.bold('Config')}    ${
-      env.config
-        ? chalk.green(t('status.configOk'))
-        : chalk.yellow(t('status.configBad'))
-    }`,
+    fieldRow(
+      t('status.field.config'),
+      env.config ? brand.success(t('status.configOk')) : brand.warn(t('status.configBad'))
+    )
   );
   console.log(
-    `  ${chalk.bold('.env')}        ${
-      env.env ? chalk.green(t('status.envOk')) : chalk.yellow(t('status.envBad'))
-    }`,
+    fieldRow(
+      t('status.field.env'),
+      env.env ? brand.success(t('status.envOk')) : brand.warn(t('status.envBad'))
+    )
   );
-  console.log(chalk.gray('  ─────────────────────────────────────'));
-  console.log(chalk.bold('  API'));
-  console.log(`    URL       ${apiUrl}`);
+
+  console.log('');
+  console.log(sectionHeader(t('status.section.api')));
+  console.log(fieldRow(t('status.field.url'), brand.dim(apiUrl)));
+  console.log(fieldRow(t('status.field.http'), statusPill(apiHttp, httpOn)));
   console.log(
-    `    HTTP      ${
-      apiHttp ? chalk.green(t('status.apiOnline')) : chalk.red(t('status.apiOffline'))
-    }`,
-  );
-  console.log(
-    `    Health    ${
+    fieldRow(
+      t('status.field.health'),
       health.ok
-        ? chalk.green(`${healthUrl} ✓`)
-        : chalk.gray(t('status.apiUnreachable', { url: healthUrl }))
-    }`,
+        ? `${icon.ok} ${brand.dim(healthUrl)}`
+        : brand.dim(t('status.apiUnreachable', { url: healthUrl }))
+    )
   );
   if (health.ok && health.data?.data) {
     const db = health.data.data.database;
+    const dbOk = db === 'up';
     console.log(
-      `    Database  ${
-        db === 'up'
-          ? chalk.green(t('status.dbUp'))
-          : chalk.red(db === 'down' ? t('status.dbDown') : '—')
-      }`,
+      fieldRow(
+        t('status.field.database'),
+        statusPill(dbOk, { on: t('status.dbUp'), off: t('status.dbDown') })
+      )
     );
   }
+  const pidAlive = pid && isProcessRunning(pid);
   console.log(
-    `    PID       ${pid ?? '—'} ${
-      pid && isProcessRunning(pid) ? chalk.green(t('status.pidRunning')) : ''
-    }`,
+    fieldRow(
+      t('status.field.pid'),
+      `${brand.dim(pid ?? '—')}${pidAlive ? `  ${brand.success(t('status.pidRunning'))}` : ''}`
+    )
   );
-  console.log(chalk.bold(t('status.frontend')));
-  console.log(`    URL       ${clientUrl}`);
+
+  console.log('');
+  console.log(sectionHeader(t('status.section.frontend')));
+  console.log(fieldRow(t('status.field.url'), brand.dim(clientUrl)));
+  console.log(fieldRow(t('status.field.http'), statusPill(clientHttp, httpOn)));
+
+  console.log('');
+  console.log(sectionHeader(t('status.section.docker')));
   console.log(
-    `    HTTP      ${
-      clientHttp ? chalk.green(t('status.apiOnline')) : chalk.gray(t('status.apiOffline'))
-    }`,
+    fieldRow(
+      t('status.field.engine'),
+      statusPill(isDockerRunning(), {
+        on: t('status.dockerUp'),
+        off: t('status.dockerDown'),
+      })
+    )
   );
-  console.log(chalk.gray('  ─────────────────────────────────────'));
-  console.log(chalk.bold(t('status.docker')));
-  console.log(
-    `    Engine    ${
-      isDockerRunning() ? chalk.green(t('status.dockerUp')) : chalk.red(t('status.dockerDown'))
-    }`,
-  );
+
+  console.log(`  ${divider(w)}`);
   console.log('');
 }
 

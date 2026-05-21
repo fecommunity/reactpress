@@ -1,7 +1,19 @@
+const fs = require('fs');
+const path = require('path');
 const inquirer = require('inquirer');
+const ora = require('ora');
 const open = require('open');
 const { printBanner } = require('./banner');
-const { brand, label } = require('./theme');
+const {
+  brand,
+  icon,
+  label,
+  ok,
+  fail,
+  sectionHeader,
+  statusPill,
+  padRight,
+} = require('./theme');
 const { ensureOriginalCwd } = require('../lib/root');
 const { describeProject, hasClient } = require('../lib/project-type');
 const { ensureProjectEnvironment } = require('../lib/bootstrap');
@@ -9,6 +21,7 @@ const { runDev } = require('../lib/dev');
 const { runApiDev } = require('../lib/api-dev');
 const { runLifecycleCommand } = require('../lib/lifecycle');
 const { runDockerCommand } = require('../lib/docker');
+const { runNginxCommand } = require('../lib/nginx');
 const { printUnifiedStatus } = require('../lib/status');
 const { runDoctor } = require('../lib/doctor');
 const { runBuild, TARGETS } = require('../lib/build');
@@ -18,8 +31,38 @@ const { loadClientSiteUrl, loadServerSiteUrl, isHttpResponding } = require('../l
 const { isDockerRunning } = require('../lib/docker');
 const { t } = require('../lib/i18n');
 
-function section(title) {
-  return new inquirer.Separator(brand.muted(`  ── ${title} ──`));
+function menuSection(title) {
+  return new inquirer.Separator(sectionHeader(title));
+}
+
+function formatChoice(key, text, hint) {
+  const keyCol = key ? brand.primary(padRight(key, 2)) : '   ';
+  const hintPart = hint ? brand.dim(`  ${hint}`) : '';
+  return `${keyCol}  ${text}${hintPart}`;
+}
+
+function assignShortcuts(items) {
+  let n = 0;
+  return items.map((item) => {
+    if (item instanceof inquirer.Separator || item.type === 'separator') {
+      return item;
+    }
+    n += 1;
+    const key = n <= 9 ? String(n) : '';
+    return {
+      ...item,
+      name: formatChoice(key, item._label || item.name, item._hint),
+      short: item.value,
+    };
+  });
+}
+
+function choice(labelKey, value, hintKey) {
+  return {
+    _label: t(labelKey),
+    _hint: hintKey ? t(hintKey) : '',
+    value,
+  };
 }
 
 function getMenuActions(project) {
@@ -27,78 +70,80 @@ function getMenuActions(project) {
   const monorepo = project.type === 'monorepo';
   const showClient = hasClient(project.root);
 
-  const choices = [
-    section(t('menu.section.run')),
-    { name: t('menu.dev'), value: 'dev' },
-    { name: t('menu.init'), value: 'init' },
-    { name: t('menu.status'), value: 'status' },
-    { name: t('menu.doctor'), value: 'doctor' },
-    section(t('menu.section.lifecycle')),
-    { name: t('menu.devApi'), value: 'dev:api' },
+  const items = [
+    menuSection(t('menu.section.run')),
+    choice('menu.dev', 'dev', 'menu.hint.dev'),
+    choice('menu.init', 'init', 'menu.hint.init'),
+    choice('menu.status', 'status', 'menu.hint.status'),
+    choice('menu.doctor', 'doctor', 'menu.hint.doctor'),
+    menuSection(t('menu.section.lifecycle')),
+    choice('menu.devApi', 'dev:api', 'menu.hint.devApi'),
   ];
 
   if (showClient) {
-    choices.push({ name: t('menu.devClient'), value: 'dev:client' });
+    items.push(choice('menu.devClient', 'dev:client', 'menu.hint.devClient'));
   }
 
-  choices.push(
-    { name: t('menu.serverStart'), value: 'server:start' },
-    { name: t('menu.serverStop'), value: 'server:stop' },
-    { name: t('menu.serverRestart'), value: 'server:restart' },
-    section(t('menu.section.build')),
-    { name: t('menu.build'), value: 'build' }
+  items.push(
+    choice('menu.serverStart', 'server:start', 'menu.hint.serverStart'),
+    choice('menu.serverStop', 'server:stop', 'menu.hint.serverStop'),
+    choice('menu.serverRestart', 'server:restart', 'menu.hint.serverRestart'),
+    menuSection(t('menu.section.build')),
+    choice('menu.build', 'build', 'menu.hint.build')
   );
 
   if (monorepo) {
-    choices.push(
-      { name: t('menu.dockerStart'), value: 'docker:start' },
-      { name: t('menu.dockerUp'), value: 'docker:up' },
-      { name: t('menu.dockerStop'), value: 'docker:stop' }
+    items.push(
+      choice('menu.dockerStart', 'docker:start', 'menu.hint.dockerStart'),
+      choice('menu.dockerUp', 'docker:up', 'menu.hint.dockerUp'),
+      choice('menu.dockerStop', 'docker:stop', 'menu.hint.dockerStop')
     );
   } else if (standalone) {
-    choices.push(
-      { name: t('menu.dockerUp'), value: 'docker:up' },
-      { name: t('menu.dockerStop'), value: 'docker:stop' }
+    items.push(
+      choice('menu.dockerUp', 'docker:up', 'menu.hint.dockerUp'),
+      choice('menu.dockerStop', 'docker:stop', 'menu.hint.dockerStop')
     );
   }
 
-  choices.push(
-    section(t('menu.section.tools')),
-    { name: t('menu.openAdmin'), value: 'open:admin' }
+  items.push(
+    menuSection(t('menu.section.tools')),
+    choice('menu.nginxUp', 'nginx:up', 'menu.hint.nginxUp'),
+    choice('menu.nginxOpen', 'nginx:open', 'menu.hint.nginxOpen'),
+    choice('menu.nginxReload', 'nginx:reload', 'menu.hint.nginxReload'),
+    choice('menu.openAdmin', 'open:admin', 'menu.hint.openAdmin')
   );
 
   if (monorepo) {
-    choices.push({ name: t('menu.publish'), value: 'publish' });
+    items.push(choice('menu.publish', 'publish', 'menu.hint.publish'));
   }
 
-  choices.push(
+  items.push(
     new inquirer.Separator(),
-    { name: t('menu.exit'), value: 'exit' }
+    choice('menu.exit', 'exit', 'menu.hint.exit')
   );
 
-  return choices;
+  return assignShortcuts(items);
 }
 
-async function printContextStatus(projectRoot) {
-  const apiUrl = loadServerSiteUrl(projectRoot);
-  const [apiOk, dockerOk] = await Promise.all([
-    isHttpResponding(apiUrl, 1500),
-    Promise.resolve(isDockerRunning()),
-  ]);
+function parseEnvFile(projectRoot) {
+  const envPath = path.join(projectRoot, '.env');
+  const env = {};
+  try {
+    if (!fs.existsSync(envPath)) return env;
+    for (const line of fs.readFileSync(envPath, 'utf8').split('\n')) {
+      const m = line.match(/^([A-Z_]+)=(.*)$/);
+      if (m) env[m[1]] = m[2].trim().replace(/^['"]|['"]$/g, '');
+    }
+  } catch {
+    // ignore
+  }
+  return env;
+}
 
-  let dbOk = false;
+async function probeDatabase(projectRoot) {
   try {
     const mysql = require('mysql2/promise');
-    const fs = require('fs');
-    const path = require('path');
-    const envPath = path.join(projectRoot, '.env');
-    const env = {};
-    if (fs.existsSync(envPath)) {
-      for (const line of fs.readFileSync(envPath, 'utf8').split('\n')) {
-        const m = line.match(/^([A-Z_]+)=(.*)$/);
-        if (m) env[m[1]] = m[2].trim().replace(/^['"]|['"]$/g, '');
-      }
-    }
+    const env = parseEnvFile(projectRoot);
     const conn = await mysql.createConnection({
       host: env.DB_HOST || '127.0.0.1',
       port: Number(env.DB_PORT || 3306),
@@ -109,21 +154,65 @@ async function printContextStatus(projectRoot) {
     });
     await conn.ping();
     await conn.end();
-    dbOk = true;
+    return true;
   } catch {
+    return false;
   }
+}
 
-  const on = t('menu.statusOn');
-  const off = t('menu.statusOff');
-  const ready = t('menu.statusReady');
-  const notReady = t('menu.statusNotReady');
-  const yes = t('menu.statusYes');
-  const no = t('menu.statusNo');
+async function fetchContextStatus(projectRoot) {
+  const apiUrl = loadServerSiteUrl(projectRoot);
+  const [apiOk, dockerOk, dbOk] = await Promise.all([
+    isHttpResponding(apiUrl, 1500),
+    Promise.resolve(isDockerRunning()),
+    probeDatabase(projectRoot),
+  ]);
+  return { apiOk, dbOk, dockerOk };
+}
 
-  console.log(brand.muted(t('menu.statusApi', { status: apiOk ? on : off })));
-  console.log(brand.muted(t('menu.statusDb', { status: dbOk ? ready : notReady })));
-  console.log(brand.muted(t('menu.statusDocker', { status: dockerOk ? yes : no })));
+function printStatusPanel(status) {
+  const on = { on: t('menu.statusOn'), off: t('menu.statusOff') };
+  const db = {
+    on: t('menu.statusReady'),
+    off: t('menu.statusNotReady'),
+    pending: t('menu.statusChecking'),
+  };
+  const docker = { on: t('menu.statusYes'), off: t('menu.statusNo') };
+
+  console.log(sectionHeader(t('menu.statusHeader')));
+  const rows = [
+    [t('menu.statusLabelApi'), statusPill(status.apiOk, on)],
+    [t('menu.statusLabelDb'), statusPill(status.dbOk, db)],
+    [t('menu.statusLabelDocker'), statusPill(status.dockerOk, docker)],
+  ];
+  for (const [name, pill] of rows) {
+    console.log(`  ${brand.muted(padRight(name, 10))}  ${pill}`);
+  }
   console.log('');
+}
+
+async function printContextStatus(projectRoot) {
+  const spinner = ora({
+    text: brand.dim(t('menu.statusChecking')),
+    color: 'magenta',
+    spinner: 'dots',
+  }).start();
+  const status = await fetchContextStatus(projectRoot);
+  spinner.stop();
+  printStatusPanel(status);
+  return status;
+}
+
+async function withSpinner(text, fn) {
+  const spinner = ora({ text, color: 'magenta', spinner: 'dots' }).start();
+  try {
+    const result = await fn();
+    spinner.succeed();
+    return result;
+  } catch (err) {
+    spinner.fail();
+    throw err;
+  }
 }
 
 async function runMenuAction(action, projectRoot, project) {
@@ -133,9 +222,10 @@ async function runMenuAction(action, projectRoot, project) {
       await runDev(projectRoot);
       return false;
     case 'init': {
-      console.log(label(t('menu.initProject')));
-      const result = await ensureProjectEnvironment(projectRoot);
-      console.log(brand.success(result.message || t('menu.done')));
+      const result = await withSpinner(t('menu.initProject'), () =>
+        ensureProjectEnvironment(projectRoot)
+      );
+      console.log(ok(result.message || t('menu.done')));
       return true;
     }
     case 'status':
@@ -153,18 +243,21 @@ async function runMenuAction(action, projectRoot, project) {
       await runNodeScript(getClientBin(), [], { cwd: projectRoot });
       return false;
     case 'server:start': {
-      console.log(label(t('menu.startingApi')));
-      const code = await runLifecycleCommand('start', projectRoot);
+      const code = await withSpinner(t('menu.startingApi'), () =>
+        runLifecycleCommand('start', projectRoot)
+      );
       if (code !== 0) process.exit(code);
       return true;
     }
     case 'server:stop':
-      console.log(label(t('menu.stoppingApi')));
-      await runLifecycleCommand('stop', projectRoot);
+      await withSpinner(t('menu.stoppingApi'), async () => {
+        await runLifecycleCommand('stop', projectRoot);
+      });
       return true;
     case 'server:restart': {
-      console.log(label(t('menu.restartingApi')));
-      const code = await runLifecycleCommand('restart', projectRoot);
+      const code = await withSpinner(t('menu.restartingApi'), () =>
+        runLifecycleCommand('restart', projectRoot)
+      );
       if (code !== 0) process.exit(code);
       return true;
     }
@@ -181,6 +274,7 @@ async function runMenuAction(action, projectRoot, project) {
           type: 'list',
           name: 'target',
           message: t('menu.buildTarget'),
+          pageSize: 12,
           choices: buildChoices,
         },
       ]);
@@ -191,10 +285,23 @@ async function runMenuAction(action, projectRoot, project) {
       await runDockerCommand('start', projectRoot);
       return false;
     case 'docker:up':
-      await runDockerCommand('up', projectRoot);
+      await withSpinner(t('docker.starting'), () => runDockerCommand('up', projectRoot));
       return true;
     case 'docker:stop':
-      await runDockerCommand('down', projectRoot);
+      await withSpinner(t('docker.stopping'), async () => {
+        await runDockerCommand('down', projectRoot);
+      });
+      return true;
+    case 'nginx:up':
+      await withSpinner(t('cli.nginx.up'), async () => {
+        await runNginxCommand('up', projectRoot);
+      });
+      return true;
+    case 'nginx:open':
+      await runNginxCommand('open', projectRoot);
+      return true;
+    case 'nginx:reload':
+      await runNginxCommand('reload', projectRoot);
       return true;
     case 'open:admin': {
       const url = loadClientSiteUrl(projectRoot);
@@ -210,7 +317,6 @@ async function runMenuAction(action, projectRoot, project) {
       return true;
     }
     case 'exit':
-      console.log(brand.muted(t('menu.goodbye')));
       return false;
     default:
       return true;
@@ -223,7 +329,7 @@ async function runInteractiveLoop() {
 
   printBanner({ projectRoot, project });
   await printContextStatus(projectRoot);
-  console.log(brand.muted(`  ${t('menu.tip')}`));
+  console.log(`  ${brand.dim(t('menu.shortcuts'))}`);
   console.log('');
 
   let loop = true;
@@ -232,8 +338,9 @@ async function runInteractiveLoop() {
       {
         type: 'list',
         name: 'action',
-        message: t('menu.prompt'),
-        pageSize: 18,
+        message: `${brand.primary(t('menu.actionPrefix'))}  ${brand.dim('›')}`,
+        pageSize: 20,
+        loop: false,
         choices: getMenuActions(project),
       },
     ]);
@@ -247,23 +354,12 @@ async function runInteractiveLoop() {
       const stay = await runMenuAction(action, projectRoot, project);
       if (!stay) break;
 
-      if (action !== 'status') {
-        const { again } = await inquirer.prompt([
-          {
-            type: 'confirm',
-            name: 'again',
-            message: t('menu.back'),
-            default: true,
-          },
-        ]);
-        loop = again;
-        if (loop) {
-          console.log('');
-          await printContextStatus(projectRoot);
-        }
+      if (action !== 'status' && action !== 'doctor') {
+        console.log('');
+        await printContextStatus(projectRoot);
       }
     } catch (err) {
-      console.error(brand.error(`  ${err.message || err}`));
+      console.error(fail(err.message || err));
       const { retry } = await inquirer.prompt([
         {
           type: 'confirm',
@@ -273,6 +369,10 @@ async function runInteractiveLoop() {
         },
       ]);
       loop = retry;
+      if (loop) {
+        console.log('');
+        await printContextStatus(projectRoot);
+      }
     }
   }
 }

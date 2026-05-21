@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const { spawn, execSync, spawnSync } = require('child_process');
+const ora = require('ora');
 const { ensureOriginalCwd } = require('./root');
 const { detectProjectType, hasClient } = require('./project-type');
 const { t } = require('./i18n');
@@ -73,6 +74,15 @@ function startDockerServices(projectRoot) {
   if (!isDockerRunning()) {
     throw new Error(t('docker.notRunning'));
   }
+  try {
+    const { ensureNginxConfig } = require('./nginx');
+    const { configPath, created } = ensureNginxConfig(projectRoot, { mode: 'dev' });
+    if (created) {
+      console.log(t('nginx.configCreated', { path: configPath }));
+    }
+  } catch (err) {
+    console.warn(t('nginx.ensureWarn', { message: err.message || err }));
+  }
   const ctx = resolveComposeContext(projectRoot);
   const result = runCompose(['up', '-d'], ctx);
   if (result.status !== 0) {
@@ -103,10 +113,15 @@ function resolveDbCredentialsFromEnv(projectRoot) {
 }
 
 async function waitForMysql(projectRoot, maxAttempts = 30) {
-  console.log(t('docker.waitingMysql'));
   const ctx = resolveComposeContext(projectRoot);
   const container = resolveDbContainerName(ctx, projectRoot);
   const { user, password } = resolveDbCredentialsFromEnv(projectRoot);
+
+  const spinner = ora({
+    text: t('docker.waitingMysql'),
+    color: 'magenta',
+    spinner: 'dots',
+  }).start();
 
   let attempts = 0;
   while (attempts < maxAttempts) {
@@ -116,16 +131,14 @@ async function waitForMysql(projectRoot, maxAttempts = 30) {
       { stdio: 'ignore' }
     );
     if (probe.status === 0) {
-      console.log(t('docker.mysqlReady'));
+      spinner.succeed(t('docker.mysqlReady'));
       return true;
     }
     attempts += 1;
-    if (attempts % 5 === 0) {
-      console.log(t('docker.waitingMysqlProgress', { attempts, max: maxAttempts }));
-    }
+    spinner.text = t('docker.waitingMysqlProgress', { attempts, max: maxAttempts });
     await new Promise((r) => setTimeout(r, 1000));
   }
-  console.error(t('docker.mysqlTimeout'));
+  spinner.fail(t('docker.mysqlTimeout'));
   return false;
 }
 
@@ -182,6 +195,35 @@ async function dockerStartWithDev(projectRoot) {
   });
 }
 
+/**
+ * Run mysqldump inside the compose `db` container (MySQL image ships mysqldump).
+ * Used when the host has no `mysqldump` binary but Docker DB is running.
+ *
+ * @returns {{ ok: true, stdout: string } | { ok: false, stderr: string }}
+ */
+function mysqldumpFromDbContainer(projectRoot, { user, password, database }) {
+  const ctx = resolveComposeContext(projectRoot);
+  if (!fs.existsSync(ctx.composeFile)) {
+    return { ok: false, stderr: 'compose file missing' };
+  }
+  if (!isDockerRunning()) {
+    return { ok: false, stderr: 'docker not running' };
+  }
+  const container = resolveDbContainerName(ctx, projectRoot);
+  const res = spawnSync(
+    'docker',
+    ['exec', container, 'mysqldump', `-u${user}`, `-p${password}`, database],
+    { encoding: 'utf8', maxBuffer: 50 * 1024 * 1024 }
+  );
+  if (res.error) {
+    return { ok: false, stderr: res.error.message };
+  }
+  if (res.status !== 0) {
+    return { ok: false, stderr: res.stderr || res.stdout || `exit ${res.status}` };
+  }
+  return { ok: true, stdout: res.stdout };
+}
+
 async function runDockerCommand(command, projectRoot = ensureOriginalCwd(), extraArgs = []) {
   const ctx = resolveComposeContext(projectRoot);
   switch (command) {
@@ -229,4 +271,5 @@ module.exports = {
   isDockerRunning,
   resolveComposeContext,
   pickDockerComposeCommand,
+  mysqldumpFromDbContainer,
 };

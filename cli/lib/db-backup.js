@@ -3,6 +3,18 @@ const path = require('path');
 const { execSync } = require('child_process');
 const chalk = require('chalk');
 const { t } = require('./i18n');
+const { mysqldumpFromDbContainer } = require('./docker');
+
+function isLocalDbHost(host) {
+  const h = String(host || '').toLowerCase();
+  return h === '127.0.0.1' || h === 'localhost' || h === '::1' || h === '';
+}
+
+function isMysqldumpNotFoundError(err) {
+  const msg = `${err && err.message ? err.message : ''}\n${err && err.stderr ? err.stderr : ''}`;
+  if (err && err.status === 127) return true;
+  return /command not found|not recognized as an internal or external command/i.test(msg);
+}
 
 function parseEnv(projectRoot) {
   const envPath = path.join(projectRoot, '.env');
@@ -38,6 +50,15 @@ async function runDbBackup(projectRoot, outputPath) {
     console.log(chalk.green('[reactpress]'), t('db.backup.done'));
     return out;
   } catch (err) {
+    if (isMysqldumpNotFoundError(err) && isLocalDbHost(host)) {
+      const via = mysqldumpFromDbContainer(projectRoot, { user, password, database });
+      if (via.ok) {
+        console.log(chalk.cyan('[reactpress]'), t('db.backup.viaDocker'));
+        fs.writeFileSync(out, via.stdout, 'utf8');
+        console.log(chalk.green('[reactpress]'), t('db.backup.done'));
+        return out;
+      }
+    }
     console.error(chalk.red('[reactpress]'), t('db.backup.fail'));
     throw err;
   }
