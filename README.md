@@ -8,9 +8,9 @@
     One global install. Two commands. Site, admin, and API ready to go.
   </p>
 
-  [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/fecommunity/reactpress/blob/master/LICENSE)
-  [![NPM Version](https://img.shields.io/npm/v/@fecommunity/reactpress.svg?style=flat-square)](https://www.npmjs.com/package/@fecommunity/reactpress)
-  [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/fecommunity/reactpress/pulls)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/fecommunity/reactpress/blob/master/LICENSE)
+[![NPM Version](https://img.shields.io/npm/v/@fecommunity/reactpress.svg?style=flat-square)](https://www.npmjs.com/package/@fecommunity/reactpress)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/fecommunity/reactpress/pulls)
 
   <p>
     <a href="https://github.com/fecommunity/reactpress/issues">Report Bug</a>
@@ -27,14 +27,23 @@
 
 ## Table of contents
 
+- [Table of contents](#table-of-contents)
 - [What is ReactPress?](#what-is-reactpress)
 - [Quick start](#quick-start)
+  - [Prerequisites](#prerequisites)
+  - [Install and run](#install-and-run)
+  - [Tips](#tips)
 - [See it in action](#see-it-in-action)
+  - [Usage demo](#usage-demo)
+  - [Screenshots](#screenshots)
 - [Highlights](#highlights)
+  - [How it compares](#how-it-compares)
 - [CLI reference](#cli-reference)
 - [Deploy](#deploy)
 - [Develop this repository](#develop-this-repository)
 - [Contributing](#contributing)
+- [Acknowledgments](#acknowledgments)
+- [Star history](#star-history)
 
 ---
 
@@ -54,11 +63,11 @@
 
 ### Prerequisites
 
-| Requirement | Notes |
-| :--- | :--- |
-| **Node.js 18+** | Required for the CLI |
-| **Docker** | Recommended — default bundled MySQL runs in a container |
-| **MySQL** | Optional — use your own instance instead of Docker |
+| Requirement     | Notes                                                   |
+| :-------------- | :------------------------------------------------------ |
+| **Node.js 18+** | Required for the CLI                                    |
+| **Docker**      | Recommended — default bundled MySQL runs in a container |
+| **MySQL**       | Optional — use your own instance instead of Docker      |
 
 ### Install and run
 
@@ -71,11 +80,11 @@ reactpress dev
 
 When `dev` is ready, open the URLs printed in the terminal:
 
-| Service | Typical URL |
-| :--- | :--- |
-| Public site | `http://localhost:3001` |
-| Admin | `http://localhost:3001/admin` |
-| API health | `http://localhost:3002/api/health` |
+| Service     | Typical URL                        |
+| :---------- | :--------------------------------- |
+| Public site | `http://localhost:3001`            |
+| Admin       | `http://localhost:3001/admin`      |
+| API health  | `http://localhost:3002/api/health` |
 
 ### Tips
 
@@ -95,30 +104,30 @@ Install, initialize, start dev, and open your site — all from the terminal:
 
 ### Screenshots
 
-| Admin dashboard | Demo site |
-| :---: | :---: |
+|                          Admin dashboard                           |                          Demo site                          |
+| :----------------------------------------------------------------: | :---------------------------------------------------------: |
 | [![Admin Dashboard](./public/admin.png)](https://blog.gaoredu.com) | [![Demo Site](./public/demo.png)](https://blog.gaoredu.com) |
 
 ---
 
 ## Highlights
 
-| Topic | What you get |
-| :--- | :--- |
-| **Go live fast** | `init` + `dev` — guided setup, automatic database, URLs when ready |
-| **Publish & manage** | Posts, pages, media, and site settings from the admin |
-| **Customize** | Themes, light/dark mode, templates from minimal hello-world to full blog |
-| **Flexible runtime** | All-in-one local dev, API-only headless mode, or production deploy |
-| **Developer experience** | Interactive menu, `doctor`, `status`, and clear error messages |
+| Topic                    | What you get                                                             |
+| :----------------------- | :----------------------------------------------------------------------- |
+| **Go live fast**         | `init` + `dev` — guided setup, automatic database, URLs when ready       |
+| **Publish & manage**     | Posts, pages, media, and site settings from the admin                    |
+| **Customize**            | Themes, light/dark mode, templates from minimal hello-world to full blog |
+| **Flexible runtime**     | All-in-one local dev, API-only headless mode, or production deploy       |
+| **Developer experience** | Interactive menu, `doctor`, `status`, and clear error messages           |
 
 ### How it compares
 
-| | Traditional CMS | Static generators | **ReactPress** |
-| :--- | :--- | :--- | :--- |
-| **Getting started** | Server, plugins, manual setup | Repo + build per site | **One CLI, ~1 minute to a working CMS** |
-| **Content** | Admin UI, coupled themes | Markdown in git | **Admin UI + optional code-first workflows** |
-| **Frontends** | Theme/plugin ecosystem | Fixed at build time | **One content hub, your choice of presentation** |
-| **Best for** | General blogs & business sites | Docs & marketing pages | **Blogs, multi-site content, custom publishing flows** |
+|                     | Traditional CMS                | Static generators      | **ReactPress**                                         |
+| :------------------ | :----------------------------- | :--------------------- | :----------------------------------------------------- |
+| **Getting started** | Server, plugins, manual setup  | Repo + build per site  | **One CLI, ~1 minute to a working CMS**                |
+| **Content**         | Admin UI, coupled themes       | Markdown in git        | **Admin UI + optional code-first workflows**           |
+| **Frontends**       | Theme/plugin ecosystem         | Fixed at build time    | **One content hub, your choice of presentation**       |
+| **Best for**        | General blogs & business sites | Docs & marketing pages | **Blogs, multi-site content, custom publishing flows** |
 
 ---
 
@@ -128,16 +137,16 @@ Install, initialize, start dev, and open your site — all from the terminal:
 npm i -g @fecommunity/reactpress@3
 ```
 
-| Command | Description |
-| :--- | :--- |
-| `reactpress` | Interactive menu |
-| `reactpress init` | Set up a new project (config + `.env`) |
-| `reactpress dev` | Run site + admin + API locally |
-| `reactpress dev --api-only` | API only — for custom frontends |
-| `reactpress doctor` | Check your environment |
-| `reactpress status` | See what is running |
-| `reactpress build` | Production build |
-| `reactpress start` | Run production build |
+| Command                     | Description                            |
+| :-------------------------- | :------------------------------------- |
+| `reactpress`                | Interactive menu                       |
+| `reactpress init`           | Set up a new project (config + `.env`) |
+| `reactpress dev`            | Run site + admin + API locally         |
+| `reactpress dev --api-only` | API only — for custom frontends        |
+| `reactpress doctor`         | Check your environment                 |
+| `reactpress status`         | See what is running                    |
+| `reactpress build`          | Production build                       |
+| `reactpress start`          | Run production build                   |
 
 More: [documentation](https://blog.gaoredu.com) · [Configuration](./docs/tutorial/tutorial-extras/config-intro.md)
 
