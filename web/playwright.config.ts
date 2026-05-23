@@ -23,7 +23,8 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: "vp dev",
+    command:
+      "VITE_ENABLE_MOCK=true VITE_AUTH_MODE=mock VITE_DEV_API_PROXY_TARGET=http://localhost:3002 vp dev",
     url: "http://localhost:5173",
     reuseExistingServer: !ci,
   },

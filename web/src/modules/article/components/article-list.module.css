@@ -1,0 +1,255 @@
+.wrap {
+  width: 100%;
+  color: var(--article-list-text);
+}
+
+.pageHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin-bottom: 4px;
+}
+
+.pageTitle {
+  margin: 0 !important;
+  font-size: 23px !important;
+  font-weight: 400 !important;
+  line-height: 1.3 !important;
+  color: var(--article-list-text) !important;
+}
+
+.statusRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+  margin-bottom: 12px;
+}
+
+.statusViews {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+  color: var(--article-list-muted);
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.statusRow .searchGroup {
+  flex: 0 0 auto;
+}
+
+.statusViews li {
+  display: inline-flex;
+  align-items: center;
+}
+
+.statusViews li + li::before {
+  content: "|";
+  margin: 0 6px;
+  color: var(--article-list-separator);
+}
+
+.statusLink {
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font: inherit;
+  color: var(--article-list-link);
+  text-decoration: none;
+}
+
+.statusLink:hover {
+  color: var(--article-list-link-hover);
+}
+
+.statusLinkActive {
+  color: var(--article-list-text);
+  font-weight: 600;
+  cursor: default;
+}
+
+.statusLinkActive:hover {
+  color: var(--article-list-text);
+}
+
+.tablenav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+  margin-bottom: 0;
+  padding: 8px 0;
+  clear: both;
+}
+
+.tablenavTop {
+  border-bottom: 1px solid var(--article-list-border);
+}
+
+.tablenavBottom {
+  border-top: 1px solid var(--article-list-border);
+  margin-top: 0;
+}
+
+.tablenavCompact {
+  justify-content: flex-end;
+}
+
+.tablenavLeft {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.tablenavRight {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px 12px;
+  margin-left: auto;
+}
+
+.searchGroup {
+  display: flex;
+  align-items: stretch;
+}
+
+.searchInput {
+  width: 180px;
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+
+.searchButton {
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+}
+
+.itemCount {
+  font-size: 13px;
+  color: var(--article-list-muted);
+  white-space: nowrap;
+}
+
+.pagination {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 13px;
+  color: var(--article-list-muted);
+}
+
+.pageNavBtn {
+  min-width: 28px;
+  padding: 0 4px !important;
+  color: var(--article-list-muted) !important;
+}
+
+.pageInput {
+  width: 40px !important;
+  text-align: center;
+  margin: 0 4px;
+}
+
+.pageOf {
+  white-space: nowrap;
+}
+
+.tableCard {
+  border: 1px solid var(--article-list-border);
+  border-radius: var(--article-list-radius);
+  overflow: hidden;
+  background: var(--article-list-bg);
+}
+
+.tableCard :global(.ant-table) {
+  font-size: 13px;
+  background: transparent;
+}
+
+.tableCard :global(.ant-table-container) {
+  border-radius: 0;
+}
+
+.tableCard :global(.ant-table-thead > tr > th) {
+  font-weight: 400;
+}
+
+.tableCard :global(.ant-table-tbody > tr > td) {
+  vertical-align: top;
+}
+
+.colTitle :global(.row-actions) {
+  visibility: hidden;
+  margin-top: 4px;
+  font-size: 12px;
+}
+
+.tableCard :global(.ant-table-tbody > tr:hover) .colTitle :global(.row-actions) {
+  visibility: visible;
+}
+
+.rowAction,
+.filterLink {
+  color: var(--article-list-link);
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  text-align: inherit;
+}
+
+.filterLink:hover {
+  color: var(--article-list-link-hover);
+  text-decoration: underline;
+}
+
+.rowAction:hover {
+  color: var(--article-list-link-hover);
+}
+
+.rowActionDanger {
+  color: var(--article-list-danger);
+}
+
+.rowActionDanger:hover {
+  color: var(--article-list-danger-hover);
+}
+
+.rowActionSep {
+  margin: 0 4px;
+  color: var(--article-list-separator);
+}
+
+.cellLink {
+  font-size: 13px;
+}
+
+.dateStatus {
+  display: block;
+  font-weight: 600;
+  color: var(--article-list-text);
+}
+
+.dateTime {
+  display: block;
+  color: var(--article-list-muted);
+  font-size: 12px;
+}
+
+.colComments {
+  text-align: center;
+}

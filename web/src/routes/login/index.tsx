@@ -2,6 +2,7 @@ import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { Form, Input, Button, Card, App, theme, Typography, Flex, Checkbox, Space } from "antd";
 import type { CSSProperties } from "react";
 import { useMutation } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import { httpClient } from "@/utils/http";
 import { useAuthStore } from "@/stores/auth";
 import { useSettingsStore } from "@/stores/settings";
@@ -15,6 +16,7 @@ import { AUTH_MODE } from "@/utils/constants";
 import type { LoginRequest } from "@/api/schemas";
 import { APP_BRAND_NAME, APP_FAVICON_SRC } from "@/utils/constants";
 import { Theme } from "@/components/Icon";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { AppFooter } from "@/components/Layout/AppFooter";
 import { Aurora } from "@/components/Aurora";
 import "./index.css";
@@ -32,6 +34,7 @@ export const Route = createFileRoute("/login/")({
 function LoginPage() {
   const navigate = useNavigate();
   const { message } = App.useApp();
+  const { t } = useTranslation();
   const setTokens = useAuthStore((s) => s.setTokens);
   const toggleDarkMode = useSettingsStore((s) => s.toggleDarkMode);
   const darkMode = useSettingsStore((s) => s.darkMode);
@@ -50,16 +53,16 @@ function LoginPage() {
       await fetchSessionFromMockApi();
     },
     onSuccess: () => {
-      message.success("Login successful");
+      message.success(t("login.success"));
       void navigate({ to: "/dashboard" });
     },
     onError: (err) => {
       const text =
         err instanceof TypeError && err.message === "Failed to fetch"
-          ? "无法连接 API：请确认已运行 pnpm dev:web 或 pnpm dev:api，且勿将 VITE_API_BASE_URL 设为跨域绝对地址"
+          ? t("login.apiConnectionError")
           : err instanceof Error
             ? err.message
-            : "Login failed";
+            : t("login.failed");
       message.error(text);
     },
   });
@@ -98,6 +101,26 @@ function LoginPage() {
   return (
     <Flex vertical style={shellStyle}>
       <Aurora />
+      <Flex
+        justify="flex-end"
+        style={{
+          position: "absolute",
+          top: token.padding,
+          right: token.padding,
+          zIndex: 2,
+        }}
+      >
+        <Space>
+          <LanguageSwitcher size="small" compact />
+          <Button
+            type="text"
+            size="small"
+            onClick={toggleDarkMode}
+            icon={<Theme size={token.size} />}
+            aria-label={t("common.toggleTheme")}
+          />
+        </Space>
+      </Flex>
       <Flex vertical style={contentStyle}>
         <Flex
           flex={1}
@@ -151,12 +174,12 @@ function LoginPage() {
             >
               <Form.Item
                 name="username"
-                label={<span style={{ fontWeight: 500 }}>Username</span>}
-                rules={[{ required: true, message: "Please enter username" }]}
+                label={<span style={{ fontWeight: 500 }}>{t("login.username")}</span>}
+                rules={[{ required: true, message: t("login.usernameRequired") }]}
               >
                 <Input
                   id="login-username"
-                  aria-label="Username"
+                  aria-label={t("login.username")}
                   placeholder="admin"
                   size="large"
                 />
@@ -164,13 +187,13 @@ function LoginPage() {
 
               <Form.Item
                 name="password"
-                label={<span style={{ fontWeight: 500 }}>Password</span>}
-                rules={[{ required: true, message: "Please enter password" }]}
+                label={<span style={{ fontWeight: 500 }}>{t("login.password")}</span>}
+                rules={[{ required: true, message: t("login.passwordRequired") }]}
                 style={{ marginBottom: token.marginLG }}
               >
                 <Input.Password
                   id="login-password"
-                  aria-label="Password"
+                  aria-label={t("login.password")}
                   placeholder="admin"
                   size="large"
                 />
@@ -183,14 +206,14 @@ function LoginPage() {
                 wrap="wrap"
               >
                 <Form.Item name="remember" valuePropName="checked" noStyle>
-                  <Checkbox>Auto login</Checkbox>
+                  <Checkbox>{t("login.autoLogin")}</Checkbox>
                 </Form.Item>
                 <Typography.Link
                   href="#"
                   onClick={(e) => e.preventDefault()}
                   style={{ fontSize: token.fontSizeSM }}
                 >
-                  Forgot password?
+                  {t("login.forgotPassword")}
                 </Typography.Link>
               </Flex>
 
@@ -202,7 +225,7 @@ function LoginPage() {
                   block
                   size="large"
                 >
-                  Sign In
+                  {t("login.signIn")}
                 </Button>
               </Form.Item>
             </Form>
@@ -216,17 +239,6 @@ function LoginPage() {
             textAlign: "center",
           }}
         >
-          <Flex justify="center" style={{ marginBottom: token.marginSM }}>
-            <Space>
-              <Button
-                type="text"
-                size="small"
-                onClick={toggleDarkMode}
-                icon={<Theme size={token.size} />}
-                aria-label="Toggle Theme"
-              />
-            </Space>
-          </Flex>
           <AppFooter />
         </Flex>
       </Flex>

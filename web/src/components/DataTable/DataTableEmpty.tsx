@@ -1,12 +1,14 @@
 import { Flex, theme } from "antd";
 import { BarChart3 } from "lucide-react";
 import type { ReactElement } from "react";
+import { useTranslation } from "react-i18next";
 
 /**
  * Table empty state: icon in soft tile + bold title + secondary description (dashboard-style).
  */
 export function DataTableEmpty(): ReactElement {
   const { token } = theme.useToken();
+  const { t } = useTranslation();
 
   return (
     <Flex
@@ -44,7 +46,7 @@ export function DataTableEmpty(): ReactElement {
             lineHeight: token.lineHeightLG,
           }}
         >
-          No data
+          {t("common.noData")}
         </span>
         <span
           style={{
@@ -54,7 +56,7 @@ export function DataTableEmpty(): ReactElement {
             lineHeight: token.lineHeight,
           }}
         >
-          Nothing to show in this list yet
+          {t("common.noDataDescription")}
         </span>
       </Flex>
     </Flex>

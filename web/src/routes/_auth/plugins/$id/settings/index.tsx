@@ -1,9 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { ModulePlaceholder } from '@/shared/components/ModulePlaceholder';
+import { SettingsTabForm } from '@/modules/settings/components/SettingsTabForm';
 
 export const Route = createFileRoute('/_auth/plugins/$id/settings/')({
   component: function PluginSettingsRoute() {
     const { id } = Route.useParams();
-    return <ModulePlaceholder title={`插件设置：${id}`} />;
+    return <SettingsTabForm tab="general" key={id} />;
   },
 });

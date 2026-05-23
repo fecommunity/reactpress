@@ -2,7 +2,7 @@
  * Server API root including global prefix (`/api`).
  * Endpoint constants under `src/api/*` must NOT repeat `/api` in the path.
  *
- * Dev default `/api` → same-origin (Vite + MSW); proxied to :3002 when using real API.
+ * Dev default `/api` → same-origin (Vite proxy); target from `VITE_DEV_API_PROXY_TARGET`.
  */
 function resolveApiBaseUrl(): string {
   const fromEnv = import.meta.env.VITE_API_BASE_URL?.trim();

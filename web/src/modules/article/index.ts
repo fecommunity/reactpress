@@ -5,15 +5,17 @@ export const articleModule: AdminModule = {
   register({ menu, permissions, routes }) {
     permissions.register(['article:read', 'article:write', 'article:publish']);
     menu.register({
-      id: 'content',
-      title: '内容',
+      id: 'article',
+      title: '文章',
+      path: '/article',
+      icon: 'IconLucideBookOpen',
+      permissions: ['article:read'],
       sort: 10,
       children: [
         {
-          id: 'article.list',
-          title: '文章',
+          id: 'article.all',
+          title: '所有文章',
           path: '/article',
-          icon: 'IconLucideBookOpen',
           permissions: ['article:read'],
           sort: 0,
         },
@@ -21,17 +23,8 @@ export const articleModule: AdminModule = {
           id: 'article.new',
           title: '写文章',
           path: '/article/editor',
-          icon: 'IconLucideSparkles',
           permissions: ['article:write'],
           sort: 1,
-        },
-        {
-          id: 'article.comment',
-          title: '评论',
-          path: '/article/comment',
-          icon: 'IconLucideHistory',
-          permissions: ['comment:manage'],
-          sort: 2,
         },
       ],
     });

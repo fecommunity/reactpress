@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { ModulePlaceholder } from '@/shared/components/ModulePlaceholder';
+import { ImportPage } from '@/modules/data/pages/ImportPage';
 
 export const Route = createFileRoute('/_auth/data/import/')({
-  component: () => <ModulePlaceholder title="数据导入" />,
+  component: ImportPage,
 });

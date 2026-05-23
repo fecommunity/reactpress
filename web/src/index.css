@@ -1,3 +1,14 @@
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  overflow: hidden;
+}
+
 :root {
   --app-scrollbar-size: 8px;
   --app-scrollbar-track: rgba(0, 0, 0, 0);

@@ -1,4 +1,5 @@
-import { Card, Typography } from 'antd';
+import { Typography } from "antd";
+import { useTranslation } from "react-i18next";
 
 interface ModulePlaceholderProps {
   title: string;
@@ -6,14 +7,22 @@ interface ModulePlaceholderProps {
 }
 
 export function ModulePlaceholder({ title, description }: ModulePlaceholderProps) {
+  const { t } = useTranslation();
+
   return (
-    <Card>
-      <Typography.Title level={4} style={{ marginTop: 0 }}>
-        {title}
-      </Typography.Title>
-      <Typography.Paragraph type="secondary" style={{ marginBottom: 0 }}>
-        {description ?? '该模块页面已挂载，业务 UI 将在此迭代。'}
-      </Typography.Paragraph>
-    </Card>
+    <>
+      <div className="admin-page-header">
+        <Typography.Title level={2} className="admin-page-title">
+          {title}
+        </Typography.Title>
+      </div>
+      <div className="admin-panel">
+        <div className="admin-panel__body">
+          <Typography.Paragraph type="secondary" style={{ marginBottom: 0 }}>
+            {description ?? t("placeholder.defaultDescription")}
+          </Typography.Paragraph>
+        </div>
+      </div>
+    </>
   );
 }

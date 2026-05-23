@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { ModulePlaceholder } from '@/shared/components/ModulePlaceholder';
+import { PluginsPage } from '@/modules/plugins/pages/PluginsPage';
 
 export const Route = createFileRoute('/_auth/plugins/')({
-  component: () => <ModulePlaceholder title="插件" />,
+  component: PluginsPage,
 });

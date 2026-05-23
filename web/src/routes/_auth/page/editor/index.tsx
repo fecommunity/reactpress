@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { ModulePlaceholder } from '@/shared/components/ModulePlaceholder';
+import { PageEditorPage } from '@/modules/page/pages/PageEditorPage';
 
 export const Route = createFileRoute('/_auth/page/editor/')({
-  component: () => <ModulePlaceholder title="新建页面" />,
+  component: () => <PageEditorPage />,
 });

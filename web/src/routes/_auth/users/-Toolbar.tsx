@@ -1,6 +1,7 @@
 import { Button, Input, Select, theme } from "antd";
 import { Plus, UserRound } from "lucide-react";
 import { forwardRef, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { FilterToolbar } from "@/components/FilterToolbar";
 
 /** Search + role slot `minWidth` for FilterToolbar collapse math */
@@ -29,6 +30,7 @@ export const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar
   ref,
 ) {
   const { token } = theme.useToken();
+  const { t } = useTranslation();
 
   const slots = useMemo(
     () => [
@@ -38,7 +40,7 @@ export const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar
         children: (
           <Input.Search
             allowClear
-            placeholder="Search User"
+            placeholder={t("users.searchPlaceholder")}
             style={{ width: FILTER_CONTROL_WIDTH }}
             value={keywordInput}
             onChange={(e) => onKeywordChange(e.target.value)}
@@ -53,20 +55,29 @@ export const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar
         children: (
           <Select
             allowClear
-            placeholder="Role"
+            placeholder={t("users.role")}
             style={{ width: FILTER_CONTROL_WIDTH }}
             prefix={<UserRound size={token.fontSize} />}
             value={roleValue}
             onChange={(v) => onRoleChange(v ?? "")}
             options={[
-              { label: "Admin", value: "admin" },
-              { label: "Editor", value: "editor" },
+              { label: t("users.roleAdmin"), value: "admin" },
+              { label: t("users.roleEditor"), value: "editor" },
             ]}
           />
         ),
       },
     ],
-    [keywordInput, onClearSearch, onKeywordChange, onRoleChange, onSearch, roleValue, token.fontSize],
+    [
+      keywordInput,
+      onClearSearch,
+      onKeywordChange,
+      onRoleChange,
+      onSearch,
+      roleValue,
+      t,
+      token.fontSize,
+    ],
   );
 
   return (
@@ -75,11 +86,11 @@ export const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar
       slots={slots}
       actions={
         <Button type="primary" icon={<Plus size={token.fontSize} />} onClick={onCreateClick}>
-          Create User
+          {t("users.createUser")}
         </Button>
       }
-      moreFiltersLabel="More filters"
-      moreFiltersTitle="More filters"
+      moreFiltersLabel={t("common.moreFilters")}
+      moreFiltersTitle={t("common.moreFilters")}
     />
   );
 });

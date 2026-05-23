@@ -1,54 +1,35 @@
-import { Menu, Layout, theme, Flex, Grid, Drawer, Button } from "antd";
+import { Menu, Layout, Grid, Drawer, Button } from "antd";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useLocation } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 import {
   Book,
   Briefcase,
   CircleDashed,
+  FileText,
   Folder,
   Home,
-  PanelLeft,
+  Image,
+  MessageSquare,
+  Palette,
+  PanelLeftClose,
+  PanelLeftOpen,
+  Puzzle,
   SlidersHorizontal,
   Star,
   User,
   Users,
+  Wrench,
   Zap,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { APP_BRAND_NAME, APP_FAVICON_SRC } from "@/utils/constants";
 import { useAuthStore } from "@/stores/auth";
 import { useSettingsStore } from "@/stores/settings";
 import type { MenuItem as MenuItemType } from "@/api/schemas";
 import type { MenuProps } from "antd";
-import { UserMenu } from "../UserMenu";
 import "./index.css";
 
 const { Sider } = Layout;
-/** API menu `name` → English labels for known keys; unknown keys pass through as `menu.name`. */
-const MENU_LABELS: Record<string, string> = {
-  概览: "概览",
-  内容: "内容",
-  文章: "文章",
-  写文章: "写文章",
-  评论: "评论",
-  媒体库: "媒体库",
-  固定页面: "固定页面",
-  页面列表: "页面列表",
-  新建页面: "新建页面",
-  外观: "外观",
-  主题: "主题",
-  站点定制: "站点定制",
-  插件: "插件",
-  用户: "用户",
-  用户管理: "用户管理",
-  个人资料: "个人资料",
-  设置: "设置",
-  数据: "数据",
-  统计: "统计",
-  导出: "导出",
-  导入: "导入",
-  仪表盘: "仪表盘",
-};
 
 type AntMenuItem = Required<MenuProps>["items"][number];
 type BuildMenuResult = {
@@ -59,29 +40,49 @@ type BuildMenuResult = {
 
 const MENU_ICON_MAP: Record<string, LucideIcon> = {
   IconLucideLayoutDashboard: Home,
-  IconLucideUsers: User,
-  IconLucideUserList: Users,
-  /** Back-compat for older menu payloads still using IconLucideHistory */
-  IconLucideHistory: Users,
+  IconLucideUsers: Users,
+  IconLucideUserList: User,
+  IconLucideHistory: MessageSquare,
+  IconLucideMessageSquare: MessageSquare,
   IconLucideStar: Star,
   IconLucideSettings: SlidersHorizontal,
   IconLucideBriefcase: Briefcase,
   IconLucideBookOpen: Book,
   IconLucideFolderKanban: Folder,
   IconLucideSparkles: Zap,
+  IconLucideFileText: FileText,
+  IconLucideImage: Image,
+  IconLucidePalette: Palette,
+  IconLucidePuzzle: Puzzle,
+  IconLucideWrench: Wrench,
 };
 
-function renderMenuIcon(icon: string | null, size = 16) {
+function renderMenuIcon(icon: string | null, size = 20) {
   const Icon = (icon && MENU_ICON_MAP[icon]) || CircleDashed;
-  return <Icon size={size} />;
+  return <Icon size={size} aria-hidden />;
+}
+
+function registerPathMapping(
+  path: string,
+  keyChain: string[],
+  keyToPath: Record<string, string>,
+  pathToKeyChain: Record<string, string[]>,
+  key: string,
+) {
+  keyToPath[key] = path;
+  const existing = pathToKeyChain[path];
+  if (!existing || keyChain.length > existing.length) {
+    pathToKeyChain[path] = keyChain;
+  }
 }
 
 function buildMenuItems(
   menus: MenuItemType[],
-  token: ReturnType<typeof theme.useToken>["token"],
+  translate: (key: string, fallback: string) => string,
   collapsed = false,
-  iconSize = 16,
+  iconSize = 20,
   parentKeys: string[] = [],
+  isTopLevel = true,
 ): BuildMenuResult {
   const sorted = menus.filter((m) => !m.hidden).sort((a, b) => a.sort - b.sort);
   const keyToPath: Record<string, string> = {};
@@ -89,99 +90,113 @@ function buildMenuItems(
   const items: AntMenuItem[] = [];
 
   for (const menu of sorted) {
-    const label = MENU_LABELS[menu.name] ?? menu.name;
+    const label = translate(`menu.${menu.id}`, menu.name);
     const key = menu.id;
 
     if (menu.kind === "group") {
-      const built = buildMenuItems(menu.children, token, collapsed, iconSize, parentKeys);
+      const built = buildMenuItems(
+        menu.children,
+        translate,
+        collapsed,
+        iconSize,
+        parentKeys,
+        isTopLevel,
+      );
       Object.assign(keyToPath, built.keyToPath);
       Object.assign(pathToKeyChain, built.pathToKeyChain);
-      if (built.items.length > 0) {
-        items.push({
-          type: "group",
-          key,
-          label: collapsed ? (
-            <span
-              style={{
-                width: "100%",
-                display: "inline-flex",
-                justifyContent: "center",
-              }}
-            >
-              <span
-                aria-label={String(label)}
-                style={{
-                  width: 6,
-                  height: 6,
-                  borderRadius: "50%",
-                  background: token.colorTextQuaternary,
-                  display: "inline-block",
-                }}
-              />
-            </span>
-          ) : (
-            <span
-              style={{
-                fontSize: token.fontSizeSM,
-                color: token.colorTextQuaternary,
-              }}
-            >
-              {label}
-            </span>
-          ),
-          children: built.items,
-        });
-      }
+      items.push(...built.items);
       continue;
     }
 
     const nextParents = [...parentKeys, key];
-    keyToPath[key] = menu.path;
-    const existing = pathToKeyChain[menu.path];
-    if (!existing || nextParents.length > existing.length) {
-      pathToKeyChain[menu.path] = nextParents;
+    const hasChildren = Boolean(menu.children?.length);
+
+    if (menu.path) {
+      registerPathMapping(menu.path, nextParents, keyToPath, pathToKeyChain, key);
     }
 
     let children: AntMenuItem[] | undefined;
-    if (menu.children?.length) {
-      const built = buildMenuItems(menu.children, token, collapsed, iconSize, nextParents);
+    if (hasChildren && menu.children) {
+      const built = buildMenuItems(
+        menu.children,
+        translate,
+        collapsed,
+        iconSize,
+        nextParents,
+        false,
+      );
       Object.assign(keyToPath, built.keyToPath);
       Object.assign(pathToKeyChain, built.pathToKeyChain);
       children = built.items.length ? built.items : undefined;
     }
 
-    items.push({
-      key,
-      label,
-      icon: renderMenuIcon(menu.icon, iconSize),
-      children,
-    });
+    if (hasChildren && children?.length) {
+      items.push({
+        key,
+        label,
+        icon: isTopLevel ? renderMenuIcon(menu.icon, iconSize) : undefined,
+        children,
+      });
+    } else {
+      items.push({
+        key,
+        label,
+        icon: isTopLevel ? renderMenuIcon(menu.icon, iconSize) : undefined,
+      });
+    }
   }
 
   return { items, keyToPath, pathToKeyChain };
 }
 
+function resolveMenuKeyChain(
+  pathname: string,
+  pathToKeyChain: Record<string, string[]>,
+): string[] {
+  const exact = pathToKeyChain[pathname];
+  if (exact?.length) return exact;
+
+  let best: string[] = [];
+  let bestLen = 0;
+  for (const [path, chain] of Object.entries(pathToKeyChain)) {
+    if (pathname === path || pathname.startsWith(`${path}/`)) {
+      if (path.length > bestLen) {
+        bestLen = path.length;
+        best = chain;
+      }
+    }
+  }
+  return best;
+}
+
 export function Sidebar() {
+  const { t } = useTranslation();
   const menus = useAuthStore((s) => s.menus);
-  const user = useAuthStore((s) => s.user);
-  const logout = useAuthStore((s) => s.logout);
   const collapsed = useSettingsStore((s) => s.sidebarCollapsed);
   const setSidebarCollapsed = useSettingsStore((s) => s.setSidebarCollapsed);
   const toggleSidebar = useSettingsStore((s) => s.toggleSidebar);
   const navigate = useNavigate();
   const location = useLocation();
-  const { token } = theme.useToken();
   const screens = Grid.useBreakpoint();
   const isMobile = !screens.lg;
   const mobileOpen = collapsed;
+
   const builtMenu = useMemo(
-    () => buildMenuItems(menus, token, !isMobile && collapsed, token.size),
-    [menus, token, isMobile, collapsed, token.size],
+    () =>
+      buildMenuItems(
+        menus,
+        (key, fallback) => t(key, { defaultValue: fallback }),
+        !isMobile && collapsed,
+        20,
+      ),
+    [menus, isMobile, collapsed, t],
   );
+
   const { selectedKey, routeOpenKeys } = useMemo(() => {
-    const chain = builtMenu.pathToKeyChain[location.pathname] ?? [];
+    const chain = resolveMenuKeyChain(location.pathname, builtMenu.pathToKeyChain);
     return { selectedKey: chain.at(-1), routeOpenKeys: chain.slice(0, -1) };
   }, [builtMenu, location.pathname]);
+
   const routeOpenKeysSig = routeOpenKeys.join("\0");
   const [openKeys, setOpenKeys] = useState<string[]>([]);
 
@@ -191,7 +206,6 @@ export function Sidebar() {
     }
   }, [isMobile, setSidebarCollapsed]);
 
-  /** Merge open keys required by the route with any submenu the user already expanded. */
   useEffect(() => {
     setOpenKeys((prev) => {
       const next = new Set(prev);
@@ -200,141 +214,26 @@ export function Sidebar() {
     });
   }, [location.pathname, routeOpenKeysSig]);
 
-  const userMenuItems: MenuProps["items"] = [
-    {
-      key: "logout",
-      label: "Sign Out",
-      onClick: () => {
-        if (isMobile) {
-          setSidebarCollapsed(false);
-        }
-        logout();
-        void navigate({ to: "/login" });
-      },
-    },
-  ];
-
-  const sidebarContent = (isCollapsed: boolean, omitBrandToggle = false) => (
-    <Flex
-      vertical
-      style={{
-        height: "100%",
-        width: "100%",
-        minWidth: 0,
-        maxWidth: "100%",
-        boxSizing: "border-box",
-      }}
-    >
-      <Flex
-        vertical
-        justify="center"
-        align={isCollapsed ? "center" : "stretch"}
-        style={{
-          paddingBlock: token.paddingSM,
-          /* Collapsed rail is 64px: keep horizontal padding minimal so 40px brand / icons are not clipped by Sider overflow. */
-          paddingInline: isCollapsed ? token.paddingXXS : token.paddingSM,
-          minHeight: 64,
-          flexShrink: 0,
-          width: "100%",
-          minWidth: 0,
-          maxWidth: "100%",
-          boxSizing: "border-box",
-        }}
+  const collapseFooter = (isCollapsed: boolean) => (
+    <div className="admin-sidebar__collapse">
+      <Button
+        type="text"
+        className={`admin-sidebar__collapseBtn ${isCollapsed ? "admin-sidebar__collapseBtn--icon" : ""}`}
+        onClick={toggleSidebar}
+        icon={isCollapsed ? <PanelLeftOpen size={18} /> : <PanelLeftClose size={18} />}
+        aria-label={t("admin.collapseMenu")}
       >
-        <Flex
-          align="center"
-          gap={token.marginSM}
-          style={{
-            width: "100%",
-            minWidth: 0,
-            maxWidth: "100%",
-            boxSizing: "border-box",
-            /* Collapsed: outer row already has paddingSM; extra inline padding would clip the 40px brand box. */
-            paddingInline: isCollapsed ? 0 : token.paddingXS,
-            minHeight: 40,
-            justifyContent: isCollapsed ? "center" : "flex-start",
-          }}
-        >
-          {isCollapsed ? (
-            <div className="sidebar-collapsed-brand">
-              <div className="sidebar-collapsed-brand__logoLayer">
-                <img
-                  src={APP_FAVICON_SRC}
-                  alt="logo"
-                  width={24}
-                  height={24}
-                  style={{
-                    borderRadius: token.borderRadius,
-                    display: "block",
-                    objectFit: "contain",
-                  }}
-                />
-              </div>
-              <div className="sidebar-collapsed-brand__toggleLayer">
-                <Button
-                  type="text"
-                  size="small"
-                  className="sidebar-collapsed-brand__toggle"
-                  onClick={toggleSidebar}
-                  icon={<PanelLeft size={token.size} />}
-                  aria-label="Toggle sidebar"
-                />
-              </div>
-            </div>
-          ) : (
-            <>
-              <Flex
-                align="center"
-                gap={token.marginSM}
-                style={{
-                  minWidth: 0,
-                  flex: 1,
-                  overflow: "hidden",
-                }}
-              >
-                <img
-                  src={APP_FAVICON_SRC}
-                  alt="logo"
-                  width={24}
-                  height={24}
-                  style={{
-                    borderRadius: token.borderRadius,
-                    display: "block",
-                    flexShrink: 0,
-                    objectFit: "contain",
-                  }}
-                />
-                <div
-                  style={{
-                    minWidth: 0,
-                    flex: 1,
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    whiteSpace: "nowrap",
-                    fontWeight: 600,
-                    fontSize: token.fontSizeLG,
-                    textTransform: "uppercase",
-                  }}
-                >
-                  {APP_BRAND_NAME}
-                </div>
-              </Flex>
-              {!omitBrandToggle ? (
-                <Button
-                  type="text"
-                  size="small"
-                  onClick={toggleSidebar}
-                  icon={<PanelLeft size={token.size} />}
-                  aria-label="Toggle sidebar"
-                  style={{ flexShrink: 0 }}
-                />
-              ) : null}
-            </>
-          )}
-        </Flex>
-      </Flex>
+        {isCollapsed ? null : t("admin.collapseMenu")}
+      </Button>
+    </div>
+  );
+
+  const sidebarMenu = (isCollapsed: boolean) => (
+    <>
       <Menu
         mode="inline"
+        theme="dark"
+        inlineCollapsed={isCollapsed}
         selectedKeys={selectedKey ? [selectedKey] : []}
         openKeys={openKeys}
         onOpenChange={(keys) => setOpenKeys(keys as string[])}
@@ -348,20 +247,10 @@ export function Sidebar() {
           }
           void navigate({ to: path });
         }}
-        style={{
-          borderRight: "none",
-          flex: 1,
-          minWidth: 0,
-          maxWidth: "100%",
-          width: "100%",
-          boxSizing: "border-box",
-          overflowX: "hidden",
-          overflowY: "auto",
-          background: "transparent",
-        }}
+        className="admin-sidebar__menu"
       />
-      <UserMenu collapsed={isCollapsed} user={user} userMenuItems={userMenuItems} />
-    </Flex>
+      {!isMobile ? collapseFooter(isCollapsed) : null}
+    </>
   );
 
   if (isMobile) {
@@ -370,48 +259,39 @@ export function Sidebar() {
         open={mobileOpen}
         placement="left"
         onClose={() => setSidebarCollapsed(false)}
-        size={320}
+        size={160}
         styles={{
           body: {
             padding: 0,
-            background: token.colorBgLayout,
+            background: "var(--admin-sidebar-bg)",
             overflow: "hidden",
-            maxWidth: "100%",
-            boxSizing: "border-box",
           },
           header: { display: "none" },
           mask: { opacity: 0.5 },
         }}
       >
-        {sidebarContent(false, true)}
+        {sidebarMenu(false)}
       </Drawer>
     );
   }
 
   return (
     <Sider
-      key={collapsed ? "collapsed" : "expanded"}
-      theme="light"
+      theme="dark"
+      className="admin-sidebar"
       collapsible
       collapsed={collapsed}
       trigger={null}
-      width={240}
-      collapsedWidth={64}
+      width={160}
+      collapsedWidth={36}
       breakpoint="lg"
       onBreakpoint={(broken) => {
         if (broken) {
           setSidebarCollapsed(false);
         }
       }}
-      style={{
-        borderRight: `1px solid ${token.colorBorderSecondary}`,
-        background: token.colorBgLayout,
-        alignSelf: "stretch",
-        minHeight: "100vh",
-        overflow: "visible",
-      }}
     >
-      {sidebarContent(collapsed)}
+      {sidebarMenu(collapsed)}
     </Sider>
   );
 }

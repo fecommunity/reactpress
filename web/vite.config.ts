@@ -1,9 +1,17 @@
 import path from "node:path";
-import { defineConfig } from "vite-plus";
+import { defineConfig, loadEnv } from "vite-plus";
 import react from "@vitejs/plugin-react-swc";
 import { tanstackRouter } from "@tanstack/router-plugin/vite";
 
+const mode = process.env.NODE_ENV === "production" ? "production" : "development";
+const env = loadEnv(mode, process.cwd(), "");
+const apiProxyTarget = env.VITE_DEV_API_PROXY_TARGET?.trim() || "https://api.gaoredu.com";
+
 export default defineConfig({
+  staged: {
+    "*": "vp check --fix",
+  },
+  lint: { options: { typeAware: true, typeCheck: true } },
   plugins: [
     tanstackRouter({
       routesDirectory: "./src/routes",
@@ -14,8 +22,9 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "http://localhost:3002",
+        target: apiProxyTarget,
         changeOrigin: true,
+        secure: true,
       },
     },
   },
@@ -50,8 +59,4 @@ export default defineConfig({
     },
     chunkSizeWarningLimit: 1024,
   },
-  staged: {
-    "*": "vp check --fix",
-  },
-  lint: { options: { typeAware: true, typeCheck: true } },
 });

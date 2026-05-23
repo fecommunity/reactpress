@@ -7,7 +7,9 @@ export const appearanceModule: AdminModule = {
     menu.register({
       id: 'appearance',
       title: '外观',
-      sort: 30,
+      path: '/appearance/themes',
+      icon: 'IconLucidePalette',
+      sort: 35,
       children: [
         {
           id: 'appearance.themes',
@@ -18,7 +20,7 @@ export const appearanceModule: AdminModule = {
         },
         {
           id: 'appearance.customize',
-          title: '站点定制',
+          title: '自定义',
           path: '/appearance/customize',
           permissions: ['setting:manage'],
           sort: 1,

@@ -6,14 +6,16 @@ export const pageModule: AdminModule = {
     permissions.register(['page:manage']);
     menu.register({
       id: 'page',
-      title: '固定页面',
+      title: '页面',
+      path: '/page',
+      icon: 'IconLucideFileText',
+      permissions: ['page:manage'],
       sort: 25,
       children: [
         {
-          id: 'page.list',
-          title: '页面列表',
+          id: 'page.all',
+          title: '所有页面',
           path: '/page',
-          icon: 'IconLucideBriefcase',
           permissions: ['page:manage'],
           sort: 0,
         },

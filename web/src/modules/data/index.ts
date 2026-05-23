@@ -5,26 +5,28 @@ export const dataModule: AdminModule = {
   register({ menu, permissions, routes }) {
     permissions.register(['view:read']);
     menu.register({
-      id: 'data',
-      title: '数据',
-      sort: 60,
+      id: 'tools',
+      title: '工具',
+      path: '/data/export',
+      icon: 'IconLucideWrench',
+      sort: 50,
       children: [
         {
-          id: 'data.analytics',
+          id: 'tools.analytics',
           title: '统计',
           path: '/data/analytics',
           permissions: ['view:read'],
           sort: 0,
         },
         {
-          id: 'data.export',
+          id: 'tools.export',
           title: '导出',
           path: '/data/export',
           permissions: ['setting:manage'],
           sort: 1,
         },
         {
-          id: 'data.import',
+          id: 'tools.import',
           title: '导入',
           path: '/data/import',
           permissions: ['setting:manage'],

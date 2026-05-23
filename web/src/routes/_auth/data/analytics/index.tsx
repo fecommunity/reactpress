@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { ModulePlaceholder } from '@/shared/components/ModulePlaceholder';
+import { AnalyticsPage } from '@/modules/data/pages/AnalyticsPage';
 
 export const Route = createFileRoute('/_auth/data/analytics/')({
-  component: () => <ModulePlaceholder title="访问统计" />,
+  component: AnalyticsPage,
 });

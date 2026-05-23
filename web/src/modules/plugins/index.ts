@@ -8,9 +8,9 @@ export const pluginsModule: AdminModule = {
       id: 'plugins',
       title: '插件',
       path: '/plugins',
-      icon: 'IconLucideSettings',
+      icon: 'IconLucidePuzzle',
       permissions: ['extension:manage'],
-      sort: 35,
+      sort: 40,
     });
     routes.registerRoute({ path: '/plugins', permission: 'extension:manage' });
   },

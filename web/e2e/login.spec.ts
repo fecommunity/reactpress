@@ -14,7 +14,7 @@ test.describe("Login Flow", () => {
 
   test("should login successfully with admin/admin", async ({ page }) => {
     await loginAsAdmin(page);
-    await expect(page.getByText("Total Revenue")).toBeVisible();
+    await expect(page.getByText(/Articles|文章/).first()).toBeVisible();
   });
 
   test("should show error for wrong credentials", async ({ page }) => {
@@ -22,6 +22,6 @@ test.describe("Login Flow", () => {
     await page.getByLabel(/Password|密码/).fill("wrong");
     await page.getByRole("button", { name: /Sign In|登录/ }).click();
 
-    await expect(page.getByText("Invalid username or password")).toBeVisible();
+    await expect(page.getByText(/Invalid username or password|用户名或密码错误/i)).toBeVisible();
   });
 });

@@ -1,0 +1,197 @@
+import { http } from "msw";
+import { withDelay, successResponse } from "../createHandler";
+
+const MOCK_PAGES = [
+  {
+    id: "p1",
+    name: "关于我们",
+    path: "about",
+    order: 0,
+    status: "publish",
+    views: 120,
+    publishAt: "2025-04-01T08:00:00.000Z",
+    content: "# 关于我们",
+  },
+  {
+    id: "p2",
+    name: "隐私政策",
+    path: "privacy",
+    order: 1,
+    status: "draft",
+    views: 0,
+    publishAt: null,
+    content: "# 隐私政策",
+  },
+];
+
+let mockSettings: Record<string, unknown> = {
+  systemTitle: "ReactPress",
+  systemUrl: "http://localhost:3001",
+  globalSetting: "{}",
+  oss: "{}",
+};
+
+export const pageHandlers = [
+  http.get("/api/page", async ({ request }) => {
+    await withDelay(200);
+    const url = new URL(request.url);
+    const page = Number(url.searchParams.get("page") ?? 1);
+    const pageSize = Number(url.searchParams.get("pageSize") ?? 12);
+    const start = (page - 1) * pageSize;
+    return successResponse([MOCK_PAGES.slice(start, start + pageSize), MOCK_PAGES.length]);
+  }),
+
+  http.get("/api/page/:id", async ({ params }) => {
+    await withDelay(150);
+    const page = MOCK_PAGES.find((p) => p.id === params.id);
+    if (!page) return successResponse(null);
+    return successResponse(page);
+  }),
+
+  http.post("/api/page", async ({ request }) => {
+    await withDelay(200);
+    const body = (await request.json()) as Record<string, unknown>;
+    const id = `p${Date.now()}`;
+    MOCK_PAGES.push({
+      id,
+      name: String(body.name ?? ""),
+      path: String(body.path ?? ""),
+      order: Number(body.order ?? 0),
+      status: String(body.status ?? "draft"),
+      views: 0,
+      publishAt: null,
+      content: String(body.content ?? ""),
+    });
+    return successResponse({ id });
+  }),
+
+  http.patch("/api/page/:id", async ({ params, request }) => {
+    await withDelay(200);
+    const body = (await request.json()) as Record<string, unknown>;
+    const idx = MOCK_PAGES.findIndex((p) => p.id === params.id);
+    if (idx >= 0) Object.assign(MOCK_PAGES[idx]!, body);
+    return successResponse({ id: params.id });
+  }),
+
+  http.delete("/api/page/:id", async ({ params }) => {
+    await withDelay(150);
+    const idx = MOCK_PAGES.findIndex((p) => p.id === params.id);
+    if (idx >= 0) MOCK_PAGES.splice(idx, 1);
+    return successResponse(null);
+  }),
+];
+
+const MOCK_FILES = [
+  {
+    id: "f1",
+    originalname: "logo.png",
+    url: "https://api.gaoredu.com/public/uploads/logo.png",
+    type: "image/png",
+    size: 1024,
+    createAt: "2025-05-01T08:00:00.000Z",
+  },
+  {
+    id: "f2",
+    originalname: "banner.jpg",
+    url: "https://api.gaoredu.com/public/uploads/banner.jpg",
+    type: "image/jpeg",
+    size: 204800,
+    createAt: "2025-04-15T10:00:00.000Z",
+  },
+  {
+    id: "f3",
+    originalname: "intro.mp4",
+    url: "https://api.gaoredu.com/public/uploads/intro.mp4",
+    type: "video/mp4",
+    size: 5242880,
+    createAt: "2025-03-20T12:00:00.000Z",
+  },
+];
+
+export const fileHandlers = [
+  http.get("/api/file", async ({ request }) => {
+    await withDelay(200);
+    const url = new URL(request.url);
+    const keyword = url.searchParams.get("originalname")?.toLowerCase() ?? "";
+    const type = url.searchParams.get("type")?.toLowerCase() ?? "";
+    const month = url.searchParams.get("createAt") ?? "";
+    const page = Number(url.searchParams.get("page") ?? "1");
+    const pageSize = Number(url.searchParams.get("pageSize") ?? "60");
+
+    let filtered = [...MOCK_FILES];
+    if (keyword) {
+      filtered = filtered.filter((f) => f.originalname.toLowerCase().includes(keyword));
+    }
+    if (type) {
+      filtered = filtered.filter((f) => f.type.toLowerCase().includes(type));
+    }
+    if (month) {
+      filtered = filtered.filter((f) => f.createAt.includes(month));
+    }
+
+    const total = filtered.length;
+    const start = (page - 1) * pageSize;
+    const list = filtered.slice(start, start + pageSize);
+    return successResponse([list, total]);
+  }),
+
+  http.post("/api/file/upload", async () => {
+    await withDelay(300);
+    return successResponse({
+      id: `f${Date.now()}`,
+      originalname: "upload.png",
+      url: "https://api.gaoredu.com/public/uploads/upload.png",
+      type: "image/png",
+      size: 2048,
+      createAt: new Date().toISOString(),
+    });
+  }),
+
+  http.delete("/api/file/:id", async () => {
+    await withDelay(150);
+    return successResponse(null);
+  }),
+];
+
+export const settingHandlers = [
+  http.post("/api/setting/get", async () => {
+    await withDelay(150);
+    return successResponse(mockSettings);
+  }),
+
+  http.post("/api/setting", async ({ request }) => {
+    await withDelay(200);
+    const body = (await request.json()) as Record<string, unknown>;
+    mockSettings = { ...mockSettings, ...body };
+    return successResponse(mockSettings);
+  }),
+];
+
+export const viewHandlers = [
+  http.get("/api/view", async () => {
+    await withDelay(200);
+    return successResponse([
+      [
+        {
+          id: "v1",
+          url: "/article/1",
+          ip: "127.0.0.1",
+          createAt: new Date().toISOString(),
+        },
+      ],
+      1,
+    ]);
+  }),
+];
+
+export const apiKeyHandlers = [
+  http.get("/api/api-key", async () => {
+    await withDelay(100);
+    return successResponse([{ id: "k1", name: "dev-key", scopes: "read" }]);
+  }),
+  http.post("/api/api-key", async ({ request }) => {
+    await withDelay(150);
+    const body = (await request.json()) as { name?: string; scopes?: string };
+    return successResponse({ id: `k${Date.now()}`, name: body.name, scopes: body.scopes });
+  }),
+];

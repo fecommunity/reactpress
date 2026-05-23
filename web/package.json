@@ -22,9 +22,11 @@
     "@tanstack/react-query": "^5.90.21",
     "@tanstack/react-router": "^1.167.4",
     "antd": "^6.3.3",
+    "i18next": "^26.2.0",
     "lucide-react": "^1.7.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
+    "react-i18next": "^17.0.8",
     "zod": "^4.3.6",
     "zustand": "^5.0.12"
   },

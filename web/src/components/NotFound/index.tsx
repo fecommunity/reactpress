@@ -1,11 +1,13 @@
 import { useNavigate } from "@tanstack/react-router";
 import { ArrowLeft, Home, SearchX } from "lucide-react";
 import { Button, Flex, Result, Space, theme } from "antd";
+import { useTranslation } from "react-i18next";
 
 /** Shared 404 UI for `/404` route and root `notFoundComponent`. */
 export function NotFound() {
   const navigate = useNavigate();
   const { token } = theme.useToken();
+  const { t } = useTranslation();
 
   const goDashboard = () => {
     void navigate({ to: "/dashboard" });
@@ -49,15 +51,15 @@ export function NotFound() {
           icon={
             <SearchX size={64} strokeWidth={1.25} color={token.colorTextQuaternary} aria-hidden />
           }
-          title="404"
-          subTitle="Sorry, the page you visited does not exist."
+          title={t("error.404Title")}
+          subTitle={t("error.404Subtitle")}
           extra={
             <Space wrap size="middle">
               <Button type="primary" icon={<Home size={16} aria-hidden />} onClick={goDashboard}>
-                Back to Home
+                {t("common.backToHome")}
               </Button>
               <Button icon={<ArrowLeft size={16} aria-hidden />} onClick={goBack}>
-                Go back
+                {t("common.goBack")}
               </Button>
             </Space>
           }

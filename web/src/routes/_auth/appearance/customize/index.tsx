@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { ModulePlaceholder } from '@/shared/components/ModulePlaceholder';
+import { CustomizePage } from '@/modules/appearance/pages/CustomizePage';
 
 export const Route = createFileRoute('/_auth/appearance/customize/')({
-  component: () => <ModulePlaceholder title="站点定制" />,
+  component: CustomizePage,
 });

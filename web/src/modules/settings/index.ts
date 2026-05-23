@@ -21,7 +21,14 @@ export const settingsModule: AdminModule = {
       path: '/settings/general',
       icon: 'IconLucideSettings',
       permissions: ['setting:manage'],
-      sort: 50,
+      sort: 60,
+      children: SETTING_TABS.map((tab) => ({
+        id: `settings.${tab.id}`,
+        title: tab.title,
+        path: tab.path,
+        permissions: ['setting:manage'] as const,
+        sort: tab.sort,
+      })),
     });
     for (const tab of SETTING_TABS) {
       settings.registerTab({

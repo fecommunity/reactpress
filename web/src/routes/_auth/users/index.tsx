@@ -8,6 +8,7 @@ import { PaginatedResponseSchema, UserSchema, CreateUserRequestSchema } from "@/
 import type { User, CreateUserRequest } from "@/api/schemas";
 import { z } from "zod/v4";
 import { MoreVertical, Pencil, Trash2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { DataTable } from "@/components/DataTable";
 import { useResourceCRUD } from "@/hooks/useResourceCRUD";
 import { Toolbar } from "./-Toolbar";
@@ -37,6 +38,7 @@ function UsersPage() {
   const search = Route.useSearch();
   const navigate = useNavigate({ from: Route.fullPath });
   const { message, modal } = App.useApp();
+  const { t } = useTranslation();
   const { token } = theme.useToken();
   const [modalOpen, setModalOpen] = useState(false);
   const pageShellRef = useRef<HTMLDivElement>(null);
@@ -99,7 +101,7 @@ function UsersPage() {
     createLifecycle: {
       onSuccess: () => {
         message.success({
-          content: "Created successfully",
+          content: t("common.createdSuccess"),
           key: MESSAGE_KEY_USER_CREATE,
         });
         setModalOpen(false);
@@ -107,7 +109,7 @@ function UsersPage() {
       },
       onError: () => {
         message.error({
-          content: "Create failed",
+          content: t("common.createFailed"),
           key: MESSAGE_KEY_USER_CREATE,
         });
       },
@@ -115,14 +117,14 @@ function UsersPage() {
     updateLifecycle: {
       onMutate: () => {
         message.loading({
-          content: "Updating…",
+          content: t("common.updating"),
           key: MESSAGE_KEY_USER_UPDATE,
           duration: 0,
         });
       },
       onSuccess: () => {
         message.success({
-          content: "Updated successfully",
+          content: t("common.updatedSuccess"),
           key: MESSAGE_KEY_USER_UPDATE,
         });
         setModalOpen(false);
@@ -131,7 +133,7 @@ function UsersPage() {
       },
       onError: () => {
         message.error({
-          content: "Update failed",
+          content: t("common.updateFailed"),
           key: MESSAGE_KEY_USER_UPDATE,
         });
       },
@@ -139,20 +141,20 @@ function UsersPage() {
     deleteLifecycle: {
       onMutate: () => {
         message.loading({
-          content: "Deleting…",
+          content: t("common.deleting"),
           key: MESSAGE_KEY_USER_DELETE,
           duration: 0,
         });
       },
       onSuccess: () => {
         message.success({
-          content: "Deleted successfully",
+          content: t("common.deletedSuccess"),
           key: MESSAGE_KEY_USER_DELETE,
         });
       },
       onError: () => {
         message.error({
-          content: "Delete failed",
+          content: t("common.deleteFailed"),
           key: MESSAGE_KEY_USER_DELETE,
         });
       },
@@ -161,25 +163,25 @@ function UsersPage() {
 
   const confirmDelete = (record: User) => {
     modal.confirm({
-      title: "Are you absolutely sure?",
-      content: "This action cannot be undone. This will permanently delete the user.",
-      okText: "Delete",
+      title: t("users.deleteTitle"),
+      content: t("users.deleteContent"),
+      okText: t("common.delete"),
       okType: "danger",
-      cancelText: "Cancel",
+      cancelText: t("common.cancel"),
       onOk: () => deleteMutation.mutate(record.id),
     });
   };
 
   const columns = [
     {
-      title: "ID",
+      title: t("users.id"),
       dataIndex: "id",
       key: "id",
       sorter: true,
       sortOrder: search.sortField === "id" ? search.sortOrder : null,
     },
     {
-      title: "Username",
+      title: t("common.username"),
       dataIndex: "username",
       key: "username",
       sorter: true,
@@ -205,14 +207,14 @@ function UsersPage() {
       },
     },
     {
-      title: "Email",
+      title: t("common.email"),
       dataIndex: "email",
       key: "email",
       sorter: true,
       sortOrder: search.sortField === "email" ? search.sortOrder : null,
     },
     {
-      title: "Roles",
+      title: t("common.roles"),
       dataIndex: "roles",
       key: "roles",
       sorter: true,
@@ -238,7 +240,7 @@ function UsersPage() {
       ),
     },
     {
-      title: "Actions",
+      title: t("users.actions"),
       key: "actions",
       width: 60,
       align: "right" as const,
@@ -250,7 +252,7 @@ function UsersPage() {
               {
                 key: "edit",
                 icon: <Pencil size={token.fontSize} />,
-                label: "Edit",
+                label: t("common.edit"),
                 onClick: () => {
                   setEditingUser(record);
                   form.setFieldsValue(record);
@@ -260,7 +262,7 @@ function UsersPage() {
               {
                 key: "delete",
                 icon: <Trash2 size={token.fontSize} />,
-                label: "Delete",
+                label: t("common.delete"),
                 danger: true,
                 onClick: () => confirmDelete(record),
               },
@@ -389,7 +391,7 @@ function UsersPage() {
             current: currentPage,
             pageSize: search.limit,
             showSizeChanger: true,
-            showTotal: (total) => `${total} rows`,
+            showTotal: (total) => t("common.rows", { count: total }),
             onChange: (page, pageSize) => {
               void navigate({
                 search: {

@@ -5,10 +5,10 @@ export const mediaModule: AdminModule = {
   register({ menu, permissions, routes }) {
     permissions.register(['media:manage']);
     menu.register({
-      id: 'media.library',
-      title: '媒体库',
+      id: 'media',
+      title: '媒体',
       path: '/media',
-      icon: 'IconLucideFolderKanban',
+      icon: 'IconLucideImage',
       permissions: ['media:manage'],
       sort: 20,
     });

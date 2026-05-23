@@ -1,9 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { ModulePlaceholder } from '@/shared/components/ModulePlaceholder';
+import { PageEditorPage } from '@/modules/page/pages/PageEditorPage';
 
 export const Route = createFileRoute('/_auth/page/editor/$id')({
-  component: function PageEditorRoute() {
+  component: function EditPageRoute() {
     const { id } = Route.useParams();
-    return <ModulePlaceholder title={`编辑页面 #${id}`} />;
+    return <PageEditorPage pageId={id} />;
   },
 });

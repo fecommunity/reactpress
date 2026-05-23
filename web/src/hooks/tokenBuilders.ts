@@ -1,5 +1,6 @@
 import { theme } from "antd";
 import type { ConfigProviderProps, ThemeConfig } from "antd";
+import { WP_ADMIN } from "./wpAdminTokens";
 
 /**
  * Common theme token builders
@@ -8,11 +9,11 @@ import type { ConfigProviderProps, ThemeConfig } from "antd";
 
 export const SHARED_DESIGN_TOKENS = {
   fontFamily:
-    "ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif",
+    "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif",
 
-  borderRadius: 8,
-  borderRadiusSM: 6,
-  borderRadiusLG: 12,
+  borderRadius: 2,
+  borderRadiusSM: 2,
+  borderRadiusLG: 4,
 } as const;
 
 export const CONTROL_COMPONENTS = {
@@ -69,12 +70,34 @@ export const MENU_DARK = {
   horizontalItemHoverColor: "rgba(255, 255, 255, 0.85)",
 } as const;
 
+/** WordPress admin sidebar (always dark). */
+export const MENU_WP_SIDEBAR = {
+  darkItemBg: WP_ADMIN.sidebarBg,
+  darkSubMenuItemBg: WP_ADMIN.sidebarSubmenuBg,
+  darkItemSelectedBg: WP_ADMIN.accentBlue,
+  darkItemSelectedColor: "#fff",
+  darkItemColor: WP_ADMIN.adminBarText,
+  darkItemHoverBg: WP_ADMIN.sidebarSubmenuBg,
+  darkItemHoverColor: "#72aee6",
+  itemBorderRadius: 0,
+  itemMarginInline: 0,
+  itemMarginBlock: 0,
+  itemHeight: 34,
+  subMenuItemBg: WP_ADMIN.sidebarSubmenuBg,
+} as const;
+
 /**
  * Build light theme config
  */
 export function buildLightThemeConfig(): ConfigProviderProps {
   const lightSeed: ThemeConfig["token"] = {
-    colorBgLayout: "#ffffff",
+    colorPrimary: WP_ADMIN.accentBlue,
+    colorLink: WP_ADMIN.accentBlue,
+    colorLinkHover: WP_ADMIN.accentBlueHover,
+    colorBgLayout: WP_ADMIN.contentBg,
+    colorBgContainer: "#ffffff",
+    colorBorder: WP_ADMIN.borderColor,
+    colorBorderSecondary: WP_ADMIN.borderColor,
     ...SHARED_DESIGN_TOKENS,
   };
 
@@ -88,7 +111,7 @@ export function buildLightThemeConfig(): ConfigProviderProps {
           algorithm: theme.defaultAlgorithm,
           token: lightSeed,
         }),
-        Menu: MENU_LIGHT,
+        Menu: { ...MENU_LIGHT, ...MENU_WP_SIDEBAR },
       },
     },
   };
@@ -99,6 +122,8 @@ export function buildLightThemeConfig(): ConfigProviderProps {
  */
 export function buildDarkThemeConfig(): ConfigProviderProps {
   const darkSeed: ThemeConfig["token"] = {
+    colorPrimary: WP_ADMIN.accentBlue,
+    colorLink: "#72aee6",
     ...SHARED_DESIGN_TOKENS,
   };
 
@@ -112,7 +137,7 @@ export function buildDarkThemeConfig(): ConfigProviderProps {
           algorithm: theme.darkAlgorithm,
           token: darkSeed,
         }),
-        Menu: MENU_DARK,
+        Menu: { ...MENU_DARK, ...MENU_WP_SIDEBAR },
       },
     },
   };

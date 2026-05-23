@@ -2,6 +2,7 @@ import { useEffect, useLayoutEffect } from "react";
 import { createRootRoute, Outlet } from "@tanstack/react-router";
 import { ConfigProvider, App } from "antd";
 import enUS from "antd/locale/en_US";
+import zhCN from "antd/locale/zh_CN";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useSettingsStore } from "@/stores/settings";
 import { useAppTheme } from "@/hooks/useAppTheme";
@@ -16,11 +17,13 @@ const queryClient = new QueryClient({
 
 function RootComponent() {
   const darkMode = useSettingsStore((s) => s.darkMode);
+  const locale = useSettingsStore((s) => s.locale);
   const configProviderProps = useAppTheme();
+  const antdLocale = locale === "zh" ? zhCN : enUS;
 
   useLayoutEffect(() => {
-    document.documentElement.lang = "en";
-  }, []);
+    document.documentElement.lang = locale === "zh" ? "zh-CN" : "en";
+  }, [locale]);
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", darkMode ? "dark" : "light");
@@ -28,7 +31,7 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ConfigProvider {...configProviderProps} locale={enUS}>
+      <ConfigProvider {...configProviderProps} locale={antdLocale}>
         <App>
           <Outlet />
         </App>

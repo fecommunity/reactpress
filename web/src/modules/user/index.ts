@@ -7,13 +7,15 @@ export const userModule: AdminModule = {
     menu.register({
       id: 'users',
       title: '用户',
-      sort: 40,
+      path: '/users',
+      icon: 'IconLucideUsers',
+      permissions: ['user:manage'],
+      sort: 45,
       children: [
         {
-          id: 'users.list',
-          title: '用户管理',
+          id: 'users.all',
+          title: '全部用户',
           path: '/users',
-          icon: 'IconLucideUsers',
           permissions: ['user:manage'],
           sort: 0,
         },
@@ -21,7 +23,6 @@ export const userModule: AdminModule = {
           id: 'users.profile',
           title: '个人资料',
           path: '/profile',
-          icon: 'IconLucideUserList',
           sort: 1,
         },
       ],

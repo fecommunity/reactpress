@@ -5,18 +5,11 @@ export const dashboardModule: AdminModule = {
   register({ menu, permissions, routes }) {
     permissions.register(['view:read']);
     menu.register({
-      id: 'overview',
-      title: '概览',
+      id: 'dashboard',
+      title: '仪表盘',
+      path: '/dashboard',
+      icon: 'IconLucideLayoutDashboard',
       sort: 0,
-      children: [
-        {
-          id: 'dashboard.home',
-          title: '仪表盘',
-          path: '/dashboard',
-          icon: 'IconLucideLayoutDashboard',
-          sort: 0,
-        },
-      ],
     });
     routes.registerRoute({ path: '/dashboard', permission: null });
   },

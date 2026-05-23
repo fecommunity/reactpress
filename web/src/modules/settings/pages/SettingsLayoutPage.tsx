@@ -1,17 +1,16 @@
-import { Card, Tabs, Typography } from 'antd';
-import { Link, useRouterState } from '@tanstack/react-router';
-import { getSettingsTabs } from '@/shell/bootstrap';
-import { ModulePlaceholder } from '@/shared/components/ModulePlaceholder';
+import { Typography } from "antd";
+import { useTranslation } from "react-i18next";
+import { SettingsTabForm } from "@/modules/settings/components/SettingsTabForm";
 
-const TAB_LABELS: Record<string, string> = {
-  general: '站点常规、时区与基础信息',
-  reading: '首页展示、RSS 与阅读偏好',
-  discussion: '评论审核与讨论规则',
-  email: 'SMTP 与发信配置',
-  storage: '本地存储与 OSS',
-  seo: '站点 SEO 与元信息',
-  'api-keys': 'REST API 密钥',
-  webhooks: '事件回调地址',
+const TAB_TITLE_KEYS: Record<string, string> = {
+  general: "settings.general",
+  reading: "settings.reading",
+  discussion: "settings.discussion",
+  email: "settings.email",
+  storage: "settings.storage",
+  seo: "settings.seo",
+  "api-keys": "settings.apiKeys",
+  webhooks: "settings.webhooks",
 };
 
 interface SettingsLayoutPageProps {
@@ -19,26 +18,27 @@ interface SettingsLayoutPageProps {
 }
 
 export function SettingsLayoutPage({ tab }: SettingsLayoutPageProps) {
-  const tabs = getSettingsTabs();
-  const routerState = useRouterState();
-  const activeKey = tab || 'general';
+  const { t } = useTranslation();
+  const activeKey = tab || "general";
+  const tabTitleKey = TAB_TITLE_KEYS[activeKey] ?? "settings.title";
 
   return (
-    <Card>
-      <Typography.Title level={4} style={{ marginTop: 0 }}>
-        设置
-      </Typography.Title>
-      <Tabs
-        activeKey={activeKey}
-        items={tabs.map((t) => ({
-          key: t.id,
-          label: <Link to={t.path}>{t.title}</Link>,
-        }))}
-      />
-      <ModulePlaceholder
-        title={tabs.find((t) => t.id === activeKey)?.title ?? '设置'}
-        description={TAB_LABELS[activeKey] ?? routerState.location.pathname}
-      />
-    </Card>
+    <>
+      <div className="admin-page-header">
+        <Typography.Title level={2} className="admin-page-title">
+          {t("settings.title")}
+        </Typography.Title>
+      </div>
+      <div className="admin-panel">
+        <div className="admin-panel__body">
+          <Typography.Title level={5} style={{ marginTop: 0, marginBottom: 16, fontWeight: 600 }}>
+            {t(tabTitleKey)}
+          </Typography.Title>
+          <div className="admin-settings-form">
+            <SettingsTabForm tab={activeKey} />
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
