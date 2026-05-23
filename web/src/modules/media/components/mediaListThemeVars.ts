@@ -16,5 +16,8 @@ export function mediaListThemeVars(token: ThemeToken): CSSProperties {
     "--media-list-separator": token.colorBorder,
     "--media-list-radius": `${token.borderRadius}px`,
     "--media-list-accent": token.colorPrimary,
+    "--media-list-header-bg": token.colorFillAlter,
+    "--media-list-header-text": token.colorTextSecondary,
+    "--media-list-row-hover": token.colorFillAlter,
   } as CSSProperties;
 }

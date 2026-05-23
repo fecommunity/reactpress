@@ -17,7 +17,8 @@ export function Header() {
   const navigate = useNavigate();
   const user = useAuthStore((s) => s.user);
   const logout = useAuthStore((s) => s.logout);
-  const toggleSidebar = useSettingsStore((s) => s.toggleSidebar);
+  const toggleMobileSidebar = useSettingsStore((s) => s.toggleMobileSidebar);
+  const mobileSidebarOpen = useSettingsStore((s) => s.mobileSidebarOpen);
   const toggleDarkMode = useSettingsStore((s) => s.toggleDarkMode);
   const { token } = theme.useToken();
   const screens = Grid.useBreakpoint();
@@ -93,9 +94,10 @@ export function Header() {
           <Button
             type="text"
             className="admin-bar__action"
-            onClick={toggleSidebar}
+            onClick={toggleMobileSidebar}
             icon={<PanelLeft size={16} />}
             aria-label={t("common.toggleSidebar")}
+            aria-expanded={mobileSidebarOpen}
           />
         ) : null}
         <a
@@ -110,7 +112,13 @@ export function Header() {
         </a>
         <span className="admin-bar__divider" aria-hidden />
         <Dropdown menu={{ items: newMenuItems }} trigger={["click"]}>
-          <Button type="text" className="admin-bar__action" icon={<Plus size={14} />}>
+          <Button
+            type="text"
+            className="admin-bar__action"
+            icon={<Plus size={14} />}
+            aria-haspopup="menu"
+            aria-label={t("admin.new")}
+          >
             {t("admin.new")}
           </Button>
         </Dropdown>
@@ -125,7 +133,7 @@ export function Header() {
           aria-label={t("common.toggleTheme")}
         />
         <Dropdown menu={{ items: userMenuItems }} trigger={["click"]}>
-          <Flex align="center" className="admin-bar__user" gap={6}>
+          <Flex align="center" className="admin-bar__user" gap={6} aria-label={t("admin.userMenu")}>
             <span>{t("admin.howdy", { name: user?.username ?? "—" })}</span>
             <Avatar size={20} src={avatarSrc}>
               {user?.username?.[0]?.toUpperCase()}

@@ -16,6 +16,7 @@
     "noDataDescription": "Nothing to show in this list yet",
     "rows": "{{count}} rows",
     "pagination": "Pagination",
+    "pageNumber": "Page number",
     "moreFilters": "More filters",
     "toggleSidebar": "Toggle sidebar",
     "toggleTheme": "Toggle theme",
@@ -42,6 +43,7 @@
   "admin": {
     "new": "New",
     "howdy": "Howdy, {{name}}",
+    "userMenu": "User menu",
     "collapseMenu": "Collapse menu"
   },
   "menu": {

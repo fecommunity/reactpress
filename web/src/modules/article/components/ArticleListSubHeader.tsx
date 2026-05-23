@@ -71,6 +71,7 @@ export function ArticleListSubHeader({
             value={keywordInput}
             onChange={(e) => onKeywordChange(e.target.value)}
             onPressEnter={onSearch}
+            aria-label={t("article.searchArticles")}
           />
           <Button className={styles.searchButton} onClick={onSearch}>
             {t("article.searchArticles")}

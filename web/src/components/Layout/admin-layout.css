@@ -306,6 +306,12 @@
   color: inherit;
 }
 
+.admin-bar__action.ant-btn:focus-visible,
+.admin-bar__user:focus-visible {
+  outline: 2px solid #72aee6;
+  outline-offset: -2px;
+}
+
 @media (max-width: 782px) {
   .admin-bar__user > span:first-child {
     display: none;
@@ -313,5 +319,15 @@
 
   .admin-bar__siteName {
     max-width: 120px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .admin-bar__user,
+  .admin-bar__action.ant-btn,
+  .admin-sidebar__collapseBtn.ant-btn,
+  .dash-card-interactive.ant-card,
+  .dash-recent-row {
+    transition: none !important;
   }
 }

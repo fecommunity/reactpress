@@ -16,6 +16,7 @@
     "noDataDescription": "列表中还没有可显示的内容",
     "rows": "{{count}} 条",
     "pagination": "分页",
+    "pageNumber": "页码",
     "moreFilters": "更多筛选",
     "toggleSidebar": "切换侧边栏",
     "toggleTheme": "切换主题",
@@ -42,6 +43,7 @@
   "admin": {
     "new": "新建",
     "howdy": "您好，{{name}}",
+    "userMenu": "用户菜单",
     "collapseMenu": "收起菜单"
   },
   "menu": {

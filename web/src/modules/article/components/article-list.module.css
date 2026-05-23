@@ -173,6 +173,11 @@
   background: var(--article-list-row-hover) !important;
 }
 
+.pageNavBtn:focus-visible {
+  outline: 2px solid var(--article-list-link);
+  outline-offset: 1px;
+}
+
 .pageInput {
   width: 40px !important;
   text-align: center;
@@ -263,6 +268,12 @@
 
 .rowAction:hover {
   color: var(--article-list-link-hover);
+}
+
+.rowAction:focus-visible,
+.filterLink:focus-visible {
+  outline: 2px solid var(--article-list-link);
+  outline-offset: 2px;
 }
 
 .rowActionDanger {

@@ -197,11 +197,12 @@ export function Sidebar() {
   const collapsed = useSettingsStore((s) => s.sidebarCollapsed);
   const setSidebarCollapsed = useSettingsStore((s) => s.setSidebarCollapsed);
   const toggleSidebar = useSettingsStore((s) => s.toggleSidebar);
+  const mobileSidebarOpen = useSettingsStore((s) => s.mobileSidebarOpen);
+  const setMobileSidebarOpen = useSettingsStore((s) => s.setMobileSidebarOpen);
   const navigate = useNavigate();
   const location = useLocation();
   const screens = Grid.useBreakpoint();
   const isMobile = !screens.lg;
-  const mobileOpen = collapsed;
 
   const showCommentBadge = menuContainsId(menus, COMMENTS_MENU_ID);
   const { data: pendingCommentCount = 0 } = usePendingCommentCount(showCommentBadge);
@@ -235,9 +236,9 @@ export function Sidebar() {
 
   useEffect(() => {
     if (isMobile) {
-      setSidebarCollapsed(false);
+      setMobileSidebarOpen(false);
     }
-  }, [isMobile, setSidebarCollapsed]);
+  }, [location.pathname, isMobile, setMobileSidebarOpen]);
 
   useEffect(() => {
     setOpenKeys((prev) => {
@@ -276,7 +277,7 @@ export function Sidebar() {
           const path = builtMenu.keyToPath[String(key)];
           if (!path) return;
           if (isMobile) {
-            setSidebarCollapsed(false);
+            setMobileSidebarOpen(false);
           }
           void navigate({ to: path });
         }}
@@ -289,9 +290,9 @@ export function Sidebar() {
   if (isMobile) {
     return (
       <Drawer
-        open={mobileOpen}
+        open={mobileSidebarOpen}
         placement="left"
-        onClose={() => setSidebarCollapsed(false)}
+        onClose={() => setMobileSidebarOpen(false)}
         size={160}
         styles={{
           body: {
@@ -320,7 +321,7 @@ export function Sidebar() {
       breakpoint="lg"
       onBreakpoint={(broken) => {
         if (broken) {
-          setSidebarCollapsed(false);
+          setMobileSidebarOpen(false);
         }
       }}
     >

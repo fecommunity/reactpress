@@ -14,14 +14,18 @@ import { pluginsModule } from "@/modules/plugins";
 import { settingsModule } from "@/modules/settings";
 import { userModule } from "@/modules/user";
 
+/** 侧边栏暂时隐藏的模块，改为 true 即可恢复菜单 */
+const SHOW_APPEARANCE_IN_SIDEBAR = false;
+const SHOW_PLUGINS_IN_SIDEBAR = false;
+
 const CORE_MODULES = [
   dashboardModule,
   articleModule,
   commentModule,
   mediaModule,
   pageModule,
-  appearanceModule,
-  pluginsModule,
+  ...(SHOW_APPEARANCE_IN_SIDEBAR ? [appearanceModule] : []),
+  ...(SHOW_PLUGINS_IN_SIDEBAR ? [pluginsModule] : []),
   userModule,
   settingsModule,
 ];

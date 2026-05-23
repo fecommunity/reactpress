@@ -278,7 +278,12 @@ export function MediaListPage({ search, routePath }: MediaListPageProps) {
             {list.map((file) => {
               const isImage = isImageType(file.type);
               return (
-                <div key={file.id} className={styles.gridItem} title={file.originalname}>
+                <div
+                  key={file.id}
+                  className={styles.gridItem}
+                  title={file.originalname}
+                  tabIndex={0}
+                >
                   {isImage ? (
                     <img className={styles.gridThumb} src={file.url} alt={file.originalname} />
                   ) : (

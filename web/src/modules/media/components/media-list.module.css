@@ -78,6 +78,11 @@
   background: color-mix(in srgb, var(--media-list-link) 8%, var(--media-list-bg));
 }
 
+.viewModeBtn:focus-visible {
+  outline: 2px solid var(--media-list-link);
+  outline-offset: -2px;
+}
+
 .viewModeBtnActive {
   color: var(--media-list-accent);
   background: color-mix(in srgb, var(--media-list-accent) 12%, var(--media-list-bg));
@@ -135,6 +140,23 @@
   min-width: 28px;
   padding: 0 4px !important;
   color: var(--media-list-muted) !important;
+  border-radius: 2px !important;
+  transition:
+    color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.pageNavBtn:hover:not(:disabled) {
+  color: var(--media-list-link) !important;
+  background: var(
+    --media-list-row-hover,
+    color-mix(in srgb, var(--media-list-link) 8%, var(--media-list-bg))
+  ) !important;
+}
+
+.pageNavBtn:focus-visible {
+  outline: 2px solid var(--media-list-link);
+  outline-offset: 1px;
 }
 
 .pageInput {
@@ -161,6 +183,9 @@
 
 .tableCard :global(.ant-table-thead > tr > th) {
   font-weight: 400;
+  background: var(--media-list-header-bg, var(--media-list-border)) !important;
+  color: var(--media-list-header-text, var(--media-list-muted)) !important;
+  border-bottom: 1px solid var(--media-list-border) !important;
 }
 
 .fileCell {
@@ -207,13 +232,26 @@
   color: var(--media-list-link-hover);
 }
 
+.fileNameLink:focus-visible,
+.rowAction:focus-visible {
+  outline: 2px solid var(--media-list-link);
+  outline-offset: 2px;
+}
+
 .rowActions {
   visibility: hidden;
   margin-top: 4px;
   font-size: 12px;
 }
 
-.tableCard :global(.ant-table-tbody > tr:hover) .rowActions {
+@media (hover: none) {
+  .rowActions {
+    visibility: visible;
+  }
+}
+
+.tableCard :global(.ant-table-tbody > tr:hover) .rowActions,
+.tableCard :global(.ant-table-tbody > tr:focus-within) .rowActions {
   visibility: visible;
 }
 
@@ -267,6 +305,11 @@
   cursor: pointer;
 }
 
+.gridItem:focus-visible {
+  outline: 2px solid var(--media-list-accent);
+  outline-offset: 2px;
+}
+
 .gridItem:hover {
   border-color: var(--media-list-accent);
 }
@@ -303,7 +346,14 @@
   transition: opacity 0.15s;
 }
 
-.gridItem:hover .gridOverlay {
+@media (hover: none) {
+  .gridOverlay {
+    opacity: 1;
+  }
+}
+
+.gridItem:hover .gridOverlay,
+.gridItem:focus-within .gridOverlay {
   opacity: 1;
 }
 

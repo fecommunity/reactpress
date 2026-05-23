@@ -12,10 +12,14 @@ function getInitialDarkMode() {
 interface SettingsState {
   darkMode: boolean;
   sidebarCollapsed: boolean;
+  /** Mobile drawer open state (not persisted; desktop uses sidebarCollapsed). */
+  mobileSidebarOpen: boolean;
   locale: AppLocale;
   toggleDarkMode: () => void;
   toggleSidebar: () => void;
+  toggleMobileSidebar: () => void;
   setSidebarCollapsed: (collapsed: boolean) => void;
+  setMobileSidebarOpen: (open: boolean) => void;
   setLocale: (locale: AppLocale) => void;
 }
 
@@ -23,10 +27,13 @@ export const useSettingsStore = createPersistentStore<SettingsState>(
   (set) => ({
     darkMode: getInitialDarkMode(),
     sidebarCollapsed: false,
+    mobileSidebarOpen: false,
     locale: detectInitialLocale(),
     toggleDarkMode: () => set((s) => ({ darkMode: !s.darkMode })),
     toggleSidebar: () => set((s) => ({ sidebarCollapsed: !s.sidebarCollapsed })),
+    toggleMobileSidebar: () => set((s) => ({ mobileSidebarOpen: !s.mobileSidebarOpen })),
     setSidebarCollapsed: (collapsed) => set({ sidebarCollapsed: collapsed }),
+    setMobileSidebarOpen: (open) => set({ mobileSidebarOpen: open }),
     setLocale: (locale) => set({ locale }),
   }),
   {

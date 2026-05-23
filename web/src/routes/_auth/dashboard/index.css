@@ -1,7 +1,20 @@
+.dash-stat-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  border-radius: var(--ant-border-radius-lg, 4px);
+}
+
+.dash-stat-link:focus-visible {
+  outline: 2px solid var(--admin-accent, #2271b1);
+  outline-offset: 2px;
+}
+
 .dash-card-interactive.ant-card {
   transition:
     border-color 0.2s ease,
-    background-color 0.2s ease;
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
   box-shadow: none;
 }
 

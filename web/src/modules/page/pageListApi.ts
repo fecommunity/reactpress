@@ -67,6 +67,26 @@ export async function fetchPageMonthOptions(locale: AppLocale): Promise<SelectOp
     .map((value) => ({ value, label: formatYearMonth(value, locale) }));
 }
 
+export async function fetchPageStatusCounts(): Promise<{
+  all: number;
+  publish: number;
+  draft: number;
+}> {
+  const api = await getToolkitClient();
+  const fetchTotal = async (status?: string) => {
+    const query: Record<string, string | number> = { page: 1, pageSize: 1 };
+    if (status) query.status = status;
+    const res = await api.page.findAll({ query } as Parameters<typeof api.page.findAll>[0]);
+    return parsePaginated(res).total;
+  };
+  const [all, publish, draft] = await Promise.all([
+    fetchTotal(),
+    fetchTotal("publish"),
+    fetchTotal("draft"),
+  ]);
+  return { all, publish, draft };
+}
+
 export async function fetchPages(search: PageListSearch, defaultAuthor: string) {
   const api = await getToolkitClient();
   const query: Record<string, string | number> = {

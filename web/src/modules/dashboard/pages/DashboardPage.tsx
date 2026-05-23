@@ -1,10 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { Card, Col, Row, Typography, theme, Flex, Skeleton, List } from "antd";
 import { FileText, MessageSquare, Files, LayoutTemplate } from "lucide-react";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "@tanstack/react-router";
 import { getToolkitClient } from "@/shared/client";
 import { parsePaginated } from "@/shared/api/pagination";
+import { dashboardThemeVars } from "@/modules/dashboard/dashboardThemeVars";
 import "@/routes/_auth/dashboard/index.css";
 
 const { Title, Text } = Typography;
@@ -40,6 +42,7 @@ async function fetchRecentArticles() {
 export function DashboardPage() {
   const { token } = theme.useToken();
   const { t } = useTranslation();
+  const dashThemeStyle = useMemo(() => dashboardThemeVars(token), [token]);
 
   const { data: stats, isPending: statsLoading } = useQuery({
     queryKey: ["dashboard-stats"],
@@ -81,7 +84,7 @@ export function DashboardPage() {
   ];
 
   return (
-    <Flex vertical gap={token.marginLG}>
+    <Flex vertical gap={token.marginLG} style={dashThemeStyle}>
       <div className="admin-page-header">
         <Title level={2} className="admin-page-title" style={{ margin: 0 }}>
           {t("dashboard.title")}
@@ -90,7 +93,7 @@ export function DashboardPage() {
       <Row gutter={[16, 16]}>
         {statCards.map((stat) => (
           <Col xs={24} sm={12} lg={6} key={stat.title}>
-            <Link to={stat.to}>
+            <Link to={stat.to} className="dash-stat-link">
               <Card
                 className="dash-card-interactive admin-panel"
                 styles={{ body: { padding: token.paddingLG } }}
@@ -132,7 +135,7 @@ export function DashboardPage() {
                 dataSource={recentArticles ?? []}
                 locale={{ emptyText: t("common.noData") }}
                 renderItem={(item) => (
-                  <List.Item>
+                  <List.Item className="dash-recent-row">
                     <Link to="/article/editor/$id" params={{ id: item.id }}>
                       {item.title}
                     </Link>
