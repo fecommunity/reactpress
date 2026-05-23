@@ -16,7 +16,7 @@ const Index = () => {
   const title = `${siteConfig.title} · ${siteConfig.tagline}`;
   const description = translate({
     message:
-      'ReactPress 3.0：装一个包、一分钟拥有自己的 CMS。零配置安装，开箱即用的博客与内容发布平台。',
+      'ReactPress 3.0: one package, one minute to your own CMS. Zero-config install for blogs and content publishing.',
     id: 'home.meta.description',
   });
 

@@ -65,13 +65,13 @@ const poll = setInterval(async () => {
   if (healthOk && clientOk) {
     clearInterval(poll);
     const elapsed = Date.now() - t0;
-    console.log(`\n[benchmark] 就绪耗时: ${(elapsed / 1000).toFixed(1)}s (上限 ${MAX_MS / 1000}s)`);
+    console.log(`\n[benchmark] Ready in ${(elapsed / 1000).toFixed(1)}s (limit ${MAX_MS / 1000}s)`);
     child.kill('SIGINT');
     process.exit(elapsed <= MAX_MS ? 0 : 1);
   }
   if (Date.now() >= deadline) {
     clearInterval(poll);
-    console.error(`\n[benchmark] 超时 ${MAX_MS / 1000}s（health=${healthOk} client=${clientOk}）`);
+    console.error(`\n[benchmark] Timeout ${MAX_MS / 1000}s (health=${healthOk} client=${clientOk})`);
     child.kill('SIGINT');
     process.exit(1);
   }

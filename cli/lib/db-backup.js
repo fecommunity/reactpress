@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 const chalk = require('chalk');
+const { t } = require('./i18n');
 
 function parseEnv(projectRoot) {
   const envPath = path.join(projectRoot, '.env');
@@ -30,14 +31,14 @@ async function runDbBackup(projectRoot, outputPath) {
     path.join(projectRoot, `reactpress-backup-${new Date().toISOString().replace(/[:.]/g, '-')}.sql`);
 
   const cmd = `mysqldump -h ${host} -P ${port} -u ${user} -p${password} ${database}`;
-  console.log(chalk.cyan('[reactpress]'), `备份数据库到 ${out}`);
+  console.log(chalk.cyan('[reactpress]'), t('db.backup.to', { path: out }));
   try {
     const dump = execSync(cmd, { encoding: 'utf8', maxBuffer: 50 * 1024 * 1024 });
     fs.writeFileSync(out, dump, 'utf8');
-    console.log(chalk.green('[reactpress]'), '备份完成');
+    console.log(chalk.green('[reactpress]'), t('db.backup.done'));
     return out;
   } catch (err) {
-    console.error(chalk.red('[reactpress]'), 'mysqldump 失败，请确认已安装 MySQL 客户端且 .env 正确');
+    console.error(chalk.red('[reactpress]'), t('db.backup.fail'));
     throw err;
   }
 }
