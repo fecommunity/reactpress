@@ -1,6 +1,7 @@
 const { spawn } = require('child_process');
 const { getServerBin, getServerDir } = require('./paths');
 const { ensureOriginalCwd } = require('./root');
+const { t } = require('./i18n');
 
 function startApiWithPm2(projectRoot = ensureOriginalCwd()) {
   return new Promise((resolve, reject) => {
@@ -14,13 +15,13 @@ function startApiWithPm2(projectRoot = ensureOriginalCwd()) {
     });
 
     child.on('error', (error) => {
-      console.error('[reactpress] PM2 启动 API 失败:', error);
+      console.error(t('pm2.startFailed'), error);
       reject(error);
     });
 
     child.on('close', (code) => {
       if (code !== 0) {
-        reject(Object.assign(new Error(`PM2 退出码 ${code}`), { exitCode: code }));
+        reject(Object.assign(new Error(t('pm2.exitCode', { code })), { exitCode: code }));
         return;
       }
       resolve();

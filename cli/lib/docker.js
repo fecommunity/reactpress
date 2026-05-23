@@ -1,6 +1,7 @@
 const { spawn, execSync } = require('child_process');
 const path = require('path');
 const { ensureOriginalCwd } = require('./root');
+const { t } = require('./i18n');
 
 function isDockerRunning() {
   try {
@@ -12,50 +13,50 @@ function isDockerRunning() {
 }
 
 function stopDockerServices(projectRoot) {
-  console.log('[reactpress] 正在停止 Docker 服务…');
+  console.log(t('docker.stopping'));
   try {
     execSync('docker-compose -f docker-compose.dev.yml down', {
       stdio: 'inherit',
       cwd: projectRoot,
     });
-    console.log('[reactpress] Docker 服务已停止。');
+    console.log(t('docker.stopped'));
   } catch (error) {
-    console.error('[reactpress] 停止 Docker 失败:', error.message);
+    console.error(t('docker.stopFailed'), error.message);
     throw error;
   }
 }
 
 function startDockerServices(projectRoot) {
-  console.log('[reactpress] 正在启动 Docker 服务…');
+  console.log(t('docker.starting'));
   if (!isDockerRunning()) {
-    throw new Error('Docker 未运行，请先启动 Docker Desktop。');
+    throw new Error(t('docker.notRunning'));
   }
   execSync('docker-compose -f docker-compose.dev.yml up -d', {
     stdio: 'inherit',
     cwd: projectRoot,
   });
-  console.log('[reactpress] Docker 服务已启动。');
+  console.log(t('docker.started'));
 }
 
 async function waitForMysql(maxAttempts = 30) {
-  console.log('[reactpress] 等待 MySQL 就绪…');
+  console.log(t('docker.waitingMysql'));
   let attempts = 0;
   while (attempts < maxAttempts) {
     try {
       execSync('docker exec reactpress_db mysql -u reactpress -preactpress -e "SELECT 1"', {
         stdio: 'ignore',
       });
-      console.log('[reactpress] MySQL 已就绪。');
+      console.log(t('docker.mysqlReady'));
       return true;
     } catch {
       attempts += 1;
       if (attempts % 5 === 0) {
-        console.log(`[reactpress] 等待 MySQL… (${attempts}/${maxAttempts})`);
+        console.log(t('docker.waitingMysqlProgress', { attempts, max: maxAttempts }));
       }
       await new Promise((r) => setTimeout(r, 1000));
     }
   }
-  console.error('[reactpress] MySQL 在超时时间内未就绪。');
+  console.error(t('docker.mysqlTimeout'));
   return false;
 }
 
@@ -63,15 +64,15 @@ async function dockerStartWithDev(projectRoot) {
   startDockerServices(projectRoot);
   const ready = await waitForMysql();
   if (!ready) {
-    throw new Error('MySQL 未就绪');
+    throw new Error(t('docker.mysqlNotReady'));
   }
 
   const { buildToolkit } = require('./dev');
   await buildToolkit(projectRoot);
 
   const apiRunner = path.join(__dirname, 'api-dev-runner.js');
-  console.log('[reactpress] 启动 API + 前端 (Docker MySQL)…');
-  console.log('[reactpress] 访问: http://localhost:8080 (nginx) / http://localhost:3001 (client)');
+  console.log(t('docker.startDevStack'));
+  console.log(t('docker.visitUrls'));
 
   return new Promise((resolve, reject) => {
     const child = spawn(
@@ -99,7 +100,7 @@ async function dockerStartWithDev(projectRoot) {
     child.on('error', reject);
     child.on('close', (code) => {
       if (code !== 0) {
-        reject(Object.assign(new Error(`开发进程退出: ${code}`), { exitCode: code }));
+        reject(Object.assign(new Error(t('docker.devProcessExit', { code })), { exitCode: code }));
         return;
       }
       resolve();
@@ -143,7 +144,7 @@ async function runDockerCommand(command, projectRoot = ensureOriginalCwd(), extr
       return;
     }
     default:
-      throw new Error(`未知 docker 命令: ${command}`);
+      throw new Error(t('docker.unknownCommand', { command }));
   }
 }
 

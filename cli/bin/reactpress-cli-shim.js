@@ -4,6 +4,7 @@
  * @deprecated 3.0 起请使用 `reactpress`（@fecommunity/reactpress）。3.1 将移除此 bin。
  */
 const chalk = require('chalk');
+const { t } = require('../lib/i18n');
 
 function mapLegacyArgv(argv) {
   const [cmd, ...rest] = argv;
@@ -17,9 +18,7 @@ function mapLegacyArgv(argv) {
 if (!process.env.REACTPRESS_SUPPRESS_DEPRECATION) {
   console.warn(
     chalk.yellow(
-      '\n[deprecated] reactpress-cli 将在 3.1 移除。请改用:\n' +
-        '  npm i -g @fecommunity/reactpress\n' +
-        '  reactpress init · reactpress dev · reactpress doctor\n'
+      t('shim.deprecated')
     )
   );
 }
