@@ -1,12 +1,12 @@
 const fs = require('fs');
-const http = require('http');
 const net = require('net');
 const path = require('path');
 const { execSync } = require('child_process');
 const chalk = require('chalk');
-const { loadServerSiteUrl, getHealthUrl, checkHealth } = require('./http');
+const { getHealthUrl, checkHealth } = require('./http');
 const { isDockerRunning } = require('./docker');
 const { envFileStatus } = require('./status');
+const { t } = require('./i18n');
 
 function checkNodeVersion() {
   const major = parseInt(process.versions.node.split('.')[0], 10);
@@ -15,20 +15,19 @@ function checkNodeVersion() {
   }
   return {
     ok: false,
-    message: `Node.js ${process.version}（需要 ≥ 18）`,
-    fix: '请安装 Node.js 18+：https://nodejs.org/',
+    message: t('doctor.nodeBad', { version: process.version }),
+    fix: t('doctor.nodeFix'),
   };
 }
 
 function checkDocker() {
   if (isDockerRunning()) {
-    return { ok: true, message: 'Docker 引擎可用' };
+    return { ok: true, message: t('doctor.dockerOk') };
   }
   return {
     ok: false,
-    message: 'Docker 未运行或不可用',
-    fix:
-      '安装并启动 Docker：https://docs.docker.com/get-docker/ ，然后运行 reactpress docker up；或改 config.json 使用外部 MySQL',
+    message: t('doctor.dockerBad'),
+    fix: t('doctor.dockerFix'),
   };
 }
 
@@ -67,16 +66,19 @@ async function checkPorts(projectRoot) {
   const clientPort = parseInt(env.CLIENT_PORT || '3001', 10);
   const [apiBusy, clientBusy] = await Promise.all([checkPort(apiPort), checkPort(clientPort)]);
   const issues = [];
-  if (apiBusy) issues.push(`API 端口 ${apiPort} 已被占用`);
-  if (clientBusy) issues.push(`前端端口 ${clientPort} 已被占用`);
+  if (apiBusy) issues.push(t('doctor.portApiBusy', { port: apiPort }));
+  if (clientBusy) issues.push(t('doctor.portClientBusy', { port: clientPort }));
   if (issues.length) {
     return {
       ok: false,
-      message: issues.join('；'),
-      fix: '修改 .env 中 SERVER_PORT / CLIENT_PORT，或停止占用进程',
+      message: issues.join('; '),
+      fix: t('doctor.portFix'),
     };
   }
-  return { ok: true, message: `端口 ${apiPort}（API）、${clientPort}（前端）可用` };
+  return {
+    ok: true,
+    message: t('doctor.portOk', { apiPort, clientPort }),
+  };
 }
 
 async function checkDatabase(projectRoot) {
@@ -97,8 +99,8 @@ async function checkDatabase(projectRoot) {
       } catch {
         resolve({
           ok: false,
-          message: '未安装 mysql2，无法检测数据库',
-          fix: '在 monorepo 根目录执行 pnpm install',
+          message: t('doctor.dbNoMysql2'),
+          fix: t('doctor.dbMysql2Fix'),
         });
         return;
       }
@@ -109,13 +111,16 @@ async function checkDatabase(projectRoot) {
       .then(async (conn) => {
         await conn.ping();
         await conn.end();
-        resolve({ ok: true, message: `MySQL ${host}:${port}/${database} 连通` });
+        resolve({
+          ok: true,
+          message: t('doctor.dbOk', { host, port, database }),
+        });
       })
       .catch((err) => {
         resolve({
           ok: false,
-          message: `数据库连接失败: ${err.message}`,
-          fix: '运行 reactpress docker up 或检查 .env 中 DB_* 配置',
+          message: t('doctor.dbBad', { error: err.message }),
+          fix: t('doctor.dbFix'),
         });
       });
   });
@@ -125,12 +130,12 @@ async function checkApiHealth(projectRoot) {
   const healthUrl = getHealthUrl(projectRoot);
   const result = await checkHealth(healthUrl);
   if (result.ok) {
-    return { ok: true, message: `API 健康检查通过 (${healthUrl})` };
+    return { ok: true, message: t('doctor.apiOk', { url: healthUrl }) };
   }
   return {
     ok: false,
-    message: `API 未响应健康检查 (${healthUrl})`,
-    fix: '运行 reactpress server start 或 reactpress dev',
+    message: t('doctor.apiBad', { url: healthUrl }),
+    fix: t('doctor.apiFix'),
   };
 }
 
@@ -141,8 +146,8 @@ function checkPnpm() {
   } catch {
     return {
       ok: false,
-      message: '未检测到 pnpm',
-      fix: 'npm i -g pnpm，或在 monorepo 根目录使用 corepack enable',
+      message: t('doctor.pnpmBad'),
+      fix: t('doctor.pnpmFix'),
     };
   }
 }
@@ -152,25 +157,31 @@ async function runDoctor(projectRoot) {
   const checks = [
     { name: 'Node.js', run: () => checkNodeVersion() },
     { name: 'pnpm', run: () => checkPnpm() },
-    { name: '配置文件', run: () => ({
-      ok: env.config,
-      message: env.config ? '.reactpress/config.json 存在' : '缺少 .reactpress/config.json',
-      fix: '运行 reactpress init',
-    }) },
-    { name: '环境变量', run: () => ({
-      ok: env.env,
-      message: env.env ? '.env 存在' : '缺少 .env',
-      fix: '运行 reactpress init 或 reactpress config --apply',
-    }) },
+    {
+      name: t('doctor.check.config'),
+      run: () => ({
+        ok: env.config,
+        message: env.config ? t('doctor.configOk') : t('doctor.configBad'),
+        fix: t('doctor.configFix'),
+      }),
+    },
+    {
+      name: t('doctor.check.env'),
+      run: () => ({
+        ok: env.env,
+        message: env.env ? t('doctor.envOk') : t('doctor.envBad'),
+        fix: t('doctor.envFix'),
+      }),
+    },
     { name: 'Docker', run: () => checkDocker() },
-    { name: '端口', run: () => checkPorts(projectRoot) },
-    { name: '数据库', run: () => checkDatabase(projectRoot) },
-    { name: 'API 健康', run: () => checkApiHealth(projectRoot) },
+    { name: t('doctor.check.ports'), run: () => checkPorts(projectRoot) },
+    { name: t('doctor.check.database'), run: () => checkDatabase(projectRoot) },
+    { name: t('doctor.check.api'), run: () => checkApiHealth(projectRoot) },
   ];
 
   console.log('');
   console.log(chalk.bold.cyan('  ReactPress Doctor'));
-  console.log(chalk.gray(`  项目: ${projectRoot}`));
+  console.log(chalk.gray(t('doctor.project', { path: projectRoot })));
   console.log(chalk.gray('  ─────────────────────────────────────'));
 
   let failed = 0;
@@ -188,9 +199,9 @@ async function runDoctor(projectRoot) {
 
   console.log(chalk.gray('  ─────────────────────────────────────'));
   if (failed === 0) {
-    console.log(chalk.green('  全部检查通过，可以开始开发。'));
+    console.log(chalk.green(t('doctor.allPass')));
   } else {
-    console.log(chalk.yellow(`  ${failed} 项需要处理。`));
+    console.log(chalk.yellow(t('doctor.failed', { count: failed })));
   }
   console.log('');
   return failed === 0 ? 0 : 1;

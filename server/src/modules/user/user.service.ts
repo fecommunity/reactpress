@@ -1,3 +1,4 @@
+import { ApiMsg } from '../../common/api-messages';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -67,19 +68,19 @@ export class UserService {
     // 如果忽略了名称校验，来自于系统内部默认的注入
     if (!ignoreValidator) {
       if (!name || !password) {
-        throw new HttpException('请输入用户名和密码', HttpStatus.BAD_REQUEST);
+        throw new HttpException(ApiMsg.USERNAME_PASSWORD_REQUIRED, HttpStatus.BAD_REQUEST);
       }
   
       // 防止用户名称非法
       if (!isValidUsername(name)) {
-        throw new HttpException('用户名不能包含空格和非法字符', HttpStatus.BAD_REQUEST);
+        throw new HttpException(ApiMsg.USERNAME_INVALID, HttpStatus.BAD_REQUEST);
       }
     }
 
     const existUser = await this.userRepository.findOne({ where: { name } });
 
     if (existUser) {
-      throw new HttpException('用户已存在', HttpStatus.BAD_REQUEST);
+      throw new HttpException(ApiMsg.USER_EXISTS, HttpStatus.BAD_REQUEST);
     }
 
     const newUser = await this.userRepository.create(user);
@@ -97,7 +98,7 @@ export class UserService {
 
     if (!existUser || !(await User.comparePassword(password, existUser.password))) {
       throw new HttpException(
-        '用户名或密码错误',
+        ApiMsg.INVALID_CREDENTIALS,
         // tslint:disable-next-line: trailing-comma
         HttpStatus.BAD_REQUEST
       );
@@ -105,7 +106,7 @@ export class UserService {
 
     if (existUser.status === 'locked') {
       throw new HttpException(
-        '用户已锁定，无法登录',
+        ApiMsg.USER_LOCKED,
         // tslint:disable-next-line: trailing-comma
         HttpStatus.BAD_REQUEST
       );
@@ -126,7 +127,7 @@ export class UserService {
 
     if (existUser.status === 'locked') {
       throw new HttpException(
-        '用户已锁定，无法登录',
+        ApiMsg.USER_LOCKED,
         // tslint:disable-next-line: trailing-comma
         HttpStatus.BAD_REQUEST
       );
@@ -153,7 +154,7 @@ export class UserService {
     if (user.role === 'admin') {
       if (!currentUser || currentUser.role !== 'admin') {
         throw new HttpException(
-          '您无权操作',
+          ApiMsg.FORBIDDEN,
           // tslint:disable-next-line: trailing-comma
           HttpStatus.FORBIDDEN
         );
@@ -167,7 +168,7 @@ export class UserService {
       const existUser = await this.userRepository.findOne({ where: { name: user.name } });
 
       if (existUser) {
-        throw new HttpException('用户已存在', HttpStatus.BAD_REQUEST);
+        throw new HttpException(ApiMsg.USER_EXISTS, HttpStatus.BAD_REQUEST);
       }
     }
 
@@ -185,7 +186,7 @@ export class UserService {
 
     if (!existUser || !(await User.comparePassword(oldPassword, existUser.password))) {
       throw new HttpException(
-        '用户名或密码错误',
+        ApiMsg.INVALID_CREDENTIALS,
         // tslint:disable-next-line: trailing-comma
         HttpStatus.BAD_REQUEST
       );

@@ -1,7 +1,7 @@
 {
   "name": "@fecommunity/reactpress",
   "version": "3.0.0",
-  "description": "ReactPress 3.0 — 零配置 CMS：一个包、一条命令 reactpress",
+  "description": "ReactPress 3.0 — zero-config CMS: one package, one reactpress command",
   "author": "fecommunity",
   "license": "MIT",
   "repository": {

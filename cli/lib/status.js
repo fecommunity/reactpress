@@ -12,6 +12,7 @@ const { isUsingMonorepoServer } = require('./paths');
 const { readPid, isProcessRunning } = require('./process');
 const { isDockerRunning } = require('./docker');
 const { ensureOriginalCwd } = require('./root');
+const { t } = require('./i18n');
 
 function envFileStatus(projectRoot) {
   const envPath = path.join(projectRoot, '.env');
@@ -36,39 +37,71 @@ async function printUnifiedStatus(projectRoot = ensureOriginalCwd()) {
     checkHealth(healthUrl),
   ]);
 
+  const apiSource = isUsingMonorepoServer()
+    ? t('status.apiSource.monorepo')
+    : t('status.apiSource.bundle');
+
   console.log('');
-  console.log(chalk.bold.cyan('  ReactPress 项目状态'));
+  console.log(chalk.bold.cyan(t('status.title')));
   console.log(chalk.gray('  ─────────────────────────────────────'));
-  console.log(`  项目目录    ${chalk.white(projectRoot)}`);
-  console.log(`  API 来源    ${chalk.white(isUsingMonorepoServer() ? 'monorepo server/' : 'reactpress-cli')}`);
+  console.log(t('status.dir', { path: projectRoot }));
+  console.log(t('status.apiSource', { source: apiSource }));
   console.log(
-    `  配置文件    ${env.config ? chalk.green('.reactpress/config.json ✓') : chalk.yellow('未初始化')}`
+    `  ${chalk.bold('Config')}    ${
+      env.config
+        ? chalk.green(t('status.configOk'))
+        : chalk.yellow(t('status.configBad'))
+    }`,
   );
-  console.log(`  环境变量    ${env.env ? chalk.green('.env ✓') : chalk.yellow('缺少 .env')}`);
+  console.log(
+    `  ${chalk.bold('.env')}        ${
+      env.env ? chalk.green(t('status.envOk')) : chalk.yellow(t('status.envBad'))
+    }`,
+  );
   console.log(chalk.gray('  ─────────────────────────────────────'));
   console.log(chalk.bold('  API'));
   console.log(`    URL       ${apiUrl}`);
-  console.log(`    HTTP      ${apiHttp ? chalk.green('在线') : chalk.red('离线')}`);
+  console.log(
+    `    HTTP      ${
+      apiHttp ? chalk.green(t('status.apiOnline')) : chalk.red(t('status.apiOffline'))
+    }`,
+  );
   console.log(
     `    Health    ${
       health.ok
         ? chalk.green(`${healthUrl} ✓`)
-        : chalk.gray(`${healthUrl} (离线或未启动)`)
-    }`
+        : chalk.gray(t('status.apiUnreachable', { url: healthUrl }))
+    }`,
   );
   if (health.ok && health.data?.data) {
     const db = health.data.data.database;
     console.log(
-      `    数据库    ${db === 'up' ? chalk.green('连通') : chalk.red(db === 'down' ? '不可用' : '—')}`
+      `    Database  ${
+        db === 'up'
+          ? chalk.green(t('status.dbUp'))
+          : chalk.red(db === 'down' ? t('status.dbDown') : '—')
+      }`,
     );
   }
-  console.log(`    PID       ${pid ?? '—'} ${pid && isProcessRunning(pid) ? chalk.green('(运行中)') : ''}`);
-  console.log(chalk.bold('  前端'));
+  console.log(
+    `    PID       ${pid ?? '—'} ${
+      pid && isProcessRunning(pid) ? chalk.green(t('status.pidRunning')) : ''
+    }`,
+  );
+  console.log(chalk.bold(t('status.frontend')));
   console.log(`    URL       ${clientUrl}`);
-  console.log(`    HTTP      ${clientHttp ? chalk.green('在线') : chalk.gray('离线')}`);
+  console.log(
+    `    HTTP      ${
+      clientHttp ? chalk.green(t('status.apiOnline')) : chalk.gray(t('status.apiOffline'))
+    }`,
+  );
   console.log(chalk.gray('  ─────────────────────────────────────'));
-  console.log(chalk.bold('  Docker'));
-  console.log(`    引擎      ${isDockerRunning() ? chalk.green('可用') : chalk.red('未运行')}`);
+  console.log(chalk.bold(t('status.docker')));
+  console.log(
+    `    Engine    ${
+      isDockerRunning() ? chalk.green(t('status.dockerUp')) : chalk.red(t('status.dockerDown'))
+    }`,
+  );
   console.log('');
 }
 

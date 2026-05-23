@@ -1,3 +1,4 @@
+import { ApiMsg } from '../../common/api-messages';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -22,7 +23,7 @@ export class CategoryService {
     });
 
     if (existCategory) {
-      throw new HttpException('分类已存在', HttpStatus.BAD_REQUEST);
+      throw new HttpException(ApiMsg.CATEGORY_EXISTS, HttpStatus.BAD_REQUEST);
     }
 
     const newCategory = await this.categoryRepository.create(Category);
@@ -98,7 +99,7 @@ export class CategoryService {
       await this.categoryRepository.remove(category);
       return true;
     } catch (e) {
-      throw new HttpException('删除失败，可能存在关联文章', HttpStatus.BAD_REQUEST);
+      throw new HttpException(ApiMsg.DELETE_HAS_ARTICLES, HttpStatus.BAD_REQUEST);
     }
   }
 }

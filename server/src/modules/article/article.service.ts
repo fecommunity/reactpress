@@ -1,3 +1,4 @@
+import { ApiMsg } from '../../common/api-messages';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -59,7 +60,7 @@ export class ArticleService {
     const exist = await this.articleRepository.findOne({ where: { title } });
 
     if (exist) {
-      throw new HttpException('文章标题已存在', HttpStatus.BAD_REQUEST);
+      throw new HttpException(ApiMsg.ARTICLE_TITLE_EXISTS, HttpStatus.BAD_REQUEST);
     }
 
     let { tags, category, status } = article; // eslint-disable-line prefer-const
@@ -330,7 +331,7 @@ export class ArticleService {
   async restoreRevision(articleId: string, revisionId: string) {
     const revision = await this.revisionRepository.findOne(revisionId);
     if (!revision || revision.articleId !== articleId) {
-      throw new HttpException('修订记录不存在', HttpStatus.NOT_FOUND);
+      throw new HttpException(ApiMsg.REVISION_NOT_FOUND, HttpStatus.NOT_FOUND);
     }
     const article = await this.articleRepository.findOne(articleId);
     await this.saveRevision(article);
