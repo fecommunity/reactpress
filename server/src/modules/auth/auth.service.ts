@@ -1,3 +1,4 @@
+import { ApiMsg } from '../../common/api-messages';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -57,7 +58,7 @@ export class AuthService {
 
   async loginWithGithub(code) {
     if (!code) {
-      throw new HttpException('请输入Gitub授权码', HttpStatus.BAD_REQUEST);
+      throw new HttpException(ApiMsg.GITHUB_CODE_REQUIRED, HttpStatus.BAD_REQUEST);
     }
 
     try {
@@ -99,7 +100,7 @@ export class AuthService {
           const emailMessage = {
             from: setting.smtpFromUser,
             to: result.data.email,
-            subject: 'Github 用户登录通知',
+            subject: ApiMsg.EMAIL_GITHUB_LOGIN,
             html: `您好，您使用了 Github 登录了 reactpress。reactpress 已为您创建用户，用户名称：${result.data.name}， 用户密码：${password}，请及时登录系统修改密码`,
           };
           this.smtpService.create(emailMessage).catch(() => {
@@ -110,7 +111,7 @@ export class AuthService {
         const res = await this.loginWithoutPasswd(user);
         return res;
       } else {
-        throw new HttpException('未获取到您的公开邮件地址，无法使用Github登录', HttpStatus.BAD_REQUEST);
+        throw new HttpException(ApiMsg.GITHUB_EMAIL_REQUIRED, HttpStatus.BAD_REQUEST);
       }
     } catch (e) {
       throw new HttpException(e.message || e, HttpStatus.BAD_REQUEST);

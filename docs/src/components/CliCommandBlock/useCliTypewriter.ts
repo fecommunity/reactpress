@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import {
   QUICK_START_COMMANDS,
-  QUICK_START_DEV_READY_LINES,
-  QUICK_START_DEMO_OUTPUTS,
+  getQuickStartDemoOutputs,
+  getQuickStartDevReadyLines,
+  type QuickStartLocale,
 } from '@site/src/constants/quickStartCommands';
 
 export type TerminalLine = {
@@ -12,6 +13,7 @@ export type TerminalLine = {
 
 type Options = {
   enabled: boolean;
+  locale?: QuickStartLocale;
   commands?: readonly string[];
   loop?: boolean;
   charDelayMs?: number;
@@ -29,15 +31,18 @@ function prefersReducedMotion(): boolean {
 
 function buildStaticTerminal(
   commands: readonly string[],
+  locale: QuickStartLocale,
 ): TerminalLine[] {
+  const demoOutputs = getQuickStartDemoOutputs(locale);
+  const readyLines = getQuickStartDevReadyLines(locale);
   const lines: TerminalLine[] = [];
   for (const cmd of commands) {
     lines.push({ kind: 'input', text: cmd });
-    for (const out of QUICK_START_DEMO_OUTPUTS[cmd] ?? []) {
+    for (const out of demoOutputs[cmd] ?? []) {
       lines.push({ kind: 'output', text: out });
     }
   }
-  for (const line of QUICK_START_DEV_READY_LINES) {
+  for (const line of readyLines) {
     lines.push({ kind: 'success', text: line });
   }
   return lines;
@@ -45,6 +50,7 @@ function buildStaticTerminal(
 
 export function useCliTypewriter({
   enabled,
+  locale = 'en',
   commands = QUICK_START_COMMANDS,
   loop = true,
   charDelayMs = 42,
@@ -52,9 +58,17 @@ export function useCliTypewriter({
   outputDelayMs = 140,
   holdMs = 4200,
 }: Options) {
+  const demoOutputs = useMemo(
+    () => getQuickStartDemoOutputs(locale),
+    [locale],
+  );
+  const readyLines = useMemo(
+    () => getQuickStartDevReadyLines(locale),
+    [locale],
+  );
   const staticLines = useMemo(
-    () => buildStaticTerminal(commands),
-    [commands],
+    () => buildStaticTerminal(commands, locale),
+    [commands, locale],
   );
 
   const [history, setHistory] = useState<TerminalLine[]>([]);
@@ -121,7 +135,7 @@ export function useCliTypewriter({
           setActiveInput('');
           await wait(linePauseMs);
 
-          for (const out of QUICK_START_DEMO_OUTPUTS[cmd] ?? []) {
+          for (const out of demoOutputs[cmd] ?? []) {
             if (cancelled) {
               return;
             }
@@ -130,7 +144,7 @@ export function useCliTypewriter({
           }
         }
 
-        for (const line of QUICK_START_DEV_READY_LINES) {
+        for (const line of readyLines) {
           if (cancelled) {
             return;
           }
@@ -152,6 +166,8 @@ export function useCliTypewriter({
   }, [
     animate,
     commands,
+    demoOutputs,
+    readyLines,
     staticLines,
     loop,
     charDelayMs,

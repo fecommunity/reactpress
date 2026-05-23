@@ -1,3 +1,4 @@
+import { ApiMsg } from '../../common/api-messages';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
@@ -18,7 +19,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     const user = await this.authService.validateUser(payload);
 
     if (!user) {
-      throw new UnauthorizedException('身份验证失败');
+      throw new UnauthorizedException(ApiMsg.AUTH_FAILED);
     }
     return user;
   }

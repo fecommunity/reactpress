@@ -12,25 +12,25 @@ type HighlightItem = {
 const items: HighlightItem[] = [
   {
     icon: '⚡',
-    title: translate({ message: '零配置起站', id: 'home.highlight.zero.title' }),
+    title: translate({ message: 'Zero-config setup', id: 'home.highlight.zero.title' }),
     description: translate({
-      message: '两条命令自动完成安装与数据库准备，无需手工配置环境。',
+      message: 'Two commands set up your site and database — no manual environment configuration.',
       id: 'home.highlight.zero.desc',
     }),
   },
   {
     icon: '📦',
-    title: translate({ message: '一条命令搞定', id: 'home.highlight.cli.title' }),
+    title: translate({ message: 'One command line tool', id: 'home.highlight.cli.title' }),
     description: translate({
-      message: '全局安装后，初始化、开发、自检与状态查看都在命令行里完成。',
+      message: 'After a global install, initialize, develop, self-check, and view status from the terminal.',
       id: 'home.highlight.cli.desc',
     }),
   },
   {
     icon: '🩺',
-    title: translate({ message: '上手更省心', id: 'home.highlight.dx.title' }),
+    title: translate({ message: 'Easy to get started', id: 'home.highlight.dx.title' }),
     description: translate({
-      message: '交互式引导、环境自检与运行状态提示，启动成功即可打开前台与后台。',
+      message: 'Interactive guides, environment checks, and status tips — open your site and admin right after startup.',
       id: 'home.highlight.dx.desc',
     }),
   },
@@ -41,7 +41,7 @@ export default function Highlights() {
     <section className={styles.section} aria-labelledby="home-highlights-heading">
       <header className={styles.header}>
         <h2 id="home-highlights-heading" className={styles.heading}>
-          <Translate id="home.highlights.title">3.0 核心亮点</Translate>
+          <Translate id="home.highlights.title">3.0 highlights</Translate>
         </h2>
       </header>
       <div className={styles.grid}>

@@ -1,51 +1,46 @@
-# @fecommunity/reactpress
+# @fecommunity/reactpress-cli
 
-**ReactPress 3.0** — 零配置 CMS：装一个包，敲一条命令。
+零配置一键初始化与管理 ReactPress CMS & 博客服务器。内置 NestJS 服务端，无需单独克隆 [fecommunity/reactpress](https://github.com/fecommunity/reactpress)。
+
+完整文档与贡献指南见：[github.com/fecommunity/reactpress-cli](https://github.com/fecommunity/reactpress-cli)
+
+## 安装
 
 ```bash
-npm i -g @fecommunity/reactpress@3
-mkdir my-blog && cd my-blog
-reactpress init
-reactpress dev
+npm install -g @fecommunity/reactpress-cli
 ```
 
-| 地址 | 说明 |
-|------|------|
-| http://localhost:3001 | 前台 |
-| http://localhost:3001/admin | 管理端 |
-| http://localhost:3002/api/health | API 健康检查 |
+全局命令为 `reactpress-cli`（与 npm 包名无关）。
+
+> npm 上的无作用域包名 `reactpress-cli` 已被占用，本包发布为 `@fecommunity/reactpress-cli`。
+
+## 快速开始
+
+```bash
+mkdir my-blog && cd my-blog
+reactpress-cli init
+reactpress-cli start
+```
+
+浏览器访问 `http://localhost:3002`（API 文档：`/api`）。
 
 ## 常用命令
 
 | 命令 | 说明 |
 |------|------|
-| `reactpress` | 交互式菜单 |
-| `reactpress init [dir]` | 初始化项目（config、.env、Docker MySQL） |
-| `reactpress dev` | 全栈开发 |
-| `reactpress dev --api-only` | 仅 API |
-| `reactpress doctor` | 环境诊断 |
-| `reactpress status` | 运行状态 |
-| `reactpress config [key] [value]` | 查看/修改配置 |
-| `reactpress config server.port 3003 --apply` | 改端口并应用 |
-| `reactpress start` / `stop` / `restart` | 生产生命周期 |
-| `reactpress db backup` | 数据库备份 |
+| `reactpress-cli init [dir]` | 初始化项目 |
+| `reactpress-cli start` | 启动服务（自动准备数据库） |
+| `reactpress-cli stop` | 停止服务 |
+| `reactpress-cli restart` | 重启服务 |
+| `reactpress-cli status` | 查看状态 |
+| `reactpress-cli config [key] [value]` | 查看/修改配置 |
+| `reactpress-cli config server.port 3003 --apply` | 改端口并重启 |
 
 ## 要求
 
 - Node.js 18+
 - macOS / Linux / Windows
-- Docker（默认 embedded-docker MySQL）；也可在 `.reactpress/config.json` 配置外部数据库
-
-## 从 2.x 升级
-
-```bash
-npm uninstall -g @fecommunity/reactpress-cli 2>/dev/null || true
-npm i -g @fecommunity/reactpress@3
-```
-
-详见仓库 [迁移指南](../docs/migration-2-to-3.md) 与 [3.0 文档](../docs/tutorial/tutorial-extras/reactpress-3-0.md)。
-
-> `@fecommunity/reactpress-cli` 与 bin `reactpress-cli` 在 3.0 为 deprecated 别名，3.1 移除。
+- 默认使用 Docker 运行嵌入式 MySQL；也可在 `.reactpress/config.json` 中配置外部数据库
 
 ## 许可证
 

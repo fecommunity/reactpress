@@ -4,19 +4,14 @@ const { ensureProjectEnvironment } = require('./bootstrap');
 const { loadServerSiteUrl, loadClientSiteUrl, waitForHttp } = require('./http');
 const { printDevReadyBanner } = require('./dev-banner');
 const { ensureOriginalCwd } = require('./root');
+const { t } = require('./i18n');
 
 const CLIENT_READY_TIMEOUT_MS = 120_000;
 
 const API_READY_TIMEOUT_MS = 180_000;
 
 function formatDevFailureHint() {
-  return [
-    '下一步建议:',
-    '  → reactpress doctor          环境诊断',
-    '  → reactpress docker up       启动嵌入式 MySQL',
-    '  → 检查 .env 中 DB_* 与 SERVER_SITE_URL',
-    '  → Docker: https://docs.docker.com/get-docker/',
-  ].join('\n');
+  return [t('dev.nextSteps'), t('dev.nextDoctor'), t('dev.nextDocker'), t('dev.nextEnv')].join('\n');
 }
 
 let apiChild;
@@ -43,7 +38,7 @@ async function buildToolkit(projectRoot) {
     });
     build.on('close', (code) => {
       if (code !== 0) {
-        reject(new Error(`toolkit 构建失败，退出码: ${code}`));
+        reject(new Error(t('dev.toolkitFailed', { code })));
         return;
       }
       resolve();
@@ -55,7 +50,7 @@ async function startDevStack(projectRoot) {
   const serverUrl = loadServerSiteUrl(projectRoot);
   const apiDevRunner = path.join(__dirname, 'api-dev-runner.js');
 
-  console.log('[reactpress] 正在启动 API（首次可能需安装依赖，请稍候）…');
+  console.log(t('dev.startingApi'));
   apiChild = spawn(process.execPath, [apiDevRunner], {
     stdio: 'inherit',
     cwd: projectRoot,
@@ -76,14 +71,11 @@ async function startDevStack(projectRoot) {
     process.exit(code ?? 1);
   });
 
-  console.log(`[reactpress] 等待 API 就绪: ${serverUrl}`);
+  console.log(t('dev.waitingApi', { url: serverUrl }));
   const ready = await waitForHttp(serverUrl, API_READY_TIMEOUT_MS);
   if (!ready) {
     console.error(
-      `[reactpress] API 在 ${API_READY_TIMEOUT_MS / 1000}s 内未就绪。\n` +
-        '  → 运行 reactpress doctor 查看详情\n' +
-        '  → 嵌入式 MySQL：reactpress docker up\n' +
-        '  → 检查 .env 中 DB_* 与 SERVER_SITE_URL'
+      t('dev.apiTimeout', { seconds: API_READY_TIMEOUT_MS / 1000 }),
     );
     shutdown('SIGINT');
     process.exit(1);
@@ -91,7 +83,7 @@ async function startDevStack(projectRoot) {
 
   printDevReadyBanner(projectRoot, { apiOnly: true });
 
-  console.log('[reactpress] API 已就绪，正在启动前端…');
+  console.log(t('dev.apiReady'));
   webChild = spawn('pnpm', ['run', '--dir', './client', 'dev'], {
     stdio: 'inherit',
     shell: true,
@@ -104,7 +96,10 @@ async function startDevStack(projectRoot) {
       printDevReadyBanner(projectRoot);
     } else {
       console.warn(
-        `[reactpress] 前端在 ${CLIENT_READY_TIMEOUT_MS / 1000}s 内未响应，可能仍在编译。稍后访问 ${clientUrl}`
+        t('dev.clientSlow', {
+          seconds: CLIENT_READY_TIMEOUT_MS / 1000,
+          url: clientUrl,
+        }),
       );
     }
   });
@@ -123,11 +118,11 @@ async function runDev(projectRoot = ensureOriginalCwd()) {
 
   try {
     const result = await ensureProjectEnvironment(projectRoot);
-    if (result.message && !result.message.includes('已就绪')) {
+    if (result.message) {
       console.log(`[reactpress] ${result.message}`);
     }
   } catch (err) {
-    console.error('[reactpress] 环境准备失败:', err.message || err);
+    console.error(t('dev.envFailed'), err.message || err);
     console.error(formatDevFailureHint());
     process.exit(1);
   }

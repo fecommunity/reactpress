@@ -1,18 +1,18 @@
 {
   "link.title.Docs": {
-    "message": "Docs",
+    "message": "文档",
     "description": "The title of the footer links column with title=Docs in the footer"
   },
   "link.title.Community": {
-    "message": "Community",
+    "message": "社区",
     "description": "The title of the footer links column with title=Community in the footer"
   },
   "link.title.More": {
-    "message": "More",
+    "message": "更多",
     "description": "The title of the footer links column with title=More in the footer"
   },
   "link.item.label.Tutorial": {
-    "message": "Tutorial",
+    "message": "教程",
     "description": "The label of footer link with label=Tutorial linking to /docs/intro"
   },
   "link.item.label.Stack Overflow": {
@@ -24,11 +24,11 @@
     "description": "The label of footer link with label=Github"
   },
   "link.item.label.Demo site": {
-    "message": "Demo site",
+    "message": "高热度网",
     "description": "The label of footer link with label=Demo site"
   },
   "link.item.label.Blog": {
-    "message": "Blog",
+    "message": "博客",
     "description": "The label of footer link with label=Blog"
   },
   "link.item.label.GitHub": {

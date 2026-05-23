@@ -1,3 +1,4 @@
+import { ApiMsg } from '../common/api-messages';
 import { HttpException, HttpStatus } from '@nestjs/common';
 
 import { SettingService } from '../modules/setting/setting.service';
@@ -30,7 +31,7 @@ export class Oss {
     const data = await this.settingService.findAll(true);
     const config = JSON.parse(data.oss);
     if (!config) {
-      throw new HttpException('OSS 配置不完善，无法进行操作', HttpStatus.BAD_REQUEST);
+      throw new HttpException(ApiMsg.OSS_CONFIG_INCOMPLETE, HttpStatus.BAD_REQUEST);
     }
     return config as Record<string, unknown>;
   }
