@@ -1,30 +1,41 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { App, Button, Dropdown, Input, Layout, Space, Spin, Typography } from "antd";
-import type { MenuProps } from "antd";
-import { Link, useNavigate } from "@tanstack/react-router";
-import { ChevronLeft, Ellipsis, Settings2 } from "lucide-react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { App, Button, Input, Spin } from "antd";
+import { useNavigate } from "@tanstack/react-router";
+import { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useSiteSettings } from "@/hooks/useSiteSettings";
 import { getToolkitClient } from "@/shared/client";
 import { httpClient } from "@/utils/http";
+import {
+  buildArticleSaveBody,
+  normalizeEditorCategory,
+  normalizeEditorTags,
+  visibilityFromArticle,
+  type ArticleVisibility,
+  type EditorCategory,
+  type EditorTag,
+} from "@/modules/article/articleEditorApi";
+import { fetchArticleCategories, fetchArticleTags } from "@/modules/article/articleListApi";
 import type { ArticleListSearch } from "@/modules/article/pages/ArticleListPage";
 import { ModulePlaceholder } from "@/shared/components/ModulePlaceholder";
-import {
-  ArticleSettingDrawer,
-  type ArticleSettings,
-} from "@/modules/article/components/ArticleSettingDrawer";
-import type { ArticleCategoryOption, ArticleTagOption } from "@/modules/article/constants";
+import { MarkdownEditor } from "@/shared/components/Editor";
+import { ArticleEditorSidebar } from "@/modules/article/components/ArticleEditorSidebar";
+import { EditorMetaPanel } from "@/modules/article/components/EditorMetaPanel";
+import styles from "@/modules/article/components/article-editor.module.css";
 
 type ArticleDraft = {
   title: string;
   content: string;
+  html: string;
+  toc: string;
   summary: string;
   status: "draft" | "publish";
   cover: string | null;
-  category: ArticleCategoryOption | null;
-  tags: ArticleTagOption[];
+  category: EditorCategory | null;
+  tags: EditorTag[];
   isRecommended: boolean;
   isCommentable: boolean;
+  visibility: ArticleVisibility;
   password: string | null;
 };
 
@@ -33,11 +44,17 @@ const defaultArticleListSearch: ArticleListSearch = {
   pageSize: 12,
   status: "",
   keyword: "",
+  category: "",
+  tag: "",
+  month: "",
+  author: "",
 };
 
 const emptyDraft = (): ArticleDraft => ({
   title: "",
   content: "",
+  html: "",
+  toc: "[]",
   summary: "",
   status: "draft",
   cover: null,
@@ -45,25 +62,12 @@ const emptyDraft = (): ArticleDraft => ({
   tags: [],
   isRecommended: true,
   isCommentable: true,
+  visibility: "public",
   password: null,
 });
 
-function toSettings(draft: ArticleDraft): ArticleSettings {
-  return {
-    summary: draft.summary,
-    password: draft.password,
-    isCommentable: draft.isCommentable,
-    isRecommended: draft.isRecommended,
-    category: draft.category,
-    tags: draft.tags,
-    cover: draft.cover,
-  };
-}
-
-function contentToHtml(content: string, title: string) {
-  const body = content.replace(/\n/g, "<br/>");
-  return `<h1>${title}</h1><p>${body}</p>`;
-}
+const EMPTY_CATEGORIES: EditorCategory[] = [];
+const EMPTY_TAGS: EditorTag[] = [];
 
 type ArticleEditorPageProps = {
   articleId?: string;
@@ -74,11 +78,27 @@ export function ArticleEditorPage({ articleId }: ArticleEditorPageProps) {
   const navigate = useNavigate();
   const { message, modal } = App.useApp();
   const { t } = useTranslation();
+  const { data: siteSettings } = useSiteSettings();
   const queryClient = useQueryClient();
   const [draft, setDraft] = useState<ArticleDraft>(emptyDraft);
+  const draftRef = useRef(draft);
+  draftRef.current = draft;
+  const [editorReady, setEditorReady] = useState(isCreate);
   const [savedId, setSavedId] = useState<string | undefined>(articleId);
-  const [settingsOpen, setSettingsOpen] = useState(false);
   const [dirty, setDirty] = useState(false);
+  const { data: categories = EMPTY_CATEGORIES, isLoading: categoriesLoading } = useQuery({
+    queryKey: ["article-categories"],
+    queryFn: fetchArticleCategories,
+    staleTime: 60_000,
+  });
+
+  const { data: tagOptions = EMPTY_TAGS, isLoading: tagsLoading } = useQuery({
+    queryKey: ["article-tags"],
+    queryFn: fetchArticleTags,
+    staleTime: 60_000,
+  });
+
+  const metaLoading = categoriesLoading || tagsLoading;
 
   const {
     data: loaded,
@@ -93,27 +113,71 @@ export function ArticleEditorPage({ articleId }: ArticleEditorPageProps) {
     enabled: Boolean(articleId),
   });
 
-  useEffect(() => {
-    if (!loaded) return;
+  useLayoutEffect(() => {
+    if (isCreate) {
+      setEditorReady(true);
+      return;
+    }
+    if (!articleId || !loaded) {
+      setEditorReady(false);
+      return;
+    }
+    if (String(loaded.id ?? "") !== String(articleId)) {
+      setEditorReady(false);
+      return;
+    }
     setDraft({
       title: String(loaded.title ?? ""),
       content: String(loaded.content ?? ""),
+      html: String(loaded.html ?? ""),
+      toc: String(loaded.toc ?? "[]"),
       summary: String(loaded.summary ?? ""),
       status: loaded.status === "publish" ? "publish" : "draft",
       cover: (loaded.cover as string | null) ?? null,
-      category: (loaded.category as ArticleCategoryOption | null) ?? null,
-      tags: Array.isArray(loaded.tags) ? (loaded.tags as ArticleTagOption[]) : [],
+      category: normalizeEditorCategory(loaded.category, categories),
+      tags: normalizeEditorTags(loaded.tags, tagOptions),
       isRecommended: loaded.isRecommended !== false,
       isCommentable: loaded.isCommentable !== false,
+      visibility: visibilityFromArticle(loaded),
       password: (loaded.password as string | null) ?? null,
     });
+    setEditorReady(true);
     setDirty(false);
-  }, [loaded]);
+    // 仅随文章数据切换；分类/标签选项异步到达时由下方 effect 补全
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- categories/tagOptions 单独同步
+  }, [isCreate, articleId, loaded]);
+
+  useLayoutEffect(() => {
+    if (isCreate || !loaded || !editorReady) return;
+    if (String(loaded.id ?? "") !== String(articleId)) return;
+
+    setDraft((prev) => {
+      const category = normalizeEditorCategory(loaded.category, categories);
+      const tags = normalizeEditorTags(loaded.tags, tagOptions);
+      if (prev.category?.id === category?.id && prev.tags.length === tags.length) {
+        const sameTags = prev.tags.every((tag, i) => tag.id === tags[i]?.id);
+        if (sameTags) return prev;
+      }
+      return { ...prev, category, tags };
+    });
+  }, [isCreate, articleId, loaded, editorReady, categories, tagOptions]);
 
   const patch = useCallback(<K extends keyof ArticleDraft>(key: K, value: ArticleDraft[K]) => {
     setDraft((prev) => ({ ...prev, [key]: value }));
     setDirty(true);
   }, []);
+
+  const handleEditorChange = useCallback(
+    ({ value, html, toc }: { value: string; html: string; toc: string }) => {
+      const prev = draftRef.current;
+      if (prev.content === value && prev.html === html && prev.toc === toc) {
+        return;
+      }
+      setDirty(true);
+      setDraft({ ...prev, content: value, html, toc });
+    },
+    [],
+  );
 
   const validate = useCallback(() => {
     if (!draft.title.trim()) {
@@ -129,19 +193,7 @@ export function ArticleEditorPage({ articleId }: ArticleEditorPageProps) {
 
   const saveMutation = useMutation({
     mutationFn: async (status: "draft" | "publish") => {
-      const body = {
-        title: draft.title.trim(),
-        content: draft.content,
-        html: contentToHtml(draft.content, draft.title.trim()),
-        summary: draft.summary,
-        status,
-        cover: draft.cover,
-        category: draft.category,
-        tags: draft.tags,
-        isRecommended: draft.isRecommended,
-        isCommentable: draft.isCommentable,
-        password: draft.password,
-      };
+      const body = buildArticleSaveBody({ ...draft, status });
       const id = savedId ?? articleId;
       if (id) {
         return httpClient.patch<{ id: string; status: string }>(`/article/${id}`, body);
@@ -152,6 +204,7 @@ export function ArticleEditorPage({ articleId }: ArticleEditorPageProps) {
       const id = String(res.id);
       setSavedId(id);
       setDirty(false);
+      setDraft((prev) => ({ ...prev, status: res.status === "publish" ? "publish" : "draft" }));
       void queryClient.invalidateQueries({ queryKey: ["articles"] });
       void queryClient.invalidateQueries({ queryKey: ["article", id] });
       message.success(
@@ -208,40 +261,29 @@ export function ArticleEditorPage({ articleId }: ArticleEditorPageProps) {
     void navigate({ to: "/article", search: defaultArticleListSearch });
   };
 
-  const moreMenuItems: MenuProps["items"] = useMemo(
-    () => [
-      {
-        key: "settings",
-        label: t("article.settings"),
-        icon: <Settings2 size={14} />,
-        onClick: () => {
-          if (!validate()) return;
-          setSettingsOpen(true);
-        },
-      },
-      { type: "divider" },
-      {
-        key: "draft",
-        label: t("article.saveDraft"),
-        onClick: () => handleSave("draft"),
-      },
-      {
-        key: "delete",
-        label: t("common.delete"),
-        danger: true,
-        disabled: isCreate && !savedId,
-        onClick: () => {
-          modal.confirm({
-            title: t("common.deleteConfirmTitle"),
-            content: t("common.deleteConfirmContent"),
-            okType: "danger",
-            onOk: () => deleteMutation.mutateAsync(),
-          });
-        },
-      },
-    ],
-    [deleteMutation, isCreate, modal, savedId, t, validate],
-  );
+  const handleDelete = () => {
+    modal.confirm({
+      title: t("common.deleteConfirmTitle"),
+      content: t("common.deleteConfirmContent"),
+      okType: "danger",
+      onOk: () => deleteMutation.mutateAsync(),
+    });
+  };
+
+  const handlePreview = useCallback(() => {
+    const id = savedId ?? articleId;
+    if (!id) {
+      message.warning(t("article.previewNeedSave"));
+      return;
+    }
+    const base = typeof siteSettings?.systemUrl === "string" ? siteSettings.systemUrl.trim() : "";
+    if (!base) {
+      message.error(t("article.previewNoSiteUrl"));
+      return;
+    }
+    const url = `${base.replace(/\/$/, "")}/article/${id}`;
+    window.open(url, "_blank", "noopener,noreferrer");
+  }, [articleId, message, savedId, siteSettings?.systemUrl, t]);
 
   if (articleId && isLoading) {
     return (
@@ -261,79 +303,87 @@ export function ArticleEditorPage({ articleId }: ArticleEditorPageProps) {
   }
 
   return (
-    <Layout style={{ minHeight: "100%", background: "transparent" }}>
-      <Layout.Header
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "0 0 16px",
-          height: "auto",
-          lineHeight: "normal",
-          background: "transparent",
-          borderBottom: "1px solid var(--ant-color-border-secondary)",
-        }}
-      >
-        <Space>
-          <Button
-            type="text"
-            icon={<ChevronLeft size={18} />}
-            onClick={handleBack}
-            aria-label={t("article.back")}
-          />
+    <div className={styles.page}>
+      <div className={styles.pageHead}>
+        <div className={styles.pageHeadMain}>
+          <h1 className={styles.pageTitle}>{t("article.writeArticle")}</h1>
           <Input
-            variant="borderless"
+            className={styles.titleInput}
             placeholder={t("article.titlePlaceholder")}
             value={draft.title}
             onChange={(e) => patch("title", e.target.value)}
-            style={{ fontSize: 18, fontWeight: 600, minWidth: 280 }}
           />
-        </Space>
-        <Space>
-          <Link to="/article" search={defaultArticleListSearch}>
-            <Button>{t("common.cancel")}</Button>
-          </Link>
-          <Button loading={saveMutation.isPending} onClick={() => handleSave("draft")}>
-            {t("article.saveDraft")}
-          </Button>
-          <Button
-            type="primary"
-            loading={saveMutation.isPending}
-            onClick={() => handleSave("publish")}
-          >
-            {t("article.publish")}
-          </Button>
-          <Dropdown menu={{ items: moreMenuItems }} trigger={["click"]}>
-            <Button type="text" icon={<Ellipsis size={18} />} aria-label={t("article.more")} />
-          </Dropdown>
-        </Space>
-      </Layout.Header>
-      <Layout.Content>
-        <Typography.Paragraph type="secondary" style={{ marginBottom: 8 }}>
-          {t("article.markdownHint")}
-        </Typography.Paragraph>
-        <Input.TextArea
-          value={draft.content}
-          onChange={(e) => patch("content", e.target.value)}
-          placeholder={t("article.contentPlaceholder")}
-          autoSize={{ minRows: 18, maxRows: 40 }}
-          style={{ fontFamily: "ui-monospace, monospace", fontSize: 14 }}
+        </div>
+        <div className={styles.pageHeadActions}>
+          <Button onClick={handleBack}>{t("common.cancel")}</Button>
+        </div>
+      </div>
+
+      <div className={styles.layout}>
+        <div className={styles.mainColumn}>
+          <div className={styles.editorArea}>
+            {editorReady ? (
+              <MarkdownEditor
+                key={articleId ?? "create"}
+                defaultValue={draft.content}
+                restoreCache={isCreate}
+                onChange={handleEditorChange}
+              />
+            ) : (
+              <div className={styles.editorLoading}>
+                <Spin />
+              </div>
+            )}
+          </div>
+
+          <div className={styles.metaStack}>
+            <EditorMetaPanel title={t("article.summary")}>
+              <Input.TextArea
+                value={draft.summary}
+                autoSize={{ minRows: 4, maxRows: 10 }}
+                placeholder={t("article.summaryPlaceholder")}
+                onChange={(e) => patch("summary", e.target.value)}
+              />
+              <p className={styles.hint}>{t("editor.excerptHint")}</p>
+            </EditorMetaPanel>
+          </div>
+        </div>
+
+        <ArticleEditorSidebar
+          status={draft.status}
+          cover={draft.cover}
+          category={draft.category}
+          tags={draft.tags}
+          categories={categories}
+          tagOptions={tagOptions}
+          metaLoading={metaLoading}
+          visibility={draft.visibility}
+          password={draft.password}
+          isCommentable={draft.isCommentable}
+          isRecommended={draft.isRecommended}
+          saving={saveMutation.isPending}
+          canPreview={Boolean(savedId ?? articleId)}
+          canDelete={Boolean(savedId ?? articleId)}
+          onCoverChange={(cover) => patch("cover", cover)}
+          onCategoryChange={(category) => patch("category", category)}
+          onTagsChange={(tags) => patch("tags", tags)}
+          onVisibilityChange={(visibility) => {
+            setDraft((prev) => ({
+              ...prev,
+              visibility,
+              password: visibility === "public" ? null : prev.password,
+            }));
+            setDirty(true);
+          }}
+          onPasswordChange={(password) => patch("password", password)}
+          onCommentableChange={(isCommentable) => patch("isCommentable", isCommentable)}
+          onRecommendedChange={(isRecommended) => patch("isRecommended", isRecommended)}
+          onSaveDraft={() => handleSave("draft")}
+          onPublish={() => handleSave("publish")}
+          onPreview={handlePreview}
+          onDelete={handleDelete}
         />
-      </Layout.Content>
-      <ArticleSettingDrawer
-        open={settingsOpen}
-        initial={toSettings(draft)}
-        onClose={() => setSettingsOpen(false)}
-        onSave={(settings) => {
-          setDraft((prev) => ({
-            ...prev,
-            ...settings,
-          }));
-          setSettingsOpen(false);
-          setDirty(true);
-          message.success(t("article.settingsApplied"));
-        }}
-      />
-    </Layout>
+      </div>
+    </div>
   );
 }

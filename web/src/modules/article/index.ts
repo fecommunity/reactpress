@@ -26,9 +26,25 @@ export const articleModule: AdminModule = {
           permissions: ["article:write"],
           sort: 1,
         },
+        {
+          id: "article.categories",
+          title: "分类目录",
+          path: "/article/category",
+          permissions: ["article:write"],
+          sort: 2,
+        },
+        {
+          id: "article.tags",
+          title: "标签",
+          path: "/article/tags",
+          permissions: ["article:write"],
+          sort: 3,
+        },
       ],
     });
     routes.registerRoute({ path: "/article", permission: "article:read" });
     routes.registerRoute({ path: "/article/editor", permission: "article:write" });
+    routes.registerRoute({ path: "/article/category", permission: "article:write" });
+    routes.registerRoute({ path: "/article/tags", permission: "article:write" });
   },
 };

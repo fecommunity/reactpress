@@ -1,0 +1,27 @@
+.copyCodeBtn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 12px;
+  color: var(--editor-text-secondary);
+  cursor: pointer;
+}
+
+.copyCodeBtn:hover {
+  color: var(--editor-accent);
+}
+
+.colorGroup {
+  position: absolute;
+  top: 8px;
+  left: 10px;
+  display: flex;
+  gap: 6px;
+}
+
+.colorGroup i {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}

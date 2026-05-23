@@ -8,6 +8,8 @@ import { useSettingsStore } from "@/stores/settings";
 import { useAppTheme } from "@/hooks/useAppTheme";
 import { NotFound } from "@/components/NotFound";
 import "@/index.css";
+import "@/shared/styles/editor-theme.css";
+import "@/shared/styles/markdown.css";
 
 const queryClient = new QueryClient({
   defaultOptions: {

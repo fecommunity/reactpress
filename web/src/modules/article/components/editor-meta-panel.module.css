@@ -1,0 +1,58 @@
+.panel {
+  background: var(--editor-surface);
+  border: 1px solid var(--editor-border);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+}
+
+:root[data-theme="dark"] .panel {
+  box-shadow: none;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: var(--editor-surface-muted);
+  border-bottom: 1px solid var(--editor-border-secondary);
+  cursor: pointer;
+  user-select: none;
+}
+
+.title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--editor-text);
+}
+
+.toggle {
+  color: var(--editor-text-secondary);
+}
+
+.body {
+  padding: 12px;
+  color: var(--editor-text);
+}
+
+.field {
+  margin-bottom: 12px;
+}
+
+.field:last-child {
+  margin-bottom: 0;
+}
+
+.label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--editor-text);
+}
+
+.hint {
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--editor-text-secondary);
+  line-height: 1.5;
+}

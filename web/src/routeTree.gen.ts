@@ -27,8 +27,10 @@ import { Route as AuthPageEditorIndexRouteImport } from './routes/_auth/page/edi
 import { Route as AuthDataImportIndexRouteImport } from './routes/_auth/data/import/index'
 import { Route as AuthDataExportIndexRouteImport } from './routes/_auth/data/export/index'
 import { Route as AuthDataAnalyticsIndexRouteImport } from './routes/_auth/data/analytics/index'
+import { Route as AuthArticleTagsIndexRouteImport } from './routes/_auth/article/tags/index'
 import { Route as AuthArticleEditorIndexRouteImport } from './routes/_auth/article/editor/index'
 import { Route as AuthArticleCommentIndexRouteImport } from './routes/_auth/article/comment/index'
+import { Route as AuthArticleCategoryIndexRouteImport } from './routes/_auth/article/category/index'
 import { Route as AuthAppearanceThemesIndexRouteImport } from './routes/_auth/appearance/themes/index'
 import { Route as AuthAppearanceCustomizeIndexRouteImport } from './routes/_auth/appearance/customize/index'
 import { Route as AuthPageEditorIdRouteImport } from './routes/_auth/page/editor/$id'
@@ -124,6 +126,11 @@ const AuthDataAnalyticsIndexRoute = AuthDataAnalyticsIndexRouteImport.update({
   path: '/data/analytics/',
   getParentRoute: () => AuthRoute,
 } as any)
+const AuthArticleTagsIndexRoute = AuthArticleTagsIndexRouteImport.update({
+  id: '/article/tags/',
+  path: '/article/tags/',
+  getParentRoute: () => AuthRoute,
+} as any)
 const AuthArticleEditorIndexRoute = AuthArticleEditorIndexRouteImport.update({
   id: '/article/editor/',
   path: '/article/editor/',
@@ -134,6 +141,12 @@ const AuthArticleCommentIndexRoute = AuthArticleCommentIndexRouteImport.update({
   path: '/article/comment/',
   getParentRoute: () => AuthRoute,
 } as any)
+const AuthArticleCategoryIndexRoute =
+  AuthArticleCategoryIndexRouteImport.update({
+    id: '/article/category/',
+    path: '/article/category/',
+    getParentRoute: () => AuthRoute,
+  } as any)
 const AuthAppearanceThemesIndexRoute =
   AuthAppearanceThemesIndexRouteImport.update({
     id: '/appearance/themes/',
@@ -180,8 +193,10 @@ export interface FileRoutesByFullPath {
   '/page/editor/$id': typeof AuthPageEditorIdRoute
   '/appearance/customize/': typeof AuthAppearanceCustomizeIndexRoute
   '/appearance/themes/': typeof AuthAppearanceThemesIndexRoute
+  '/article/category/': typeof AuthArticleCategoryIndexRoute
   '/article/comment/': typeof AuthArticleCommentIndexRoute
   '/article/editor/': typeof AuthArticleEditorIndexRoute
+  '/article/tags/': typeof AuthArticleTagsIndexRoute
   '/data/analytics/': typeof AuthDataAnalyticsIndexRoute
   '/data/export/': typeof AuthDataExportIndexRoute
   '/data/import/': typeof AuthDataImportIndexRoute
@@ -206,8 +221,10 @@ export interface FileRoutesByTo {
   '/page/editor/$id': typeof AuthPageEditorIdRoute
   '/appearance/customize': typeof AuthAppearanceCustomizeIndexRoute
   '/appearance/themes': typeof AuthAppearanceThemesIndexRoute
+  '/article/category': typeof AuthArticleCategoryIndexRoute
   '/article/comment': typeof AuthArticleCommentIndexRoute
   '/article/editor': typeof AuthArticleEditorIndexRoute
+  '/article/tags': typeof AuthArticleTagsIndexRoute
   '/data/analytics': typeof AuthDataAnalyticsIndexRoute
   '/data/export': typeof AuthDataExportIndexRoute
   '/data/import': typeof AuthDataImportIndexRoute
@@ -234,8 +251,10 @@ export interface FileRoutesById {
   '/_auth/page/editor/$id': typeof AuthPageEditorIdRoute
   '/_auth/appearance/customize/': typeof AuthAppearanceCustomizeIndexRoute
   '/_auth/appearance/themes/': typeof AuthAppearanceThemesIndexRoute
+  '/_auth/article/category/': typeof AuthArticleCategoryIndexRoute
   '/_auth/article/comment/': typeof AuthArticleCommentIndexRoute
   '/_auth/article/editor/': typeof AuthArticleEditorIndexRoute
+  '/_auth/article/tags/': typeof AuthArticleTagsIndexRoute
   '/_auth/data/analytics/': typeof AuthDataAnalyticsIndexRoute
   '/_auth/data/export/': typeof AuthDataExportIndexRoute
   '/_auth/data/import/': typeof AuthDataImportIndexRoute
@@ -262,8 +281,10 @@ export interface FileRouteTypes {
     | '/page/editor/$id'
     | '/appearance/customize/'
     | '/appearance/themes/'
+    | '/article/category/'
     | '/article/comment/'
     | '/article/editor/'
+    | '/article/tags/'
     | '/data/analytics/'
     | '/data/export/'
     | '/data/import/'
@@ -288,8 +309,10 @@ export interface FileRouteTypes {
     | '/page/editor/$id'
     | '/appearance/customize'
     | '/appearance/themes'
+    | '/article/category'
     | '/article/comment'
     | '/article/editor'
+    | '/article/tags'
     | '/data/analytics'
     | '/data/export'
     | '/data/import'
@@ -315,8 +338,10 @@ export interface FileRouteTypes {
     | '/_auth/page/editor/$id'
     | '/_auth/appearance/customize/'
     | '/_auth/appearance/themes/'
+    | '/_auth/article/category/'
     | '/_auth/article/comment/'
     | '/_auth/article/editor/'
+    | '/_auth/article/tags/'
     | '/_auth/data/analytics/'
     | '/_auth/data/export/'
     | '/_auth/data/import/'
@@ -460,6 +485,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthDataAnalyticsIndexRouteImport
       parentRoute: typeof AuthRoute
     }
+    '/_auth/article/tags/': {
+      id: '/_auth/article/tags/'
+      path: '/article/tags'
+      fullPath: '/article/tags/'
+      preLoaderRoute: typeof AuthArticleTagsIndexRouteImport
+      parentRoute: typeof AuthRoute
+    }
     '/_auth/article/editor/': {
       id: '/_auth/article/editor/'
       path: '/article/editor'
@@ -472,6 +504,13 @@ declare module '@tanstack/react-router' {
       path: '/article/comment'
       fullPath: '/article/comment/'
       preLoaderRoute: typeof AuthArticleCommentIndexRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/article/category/': {
+      id: '/_auth/article/category/'
+      path: '/article/category'
+      fullPath: '/article/category/'
+      preLoaderRoute: typeof AuthArticleCategoryIndexRouteImport
       parentRoute: typeof AuthRoute
     }
     '/_auth/appearance/themes/': {
@@ -526,8 +565,10 @@ interface AuthRouteChildren {
   AuthPageEditorIdRoute: typeof AuthPageEditorIdRoute
   AuthAppearanceCustomizeIndexRoute: typeof AuthAppearanceCustomizeIndexRoute
   AuthAppearanceThemesIndexRoute: typeof AuthAppearanceThemesIndexRoute
+  AuthArticleCategoryIndexRoute: typeof AuthArticleCategoryIndexRoute
   AuthArticleCommentIndexRoute: typeof AuthArticleCommentIndexRoute
   AuthArticleEditorIndexRoute: typeof AuthArticleEditorIndexRoute
+  AuthArticleTagsIndexRoute: typeof AuthArticleTagsIndexRoute
   AuthDataAnalyticsIndexRoute: typeof AuthDataAnalyticsIndexRoute
   AuthDataExportIndexRoute: typeof AuthDataExportIndexRoute
   AuthDataImportIndexRoute: typeof AuthDataImportIndexRoute
@@ -550,8 +591,10 @@ const AuthRouteChildren: AuthRouteChildren = {
   AuthPageEditorIdRoute: AuthPageEditorIdRoute,
   AuthAppearanceCustomizeIndexRoute: AuthAppearanceCustomizeIndexRoute,
   AuthAppearanceThemesIndexRoute: AuthAppearanceThemesIndexRoute,
+  AuthArticleCategoryIndexRoute: AuthArticleCategoryIndexRoute,
   AuthArticleCommentIndexRoute: AuthArticleCommentIndexRoute,
   AuthArticleEditorIndexRoute: AuthArticleEditorIndexRoute,
+  AuthArticleTagsIndexRoute: AuthArticleTagsIndexRoute,
   AuthDataAnalyticsIndexRoute: AuthDataAnalyticsIndexRoute,
   AuthDataExportIndexRoute: AuthDataExportIndexRoute,
   AuthDataImportIndexRoute: AuthDataImportIndexRoute,
