@@ -6,13 +6,14 @@ const path = require('path');
 const chalk = require('chalk');
 const inquirer = require('inquirer');
 const crypto = require('crypto');
+const { t } = require('./i18n');
 
-// Package build order (dependencies first)
-const packages = [
+function getPackages() {
+  return [
   {
     name: '@fecommunity/reactpress',
     path: 'cli',
-    description: 'ReactPress 3.0 主包 — 唯一入口 (init / dev / doctor / publish)'
+    description: t('publish.pkg.main')
   },
   {
     name: '@fecommunity/reactpress-toolkit',
@@ -27,7 +28,7 @@ const packages = [
   {
     name: '@fecommunity/reactpress-server',
     path: 'server',
-    description: 'NestJS backend API (deprecated — 使用 reactpress-cli 内置 API)',
+    description: t('publish.pkg.server'),
     deprecated: true
   },
   {
@@ -41,6 +42,9 @@ const packages = [
     description: 'Twenty Twenty Five blog template for ReactPress'
   }
 ];
+}
+
+const packages = getPackages();
 
 // Generate a hash for a file or directory
 function generateHash(filePath) {

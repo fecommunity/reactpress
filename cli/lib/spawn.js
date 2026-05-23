@@ -3,6 +3,7 @@ const path = require('path');
 const chalk = require('chalk');
 const { getMonorepoRoot } = require('./root');
 const { getCliPackageRoot } = require('./paths');
+const { t, resolveLocale } = require('./i18n');
 
 function runSync(command, args, options = {}) {
   const result = spawnSync(command, args, {
@@ -10,13 +11,16 @@ function runSync(command, args, options = {}) {
     stdio: 'inherit',
     env: {
       ...process.env,
+      REACTPRESS_LANG: process.env.REACTPRESS_LANG || resolveLocale(),
       REACTPRESS_ORIGINAL_CWD:
         options.cwd || process.env.REACTPRESS_ORIGINAL_CWD || process.cwd(),
     },
     shell: options.shell ?? false,
   });
   if (result.status !== 0) {
-    const err = new Error(`命令失败 (${command}): 退出码 ${result.status ?? 1}`);
+    const err = new Error(
+      t('spawn.commandFailed', { command, code: result.status ?? 1 })
+    );
     err.exitCode = result.status ?? 1;
     throw err;
   }
@@ -30,6 +34,7 @@ function runNodeScript(scriptPath, args = [], options = {}) {
       cwd: options.cwd || getMonorepoRoot(),
       env: {
         ...process.env,
+        REACTPRESS_LANG: process.env.REACTPRESS_LANG || resolveLocale(),
         REACTPRESS_ORIGINAL_CWD:
           options.cwd || process.env.REACTPRESS_ORIGINAL_CWD || process.cwd(),
         ...options.env,
@@ -43,7 +48,7 @@ function runNodeScript(scriptPath, args = [], options = {}) {
 
     child.on('close', (code) => {
       if (code !== 0) {
-        reject(Object.assign(new Error(`退出码 ${code}`), { exitCode: code }));
+        reject(Object.assign(new Error(t('spawn.exitCode', { code })), { exitCode: code }));
         return;
       }
       resolve(code);
@@ -58,6 +63,7 @@ function spawnDetached(scriptPath, args = [], options = {}) {
     cwd: options.cwd,
     env: {
       ...process.env,
+      REACTPRESS_LANG: process.env.REACTPRESS_LANG || resolveLocale(),
       REACTPRESS_ORIGINAL_CWD:
         options.cwd || process.env.REACTPRESS_ORIGINAL_CWD || process.cwd(),
       ...options.env,
