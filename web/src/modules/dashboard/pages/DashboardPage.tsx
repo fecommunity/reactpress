@@ -12,9 +12,13 @@ const { Title, Text } = Typography;
 async function fetchDashboardStats() {
   const api = await getToolkitClient();
   const [articles, pages, comments, files] = await Promise.all([
-    api.article.findAll({ query: { page: 1, pageSize: 1 } } as Parameters<typeof api.article.findAll>[0]),
+    api.article.findAll({ query: { page: 1, pageSize: 1 } } as Parameters<
+      typeof api.article.findAll
+    >[0]),
     api.page.findAll({ query: { page: 1, pageSize: 1 } } as Parameters<typeof api.page.findAll>[0]),
-    api.comment.findAll({ query: { page: 1, pageSize: 1 } } as Parameters<typeof api.comment.findAll>[0]),
+    api.comment.findAll({ query: { page: 1, pageSize: 1 } } as Parameters<
+      typeof api.comment.findAll
+    >[0]),
     api.file.findAll({ query: { page: 1, pageSize: 1 } } as Parameters<typeof api.file.findAll>[0]),
   ]);
   return {
@@ -91,7 +95,11 @@ export function DashboardPage() {
                 className="dash-card-interactive admin-panel"
                 styles={{ body: { padding: token.paddingLG } }}
               >
-                <Flex justify="space-between" align="center" style={{ marginBottom: token.marginXS }}>
+                <Flex
+                  justify="space-between"
+                  align="center"
+                  style={{ marginBottom: token.marginXS }}
+                >
                   <Text strong style={{ fontSize: token.fontSizeSM }}>
                     {stat.title}
                   </Text>
@@ -109,7 +117,14 @@ export function DashboardPage() {
       </Row>
       <Row gutter={[16, 16]}>
         <Col xs={24} lg={14}>
-          <Card className="admin-panel" title={<Title level={5} style={{ margin: 0 }}>{t("dashboard.recentArticles")}</Title>}>
+          <Card
+            className="admin-panel"
+            title={
+              <Title level={5} style={{ margin: 0 }}>
+                {t("dashboard.recentArticles")}
+              </Title>
+            }
+          >
             {articlesLoading ? (
               <Skeleton active paragraph={{ rows: 4 }} />
             ) : (
@@ -129,7 +144,14 @@ export function DashboardPage() {
           </Card>
         </Col>
         <Col xs={24} lg={10}>
-          <Card className="admin-panel" title={<Title level={5} style={{ margin: 0 }}>{t("dashboard.quickLinks")}</Title>}>
+          <Card
+            className="admin-panel"
+            title={
+              <Title level={5} style={{ margin: 0 }}>
+                {t("dashboard.quickLinks")}
+              </Title>
+            }
+          >
             <List
               dataSource={[
                 { label: t("menu.article.new"), to: "/article/editor" },

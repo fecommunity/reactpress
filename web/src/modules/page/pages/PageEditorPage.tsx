@@ -46,7 +46,11 @@ export function PageEditorPage({ pageId }: PageEditorPageProps) {
   const [savedId, setSavedId] = useState<string | undefined>(pageId);
   const [dirty, setDirty] = useState(false);
 
-  const { data: loaded, isLoading, isError } = useQuery({
+  const {
+    data: loaded,
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ["page", pageId],
     queryFn: async () => {
       const api = await getToolkitClient();
@@ -162,7 +166,11 @@ export function PageEditorPage({ pageId }: PageEditorPageProps) {
           <Button loading={saveMutation.isPending} onClick={() => handleSave("draft")}>
             {t("article.saveDraft")}
           </Button>
-          <Button type="primary" loading={saveMutation.isPending} onClick={() => handleSave("publish")}>
+          <Button
+            type="primary"
+            loading={saveMutation.isPending}
+            onClick={() => handleSave("publish")}
+          >
             {t("article.publish")}
           </Button>
         </Space>

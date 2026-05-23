@@ -1,12 +1,4 @@
-import {
-  Avatar,
-  Button,
-  Dropdown,
-  Flex,
-  Grid,
-  Layout,
-  theme,
-} from "antd";
+import { Avatar, Button, Dropdown, Flex, Grid, Layout, theme } from "antd";
 import type { MenuProps } from "antd";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { Home, Plus, PanelLeft } from "lucide-react";
@@ -134,9 +126,7 @@ export function Header() {
         />
         <Dropdown menu={{ items: userMenuItems }} trigger={["click"]}>
           <Flex align="center" className="admin-bar__user" gap={6}>
-            <span>
-              {t("admin.howdy", { name: user?.username ?? "—" })}
-            </span>
+            <span>{t("admin.howdy", { name: user?.username ?? "—" })}</span>
             <Avatar size={20} src={avatarSrc}>
               {user?.username?.[0]?.toUpperCase()}
             </Avatar>

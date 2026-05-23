@@ -1,8 +1,8 @@
-import { getRoutePermissionMap } from './bootstrap';
+import { getRoutePermissionMap } from "./bootstrap";
 
 export function normalizeAppPath(pathname: string): string {
-  if (pathname === '/') return pathname;
-  return pathname.replace(/\/+$/, '') || '/';
+  if (pathname === "/") return pathname;
+  return pathname.replace(/\/+$/, "") || "/";
 }
 
 export function requiredPermissionForPath(pathname: string): string | null {
@@ -10,10 +10,10 @@ export function requiredPermissionForPath(pathname: string): string | null {
   const map = getRoutePermissionMap();
   if (p in map) return map[p] ?? null;
 
-  if (p.startsWith('/settings/')) return 'setting:manage';
-  if (p.startsWith('/plugins/') && p.endsWith('/settings')) return 'extension:manage';
-  if (p.startsWith('/article/editor')) return 'article:write';
-  if (p.startsWith('/page/editor')) return 'page:manage';
+  if (p.startsWith("/settings/")) return "setting:manage";
+  if (p.startsWith("/plugins/") && p.endsWith("/settings")) return "extension:manage";
+  if (p.startsWith("/article/editor")) return "article:write";
+  if (p.startsWith("/page/editor")) return "page:manage";
 
   return null;
 }

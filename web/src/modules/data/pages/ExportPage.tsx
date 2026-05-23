@@ -23,8 +23,12 @@ export function ExportPage() {
       const api = await getToolkitClient();
       const [settings, articles, pages] = await Promise.all([
         api.setting.findAll(),
-        api.article.findAll({ query: { page: 1, pageSize: 500 } } as Parameters<typeof api.article.findAll>[0]),
-        api.page.findAll({ query: { page: 1, pageSize: 500 } } as Parameters<typeof api.page.findAll>[0]),
+        api.article.findAll({ query: { page: 1, pageSize: 500 } } as Parameters<
+          typeof api.article.findAll
+        >[0]),
+        api.page.findAll({ query: { page: 1, pageSize: 500 } } as Parameters<
+          typeof api.page.findAll
+        >[0]),
       ]);
       downloadJson(`reactpress-export-${Date.now()}.json`, {
         exportedAt: new Date().toISOString(),

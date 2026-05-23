@@ -3,17 +3,17 @@ import {
   filterMenuByPermissions,
   type AdminContext,
   type AdminMenuItem,
-} from '@fecommunity/reactpress-toolkit/admin';
-import { articleModule } from '@/modules/article';
-import { commentModule } from '@/modules/comment';
-import { dashboardModule } from '@/modules/dashboard';
-import { dataModule } from '@/modules/data';
-import { appearanceModule } from '@/modules/appearance';
-import { mediaModule } from '@/modules/media';
-import { pageModule } from '@/modules/page';
-import { pluginsModule } from '@/modules/plugins';
-import { settingsModule } from '@/modules/settings';
-import { userModule } from '@/modules/user';
+} from "@fecommunity/reactpress-toolkit/admin";
+import { articleModule } from "@/modules/article";
+import { commentModule } from "@/modules/comment";
+import { dashboardModule } from "@/modules/dashboard";
+import { dataModule } from "@/modules/data";
+import { appearanceModule } from "@/modules/appearance";
+import { mediaModule } from "@/modules/media";
+import { pageModule } from "@/modules/page";
+import { pluginsModule } from "@/modules/plugins";
+import { settingsModule } from "@/modules/settings";
+import { userModule } from "@/modules/user";
 
 const CORE_MODULES = [
   dashboardModule,

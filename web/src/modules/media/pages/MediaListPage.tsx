@@ -47,10 +47,7 @@ export function MediaListPage({ search, routePath }: MediaListPageProps) {
   const [monthDraft, setMonthDraft] = useState(search.month || undefined);
 
   const pageSize = search.view === "grid" ? GRID_PAGE_SIZE : LIST_PAGE_SIZE;
-  const listSearch = useMemo(
-    () => ({ ...search, pageSize }),
-    [search, pageSize],
-  );
+  const listSearch = useMemo(() => ({ ...search, pageSize }), [search, pageSize]);
 
   useEffect(() => {
     setKeywordInput(search.keyword);
@@ -163,7 +160,9 @@ export function MediaListPage({ search, routePath }: MediaListPageProps) {
                 {isImage ? (
                   <Image src={file.url} alt={file.originalname} width={60} height={60} preview />
                 ) : (
-                  <span className={styles.gridPlaceholder}>{file.type.split("/")[1] ?? "file"}</span>
+                  <span className={styles.gridPlaceholder}>
+                    {file.type.split("/")[1] ?? "file"}
+                  </span>
                 )}
               </div>
               <div className={styles.fileName}>
@@ -175,7 +174,11 @@ export function MediaListPage({ search, routePath }: MediaListPageProps) {
                   {file.originalname}
                 </button>
                 <div className={styles.rowActions}>
-                  <button type="button" className={styles.rowAction} onClick={() => void copyUrl(file.url)}>
+                  <button
+                    type="button"
+                    className={styles.rowAction}
+                    onClick={() => void copyUrl(file.url)}
+                  >
                     {t("media.copyUrl")}
                   </button>
                   <span className={styles.rowActionSep}>|</span>

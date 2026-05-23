@@ -1,17 +1,17 @@
-import type { AdminModule } from '@fecommunity/reactpress-toolkit/admin';
+import type { AdminModule } from "@fecommunity/reactpress-toolkit/admin";
 
 export const pluginsModule: AdminModule = {
-  id: 'plugins',
+  id: "plugins",
   register({ menu, permissions, routes }) {
-    permissions.register(['extension:manage']);
+    permissions.register(["extension:manage"]);
     menu.register({
-      id: 'plugins',
-      title: '插件',
-      path: '/plugins',
-      icon: 'IconLucidePuzzle',
-      permissions: ['extension:manage'],
+      id: "plugins",
+      title: "插件",
+      path: "/plugins",
+      icon: "IconLucidePuzzle",
+      permissions: ["extension:manage"],
       sort: 40,
     });
-    routes.registerRoute({ path: '/plugins', permission: 'extension:manage' });
+    routes.registerRoute({ path: "/plugins", permission: "extension:manage" });
   },
 };

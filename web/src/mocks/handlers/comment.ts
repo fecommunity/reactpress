@@ -8,12 +8,21 @@ let comments = [...MOCK_COMMENTS];
 
 function filterComments(
   list: MockComment[],
-  options: { pass?: string; name?: string; email?: string },
+  options: { pass?: string; name?: string; email?: string; keyword?: string },
 ): MockComment[] {
   let filtered = [...list];
   if (options.pass !== undefined && options.pass !== "") {
     const passVal = options.pass === "1" || options.pass === "true";
     filtered = filtered.filter((c) => c.pass === passVal);
+  }
+  if (options.keyword) {
+    const q = options.keyword.toLowerCase();
+    filtered = filtered.filter(
+      (c) =>
+        c.name.toLowerCase().includes(q) ||
+        c.email.toLowerCase().includes(q) ||
+        c.content.toLowerCase().includes(q),
+    );
   }
   if (options.name) {
     filtered = filtered.filter((c) => c.name.includes(options.name!));
@@ -32,11 +41,13 @@ export const commentHandlers = [
     const pass = url.searchParams.get("pass") ?? "";
     const name = url.searchParams.get("name") ?? "";
     const email = url.searchParams.get("email") ?? "";
+    const keyword = url.searchParams.get("keyword") ?? "";
 
     const filtered = filterComments(comments, {
       pass: pass || undefined,
       name: name || undefined,
       email: email || undefined,
+      keyword: keyword || undefined,
     });
     const list = paginateList(filtered, limit, offset);
 

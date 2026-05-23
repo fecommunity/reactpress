@@ -35,7 +35,12 @@ type ArticleSettingDrawerProps = {
   onSave: (settings: ArticleSettings) => void;
 };
 
-export function ArticleSettingDrawer({ open, initial, onClose, onSave }: ArticleSettingDrawerProps) {
+export function ArticleSettingDrawer({
+  open,
+  initial,
+  onClose,
+  onSave,
+}: ArticleSettingDrawerProps) {
   const { t } = useTranslation();
   const [attrs, setAttrs] = useState<ArticleSettings>(defaultSettings);
 
@@ -90,9 +95,7 @@ export function ArticleSettingDrawer({ open, initial, onClose, onSave }: Article
           <Input.Password
             placeholder={t("article.passwordPlaceholder")}
             value={attrs.password ?? ""}
-            onChange={(e) =>
-              setAttrs((s) => ({ ...s, password: e.target.value.trim() || null }))
-            }
+            onChange={(e) => setAttrs((s) => ({ ...s, password: e.target.value.trim() || null }))}
           />
         </label>
         <label>
@@ -100,9 +103,7 @@ export function ArticleSettingDrawer({ open, initial, onClose, onSave }: Article
           <Input
             placeholder="https://..."
             value={attrs.cover ?? ""}
-            onChange={(e) =>
-              setAttrs((s) => ({ ...s, cover: e.target.value.trim() || null }))
-            }
+            onChange={(e) => setAttrs((s) => ({ ...s, cover: e.target.value.trim() || null }))}
           />
         </label>
         <label>

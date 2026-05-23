@@ -1,5 +1,5 @@
 import { Menu, Layout, Grid, Drawer, Button } from "antd";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { useNavigate, useLocation } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import {
@@ -23,6 +23,7 @@ import {
   Zap,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { usePendingCommentCount } from "@/hooks/usePendingCommentCount";
 import { useAuthStore } from "@/stores/auth";
 import { useSettingsStore } from "@/stores/settings";
 import type { MenuItem as MenuItemType } from "@/api/schemas";
@@ -37,6 +38,8 @@ type BuildMenuResult = {
   keyToPath: Record<string, string>;
   pathToKeyChain: Record<string, string[]>;
 };
+
+const COMMENTS_MENU_ID = "comments";
 
 const MENU_ICON_MAP: Record<string, LucideIcon> = {
   IconLucideLayoutDashboard: Home,
@@ -62,6 +65,24 @@ function renderMenuIcon(icon: string | null, size = 20) {
   return <Icon size={size} aria-hidden />;
 }
 
+function menuContainsId(menus: MenuItemType[], id: string): boolean {
+  for (const menu of menus) {
+    if (menu.id === id) return true;
+    if (menu.children?.length && menuContainsId(menu.children, id)) return true;
+  }
+  return false;
+}
+
+function renderMenuLabel(text: string, badge?: number): ReactNode {
+  if (!badge) return text;
+  return (
+    <span className="admin-sidebar__menuLabel">
+      {text}
+      <span className="admin-sidebar__menuBadge">{badge}</span>
+    </span>
+  );
+}
+
 function registerPathMapping(
   path: string,
   keyChain: string[],
@@ -83,6 +104,7 @@ function buildMenuItems(
   iconSize = 20,
   parentKeys: string[] = [],
   isTopLevel = true,
+  menuBadges: Record<string, number> = {},
 ): BuildMenuResult {
   const sorted = menus.filter((m) => !m.hidden).sort((a, b) => a.sort - b.sort);
   const keyToPath: Record<string, string> = {};
@@ -90,7 +112,8 @@ function buildMenuItems(
   const items: AntMenuItem[] = [];
 
   for (const menu of sorted) {
-    const label = translate(`menu.${menu.id}`, menu.name);
+    const labelText = translate(`menu.${menu.id}`, menu.name);
+    const label = renderMenuLabel(labelText, menuBadges[menu.id]);
     const key = menu.id;
 
     if (menu.kind === "group") {
@@ -101,6 +124,7 @@ function buildMenuItems(
         iconSize,
         parentKeys,
         isTopLevel,
+        menuBadges,
       );
       Object.assign(keyToPath, built.keyToPath);
       Object.assign(pathToKeyChain, built.pathToKeyChain);
@@ -124,6 +148,7 @@ function buildMenuItems(
         iconSize,
         nextParents,
         false,
+        menuBadges,
       );
       Object.assign(keyToPath, built.keyToPath);
       Object.assign(pathToKeyChain, built.pathToKeyChain);
@@ -149,10 +174,7 @@ function buildMenuItems(
   return { items, keyToPath, pathToKeyChain };
 }
 
-function resolveMenuKeyChain(
-  pathname: string,
-  pathToKeyChain: Record<string, string[]>,
-): string[] {
+function resolveMenuKeyChain(pathname: string, pathToKeyChain: Record<string, string[]>): string[] {
   const exact = pathToKeyChain[pathname];
   if (exact?.length) return exact;
 
@@ -181,6 +203,14 @@ export function Sidebar() {
   const isMobile = !screens.lg;
   const mobileOpen = collapsed;
 
+  const showCommentBadge = menuContainsId(menus, COMMENTS_MENU_ID);
+  const { data: pendingCommentCount = 0 } = usePendingCommentCount(showCommentBadge);
+
+  const menuBadges = useMemo(() => {
+    if (!pendingCommentCount) return {};
+    return { [COMMENTS_MENU_ID]: pendingCommentCount };
+  }, [pendingCommentCount]);
+
   const builtMenu = useMemo(
     () =>
       buildMenuItems(
@@ -188,8 +218,11 @@ export function Sidebar() {
         (key, fallback) => t(key, { defaultValue: fallback }),
         !isMobile && collapsed,
         20,
+        [],
+        true,
+        menuBadges,
       ),
-    [menus, isMobile, collapsed, t],
+    [menus, isMobile, collapsed, t, menuBadges],
   );
 
   const { selectedKey, routeOpenKeys } = useMemo(() => {

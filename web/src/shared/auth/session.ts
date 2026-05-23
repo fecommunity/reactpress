@@ -1,23 +1,23 @@
-import { permissionsForRole } from '@fecommunity/reactpress-toolkit/admin';
-import { AUTH_ENDPOINTS } from '@/api/auth';
+import { permissionsForRole } from "@fecommunity/reactpress-toolkit/admin";
+import { AUTH_ENDPOINTS } from "@/api/auth";
 import {
   AuthTokensSchema,
   AuthUserResponseSchema,
   PermissionsListSchema,
   UserSchema,
-} from '@/api/schemas';
-import { getMenuTreeForPermissions } from '@/shell/bootstrap';
-import { adminMenuToSidebar } from '@/shared/menu';
-import { getToolkitClient } from '@/shared/client';
-import { httpClient } from '@/utils/http';
-import { useAuthStore } from '@/stores/auth';
+} from "@/api/schemas";
+import { getMenuTreeForPermissions } from "@/shell/bootstrap";
+import { adminMenuToSidebar } from "@/shared/menu";
+import { getToolkitClient } from "@/shared/client";
+import { httpClient } from "@/utils/http";
+import { useAuthStore } from "@/stores/auth";
 
 function mapServerUser(raw: Record<string, unknown>) {
-  const role = String(raw.role ?? 'admin');
+  const role = String(raw.role ?? "admin");
   const permissions = permissionsForRole(role);
   return UserSchema.parse({
     id: String(raw.id),
-    username: String(raw.name ?? raw.username ?? ''),
+    username: String(raw.name ?? raw.username ?? ""),
     avatar: (raw.avatar as string | null) ?? null,
     email: (raw.email as string | null) ?? null,
     roles: [role],
@@ -36,7 +36,9 @@ export async function fetchSessionFromMockApi(): Promise<void> {
 }
 
 /** ReactPress server: user comes from login payload; menus from Registry. */
-export async function fetchSessionFromServer(loginPayload?: Record<string, unknown>): Promise<void> {
+export async function fetchSessionFromServer(
+  loginPayload?: Record<string, unknown>,
+): Promise<void> {
   if (loginPayload) {
     const user = mapServerUser(loginPayload);
     applySession(user, user.permissions);
@@ -62,7 +64,7 @@ export async function loginWithServerCredentials(name: string, password: string)
   const data = (await api.auth.login({
     body: { name, password },
   } as Parameters<typeof api.auth.login>[0])) as Record<string, unknown>;
-  const token = String(data.token ?? '');
+  const token = String(data.token ?? "");
   const tokens = AuthTokensSchema.parse({
     accessToken: token,
     refreshToken: token,

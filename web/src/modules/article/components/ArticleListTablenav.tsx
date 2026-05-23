@@ -117,9 +117,7 @@ export function ArticleListTablenav({
               if (!Number.isNaN(n)) goPage(n);
             }}
           />
-          <span className={styles.pageOf}>
-            {t("article.pageOf", { total: totalPages })}
-          </span>
+          <span className={styles.pageOf}>{t("article.pageOf", { total: totalPages })}</span>
           <Button
             type="text"
             size="small"

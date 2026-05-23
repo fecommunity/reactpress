@@ -159,7 +159,10 @@
   background-color: var(--admin-accent) !important;
 }
 
-.admin-sidebar .admin-sidebar__menu.ant-menu-dark .ant-menu-submenu-selected > .ant-menu-submenu-title {
+.admin-sidebar
+  .admin-sidebar__menu.ant-menu-dark
+  .ant-menu-submenu-selected
+  > .ant-menu-submenu-title {
   color: #fff;
 }
 
@@ -198,6 +201,29 @@
 .admin-sidebar .admin-sidebar__menu.ant-menu-dark .ant-menu-submenu-title .ant-menu-item-icon {
   min-width: 20px;
   font-size: 20px;
+}
+
+.admin-sidebar__menuLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.admin-sidebar__menuBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 9px;
+  background: #d63638;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  flex-shrink: 0;
 }
 
 .admin-sidebar__collapse {

@@ -8,10 +8,7 @@ import { useAuthStore } from "@/stores/auth";
 import { useSettingsStore } from "@/stores/settings";
 import { AUTH_ENDPOINTS } from "@/api/auth";
 import { LoginRequestSchema, AuthTokensSchema } from "@/api/schemas";
-import {
-  fetchSessionFromMockApi,
-  loginWithServerCredentials,
-} from "@/shared/auth/session";
+import { fetchSessionFromMockApi, loginWithServerCredentials } from "@/shared/auth/session";
 import { AUTH_MODE } from "@/utils/constants";
 import type { LoginRequest } from "@/api/schemas";
 import { APP_BRAND_NAME, APP_FAVICON_SRC } from "@/utils/constants";

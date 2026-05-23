@@ -1,11 +1,11 @@
-import type { AdminMenuItem } from '@fecommunity/reactpress-toolkit/admin';
-import type { MenuItem } from '@/api/schemas';
+import type { AdminMenuItem } from "@fecommunity/reactpress-toolkit/admin";
+import type { MenuItem } from "@/api/schemas";
 
 /** Flatten legacy group nodes so the sidebar matches WordPress (no section headers). */
 function flattenAdminGroups(nodes: AdminMenuItem[]): AdminMenuItem[] {
   const out: AdminMenuItem[] = [];
   for (const node of nodes) {
-    if (node.kind === 'group' && !node.path) {
+    if (node.kind === "group" && !node.path) {
       out.push(...flattenAdminGroups(node.children ?? []));
       continue;
     }
@@ -22,10 +22,10 @@ export function adminMenuToSidebar(nodes: AdminMenuItem[]): MenuItem[] {
 
   const walk = (list: AdminMenuItem[]): MenuItem[] =>
     list.map((node) => {
-      if (node.kind === 'group' || (node.children?.length && !node.path)) {
+      if (node.kind === "group" || (node.children?.length && !node.path)) {
         return {
           id: node.id,
-          kind: 'group' as const,
+          kind: "group" as const,
           name: node.title,
           path: null,
           icon: node.icon ?? null,
@@ -37,9 +37,9 @@ export function adminMenuToSidebar(nodes: AdminMenuItem[]): MenuItem[] {
       }
       return {
         id: node.id,
-        kind: 'item' as const,
+        kind: "item" as const,
         name: node.title,
-        path: node.path ?? '/',
+        path: node.path ?? "/",
         icon: node.icon ?? null,
         permissions: node.permissions ?? null,
         sort: node.sort ?? 0,

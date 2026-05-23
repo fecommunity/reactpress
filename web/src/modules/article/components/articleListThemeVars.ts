@@ -3,7 +3,7 @@ import type { CSSProperties } from "react";
 
 type ThemeToken = ReturnType<typeof theme.useToken>["token"];
 
-/** Theme-aware CSS variables for WordPress-style article list (light/dark). */
+/** Theme-aware CSS variables for WordPress-style admin list pages (light/dark). */
 export function articleListThemeVars(token: ThemeToken): CSSProperties {
   return {
     "--article-list-text": token.colorText,
@@ -16,5 +16,17 @@ export function articleListThemeVars(token: ThemeToken): CSSProperties {
     "--article-list-danger-hover": token.colorErrorHover,
     "--article-list-separator": token.colorBorder,
     "--article-list-radius": `${token.borderRadius}px`,
+    "--article-list-row-hover": token.colorFillAlter,
+    "--article-list-row-selected": token.colorPrimaryBg,
+    "--article-list-header-bg": token.colorFillAlter,
+    "--article-list-header-text": token.colorTextSecondary,
+    "--article-list-avatar-bg": token.colorFillSecondary,
+    "--article-list-avatar-text": token.colorTextSecondary,
+    "--article-list-count-badge-bg": token.colorFillSecondary,
+    "--article-list-count-badge-text": token.colorTextLightSolid,
+    "--comment-pending-bg": token.colorWarningBg,
+    "--comment-pending-accent": token.colorWarning,
+    "--comment-pending-border": token.colorWarningBorder,
+    "--comment-pending-indicator": token.colorError,
   } as CSSProperties;
 }

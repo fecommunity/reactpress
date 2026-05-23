@@ -173,6 +173,11 @@
   background: var(--article-list-row-hover) !important;
 }
 
+.pageNavBtn:focus-visible {
+  outline: 2px solid var(--article-list-link);
+  outline-offset: 1px;
+}
+
 .pageInput {
   width: 40px !important;
   text-align: center;
@@ -212,15 +217,15 @@
   transition: background-color 0.15s ease;
 }
 
-.tableCard :global(.ant-table-tbody > tr:hover > td) {
+.tableCard :global(.ant-table-tbody > tr:not(.rowPending):hover > td) {
   background: var(--article-list-row-hover) !important;
 }
 
-.tableCard :global(.ant-table-tbody > tr.ant-table-row-selected > td) {
+.tableCard :global(.ant-table-tbody > tr.ant-table-row-selected:not(.rowPending) > td) {
   background: var(--article-list-row-selected) !important;
 }
 
-.tableCard :global(.ant-table-tbody > tr.ant-table-row-selected:hover > td) {
+.tableCard :global(.ant-table-tbody > tr.ant-table-row-selected:not(.rowPending):hover > td) {
   background: color-mix(
     in srgb,
     var(--article-list-row-selected) 88%,
@@ -228,20 +233,97 @@
   ) !important;
 }
 
-.colTitle :global(.row-actions) {
+.tableCard :global(.ant-table-tbody > tr.rowPending > td) {
+  background: var(--comment-pending-bg) !important;
+  border-bottom-color: var(--comment-pending-border);
+}
+
+.tableCard :global(.ant-table-tbody > tr.rowPending > td:first-child) {
+  box-shadow: inset 4px 0 0 var(--comment-pending-indicator);
+}
+
+.tableCard :global(.ant-table-tbody > tr.rowPending:hover > td) {
+  background: color-mix(
+    in srgb,
+    var(--comment-pending-bg) 76%,
+    var(--comment-pending-accent) 24%
+  ) !important;
+}
+
+.tableCard :global(.ant-table-tbody > tr.rowPending.ant-table-row-selected > td) {
+  background: color-mix(
+    in srgb,
+    var(--comment-pending-bg) 62%,
+    var(--article-list-row-selected) 38%
+  ) !important;
+}
+
+.tableCard :global(.ant-table-tbody > tr.rowPending.ant-table-row-selected:hover > td) {
+  background: color-mix(
+    in srgb,
+    var(--comment-pending-bg) 54%,
+    var(--article-list-row-selected) 46%
+  ) !important;
+}
+
+.authorCell {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.authorAvatar:global(.ant-avatar) {
+  flex-shrink: 0;
+  background: var(--article-list-avatar-bg) !important;
+  color: var(--article-list-avatar-text) !important;
+  font-weight: 600;
+}
+
+.authorMeta {
+  min-width: 0;
+}
+
+.authorName {
+  display: block;
+  font-weight: 600;
+  color: var(--article-list-text);
+}
+
+.filterLink:hover .authorName {
+  color: var(--article-list-link-hover);
+}
+
+.authorEmail {
+  display: block;
+  font-size: 12px;
+  color: var(--article-list-link);
+  word-break: break-all;
+  transition: color 0.15s ease;
+}
+
+.authorEmail:hover {
+  color: var(--article-list-link-hover);
+  text-decoration: underline;
+}
+
+.commentContent {
+  line-height: 1.5;
+}
+
+.colComment :global(.row-actions) {
   visibility: hidden;
-  margin-top: 4px;
+  margin-top: 6px;
   font-size: 12px;
 }
 
 @media (hover: none) {
-  .colTitle :global(.row-actions) {
+  .colComment :global(.row-actions) {
     visibility: visible;
   }
 }
 
-.tableCard :global(.ant-table-tbody > tr:hover) .colTitle :global(.row-actions),
-.tableCard :global(.ant-table-tbody > tr:focus-within) .colTitle :global(.row-actions) {
+.tableCard :global(.ant-table-tbody > tr:hover) .colComment :global(.row-actions),
+.tableCard :global(.ant-table-tbody > tr:focus-within) .colComment :global(.row-actions) {
   visibility: visible;
 }
 
@@ -254,6 +336,8 @@
   padding: 0;
   font: inherit;
   text-align: inherit;
+  border-radius: 2px;
+  transition: color 0.15s ease;
 }
 
 .filterLink:hover {
@@ -263,6 +347,13 @@
 
 .rowAction:hover {
   color: var(--article-list-link-hover);
+  text-decoration: underline;
+}
+
+.rowAction:focus-visible,
+.filterLink:focus-visible {
+  outline: 2px solid var(--article-list-link);
+  outline-offset: 2px;
 }
 
 .rowActionDanger {
@@ -278,22 +369,43 @@
   color: var(--article-list-separator);
 }
 
-.cellLink {
-  font-size: 13px;
-}
-
-.dateStatus {
+.responseTitle {
   display: block;
   font-weight: 600;
   color: var(--article-list-text);
+  margin-bottom: 4px;
 }
 
-.dateTime {
-  display: block;
-  color: var(--article-list-muted);
+.responseMeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
   font-size: 12px;
 }
 
-.colComments {
-  text-align: center;
+.responseBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 10px;
+  background: var(--article-list-count-badge-bg);
+  color: var(--article-list-count-badge-text);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.submittedDate {
+  display: block;
+  color: var(--article-list-text);
+}
+
+.submittedTime {
+  display: block;
+  color: var(--article-list-muted);
+  font-size: 12px;
 }

@@ -144,7 +144,11 @@ export function PageListPage({ search, routePath }: PageListPageProps) {
           ];
           return (
             <Dropdown menu={{ items }} trigger={["click"]}>
-              <Button type="text" icon={<MoreVertical size={16} />} aria-label={t("common.actions")} />
+              <Button
+                type="text"
+                icon={<MoreVertical size={16} />}
+                aria-label={t("common.actions")}
+              />
             </Dropdown>
           );
         },

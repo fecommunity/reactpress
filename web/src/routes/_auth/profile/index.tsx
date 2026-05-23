@@ -1,11 +1,11 @@
-import { createFileRoute } from '@tanstack/react-router';
-import { App, Button, Card, Form, Input, Space } from 'antd';
-import { useTranslation } from 'react-i18next';
-import { useMutation } from '@tanstack/react-query';
-import { useAuthStore } from '@/stores/auth';
-import { getToolkitClient } from '@/shared/client';
+import { createFileRoute } from "@tanstack/react-router";
+import { App, Button, Card, Form, Input, Space } from "antd";
+import { useTranslation } from "react-i18next";
+import { useMutation } from "@tanstack/react-query";
+import { useAuthStore } from "@/stores/auth";
+import { getToolkitClient } from "@/shared/client";
 
-export const Route = createFileRoute('/_auth/profile/')({
+export const Route = createFileRoute("/_auth/profile/")({
   component: ProfilePage,
 });
 
@@ -28,31 +28,31 @@ function ProfilePage() {
       if (user) {
         setUser({ ...user, username: values.name, email: values.email });
       }
-      message.success(t('profile.savedSuccess'));
+      message.success(t("profile.savedSuccess"));
     },
-    onError: () => message.error(t('common.saveFailed')),
+    onError: () => message.error(t("common.saveFailed")),
   });
 
   return (
-    <Card title={t('profile.title')}>
+    <Card title={t("profile.title")}>
       <Form
         form={form}
         layout="vertical"
-        initialValues={{ name: user?.username ?? '', email: user?.email ?? '' }}
+        initialValues={{ name: user?.username ?? "", email: user?.email ?? "" }}
         onFinish={(values) => saveMutation.mutate(values)}
       >
-        <Form.Item name="name" label={t('profile.username')} rules={[{ required: true }]}>
+        <Form.Item name="name" label={t("profile.username")} rules={[{ required: true }]}>
           <Input />
         </Form.Item>
-        <Form.Item name="email" label={t('profile.email')}>
+        <Form.Item name="email" label={t("profile.email")}>
           <Input />
         </Form.Item>
-        <Form.Item label={t('profile.roles')}>
-          <Input disabled value={user?.roles?.join(', ') ?? '—'} />
+        <Form.Item label={t("profile.roles")}>
+          <Input disabled value={user?.roles?.join(", ") ?? "—"} />
         </Form.Item>
         <Space>
           <Button type="primary" htmlType="submit" loading={saveMutation.isPending}>
-            {t('common.save')}
+            {t("common.save")}
           </Button>
         </Space>
       </Form>

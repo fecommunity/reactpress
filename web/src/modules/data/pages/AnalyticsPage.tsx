@@ -33,7 +33,10 @@ export function AnalyticsPage() {
 
   if (isError) {
     return (
-      <ModulePlaceholder title={t("placeholder.analytics")} description={t("analytics.loadError")} />
+      <ModulePlaceholder
+        title={t("placeholder.analytics")}
+        description={t("analytics.loadError")}
+      />
     );
   }
 

@@ -80,7 +80,11 @@ export function ArticleEditorPage({ articleId }: ArticleEditorPageProps) {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [dirty, setDirty] = useState(false);
 
-  const { data: loaded, isLoading, isError } = useQuery({
+  const {
+    data: loaded,
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ["article", articleId],
     queryFn: async () => {
       const api = await getToolkitClient();
@@ -150,7 +154,9 @@ export function ArticleEditorPage({ articleId }: ArticleEditorPageProps) {
       setDirty(false);
       void queryClient.invalidateQueries({ queryKey: ["articles"] });
       void queryClient.invalidateQueries({ queryKey: ["article", id] });
-      message.success(res.status === "draft" ? t("article.draftSaved") : t("article.publishedSuccess"));
+      message.success(
+        res.status === "draft" ? t("article.draftSaved") : t("article.publishedSuccess"),
+      );
       if (isCreate && id) {
         void navigate({ to: "/article/editor/$id", params: { id }, replace: true });
       }
@@ -269,7 +275,12 @@ export function ArticleEditorPage({ articleId }: ArticleEditorPageProps) {
         }}
       >
         <Space>
-          <Button type="text" icon={<ChevronLeft size={18} />} onClick={handleBack} aria-label={t("article.back")} />
+          <Button
+            type="text"
+            icon={<ChevronLeft size={18} />}
+            onClick={handleBack}
+            aria-label={t("article.back")}
+          />
           <Input
             variant="borderless"
             placeholder={t("article.titlePlaceholder")}

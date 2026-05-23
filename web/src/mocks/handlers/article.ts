@@ -4,7 +4,11 @@ import type { MockArticle } from "../data";
 import { paginateList, parsePaginationParams } from "../utils";
 import { withDelay, successResponse, errorResponse, ERROR_CODES } from "../createHandler";
 
-let articles = MOCK_ARTICLES.map((a) => ({ ...a, category: a.category ? { ...a.category } : null, tags: a.tags.map((t) => ({ ...t })) }));
+let articles = MOCK_ARTICLES.map((a) => ({
+  ...a,
+  category: a.category ? { ...a.category } : null,
+  tags: a.tags.map((t) => ({ ...t })),
+}));
 
 function filterArticles(
   list: MockArticle[],
@@ -174,7 +178,7 @@ export const articleHandlers = [
       status: status as MockArticle["status"],
       publishAt:
         status === "publish"
-          ? body.publishAt ?? prev.publishAt ?? new Date().toISOString()
+          ? (body.publishAt ?? prev.publishAt ?? new Date().toISOString())
           : status === "draft"
             ? null
             : prev.publishAt,

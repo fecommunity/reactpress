@@ -1,34 +1,34 @@
-import type { AdminModule } from '@fecommunity/reactpress-toolkit/admin';
+import type { AdminModule } from "@fecommunity/reactpress-toolkit/admin";
 
 export const articleModule: AdminModule = {
-  id: 'article',
+  id: "article",
   register({ menu, permissions, routes }) {
-    permissions.register(['article:read', 'article:write', 'article:publish']);
+    permissions.register(["article:read", "article:write", "article:publish"]);
     menu.register({
-      id: 'article',
-      title: '文章',
-      path: '/article',
-      icon: 'IconLucideBookOpen',
-      permissions: ['article:read'],
+      id: "article",
+      title: "文章",
+      path: "/article",
+      icon: "IconLucideBookOpen",
+      permissions: ["article:read"],
       sort: 10,
       children: [
         {
-          id: 'article.all',
-          title: '所有文章',
-          path: '/article',
-          permissions: ['article:read'],
+          id: "article.all",
+          title: "所有文章",
+          path: "/article",
+          permissions: ["article:read"],
           sort: 0,
         },
         {
-          id: 'article.new',
-          title: '写文章',
-          path: '/article/editor',
-          permissions: ['article:write'],
+          id: "article.new",
+          title: "写文章",
+          path: "/article/editor",
+          permissions: ["article:write"],
           sort: 1,
         },
       ],
     });
-    routes.registerRoute({ path: '/article', permission: 'article:read' });
-    routes.registerRoute({ path: '/article/editor', permission: 'article:write' });
+    routes.registerRoute({ path: "/article", permission: "article:read" });
+    routes.registerRoute({ path: "/article/editor", permission: "article:write" });
   },
 };

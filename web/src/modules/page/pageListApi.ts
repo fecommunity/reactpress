@@ -47,9 +47,7 @@ function applyClientFilters(
     result = result.filter((p) => p.publishAt?.startsWith(search.month));
   }
   if (search.author) {
-    result = result.filter(
-      (p) => resolvePageAuthor(p, defaultAuthor) === search.author,
-    );
+    result = result.filter((p) => resolvePageAuthor(p, defaultAuthor) === search.author);
   }
   return result;
 }

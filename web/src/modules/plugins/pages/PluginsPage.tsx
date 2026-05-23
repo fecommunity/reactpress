@@ -26,7 +26,12 @@ export function PluginsPage() {
     <>
       <Typography.Title level={4}>{t("placeholder.plugins")}</Typography.Title>
       {plugins.length === 0 ? (
-        <Alert type="info" showIcon message={t("plugins.empty")} description={t("plugins.emptyDesc")} />
+        <Alert
+          type="info"
+          showIcon
+          message={t("plugins.empty")}
+          description={t("plugins.emptyDesc")}
+        />
       ) : (
         <pre style={{ whiteSpace: "pre-wrap" }}>{JSON.stringify(plugins, null, 2)}</pre>
       )}

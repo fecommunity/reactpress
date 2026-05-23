@@ -1,5 +1,5 @@
-import { useTranslation } from 'react-i18next';
-import { ModulePlaceholder } from '@/shared/components/ModulePlaceholder';
+import { useTranslation } from "react-i18next";
+import { ModulePlaceholder } from "@/shared/components/ModulePlaceholder";
 
 type PlaceholderPageProps = {
   titleKey: string;

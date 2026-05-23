@@ -233,149 +233,150 @@ export function ArticleListPage({ search, routePath }: ArticleListPageProps) {
       month: monthDraft ?? "",
     });
 
-  const columns = useMemo(
-    () => {
-      const categoryLabel = (category: ArticleListRow["category"]) => {
-        if (!category) return null;
-        if (category.label) return category.label;
-        if (category.labelKey) return t(category.labelKey);
-        const fromList = categories.find((c) => c.id === category.id || c.value === category.value);
-        return fromList?.label ?? category.value ?? null;
-      };
+  const columns = useMemo(() => {
+    const categoryLabel = (category: ArticleListRow["category"]) => {
+      if (!category) return null;
+      if (category.label) return category.label;
+      if (category.labelKey) return t(category.labelKey);
+      const fromList = categories.find((c) => c.id === category.id || c.value === category.value);
+      return fromList?.label ?? category.value ?? null;
+    };
 
-      return [
-        {
-          title: t("article.colTitle"),
-          dataIndex: "title",
-          className: styles.colTitle,
-          render: (title: string, record: ArticleListRow) => (
-            <div>
-              <Link to="/article/editor/$id" params={{ id: record.id }} className={styles.cellLink}>
-                <Typography.Text strong={record.status !== "draft"}>{title}</Typography.Text>
+    return [
+      {
+        title: t("article.colTitle"),
+        dataIndex: "title",
+        className: styles.colTitle,
+        render: (title: string, record: ArticleListRow) => (
+          <div>
+            <Link to="/article/editor/$id" params={{ id: record.id }} className={styles.cellLink}>
+              <Typography.Text strong={record.status !== "draft"}>{title}</Typography.Text>
+            </Link>
+            <div className="row-actions">
+              <Link
+                to="/article/editor/$id"
+                params={{ id: record.id }}
+                className={styles.rowAction}
+              >
+                {t("common.edit")}
               </Link>
-              <div className="row-actions">
-                <Link to="/article/editor/$id" params={{ id: record.id }} className={styles.rowAction}>
-                  {t("common.edit")}
-                </Link>
-                <span className={styles.rowActionSep}>|</span>
-                <button
-                  type="button"
-                  className={`${styles.rowAction} ${styles.rowActionDanger}`}
-                  onClick={() => confirmDelete(record)}
-                >
-                  {t("common.delete")}
-                </button>
-              </div>
+              <span className={styles.rowActionSep}>|</span>
+              <button
+                type="button"
+                className={`${styles.rowAction} ${styles.rowActionDanger}`}
+                onClick={() => confirmDelete(record)}
+              >
+                {t("common.delete")}
+              </button>
             </div>
-          ),
+          </div>
+        ),
+      },
+      {
+        title: t("article.colAuthor"),
+        key: "author",
+        width: 120,
+        render: (_: unknown, record: ArticleListRow) => {
+          const author = resolveArticleAuthor(record, defaultAuthor);
+          return (
+            <button
+              type="button"
+              className={styles.filterLink}
+              onClick={() => filterByAuthor(record)}
+            >
+              {author}
+            </button>
+          );
         },
-        {
-          title: t("article.colAuthor"),
-          key: "author",
-          width: 120,
-          render: (_: unknown, record: ArticleListRow) => {
-            const author = resolveArticleAuthor(record, defaultAuthor);
-            return (
-              <button
-                type="button"
-                className={styles.filterLink}
-                onClick={() => filterByAuthor(record)}
-              >
-                {author}
-              </button>
-            );
-          },
+      },
+      {
+        title: t("article.colCategories"),
+        dataIndex: "category",
+        width: 140,
+        render: (category: ArticleListRow["category"]) => {
+          const label = categoryLabel(category);
+          if (!label) return "—";
+          return (
+            <button
+              type="button"
+              className={styles.filterLink}
+              onClick={() => filterByCategory(category)}
+            >
+              {label}
+            </button>
+          );
         },
-        {
-          title: t("article.colCategories"),
-          dataIndex: "category",
-          width: 140,
-          render: (category: ArticleListRow["category"]) => {
-            const label = categoryLabel(category);
-            if (!label) return "—";
-            return (
-              <button
-                type="button"
-                className={styles.filterLink}
-                onClick={() => filterByCategory(category)}
-              >
-                {label}
-              </button>
-            );
-          },
-        },
-        {
-          title: t("article.colTags"),
-          dataIndex: "tags",
-          width: 160,
-          render: (tags: ArticleListRow["tags"]) => {
-            if (!tags?.length) return "—";
-            return (
-              <>
-                {tags.map((tag, i) => (
-                  <span key={tag.value}>
-                    {i > 0 ? ", " : ""}
-                    <button
-                      type="button"
-                      className={styles.filterLink}
-                      onClick={() => filterByTag(tag.value)}
-                    >
-                      {tag.label}
-                    </button>
-                  </span>
-                ))}
-              </>
-            );
-          },
-        },
-        {
-          title: (
-            <span className={styles.colComments} title={t("article.colComments")}>
-              <MessageCircle size={14} aria-hidden />
-            </span>
-          ),
-          key: "comments",
-          width: 56,
-          align: "center" as const,
-          className: styles.colComments,
-          render: (_: unknown, record: ArticleListRow) => {
-            const count = commentCounts[record.id];
-            if (!count) return "—";
-            return <Link to="/article/comment">{count}</Link>;
-          },
-        },
-        {
-          title: t("article.colDate"),
-          dataIndex: "publishAt",
-          width: 160,
-          render: (_: string | null, record: ArticleListRow) => {
-            const isDraft = record.status === "draft";
-            const statusLabel = isDraft ? t("article.draft") : t("article.published");
-            const dateValue = record.publishAt;
-            return (
-              <div>
-                <span className={styles.dateStatus}>{statusLabel}</span>
-                <span className={styles.dateTime}>
-                  {dateValue ? formatDateTime(dateValue, locale) : "—"}
+      },
+      {
+        title: t("article.colTags"),
+        dataIndex: "tags",
+        width: 160,
+        render: (tags: ArticleListRow["tags"]) => {
+          if (!tags?.length) return "—";
+          return (
+            <>
+              {tags.map((tag, i) => (
+                <span key={tag.value}>
+                  {i > 0 ? ", " : ""}
+                  <button
+                    type="button"
+                    className={styles.filterLink}
+                    onClick={() => filterByTag(tag.value)}
+                  >
+                    {tag.label}
+                  </button>
                 </span>
-              </div>
-            );
-          },
+              ))}
+            </>
+          );
         },
-      ];
-    },
-    [
-      categories,
-      commentCounts,
-      confirmDelete,
-      defaultAuthor,
-      filterByAuthor,
-      filterByCategory,
-      filterByTag,
-      locale,
-      t,
-    ],
-  );
+      },
+      {
+        title: (
+          <span className={styles.colComments} title={t("article.colComments")}>
+            <MessageCircle size={14} aria-hidden />
+          </span>
+        ),
+        key: "comments",
+        width: 56,
+        align: "center" as const,
+        className: styles.colComments,
+        render: (_: unknown, record: ArticleListRow) => {
+          const count = commentCounts[record.id];
+          if (!count) return "—";
+          return <Link to="/article/comment">{count}</Link>;
+        },
+      },
+      {
+        title: t("article.colDate"),
+        dataIndex: "publishAt",
+        width: 160,
+        render: (_: string | null, record: ArticleListRow) => {
+          const isDraft = record.status === "draft";
+          const statusLabel = isDraft ? t("article.draft") : t("article.published");
+          const dateValue = record.publishAt;
+          return (
+            <div>
+              <span className={styles.dateStatus}>{statusLabel}</span>
+              <span className={styles.dateTime}>
+                {dateValue ? formatDateTime(dateValue, locale) : "—"}
+              </span>
+            </div>
+          );
+        },
+      },
+    ];
+  }, [
+    categories,
+    commentCounts,
+    confirmDelete,
+    defaultAuthor,
+    filterByAuthor,
+    filterByCategory,
+    filterByTag,
+    locale,
+    t,
+  ]);
 
   const total = data?.total ?? 0;
 

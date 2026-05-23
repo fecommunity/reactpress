@@ -55,10 +55,7 @@ function normalizeTags(list: ArticleTagItem[]): ArticleTagItem[] {
   }));
 }
 
-export function resolveArticleAuthor(
-  article: ArticleListRow,
-  defaultAuthor: string,
-): string {
+export function resolveArticleAuthor(article: ArticleListRow, defaultAuthor: string): string {
   const raw = article.author;
   if (typeof raw === "string" && raw) return raw;
   if (raw && typeof raw === "object") {
@@ -80,15 +77,11 @@ function applyClientFilters(
     result = result.filter((a) => a.publishAt?.startsWith(search.month));
   }
   if (search.author) {
-    result = result.filter(
-      (a) => resolveArticleAuthor(a, defaultAuthor) === search.author,
-    );
+    result = result.filter((a) => resolveArticleAuthor(a, defaultAuthor) === search.author);
   }
   if (search.category) {
     result = result.filter(
-      (a) =>
-        a.category?.id === search.category ||
-        a.category?.value === search.category,
+      (a) => a.category?.id === search.category || a.category?.value === search.category,
     );
   }
   return result;
@@ -198,9 +191,6 @@ export async function fetchArticles(
   } as Parameters<typeof api.article.findAll>[0]);
   const tuple = res as unknown as [ArticleListRow[], number];
   let list = applyClientFilters(tuple[0] ?? [], search, defaultAuthor);
-  const total =
-    search.author || search.category
-      ? list.length
-      : (tuple[1] ?? 0);
+  const total = search.author || search.category ? list.length : (tuple[1] ?? 0);
   return { list, total };
 }

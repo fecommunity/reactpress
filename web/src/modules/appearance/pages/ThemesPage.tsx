@@ -8,7 +8,9 @@ export function ThemesPage() {
   const { data, isLoading, isError } = useSiteSettings();
 
   if (isError) {
-    return <ModulePlaceholder title={t("placeholder.themes")} description={t("settings.loadError")} />;
+    return (
+      <ModulePlaceholder title={t("placeholder.themes")} description={t("settings.loadError")} />
+    );
   }
 
   if (isLoading) {
@@ -17,9 +19,21 @@ export function ThemesPage() {
 
   const branding = [
     { label: t("settings.fields.systemTitle"), value: String(data?.systemTitle ?? "—") },
-    { label: t("settings.fields.systemLogo"), value: String(data?.systemLogo ?? "—"), image: data?.systemLogo },
-    { label: t("settings.fields.systemBg"), value: String(data?.systemBg ?? "—"), image: data?.systemBg },
-    { label: t("settings.fields.systemFavicon"), value: String(data?.systemFavicon ?? "—"), image: data?.systemFavicon },
+    {
+      label: t("settings.fields.systemLogo"),
+      value: String(data?.systemLogo ?? "—"),
+      image: data?.systemLogo,
+    },
+    {
+      label: t("settings.fields.systemBg"),
+      value: String(data?.systemBg ?? "—"),
+      image: data?.systemBg,
+    },
+    {
+      label: t("settings.fields.systemFavicon"),
+      value: String(data?.systemFavicon ?? "—"),
+      image: data?.systemFavicon,
+    },
   ];
 
   return (
@@ -31,7 +45,11 @@ export function ThemesPage() {
           <Col xs={24} sm={12} md={6} key={item.label}>
             <Card size="small" title={item.label}>
               {typeof item.image === "string" && item.image.startsWith("http") ? (
-                <Image src={item.image} alt={item.label} style={{ maxHeight: 120, objectFit: "contain" }} />
+                <Image
+                  src={item.image}
+                  alt={item.label}
+                  style={{ maxHeight: 120, objectFit: "contain" }}
+                />
               ) : (
                 <Typography.Text type="secondary">{item.value}</Typography.Text>
               )}
