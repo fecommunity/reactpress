@@ -3,7 +3,7 @@ const path = require('path');
 
 /**
  * Decide whether a given directory is a ReactPress monorepo checkout (with
- * editable `server/src`, `client/`, `toolkit/`) or a standalone project that
+ * editable `server/src`, `web/`, `client/`, `toolkit/`) or a standalone project that
  * was created with `reactpress init` and relies on the bundled runtime.
  *
  * @param {string} root absolute project root
@@ -36,6 +36,14 @@ function hasClient(root) {
 }
 
 /**
+ * Admin SPA (`web/`), preferred over client `/admin` in monorepo dev.
+ * @param {string} root
+ */
+function hasWeb(root) {
+  return fs.existsSync(path.join(root, 'web', 'package.json'));
+}
+
+/**
  * @param {string} root
  */
 function hasServerSource(root) {
@@ -58,6 +66,7 @@ function describeProject(root) {
     type,
     root,
     hasClient: hasClient(root),
+    hasWeb: hasWeb(root),
     hasServerSource: hasServerSource(root),
     hasToolkit: hasToolkit(root),
   };
@@ -67,6 +76,7 @@ module.exports = {
   detectProjectType,
   describeProject,
   hasClient,
+  hasWeb,
   hasServerSource,
   hasToolkit,
 };

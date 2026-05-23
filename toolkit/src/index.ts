@@ -13,3 +13,6 @@ const http = {
 };
 
 export { api, types, utils, config, http };
+export * as admin from './admin';
+export * as react from './react';
+export { createClient, getDefaultApiBaseUrl } from './react/client';

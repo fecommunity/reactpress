@@ -20,6 +20,8 @@ dist-ssr
 coverage
 logs
 test-results
+web/dist
+web/playwright-report
 .pnpm-store
 tsconfig.tsbuildinfo
 .pnpm-store

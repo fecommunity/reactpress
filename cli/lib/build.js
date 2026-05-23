@@ -4,6 +4,7 @@ const ora = require('ora');
 const { brand, icon, ok, warn, label, chip } = require('../ui/theme');
 const { runSync } = require('./spawn');
 const { ensureOriginalCwd } = require('./root');
+const { hasWeb } = require('./project-type');
 const { t } = require('./i18n');
 
 const FORBIDDEN_SCRIPTS = new Set(['build']);
@@ -12,16 +13,28 @@ const FORBIDDEN_SCRIPTS = new Set(['build']);
 const BUILD_STEPS = {
   toolkit: [{ script: 'build:toolkit', labelKey: 'build.label.toolkit' }],
   server: [{ script: 'build:server', labelKey: 'build.label.server' }],
+  web: [{ script: 'build:web', labelKey: 'build.label.web' }],
   client: [{ script: 'build:client', labelKey: 'build.label.client' }],
   docs: [{ script: 'build:docs', labelKey: 'build.label.docs' }],
-  all: [
-    { script: 'build:toolkit', labelKey: 'build.label.toolkit' },
-    { script: 'build:server', labelKey: 'build.label.server' },
-    { script: 'build:client', labelKey: 'build.label.client' },
-  ],
 };
 
-const TARGETS = Object.keys(BUILD_STEPS);
+const TARGETS = [...Object.keys(BUILD_STEPS), 'all'];
+
+function getBuildSteps(target, projectRoot) {
+  if (target !== 'all') {
+    return BUILD_STEPS[target];
+  }
+
+  const steps = [
+    { script: 'build:toolkit', labelKey: 'build.label.toolkit' },
+    { script: 'build:server', labelKey: 'build.label.server' },
+  ];
+  if (hasWeb(projectRoot)) {
+    steps.push({ script: 'build:web', labelKey: 'build.label.web' });
+  }
+  steps.push({ script: 'build:client', labelKey: 'build.label.client' });
+  return steps;
+}
 
 const buildChildEnv = { REACTPRESS_BUILD_ACTIVE: '1' };
 
@@ -57,6 +70,18 @@ function resolveBuildInvocation(script, projectRoot) {
     }
   }
 
+  if (script === 'build:web') {
+    const webDir = path.join(root, 'web');
+    if (fs.existsSync(path.join(webDir, 'package.json'))) {
+      return { command: 'pnpm', args: ['run', 'build'], cwd: webDir };
+    }
+    const rootScripts = readPackageScripts(path.join(root, 'package.json'));
+    if (rootScripts['build:web']) {
+      return { command: 'pnpm', args: ['run', 'build:web'], cwd: root };
+    }
+    return null;
+  }
+
   if (script === 'build:client') {
     const clientDir = path.join(root, 'client');
     if (fs.existsSync(path.join(clientDir, 'package.json'))) {
@@ -88,7 +113,7 @@ async function runBuild(target = 'all', projectRoot = ensureOriginalCwd()) {
     throw new Error(t('build.recursive'));
   }
 
-  const steps = BUILD_STEPS[target];
+  const steps = getBuildSteps(target, projectRoot);
   if (!steps) {
     throw new Error(
       t('build.unknownTarget', {
@@ -158,5 +183,6 @@ module.exports = {
   runBuild,
   TARGETS,
   BUILD_STEPS,
+  getBuildSteps,
   resolveBuildInvocation,
 };

@@ -3,10 +3,10 @@ const path = require('path');
 const ora = require('ora');
 const { runBuild } = require('./build');
 const { ensureProjectEnvironment } = require('./bootstrap');
-const { loadServerSiteUrl, loadClientSiteUrl, waitForHttp } = require('./http');
+const { loadServerSiteUrl, loadClientSiteUrl, loadWebAdminUrl, waitForHttp } = require('./http');
 const { printDevReadyBanner } = require('./dev-banner');
 const { ensureOriginalCwd } = require('./root');
-const { detectProjectType, hasClient, hasToolkit } = require('./project-type');
+const { detectProjectType, hasClient, hasWeb, hasToolkit } = require('./project-type');
 const { t } = require('./i18n');
 
 const CLIENT_READY_TIMEOUT_MS = 120_000;
@@ -75,22 +75,24 @@ async function waitForApiReady(projectRoot) {
   spinner.succeed(t('dev.apiReady'));
 }
 
-function spawnClient(projectRoot) {
-  webChild = spawn('pnpm', ['run', '--dir', './client', 'dev'], {
+function spawnFrontend(projectRoot) {
+  const useWeb = hasWeb(projectRoot);
+  const frontendDir = useWeb ? './web' : './client';
+  webChild = spawn('pnpm', ['run', '--dir', frontendDir, 'dev'], {
     stdio: 'inherit',
     shell: true,
     cwd: projectRoot,
   });
 
-  const clientUrl = loadClientSiteUrl(projectRoot);
-  waitForHttp(clientUrl, CLIENT_READY_TIMEOUT_MS).then((clientReady) => {
+  const readyUrl = useWeb ? loadWebAdminUrl(projectRoot) : loadClientSiteUrl(projectRoot);
+  waitForHttp(readyUrl, CLIENT_READY_TIMEOUT_MS).then((clientReady) => {
     if (clientReady) {
       printDevReadyBanner(projectRoot);
     } else {
       console.warn(
         t('dev.clientSlow', {
           seconds: CLIENT_READY_TIMEOUT_MS / 1000,
-          url: clientUrl,
+          url: readyUrl,
         })
       );
     }
@@ -103,17 +105,17 @@ function spawnClient(projectRoot) {
 }
 
 async function startDevStack(projectRoot) {
-  const includeClient = hasClient(projectRoot);
+  const includeFrontend = hasWeb(projectRoot) || hasClient(projectRoot);
 
   spawnApi(projectRoot);
   await waitForApiReady(projectRoot);
-  printDevReadyBanner(projectRoot, { apiOnly: !includeClient });
+  printDevReadyBanner(projectRoot, { apiOnly: !includeFrontend });
 
-  if (!includeClient) {
+  if (!includeFrontend) {
     console.log(t('dev.standaloneHint'));
     return;
   }
-  spawnClient(projectRoot);
+  spawnFrontend(projectRoot);
 }
 
 async function runDev(projectRoot = ensureOriginalCwd()) {

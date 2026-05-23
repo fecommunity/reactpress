@@ -9,7 +9,17 @@
     "./api/instance": "./dist/api/instance.js",
     "./types": "./dist/types/index.js",
     "./utils": "./dist/utils/index.js",
-    "./config": "./dist/config/index.js"
+    "./config": "./dist/config/index.js",
+    "./admin": "./dist/admin/index.js",
+    "./react": "./dist/react/index.js"
+  },
+  "peerDependencies": {
+    "@tanstack/react-query": ">=5",
+    "react": ">=18"
+  },
+  "peerDependenciesMeta": {
+    "@tanstack/react-query": { "optional": true },
+    "react": { "optional": true }
   },
   "scripts": {
     "generate": "node scripts/generate-swagger.js",

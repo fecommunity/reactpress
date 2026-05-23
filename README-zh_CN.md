@@ -99,10 +99,11 @@ pnpm run dev    # 自动 init + Docker MySQL + toolkit + API (3002) + 前端 (30
 
 | 命令 | 说明 |
 | :--- | :--- |
-| `pnpm dev` | 一键本地全栈（推荐） |
+| `pnpm dev` | 一键本地：API + Admin（存在 `web/` 时启动 `web`，否则 `client`） |
 | `pnpm dev:api` | 仅 API（`server/` nest watch） |
-| `pnpm dev:client` | 仅 Next.js 前端 |
-| `pnpm build` | 生产构建：toolkit → server → client |
+| `pnpm dev:web` | 仅管理后台 Admin SPA（`web/`） |
+| `pnpm dev:client` | 仅 Next.js 访客前台（`client/`） |
+| `pnpm build` | 生产构建：toolkit → server → web（若存在）→ client |
 | `pnpm start` | 生产模式同时起 API + 前端 |
 | `pnpm run status` | 查看 API 进程与 HTTP 健康 |
 
@@ -177,7 +178,8 @@ ReactPress 以 **Monorepo** 组织，主要包与模板如下。
 | 包 | 说明 |
 | :--- | :--- |
 | [`@fecommunity/reactpress`](./cli) | **3.0 主包** — 全局命令 `reactpress`，内置 API |
-| [`@fecommunity/reactpress-client`](./client) | 进阶：仅部署前台 |
+| [`@fecommunity/reactpress-web`](./web) | **管理后台** Admin SPA（Vite，替代 client 内 `/admin`） |
+| [`@fecommunity/reactpress-client`](./client) | 访客前台（Next.js，逐步由 themes 承接） |
 | [`@fecommunity/reactpress-toolkit`](./toolkit) | 由 OpenAPI 生成的 API SDK |
 | `@fecommunity/reactpress-server` | **已弃用** — 请使用主包内置 API |
 | `@fecommunity/reactpress-cli` | **已弃用别名** |

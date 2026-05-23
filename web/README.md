@@ -1,6 +1,6 @@
 # @fecommunity/reactpress-web
 
-ReactPress **管理后台** SPA，属于本 Monorepo 的 `web/` 工作区包（与 `server`、`client`、`toolkit` 同级）。
+ReactPress **管理后台** SPA，属于本 Monorepo 的 `web/` 工作区包（与 `server`、`client`、`toolkit` 同级）。**不要**在 `web/` 下单独 `git init` 或维护 `pnpm-lock.yaml`，依赖与锁文件统一在仓库根目录管理。
 
 技术栈：Vite、React 19、Ant Design 6、TanStack Router / Query、Zustand、MSW（开发 mock）。
 

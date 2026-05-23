@@ -16,6 +16,20 @@ function loadServerSiteUrl(projectRoot) {
   return 'http://localhost:3002';
 }
 
+function loadWebAdminUrl(projectRoot) {
+  const envPath = path.join(projectRoot, '.env');
+  try {
+    const content = fs.readFileSync(envPath, 'utf8');
+    const match = content.match(/^WEB_ADMIN_URL=(.+)$/m);
+    if (match) {
+      return match[1].trim().replace(/^['"]|['"]$/g, '');
+    }
+  } catch {
+    // ignore
+  }
+  return 'http://localhost:5173';
+}
+
 function loadClientSiteUrl(projectRoot) {
   const envPath = path.join(projectRoot, '.env');
   try {
@@ -173,6 +187,7 @@ async function waitForHttp(url, timeoutMs = 120_000, intervalMs = 500) {
 
 module.exports = {
   loadServerSiteUrl,
+  loadWebAdminUrl,
   loadClientSiteUrl,
   getApiPrefix,
   getHealthUrl,

@@ -12,19 +12,24 @@ const {
 } = require('../ui/theme');
 const {
   loadClientSiteUrl,
+  loadWebAdminUrl,
   loadServerSiteUrl,
   getApiPrefix,
   getHealthUrl,
 } = require('./http');
+const { hasWeb } = require('./project-type');
 const { t } = require('./i18n');
 
 function getDevUrls(projectRoot) {
   const client = loadClientSiteUrl(projectRoot).replace(/\/$/, '');
   const server = loadServerSiteUrl(projectRoot).replace(/\/$/, '');
   const prefix = getApiPrefix(projectRoot).replace(/\/$/, '') || '/api';
+  const admin = hasWeb(projectRoot)
+    ? loadWebAdminUrl(projectRoot).replace(/\/$/, '')
+    : `${client}/admin`;
   return {
     site: client,
-    admin: `${client}/admin`,
+    admin,
     api: `${server}${prefix}`,
     swagger: `${server}${prefix}`,
     health: getHealthUrl(projectRoot),
