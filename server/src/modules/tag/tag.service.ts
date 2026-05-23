@@ -1,3 +1,4 @@
+import { ApiMsg } from '../../common/api-messages';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -20,7 +21,7 @@ export class TagService {
     const existTag = await this.tagRepository.findOne({ where: { label } });
 
     if (existTag) {
-      throw new HttpException('标签已存在', HttpStatus.BAD_REQUEST);
+      throw new HttpException(ApiMsg.TAG_EXISTS, HttpStatus.BAD_REQUEST);
     }
 
     const newTag = await this.tagRepository.create(tag);
@@ -116,7 +117,7 @@ export class TagService {
       await this.tagRepository.remove(tag);
       return true;
     } catch (e) {
-      throw new HttpException('删除失败，可能存在关联文章', HttpStatus.BAD_REQUEST);
+      throw new HttpException(ApiMsg.DELETE_HAS_ARTICLES, HttpStatus.BAD_REQUEST);
     }
   }
 }

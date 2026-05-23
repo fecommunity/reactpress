@@ -1,3 +1,4 @@
+import { ApiMsg } from '../../common/api-messages';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import axios from 'axios';
@@ -28,7 +29,7 @@ export class WebhookService {
   async remove(id: string) {
     const hook = await this.webhookRepository.findOne(id);
     if (!hook) {
-      throw new HttpException('Webhook 不存在', HttpStatus.NOT_FOUND);
+      throw new HttpException(ApiMsg.WEBHOOK_NOT_FOUND, HttpStatus.NOT_FOUND);
     }
     return this.webhookRepository.remove(hook);
   }

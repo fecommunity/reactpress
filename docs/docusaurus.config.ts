@@ -6,7 +6,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
   title: 'ReactPress',
-  tagline: '装一个包，一分钟拥有自己的 CMS',
+  tagline: 'One package. Your CMS in about a minute.',
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
@@ -56,7 +56,7 @@ const config: Config = {
           onInlineAuthors: 'warn',
           onUntruncatedBlogPosts: 'warn',
           blogSidebarTitle: 'ReactPress',
-          blogTitle: '更新日志',
+          blogTitle: 'Changelog',
         },
         theme: {
           customCss: [
@@ -85,10 +85,10 @@ const config: Config = {
           type: 'docSidebar',
           sidebarId: 'tutorialSidebar',
           position: 'left',
-          label: '教程',
+          label: 'Tutorial',
         },
-        { to: '/blog', label: '博客', position: 'left' },
-        { href: 'https://blog.gaoredu.com', label: 'Demo演示', position: 'left' },
+        { to: '/blog', label: 'Blog', position: 'left' },
+        { href: 'https://blog.gaoredu.com', label: 'Demo', position: 'left' },
         {
           type: 'localeDropdown',
           position: 'right',
@@ -107,13 +107,13 @@ const config: Config = {
           title: 'Docs',
           items: [
             {
-              label: '教程',
+              label: 'Tutorial',
               to: '/docs/intro',
             },
           ],
         },
         {
-          title: '社区',
+          title: 'Community',
           items: [
             {
               label: 'Stack Overflow',
@@ -124,13 +124,13 @@ const config: Config = {
               href: 'https://github.com/fecommunity/reactpress/issues',
             },
             {
-              label: '高热度网',
+              label: 'Demo site',
               href: 'https://blog.gaoredu.com/',
             },
           ],
         },
         {
-          title: '更多',
+          title: 'More',
           items: [
             {
               label: 'Blog',

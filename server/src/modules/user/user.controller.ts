@@ -1,3 +1,4 @@
+import { ApiMsg } from '../../common/api-messages';
 import {
   Body,
   ClassSerializerInterceptor,
@@ -53,7 +54,7 @@ export class UserController {
     let token = req.headers.authorization;
 
     if (!token) {
-      throw new HttpException('未认证', HttpStatus.UNAUTHORIZED);
+      throw new HttpException(ApiMsg.UNAUTHORIZED, HttpStatus.UNAUTHORIZED);
     }
 
     if (/Bearer/.test(token)) {
@@ -64,12 +65,12 @@ export class UserController {
     const id = tokenUser.id;
 
     if (!id) {
-      throw new HttpException('未认证', HttpStatus.UNAUTHORIZED);
+      throw new HttpException(ApiMsg.UNAUTHORIZED, HttpStatus.UNAUTHORIZED);
     }
 
     const exist = await this.userService.findById(id);
     if (exist.id !== user.id && exist.role !== 'admin') {
-      throw new HttpException('无权处理', HttpStatus.FORBIDDEN);
+      throw new HttpException(ApiMsg.FORBIDDEN_ACTION, HttpStatus.FORBIDDEN);
     }
 
     req.user = tokenUser;

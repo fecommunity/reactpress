@@ -1,3 +1,4 @@
+import { ApiMsg } from '../../common/api-messages';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcryptjs';
@@ -33,7 +34,7 @@ export class ApiKeyService {
   async revoke(id: string) {
     const key = await this.apiKeyRepository.findOne(id);
     if (!key) {
-      throw new HttpException('API Key 不存在', HttpStatus.NOT_FOUND);
+      throw new HttpException(ApiMsg.API_KEY_NOT_FOUND, HttpStatus.NOT_FOUND);
     }
     key.enabled = false;
     return this.apiKeyRepository.save(key);
