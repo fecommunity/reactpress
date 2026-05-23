@@ -1,6 +1,6 @@
 :root {
   --admin-bar-height: 32px;
-  --admin-sidebar-width: 160px;
+  --admin-sidebar-width: 200px;
   --admin-sidebar-collapsed-width: 36px;
   --admin-content-bg: #f0f0f1;
   --admin-bar-bg: #1d2327;
@@ -201,6 +201,21 @@
 .admin-sidebar .admin-sidebar__menu.ant-menu-dark .ant-menu-submenu-title .ant-menu-item-icon {
   min-width: 20px;
   font-size: 20px;
+}
+
+.admin-sidebar .admin-sidebar__menu .ant-menu-title-content {
+  overflow: visible;
+  white-space: normal;
+  line-height: 1.35;
+  text-overflow: unset;
+}
+
+.admin-sidebar .admin-sidebar__menu.ant-menu-inline .ant-menu-item,
+.admin-sidebar .admin-sidebar__menu.ant-menu-inline .ant-menu-submenu-title {
+  height: auto;
+  min-height: 34px;
+  line-height: 1.35;
+  padding-block: 6px;
 }
 
 .admin-sidebar__menuLabel {

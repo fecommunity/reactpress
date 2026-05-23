@@ -144,7 +144,7 @@ export const articleHandlers = [
     const status = body.status === "publish" ? "publish" : "draft";
     const newArticle: MockArticle = {
       id: String(articles.length + 1),
-      title: String(body.title ?? "未命名文章"),
+      title: String(body.title ?? "Untitled"),
       summary: String(body.summary ?? ""),
       content: String(body.content ?? ""),
       html: String(body.html ?? ""),

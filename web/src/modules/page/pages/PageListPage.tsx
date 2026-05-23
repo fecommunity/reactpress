@@ -167,7 +167,7 @@ export function PageListPage({ search, routePath }: PageListPageProps) {
       {
         title: t("article.colDate"),
         dataIndex: "publishAt",
-        width: 160,
+        width: 200,
         render: (_: string | null, record: PageListRow) => {
           const isDraft = record.status === "draft";
           const statusLabel = isDraft ? t("article.draft") : t("article.published");

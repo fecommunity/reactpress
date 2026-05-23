@@ -84,9 +84,10 @@
 }
 
 .toolbarAction {
-  padding: 0 8px;
+  padding: 0 10px;
   font-size: 12px;
   line-height: 28px;
+  white-space: nowrap;
   color: var(--editor-accent);
   cursor: pointer;
   border-radius: 2px;
@@ -132,7 +133,7 @@
 }
 
 .tocPane {
-  width: 220px;
+  width: 260px;
   flex-shrink: 0;
   border-left: 1px solid var(--editor-border-secondary);
 }

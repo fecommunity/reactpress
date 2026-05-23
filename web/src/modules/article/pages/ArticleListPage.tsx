@@ -310,7 +310,7 @@ export function ArticleListPage({ search, routePath }: ArticleListPageProps) {
       {
         title: t("article.colTags"),
         dataIndex: "tags",
-        width: 160,
+        width: 200,
         render: (tags: ArticleListRow["tags"]) => {
           if (!tags?.length) return "—";
           return (
@@ -350,7 +350,7 @@ export function ArticleListPage({ search, routePath }: ArticleListPageProps) {
       {
         title: t("article.colDate"),
         dataIndex: "publishAt",
-        width: 160,
+        width: 200,
         render: (_: string | null, record: ArticleListRow) => {
           const isDraft = record.status === "draft";
           const statusLabel = isDraft ? t("article.draft") : t("article.published");

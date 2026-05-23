@@ -51,6 +51,7 @@
 
 .publishRow {
   display: flex;
+  flex-wrap: wrap;
   align-items: stretch;
   gap: 6px;
   padding-top: 12px;
@@ -58,10 +59,13 @@
 }
 
 .publishRow :global(.ant-btn) {
-  flex: 1;
-  min-width: 0;
-  padding-inline: 6px;
+  flex: 1 1 calc(33.333% - 4px);
+  min-width: 72px;
+  padding-inline: 8px;
   font-size: 12px;
+  white-space: normal;
+  height: auto;
+  min-height: 32px;
 }
 
 .deleteLink {
@@ -117,12 +121,22 @@
 
 .switchRow {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
-  gap: 8px;
+  gap: 12px;
   padding: 6px 0;
   font-size: 13px;
+  line-height: 1.4;
   color: var(--editor-text);
+}
+
+.switchRow > span {
+  flex: 1;
+  min-width: 0;
+}
+
+.switchRow :global(.ant-switch) {
+  flex-shrink: 0;
 }
 
 .coverPreviewWrap {

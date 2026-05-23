@@ -48,7 +48,7 @@ export function CommentListTablenav({
         <div className={styles.tablenavLeft}>
           <Select
             placeholder={t("comment.bulkActions")}
-            style={{ width: 160 }}
+            style={{ width: 200, minWidth: 200 }}
             value={bulkAction}
             onChange={(value) => onBulkActionChange(value)}
             options={bulkOptions}

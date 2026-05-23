@@ -134,7 +134,8 @@
 }
 
 .searchInput {
-  width: 180px;
+  width: min(240px, 100%);
+  min-width: 200px;
   border-top-right-radius: 0 !important;
   border-bottom-right-radius: 0 !important;
 }

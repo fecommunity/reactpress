@@ -40,7 +40,7 @@ export function PageListTablenav({
           <Select
             allowClear
             placeholder={t("page.allDates")}
-            style={{ width: 160 }}
+            style={{ width: 200, minWidth: 200 }}
             value={monthValue || undefined}
             onChange={(v) => onMonthChange(v)}
             options={monthOptions}

@@ -5,7 +5,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Toc } from "@/shared/components/Toc";
 import { useToggle } from "@/shared/hooks/useToggle";
-import { DEFAULT_MARKDOWN } from "./DefaultMarkdown";
+import { getDefaultMarkdown } from "./DefaultMarkdown";
 import styles from "./editor.module.css";
 import { MonacoEditor, type MonacoEditorHandle } from "./MonacoEditor";
 import { Preview } from "./Preview";
@@ -27,6 +27,7 @@ type MarkdownEditorProps = {
 };
 
 const CACHE_KEY = "MONACO_CONTENT_STORAGE";
+const TOC_PANE_WIDTH = 260;
 let saveTimer: ReturnType<typeof setTimeout> | undefined;
 
 function countWords(text: string) {
@@ -35,15 +36,20 @@ function countWords(text: string) {
 }
 
 export function MarkdownEditor({
-  defaultValue = DEFAULT_MARKDOWN,
+  defaultValue,
   restoreCache = false,
   onChange,
 }: MarkdownEditorProps) {
-  const { t } = useTranslation();
+  const { t, i18n: i18nInstance } = useTranslation();
+  const localeDefaultMarkdown = useMemo(
+    () => getDefaultMarkdown(i18nInstance.language),
+    [i18nInstance.language],
+  );
+  const resolvedDefaultValue = defaultValue ?? localeDefaultMarkdown;
   const editorRef = useRef<MonacoEditorHandle>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const editorContainerRef = useRef<HTMLDivElement>(null);
-  const [innerValue, setInnerValue] = useState(defaultValue);
+  const [innerValue, setInnerValue] = useState(resolvedDefaultValue);
   const [mounted, setMounted] = useState(false);
   const [hydrated, setHydrated] = useState(false);
   const [mode, setMode] = useState<"preview" | "edit">("edit");
@@ -54,12 +60,13 @@ export function MarkdownEditor({
   const [tocs, setTocs] = useState<ReturnType<typeof makeToc>>([]);
   const onChangeRef = useRef(onChange);
   onChangeRef.current = onChange;
-  const lastDefaultValueRef = useRef(defaultValue);
+  const lastDefaultValueRef = useRef(resolvedDefaultValue);
 
   const [fullWidth, halfWidth] = useMemo(() => {
+    const halfToc = TOC_PANE_WIDTH / 2;
     return [
-      tocVisible ? "calc(100% - 220px)" : "100%",
-      tocVisible ? "calc(50% - 110px)" : "50%",
+      tocVisible ? `calc(100% - ${TOC_PANE_WIDTH}px)` : "100%",
+      tocVisible ? `calc(50% - ${halfToc}px)` : "50%",
     ] as const;
   }, [tocVisible]);
 
@@ -119,10 +126,10 @@ export function MarkdownEditor({
   }, [innerValue, hydrated]);
 
   useEffect(() => {
-    if (lastDefaultValueRef.current === defaultValue) return;
-    lastDefaultValueRef.current = defaultValue;
-    setInnerValue(defaultValue);
-  }, [defaultValue]);
+    if (lastDefaultValueRef.current === resolvedDefaultValue) return;
+    lastDefaultValueRef.current = resolvedDefaultValue;
+    setInnerValue(resolvedDefaultValue);
+  }, [resolvedDefaultValue]);
 
   useEffect(() => {
     if (!mounted || hydrated) return;
@@ -130,7 +137,7 @@ export function MarkdownEditor({
     const hydrate = async () => {
       if (restoreCache) {
         const cache = localStorage.getItem(CACHE_KEY);
-        if (cache && defaultValue === DEFAULT_MARKDOWN) {
+        if (cache && resolvedDefaultValue === localeDefaultMarkdown) {
           try {
             await confirmRestoreCache();
             applyEditorValue(cache);
@@ -141,12 +148,19 @@ export function MarkdownEditor({
           }
         }
       }
-      applyEditorValue(defaultValue);
+      applyEditorValue(resolvedDefaultValue);
       setHydrated(true);
     };
 
     void hydrate();
-  }, [mounted, defaultValue, restoreCache, applyEditorValue, hydrated]);
+  }, [
+    mounted,
+    resolvedDefaultValue,
+    localeDefaultMarkdown,
+    restoreCache,
+    applyEditorValue,
+    hydrated,
+  ]);
 
   useEffect(() => () => clearTimeout(saveTimer), []);
 
@@ -269,7 +283,7 @@ export function MarkdownEditor({
         >
           <MonacoEditor
             ref={editorRef}
-            defaultValue={defaultValue}
+            defaultValue={resolvedDefaultValue}
             onChange={setInnerValue}
             onSave={saveCache}
             onMount={onMount}

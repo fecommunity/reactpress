@@ -293,7 +293,7 @@ export function Sidebar() {
         open={mobileSidebarOpen}
         placement="left"
         onClose={() => setMobileSidebarOpen(false)}
-        size={160}
+        size={200}
         styles={{
           body: {
             padding: 0,
@@ -316,7 +316,7 @@ export function Sidebar() {
       collapsible
       collapsed={collapsed}
       trigger={null}
-      width={160}
+      width={200}
       collapsedWidth={36}
       breakpoint="lg"
       onBreakpoint={(broken) => {

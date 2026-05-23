@@ -53,7 +53,7 @@ export function ArticleListTablenav({
           <Select
             allowClear
             placeholder={t("article.allDates")}
-            style={{ width: 160 }}
+            style={{ width: 200, minWidth: 200 }}
             value={monthValue || undefined}
             onChange={(v) => onMonthChange(v)}
             options={monthOptions}
@@ -61,7 +61,7 @@ export function ArticleListTablenav({
           <Select
             allowClear
             placeholder={t("article.allCategories")}
-            style={{ width: 160 }}
+            style={{ width: 200, minWidth: 200 }}
             value={categoryValue || undefined}
             onChange={(v) => onCategoryChange(v)}
             options={categoryOptions}
@@ -69,7 +69,7 @@ export function ArticleListTablenav({
           <Select
             allowClear
             placeholder={t("article.allTags")}
-            style={{ width: 160 }}
+            style={{ width: 200, minWidth: 200 }}
             value={tagValue || undefined}
             onChange={(v) => onTagChange(v)}
             options={tagOptions}

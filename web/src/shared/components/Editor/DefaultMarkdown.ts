@@ -1,17 +1,9 @@
-export const DEFAULT_MARKDOWN = `
+import i18n from "@/i18n";
 
-# Enjoy Markdown
+/** Locale-aware default editor content for new articles/pages. */
+export function getDefaultMarkdown(lng?: string) {
+  return i18n.t("editor.defaultMarkdown", { lng });
+}
 
-在此编写文章内容，支持 **粗体**、*斜体*、列表、代码块与表格等常见语法。
-
-## 快捷提示
-
-- 使用工具栏插入图片、视频、表情与代码块
-- \`Ctrl/Cmd + S\` 可将内容缓存到本地
-- 右侧栏可设置分类、标签与发布选项
-
-\`\`\`js
-console.log('Hello ReactPress');
-\`\`\`
-
-`;
+/** @deprecated Use getDefaultMarkdown() so content follows the active locale. */
+export const DEFAULT_MARKDOWN = getDefaultMarkdown();

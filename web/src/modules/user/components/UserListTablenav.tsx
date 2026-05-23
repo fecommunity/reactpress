@@ -62,7 +62,7 @@ export function UserListTablenav({
         <div className={styles.tablenavLeft}>
           <Select
             placeholder={t("users.bulkActions")}
-            style={{ width: 160 }}
+            style={{ width: 200, minWidth: 200 }}
             value={bulkAction}
             onChange={(value) => onBulkActionChange(value)}
             options={bulkOptions}

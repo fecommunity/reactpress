@@ -238,6 +238,11 @@ export function SettingsTabForm({ tab }: SettingsTabFormProps) {
         });
       }}
     >
+      {fields.length === 0 ? (
+        <p className={styles.description}>
+          {t(`settings.${tab}Desc`, { defaultValue: t("settings.tabEmptyHint") })}
+        </p>
+      ) : null}
       <table className={styles.formTable}>
         <tbody>
           {fields.map((field) => {
@@ -266,11 +271,13 @@ export function SettingsTabForm({ tab }: SettingsTabFormProps) {
         </tbody>
       </table>
 
-      <p className={styles.submitRow}>
-        <Button type="primary" loading={saveMutation.isPending} onClick={() => form.submit()}>
-          {t("settings.saveChanges")}
-        </Button>
-      </p>
+      {fields.length > 0 ? (
+        <p className={styles.submitRow}>
+          <Button type="primary" loading={saveMutation.isPending} onClick={() => form.submit()}>
+            {t("settings.saveChanges")}
+          </Button>
+        </p>
+      ) : null}
     </Form>
   );
 }

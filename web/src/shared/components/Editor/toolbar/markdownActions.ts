@@ -100,7 +100,13 @@ export function insertHorizontalRule(props: ToolbarEditorProps) {
 }
 
 export function insertTable(props: ToolbarEditorProps) {
-  insertAtCursor(props, "\n| 列1 | 列2 | 列3 |\n| --- | --- | --- |\n|  |  |  |\n|  |  |  |\n");
+  const c1 = i18n.t("editor.tableCol1");
+  const c2 = i18n.t("editor.tableCol2");
+  const c3 = i18n.t("editor.tableCol3");
+  insertAtCursor(
+    props,
+    `\n| ${c1} | ${c2} | ${c3} |\n| --- | --- | --- |\n|  |  |  |\n|  |  |  |\n`,
+  );
   props.editor?.focus();
 }
 

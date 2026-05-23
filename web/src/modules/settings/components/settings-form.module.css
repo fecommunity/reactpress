@@ -9,7 +9,8 @@
 }
 
 .formTable th {
-  width: 210px;
+  width: min(240px, 38%);
+  min-width: 200px;
   padding: 14px 10px 14px 0;
   vertical-align: top;
   text-align: left;
