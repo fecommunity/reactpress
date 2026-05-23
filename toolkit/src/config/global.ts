@@ -402,11 +402,20 @@ interface LanguageConfig {
   globalConfig: GlobalConfig;
 }
 
-// TODO: 需要为英文环境创建专门的配置
-// 当前英文配置只是复制了中文配置，需要根据实际需求调整
+const navConfigEn: NavConfig = {
+  categories: [
+    { label: 'Site', key: 'local' },
+    { label: 'Search', key: 'search' },
+    { label: 'Tools', key: 'tools' },
+    { label: 'Community', key: 'community' },
+    { label: 'Jobs', key: 'job' },
+  ],
+  subCategories: navConfig.subCategories,
+};
+
 const en: LanguageConfig = {
   globalConfig: {
-    navConfig,
+    navConfig: navConfigEn,
     urlConfig,
   },
 };

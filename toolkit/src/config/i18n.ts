@@ -27,7 +27,7 @@ function parseI18n(): I18nResult {
     return i18n;
   }, {} as I18nMessages);
   const locales = Object.keys(messages);
-  const defaultLocale = 'zh' in messages ? 'zh' : locales[0];
+  const defaultLocale = 'en' in messages ? 'en' : locales[0];
 
   return { messages, locales, defaultLocale };
 }

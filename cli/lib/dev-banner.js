@@ -5,6 +5,7 @@ const {
   getApiPrefix,
   getHealthUrl,
 } = require('./http');
+const { t } = require('./i18n');
 
 function getDevUrls(projectRoot) {
   const client = loadClientSiteUrl(projectRoot).replace(/\/$/, '');
@@ -22,17 +23,17 @@ function getDevUrls(projectRoot) {
 function printDevReadyBanner(projectRoot, { apiOnly = false } = {}) {
   const urls = getDevUrls(projectRoot);
   console.log('');
-  console.log(chalk.bold.green('  ✓ ReactPress 开发环境已就绪'));
+  console.log(chalk.bold.green(t('devBanner.ready')));
   console.log(chalk.gray('  ─────────────────────────────────────────'));
   if (!apiOnly) {
-    console.log(`  ${chalk.cyan('前台')}     ${chalk.underline(urls.site)}`);
-    console.log(`  ${chalk.cyan('管理端')}   ${chalk.underline(urls.admin)}`);
+    console.log(`  ${chalk.cyan(t('devBanner.site'))}     ${chalk.underline(urls.site)}`);
+    console.log(`  ${chalk.cyan(t('devBanner.admin'))}   ${chalk.underline(urls.admin)}`);
   }
   console.log(`  ${chalk.cyan('API')}      ${chalk.underline(urls.api)}`);
   console.log(`  ${chalk.cyan('Swagger')}  ${chalk.underline(urls.swagger)}`);
-  console.log(`  ${chalk.cyan('健康检查')} ${urls.health}`);
+  console.log(`  ${chalk.cyan(t('devBanner.health'))} ${urls.health}`);
   console.log(chalk.gray('  ─────────────────────────────────────────'));
-  console.log(chalk.gray('  诊断: reactpress doctor  ·  状态: reactpress status'));
+  console.log(chalk.gray(t('devBanner.hint')));
   console.log('');
 }
 

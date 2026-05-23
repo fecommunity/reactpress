@@ -51,26 +51,26 @@ function Hero() {
           </div>
           <p className={styles.subtitle}>
             <Translate id="home.hero.subTitle">
-              装一个包，一分钟拥有自己的 CMS。
+              One package, one minute to your own CMS.
             </Translate>
           </p>
 
           <div className={styles.actions}>
             <div className={styles.buttonContainer}>
               <Link className={styles.primaryButton} to="/docs/intro">
-                <Translate id="home.hero.intro">快速开始</Translate>
+                <Translate id="home.hero.intro">Get Started</Translate>
               </Link>
               <Link
                 className={styles.secondaryButton}
                 to="/docs/tutorial-extras/reactpress-3-0">
-                <Translate id="home.hero.whatsNew">3.0 新特性</Translate>
+                <Translate id="home.hero.whatsNew">What&apos;s New in 3.0</Translate>
               </Link>
               <a
                 href="https://blog.gaoredu.com"
                 target="_blank"
                 rel="noopener noreferrer"
                 className={styles.ghostButton}>
-                <Translate id="home.hero.try">在线演示</Translate>
+                <Translate id="home.hero.try">Live Demo</Translate>
               </a>
             </div>
 

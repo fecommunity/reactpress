@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Translate, { translate } from '@docusaurus/Translate';
 import {
   QUICK_START_COMMANDS,
@@ -86,6 +87,8 @@ export default function CliCommandBlock({
   commands = QUICK_START_COMMANDS,
   copyCommand = QUICK_START_COPY_COMMAND,
 }: Props) {
+  const { i18n } = useDocusaurusContext();
+  const locale = i18n.currentLocale === 'zh' ? 'zh' : 'en';
   const [copied, setCopied] = useState(false);
   const lines =
     commands.length > 0 ? commands : [...QUICK_START_COMMANDS];
@@ -93,6 +96,7 @@ export default function CliCommandBlock({
   const { history, activeInput, isTyping, animate: isAnimating } =
     useCliTypewriter({
       enabled: animate,
+      locale,
       commands: lines,
     });
 
@@ -136,7 +140,7 @@ export default function CliCommandBlock({
             <Translate id="home.cli.title">reactpress</Translate>
             {isReady && (
               <span className={styles.toolbarStatus}>
-                <Translate id="home.cli.running">运行中</Translate>
+                <Translate id="home.cli.running">Running</Translate>
               </span>
             )}
           </span>
@@ -145,15 +149,15 @@ export default function CliCommandBlock({
             className={clsx(styles.copyBtn, copied && styles.copyBtnDone)}
             onClick={handleCopy}
             aria-label={translate({
-              message: '复制快速开始命令',
+              message: 'Copy quick start commands',
               id: 'home.cli.copyAll.aria',
             })}>
             {copied ? <CheckIcon /> : <CopyIcon />}
             <span>
               {copied ? (
-                <Translate id="home.cli.copied">已复制</Translate>
+                <Translate id="home.cli.copied">Copied!</Translate>
               ) : (
-                <Translate id="home.cli.copyAll">复制</Translate>
+                <Translate id="home.cli.copyAll">Copy</Translate>
               )}
             </span>
           </button>
@@ -163,7 +167,7 @@ export default function CliCommandBlock({
           className={clsx(styles.body, isAnimating && styles.bodyAnimated)}
           aria-live={isAnimating ? 'polite' : undefined}
           aria-label={translate({
-            message: 'ReactPress 快速开始命令演示',
+            message: 'ReactPress quick start command demo',
             id: 'home.cli.terminal.aria',
           })}>
           <div ref={scrollRef} className={styles.terminalScroll}>
@@ -212,7 +216,7 @@ export default function CliCommandBlock({
         {showHint && (
           <p className={styles.hint}>
             <Translate id="home.cli.hint">
-              复制全部命令，粘贴到终端按序执行即可起站
+              Copy all commands and paste into your terminal to get started
             </Translate>
           </p>
         )}

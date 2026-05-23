@@ -1,3 +1,4 @@
+import { ApiMsg } from '../../common/api-messages';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -30,7 +31,7 @@ export class SMTPService {
       user: smtpUser,
       pass: smtpPass,
     }).catch(() => {
-      throw new HttpException('邮件发送失败', HttpStatus.BAD_REQUEST);
+      throw new HttpException(ApiMsg.EMAIL_SEND_FAILED, HttpStatus.BAD_REQUEST);
     });
     const newSMTP = await this.smtpRepository.create(data);
     await this.smtpRepository.save(newSMTP);

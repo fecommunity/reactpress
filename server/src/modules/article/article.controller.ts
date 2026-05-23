@@ -1,3 +1,4 @@
+import { ApiMsg } from '../../common/api-messages';
 import {
   Body,
   Controller,
@@ -65,7 +66,7 @@ export class ArticleController {
   @HttpCode(HttpStatus.OK)
   findHeadless(@Request() req, @Query() queryParams) {
     if (!this.apiKeyService.hasScope(req.apiKey, 'read')) {
-      throw new ForbiddenException('API Key 缺少 read 权限');
+      throw new ForbiddenException(ApiMsg.API_KEY_MISSING_READ);
     }
     return this.articleService.findAll({ ...queryParams, status: 'publish' });
   }

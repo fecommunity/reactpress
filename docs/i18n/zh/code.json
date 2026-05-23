@@ -1,0 +1,104 @@
+{
+  "theme.tagline": {
+    "message": "装一个包，一分钟拥有自己的 CMS"
+  },
+  "home.hero.subTitle": {
+    "message": "装一个包，一分钟拥有自己的 CMS。"
+  },
+  "home.hero.intro": {
+    "message": "快速开始"
+  },
+  "home.hero.whatsNew": {
+    "message": "3.0 新特性"
+  },
+  "home.hero.try": {
+    "message": "在线演示"
+  },
+  "home.cli.running": {
+    "message": "运行中"
+  },
+  "home.cli.copied": {
+    "message": "已复制"
+  },
+  "home.cli.copyAll": {
+    "message": "复制"
+  },
+  "home.cli.copyAll.aria": {
+    "message": "复制快速开始命令"
+  },
+  "home.cli.terminal.aria": {
+    "message": "ReactPress 快速开始命令演示"
+  },
+  "home.highlights.title": {
+    "message": "3.0 核心亮点"
+  },
+  "home.highlight.zero.title": {
+    "message": "零配置起站"
+  },
+  "home.highlight.zero.desc": {
+    "message": "两条命令自动完成安装与数据库准备，无需手工配置环境。"
+  },
+  "home.highlight.cli.title": {
+    "message": "一条命令搞定"
+  },
+  "home.highlight.cli.desc": {
+    "message": "全局安装后，初始化、开发、自检与状态查看都在命令行里完成。"
+  },
+  "home.highlight.dx.title": {
+    "message": "上手更省心"
+  },
+  "home.highlight.dx.desc": {
+    "message": "交互式引导、环境自检与运行状态提示，启动成功即可打开前台与后台。"
+  },
+  "home.call.feature": {
+    "message": "平台能力一览"
+  },
+  "home.call.subtitle": {
+    "message": "从个人博客到团队内容站，发布、管理与协作，开箱即用。"
+  },
+  "home.call.cta": {
+    "message": "阅读完整文档"
+  },
+  "home.feature.zero.title": {
+    "message": "零配置起站"
+  },
+  "home.feature.zero.desc": {
+    "message": "安装向导式流程，自动完成配置与数据库，像安装常用博客程序一样简单。"
+  },
+  "home.feature.cli.title": {
+    "message": "命令行一站式"
+  },
+  "home.feature.cli.desc": {
+    "message": "环境自检、运行状态查看，交互式菜单与启动成功后的直达链接。"
+  },
+  "home.feature.ui.title": {
+    "message": "现代界面"
+  },
+  "home.feature.ui.desc": {
+    "message": "现代化管理后台与前台，支持亮/暗主题切换。"
+  },
+  "home.feature.content.title": {
+    "message": "创作与内容"
+  },
+  "home.feature.content.desc": {
+    "message": "内置 Markdown 编辑器，文章、分类、标签、页面、评论与媒体管理一应俱全。"
+  },
+  "home.feature.headless.title": {
+    "message": "开放集成"
+  },
+  "home.feature.headless.desc": {
+    "message": "开放接口、访问密钥与事件回调，便于对接外部系统与自动化流程。"
+  },
+  "home.feature.i18n.title": {
+    "message": "国际化"
+  },
+  "home.feature.i18n.desc": {
+    "message": "中英文界面切换，在电脑、平板与手机上均可舒适使用。"
+  },
+  "home.meta.description": {
+    "message": "ReactPress 3.0：装一个包、一分钟拥有自己的 CMS。零配置安装，开箱即用的博客与内容发布平台。"
+  },
+  "home.cli.hint": {
+    "message": "复制全部命令，粘贴到终端按序执行即可起站"
+  }
+}

@@ -22,6 +22,7 @@ const { startApiWithPm2 } = require('../lib/pm2');
 const { runNodeScript, runReactpressCli } = require('../lib/spawn');
 const { getClientBin } = require('../lib/paths');
 const { runInteractiveLoop } = require('../ui/interactive');
+const { t } = require('../lib/i18n');
 
 const rootPkg = require(path.join(getMonorepoRoot(), 'package.json'));
 
@@ -29,14 +30,14 @@ const program = new Command();
 
 program
   .name('reactpress')
-  .description('ReactPress 全栈 CLI — 初始化、开发、构建、部署、发布')
+  .description(t('cli.description'))
   .version(rootPkg.version);
 
 program
   .command('init')
-  .description('初始化项目 (.reactpress/config.json + .env + Docker MySQL)')
-  .argument('[directory]', '项目目录', '.')
-  .option('-f, --force', '覆盖已有配置')
+  .description(t('cli.init.description'))
+  .argument('[directory]', t('cli.init.directory'), '.')
+  .option('-f, --force', t('cli.init.force'))
   .action(async (directory, options) => {
     const projectRoot = path.resolve(directory);
     process.env.REACTPRESS_ORIGINAL_CWD = projectRoot;
@@ -54,9 +55,9 @@ program
 
 program
   .command('dev')
-  .description('零配置开发: 环境检查 + toolkit 构建 + API + 前端')
-  .option('--api-only', '仅启动 API (watch)')
-  .option('--client-only', '仅启动前端')
+  .description(t('cli.dev.description'))
+  .option('--api-only', t('cli.dev.apiOnly'))
+  .option('--client-only', t('cli.dev.clientOnly'))
   .action(async (options) => {
     const projectRoot = ensureOriginalCwd();
     try {
@@ -75,13 +76,13 @@ program
     }
   });
 
-const serverCmd = program.command('server').description('管理 API 服务');
+const serverCmd = program.command('server').description(t('cli.server.description'));
 
 serverCmd
   .command('start')
-  .description('启动 API（等待 HTTP 就绪）')
-  .option('--pm2', '使用 PM2 启动（生产）')
-  .option('--bg', '后台启动，不等待 HTTP')
+  .description(t('cli.server.start.description'))
+  .option('--pm2', t('cli.server.start.pm2'))
+  .option('--bg', t('cli.server.start.bg'))
   .action(async (options) => {
     const projectRoot = ensureOriginalCwd();
     try {
@@ -98,26 +99,26 @@ serverCmd
     }
   });
 
-serverCmd.command('stop').description('停止 API').action(async () => {
+serverCmd.command('stop').description(t('cli.server.stop')).action(async () => {
   const code = await runLifecycleCommand('stop', ensureOriginalCwd());
   process.exit(code ?? 0);
 });
 
-serverCmd.command('restart').description('重启 API').action(async () => {
+serverCmd.command('restart').description(t('cli.server.restart')).action(async () => {
   const code = await runLifecycleCommand('restart', ensureOriginalCwd());
   process.exit(code ?? 0);
 });
 
-serverCmd.command('status').description('查看 API 状态').action(async () => {
+serverCmd.command('status').description(t('cli.server.status')).action(async () => {
   await runLifecycleCommand('status', ensureOriginalCwd());
 });
 
-const clientCmd = program.command('client').description('管理前端');
+const clientCmd = program.command('client').description(t('cli.client.description'));
 
 clientCmd
   .command('start')
-  .description('启动 Next.js 客户端')
-  .option('--pm2', '使用 PM2 启动')
+  .description(t('cli.client.start'))
+  .option('--pm2', t('cli.client.start.pm2'))
   .action(async (options) => {
     const args = options.pm2 ? ['--pm2'] : [];
     await runNodeScript(getClientBin(), args, { cwd: ensureOriginalCwd() });
@@ -125,7 +126,7 @@ clientCmd
 
 program
   .command('build')
-  .description('构建生产产物')
+  .description(t('cli.build.description'))
   .option('-t, --target <target>', 'toolkit | server | client | docs | all', 'all')
   .action(async (options) => {
     try {
@@ -136,11 +137,11 @@ program
     }
   });
 
-const dockerCmd = program.command('docker').description('Docker 开发环境 (MySQL + nginx)');
+const dockerCmd = program.command('docker').description(t('cli.docker.description'));
 
 dockerCmd
   .command('up')
-  .description('仅启动 Docker 服务并等待 MySQL')
+  .description(t('cli.docker.up'))
   .action(async () => {
     await runDockerCommand('up', ensureOriginalCwd());
   });
@@ -148,54 +149,54 @@ dockerCmd
 dockerCmd
   .command('down')
   .alias('stop')
-  .description('停止 Docker 服务')
+  .description(t('cli.docker.down'))
   .action(async () => {
     await runDockerCommand('down', ensureOriginalCwd());
   });
 
 dockerCmd
   .command('start')
-  .description('启动 Docker + 全栈开发 (API + 前端)')
+  .description(t('cli.docker.start'))
   .action(async () => {
     await runDockerCommand('start', ensureOriginalCwd());
   });
 
-dockerCmd.command('restart').description('重启 Docker 服务').action(async () => {
+dockerCmd.command('restart').description(t('cli.docker.restart')).action(async () => {
   await runDockerCommand('restart', ensureOriginalCwd());
 });
 
-dockerCmd.command('status').description('查看 Docker 容器状态').action(async () => {
+dockerCmd.command('status').description(t('cli.docker.status')).action(async () => {
   await runDockerCommand('status', ensureOriginalCwd());
 });
 
 dockerCmd
   .command('logs [service]')
-  .description('查看 Docker 日志 (db | nginx)')
+  .description(t('cli.docker.logs'))
   .action(async (service) => {
     await runDockerCommand('logs', ensureOriginalCwd(), service ? [service] : []);
   });
 
 program
   .command('status')
-  .description('查看项目、API、前端、Docker 综合状态')
+  .description(t('cli.status.description'))
   .action(async () => {
     await printUnifiedStatus(ensureOriginalCwd());
   });
 
 program
   .command('doctor')
-  .description('诊断环境：Node、Docker、端口、数据库、API 健康')
+  .description(t('cli.doctor.description'))
   .action(async () => {
     const code = await runDoctor(ensureOriginalCwd());
     process.exit(code);
   });
 
-const dbCmd = program.command('db').description('数据库运维');
+const dbCmd = program.command('db').description(t('cli.db.description'));
 
 dbCmd
   .command('backup')
-  .description('使用 mysqldump 备份当前项目数据库')
-  .option('-o, --output <file>', '输出 SQL 文件路径')
+  .description(t('cli.db.backup'))
+  .option('-o, --output <file>', t('cli.db.backup.output'))
   .action(async (options) => {
     try {
       await runDbBackup(ensureOriginalCwd(), options.output);
@@ -207,9 +208,9 @@ dbCmd
 
 program
   .command('publish')
-  .description('构建并发布 npm 包 (交互式)')
-  .option('--build', '仅构建所有包')
-  .option('--publish', '交互式发布')
+  .description(t('cli.publish.description'))
+  .option('--build', t('cli.publish.build'))
+  .option('--publish', t('cli.publish.publish'))
   .action(async (options) => {
     const prev = process.argv.slice();
     const args = [process.argv[0], process.argv[1]];
@@ -229,7 +230,7 @@ program
 
 program
   .command('start')
-  .description('生产模式: 启动 API + 前端')
+  .description(t('cli.start.description'))
   .action(async () => {
     const projectRoot = ensureOriginalCwd();
     const { spawn } = require('child_process');
@@ -245,15 +246,15 @@ program
 
 program.on('--help', () => {
   console.log('');
-  console.log(chalk.gray('示例:'));
-  console.log('  reactpress                  交互式菜单');
-  console.log('  reactpress dev              零配置全栈开发');
-  console.log('  reactpress init --force     重新初始化配置');
-  console.log('  reactpress server start     启动 API');
-  console.log('  reactpress status           综合状态');
-  console.log('  reactpress doctor           环境诊断');
-  console.log('  reactpress docker start     Docker + 全栈');
-  console.log('  reactpress publish          发布 npm 包');
+  console.log(chalk.gray(t('cli.help.examples')));
+  console.log(t('cli.help.interactive'));
+  console.log(t('cli.help.dev'));
+  console.log(t('cli.help.init'));
+  console.log(t('cli.help.server'));
+  console.log(t('cli.help.status'));
+  console.log(t('cli.help.doctor'));
+  console.log(t('cli.help.docker'));
+  console.log(t('cli.help.publish'));
   console.log('');
 });
 
