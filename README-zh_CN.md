@@ -101,7 +101,7 @@ pnpm run dev    # 自动 init + Docker MySQL + toolkit + API (3002) + 前端 (30
 | :--- | :--- |
 | `pnpm dev` | 一键本地：API + Admin（存在 `web/` 时启动 `web`，否则 `client`） |
 | `pnpm dev:api` | 仅 API（`server/` nest watch） |
-| `pnpm dev:web` | 仅管理后台 Admin SPA（`web/`） |
+| `pnpm dev:web` | 管理后台 Admin SPA（`web/`）+ API（`:3002`） |
 | `pnpm dev:client` | 仅 Next.js 访客前台（`client/`） |
 | `pnpm build` | 生产构建：toolkit → server → web（若存在）→ client |
 | `pnpm start` | 生产模式同时起 API + 前端 |

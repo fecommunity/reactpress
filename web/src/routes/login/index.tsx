@@ -56,7 +56,7 @@ function LoginPage() {
     onError: (err) => {
       const text =
         err instanceof TypeError && err.message === "Failed to fetch"
-          ? "无法连接 API：请确认已运行 pnpm dev:web（mock）或 pnpm dev:api（server），且勿将 VITE_API_BASE_URL 设为跨域绝对地址"
+          ? "无法连接 API：请确认已运行 pnpm dev:web 或 pnpm dev:api，且勿将 VITE_API_BASE_URL 设为跨域绝对地址"
           : err instanceof Error
             ? err.message
             : "Login failed";

@@ -11,7 +11,7 @@ const chalk = require('chalk');
 const { brand, divider } = require('../ui/theme');
 const { ensureOriginalCwd } = require('../lib/root');
 const { ensureProjectEnvironment, initMonorepoProject } = require('../lib/bootstrap');
-const { runDev } = require('../lib/dev');
+const { runDev, runWebDev } = require('../lib/dev');
 const { runApiDev } = require('../lib/api-dev');
 const { runLifecycleCommand } = require('../lib/lifecycle');
 const { runDockerCommand } = require('../lib/docker');
@@ -60,11 +60,16 @@ program
   .description(t('cli.dev.description'))
   .option('--api-only', t('cli.dev.apiOnly'))
   .option('--client-only', t('cli.dev.clientOnly'))
+  .option('--web-only', t('cli.dev.webOnly'))
   .action(async (options) => {
     const projectRoot = ensureOriginalCwd();
     try {
       if (options.clientOnly) {
         await runNodeScript(getClientBin(), [], { cwd: projectRoot });
+        return;
+      }
+      if (options.webOnly) {
+        await runWebDev(projectRoot);
         return;
       }
       if (options.apiOnly) {

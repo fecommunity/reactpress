@@ -59,7 +59,7 @@ function spawnApi(projectRoot) {
   });
 }
 
-async function waitForApiReady(projectRoot) {
+async function waitForApiReady(projectRoot, { readyMessageKey = 'dev.apiReady' } = {}) {
   const serverUrl = loadServerSiteUrl(projectRoot);
   const spinner = ora({
     text: t('dev.waitingApi', { url: serverUrl }),
@@ -72,11 +72,11 @@ async function waitForApiReady(projectRoot) {
     shutdown('SIGINT');
     process.exit(1);
   }
-  spinner.succeed(t('dev.apiReady'));
+  spinner.succeed(t(readyMessageKey));
 }
 
-function spawnFrontend(projectRoot) {
-  const useWeb = hasWeb(projectRoot);
+function spawnFrontend(projectRoot, { webOnly = false } = {}) {
+  const useWeb = webOnly || hasWeb(projectRoot);
   const frontendDir = useWeb ? './web' : './client';
   webChild = spawn('pnpm', ['run', '--dir', frontendDir, 'dev'], {
     stdio: 'inherit',
@@ -87,10 +87,10 @@ function spawnFrontend(projectRoot) {
   const readyUrl = useWeb ? loadWebAdminUrl(projectRoot) : loadClientSiteUrl(projectRoot);
   waitForHttp(readyUrl, CLIENT_READY_TIMEOUT_MS).then((clientReady) => {
     if (clientReady) {
-      printDevReadyBanner(projectRoot);
+      printDevReadyBanner(projectRoot, { webOnly: useWeb && (webOnly || hasWeb(projectRoot)) });
     } else {
       console.warn(
-        t('dev.clientSlow', {
+        t(useWeb ? 'dev.adminSlow' : 'dev.clientSlow', {
           seconds: CLIENT_READY_TIMEOUT_MS / 1000,
           url: readyUrl,
         })
@@ -104,18 +104,42 @@ function spawnFrontend(projectRoot) {
   });
 }
 
-async function startDevStack(projectRoot) {
-  const includeFrontend = hasWeb(projectRoot) || hasClient(projectRoot);
+async function startDevStack(projectRoot, { webOnly = false } = {}) {
+  const includeFrontend = webOnly || hasWeb(projectRoot) || hasClient(projectRoot);
 
   spawnApi(projectRoot);
-  await waitForApiReady(projectRoot);
-  printDevReadyBanner(projectRoot, { apiOnly: !includeFrontend });
+  await waitForApiReady(projectRoot, {
+    readyMessageKey: webOnly || hasWeb(projectRoot) ? 'dev.apiReadyAdmin' : 'dev.apiReady',
+  });
 
   if (!includeFrontend) {
+    printDevReadyBanner(projectRoot, { apiOnly: true });
     console.log(t('dev.standaloneHint'));
     return;
   }
-  spawnFrontend(projectRoot);
+  spawnFrontend(projectRoot, { webOnly });
+}
+
+async function runWebDev(projectRoot = ensureOriginalCwd()) {
+  if (!hasWeb(projectRoot)) {
+    console.error(t('dev.noWeb'));
+    process.exit(1);
+  }
+
+  process.on('SIGINT', () => shutdown('SIGINT'));
+  process.on('SIGTERM', () => shutdown('SIGTERM'));
+
+  try {
+    const result = await ensureProjectEnvironment(projectRoot);
+    if (result.message) console.log(`[reactpress] ${result.message}`);
+  } catch (err) {
+    console.error(t('dev.envFailed'), err.message || err);
+    console.error(formatDevFailureHint());
+    process.exit(1);
+  }
+
+  await buildToolkit(projectRoot);
+  await startDevStack(projectRoot, { webOnly: true });
 }
 
 async function runDev(projectRoot = ensureOriginalCwd()) {
@@ -137,6 +161,7 @@ async function runDev(projectRoot = ensureOriginalCwd()) {
 
 module.exports = {
   runDev,
+  runWebDev,
   buildToolkit,
   startDevStack,
   detectProjectType,

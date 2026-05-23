@@ -14,7 +14,7 @@
     "dev:client": "node ./cli/bin/reactpress.js dev --client-only",
     "dev:server": "echo '[deprecated] 请使用 pnpm dev:api 或 reactpress dev --api-only' && pnpm run dev:api",
     "dev:docs": "pnpm run --dir ./docs dev",
-    "dev:web": "pnpm run --dir ./web dev",
+    "dev:web": "node ./cli/bin/reactpress.js dev --web-only",
     "docker:dev": "node ./cli/bin/reactpress.js docker start",
     "docker:dev:start": "node ./cli/bin/reactpress.js docker start",
     "docker:dev:stop": "node ./cli/bin/reactpress.js docker down",

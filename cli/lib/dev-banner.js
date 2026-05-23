@@ -42,18 +42,21 @@ function urlLine(key, url, { underline = true } = {}) {
   return `  ${brand.accent('▸ ')}${keyCol}  ${value}`;
 }
 
-function printDevReadyBanner(projectRoot, { apiOnly = false } = {}) {
+function printDevReadyBanner(projectRoot, { apiOnly = false, webOnly = false } = {}) {
   const urls = getDevUrls(projectRoot);
   const w = Math.min(terminalWidth() - 4, 56);
+  const readyKey = apiOnly ? 'devBanner.readyApi' : webOnly ? 'devBanner.readyWeb' : 'devBanner.ready';
 
   console.log('');
   console.log(
-    `  ${icon.ok}  ${gradientText(t('devBanner.ready'), [palette.green, palette.accent], { bold: true })}  ${statusLights('online')}`
+    `  ${icon.ok}  ${gradientText(t(readyKey), [palette.green, palette.accent], { bold: true })}  ${statusLights('online')}`
   );
   console.log(`  ${brand.primary('╔' + '═'.repeat(w) + '╗')}`);
 
   if (!apiOnly) {
-    console.log(urlLine(t('devBanner.site'), urls.site));
+    if (!webOnly) {
+      console.log(urlLine(t('devBanner.site'), urls.site));
+    }
     console.log(urlLine(t('devBanner.admin'), urls.admin));
   }
   console.log(urlLine(t('devBanner.api'), urls.api));
