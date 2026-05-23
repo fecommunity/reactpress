@@ -9,6 +9,7 @@
 const path = require('path');
 const fs = require('fs');
 const { spawn, spawnSync } = require('child_process');
+const { t } = require('../../lib/i18n');
 
 // Capture the original working directory where npx was executed
 // BUT prioritize the REACTPRESS_ORIGINAL_CWD environment variable if it exists
@@ -27,7 +28,7 @@ ReactPress Server - NestJS-based backend API for ReactPress CMS
 
 Usage:
   reactpress-server [options]
-  (通常由 reactpress-cli start 调用)
+${t('server.help.invokedBy')}
 
 Options:
   --pm2        Start server with PM2 process manager
