@@ -486,8 +486,15 @@
     "passwordUpdateFailed": "密码更新失败，请检查当前密码是否正确"
   },
   "page": {
+    "title": "页面",
     "listTitle": "页面列表",
     "loadError": "无法加载页面数据，请确认 API 已启动且已登录。",
+    "statusAll": "全部",
+    "statusFilter": "按状态筛选",
+    "searchPages": "搜索页面",
+    "filter": "筛选",
+    "allDates": "全部日期",
+    "itemsCount": "{{count}} 项",
     "name": "名称",
     "path": "路径",
     "status": "状态",

@@ -2,6 +2,7 @@ import { App, Avatar, Button, Form, Input, Typography, Upload } from "antd";
 import { useMutation } from "@tanstack/react-query";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
+import formStyles from "@/shared/styles/admin-form-table.module.css";
 import styles from "@/modules/user/components/profile.module.css";
 import {
   updateProfile,
@@ -29,7 +30,7 @@ function ProfileField({ label, description, children }: ProfileFieldProps) {
       <th scope="row">{label}</th>
       <td>
         {children}
-        {description ? <p className={styles.description}>{description}</p> : null}
+        {description ? <p className={formStyles.description}>{description}</p> : null}
       </td>
     </tr>
   );
@@ -193,7 +194,7 @@ export function ProfilePage() {
             </Form.Item>
 
             <h2 className={styles.sectionTitle}>{t("profile.sectionIdentity")}</h2>
-            <table className={styles.formTable}>
+            <table className={formStyles.formTable}>
               <tbody>
                 <ProfileField label={t("profile.username")}>
                   <Form.Item
@@ -201,12 +202,12 @@ export function ProfilePage() {
                     noStyle
                     rules={[{ required: true, message: t("users.usernameRequired") }]}
                   >
-                    <Input className={styles.fieldInput} />
+                    <Input className={formStyles.fieldInput} />
                   </Form.Item>
                 </ProfileField>
                 <ProfileField label={t("profile.email")}>
                   <Form.Item name="email" noStyle>
-                    <Input className={styles.fieldInput} type="email" />
+                    <Input className={formStyles.fieldInput} type="email" />
                   </Form.Item>
                 </ProfileField>
                 <ProfileField label={t("profile.roles")}>
@@ -216,45 +217,51 @@ export function ProfilePage() {
             </table>
 
             <h2 className={styles.sectionTitle}>{t("profile.sectionAbout")}</h2>
-            <table className={styles.formTable}>
+            <table className={formStyles.formTable}>
               <tbody>
                 <ProfileField
                   label={t("profile.avatarLabel")}
                   description={t("profile.avatarHint")}
                 >
-                  <Avatar
-                    shape="square"
-                    size={96}
-                    src={displayAvatar}
-                    className={styles.avatarPreview}
-                  >
-                    {displayName?.[0]?.toUpperCase()}
-                  </Avatar>
-                  <div className={styles.avatarActions}>
-                    <Upload
-                      accept="image/*"
-                      showUploadList={false}
-                      beforeUpload={(file) => {
-                        uploadAvatarMutation.mutate(file);
-                        return false;
-                      }}
+                  <div className={styles.avatarCell}>
+                    <Avatar
+                      shape="square"
+                      size={96}
+                      src={displayAvatar}
+                      className={styles.avatarPreview}
                     >
-                      <Button loading={uploadAvatarMutation.isPending}>
-                        {t("profile.changeAvatar")}
-                      </Button>
-                    </Upload>
-                    {displayAvatar ? (
-                      <Button type="link" className={styles.linkButton} onClick={removeAvatar}>
-                        {t("profile.removeAvatar")}
-                      </Button>
-                    ) : null}
+                      {displayName?.[0]?.toUpperCase()}
+                    </Avatar>
+                    <div className={styles.avatarActions}>
+                      <Upload
+                        accept="image/*"
+                        showUploadList={false}
+                        beforeUpload={(file) => {
+                          uploadAvatarMutation.mutate(file);
+                          return false;
+                        }}
+                      >
+                        <Button loading={uploadAvatarMutation.isPending}>
+                          {t("profile.changeAvatar")}
+                        </Button>
+                      </Upload>
+                      {displayAvatar ? (
+                        <Button
+                          type="link"
+                          className={formStyles.linkButton}
+                          onClick={removeAvatar}
+                        >
+                          {t("profile.removeAvatar")}
+                        </Button>
+                      ) : null}
+                    </div>
                   </div>
                 </ProfileField>
               </tbody>
             </table>
 
             <h2 className={styles.sectionTitle}>{t("profile.sectionAccount")}</h2>
-            <table className={styles.formTable}>
+            <table className={formStyles.formTable}>
               <tbody>
                 {!showPasswordFields ? (
                   <ProfileField label={t("profile.newPassword")}>
@@ -269,7 +276,7 @@ export function ProfilePage() {
                         rules={[{ required: true, message: t("profile.currentPasswordRequired") }]}
                       >
                         <Input.Password
-                          className={styles.fieldInput}
+                          className={formStyles.fieldInput}
                           autoComplete="current-password"
                         />
                       </Form.Item>
@@ -283,39 +290,47 @@ export function ProfilePage() {
                           { min: 6, message: t("profile.newPasswordMin") },
                         ]}
                       >
-                        <Input.Password className={styles.fieldInput} autoComplete="new-password" />
+                        <Input.Password
+                          className={formStyles.fieldInput}
+                          autoComplete="new-password"
+                        />
                       </Form.Item>
                     </ProfileField>
                     <ProfileField
                       label={t("profile.confirmPassword")}
                       description={t("profile.passwordHint")}
                     >
-                      <Form.Item
-                        name="confirmPassword"
-                        noStyle
-                        dependencies={["newPassword"]}
-                        rules={[
-                          { required: true, message: t("profile.confirmPasswordRequired") },
-                          ({ getFieldValue }) => ({
-                            validator(_, value) {
-                              if (!value || getFieldValue("newPassword") === value) {
-                                return Promise.resolve();
-                              }
-                              return Promise.reject(new Error(t("profile.passwordMismatch")));
-                            },
-                          }),
-                        ]}
-                      >
-                        <Input.Password className={styles.fieldInput} autoComplete="new-password" />
-                      </Form.Item>
-                      <div className={styles.inlineAction}>
-                        <Button
-                          type="link"
-                          className={styles.linkButton}
-                          onClick={cancelPasswordFields}
+                      <div className={styles.passwordFieldStack}>
+                        <Form.Item
+                          name="confirmPassword"
+                          noStyle
+                          dependencies={["newPassword"]}
+                          rules={[
+                            { required: true, message: t("profile.confirmPasswordRequired") },
+                            ({ getFieldValue }) => ({
+                              validator(_, value) {
+                                if (!value || getFieldValue("newPassword") === value) {
+                                  return Promise.resolve();
+                                }
+                                return Promise.reject(new Error(t("profile.passwordMismatch")));
+                              },
+                            }),
+                          ]}
                         >
-                          {t("profile.cancelPassword")}
-                        </Button>
+                          <Input.Password
+                            className={formStyles.fieldInput}
+                            autoComplete="new-password"
+                          />
+                        </Form.Item>
+                        <div className={styles.inlineAction}>
+                          <Button
+                            type="link"
+                            className={formStyles.linkButton}
+                            onClick={cancelPasswordFields}
+                          >
+                            {t("profile.cancelPassword")}
+                          </Button>
+                        </div>
                       </div>
                     </ProfileField>
                   </>
@@ -323,7 +338,7 @@ export function ProfilePage() {
               </tbody>
             </table>
 
-            <p className={styles.submitRow}>
+            <p className={formStyles.submitRow}>
               <Button type="primary" loading={saveMutation.isPending} onClick={() => form.submit()}>
                 {t("profile.updateProfile")}
               </Button>

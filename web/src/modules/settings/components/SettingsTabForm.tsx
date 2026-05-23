@@ -2,6 +2,7 @@ import { App, Button, Form, Input, Spin } from "antd";
 import { useEffect, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
+import formStyles from "@/shared/styles/admin-form-table.module.css";
 import styles from "@/modules/settings/components/settings-form.module.css";
 import { ModulePlaceholder } from "@/shared/components/ModulePlaceholder";
 
@@ -103,7 +104,7 @@ function SettingsField({ label, description, children }: SettingsFieldProps) {
       <th scope="row">{label}</th>
       <td>
         {children}
-        {description ? <p className={styles.description}>{description}</p> : null}
+        {description ? <p className={formStyles.description}>{description}</p> : null}
       </td>
     </tr>
   );
@@ -121,7 +122,7 @@ function SiteFaviconField({ siteTitle, value, onChange }: SiteFaviconFieldProps)
   const displayTitle = siteTitle.trim() || t("settings.fields.systemTitle");
 
   return (
-    <div>
+    <div className={styles.faviconCell}>
       <div className={styles.faviconBlock}>
         <div className={styles.faviconPreview}>
           <div className={styles.faviconTabMock} aria-hidden>
@@ -139,19 +140,21 @@ function SiteFaviconField({ siteTitle, value, onChange }: SiteFaviconFieldProps)
           )}
         </div>
       </div>
-      <Input
-        className={styles.fieldInput}
-        value={value}
-        placeholder="https://"
-        onChange={(e) => onChange?.(e.target.value)}
-      />
-      {faviconUrl ? (
-        <div className={styles.faviconActions}>
-          <Button type="link" className={styles.linkButtonDanger} onClick={() => onChange?.("")}>
-            {t("settings.removeFavicon")}
-          </Button>
-        </div>
-      ) : null}
+      <div className={styles.faviconControls}>
+        <Input
+          className={formStyles.fieldInput}
+          value={value}
+          placeholder="https://"
+          onChange={(e) => onChange?.(e.target.value)}
+        />
+        {faviconUrl ? (
+          <div className={styles.faviconActions}>
+            <Button type="link" className={styles.linkButtonDanger} onClick={() => onChange?.("")}>
+              {t("settings.removeFavicon")}
+            </Button>
+          </div>
+        ) : null}
+      </div>
     </div>
   );
 }
@@ -209,9 +212,9 @@ export function SettingsTabForm({ tab }: SettingsTabFormProps) {
     return <Spin />;
   }
 
-  const inputClass = styles.fieldInput;
-  const textareaClass = `${styles.fieldInput} ${styles.fieldTextarea}`;
-  const jsonClass = `${styles.fieldInputWide} ${styles.fieldJson}`;
+  const inputClass = formStyles.fieldInput;
+  const textareaClass = formStyles.fieldInputWide;
+  const jsonClass = `${formStyles.fieldInputWide} ${styles.fieldJson}`;
 
   return (
     <Form
@@ -239,11 +242,11 @@ export function SettingsTabForm({ tab }: SettingsTabFormProps) {
       }}
     >
       {fields.length === 0 ? (
-        <p className={styles.description}>
+        <p className={formStyles.description}>
           {t(`settings.${tab}Desc`, { defaultValue: t("settings.tabEmptyHint") })}
         </p>
       ) : null}
-      <table className={styles.formTable}>
+      <table className={formStyles.formTable}>
         <tbody>
           {fields.map((field) => {
             const hint = field.hintKey ? t(field.hintKey) : undefined;
@@ -272,7 +275,7 @@ export function SettingsTabForm({ tab }: SettingsTabFormProps) {
       </table>
 
       {fields.length > 0 ? (
-        <p className={styles.submitRow}>
+        <p className={formStyles.submitRow}>
           <Button type="primary" loading={saveMutation.isPending} onClick={() => form.submit()}>
             {t("settings.saveChanges")}
           </Button>

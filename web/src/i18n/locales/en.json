@@ -486,8 +486,15 @@
     "passwordUpdateFailed": "Failed to update password — check your current password"
   },
   "page": {
+    "title": "Pages",
     "listTitle": "Page list",
     "loadError": "Failed to load pages. Ensure the API is running and you are signed in.",
+    "statusAll": "All",
+    "statusFilter": "Filter by status",
+    "searchPages": "Search pages",
+    "filter": "Filter",
+    "allDates": "All dates",
+    "itemsCount": "{{count}} items",
     "name": "Name",
     "path": "Path",
     "status": "Status",

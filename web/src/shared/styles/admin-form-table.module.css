@@ -1,0 +1,95 @@
+/* WordPress-style admin form table (profile, settings, etc.) */
+
+.formTable {
+  width: 100%;
+  max-width: 960px;
+  border-collapse: collapse;
+  margin-bottom: 8px;
+  table-layout: fixed;
+}
+
+.formTable th {
+  width: 200px;
+  padding: 16px 24px 16px 0;
+  vertical-align: top;
+  text-align: right;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--admin-form-text, #1d2327);
+}
+
+.formTable td {
+  padding: 12px 0 16px;
+  vertical-align: top;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--admin-form-text, #1d2327);
+}
+
+.description {
+  margin: 8px 0 0;
+  max-width: 520px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--admin-form-muted, #646970);
+}
+
+.fieldInput {
+  width: 100%;
+  max-width: 400px;
+}
+
+.fieldInputWide {
+  width: 100%;
+  max-width: 520px;
+}
+
+.fieldInput:global(.ant-input-password) {
+  max-width: 400px;
+}
+
+.submitRow {
+  margin: 24px 0 0;
+  padding-top: 20px;
+  border-top: 1px solid var(--admin-form-border, #c3c4c7);
+}
+
+.linkButton:global(.ant-btn-link) {
+  padding: 0;
+  height: auto;
+  font-size: 13px;
+}
+
+@media (max-width: 782px) {
+  .formTable,
+  .formTable tbody,
+  .formTable tr,
+  .formTable th,
+  .formTable td {
+    display: block;
+    width: 100%;
+  }
+
+  .formTable th {
+    padding: 0 0 6px;
+    text-align: left;
+  }
+
+  .formTable td {
+    padding: 0 0 20px;
+  }
+}
+
+:root[data-theme="dark"] .formTable th,
+:root[data-theme="dark"] .formTable td {
+  --admin-form-text: rgba(255, 255, 255, 0.88);
+}
+
+:root[data-theme="dark"] .description {
+  --admin-form-muted: rgba(255, 255, 255, 0.45);
+}
+
+:root[data-theme="dark"] .submitRow {
+  --admin-form-border: #303030;
+}

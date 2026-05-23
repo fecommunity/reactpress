@@ -2,68 +2,9 @@
   width: 100%;
 }
 
-.formTable {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 8px;
-}
-
-.formTable th {
-  width: min(240px, 38%);
-  min-width: 200px;
-  padding: 14px 10px 14px 0;
-  vertical-align: top;
-  text-align: left;
-  font-weight: 600;
-  font-size: 14px;
-  line-height: 1.4;
-  color: var(--settings-text, #1d2327);
-}
-
-.formTable td {
-  padding: 12px 0;
-  vertical-align: top;
-  font-size: 14px;
-  line-height: 1.5;
-  color: var(--settings-text, #1d2327);
-}
-
-.description {
-  margin: 6px 0 0;
-  font-size: 13px;
-  line-height: 1.5;
-  color: var(--settings-muted, #646970);
-}
-
-.fieldInput {
-  width: 100%;
-  max-width: 520px;
-}
-
-.fieldInputWide {
-  width: 100%;
-  max-width: 640px;
-}
-
-.fieldTextarea:global(.ant-input) {
-  max-width: 640px;
-}
-
 .fieldJson:global(.ant-input) {
-  max-width: 100%;
+  max-width: 520px;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-}
-
-.submitRow {
-  margin: 24px 0 0;
-  padding-top: 20px;
-  border-top: 1px solid var(--settings-border, #c3c4c7);
-}
-
-.linkButton:global(.ant-btn-link) {
-  padding: 0;
-  height: auto;
-  font-size: 13px;
 }
 
 .linkButtonDanger:global(.ant-btn-link) {
@@ -77,11 +18,16 @@
   color: #8a2424 !important;
 }
 
-.faviconBlock {
+.faviconCell {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
-  gap: 16px 24px;
+  gap: 16px 20px;
+  max-width: 520px;
+}
+
+.faviconBlock {
+  flex-shrink: 0;
 }
 
 .faviconPreview {
@@ -140,30 +86,26 @@
   padding: 4px;
 }
 
+.faviconControls {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  min-width: 200px;
+  padding-top: 4px;
+}
+
 .faviconActions {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 8px 12px;
-  margin-top: 8px;
 }
 
 .apiKeyList {
   margin: 0;
   padding-left: 20px;
-}
-
-:root[data-theme="dark"] .formTable th,
-:root[data-theme="dark"] .formTable td {
-  --settings-text: rgba(255, 255, 255, 0.88);
-}
-
-:root[data-theme="dark"] .description {
-  --settings-muted: rgba(255, 255, 255, 0.45);
-}
-
-:root[data-theme="dark"] .submitRow {
-  --settings-border: #303030;
 }
 
 :root[data-theme="dark"] .faviconTabMock,
@@ -174,4 +116,8 @@
 
 :root[data-theme="dark"] .faviconPlaceholder {
   --settings-surface: #1f1f1f;
+}
+
+:root[data-theme="dark"] .faviconTabMock {
+  --settings-text: rgba(255, 255, 255, 0.88);
 }

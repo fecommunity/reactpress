@@ -14,6 +14,7 @@ import type { LoginRequest } from "@/api/schemas";
 import { APP_BRAND_NAME, APP_FAVICON_SRC } from "@/utils/constants";
 import { Theme } from "@/components/Icon";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { AppFooter } from "@/components/Layout/AppFooter";
 import { Aurora } from "@/components/Aurora";
 import "./index.css";
@@ -29,6 +30,7 @@ export const Route = createFileRoute("/login/")({
 });
 
 function LoginPage() {
+  useDocumentTitle("login.title");
   const navigate = useNavigate();
   const { message } = App.useApp();
   const { t } = useTranslation();
