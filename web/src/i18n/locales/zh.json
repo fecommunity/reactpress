@@ -488,6 +488,7 @@
     "namePlaceholder": "页面名称",
     "pathPlaceholder": "page-path",
     "contentPlaceholder": "Markdown 内容…",
+    "contentRequired": "请输入页面内容",
     "editTitle": "编辑页面",
     "savedSuccess": "页面已保存",
     "deletedSuccess": "页面已删除",

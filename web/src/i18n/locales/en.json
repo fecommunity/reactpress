@@ -488,6 +488,7 @@
     "namePlaceholder": "Page name",
     "pathPlaceholder": "page-path",
     "contentPlaceholder": "Markdown content…",
+    "contentRequired": "Please enter page content",
     "editTitle": "Edit page",
     "savedSuccess": "Page saved",
     "deletedSuccess": "Page deleted",

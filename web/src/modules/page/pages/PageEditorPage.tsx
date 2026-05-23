@@ -2,17 +2,21 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { App, Button, Input, Layout, Space, Spin, Typography } from "antd";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { ChevronLeft } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { getToolkitClient } from "@/shared/client";
 import { httpClient } from "@/utils/http";
 import { ModulePlaceholder } from "@/shared/components/ModulePlaceholder";
+import { MarkdownEditor } from "@/shared/components/Editor";
 import type { PageListSearch } from "@/modules/page/pages/PageListPage";
+import styles from "@/modules/page/components/page-editor.module.css";
 
 type PageDraft = {
   name: string;
   path: string;
   content: string;
+  html: string;
+  toc: string;
   order: number;
   status: "draft" | "publish";
 };
@@ -28,6 +32,8 @@ const emptyDraft = (): PageDraft => ({
   name: "",
   path: "",
   content: "",
+  html: "",
+  toc: "[]",
   order: 0,
   status: "draft",
 });
@@ -43,6 +49,9 @@ export function PageEditorPage({ pageId }: PageEditorPageProps) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [draft, setDraft] = useState<PageDraft>(emptyDraft);
+  const draftRef = useRef(draft);
+  draftRef.current = draft;
+  const [editorReady, setEditorReady] = useState(isCreate);
   const [savedId, setSavedId] = useState<string | undefined>(pageId);
   const [dirty, setDirty] = useState(false);
 
@@ -59,22 +68,48 @@ export function PageEditorPage({ pageId }: PageEditorPageProps) {
     enabled: Boolean(pageId),
   });
 
-  useEffect(() => {
-    if (!loaded) return;
+  useLayoutEffect(() => {
+    if (isCreate) {
+      setEditorReady(true);
+      return;
+    }
+    if (!pageId || !loaded) {
+      setEditorReady(false);
+      return;
+    }
+    if (String(loaded.id ?? "") !== String(pageId)) {
+      setEditorReady(false);
+      return;
+    }
     setDraft({
       name: String(loaded.name ?? ""),
       path: String(loaded.path ?? ""),
       content: String(loaded.content ?? ""),
+      html: String(loaded.html ?? ""),
+      toc: String(loaded.toc ?? "[]"),
       order: Number(loaded.order ?? 0),
       status: loaded.status === "publish" ? "publish" : "draft",
     });
+    setEditorReady(true);
     setDirty(false);
-  }, [loaded]);
+  }, [isCreate, pageId, loaded]);
 
   const patch = useCallback(<K extends keyof PageDraft>(key: K, value: PageDraft[K]) => {
     setDraft((prev) => ({ ...prev, [key]: value }));
     setDirty(true);
   }, []);
+
+  const handleEditorChange = useCallback(
+    ({ value, html, toc }: { value: string; html: string; toc: string }) => {
+      const prev = draftRef.current;
+      if (prev.content === value && prev.html === html && prev.toc === toc) {
+        return;
+      }
+      setDirty(true);
+      setDraft({ ...prev, content: value, html, toc });
+    },
+    [],
+  );
 
   const validate = useCallback(() => {
     if (!draft.name.trim()) {
@@ -85,8 +120,12 @@ export function PageEditorPage({ pageId }: PageEditorPageProps) {
       message.warning(t("page.pathRequired"));
       return false;
     }
+    if (!draft.content.trim()) {
+      message.warning(t("page.contentRequired"));
+      return false;
+    }
     return true;
-  }, [draft.name, draft.path, message, t]);
+  }, [draft.content, draft.name, draft.path, message, t]);
 
   const saveMutation = useMutation({
     mutationFn: async (status: "draft" | "publish") => {
@@ -94,6 +133,8 @@ export function PageEditorPage({ pageId }: PageEditorPageProps) {
         name: draft.name.trim(),
         path: draft.path.trim(),
         content: draft.content,
+        html: draft.html,
+        toc: draft.toc,
         order: draft.order,
         status,
       };
@@ -194,13 +235,20 @@ export function PageEditorPage({ pageId }: PageEditorPageProps) {
             value={draft.order}
             onChange={(e) => patch("order", Number(e.target.value) || 0)}
           />
-          <Input.TextArea
-            value={draft.content}
-            onChange={(e) => patch("content", e.target.value)}
-            placeholder={t("page.contentPlaceholder")}
-            autoSize={{ minRows: 16, maxRows: 32 }}
-            style={{ fontFamily: "ui-monospace, monospace" }}
-          />
+          <div className={styles.editorArea}>
+            {editorReady ? (
+              <MarkdownEditor
+                key={pageId ?? "create"}
+                defaultValue={draft.content}
+                restoreCache={isCreate}
+                onChange={handleEditorChange}
+              />
+            ) : (
+              <div className={styles.editorLoading}>
+                <Spin />
+              </div>
+            )}
+          </div>
           {dirty ? (
             <Typography.Text type="secondary">{t("page.unsavedHint")}</Typography.Text>
           ) : null}
