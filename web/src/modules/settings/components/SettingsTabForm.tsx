@@ -98,13 +98,26 @@ type SettingsFieldProps = {
   children?: ReactNode;
 };
 
-function SettingsField({ label, description, children }: SettingsFieldProps) {
+type SettingsFieldRowProps = SettingsFieldProps & {
+  rowClassName?: string;
+  hideDescription?: boolean;
+};
+
+function SettingsField({
+  label,
+  description,
+  children,
+  rowClassName,
+  hideDescription,
+}: SettingsFieldRowProps) {
   return (
-    <tr>
+    <tr className={rowClassName}>
       <th scope="row">{label}</th>
       <td>
         {children}
-        {description ? <p className={formStyles.description}>{description}</p> : null}
+        {!hideDescription && description ? (
+          <p className={formStyles.description}>{description}</p>
+        ) : null}
       </td>
     </tr>
   );
@@ -113,25 +126,26 @@ function SettingsField({ label, description, children }: SettingsFieldProps) {
 type SiteFaviconFieldProps = {
   siteTitle: string;
   value?: string;
+  description?: string;
   onChange?: (value: string) => void;
 };
 
-function SiteFaviconField({ siteTitle, value, onChange }: SiteFaviconFieldProps) {
+function SiteFaviconField({ siteTitle, value, description, onChange }: SiteFaviconFieldProps) {
   const { t } = useTranslation();
   const faviconUrl = (value ?? "").trim();
   const displayTitle = siteTitle.trim() || t("settings.fields.systemTitle");
 
   return (
-    <div className={styles.faviconCell}>
-      <div className={styles.faviconBlock}>
-        <div className={styles.faviconPreview}>
+    <div className={styles.faviconField}>
+      <div className={styles.faviconMain}>
+        <div className={styles.faviconPreviewCol}>
           <div className={styles.faviconTabMock} aria-hidden>
             {faviconUrl ? (
               <img src={faviconUrl} alt="" />
             ) : (
-              <span style={{ width: 16, height: 16, background: "#dcdcde", borderRadius: 2 }} />
+              <span className={styles.faviconTabMockFallback} aria-hidden />
             )}
-            <span>{displayTitle}</span>
+            <span className={styles.faviconTabMockTitle}>{displayTitle}</span>
           </div>
           {faviconUrl ? (
             <img className={styles.faviconLarge} src={faviconUrl} alt="" />
@@ -139,22 +153,23 @@ function SiteFaviconField({ siteTitle, value, onChange }: SiteFaviconFieldProps)
             <div className={styles.faviconPlaceholder}>{t("settings.faviconPlaceholder")}</div>
           )}
         </div>
-      </div>
-      <div className={styles.faviconControls}>
-        <Input
-          className={formStyles.fieldInput}
-          value={value}
-          placeholder="https://"
-          onChange={(e) => onChange?.(e.target.value)}
-        />
-        {faviconUrl ? (
-          <div className={styles.faviconActions}>
+        <div className={styles.faviconControlCol}>
+          <Input
+            className={styles.faviconInput}
+            value={value}
+            placeholder="https://"
+            onChange={(e) => onChange?.(e.target.value)}
+          />
+          {faviconUrl ? (
             <Button type="link" className={styles.linkButtonDanger} onClick={() => onChange?.("")}>
               {t("settings.removeFavicon")}
             </Button>
-          </div>
-        ) : null}
+          ) : null}
+        </div>
       </div>
+      {description ? (
+        <p className={`${formStyles.description} ${styles.faviconHint}`}>{description}</p>
+      ) : null}
     </div>
   );
 }
@@ -255,9 +270,14 @@ export function SettingsTabForm({ tab }: SettingsTabFormProps) {
 
             if (field.name === "systemFavicon" && tab === "general") {
               return (
-                <SettingsField key={field.name} label={t(field.labelKey)} description={hint}>
+                <SettingsField
+                  key={field.name}
+                  label={t(field.labelKey)}
+                  rowClassName={styles.faviconRow}
+                  hideDescription
+                >
                   <Form.Item name={field.name} noStyle>
-                    <SiteFaviconField siteTitle={String(siteTitle)} />
+                    <SiteFaviconField siteTitle={String(siteTitle)} description={hint} />
                   </Form.Item>
                 </SettingsField>
               );

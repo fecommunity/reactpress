@@ -18,30 +18,37 @@
   color: #8a2424 !important;
 }
 
-.faviconCell {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  gap: 16px 20px;
+/* Site icon row: label vertically centered against preview + controls block */
+.faviconRow th {
+  vertical-align: middle;
+}
+
+.faviconField {
+  width: 100%;
   max-width: 520px;
 }
 
-.faviconBlock {
-  flex-shrink: 0;
+.faviconMain {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
 }
 
-.faviconPreview {
+.faviconPreviewCol {
   display: flex;
+  flex-shrink: 0;
   flex-direction: column;
+  align-items: flex-start;
   gap: 8px;
+  width: 220px;
 }
 
 .faviconTabMock {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 6px;
-  max-width: 220px;
-  padding: 6px 10px;
+  width: 100%;
+  padding: 10px 10px;
   border: 1px solid var(--settings-border, #c3c4c7);
   border-radius: 6px 6px 0 0;
   background: #fff;
@@ -51,17 +58,25 @@
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
 }
 
-.faviconTabMock img {
+.faviconTabMock img,
+.faviconTabMockFallback {
   width: 16px;
   height: 16px;
-  object-fit: contain;
   flex-shrink: 0;
+  object-fit: contain;
 }
 
-.faviconTabMock span {
+.faviconTabMockFallback {
+  display: block;
+  background: #dcdcde;
+  border-radius: 2px;
+}
+
+.faviconTabMockTitle {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  min-width: 0;
 }
 
 .faviconLarge {
@@ -86,26 +101,47 @@
   padding: 4px;
 }
 
-.faviconControls {
+.faviconControlCol {
   display: flex;
   flex: 1;
   flex-direction: column;
   align-items: flex-start;
-  gap: 8px;
-  min-width: 200px;
-  padding-top: 4px;
+  gap: 6px;
+  min-width: 0;
+  padding-top: 2px;
 }
 
-.faviconActions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px 12px;
+.faviconInput:global(.ant-input) {
+  width: 100%;
+  max-width: 400px;
+}
+
+.faviconHint {
+  margin-top: 12px;
 }
 
 .apiKeyList {
   margin: 0;
   padding-left: 20px;
+}
+
+@media (max-width: 782px) {
+  .faviconRow th {
+    vertical-align: top;
+  }
+
+  .faviconMain {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .faviconPreviewCol {
+    width: auto;
+  }
+
+  .faviconInput:global(.ant-input) {
+    max-width: 100%;
+  }
 }
 
 :root[data-theme="dark"] .faviconTabMock,
@@ -120,4 +156,8 @@
 
 :root[data-theme="dark"] .faviconTabMock {
   --settings-text: rgba(255, 255, 255, 0.88);
+}
+
+:root[data-theme="dark"] .faviconTabMockFallback {
+  background: #434343;
 }
