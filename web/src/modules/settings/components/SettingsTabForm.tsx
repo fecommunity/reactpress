@@ -1,95 +1,177 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { App, Button, Form, Input, Space, Spin, Typography } from "antd";
-import { useEffect } from "react";
+import { App, Button, Form, Input, Spin } from "antd";
+import { useEffect, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
+import styles from "@/modules/settings/components/settings-form.module.css";
 import { ModulePlaceholder } from "@/shared/components/ModulePlaceholder";
-import { httpClient } from "@/utils/http";
 
 type FieldDef = {
   name: string;
   labelKey: string;
+  hintKey?: string;
   type?: "text" | "password" | "textarea" | "json";
+  wide?: boolean;
 };
 
 const TAB_FIELDS: Record<string, FieldDef[]> = {
   general: [
     { name: "systemTitle", labelKey: "settings.fields.systemTitle" },
-    { name: "systemSubTitle", labelKey: "settings.fields.systemSubTitle" },
-    { name: "systemUrl", labelKey: "settings.fields.systemUrl" },
-    { name: "adminSystemUrl", labelKey: "settings.fields.adminSystemUrl" },
-    { name: "systemLogo", labelKey: "settings.fields.systemLogo" },
-    { name: "systemFavicon", labelKey: "settings.fields.systemFavicon" },
-    { name: "systemBg", labelKey: "settings.fields.systemBg" },
-    { name: "systemNoticeInfo", labelKey: "settings.fields.systemNoticeInfo", type: "textarea" },
-    { name: "systemFooterInfo", labelKey: "settings.fields.systemFooterInfo", type: "textarea" },
+    {
+      name: "systemSubTitle",
+      labelKey: "settings.fields.systemSubTitle",
+      hintKey: "settings.hints.systemSubTitle",
+    },
+    {
+      name: "systemFavicon",
+      labelKey: "settings.fields.systemFavicon",
+      hintKey: "settings.hints.systemFavicon",
+    },
+    {
+      name: "systemUrl",
+      labelKey: "settings.fields.systemUrl",
+      hintKey: "settings.hints.systemUrl",
+    },
+    {
+      name: "adminSystemUrl",
+      labelKey: "settings.fields.adminSystemUrl",
+      hintKey: "settings.hints.adminSystemUrl",
+    },
+    {
+      name: "systemLogo",
+      labelKey: "settings.fields.systemLogo",
+      hintKey: "settings.hints.systemLogo",
+    },
+    {
+      name: "systemBg",
+      labelKey: "settings.fields.systemBg",
+      hintKey: "settings.hints.systemBg",
+    },
+    {
+      name: "systemNoticeInfo",
+      labelKey: "settings.fields.systemNoticeInfo",
+      hintKey: "settings.hints.systemNoticeInfo",
+      type: "textarea",
+      wide: true,
+    },
+    {
+      name: "systemFooterInfo",
+      labelKey: "settings.fields.systemFooterInfo",
+      hintKey: "settings.hints.systemFooterInfo",
+      type: "textarea",
+      wide: true,
+    },
   ],
-  reading: [{ name: "globalSetting", labelKey: "settings.fields.globalSetting", type: "json" }],
-  discussion: [{ name: "globalSetting", labelKey: "settings.fields.globalSetting", type: "json" }],
   email: [
     { name: "smtpHost", labelKey: "settings.fields.smtpHost" },
-    { name: "smtpPort", labelKey: "settings.fields.smtpPort" },
+    {
+      name: "smtpPort",
+      labelKey: "settings.fields.smtpPort",
+      hintKey: "settings.hints.smtpPort",
+    },
     { name: "smtpUser", labelKey: "settings.fields.smtpUser" },
-    { name: "smtpPass", labelKey: "settings.fields.smtpPass", type: "password" },
+    {
+      name: "smtpPass",
+      labelKey: "settings.fields.smtpPass",
+      type: "password",
+      hintKey: "settings.hints.smtpPass",
+    },
     { name: "smtpFromUser", labelKey: "settings.fields.smtpFromUser" },
   ],
-  storage: [{ name: "oss", labelKey: "settings.fields.oss", type: "json" }],
   seo: [
     { name: "seoKeyword", labelKey: "settings.fields.seoKeyword" },
-    { name: "seoDesc", labelKey: "settings.fields.seoDesc", type: "textarea" },
+    {
+      name: "seoDesc",
+      labelKey: "settings.fields.seoDesc",
+      hintKey: "settings.hints.seoDesc",
+      type: "textarea",
+      wide: true,
+    },
     { name: "baiduAnalyticsId", labelKey: "settings.fields.baiduAnalyticsId" },
     { name: "googleAnalyticsId", labelKey: "settings.fields.googleAnalyticsId" },
   ],
 };
 
-type ApiKeyRow = { id: string; name: string; scopes?: string };
+type SettingsFieldProps = {
+  label: string;
+  description?: string;
+  children?: ReactNode;
+};
 
-function ApiKeysPanel() {
+function SettingsField({ label, description, children }: SettingsFieldProps) {
+  return (
+    <tr>
+      <th scope="row">{label}</th>
+      <td>
+        {children}
+        {description ? <p className={styles.description}>{description}</p> : null}
+      </td>
+    </tr>
+  );
+}
+
+type SiteFaviconFieldProps = {
+  siteTitle: string;
+  value?: string;
+  onChange?: (value: string) => void;
+};
+
+function SiteFaviconField({ siteTitle, value, onChange }: SiteFaviconFieldProps) {
   const { t } = useTranslation();
-  const queryClient = useQueryClient();
-  const { message } = App.useApp();
-
-  const { data, isLoading, isFetching } = useQuery({
-    queryKey: ["api-keys"],
-    queryFn: async () => {
-      try {
-        return (await httpClient.get<ApiKeyRow[]>("/api-key")) ?? [];
-      } catch {
-        return [];
-      }
-    },
-  });
-
-  const createMutation = useMutation({
-    mutationFn: (name: string) => httpClient.post("/api-key", { name, scopes: "read" }),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["api-keys"] });
-      message.success(t("settings.apiKeyCreated"));
-    },
-    onError: () => message.error(t("common.createFailed")),
-  });
+  const faviconUrl = (value ?? "").trim();
+  const displayTitle = siteTitle.trim() || t("settings.fields.systemTitle");
 
   return (
-    <Space direction="vertical" style={{ width: "100%" }} size="middle">
-      <Typography.Paragraph type="secondary" style={{ marginBottom: 0 }}>
-        {t("settings.apiKeysDesc")}
-      </Typography.Paragraph>
-      <Button loading={isFetching} onClick={() => createMutation.mutate(`key-${Date.now()}`)}>
-        {t("settings.createApiKey")}
-      </Button>
-      {isLoading ? (
-        <Spin />
-      ) : (
-        <ul style={{ paddingLeft: 20, margin: 0 }}>
-          {(data ?? []).map((key) => (
-            <li key={key.id}>
-              {key.name} ({key.scopes ?? "read"})
-            </li>
-          ))}
-        </ul>
-      )}
-    </Space>
+    <div>
+      <div className={styles.faviconBlock}>
+        <div className={styles.faviconPreview}>
+          <div className={styles.faviconTabMock} aria-hidden>
+            {faviconUrl ? (
+              <img src={faviconUrl} alt="" />
+            ) : (
+              <span style={{ width: 16, height: 16, background: "#dcdcde", borderRadius: 2 }} />
+            )}
+            <span>{displayTitle}</span>
+          </div>
+          {faviconUrl ? (
+            <img className={styles.faviconLarge} src={faviconUrl} alt="" />
+          ) : (
+            <div className={styles.faviconPlaceholder}>{t("settings.faviconPlaceholder")}</div>
+          )}
+        </div>
+      </div>
+      <Input
+        className={styles.fieldInput}
+        value={value}
+        placeholder="https://"
+        onChange={(e) => onChange?.(e.target.value)}
+      />
+      {faviconUrl ? (
+        <div className={styles.faviconActions}>
+          <Button type="link" className={styles.linkButtonDanger} onClick={() => onChange?.("")}>
+            {t("settings.removeFavicon")}
+          </Button>
+        </div>
+      ) : null}
+    </div>
   );
+}
+
+function renderFieldControl(
+  field: FieldDef,
+  inputClass: string,
+  textareaClass: string,
+  jsonClass: string,
+) {
+  if (field.type === "textarea") {
+    return <Input.TextArea className={textareaClass} rows={4} />;
+  }
+  if (field.type === "json") {
+    return <Input.TextArea className={jsonClass} rows={12} />;
+  }
+  if (field.type === "password") {
+    return <Input.Password className={inputClass} autoComplete="new-password" />;
+  }
+  return <Input className={inputClass} type="text" />;
 }
 
 type SettingsTabFormProps = {
@@ -102,6 +184,8 @@ export function SettingsTabForm({ tab }: SettingsTabFormProps) {
   const [form] = Form.useForm();
   const { data, isLoading, isError, saveMutation } = useSiteSettings();
   const fields = TAB_FIELDS[tab] ?? [];
+
+  const siteTitle = Form.useWatch("systemTitle", form) ?? data?.systemTitle ?? "";
 
   useEffect(() => {
     if (!data) return;
@@ -117,16 +201,6 @@ export function SettingsTabForm({ tab }: SettingsTabFormProps) {
     form.setFieldsValue(values);
   }, [data, fields, form]);
 
-  if (tab === "api-keys") {
-    return <ApiKeysPanel />;
-  }
-
-  if (tab === "webhooks") {
-    return (
-      <Typography.Paragraph type="secondary">{t("settings.webhooksDesc")}</Typography.Paragraph>
-    );
-  }
-
   if (isError) {
     return <ModulePlaceholder title={t("settings.title")} description={t("settings.loadError")} />;
   }
@@ -135,10 +209,14 @@ export function SettingsTabForm({ tab }: SettingsTabFormProps) {
     return <Spin />;
   }
 
+  const inputClass = styles.fieldInput;
+  const textareaClass = `${styles.fieldInput} ${styles.fieldTextarea}`;
+  const jsonClass = `${styles.fieldInputWide} ${styles.fieldJson}`;
+
   return (
     <Form
       form={form}
-      layout="vertical"
+      component={false}
       onFinish={(values) => {
         const patch: Record<string, unknown> = {};
         for (const field of fields) {
@@ -160,21 +238,39 @@ export function SettingsTabForm({ tab }: SettingsTabFormProps) {
         });
       }}
     >
-      {fields.map((field) => (
-        <Form.Item key={field.name} name={field.name} label={t(field.labelKey)}>
-          {field.type === "textarea" || field.type === "json" ? (
-            <Input.TextArea
-              rows={field.type === "json" ? 12 : 4}
-              style={field.type === "json" ? { fontFamily: "ui-monospace, monospace" } : undefined}
-            />
-          ) : (
-            <Input type={field.type === "password" ? "password" : "text"} />
-          )}
-        </Form.Item>
-      ))}
-      <Button type="primary" htmlType="submit" loading={saveMutation.isPending}>
-        {t("common.save")}
-      </Button>
+      <table className={styles.formTable}>
+        <tbody>
+          {fields.map((field) => {
+            const hint = field.hintKey ? t(field.hintKey) : undefined;
+            const controlClass =
+              field.type === "json" ? jsonClass : field.wide ? textareaClass : inputClass;
+
+            if (field.name === "systemFavicon" && tab === "general") {
+              return (
+                <SettingsField key={field.name} label={t(field.labelKey)} description={hint}>
+                  <Form.Item name={field.name} noStyle>
+                    <SiteFaviconField siteTitle={String(siteTitle)} />
+                  </Form.Item>
+                </SettingsField>
+              );
+            }
+
+            return (
+              <SettingsField key={field.name} label={t(field.labelKey)} description={hint}>
+                <Form.Item name={field.name} noStyle>
+                  {renderFieldControl(field, inputClass, controlClass, jsonClass)}
+                </Form.Item>
+              </SettingsField>
+            );
+          })}
+        </tbody>
+      </table>
+
+      <p className={styles.submitRow}>
+        <Button type="primary" loading={saveMutation.isPending} onClick={() => form.submit()}>
+          {t("settings.saveChanges")}
+        </Button>
+      </p>
     </Form>
   );
 }

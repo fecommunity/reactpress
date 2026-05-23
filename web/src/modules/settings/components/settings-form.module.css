@@ -1,0 +1,176 @@
+.wrap {
+  width: 100%;
+}
+
+.formTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 8px;
+}
+
+.formTable th {
+  width: 210px;
+  padding: 14px 10px 14px 0;
+  vertical-align: top;
+  text-align: left;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--settings-text, #1d2327);
+}
+
+.formTable td {
+  padding: 12px 0;
+  vertical-align: top;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--settings-text, #1d2327);
+}
+
+.description {
+  margin: 6px 0 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--settings-muted, #646970);
+}
+
+.fieldInput {
+  width: 100%;
+  max-width: 520px;
+}
+
+.fieldInputWide {
+  width: 100%;
+  max-width: 640px;
+}
+
+.fieldTextarea:global(.ant-input) {
+  max-width: 640px;
+}
+
+.fieldJson:global(.ant-input) {
+  max-width: 100%;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.submitRow {
+  margin: 24px 0 0;
+  padding-top: 20px;
+  border-top: 1px solid var(--settings-border, #c3c4c7);
+}
+
+.linkButton:global(.ant-btn-link) {
+  padding: 0;
+  height: auto;
+  font-size: 13px;
+}
+
+.linkButtonDanger:global(.ant-btn-link) {
+  padding: 0;
+  height: auto;
+  font-size: 13px;
+  color: #b32d2e !important;
+}
+
+.linkButtonDanger:global(.ant-btn-link:hover) {
+  color: #8a2424 !important;
+}
+
+.faviconBlock {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 16px 24px;
+}
+
+.faviconPreview {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.faviconTabMock {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 220px;
+  padding: 6px 10px;
+  border: 1px solid var(--settings-border, #c3c4c7);
+  border-radius: 6px 6px 0 0;
+  background: #fff;
+  font-size: 12px;
+  line-height: 1.3;
+  color: var(--settings-text, #1d2327);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.faviconTabMock img {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.faviconTabMock span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.faviconLarge {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  border: 1px solid var(--settings-border, #c3c4c7);
+  background: #fff;
+}
+
+.faviconPlaceholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border: 1px dashed var(--settings-border, #c3c4c7);
+  background: var(--settings-surface, #f0f0f1);
+  font-size: 11px;
+  color: var(--settings-muted, #646970);
+  text-align: center;
+  padding: 4px;
+}
+
+.faviconActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin-top: 8px;
+}
+
+.apiKeyList {
+  margin: 0;
+  padding-left: 20px;
+}
+
+:root[data-theme="dark"] .formTable th,
+:root[data-theme="dark"] .formTable td {
+  --settings-text: rgba(255, 255, 255, 0.88);
+}
+
+:root[data-theme="dark"] .description {
+  --settings-muted: rgba(255, 255, 255, 0.45);
+}
+
+:root[data-theme="dark"] .submitRow {
+  --settings-border: #303030;
+}
+
+:root[data-theme="dark"] .faviconTabMock,
+:root[data-theme="dark"] .faviconLarge {
+  background: #141414;
+  border-color: #303030;
+}
+
+:root[data-theme="dark"] .faviconPlaceholder {
+  --settings-surface: #1f1f1f;
+}

@@ -7,7 +7,6 @@ import {
 import { articleModule } from "@/modules/article";
 import { commentModule } from "@/modules/comment";
 import { dashboardModule } from "@/modules/dashboard";
-import { dataModule } from "@/modules/data";
 import { appearanceModule } from "@/modules/appearance";
 import { mediaModule } from "@/modules/media";
 import { pageModule } from "@/modules/page";
@@ -25,7 +24,6 @@ const CORE_MODULES = [
   pluginsModule,
   userModule,
   settingsModule,
-  dataModule,
 ];
 
 let adminContext: AdminContext | null = null;
