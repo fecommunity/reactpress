@@ -1,0 +1,23 @@
+import type { AdminModule } from '@fecommunity/reactpress-toolkit/admin';
+
+export const dashboardModule: AdminModule = {
+  id: 'dashboard',
+  register({ menu, permissions, routes }) {
+    permissions.register(['view:read']);
+    menu.register({
+      id: 'overview',
+      title: '概览',
+      sort: 0,
+      children: [
+        {
+          id: 'dashboard.home',
+          title: '仪表盘',
+          path: '/dashboard',
+          icon: 'IconLucideLayoutDashboard',
+          sort: 0,
+        },
+      ],
+    });
+    routes.registerRoute({ path: '/dashboard', permission: null });
+  },
+};

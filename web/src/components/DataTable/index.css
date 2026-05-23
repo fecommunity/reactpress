@@ -1,0 +1,35 @@
+.data-table__table.ant-table-wrapper {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.data-table__table .ant-spin-nested-loading,
+.data-table__table .ant-spin-container {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.data-table__table .ant-table {
+  flex: 1;
+  min-height: 0;
+}
+
+.data-table__table .ant-table-container {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Empty state: let placeholder row breathe in flex-height tables */
+.data-table__table .ant-table-tbody > tr.ant-table-placeholder > td {
+  border-bottom: none;
+}
+
+.data-table__table .ant-table-tbody > tr.ant-table-placeholder .ant-table-cell {
+  padding-block: 0;
+}

@@ -1,0 +1,42 @@
+.dash-card-interactive.ant-card {
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+  box-shadow: none;
+}
+
+.dash-card-interactive.ant-card:hover {
+  background-color: var(--dash-card-hover-bg) !important;
+  border-color: var(--dash-card-hover-border) !important;
+  box-shadow: var(--dash-card-hover-shadow);
+}
+
+.dash-recent-row {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.dash-recent-row:hover {
+  background-color: var(--dash-recent-hover-bg);
+}
+
+.dash-chart-placeholder {
+  transition: border-color 0.2s ease;
+}
+
+.dash-chart-placeholder:hover {
+  border-color: var(--dash-chart-hover-border);
+}
+
+.dash-skel-stat .ant-skeleton-input {
+  min-height: unset !important;
+}
+
+.dash-skel-recent .ant-skeleton-input {
+  min-height: unset !important;
+  margin-block: 0 !important;
+}
+
+.dash-skel-recent .ant-skeleton-avatar {
+  margin-inline-end: 0 !important;
+}

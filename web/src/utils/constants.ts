@@ -1,0 +1,23 @@
+/**
+ * Server API root including global prefix (`/api`).
+ * Endpoint constants under `src/api/*` must NOT repeat `/api` in the path.
+ *
+ * Dev default `/api` → same-origin (Vite + MSW); proxied to :3002 when using real API.
+ */
+function resolveApiBaseUrl(): string {
+  const fromEnv = import.meta.env.VITE_API_BASE_URL?.trim();
+  if (fromEnv) return fromEnv.replace(/\/$/, "");
+  if (import.meta.env.DEV) return "/api";
+  return "http://localhost:3002/api";
+}
+
+export const API_BASE_URL = resolveApiBaseUrl();
+
+/** `mock` = MSW scaffold (admin/admin); `server` = Nest JWT (`name` + `password`) */
+export const AUTH_MODE = import.meta.env.VITE_AUTH_MODE ?? "mock";
+
+/** Favicon path under `public/` (Vite serves as site root). */
+export const APP_FAVICON_SRC = "/favicon.svg";
+
+/** Product / brand name (login header, sidebar logo text, etc.). */
+export const APP_BRAND_NAME = "ReactPress";

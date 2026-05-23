@@ -1,0 +1,57 @@
+{
+  "name": "@fecommunity/reactpress-web",
+  "version": "3.0.0",
+  "private": true,
+  "description": "ReactPress Admin SPA (Vite + TanStack Router)",
+  "type": "module",
+  "scripts": {
+    "dev": "vp dev",
+    "build": "vp build",
+    "typecheck": "tsc --noEmit",
+    "preview": "vp preview",
+    "prepare": "vp config",
+    "fmt": "vp fmt",
+    "lint": "vp lint",
+    "check": "vp check --no-fmt",
+    "test:e2e": "playwright test",
+    "test:e2e:core": "playwright test e2e/login.spec.ts e2e/users.spec.ts",
+    "test:e2e:ui": "playwright test --ui"
+  },
+  "dependencies": {
+    "@fecommunity/reactpress-toolkit": "workspace:*",
+    "@tanstack/react-query": "^5.90.21",
+    "@tanstack/react-router": "^1.167.4",
+    "antd": "^6.3.3",
+    "lucide-react": "^1.7.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "zod": "^4.3.6",
+    "zustand": "^5.0.12"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "@tanstack/router-plugin": "^1.166.13",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react-swc": "^4.3.0",
+    "msw": "^2.12.12",
+    "typescript": "~5.9.3",
+    "vite": "npm:@voidzero-dev/vite-plus-core@latest",
+    "vite-plus": "latest"
+  },
+  "pnpm": {
+    "overrides": {
+      "vite": "npm:@voidzero-dev/vite-plus-core@latest",
+      "vitest": "npm:@voidzero-dev/vite-plus-test@latest"
+    },
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "msw"
+    ]
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
+  }
+}
