@@ -3,6 +3,7 @@ const path = require('path');
 const { ensureProjectEnvironment } = require('./bootstrap');
 const { isUsingMonorepoServer } = require('./paths');
 const { getMonorepoRoot } = require('./root');
+const { t } = require('./i18n');
 
 let apiChild;
 
@@ -20,7 +21,7 @@ function stopApiDev(projectRoot) {
 
 function startApiDev(projectRoot) {
   if (isUsingMonorepoServer()) {
-    console.log('[reactpress] 开发模式: server/ (nest start --watch)');
+    console.log(t('apiDev.modeServer'));
     apiChild = spawn('pnpm', ['run', '--dir', './server', 'dev'], {
       cwd: projectRoot,
       stdio: 'inherit',
@@ -31,7 +32,7 @@ function startApiDev(projectRoot) {
       },
     });
   } else {
-    console.log('[reactpress] 开发模式: reactpress-cli（未找到 server/src）');
+    console.log(t('apiDev.modeCli'));
     const start = spawnSync('pnpm', ['exec', 'reactpress-cli', 'start'], {
       cwd: projectRoot,
       stdio: 'inherit',
@@ -39,7 +40,7 @@ function startApiDev(projectRoot) {
     if (start.status !== 0) {
       process.exit(start.status ?? 1);
     }
-    console.log('[reactpress] API 已由 reactpress-cli 启动。');
+    console.log(t('apiDev.startedByCli'));
     process.stdin.resume();
     return;
   }
@@ -48,8 +49,8 @@ function startApiDev(projectRoot) {
     apiChild.on('close', (code) => {
       process.exit(code ?? 0);
     });
-    console.log('[reactpress] 按 Ctrl+C 停止 API。');
-    console.log('[reactpress] 单独停止: reactpress server stop');
+    console.log(t('apiDev.ctrlCHint'));
+    console.log(t('apiDev.stopHint'));
   }
 }
 
@@ -57,7 +58,7 @@ async function runApiDev(projectRoot = process.env.REACTPRESS_ORIGINAL_CWD || ge
   try {
     await ensureProjectEnvironment(projectRoot);
   } catch (err) {
-    console.error('[reactpress] 环境准备失败:', err.message || err);
+    console.error(t('dev.envFailed'), err.message || err);
     process.exit(1);
   }
 

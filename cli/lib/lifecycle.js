@@ -9,13 +9,14 @@ const {
 } = require('./paths');
 const { readPid, isProcessRunning, clearPidFile, writePid } = require('./process');
 const { getMonorepoRoot } = require('./root');
+const { t } = require('./i18n');
 
 async function ensureConfig(projectRoot) {
   try {
     await ensureProjectEnvironment(projectRoot);
     return true;
   } catch (err) {
-    console.error('[reactpress] 环境准备失败:', err.message || err);
+    console.error(t('dev.envFailed'), err.message || err);
     return false;
   }
 }
@@ -25,9 +26,9 @@ function stopApi(projectRoot) {
   if (pid && isProcessRunning(pid)) {
     try {
       process.kill(pid, 'SIGTERM');
-      console.log(`[reactpress] 已停止 API 进程 (pid ${pid})`);
+      console.log(t('lifecycle.apiStopped', { pid }));
     } catch (err) {
-      console.warn(`[reactpress] 停止 pid ${pid} 失败:`, err.message);
+      console.warn(t('lifecycle.stopPidFailed', { pid }), err.message);
     }
   }
   clearPidFile(projectRoot);
@@ -40,13 +41,13 @@ async function startApi(projectRoot, { wait = true } = {}) {
 
   const existing = readPid(projectRoot);
   if (existing && isProcessRunning(existing)) {
-    console.log(`[reactpress] API 已在运行 (pid ${existing})`);
+    console.log(t('lifecycle.apiAlreadyRunning', { pid: existing }));
     return 0;
   }
   clearPidFile(projectRoot);
 
   if (!isUsingMonorepoServer()) {
-    console.warn('[reactpress] 未检测到 server/src，回退到 reactpress-cli start');
+    console.warn(t('lifecycle.noServerSrc'));
     const start = spawnSync('pnpm', ['exec', 'reactpress-cli', 'start'], {
       cwd: projectRoot,
       stdio: 'inherit',
@@ -54,7 +55,7 @@ async function startApi(projectRoot, { wait = true } = {}) {
     return start.status ?? 1;
   }
 
-  console.log('[reactpress] 正在启动本地 API (server/)…');
+  console.log(t('lifecycle.startingLocalApi'));
   const child = spawn(process.execPath, [getServerBin()], {
     cwd: getServerDir(),
     detached: true,
@@ -67,7 +68,7 @@ async function startApi(projectRoot, { wait = true } = {}) {
 
   child.unref();
   writePid(projectRoot, child.pid);
-  console.log(`[reactpress] API 已后台启动 (pid ${child.pid})`);
+  console.log(t('lifecycle.apiStartedBg', { pid: child.pid }));
 
   if (!wait) {
     return 0;
@@ -76,10 +77,10 @@ async function startApi(projectRoot, { wait = true } = {}) {
   const serverUrl = loadServerSiteUrl(projectRoot);
   const ready = await waitForHttp(serverUrl);
   if (!ready) {
-    console.error(`[reactpress] API 在 120s 内未就绪: ${serverUrl}`);
+    console.error(t('lifecycle.apiTimeout120', { url: serverUrl }));
     return 1;
   }
-  console.log(`[reactpress] API 已就绪: ${serverUrl}`);
+  console.log(t('lifecycle.apiReady', { url: serverUrl }));
   return 0;
 }
 
@@ -89,12 +90,33 @@ async function statusApi(projectRoot) {
   const { isHttpResponding } = require('./http');
   const httpOk = await isHttpResponding(serverUrl);
 
-  console.log('[reactpress] API 状态');
-  console.log(`  来源: ${isUsingMonorepoServer() ? 'monorepo server/' : 'reactpress-cli bundle'}`);
-  console.log(`  PID 文件: ${getPidFile(projectRoot)}`);
-  console.log(`  记录 PID: ${pid ?? '(无)'}`);
-  console.log(`  进程存活: ${pid ? (isProcessRunning(pid) ? '是' : '否') : '—'}`);
-  console.log(`  HTTP (${serverUrl}): ${httpOk ? '可访问' : '不可访问'}`);
+  const source = isUsingMonorepoServer()
+    ? t('lifecycle.source.monorepo')
+    : t('lifecycle.source.bundle');
+
+  console.log(t('lifecycle.apiStatusTitle'));
+  console.log(t('lifecycle.source', { source }));
+  console.log(t('lifecycle.pidFile', { path: getPidFile(projectRoot) }));
+  console.log(
+    t('lifecycle.recordedPid', {
+      pid: pid ?? t('common.none'),
+    })
+  );
+  console.log(
+    t('lifecycle.processAlive', {
+      alive: pid
+        ? isProcessRunning(pid)
+          ? t('common.yes')
+          : t('common.no')
+        : '—',
+    })
+  );
+  console.log(
+    t('lifecycle.httpStatus', {
+      url: serverUrl,
+      status: httpOk ? t('lifecycle.httpReachable') : t('lifecycle.httpUnreachable'),
+    })
+  );
 }
 
 async function runLifecycleCommand(command, projectRoot = process.env.REACTPRESS_ORIGINAL_CWD || getMonorepoRoot()) {
@@ -126,7 +148,7 @@ async function runLifecycleCommand(command, projectRoot = process.env.REACTPRESS
       await statusApi(projectRoot);
       return 0;
     default:
-      throw new Error(`未知 lifecycle 命令: ${command}`);
+      throw new Error(t('lifecycle.unknownCommand', { command }));
   }
 }
 
