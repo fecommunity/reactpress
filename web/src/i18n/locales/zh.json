@@ -39,7 +39,8 @@
     "language": "语言",
     "languageZh": "中文",
     "languageEn": "English",
-    "switchLanguage": "切换语言"
+    "switchLanguage": "切换语言",
+    "openGitHub": "在 GitHub 上查看 ReactPress"
   },
   "admin": {
     "new": "新建",

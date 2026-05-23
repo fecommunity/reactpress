@@ -96,19 +96,31 @@
   white-space: nowrap;
 }
 
-.admin-bar__action.ant-btn {
+/* Ant Design text buttons keep a 1px border; on hover the token border-color flashes white on the dark bar */
+.admin-bar .ant-btn {
   color: var(--admin-bar-text) !important;
-  border: none;
-  box-shadow: none;
+  border: none !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  outline: none;
   height: var(--admin-bar-height);
   padding: 0 8px;
   font-size: 13px;
   border-radius: 0;
+  transition:
+    color 0.15s ease,
+    background-color 0.15s ease !important;
 }
 
-.admin-bar__action.ant-btn:hover {
+.admin-bar .ant-btn:hover,
+.admin-bar .ant-btn:focus,
+.admin-bar .ant-btn:active {
   color: #72aee6 !important;
   background: rgba(255, 255, 255, 0.04) !important;
+  border: none !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  outline: none;
 }
 
 .admin-bar__divider {
@@ -302,16 +314,6 @@
   font-weight: 600;
 }
 
-.admin-bar__right .ant-btn {
-  color: var(--admin-bar-text) !important;
-  border-radius: 0;
-}
-
-.admin-bar__right .ant-btn:hover {
-  color: #72aee6 !important;
-  background: rgba(255, 255, 255, 0.04) !important;
-}
-
 .admin-bar__menuLink {
   color: inherit;
   text-decoration: none;
@@ -321,7 +323,7 @@
   color: inherit;
 }
 
-.admin-bar__action.ant-btn:focus-visible,
+.admin-bar .ant-btn:focus-visible,
 .admin-bar__user:focus-visible {
   outline: 2px solid #72aee6;
   outline-offset: -2px;
@@ -339,7 +341,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .admin-bar__user,
-  .admin-bar__action.ant-btn,
+  .admin-bar .ant-btn,
   .admin-sidebar__collapseBtn.ant-btn,
   .dash-card-interactive.ant-card,
   .dash-recent-row {

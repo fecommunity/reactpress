@@ -21,3 +21,6 @@ export const APP_FAVICON_SRC = "/favicon.svg";
 
 /** Product / brand name (login header, sidebar logo text, etc.). */
 export const APP_BRAND_NAME = "ReactPress";
+
+/** Official ReactPress monorepo on GitHub. */
+export const REACTPRESS_GITHUB_URL = "https://github.com/fecommunity/reactpress";

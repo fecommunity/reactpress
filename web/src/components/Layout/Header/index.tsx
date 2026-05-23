@@ -3,12 +3,12 @@ import type { MenuProps } from "antd";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { Home, Plus, PanelLeft } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { Theme } from "@/components/Icon";
+import { GitHub, Theme } from "@/components/Icon";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 import { useAuthStore } from "@/stores/auth";
 import { useSettingsStore } from "@/stores/settings";
-import { APP_BRAND_NAME } from "@/utils/constants";
+import { APP_BRAND_NAME, REACTPRESS_GITHUB_URL } from "@/utils/constants";
 
 const { Header: AntHeader } = Layout;
 
@@ -124,6 +124,15 @@ export function Header() {
         </Dropdown>
       </div>
       <div className="admin-bar__right">
+        <Button
+          type="text"
+          className="admin-bar__action"
+          href={REACTPRESS_GITHUB_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          icon={<GitHub size={16} />}
+          aria-label={t("common.openGitHub")}
+        />
         <LanguageSwitcher compact />
         <Button
           type="text"
