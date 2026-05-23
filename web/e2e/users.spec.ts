@@ -23,7 +23,7 @@ test.describe("User Management", () => {
   });
 
   test("should open create user modal", async ({ page }) => {
-    await page.getByRole("button", { name: /Create User|创建用户/ }).click();
+    await page.getByRole("button", { name: /Add User|添加用户|Create User|新建用户/ }).click();
     await expect(page.getByRole("dialog").getByText(/New User|新建用户/)).toBeVisible();
   });
 });

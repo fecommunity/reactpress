@@ -1,0 +1,65 @@
+.colUsername {
+  vertical-align: top !important;
+}
+
+.userCell {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.userAvatar:global(.ant-avatar) {
+  flex-shrink: 0;
+  background: var(--article-list-avatar-bg) !important;
+  color: var(--article-list-avatar-text) !important;
+  font-weight: 600;
+}
+
+.userMeta {
+  min-width: 0;
+}
+
+.userNameRow {
+  display: flex;
+  align-items: center;
+  min-height: 32px;
+}
+
+.userName {
+  display: block;
+  font-weight: 600;
+  color: var(--article-list-text);
+  line-height: 1.4;
+}
+
+.userNameRow :global(.filterLink:hover) .userName {
+  color: var(--article-list-link-hover);
+}
+
+.colUsername :global(.row-actions) {
+  visibility: hidden;
+  min-height: 20px;
+  margin-top: 2px;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+@media (hover: none) {
+  .colUsername :global(.row-actions) {
+    visibility: visible;
+  }
+}
+
+:global(.ant-table-tbody > tr:hover) .colUsername :global(.row-actions),
+:global(.ant-table-tbody > tr:focus-within) .colUsername :global(.row-actions) {
+  visibility: visible;
+}
+
+:global(.ant-table-tbody > tr.rowLocked > td) {
+  background: color-mix(in srgb, var(--article-list-row-hover) 55%, transparent) !important;
+  color: var(--article-list-muted);
+}
+
+:global(.ant-table-tbody > tr.rowLocked:hover > td) {
+  background: color-mix(in srgb, var(--article-list-row-hover) 75%, transparent) !important;
+}

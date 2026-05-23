@@ -22,7 +22,7 @@ export const MOCK_USERS: User[] = MOCK_IDENTITIES.map(([username, email], i) => 
   username,
   avatar: vercelAvatarUrl(username),
   email,
-  roles: i === 0 ? ["admin"] : ["editor"],
+  roles: i === 0 ? ["admin"] : ["visitor"],
   permissions: i === 0 ? [...ADMIN_PERMISSIONS] : ["article:read", "view:read"],
 }));
 

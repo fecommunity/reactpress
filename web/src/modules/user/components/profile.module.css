@@ -1,0 +1,115 @@
+.wrap {
+  width: 100%;
+}
+
+.sectionTitle {
+  margin: 0 0 0;
+  padding: 0;
+  font-size: 1.3em;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--profile-text, #1d2327);
+}
+
+.sectionTitle + .formTable {
+  margin-top: 12px;
+}
+
+.sectionTitle:not(:first-child) {
+  margin-top: 28px;
+  padding-top: 28px;
+  border-top: 1px solid var(--profile-border, #c3c4c7);
+}
+
+.formTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 8px;
+}
+
+.formTable th {
+  width: 210px;
+  padding: 14px 10px 14px 0;
+  vertical-align: top;
+  text-align: left;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--profile-text, #1d2327);
+}
+
+.formTable td {
+  padding: 12px 0;
+  vertical-align: top;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--profile-text, #1d2327);
+}
+
+.description {
+  margin: 6px 0 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--profile-muted, #646970);
+}
+
+.fieldInput {
+  width: 100%;
+  max-width: 520px;
+}
+
+.avatarPreview:global(.ant-avatar) {
+  border-radius: 0 !important;
+  background: var(--profile-avatar-bg, #f0f0f1) !important;
+  color: var(--profile-muted, #646970) !important;
+  margin-bottom: 8px;
+}
+
+.avatarActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+}
+
+.linkButton:global(.ant-btn-link) {
+  padding: 0;
+  height: auto;
+  font-size: 13px;
+}
+
+.inlineAction {
+  margin-top: 8px;
+}
+
+.fieldInput:global(.ant-input-password) {
+  max-width: 520px;
+}
+
+.submitRow {
+  margin: 24px 0 0;
+  padding-top: 20px;
+  border-top: 1px solid var(--profile-border, #c3c4c7);
+}
+
+.roleText {
+  display: inline-block;
+  padding-top: 4px;
+  color: var(--profile-muted, #646970);
+}
+
+:root[data-theme="dark"] .sectionTitle,
+:root[data-theme="dark"] .formTable th,
+:root[data-theme="dark"] .formTable td {
+  --profile-text: rgba(255, 255, 255, 0.88);
+}
+
+:root[data-theme="dark"] .description,
+:root[data-theme="dark"] .roleText {
+  --profile-muted: rgba(255, 255, 255, 0.45);
+}
+
+:root[data-theme="dark"] .sectionTitle:not(:first-child),
+:root[data-theme="dark"] .submitRow {
+  --profile-border: #303030;
+}

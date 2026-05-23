@@ -1,16 +1,24 @@
 import { Form, Input, Select } from "antd";
 import type { FormInstance } from "antd/es/form";
-import type { CreateUserRequest, User } from "@/api/schemas";
+import type { User } from "@/api/schemas";
 import { useTranslation } from "react-i18next";
 import { BaseFormModal } from "@/components/FormModal";
+import { AUTH_MODE } from "@/utils/constants";
+
+export type UserFormValues = {
+  username: string;
+  email?: string | null;
+  role: string;
+  password?: string;
+};
 
 export type FormModalProps = {
   open: boolean;
   editingUser: User | null;
-  form: FormInstance<CreateUserRequest>;
+  form: FormInstance<UserFormValues>;
   confirmLoading: boolean;
   onCancel: () => void;
-  onFinish: (values: CreateUserRequest) => void;
+  onFinish: (values: UserFormValues) => void;
 };
 
 export function FormModal({
@@ -22,9 +30,10 @@ export function FormModal({
   onFinish,
 }: FormModalProps) {
   const { t } = useTranslation();
+  const isServer = AUTH_MODE === "server";
 
   return (
-    <BaseFormModal<CreateUserRequest>
+    <BaseFormModal<UserFormValues>
       open={open}
       title={editingUser ? t("users.editUser") : t("users.newUser")}
       okText={t("common.ok")}
@@ -41,16 +50,25 @@ export function FormModal({
       >
         <Input />
       </Form.Item>
+      {!editingUser && isServer ? (
+        <Form.Item
+          name="password"
+          label={t("login.password")}
+          rules={[{ required: true, message: t("users.passwordRequired") }]}
+        >
+          <Input.Password />
+        </Form.Item>
+      ) : null}
       <Form.Item
-        name="roles"
+        name="role"
         label={t("common.roles")}
         rules={[{ required: true, message: t("users.rolesRequired") }]}
       >
         <Select
-          mode="multiple"
           options={[
             { label: t("users.roleAdmin"), value: "admin" },
-            { label: t("users.roleEditor"), value: "editor" },
+            { label: t("users.roleSubscriber"), value: "visitor" },
+            ...(isServer ? [] : [{ label: t("users.roleEditor"), value: "editor" }]),
           ]}
         />
       </Form.Item>
