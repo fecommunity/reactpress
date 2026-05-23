@@ -3,6 +3,7 @@ const path = require('path');
 const { pathToFileURL } = require('url');
 const { getMonorepoRoot, isMonorepoCheckout } = require('./root');
 const { getCliPackageRoot } = require('./paths');
+const { t } = require('./i18n');
 
 async function importCliModule(relativePath) {
   const modulePath = path.join(getCliPackageRoot(), 'dist', relativePath);
@@ -29,7 +30,7 @@ async function initMonorepoProject(projectRoot, { force = false } = {}) {
     if (!dbResult.ok) {
       return { ok: false, projectRoot, message: dbResult.message };
     }
-    return { ok: true, projectRoot, message: '配置已存在，数据库已就绪。' };
+    return { ok: true, projectRoot, message: t('bootstrap.configReady') };
   }
 
   await fs.promises.mkdir(paths.reactpressDir, { recursive: true });
@@ -56,14 +57,14 @@ async function initMonorepoProject(projectRoot, { force = false } = {}) {
     return {
       ok: true,
       projectRoot,
-      message: `项目已创建，但数据库未就绪: ${dbResult.message}。请确认 Docker 已启动后重试 reactpress dev。`,
+      message: t('bootstrap.projectDbPending', { message: dbResult.message }),
     };
   }
 
   return {
     ok: true,
     projectRoot,
-    message: 'ReactPress 开发环境已就绪（配置 + 数据库）。',
+    message: t('bootstrap.ready'),
   };
 }
 
@@ -79,7 +80,7 @@ async function ensureProjectEnvironment(projectRoot = getMonorepoRoot()) {
     if (isMonorepoCheckout(root)) {
       const result = await initMonorepoProject(root);
       if (!result.ok) {
-        throw new Error(result.message || '初始化失败');
+        throw new Error(result.message || t('bootstrap.initFailed'));
       }
       return result;
     }
@@ -87,7 +88,7 @@ async function ensureProjectEnvironment(projectRoot = getMonorepoRoot()) {
     const { initProject } = await importCliModule('services/init.js');
     const result = await initProject({ directory: root, force: false });
     if (!result.ok) {
-      throw new Error(result.message || 'reactpress-cli init 失败');
+      throw new Error(result.message || t('bootstrap.cliInitFailed'));
     }
     return result;
   }
@@ -97,11 +98,13 @@ async function ensureProjectEnvironment(projectRoot = getMonorepoRoot()) {
   const dbResult = await ensureDatabase(root, config);
   if (!dbResult.ok) {
     throw new Error(
-      `${dbResult.message || '数据库未就绪'}。建议：启动 Docker 后运行 reactpress docker up，或执行 reactpress doctor`
+      t('bootstrap.dbNotReady', {
+        message: dbResult.message || t('bootstrap.dbPendingShort'),
+      })
     );
   }
 
-  return { ok: true, projectRoot: root, message: '数据库已就绪' };
+  return { ok: true, projectRoot: root, message: t('bootstrap.dbReady') };
 }
 
 module.exports = {

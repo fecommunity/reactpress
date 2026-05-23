@@ -13,55 +13,58 @@ type FeatureItem = {
 
 const FeatureList: FeatureItem[] = [
   {
-    title: translate({ message: '零配置起站', id: 'home.feature.zero.title' }),
+    title: translate({ message: 'Zero-config setup', id: 'home.feature.zero.title' }),
     Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
     description: translate({
-      message: '安装向导式流程，自动完成配置与数据库，像安装常用博客程序一样简单。',
+      message:
+        'Installer-style flow auto-configures your site and database — as familiar as setting up a popular blog platform.',
       id: 'home.feature.zero.desc',
     }),
     accent: 1,
   },
   {
-    title: translate({ message: '命令行一站式', id: 'home.feature.cli.title' }),
+    title: translate({ message: 'All-in-one CLI', id: 'home.feature.cli.title' }),
     Svg: require('@site/static/img/undraw_version_control.svg').default,
     description: translate({
-      message: '环境自检、运行状态查看，交互式菜单与启动成功后的直达链接。',
+      message:
+        'Environment checks, status output, interactive menus, and direct links right after startup.',
       id: 'home.feature.cli.desc',
     }),
     accent: 2,
   },
   {
-    title: translate({ message: '现代界面', id: 'home.feature.ui.title' }),
+    title: translate({ message: 'Modern interface', id: 'home.feature.ui.title' }),
     Svg: require('@site/static/img/undraw_react.svg').default,
     description: translate({
-      message: '现代化管理后台与前台，支持亮/暗主题切换。',
+      message: 'Modern admin and public site with light/dark theme support.',
       id: 'home.feature.ui.desc',
     }),
     accent: 3,
   },
   {
-    title: translate({ message: '创作与内容', id: 'home.feature.content.title' }),
+    title: translate({ message: 'Content & authoring', id: 'home.feature.content.title' }),
     Svg: require('@site/static/img/undraw_typewriter.svg').default,
     description: translate({
-      message: '内置 Markdown 编辑器，文章、分类、标签、页面、评论与媒体管理一应俱全。',
+      message:
+        'Built-in Markdown editor; articles, categories, tags, pages, comments, and media in one place.',
       id: 'home.feature.content.desc',
     }),
     accent: 1,
   },
   {
-    title: translate({ message: '开放集成', id: 'home.feature.headless.title' }),
+    title: translate({ message: 'Open integrations', id: 'home.feature.headless.title' }),
     Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
     description: translate({
-      message: '开放接口、访问密钥与事件回调，便于对接外部系统与自动化流程。',
+      message: 'Open APIs, access keys, and event callbacks for external systems and automation.',
       id: 'home.feature.headless.desc',
     }),
     accent: 2,
   },
   {
-    title: translate({ message: '国际化', id: 'home.feature.i18n.title' }),
+    title: translate({ message: 'Internationalization', id: 'home.feature.i18n.title' }),
     Svg: require('@site/static/img/undraw_around_the_world.svg').default,
     description: translate({
-      message: '中英文界面切换，在电脑、平板与手机上均可舒适使用。',
+      message: 'Chinese/English UI, comfortable on desktop, tablet, and mobile.',
       id: 'home.feature.i18n.desc',
     }),
     accent: 3,

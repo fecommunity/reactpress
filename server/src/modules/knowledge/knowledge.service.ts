@@ -1,3 +1,4 @@
+import { ApiMsg } from '../../common/api-messages';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -22,7 +23,7 @@ export class KnowledgeService {
     const exist = await this.repository.findOne({ where: { title } });
     if (exist && !parentId) {
       // 章节不考虑重名
-      throw new HttpException('知识库已存在', HttpStatus.BAD_REQUEST);
+      throw new HttpException(ApiMsg.KNOWLEDGE_EXISTS, HttpStatus.BAD_REQUEST);
     }
 
     if (status === 'publish') {
@@ -43,7 +44,7 @@ export class KnowledgeService {
       knowledges = [knowledges];
     }
     if (knowledges.some((knowledge) => !knowledge.parentId)) {
-      throw new HttpException('无效的知识库章节', HttpStatus.BAD_REQUEST);
+      throw new HttpException(ApiMsg.INVALID_KNOWLEDGE_SECTION, HttpStatus.BAD_REQUEST);
     }
     const result = [];
     for (const knowledge of knowledges) {

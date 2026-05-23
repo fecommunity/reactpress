@@ -1,3 +1,4 @@
+import { ApiMsg } from '../../common/api-messages';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -21,7 +22,7 @@ export class PageService {
     const exist = await this.pageRepository.findOne({ where: { path } });
 
     if (exist) {
-      throw new HttpException('页面已存在', HttpStatus.BAD_REQUEST);
+      throw new HttpException(ApiMsg.PAGE_EXISTS, HttpStatus.BAD_REQUEST);
     }
 
     const newPage = await this.pageRepository.create({

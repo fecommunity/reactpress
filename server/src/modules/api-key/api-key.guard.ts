@@ -1,3 +1,4 @@
+import { ApiMsg } from '../../common/api-messages';
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 
 import { ApiKeyService } from './api-key.service';
@@ -13,12 +14,12 @@ export class ApiKeyGuard implements CanActivate {
       (request.headers.authorization || '').replace(/^Bearer\s+/i, '').trim();
 
     if (!rawKey) {
-      throw new UnauthorizedException('缺少 API Key');
+      throw new UnauthorizedException(ApiMsg.MISSING_API_KEY);
     }
 
     const apiKey = await this.apiKeyService.validateRawKey(rawKey);
     if (!apiKey) {
-      throw new UnauthorizedException('无效的 API Key');
+      throw new UnauthorizedException(ApiMsg.INVALID_API_KEY);
     }
 
     request.apiKey = apiKey;

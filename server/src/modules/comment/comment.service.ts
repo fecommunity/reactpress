@@ -1,3 +1,4 @@
+import { ApiMsg } from '../../common/api-messages';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -35,7 +36,7 @@ export class CommentService {
     const { hostId, name, email, content, createByAdmin = false } = comment;
 
     if (!hostId || !name || !email || !content) {
-      throw new HttpException('缺失参数', HttpStatus.BAD_REQUEST);
+      throw new HttpException(ApiMsg.MISSING_PARAMS, HttpStatus.BAD_REQUEST);
     }
 
     comment.pass = false;
@@ -52,7 +53,7 @@ export class CommentService {
         const emailMessage = {
           from: setting.smtpFromUser,
           to: adminEmail,
-          subject: '新评论通知',
+          subject: ApiMsg.EMAIL_NEW_COMMENT,
           html: getNewCommentHTML({ ...setting, adminName, comment }),
         };
         this.smtpService.create(emailMessage).catch(() => {
@@ -174,7 +175,7 @@ export class CommentService {
           const emailMessage = {
             from: setting.smtpFromUser,
             to: replyUserEmail,
-            subject: '评论回复通知',
+            subject: ApiMsg.EMAIL_COMMENT_REPLY,
             html: getReplyCommentHTML({
               ...setting,
               replyUserName,
