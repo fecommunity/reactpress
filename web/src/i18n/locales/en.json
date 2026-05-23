@@ -114,7 +114,12 @@
     "statComments": "Comments",
     "statFiles": "Media files",
     "recentArticles": "Recent articles",
-    "quickLinks": "Quick links"
+    "quickLinks": "Quick links",
+    "recentComments": "Recent comments",
+    "commentMetaPrefix": "By",
+    "commentMetaOn": "on",
+    "commentPending": "[Pending]",
+    "unknownArticle": "Unknown article"
   },
   "users": {
     "searchPlaceholder": "Search User",

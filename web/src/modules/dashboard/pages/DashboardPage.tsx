@@ -6,7 +6,9 @@ import { useTranslation } from "react-i18next";
 import { Link } from "@tanstack/react-router";
 import { getToolkitClient } from "@/shared/client";
 import { parsePaginated } from "@/shared/api/pagination";
+import { RecentCommentsCard } from "@/modules/dashboard/components/RecentCommentsCard";
 import { dashboardThemeVars } from "@/modules/dashboard/dashboardThemeVars";
+import { articleListThemeVars } from "@/modules/article/components/articleListThemeVars";
 import "@/routes/_auth/dashboard/index.css";
 
 const { Title, Text } = Typography;
@@ -42,7 +44,10 @@ async function fetchRecentArticles() {
 export function DashboardPage() {
   const { token } = theme.useToken();
   const { t } = useTranslation();
-  const dashThemeStyle = useMemo(() => dashboardThemeVars(token), [token]);
+  const dashThemeStyle = useMemo(
+    () => ({ ...dashboardThemeVars(token), ...articleListThemeVars(token) }),
+    [token],
+  );
 
   const { data: stats, isPending: statsLoading } = useQuery({
     queryKey: ["dashboard-stats"],
@@ -169,6 +174,11 @@ export function DashboardPage() {
               )}
             />
           </Card>
+        </Col>
+      </Row>
+      <Row gutter={[16, 16]}>
+        <Col xs={24}>
+          <RecentCommentsCard />
         </Col>
       </Row>
     </Flex>

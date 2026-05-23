@@ -114,7 +114,12 @@
     "statComments": "评论",
     "statFiles": "媒体文件",
     "recentArticles": "最新文章",
-    "quickLinks": "快捷入口"
+    "quickLinks": "快捷入口",
+    "recentComments": "近期评论",
+    "commentMetaPrefix": "由",
+    "commentMetaOn": "发表在",
+    "commentPending": "[待审]",
+    "unknownArticle": "未知文章"
   },
   "users": {
     "searchPlaceholder": "搜索用户",

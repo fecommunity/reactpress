@@ -11,5 +11,6 @@ export function dashboardThemeVars(token: ThemeToken): CSSProperties {
     "--dash-card-hover-shadow": token.boxShadowSecondary,
     "--dash-recent-hover-bg": token.colorFillAlter,
     "--dash-chart-hover-border": token.colorBorderSecondary,
+    "--dash-comment-divider": token.colorSplit,
   } as CSSProperties;
 }
