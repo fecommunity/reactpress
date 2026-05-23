@@ -61,6 +61,24 @@ function main() {
 
   const distPkg = path.join(cliRoot, 'dist', 'package.json');
   fs.writeFileSync(distPkg, JSON.stringify({ type: 'module' }, null, 2) + '\n');
+
+  // Keep ESM bridge to CommonJS i18n (not shipped in legacy package)
+  const i18nBridge = path.join(cliRoot, 'dist', 'i18n.js');
+  if (!fs.existsSync(i18nBridge)) {
+    fs.writeFileSync(
+      i18nBridge,
+      `import { createRequire } from 'node:module';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const require = createRequire(import.meta.url);
+const { t, getLocale, setLocale } = require(join(dirname(fileURLToPath(import.meta.url)), '..', 'lib', 'i18n', 'index.js'));
+
+export { t, getLocale, setLocale };
+`
+    );
+    console.log('[sync-bundled-core] restored dist/i18n.js bridge');
+  }
 }
 
 main();
