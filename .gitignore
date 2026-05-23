@@ -22,6 +22,7 @@ logs
 test-results
 web/dist
 web/playwright-report
+web/.tanstack
 .pnpm-store
 tsconfig.tsbuildinfo
 .pnpm-store
