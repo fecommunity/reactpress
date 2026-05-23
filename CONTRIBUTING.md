@@ -7,7 +7,7 @@ Thank you for your interest in contributing to ReactPress!
 ### Prerequisites
 
 - Node.js >= 18.0.0
-- pnpm >= 8.0.0
+- pnpm 9.x（与根目录 `packageManager` 一致，推荐 `corepack enable` 后使用）
 - MySQL 5.7+ (or Docker via `pnpm run init` / `pnpm docker:dev`)
 
 ### First run

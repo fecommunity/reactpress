@@ -2,6 +2,7 @@
   "name": "reactpress",
   "version": "3.0.0",
   "private": true,
+  "packageManager": "pnpm@9.15.9",
   "description": "ReactPress CMS & Blog site",
   "bin": {
     "reactpress": "./cli/bin/reactpress.js"

@@ -1,3 +1,11 @@
+overrides:
+  '@tanstack/query-core': '5.90.20'
+  '@tanstack/react-query': '5.90.21'
+  shell-quote: '1.8.1'
+  ws@6.2.4: '6.2.3'
+  ws@7.5.11: '7.5.10'
+  ws@8.21.0: '8.18.1'
+
 packages:
   # CLI 工具链
   - 'cli'
