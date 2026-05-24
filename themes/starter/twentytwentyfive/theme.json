@@ -21,19 +21,90 @@
   "customizer": {
     "sections": [
       {
-        "id": "colors",
-        "title": "颜色",
-        "settings": [
-          { "id": "primaryColor", "type": "color", "label": "主色", "default": "#1a1a1a" },
-          { "id": "accentColor", "type": "color", "label": "强调色", "default": "#d63638" },
-          { "id": "backgroundColor", "type": "color", "label": "背景色", "default": "#ffffff" }
-        ]
-      },
-      {
         "id": "identity",
         "title": "站点身份",
         "settings": [
-          { "id": "displayTitle", "type": "text", "label": "展示标题", "default": "Twenty Twenty-Five" }
+          {
+            "id": "siteLogo",
+            "type": "image",
+            "label": "站点 Logo",
+            "description": "留空则使用后台「站点 Logo」(systemLogo)"
+          },
+          {
+            "id": "displayTitle",
+            "type": "text",
+            "label": "站点标题",
+            "description": "留空则使用后台「站点标题」(systemTitle)",
+            "default": "Twenty Twenty-Five"
+          },
+          {
+            "id": "displayTagline",
+            "type": "text",
+            "label": "站点副标题",
+            "description": "留空则使用后台「站点副标题」(systemSubTitle)"
+          },
+          {
+            "id": "showBranding",
+            "type": "checkbox",
+            "label": "显示站点标题与副标题",
+            "default": "1"
+          }
+        ]
+      },
+      {
+        "id": "colors",
+        "title": "颜色与深色模式",
+        "settings": [
+          { "id": "primaryColor", "type": "color", "label": "主色", "default": "#1a1a1a" },
+          { "id": "accentColor", "type": "color", "label": "强调色", "default": "#d63638" },
+          { "id": "backgroundColor", "type": "color", "label": "背景色", "default": "#ffffff" },
+          {
+            "id": "darkMode",
+            "type": "checkbox",
+            "label": "启用深色模式",
+            "default": "0",
+            "description": "开启后站点使用深色背景与浅色文字"
+          }
+        ]
+      },
+      {
+        "id": "background",
+        "title": "背景图片",
+        "settings": [
+          {
+            "id": "backgroundImage",
+            "type": "image",
+            "label": "背景图",
+            "description": "设置后将覆盖纯色背景（宽屏可见）"
+          }
+        ]
+      },
+      {
+        "id": "excerpt",
+        "title": "摘要设置",
+        "settings": [
+          {
+            "id": "archiveExcerpt",
+            "type": "select",
+            "label": "归档页文章内容",
+            "default": "excerpt",
+            "choices": [
+              { "value": "excerpt", "label": "仅显示摘要" },
+              { "value": "full", "label": "显示全文（若有正文）" }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "css",
+        "title": "额外 CSS",
+        "settings": [
+          {
+            "id": "additionalCss",
+            "type": "textarea",
+            "label": "自定义 CSS",
+            "description": "将追加到主题样式之后，可覆盖当前主题规则"
+          }
         ]
       }
     ]

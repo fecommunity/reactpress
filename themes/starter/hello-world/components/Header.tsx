@@ -1,5 +1,11 @@
 import Link from 'next/link';
-import { NavMenu, SiteBranding, type NavItem } from '@fecommunity/reactpress-toolkit/theme';
+import {
+  NavMenu,
+  SiteBranding,
+  SiteLogo,
+  useThemeModBool,
+  type NavItem,
+} from '@fecommunity/reactpress-toolkit/theme';
 import SiteTagline from './SiteTagline';
 
 const NAV: NavItem[] = [
@@ -14,14 +20,17 @@ interface HeaderProps {
 }
 
 export default function Header({ currentPage }: HeaderProps) {
+  const showBranding = useThemeModBool('showBranding', true);
+
   return (
     <header className="header">
       <Link href="/">
-        <a className="site-title">
-          <SiteBranding fallback="My Site" />
+        <a className="site-brand">
+          <SiteLogo className="site-logo" />
+          {showBranding ? <SiteBranding className="site-title-text" as="span" /> : null}
         </a>
       </Link>
-      <SiteTagline />
+      {showBranding ? <SiteTagline /> : null}
       <NavMenu
         items={NAV}
         activeId={currentPage === 'category' || currentPage === 'tag' ? undefined : currentPage}
@@ -37,9 +46,21 @@ export default function Header({ currentPage }: HeaderProps) {
           padding: 2.5rem 0 1.5rem;
         }
 
-        .site-title {
-          display: inline-block;
+        .site-brand {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.75rem;
           margin: 0 0 0.5rem;
+          text-decoration: none;
+        }
+
+        .site-logo {
+          display: block;
+          max-height: 48px;
+          width: auto;
+        }
+
+        .site-title-text {
           font-size: clamp(1.75rem, 5vw, 2.25rem);
           font-weight: 700;
           line-height: 1.15;
@@ -49,7 +70,7 @@ export default function Header({ currentPage }: HeaderProps) {
           text-underline-offset: 0.12em;
         }
 
-        .site-title:hover {
+        .site-brand:hover .site-title-text {
           color: #9a2349;
         }
 

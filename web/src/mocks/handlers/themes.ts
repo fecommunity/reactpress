@@ -18,20 +18,34 @@ const MOCK_THEMES = [
     customizer: {
       sections: [
         {
+          id: "identity",
+          title: "站点身份",
+          settings: [
+            { id: "siteLogo", type: "image", label: "站点 Logo" },
+            {
+              id: "displayTitle",
+              type: "text",
+              label: "站点标题",
+              default: "Twenty Twenty-Five",
+            },
+            { id: "displayTagline", type: "text", label: "站点副标题" },
+            { id: "showBranding", type: "checkbox", label: "显示站点标题与副标题", default: "1" },
+          ],
+        },
+        {
           id: "colors",
-          title: "颜色",
+          title: "颜色与深色模式",
           settings: [
             { id: "primaryColor", type: "color", label: "主色", default: "#1a1a1a" },
             { id: "accentColor", type: "color", label: "强调色", default: "#d63638" },
             { id: "backgroundColor", type: "color", label: "背景色", default: "#ffffff" },
+            { id: "darkMode", type: "checkbox", label: "启用深色模式", default: "0" },
           ],
         },
         {
-          id: "identity",
-          title: "站点身份",
-          settings: [
-            { id: "displayTitle", type: "text", label: "展示标题", default: "Twenty Twenty-Five" },
-          ],
+          id: "background",
+          title: "背景图片",
+          settings: [{ id: "backgroundImage", type: "image", label: "背景图" }],
         },
       ],
     },
@@ -50,20 +64,27 @@ const MOCK_THEMES = [
     customizer: {
       sections: [
         {
-          id: "colors",
-          title: "颜色",
-          settings: [
-            { id: "primaryColor", type: "color", label: "主色", default: "#2271b1" },
-            { id: "accentColor", type: "color", label: "强调色", default: "#72aee6" },
-            { id: "backgroundColor", type: "color", label: "背景色", default: "#f6f7f7" },
-          ],
-        },
-        {
           id: "identity",
           title: "站点身份",
           settings: [
-            { id: "displayTitle", type: "text", label: "展示标题", default: "Hello World" },
+            { id: "siteLogo", type: "image", label: "站点 Logo" },
+            { id: "displayTitle", type: "text", label: "站点标题", default: "Hello World" },
+            { id: "displayTagline", type: "text", label: "站点副标题" },
           ],
+        },
+        {
+          id: "colors",
+          title: "颜色与深色模式",
+          settings: [
+            { id: "primaryColor", type: "color", label: "主色", default: "#c02b5a" },
+            { id: "backgroundColor", type: "color", label: "背景色", default: "#ffffff" },
+            { id: "darkMode", type: "checkbox", label: "启用深色模式", default: "0" },
+          ],
+        },
+        {
+          id: "background",
+          title: "背景图片",
+          settings: [{ id: "backgroundImage", type: "image", label: "背景图" }],
         },
       ],
     },

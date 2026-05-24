@@ -31,7 +31,7 @@ export function CustomizePage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { data: settings, isLoading: settingsLoading } = useSiteSettings();
-  const { data: themes, isLoading: themesLoading, isError } = useThemes();
+  const { data: themes, isLoading: themesLoading, isError, refetch: refetchThemes } = useThemes();
   const { modsMutation } = useThemeMutations();
 
   const themeState = useMemo(() => {
@@ -48,19 +48,22 @@ export function CustomizePage() {
   const activeTheme = themes?.find((th) => th.id === themeId);
   const siteTitle =
     typeof settings?.systemTitle === "string" ? settings.systemTitle.trim() : undefined;
+  const siteDescription =
+    typeof settings?.systemSubTitle === "string" ? settings.systemSubTitle.trim() : undefined;
 
   const savedMods = useMemo(() => themeState.mods[themeId] ?? {}, [themeState.mods, themeId]);
   const [draftMods, setDraftMods] = useState<ThemeMods>(savedMods);
-  const [debouncedMods, setDebouncedMods] = useState<ThemeMods>(savedMods);
-  useEffect(() => {
-    setDraftMods(savedMods);
-    setDebouncedMods(savedMods);
-  }, [themeId, savedMods]);
+  /** Applied to preview iframe only when user clicks「预览」or after publish. */
+  const [previewMods, setPreviewMods] = useState<ThemeMods>(savedMods);
 
   useEffect(() => {
-    const timer = window.setTimeout(() => setDebouncedMods(draftMods), 280);
-    return () => window.clearTimeout(timer);
-  }, [draftMods]);
+    void refetchThemes();
+  }, [refetchThemes]);
+
+  useEffect(() => {
+    setDraftMods(savedMods);
+    setPreviewMods(savedMods);
+  }, [themeId, savedMods]);
 
   const [previewRefreshKey, setPreviewRefreshKey] = useState(0);
   const [device, setDevice] = useState<PreviewDevice>("desktop");
@@ -85,10 +88,15 @@ export function CustomizePage() {
     setDraftMods(mods);
   };
 
+  const handlePreview = (mods: ThemeMods) => {
+    setPreviewMods(mods);
+    setPreviewRefreshKey((k) => k + 1);
+  };
+
   const handleSave = async (mods: ThemeMods) => {
     if (!themeId) return;
     await modsMutation.mutateAsync({ themeId, mods });
-    setDebouncedMods(mods);
+    setPreviewMods(mods);
     setPreviewRefreshKey((k) => k + 1);
   };
 
@@ -131,8 +139,10 @@ export function CustomizePage() {
           <ThemeCustomizerPanel
             theme={activeTheme}
             siteTitle={siteTitle}
+            siteDescription={siteDescription}
             mods={draftMods}
             onModsChange={handleModsChange}
+            onPreview={handlePreview}
             onSave={handleSave}
             saving={modsMutation.isPending}
           />
@@ -155,7 +165,7 @@ export function CustomizePage() {
               <ThemePreviewFrame
                 themeId={themeId}
                 activeThemeId={themeState.activeTheme}
-                mods={debouncedMods}
+                mods={previewMods}
                 siteUrl={siteUrl}
                 title={t("appearance.livePreview")}
                 previewSiteUrl={previewSiteUrl}

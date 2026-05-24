@@ -29,6 +29,9 @@ export { ThemeCssVars } from './ThemeCssVars';
 export { SiteBranding } from './SiteBranding';
 export type { SiteBrandingProps } from './SiteBranding';
 
+export { SiteLogo } from './SiteLogo';
+export type { SiteLogoProps } from './SiteLogo';
+
 export { LocaleSwitcher } from './LocaleSwitcher';
 export type { LocaleSwitcherProps } from './LocaleSwitcher';
 
@@ -42,8 +45,10 @@ export {
   useActiveThemeId,
   useIsThemePreview,
   useLocale,
+  useSiteMeta,
   useThemeId,
   useThemeMod,
+  useThemeModBool,
   useThemeRuntime,
 } from './context';
 export type {

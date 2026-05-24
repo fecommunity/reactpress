@@ -3,20 +3,53 @@ const App = require('next/app').default;
 const { fetchVisitorContext, createDefaultVisitorContext } = require('./fetch');
 const { themeApi } = require('./api');
 const { ReactPressProvider } = require('../ui/context/ReactPressProvider');
+const { ThemeCssVars } = require('../ui/ThemeCssVars');
+const {
+  PREVIEW_MODS_QUERY_KEY,
+  mergePreviewMods,
+  parsePreviewModsFromNextCtx,
+  parsePreviewModsParam,
+} = require('./preview-mods');
 
 /**
  * WordPress-style `functions.php` bootstrap for Next `_app`.
  * @param {{ id: string }} manifest from theme.json
  */
+function mergeModsWithPreviewQuery(baseMods) {
+  let next = baseMods ?? {};
+  if (typeof window !== 'undefined') {
+    const fromUrl = parsePreviewModsParam(
+      new URLSearchParams(window.location.search).get(PREVIEW_MODS_QUERY_KEY),
+    );
+    if (Object.keys(fromUrl).length > 0) {
+      next = mergePreviewMods(next, fromUrl);
+    }
+  }
+  return next;
+}
+
 function createThemeApp(manifest) {
   function ThemeApp({ Component, pageProps }) {
     const { reactPress, ...rest } = pageProps;
+    const [mods, setMods] = React.useState(() =>
+      reactPress ? mergeModsWithPreviewQuery(reactPress.mods) : {},
+    );
+
+    React.useEffect(() => {
+      if (!reactPress) return;
+      setMods(mergeModsWithPreviewQuery(reactPress.mods));
+    }, [reactPress]);
+
     if (!reactPress) {
       return React.createElement(Component, rest);
     }
+
+    const providerProps = { ...reactPress, mods };
+
     return React.createElement(
       ReactPressProvider,
-      reactPress,
+      providerProps,
+      React.createElement(ThemeCssVars, null),
       React.createElement(Component, rest),
     );
   }
@@ -43,6 +76,15 @@ function createThemeApp(manifest) {
     } catch (error) {
       console.error('[reactpress] fetchVisitorContext failed', error);
     }
+
+    const draftMods = parsePreviewModsFromNextCtx(appContext.ctx);
+    if (Object.keys(draftMods).length > 0) {
+      reactPress = {
+        ...reactPress,
+        mods: mergePreviewMods(reactPress.mods ?? {}, draftMods),
+      };
+    }
+
     return {
       ...appProps,
       pageProps: {

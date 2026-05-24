@@ -13,6 +13,7 @@ export function ReactPressProvider({
   activeThemeId,
   mods = {},
   isPreview = false,
+  siteMeta,
   children,
   persistLocale = true,
   onLocaleChange,
@@ -31,6 +32,7 @@ export function ReactPressProvider({
         activeThemeId={activeThemeId}
         mods={mods}
         isPreview={isPreview}
+        siteMeta={siteMeta}
       >
         {children}
       </ThemeRuntimeProvider>

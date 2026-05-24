@@ -549,23 +549,49 @@ function watchPreviewThemeManifest(projectRoot, onChange) {
 
   let lastSignature = readPreviewManifestSignature(projectRoot);
   let debounce = null;
+  /** Delay teardown when manifest is deleted — admin preview session may remount immediately. */
+  let clearDebounce = null;
+  const PREVIEW_CLEAR_GRACE_MS = 500;
+
+  const enqueueRestart = (nextSignature) => {
+    lastSignature = nextSignature;
+    if (nextSignature) {
+      console.log('\n[reactpress] preview-theme.json changed — restarting preview theme…');
+    }
+    previewRestartChain = previewRestartChain
+      .then(() => onChange())
+      .catch((err) => {
+        console.warn(
+          `[reactpress] ${t('themeDev.restartFailed', { message: err.message || err })}`,
+        );
+      });
+  };
 
   const scheduleCheck = () => {
     clearTimeout(debounce);
     debounce = setTimeout(() => {
       const next = readPreviewManifestSignature(projectRoot);
       if (next === lastSignature) return;
-      lastSignature = next;
-      if (next) {
-        console.log('\n[reactpress] preview-theme.json changed — restarting preview theme…');
+
+      if (!next && lastSignature) {
+        if (clearDebounce) clearTimeout(clearDebounce);
+        clearDebounce = setTimeout(() => {
+          clearDebounce = null;
+          const still = readPreviewManifestSignature(projectRoot);
+          if (still) {
+            if (still !== lastSignature) enqueueRestart(still);
+            return;
+          }
+          enqueueRestart('');
+        }, PREVIEW_CLEAR_GRACE_MS);
+        return;
       }
-      previewRestartChain = previewRestartChain
-        .then(() => onChange())
-        .catch((err) => {
-          console.warn(
-            `[reactpress] ${t('themeDev.restartFailed', { message: err.message || err })}`,
-          );
-        });
+
+      if (clearDebounce) {
+        clearTimeout(clearDebounce);
+        clearDebounce = null;
+      }
+      enqueueRestart(next);
     }, 400);
   };
 
@@ -574,6 +600,7 @@ function watchPreviewThemeManifest(projectRoot, onChange) {
 
   return () => {
     clearTimeout(debounce);
+    if (clearDebounce) clearTimeout(clearDebounce);
     clearInterval(poller);
     watcher.close();
   };

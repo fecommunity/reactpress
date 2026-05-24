@@ -61,6 +61,10 @@ export default defineConfig({
         __dirname,
         "../toolkit/src/extension/index.ts",
       ),
+      "@fecommunity/reactpress-toolkit/theme": path.resolve(
+        __dirname,
+        "../toolkit/src/theme/index.ts",
+      ),
     },
   },
   build: {

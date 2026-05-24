@@ -2,6 +2,7 @@ import type { CSSProperties } from "react";
 import { useMemo } from "react";
 import { Spin, Typography } from "antd";
 import type { ThemeMods } from "@fecommunity/reactpress-toolkit/extension";
+import { appendPreviewModsToUrl } from "@fecommunity/reactpress-toolkit/extension";
 import { useThemePreviewHtml } from "@/hooks/useThemePreviewHtml";
 import { resolveLiveSitePreviewUrl } from "@/shared/theme/previewUrl";
 import styles from "@/modules/appearance/components/themes-page.module.css";
@@ -39,14 +40,23 @@ export function ThemePreviewFrame({
 
   const liveUrl = useMemo(() => {
     if (preferModsPreview) return null;
-    if (preferModsPreview) return null;
-    return resolveLiveSitePreviewUrl(siteUrl, {
+    const base = resolveLiveSitePreviewUrl(siteUrl, {
       themeId,
       activeThemeId,
       previewSiteUrl,
       previewSessionReady,
     });
-  }, [preferModsPreview, themeId, activeThemeId, siteUrl, previewSiteUrl, previewSessionReady]);
+    if (!base) return null;
+    return appendPreviewModsToUrl(base, mods);
+  }, [
+    preferModsPreview,
+    themeId,
+    activeThemeId,
+    siteUrl,
+    previewSiteUrl,
+    previewSessionReady,
+    modsKey,
+  ]);
 
   const {
     html: previewHtml,
@@ -57,7 +67,7 @@ export function ThemePreviewFrame({
   if (liveUrl) {
     return (
       <iframe
-        key={refreshKey ? `${liveUrl}-${refreshKey}` : liveUrl}
+        key={refreshKey ? `${modsKey}-${refreshKey}` : modsKey}
         className={className ?? styles.previewFrame}
         style={style}
         title={title}

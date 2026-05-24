@@ -56,10 +56,12 @@ export type {
   SiteLocaleState,
 } from './locale';
 
+export { resolvePublicAssetUrl } from './assets';
+
 export { resolveThemeRuntime } from './runtime';
 export type { ResolveThemeRuntimeOptions, ThemeRuntime } from './runtime';
 
-export { parseSiteMeta, unwrapSetting } from './setting';
+export { DEFAULT_SITE_META, parseSiteMeta, unwrapSetting } from './setting';
 export type { SiteMeta } from './setting';
 
 export type { FetchVisitorContextOptions, VisitorContextProps } from './fetch';
@@ -71,6 +73,15 @@ export const createThemeApp = require('./createApp').createThemeApp as (
 export type ThemeManifestRef = { id: string };
 
 export { defaultModsFromManifest } from './customizer';
+
+export {
+  PREVIEW_MODS_QUERY_KEY,
+  appendPreviewModsToUrl,
+  mergePreviewMods,
+  parsePreviewModsFromNextCtx,
+  parsePreviewModsFromRequestUrl,
+  parsePreviewModsParam,
+} from './preview-mods';
 
 export { themeNotFound, themeOnDemandPaths, themeStaticNotFound } from './static';
 
@@ -87,6 +98,7 @@ export {
   PageHeader,
   ReactPressProvider,
   SiteBranding,
+  SiteLogo,
   SiteDocument,
   TaxonomyList,
   ThemeCssVars,
@@ -97,8 +109,10 @@ export {
   useIsThemePreview,
   useLocale,
   useNavActive,
+  useSiteMeta,
   useThemeId,
   useThemeMod,
+  useThemeModBool,
   useThemeRuntime,
 } from '../ui';
 export type {
@@ -112,6 +126,7 @@ export type {
   PageHeaderProps,
   ReactPressProviderProps,
   SiteBrandingProps,
+  SiteLogoProps,
   SiteDocumentProps,
   TaxonomyItem,
   TaxonomyListProps,

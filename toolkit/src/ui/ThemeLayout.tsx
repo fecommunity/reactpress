@@ -1,4 +1,5 @@
 import React from 'react';
+import { useThemeModBool } from './context/ThemeRuntimeContext';
 
 export interface ThemeLayoutProps {
   header?: React.ReactNode;
@@ -21,6 +22,7 @@ export function ThemeLayout({
   contentClassName,
   wrapContent = false,
 }: ThemeLayoutProps) {
+  const darkMode = useThemeModBool('darkMode', false);
   const mainContent = wrapContent ? (
     <div className={contentClassName} data-rp-part="content">
       {children}
@@ -30,7 +32,11 @@ export function ThemeLayout({
   );
 
   return (
-    <div className={className} data-rp-component="layout">
+    <div
+      className={className}
+      data-rp-component="layout"
+      {...(darkMode ? { 'data-rp-dark': 'true' } : {})}
+    >
       {header}
       <main className={mainClassName} data-rp-component="main">
         {mainContent}

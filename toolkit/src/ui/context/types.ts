@@ -1,6 +1,7 @@
 import type React from 'react';
 import type { ThemeMods } from '../../extension/theme';
 import type { LocaleCatalog, LocaleMessages } from '../../theme/locale';
+import type { SiteMeta } from '../../theme/setting';
 
 export interface LocaleContextValue {
   locale: string;
@@ -16,6 +17,7 @@ export interface ThemeRuntimeContextValue {
   activeThemeId: string;
   mods: ThemeMods;
   isPreview: boolean;
+  siteMeta: SiteMeta;
 }
 
 export interface ReactPressProviderProps {
@@ -27,6 +29,7 @@ export interface ReactPressProviderProps {
   activeThemeId: string;
   mods?: ThemeMods;
   isPreview?: boolean;
+  siteMeta?: SiteMeta;
   children: React.ReactNode;
   /** Persist locale in `localStorage` (browser only). */
   persistLocale?: boolean;

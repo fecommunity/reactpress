@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useMemo } from 'react';
 import type { ThemeMods } from '../../extension/theme';
+import { DEFAULT_SITE_META } from '../../theme/setting';
 import type { ThemeRuntimeContextValue } from './types';
 
 const ThemeRuntimeContext = createContext<ThemeRuntimeContextValue | null>(null);
@@ -9,6 +10,7 @@ export interface ThemeRuntimeProviderProps {
   activeThemeId: string;
   mods?: ThemeMods;
   isPreview?: boolean;
+  siteMeta?: ThemeRuntimeContextValue['siteMeta'];
   children: React.ReactNode;
 }
 
@@ -17,6 +19,7 @@ export function ThemeRuntimeProvider({
   activeThemeId,
   mods = {},
   isPreview = false,
+  siteMeta = DEFAULT_SITE_META,
   children,
 }: ThemeRuntimeProviderProps) {
   const value = useMemo<ThemeRuntimeContextValue>(
@@ -25,8 +28,9 @@ export function ThemeRuntimeProvider({
       activeThemeId,
       mods,
       isPreview,
+      siteMeta,
     }),
-    [activeThemeId, isPreview, mods, themeId],
+    [activeThemeId, isPreview, mods, siteMeta, themeId],
   );
 
   return (
@@ -51,6 +55,15 @@ export function useThemeMod(modId: string, defaultValue = ''): string {
   return ctx.mods[modId] ?? defaultValue;
 }
 
+const TRUTHY = new Set(['1', 'true', 'yes', 'on']);
+
+/** Checkbox mods are stored as strings (`"1"` / `"0"`). */
+export function useThemeModBool(modId: string, defaultValue = false): boolean {
+  const raw = useThemeMod(modId, defaultValue ? '1' : '0');
+  if (raw === '') return defaultValue;
+  return TRUTHY.has(raw.trim().toLowerCase());
+}
+
 export function useThemeId(): string {
   return useThemeRuntime().themeId;
 }
@@ -61,4 +74,9 @@ export function useActiveThemeId(): string {
 
 export function useIsThemePreview(): boolean {
   return useThemeRuntime().isPreview;
+}
+
+export function useSiteMeta(): ThemeRuntimeContextValue['siteMeta'] {
+  const ctx = useContext(ThemeRuntimeContext);
+  return ctx?.siteMeta ?? DEFAULT_SITE_META;
 }

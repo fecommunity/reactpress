@@ -1,6 +1,12 @@
 import Link from 'next/link';
 import React from 'react';
-import { NavMenu, type NavItem } from '@fecommunity/reactpress-toolkit/theme';
+import {
+  NavMenu,
+  SiteBranding,
+  SiteLogo,
+  useThemeModBool,
+  type NavItem,
+} from '@fecommunity/reactpress-toolkit/theme';
 
 const NAV_ITEMS: NavItem[] = [
   { id: 'home', href: '/', label: 'Home' },
@@ -14,12 +20,17 @@ interface HeaderProps {
 }
 
 export default function Header({ currentPage }: HeaderProps) {
+  const showBranding = useThemeModBool('showBranding', true);
+
   return (
     <header className="header">
       <div className="header-content">
         <h1 className="site-title">
           <Link href="/">
-            <a>ReactPress</a>
+            <a className="site-brand-link">
+              <SiteLogo className="site-logo" />
+              {showBranding ? <SiteBranding fallback="ReactPress" as="span" /> : null}
+            </a>
           </Link>
         </h1>
         <NavMenu
@@ -35,8 +46,21 @@ export default function Header({ currentPage }: HeaderProps) {
       </div>
 
       <style jsx>{`
+        .site-brand-link {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+          text-decoration: none;
+          color: inherit;
+        }
+
+        .site-logo {
+          max-height: 40px;
+          width: auto;
+        }
+
         .header {
-          background-color: #fff;
+          background-color: var(--rp-background, #fff);
           box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
           position: sticky;
           top: 0;
@@ -58,7 +82,12 @@ export default function Header({ currentPage }: HeaderProps) {
           margin: 0;
           font-size: 1.8rem;
           font-weight: 800;
-          background: linear-gradient(90deg, #3b82f6, #8b5cf6, #3b82f6);
+          background: linear-gradient(
+            90deg,
+            var(--rp-primary, #3b82f6),
+            var(--rp-accent, #8b5cf6),
+            var(--rp-primary, #3b82f6)
+          );
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;

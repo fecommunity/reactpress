@@ -7,7 +7,8 @@ import type { ParseSiteLocaleOptions } from './locale';
 import { safeJsonParse } from './json';
 import { resolveThemeRuntime } from './runtime';
 import type { ThemeRuntime } from './runtime';
-import { parseSiteMeta, unwrapSetting } from './setting';
+import { DEFAULT_SITE_META, parseSiteMeta, unwrapSetting } from './setting';
+import type { SiteMeta } from './setting';
 
 /** Default ISR interval for theme list/home pages. */
 export const THEME_ISR_REVALIDATE_SECONDS = 60;
@@ -57,6 +58,8 @@ export interface VisitorContextProps {
   activeThemeId: string;
   mods: ThemeRuntime['mods'];
   isPreview: boolean;
+  /** Site settings (`systemTitle`, `systemSubTitle`, …) for branding fallbacks. */
+  siteMeta: SiteMeta;
 }
 
 /** Safe defaults when API is unreachable (still wraps pages in Provider). */
@@ -73,6 +76,7 @@ export function createDefaultVisitorContext(
     activeThemeId: themeId,
     mods: {},
     isPreview: false,
+    siteMeta: DEFAULT_SITE_META,
     ...partial,
   };
 }
@@ -96,6 +100,7 @@ export async function fetchVisitorContext(
     themeId: options.themeId,
     honorPreview: options.honorPreview,
   });
+  const siteMeta = parseSiteMeta(row);
 
   return {
     locale: localeState.locale,
@@ -106,6 +111,7 @@ export async function fetchVisitorContext(
     activeThemeId: runtime.activeThemeId,
     mods: runtime.mods,
     isPreview: runtime.isPreview,
+    siteMeta,
   };
 }
 

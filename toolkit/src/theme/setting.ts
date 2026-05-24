@@ -24,12 +24,14 @@ export interface SiteMeta {
   siteFavicon?: string;
 }
 
+export const DEFAULT_SITE_META: SiteMeta = {
+  siteName: 'ReactPress Site',
+  siteDescription: 'A ReactPress powered site',
+};
+
 export function parseSiteMeta(row: Record<string, unknown> | null): SiteMeta {
   if (!row) {
-    return {
-      siteName: 'ReactPress Site',
-      siteDescription: 'A ReactPress powered site',
-    };
+    return { ...DEFAULT_SITE_META };
   }
   return {
     siteName: String(row.systemTitle ?? 'ReactPress Site'),

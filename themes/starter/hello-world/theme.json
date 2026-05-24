@@ -7,7 +7,7 @@
   "tags": ["入门", "博客", "Hello"],
   "reactpress": {
     "requires": ">=3.0.0",
-    "supports": { "darkMode": false, "menus": ["primary"] },
+    "supports": { "darkMode": true, "menus": ["primary"] },
     "templates": {
       "home": "pages/index.tsx",
       "single": "pages/article/[id].tsx",
@@ -21,23 +21,53 @@
   "customizer": {
     "sections": [
       {
-        "id": "colors",
-        "title": "颜色",
-        "settings": [
-          { "id": "primaryColor", "type": "color", "label": "主色", "default": "#c02b5a" },
-          { "id": "backgroundColor", "type": "color", "label": "背景色", "default": "#ffffff" }
-        ]
-      },
-      {
         "id": "identity",
         "title": "站点身份",
         "settings": [
-          { "id": "displayTitle", "type": "text", "label": "展示标题", "default": "My Site" },
+          {
+            "id": "siteLogo",
+            "type": "image",
+            "label": "站点 Logo",
+            "description": "留空则使用后台「站点 Logo」(systemLogo)"
+          },
+          {
+            "id": "displayTitle",
+            "type": "text",
+            "label": "站点标题",
+            "description": "留空则使用后台「站点标题」(systemTitle)"
+          },
           {
             "id": "displayTagline",
             "type": "text",
             "label": "站点副标题",
-            "default": "A ReactPress powered site"
+            "description": "留空则使用后台「站点副标题」(systemSubTitle)"
+          }
+        ]
+      },
+      {
+        "id": "colors",
+        "title": "颜色与深色模式",
+        "settings": [
+          { "id": "primaryColor", "type": "color", "label": "主色", "default": "#c02b5a" },
+          { "id": "backgroundColor", "type": "color", "label": "背景色", "default": "#ffffff" },
+          {
+            "id": "darkMode",
+            "type": "checkbox",
+            "label": "启用深色模式",
+            "default": "0",
+            "description": "开启后站点使用深色背景与浅色文字"
+          }
+        ]
+      },
+      {
+        "id": "background",
+        "title": "背景图片",
+        "settings": [
+          {
+            "id": "backgroundImage",
+            "type": "image",
+            "label": "背景图",
+            "description": "设置后将覆盖纯色背景（宽屏可见）"
           }
         ]
       }

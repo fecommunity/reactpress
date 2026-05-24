@@ -5,8 +5,10 @@ export {
   ThemeRuntimeProvider,
   useActiveThemeId,
   useIsThemePreview,
+  useSiteMeta,
   useThemeId,
   useThemeMod,
+  useThemeModBool,
   useThemeRuntime,
 } from './ThemeRuntimeContext';
 export type { ThemeRuntimeProviderProps } from './ThemeRuntimeContext';

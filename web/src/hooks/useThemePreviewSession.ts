@@ -5,6 +5,34 @@ import { waitForVisitorSite } from "@/shared/theme/waitForVisitorSite";
 
 export type ThemePreviewSessionStatus = "idle" | "switching" | "ready";
 
+/** Debounce ending preview so React Strict Mode remount does not delete preview-theme.json twice. */
+const PREVIEW_SESSION_END_MS = 450;
+
+let previewSessionRefCount = 0;
+let previewSessionEndTimer: ReturnType<typeof setTimeout> | null = null;
+
+function retainPreviewSession(): void {
+  if (previewSessionEndTimer) {
+    clearTimeout(previewSessionEndTimer);
+    previewSessionEndTimer = null;
+  }
+  previewSessionRefCount += 1;
+}
+
+function releasePreviewSession(): void {
+  previewSessionRefCount = Math.max(0, previewSessionRefCount - 1);
+  if (previewSessionRefCount > 0) return;
+  if (previewSessionEndTimer) clearTimeout(previewSessionEndTimer);
+  previewSessionEndTimer = setTimeout(() => {
+    previewSessionEndTimer = null;
+    if (previewSessionRefCount === 0) {
+      void endThemePreviewSession().catch(() => {
+        /* ignore cleanup errors */
+      });
+    }
+  }, PREVIEW_SESSION_END_MS);
+}
+
 /**
  * Sync local preview dev (`preview-theme.json` on :3003) while admin preview is open.
  * Does not change the public visitor site (`active-theme.json` / :3001).
@@ -23,6 +51,8 @@ export function useThemePreviewSession(
       setPreviewSiteUrl(undefined);
       return;
     }
+
+    retainPreviewSession();
 
     let cancelled = false;
     setStatus("switching");
@@ -60,9 +90,7 @@ export function useThemePreviewSession(
       cancelled = true;
       setStatus("idle");
       setPreviewSiteUrl(undefined);
-      void endThemePreviewSession().catch(() => {
-        /* ignore cleanup errors */
-      });
+      releasePreviewSession();
     };
   }, [themeId, siteUrl, activeThemeId]);
 

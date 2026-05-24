@@ -1,10 +1,20 @@
 /** WordPress-style theme manifest and site theme state (shared by server / web / themes). */
 
+export interface ThemeCustomizerChoice {
+  value: string;
+  label: string;
+}
+
+/** WordPress Customizer–style control (declared in `theme.json` → `customizer.sections`). */
 export interface ThemeCustomizerSetting {
   id: string;
-  type: 'color' | 'text' | 'image' | 'textarea';
+  type: 'color' | 'text' | 'image' | 'textarea' | 'checkbox' | 'select';
   label: string;
   default?: string;
+  /** Shown below the control (like WP customize control descriptions). */
+  description?: string;
+  /** For `type: "select"`. */
+  choices?: ThemeCustomizerChoice[];
 }
 
 export interface ThemeCustomizerSection {
@@ -100,6 +110,17 @@ export function getThemeStateFromGlobalSetting(raw: unknown): SiteThemeState {
       typeof theme.previewThemeId === 'string' ? theme.previewThemeId : undefined,
   };
 }
+
+export { resolvePublicAssetUrl } from '../theme/assets';
+
+export {
+  PREVIEW_MODS_QUERY_KEY,
+  appendPreviewModsToUrl,
+  mergePreviewMods,
+  parsePreviewModsFromNextCtx,
+  parsePreviewModsFromRequestUrl,
+  parsePreviewModsParam,
+} from '../theme/preview-mods';
 
 export function mergeThemeStateIntoGlobalSetting(
   raw: unknown,

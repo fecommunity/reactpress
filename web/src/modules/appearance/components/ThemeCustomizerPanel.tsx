@@ -1,17 +1,21 @@
-import { App, Button, Collapse, ColorPicker, Form, Input, Typography } from "antd";
-import { useEffect, useMemo } from "react";
+import { App, Button, Form, Typography } from "antd";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "@tanstack/react-router";
 import type { ThemeListItem } from "@/hooks/useThemes";
 import type { ThemeMods } from "@fecommunity/reactpress-toolkit/extension";
 import { normalizeThemeMods } from "@/shared/theme/normalizeMods";
+import { CustomizerSettingField } from "@/modules/appearance/components/CustomizerSettingField";
 import styles from "@/modules/appearance/components/themes-page.module.css";
 
 type Props = {
   theme: ThemeListItem;
   siteTitle?: string;
+  siteDescription?: string;
   mods: ThemeMods;
   onModsChange: (mods: ThemeMods) => void;
+  onPreview: (mods: ThemeMods) => void;
   onSave: (mods: ThemeMods) => Promise<void>;
   saving?: boolean;
 };
@@ -29,8 +33,10 @@ function defaultModsFromTheme(theme: ThemeListItem): ThemeMods {
 export function ThemeCustomizerPanel({
   theme,
   siteTitle,
+  siteDescription,
   mods,
   onModsChange,
+  onPreview,
   onSave,
   saving,
 }: Props) {
@@ -38,44 +44,34 @@ export function ThemeCustomizerPanel({
   const { message } = App.useApp();
   const navigate = useNavigate();
   const [form] = Form.useForm<ThemeMods>();
+  const [activeSectionId, setActiveSectionId] = useState<string | null>(null);
 
   const defaults = useMemo(() => defaultModsFromTheme(theme), [theme]);
   const sections = theme.customizer?.sections ?? [];
   const displaySite = siteTitle?.trim() || t("appearance.yourSite");
+  const activeSection = sections.find((s) => s.id === activeSectionId);
 
   useEffect(() => {
-    form.setFieldsValue({ ...defaults, ...mods });
-  }, [theme.id, defaults, mods, form]);
+    setActiveSectionId(null);
+  }, [theme.id]);
 
-  const collapseItems = sections.map((section) => ({
-    key: section.id,
-    label: section.title,
-    children: (
-      <>
-        {section.settings.map((setting) => {
-          if (setting.type === "color") {
-            return (
-              <Form.Item
-                key={setting.id}
-                name={setting.id}
-                label={setting.label}
-                getValueFromEvent={(color) =>
-                  typeof color === "string" ? color : (color?.toHexString?.() ?? "")
-                }
-              >
-                <ColorPicker showText format="hex" />
-              </Form.Item>
-            );
-          }
-          return (
-            <Form.Item key={setting.id} name={setting.id} label={setting.label}>
-              <Input />
-            </Form.Item>
-          );
-        })}
-      </>
-    ),
-  }));
+  useEffect(() => {
+    const merged = { ...defaults, ...mods };
+    if (!mods.displayTitle?.trim() && siteTitle?.trim()) {
+      merged.displayTitle = siteTitle.trim();
+    }
+    if (!mods.displayTagline?.trim() && siteDescription?.trim()) {
+      merged.displayTagline = siteDescription.trim();
+    }
+    for (const section of sections) {
+      for (const setting of section.settings) {
+        if (setting.type === "checkbox" && merged[setting.id] == null && setting.default != null) {
+          merged[setting.id] = setting.default === "1" || setting.default === "true" ? "1" : "0";
+        }
+      }
+    }
+    form.setFieldsValue(merged);
+  }, [theme.id, defaults, mods, siteTitle, siteDescription, form, sections]);
 
   return (
     <div>
@@ -104,37 +100,75 @@ export function ThemeCustomizerPanel({
         onValuesChange={(_, all) =>
           onModsChange(normalizeThemeMods(all as Record<string, unknown>))
         }
-        style={{ marginTop: 16 }}
+        className={styles.customizerForm}
       >
-        {collapseItems.length > 0 ? (
-          <Collapse
-            bordered={false}
-            className={styles.customizerCollapse}
-            defaultActiveKey={sections.map((s) => s.id)}
-            items={collapseItems}
-          />
-        ) : (
+        {sections.length === 0 ? (
           <span className={styles.sidebarMuted}>{t("appearance.noCustomizerSections")}</span>
+        ) : activeSection ? (
+          <div className={styles.customizerSectionDetail}>
+            <Button
+              type="link"
+              icon={<ChevronLeft size={14} />}
+              className={styles.customizerSectionBack}
+              onClick={() => setActiveSectionId(null)}
+            >
+              {t("appearance.backToCustomizer")}
+            </Button>
+            <Typography.Title level={5} className={styles.customizerSectionTitle}>
+              {activeSection.title}
+            </Typography.Title>
+            {activeSection.settings.map((setting) => (
+              <CustomizerSettingField key={setting.id} setting={setting} />
+            ))}
+          </div>
+        ) : (
+          <nav className={styles.customizerNav} aria-label={t("appearance.customizerNav")}>
+            {sections.map((section) => (
+              <button
+                key={section.id}
+                type="button"
+                className={styles.customizerNavItem}
+                onClick={() => setActiveSectionId(section.id)}
+              >
+                <span>{section.title}</span>
+                <ChevronRight size={16} aria-hidden />
+              </button>
+            ))}
+          </nav>
         )}
       </Form>
 
-      <Button
-        type="primary"
-        block
-        className={styles.customizerPublish}
-        loading={saving}
-        onClick={async () => {
-          try {
-            const normalized = normalizeThemeMods(form.getFieldsValue() as Record<string, unknown>);
-            await onSave(normalized);
-            message.success(t("appearance.saveModsSuccess"));
-          } catch {
-            message.error(t("appearance.actionFailed"));
-          }
-        }}
-      >
-        {t("appearance.publish")}
-      </Button>
+      <div className={styles.customizerActions}>
+        <Button
+          className={styles.customizerPreviewBtn}
+          onClick={() => {
+            const normalized = normalizeThemeMods(
+              form.getFieldsValue(true) as Record<string, unknown>,
+            );
+            onPreview(normalized);
+          }}
+        >
+          {t("appearance.applyPreview")}
+        </Button>
+        <Button
+          type="primary"
+          className={styles.customizerPublishBtn}
+          loading={saving}
+          onClick={async () => {
+            try {
+              const normalized = normalizeThemeMods(
+                form.getFieldsValue(true) as Record<string, unknown>,
+              );
+              await onSave(normalized);
+              message.success(t("appearance.saveModsSuccess"));
+            } catch {
+              message.error(t("appearance.actionFailed"));
+            }
+          }}
+        >
+          {t("appearance.publish")}
+        </Button>
+      </div>
     </div>
   );
 }

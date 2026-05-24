@@ -74,6 +74,14 @@ export class ThemeService {
     return path.join(projectRoot(), 'templates');
   }
 
+  /** Installed copies may lag behind `themes/starter/` — keep customizer schema in sync for admin UI. */
+  private applyStarterCustomizerSchema(manifest: ThemeManifest): ThemeManifest {
+    const starterPath = path.join(this.starterDir(), manifest.id);
+    const starter = this.readManifest(starterPath);
+    if (!starter?.customizer?.sections?.length) return manifest;
+    return { ...manifest, customizer: starter.customizer };
+  }
+
   private readManifest(themeDir: string): ThemeManifest | null {
     const manifestPath = path.join(themeDir, 'theme.json');
     if (!fs.existsSync(manifestPath)) return null;
@@ -141,12 +149,13 @@ export class ThemeService {
 
     const add = (manifest: ThemeManifest, source: 'starter' | 'installed') => {
       const installed = installedSet.has(manifest.id) || source === 'installed';
-      byId.set(manifest.id, {
-        ...manifest,
+      const merged = this.applyStarterCustomizerSchema(manifest);
+      byId.set(merged.id, {
+        ...merged,
         source,
         installed,
-        active: state.activeTheme === manifest.id,
-        screenshotUrl: `/api/extension/themes/${manifest.id}/screenshot`,
+        active: state.activeTheme === merged.id,
+        screenshotUrl: `/api/extension/themes/${merged.id}/screenshot`,
       });
     };
 
@@ -462,9 +471,16 @@ export class ThemeService {
     const accent = mods.accentColor ?? '#d63638';
     const bg = mods.backgroundColor ?? '#f0f0f1';
     const displayTitle = mods.displayTitle ?? name;
+    const displayTagline = mods.displayTagline ?? manifest?.description ?? 'Theme preview';
+    const dark =
+      mods.darkMode === '1' || mods.darkMode === 'true' || mods.darkMode === 'yes';
+    const textColor = dark ? '#e8e8e8' : '#1d2327';
+    const pageBg = dark ? '#1a1a1a' : bg;
+    const bgImage = mods.backgroundImage?.trim();
+    const extraCss = mods.additionalCss?.trim() ?? '';
 
     return `<!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN"${dark ? ' data-rp-dark="true"' : ''}>
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -473,16 +489,17 @@ export class ThemeService {
     :root {
       --rp-primary: ${primary};
       --rp-accent: ${accent};
-      --rp-bg: ${bg};
+      --rp-bg: ${pageBg};
     }
     * { box-sizing: border-box; }
     body {
       margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: var(--rp-bg);
-      color: #1d2327;
+      background: ${bgImage ? `url("${bgImage.replace(/"/g, '\\"')}") center/cover fixed` : 'var(--rp-bg)'};
+      color: ${textColor};
       line-height: 1.6;
     }
+    ${extraCss}
     .wrap { max-width: 720px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
     header { border-bottom: 3px solid var(--rp-primary); padding-bottom: 1rem; margin-bottom: 2rem; }
     h1 { color: var(--rp-primary); font-size: 2rem; margin: 0 0 0.25rem; }
@@ -503,7 +520,7 @@ export class ThemeService {
   <div class="wrap">
     <header>
       <h1>${displayTitle}</h1>
-      <p class="tagline">${manifest?.description ?? 'Theme preview'}</p>
+      <p class="tagline">${displayTagline}</p>
     </header>
     <h2>排版示例</h2>
     <p>这是 <strong>${name}</strong> 主题的实时预览。在左侧自定义器中修改颜色与标题后，此页面会即时更新。</p>

@@ -34,7 +34,6 @@ export default function Home({ articles = [], categories = [], tags = [] }: Home
       }
       header={<Header currentPage="home" />}
       footer={<Footer />}
-      globalCss="html, body { background: #fff; }"
     >
       <h1 className="section-title">Archives</h1>
       <div className="content-layout">

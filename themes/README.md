@@ -29,7 +29,8 @@
 | `header.php` / `footer.php` | `components/Header.tsx` / `Footer.tsx` |
 | 模板层级 `front-page.php` 等 | `theme.json` → `reactpress.templates` + `pages/*` |
 | `get_header()` / `the_loop` | `SiteDocument` + `ArticleList` |
-| `theme_mod` / Customizer | `useThemeMod('primaryColor')` + `ThemeCssVars` |
+| `theme_mod` / Customizer | `theme.json` → `customizer.sections`；后台「外观 → 自定义」；`useThemeMod` / `useThemeModBool` + `ThemeCssVars` |
+| Site Identity / Colors / Background / Excerpt / Additional CSS | 在 `customizer.sections` 声明 `text` `color` `image` `checkbox` `select` `textarea` 控件 |
 | `__()` 翻译 | `useLocale().t('archives')` |
 | `home_url()` | `articlePath` / `categoryPath` / `tagPath` |
 

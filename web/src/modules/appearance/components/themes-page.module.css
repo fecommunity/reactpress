@@ -518,8 +518,102 @@
   padding: 0 0 12px !important;
 }
 
-.customizerPublish {
+.customizerActions {
+  display: flex;
+  gap: 8px;
   margin-top: 16px;
+}
+
+.customizerPreviewBtn,
+.customizerPublishBtn {
+  flex: 1;
+  margin-top: 0 !important;
+}
+
+.customizerForm {
+  margin-top: 16px;
+}
+
+.customizerNav {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid #dcdcde;
+}
+
+.customizerNavItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 14px 4px;
+  border: 0;
+  border-bottom: 1px solid #dcdcde;
+  background: transparent;
+  color: var(--appearance-text, #1d2327);
+  font-size: 14px;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+}
+
+.customizerNavItem:hover {
+  color: #2271b1;
+}
+
+.customizerSectionBack {
+  padding-left: 0 !important;
+  margin-bottom: 4px;
+  color: #2271b1 !important;
+}
+
+.customizerSectionTitle {
+  margin: 0 0 12px !important;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+}
+
+.settingDescription {
+  display: block;
+  font-size: 12px;
+}
+
+.imageSetting {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.imageSettingPreview {
+  max-width: 100%;
+  max-height: 120px;
+  object-fit: contain;
+  border: 1px solid #dcdcde;
+  border-radius: 2px;
+  background: #f6f7f7;
+}
+
+.imageSettingPlaceholder {
+  padding: 24px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--appearance-muted, #646970);
+  border: 1px dashed #c3c4c7;
+  border-radius: 2px;
+}
+
+.imageSettingActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.customizerCodeArea {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 12px;
 }
 
 /* WP-style fullscreen shells — always light sidebar text (admin may be dark) */

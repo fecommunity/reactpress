@@ -12,7 +12,6 @@ export function BaseGlobalStyles({ extra }: BaseGlobalStylesProps) {
       margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
         Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-      background-color: var(--rp-background, #f8f9fa);
     }
     * { box-sizing: border-box; }
     ${extra ?? ''}
