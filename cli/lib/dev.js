@@ -17,6 +17,7 @@ const { ensureOriginalCwd } = require('./root');
 const { detectProjectType, hasClient, hasWeb, hasToolkit } = require('./project-type');
 const { hasThemePackages } = require('./theme-runtime');
 const { startThemeSiteWithWatch, stopThemeSite } = require('./theme-dev');
+const { warmupThemeDevRoutes } = require('./theme-warmup');
 const { DEV_PORTS, ensureDevStackPorts, ensureApiPortFree, ensurePortFree, readEnvPort, isPortListening } =
   require('./ports');
 const { ensureDevDatabase, probeMysqlHost } = require('./docker');
@@ -338,6 +339,7 @@ async function startDevStack(projectRoot, { webOnly = false, infraDone = false }
     }
     if (includeThemeSite) {
       await waitForHttp(loadClientSiteUrl(projectRoot), 120_000);
+      await warmupThemeDevRoutes(projectRoot);
     }
     if (includeLegacyClient) {
       await waitForHttp(loadClientSiteUrl(projectRoot), 120_000);

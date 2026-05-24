@@ -1,4 +1,3 @@
-import React from 'react';
 import { resolvePublicAssetUrl } from '../theme/assets';
 import { useSiteMeta, useThemeMod } from './context/ThemeRuntimeContext';
 

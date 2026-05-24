@@ -59,9 +59,7 @@ export default function Home({ initialArticles, initialCategories, initialTags }
                     )}
                     <div className="article-content">
                       <h3 className="article-title">
-                        <Link href={articlePath(article.id)}>
-                          <a>{article.title}</a>
-                        </Link>
+                        <Link href={articlePath(article.id)}>{article.title}</Link>
                       </h3>
                       {article.summary && (
                         <p className="article-summary">{article.summary}</p>
@@ -73,7 +71,7 @@ export default function Home({ initialArticles, initialCategories, initialTags }
                         {article.category && (
                           <span className="article-category">
                             <Link href={`/category/${article.category.value}`}>
-                              <a>{article.category.label}</a>
+                              {article.category.label}
                             </Link>
                           </span>
                         )}
@@ -94,11 +92,9 @@ export default function Home({ initialArticles, initialCategories, initialTags }
                   className="categories-list"
                   itemClassName="category-item"
                   renderLink={({ item, href }) => (
-                    <Link href={href}>
-                      <a className="category-link">
-                        <span className="category-name">{item.label}</span>
-                        <span className="category-count">{item.articleCount || 0}</span>
-                      </a>
+                    <Link href={href} className="category-link">
+                      <span className="category-name">{item.label}</span>
+                      <span className="category-count">{item.articleCount || 0}</span>
                     </Link>
                   )}
                 />

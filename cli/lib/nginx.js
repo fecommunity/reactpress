@@ -120,12 +120,20 @@ function renderDevNginxConfig({ adminPort, visitorPort, apiPort }) {
         proxy_redirect off;
     }
 
-    location /_next/static/ {
+    # Next.js dev/HMR rewrites chunks frequently — never cache /_next (prod nginx keeps long cache).
+    location /_next/ {
         proxy_pass http://host.docker.internal:${visitorPort};
-        proxy_cache_valid 200 302 1y;
-        proxy_cache_valid 404 1m;
-        expires 1y;
-        add_header Cache-Control "public, immutable";
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+        proxy_read_timeout 300;
+        proxy_connect_timeout 300;
+        add_header Cache-Control "no-store, no-cache, must-revalidate" always;
         proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
     }
 
@@ -155,6 +163,8 @@ function isDevNginxConfigStale(projectRoot, configPath) {
   if (!content.includes(`host.docker.internal:${adminPort}/admin/`)) return true;
   if (!content.includes(`host.docker.internal:${visitorPort}`)) return true;
   if (!content.includes(`host.docker.internal:${apiPort}`)) return true;
+  // Dev must not long-cache Next chunks (breaks client-side nav after on-demand compile).
+  if (content.includes('expires 1y') && content.includes('/_next/')) return true;
   return false;
 }
 

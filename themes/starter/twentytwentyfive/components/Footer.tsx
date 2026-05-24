@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import React from 'react';
 
 export default function Footer() {
   return (
@@ -12,9 +11,9 @@ export default function Footer() {
         <div className="footer-links">
           <h4>Quick Links</h4>
           <ul>
-            <li><Link href="/"><a>Home</a></Link></li>
-            <li><Link href="/search"><a>Search</a></Link></li>
-            <li><Link href="/rss"><a>RSS Feed</a></Link></li>
+            <li><Link href="/">Home</Link></li>
+            <li><Link href="/search">Search</Link></li>
+            <li><Link href="/rss">RSS Feed</Link></li>
           </ul>
         </div>
         <div className="footer-credits">

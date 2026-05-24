@@ -31,11 +31,11 @@ export function normalizeThemeMods(values: Record<string, unknown>): ThemeMods {
   const out: ThemeMods = {};
   for (const [key, value] of Object.entries(values)) {
     const hex = colorToHex(value);
-    if (hex) {
+    if (hex !== undefined) {
       out[key] = hex;
       continue;
     }
-    if (value == null || value === "") continue;
+    if (value == null) continue;
     if (typeof value === "boolean") {
       out[key] = value ? "1" : "0";
       continue;

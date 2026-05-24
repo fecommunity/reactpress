@@ -22,14 +22,8 @@ const MOCK_THEMES = [
           title: "站点身份",
           settings: [
             { id: "siteLogo", type: "image", label: "站点 Logo" },
-            {
-              id: "displayTitle",
-              type: "text",
-              label: "站点标题",
-              default: "Twenty Twenty-Five",
-            },
+            { id: "displayTitle", type: "text", label: "站点标题", default: "Twenty Twenty-Five" },
             { id: "displayTagline", type: "text", label: "站点副标题" },
-            { id: "showBranding", type: "checkbox", label: "显示站点标题与副标题", default: "1" },
           ],
         },
         {
@@ -37,7 +31,6 @@ const MOCK_THEMES = [
           title: "颜色与深色模式",
           settings: [
             { id: "primaryColor", type: "color", label: "主色", default: "#1a1a1a" },
-            { id: "accentColor", type: "color", label: "强调色", default: "#d63638" },
             { id: "backgroundColor", type: "color", label: "背景色", default: "#ffffff" },
             { id: "darkMode", type: "checkbox", label: "启用深色模式", default: "0" },
           ],
@@ -244,9 +237,17 @@ export const themeHandlers = [
     await withDelay(120);
     const body = (await request.json()) as { mods?: Record<string, string> };
     const id = String(params.id);
+    const themeMods = { ...themeState.mods[id] };
+    for (const [key, value] of Object.entries(body.mods ?? {})) {
+      if (value === "") {
+        delete themeMods[key];
+      } else {
+        themeMods[key] = value;
+      }
+    }
     themeState = {
       ...themeState,
-      mods: { ...themeState.mods, [id]: { ...themeState.mods[id], ...body.mods } },
+      mods: { ...themeState.mods, [id]: themeMods },
       previewThemeId: id,
     };
     patchMockGlobalSettingTheme(themeState);

@@ -48,8 +48,10 @@
   "devDependencies": {
     "@types/fs-extra": "^9.0.13",
     "@types/node": "^17.0.22",
-    "@types/next": "12.3.4",
-    "@types/react": "17.0.42",
-    "react": "17.0.2"
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "typescript": "^5.7.3"
   }
 }

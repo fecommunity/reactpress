@@ -43,6 +43,7 @@ describe('lib/nginx', () => {
       assert.ok(content.includes('host.docker.internal'));
       assert.ok(content.includes('host.docker.internal:3000/admin/'));
       assert.ok(!content.includes(':5173'));
+      assert.ok(!content.includes('expires 1y'));
     } finally {
       rmDir(root);
     }

@@ -1,6 +1,7 @@
 import { GetStaticPaths, GetStaticProps } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import TagsCloud from '../../components/TagsCloud';
@@ -18,10 +19,34 @@ interface TagProps {
   tags: any[];
 }
 
-export default function Tag({ tag, articles, tags }: TagProps) {
+export default function Tag({
+  tag: tagProp,
+  articles = [],
+  tags = [],
+}: TagProps) {
+  const router = useRouter();
+  const tag = tagProp ?? (typeof router.query.tag === 'string' ? router.query.tag : '');
+
+  if (router.isFallback) {
+    return (
+      <div className="container">
+        <Head>
+          <title>Loading…</title>
+        </Head>
+        <Header currentPage="tag" />
+        <main className="main">
+          <div className="content-wrapper">
+            <p className="page-description">Loading…</p>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
   // Add safety check for tags array
   const safeTags = Array.isArray(tags) ? tags : [];
-  const tagData = safeTags.find(t => t && t.value === tag);
+  const tagData = safeTags.find((t) => t && t.value === tag);
   const tagName = tagData ? tagData.label : tag;
 
   // Add safety check for articles array
@@ -30,7 +55,7 @@ export default function Tag({ tag, articles, tags }: TagProps) {
   return (
     <div className="container">
       <Head>
-        <title>Tag: {tagName}</title>
+        <title>{`Tag: ${tagName}`}</title>
         <meta name="description" content={`Articles tagged with ${tagName}`} />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -60,9 +85,7 @@ export default function Tag({ tag, articles, tags }: TagProps) {
                       )}
                       <div className="article-content">
                         <h2 className="article-title">
-                          <Link href={`/article/${article.id}`}>
-                            <a>{article.title}</a>
-                          </Link>
+                          <Link href={`/article/${article.id}`}>{article.title}</Link>
                         </h2>
                         {article.summary && (
                           <p className="article-summary">{article.summary}</p>
@@ -78,7 +101,7 @@ export default function Tag({ tag, articles, tags }: TagProps) {
                           {article.category && (
                             <span className="article-category">
                               <Link href={`/category/${article.category.value}`}>
-                                <a>{article.category.label}</a>
+                                {article.category.label}
                               </Link>
                             </span>
                           )}
@@ -91,9 +114,7 @@ export default function Tag({ tag, articles, tags }: TagProps) {
                 <div className="no-articles">
                   <h2>No articles found</h2>
                   <p>There are no articles with this tag yet.</p>
-                  <Link href="/">
-                    <a className="back-home-link">← Back to Home</a>
-                  </Link>
+                  <Link href="/" className="back-home-link">← Back to Home</Link>
                 </div>
               )}
             </section>

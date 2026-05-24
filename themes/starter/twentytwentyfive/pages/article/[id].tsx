@@ -11,6 +11,47 @@ interface ArticleProps {
 }
 
 export default function Article({ article }: ArticleProps) {
+  const router = useRouter();
+
+  if (router.isFallback) {
+    return (
+      <div className="container">
+        <Head>
+          <title>Loading…</title>
+        </Head>
+        <Header currentPage="article" />
+        <main className="main">
+          <div className="content-wrapper">
+            <p className="loading-state">Loading…</p>
+          </div>
+        </main>
+        <Footer />
+        <style jsx>{`
+          .container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-color: #f8f9fa;
+          }
+          .main {
+            flex: 1;
+            padding: 3rem 0;
+          }
+          .content-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+          }
+          .loading-state {
+            color: #6b7280;
+            font-size: 1.1rem;
+            text-align: center;
+          }
+        `}</style>
+      </div>
+    );
+  }
+
   // If the article doesn't exist, render a 404 page
   if (!article) {
     // SVG Icons as React components to avoid Unicode escape sequence issues
@@ -38,9 +79,7 @@ export default function Article({ article }: ArticleProps) {
               </div>
               <h1>Article Not Found</h1>
               <p>The article you're looking for doesn't exist or has been removed.</p>
-              <Link href="/">
-                <a className="back-home-link">← Back to Home</a>
-              </Link>
+              <Link href="/" className="back-home-link">← Back to Home</Link>
             </div>
           </div>
         </main>
@@ -242,7 +281,7 @@ export default function Article({ article }: ArticleProps) {
                 {article.category && (
                   <span className="article-category">
                     <Link href={`/category/${article.category.value}`}>
-                      <a>{article.category.label}</a>
+                      {article.category.label}
                     </Link>
                   </span>
                 )}
@@ -265,8 +304,8 @@ export default function Article({ article }: ArticleProps) {
                 <h3>Tags</h3>
                 <div className="tags-list">
                   {article.tags.map((tag: any) => (
-                    <Link key={tag.value} href={`/tag/${tag.value}`}>
-                      <a className="tag">{tag.label}</a>
+                    <Link key={tag.value} href={`/tag/${tag.value}`} className="tag">
+                      {tag.label}
                     </Link>
                   ))}
                 </div>
@@ -274,9 +313,7 @@ export default function Article({ article }: ArticleProps) {
             )}
 
             <div className="article-navigation">
-              <Link href="/">
-                <a className="back-link">← Back to Home</a>
-              </Link>
+              <Link href="/" className="back-link">← Back to Home</Link>
             </div>
           </article>
         </div>

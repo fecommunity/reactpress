@@ -1,6 +1,7 @@
 import { GetStaticPaths, GetStaticProps } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import {
@@ -17,14 +18,41 @@ interface CategoryProps {
   categories: any[];
 }
 
-export default function Category({ category, articles, categories }: CategoryProps) {
-  const categoryData = categories.find(cat => cat.value === category);
+export default function Category({
+  category: categoryProp,
+  articles = [],
+  categories = [],
+}: CategoryProps) {
+  const router = useRouter();
+  const category =
+    categoryProp ?? (typeof router.query.category === 'string' ? router.query.category : '');
+
+  if (router.isFallback) {
+    return (
+      <div className="container">
+        <Head>
+          <title>Loading…</title>
+        </Head>
+        <Header currentPage="category" />
+        <main className="main">
+          <div className="content-wrapper">
+            <p className="page-description">Loading…</p>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  const safeCategories = Array.isArray(categories) ? categories : [];
+  const safeArticles = Array.isArray(articles) ? articles : [];
+  const categoryData = safeCategories.find((cat) => cat?.value === category);
   const categoryName = categoryData ? categoryData.label : category;
 
   return (
     <div className="container">
       <Head>
-        <title>Category: {categoryName}</title>
+        <title>{`Category: ${categoryName}`}</title>
         <meta name="description" content={`Articles in category ${categoryName}`} />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -37,15 +65,15 @@ export default function Category({ category, articles, categories }: CategoryPro
           <div className="page-header">
             <h1 className="page-title">Category: {categoryName}</h1>
             <p className="page-description">
-              {articles.length} article{articles.length !== 1 ? 's' : ''} in this category
+              {safeArticles.length} article{safeArticles.length !== 1 ? 's' : ''} in this category
             </p>
           </div>
 
           <div className="content-layout">
             <section className="articles-section">
-              {articles.length > 0 ? (
+              {safeArticles.length > 0 ? (
                 <div className="articles-grid">
-                  {articles.map((article: any) => (
+                  {safeArticles.map((article: any) => (
                     <article key={article.id} className="article-card">
                       {article.cover && (
                         <div className="article-image">
@@ -54,9 +82,7 @@ export default function Category({ category, articles, categories }: CategoryPro
                       )}
                       <div className="article-content">
                         <h2 className="article-title">
-                          <Link href={`/article/${article.id}`}>
-                            <a>{article.title}</a>
-                          </Link>
+                          <Link href={`/article/${article.id}`}>{article.title}</Link>
                         </h2>
                         {article.summary && (
                           <p className="article-summary">{article.summary}</p>
@@ -78,9 +104,7 @@ export default function Category({ category, articles, categories }: CategoryPro
                 <div className="no-articles">
                   <h2>No articles found</h2>
                   <p>There are no articles in this category yet.</p>
-                  <Link href="/">
-                    <a className="back-home-link">← Back to Home</a>
-                  </Link>
+                  <Link href="/" className="back-home-link">← Back to Home</Link>
                 </div>
               )}
             </section>
@@ -89,13 +113,11 @@ export default function Category({ category, articles, categories }: CategoryPro
               <div className="sidebar-widget">
                 <h3 className="widget-title">All Categories</h3>
                 <ul className="categories-list">
-                  {categories.map((cat) => (
+                  {safeCategories.map((cat) => (
                     <li key={cat.value} className={`category-item ${cat.value === category ? 'active' : ''}`}>
-                      <Link href={`/category/${cat.value}`}>
-                        <a className="category-link">
+                      <Link href={`/category/${cat.value}`} className="category-link">
                           <span className="category-name">{cat.label}</span>
                           <span className="category-count">{cat.articleCount || 0}</span>
-                        </a>
                       </Link>
                     </li>
                   ))}

@@ -13,6 +13,7 @@ const {
   isThemePackageDir,
   isAllowedThemePort,
 } = require('./theme-runtime');
+const { warmupThemeDevRoutes } = require('./theme-warmup');
 const { t } = require('./i18n');
 
 let themeChild = null;
@@ -26,6 +27,21 @@ let previewWatchStop = null;
 let previewRunningSignature = null;
 let trackedPreviewThemePid = null;
 let previewRestartChain = Promise.resolve();
+
+/** Remove `.next` when it still contains Next 12 / React 17 chunks after a theme upgrade. */
+function cleanStaleThemeDevCache(themeDir) {
+  const nextDir = path.join(themeDir, '.next');
+  if (!fs.existsSync(nextDir)) return;
+  try {
+    const result = spawnSync('grep', ['-rl', 'react@17.0.2', nextDir], { encoding: 'utf8' });
+    if (result.stdout?.trim()) {
+      fs.rmSync(nextDir, { recursive: true, force: true });
+      console.log('[reactpress] Cleared stale theme .next cache (react@17 chunks).');
+    }
+  } catch {
+    // ignore grep / rm failures
+  }
+}
 
 function getClientPort(projectRoot) {
   try {
@@ -340,6 +356,8 @@ function spawnThemeSite(projectRoot, { onClose } = {}) {
     console.log(t('themeDev.apiSplit', { ssr: serverApiUrl, browser: publicApiUrl }));
   }
 
+  cleanStaleThemeDevCache(themeDir);
+
   themeChild = spawn('pnpm', ['run', 'dev'], {
     cwd: themeDir,
     detached: process.platform !== 'win32',
@@ -362,8 +380,9 @@ function spawnThemeSite(projectRoot, { onClose } = {}) {
     if (onClose) onClose(code);
   });
 
-  waitForHttp(siteUrl, 120_000).then((ready) => {
+  waitForHttp(siteUrl, 120_000).then(async (ready) => {
     if (ready && runningSignature === signature) {
+      await warmupThemeDevRoutes(projectRoot);
       console.log(t('themeDev.ready', { url: siteUrl, id: activeTheme }));
     } else if (!ready && runningSignature === signature) {
       console.warn(t('themeDev.slow', { url: siteUrl }));
@@ -416,6 +435,8 @@ function spawnPreviewThemeSite(projectRoot, { onClose } = {}) {
   console.log(
     `[reactpress] Preview theme "${activeTheme}" → ${previewUrl} (port ${port}, ${relDir})`,
   );
+
+  cleanStaleThemeDevCache(themeDir);
 
   previewThemeChild = spawn('pnpm', ['run', 'dev'], {
     cwd: themeDir,

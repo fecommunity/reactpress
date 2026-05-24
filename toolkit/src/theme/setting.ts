@@ -37,7 +37,10 @@ export function parseSiteMeta(row: Record<string, unknown> | null): SiteMeta {
     siteName: String(row.systemTitle ?? 'ReactPress Site'),
     siteDescription: String(row.systemSubTitle ?? 'A ReactPress powered site'),
     siteUrl: row.systemUrl != null ? String(row.systemUrl) : undefined,
-    siteLogo: row.systemLogo != null ? String(row.systemLogo) : undefined,
+    siteLogo:
+      row.systemLogo != null && String(row.systemLogo).trim()
+        ? String(row.systemLogo).trim()
+        : undefined,
     siteFavicon: row.systemFavicon != null ? String(row.systemFavicon) : undefined,
   };
 }

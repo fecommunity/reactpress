@@ -132,9 +132,7 @@ export default function Search({ query, articles }: SearchProps) {
                         )}
                         <div className="article-content">
                           <h2 className="article-title">
-                            <Link href={`/article/${article.id}`}>
-                              <a>{article.title}</a>
-                            </Link>
+                            <Link href={`/article/${article.id}`}>{article.title}</Link>
                           </h2>
                           {article.summary && (
                             <p className="article-summary">{article.summary}</p>
@@ -150,7 +148,7 @@ export default function Search({ query, articles }: SearchProps) {
                             {article.category && (
                               <span className="article-category">
                                 <Link href={`/category/${article.category.value}`}>
-                                  <a>{article.category.label}</a>
+                                  {article.category.label}
                                 </Link>
                               </span>
                             )}
@@ -166,9 +164,7 @@ export default function Search({ query, articles }: SearchProps) {
                     </div>
                     <h3>No articles found</h3>
                     <p>Try different search terms or browse our categories.</p>
-                    <Link href="/">
-                      <a className="back-home-link">← Back to Home</a>
-                    </Link>
+                    <Link href="/" className="back-home-link">← Back to Home</Link>
                   </div>
                 )}
               </>

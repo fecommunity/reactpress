@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import React from 'react';
 import { TaxonomyList, type TaxonomyItem } from '@fecommunity/reactpress-toolkit/theme';
 
 interface TagsCloudProps {
@@ -16,16 +15,15 @@ export default function TagsCloud({ tags, currentTag }: TagsCloudProps) {
       currentValue={currentTag}
       className="tags-cloud"
       renderLink={({ item, href, active }) => (
-        <Link href={href}>
-          <a
-            className={`tag-link ${active ? 'active' : ''}`}
-            style={{
-              fontSize: `${10 + Math.min((item.articleCount || 0) / 3, 8)}px`,
-              lineHeight: '1.4',
-            }}
-          >
-            {item.label}
-          </a>
+        <Link
+          href={href}
+          className={`tag-link ${active ? 'active' : ''}`}
+          style={{
+            fontSize: `${10 + Math.min((item.articleCount || 0) / 3, 8)}px`,
+            lineHeight: '1.4',
+          }}
+        >
+          {item.label}
         </Link>
       )}
     />

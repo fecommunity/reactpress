@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import React from 'react';
 import {
   NavMenu,
   SiteBranding,
@@ -26,11 +25,9 @@ export default function Header({ currentPage }: HeaderProps) {
     <header className="header">
       <div className="header-content">
         <h1 className="site-title">
-          <Link href="/">
-            <a className="site-brand-link">
+          <Link href="/" className="site-brand-link">
               <SiteLogo className="site-logo" />
               {showBranding ? <SiteBranding fallback="ReactPress" as="span" /> : null}
-            </a>
           </Link>
         </h1>
         <NavMenu
@@ -38,12 +35,81 @@ export default function Header({ currentPage }: HeaderProps) {
           activeId={currentPage}
           className="navigation"
           renderLink={({ item, active }) => (
-            <Link href={item.href}>
-              <a className={active ? 'active' : ''}>{item.label}</a>
+            <Link href={item.href} className={active ? 'active' : ''}>
+              {item.label}
             </Link>
           )}
         />
       </div>
+
+      <style jsx global>{`
+        .navigation {
+          flex-shrink: 0;
+        }
+
+        .navigation ul {
+          display: flex;
+          flex-wrap: nowrap;
+          align-items: center;
+          list-style: none;
+          margin: 0;
+          padding: 0;
+          gap: 2rem;
+        }
+
+        .navigation a {
+          color: #4b5563;
+          text-decoration: none;
+          font-weight: 500;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          position: relative;
+          padding: 0.5rem 0;
+          white-space: nowrap;
+        }
+
+        .navigation a::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 0;
+          height: 2px;
+          background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+          transition: width 0.3s ease;
+          border-radius: 2px;
+        }
+
+        .navigation a:hover {
+          color: #1e1e1e;
+        }
+
+        .navigation a:hover::after {
+          width: 100%;
+        }
+
+        .navigation a.active {
+          color: #1e1e1e;
+          font-weight: 600;
+        }
+
+        .navigation a.active::after {
+          width: 100%;
+        }
+
+        @media (max-width: 768px) {
+          .navigation ul {
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.25rem;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .navigation ul {
+            gap: 0.875rem;
+          }
+        }
+      `}</style>
 
       <style jsx>{`
         .site-brand-link {
@@ -115,59 +181,9 @@ export default function Header({ currentPage }: HeaderProps) {
           }
         }
 
-        .navigation :global(ul) {
-          display: flex;
-          list-style: none;
-          margin: 0;
-          padding: 0;
-          gap: 2rem;
-        }
-
-        .navigation :global(a) {
-          color: #4b5563;
-          text-decoration: none;
-          font-weight: 500;
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          position: relative;
-          padding: 0.5rem 0;
-        }
-
-        .navigation :global(a::after) {
-          content: '';
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          width: 0;
-          height: 2px;
-          background: linear-gradient(90deg, #3b82f6, #8b5cf6);
-          transition: width 0.3s ease;
-          border-radius: 2px;
-        }
-
-        .navigation :global(a:hover) {
-          color: #1e1e1e;
-        }
-
-        .navigation :global(a:hover::after) {
-          width: 100%;
-        }
-
-        .navigation :global(a.active) {
-          color: #1e1e1e;
-          font-weight: 600;
-        }
-
-        .navigation :global(a.active::after) {
-          width: 100%;
-        }
-
         @media (max-width: 768px) {
           .header-content {
             flex-direction: column;
-            gap: 1.25rem;
-          }
-
-          .navigation :global(ul) {
             gap: 1.25rem;
           }
         }
@@ -179,12 +195,6 @@ export default function Header({ currentPage }: HeaderProps) {
 
           .site-title {
             font-size: 1.6rem;
-          }
-
-          .navigation :global(ul) {
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 0.875rem;
           }
         }
       `}</style>

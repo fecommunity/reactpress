@@ -350,7 +350,15 @@ export class ThemeService {
 
   async updateThemeMods(themeId: string, mods: ThemeMods): Promise<SiteThemeState> {
     const state = await this.getThemeState();
-    const nextMods = { ...state.mods, [themeId]: { ...(state.mods[themeId] ?? {}), ...mods } };
+    const themeMods = { ...(state.mods[themeId] ?? {}) };
+    for (const [key, value] of Object.entries(mods)) {
+      if (value === "") {
+        delete themeMods[key];
+      } else {
+        themeMods[key] = value;
+      }
+    }
+    const nextMods = { ...state.mods, [themeId]: themeMods };
     return this.saveThemeState({ mods: nextMods, previewThemeId: themeId });
   }
 

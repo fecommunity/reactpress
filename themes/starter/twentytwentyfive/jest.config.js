@@ -5,12 +5,16 @@ module.exports = {
     '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
   },
   transform: {
-    '^.+\\.tsx?$': 'ts-jest',
+    '^.+\\.tsx?$': [
+      'ts-jest',
+      {
+        tsconfig: {
+          jsx: 'react-jsx',
+        },
+      },
+    ],
   },
   testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.tsx?$',
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
-  // Add this to support ES modules
-  transformIgnorePatterns: [
-    '/node_modules/(?!@testing-library/jest-dom).+\\.js$'
-  ]
+  transformIgnorePatterns: ['/node_modules/(?!@testing-library/jest-dom).+\\.js$'],
 };

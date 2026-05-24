@@ -45,12 +45,8 @@ export default function Custom404() {
                 The page you're looking for doesn't exist or has been moved.
               </p>
               <div className="error-actions">
-                <Link href="/">
-                  <a className="primary-button">Go to Homepage</a>
-                </Link>
-                <Link href="/search">
-                  <a className="secondary-button">Search Articles</a>
-                </Link>
+                <Link href="/" className="primary-button">Go to Homepage</Link>
+                <Link href="/search" className="secondary-button">Search Articles</Link>
               </div>
             </div>
           </div>
