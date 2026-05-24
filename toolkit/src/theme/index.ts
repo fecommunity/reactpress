@@ -109,6 +109,7 @@ export {
   useIsThemePreview,
   useLocale,
   useNavActive,
+  useReportArticleView,
   useSiteMeta,
   useThemeId,
   useThemeMod,

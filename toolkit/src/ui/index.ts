@@ -35,7 +35,7 @@ export type { SiteLogoProps } from './SiteLogo';
 export { LocaleSwitcher } from './LocaleSwitcher';
 export type { LocaleSwitcherProps } from './LocaleSwitcher';
 
-export { useNavActive } from './hooks';
+export { useNavActive, useReportArticleView } from './hooks';
 
 export {
   LocaleProvider,

@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
-import { themeApi, unpackOne } from '@fecommunity/reactpress-toolkit/theme';
+import { themeApi, unpackOne, useReportArticleView } from '@fecommunity/reactpress-toolkit/theme';
 
 interface ArticleProps {
   article: any | null;
@@ -12,6 +12,12 @@ interface ArticleProps {
 
 export default function Article({ article }: ArticleProps) {
   const router = useRouter();
+  const routeArticleId =
+    typeof router.query.id === 'string' ? router.query.id : article?.id;
+  const viewCount = useReportArticleView(
+    !router.isFallback && article ? routeArticleId : undefined,
+    article?.views,
+  );
 
   if (router.isFallback) {
     return (
@@ -285,9 +291,11 @@ export default function Article({ article }: ArticleProps) {
                     </Link>
                   </span>
                 )}
-                <span className="article-views">
-                  {article.views} views
-                </span>
+                {viewCount != null ? (
+                  <span className="article-views">
+                    {viewCount} views
+                  </span>
+                ) : null}
               </div>
             </header>
 
