@@ -1,24 +1,24 @@
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import {
   NavMenu,
   SiteBranding,
   SiteLogo,
+  useNavActive,
   useThemeModBool,
   type NavItem,
 } from '@fecommunity/reactpress-toolkit/theme';
 
 const NAV_ITEMS: NavItem[] = [
   { id: 'home', href: '/', label: 'Home' },
-  { id: 'category', href: '/category/frontend', label: 'Categories' },
-  { id: 'tag', href: '/tag/javascript', label: 'Tags' },
+  { id: 'category', href: '/category', label: 'Categories' },
+  { id: 'tag', href: '/tag', label: 'Tags' },
   { id: 'search', href: '/search', label: 'Search' },
 ];
 
-interface HeaderProps {
-  currentPage?: 'home' | 'category' | 'tag' | 'search';
-}
-
-export default function Header({ currentPage }: HeaderProps) {
+export default function Header() {
+  const router = useRouter();
+  const activeId = useNavActive(NAV_ITEMS, router.pathname);
   const showBranding = useThemeModBool('showBranding', true);
 
   return (
@@ -26,13 +26,13 @@ export default function Header({ currentPage }: HeaderProps) {
       <div className="header-content">
         <h1 className="site-title">
           <Link href="/" className="site-brand-link">
-              <SiteLogo className="site-logo" />
-              {showBranding ? <SiteBranding fallback="ReactPress" as="span" /> : null}
+            <SiteLogo className="site-logo" />
+            {showBranding ? <SiteBranding fallback="ReactPress" as="span" /> : null}
           </Link>
         </h1>
         <NavMenu
           items={NAV_ITEMS}
-          activeId={currentPage}
+          activeId={activeId}
           className="navigation"
           renderLink={({ item, active }) => (
             <Link href={item.href} className={active ? 'active' : ''}>
@@ -103,21 +103,22 @@ export default function Header({ currentPage }: HeaderProps) {
             gap: 1.25rem;
           }
         }
-
-        @media (max-width: 480px) {
-          .navigation ul {
-            gap: 0.875rem;
-          }
-        }
       `}</style>
 
       <style jsx>{`
-        .site-brand-link {
+        .site-brand-link,
+        .site-brand-link:hover,
+        .site-brand-link:focus,
+        .site-brand-link:visited {
           display: inline-flex;
           align-items: center;
           gap: 0.5rem;
           text-decoration: none;
           color: inherit;
+        }
+
+        .site-brand-link span {
+          text-decoration: none;
         }
 
         .site-logo {
@@ -158,8 +159,7 @@ export default function Header({ currentPage }: HeaderProps) {
           -webkit-text-fill-color: transparent;
           background-clip: text;
           background-size: 200% auto;
-          animation: shimmer 3s linear infinite, pulse 4s ease-in-out infinite;
-          position: relative;
+          animation: shimmer 3s linear infinite;
         }
 
         @keyframes shimmer {
@@ -171,30 +171,10 @@ export default function Header({ currentPage }: HeaderProps) {
           }
         }
 
-        @keyframes pulse {
-          0%,
-          100% {
-            transform: scale(1);
-          }
-          50% {
-            transform: scale(1.05);
-          }
-        }
-
         @media (max-width: 768px) {
           .header-content {
             flex-direction: column;
             gap: 1.25rem;
-          }
-        }
-
-        @media (max-width: 480px) {
-          .header-content {
-            padding: 1.25rem;
-          }
-
-          .site-title {
-            font-size: 1.6rem;
           }
         }
       `}</style>

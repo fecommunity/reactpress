@@ -57,6 +57,24 @@
   text-underline-offset: 0.15em;
 }
 
+[data-rp-component='layout'] .site-brand,
+[data-rp-component='layout'] .site-brand:hover,
+[data-rp-component='layout'] .site-brand:focus,
+[data-rp-component='layout'] .site-brand:visited,
+[data-rp-component='layout'] .site-brand .site-title-text,
+[data-rp-component='layout'] .site-brand span {
+  text-decoration: none !important;
+  border-bottom: none;
+}
+
+.site-brand,
+.site-brand:hover,
+.site-brand:focus,
+.site-brand:visited,
+.site-title-text {
+  text-decoration: none;
+}
+
 .content-wrapper a:hover {
   color: #9a2349;
 }

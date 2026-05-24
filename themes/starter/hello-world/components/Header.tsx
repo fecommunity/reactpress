@@ -1,25 +1,23 @@
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import {
   NavMenu,
   SiteBranding,
   SiteLogo,
+  SiteTagline,
+  useNavActive,
   useThemeModBool,
   type NavItem,
 } from '@fecommunity/reactpress-toolkit/theme';
-import SiteTagline from './SiteTagline';
 
 const NAV: NavItem[] = [
   { id: 'home', href: '/', label: 'Home' },
   { id: 'search', href: '/search', label: 'Search' },
 ];
 
-export type HeaderPage = 'home' | 'category' | 'tag' | 'search' | 'article';
-
-interface HeaderProps {
-  currentPage?: HeaderPage;
-}
-
-export default function Header({ currentPage }: HeaderProps) {
+export default function Header() {
+  const router = useRouter();
+  const activeId = useNavActive(NAV, router.pathname);
   const showBranding = useThemeModBool('showBranding', true);
 
   return (
@@ -33,7 +31,7 @@ export default function Header({ currentPage }: HeaderProps) {
       {showBranding ? <SiteTagline /> : null}
       <NavMenu
         items={NAV}
-        activeId={currentPage === 'category' || currentPage === 'tag' ? undefined : currentPage}
+        activeId={activeId}
         className="site-nav"
         renderLink={({ item, active }) => (
           <Link href={item.href}>
@@ -46,12 +44,21 @@ export default function Header({ currentPage }: HeaderProps) {
           padding: 2.5rem 0 1.5rem;
         }
 
-        .site-brand {
+        .site-brand,
+        .site-brand:hover,
+        .site-brand:focus,
+        .site-brand:visited {
           display: inline-flex;
           align-items: center;
           gap: 0.75rem;
           margin: 0 0 0.5rem;
-          text-decoration: none;
+          text-decoration: none !important;
+        }
+
+        .site-brand :global(.site-title-text),
+        .site-brand :global(span) {
+          text-decoration: none !important;
+          border-bottom: none;
         }
 
         .site-logo {
@@ -60,17 +67,14 @@ export default function Header({ currentPage }: HeaderProps) {
           width: auto;
         }
 
-        .site-title-text {
+        .site-brand :global(.site-title-text) {
           font-size: clamp(1.75rem, 5vw, 2.25rem);
           font-weight: 700;
           line-height: 1.15;
           color: var(--rp-primary, #c02b5a);
-          text-decoration: underline;
-          text-decoration-thickness: 1px;
-          text-underline-offset: 0.12em;
         }
 
-        .site-brand:hover .site-title-text {
+        .site-brand:hover :global(.site-title-text) {
           color: #9a2349;
         }
 

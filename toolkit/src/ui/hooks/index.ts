@@ -1,5 +1,6 @@
 export { useNavActive } from './useNavActive';
 export { useReportArticleView } from './useReportArticleView';
+export { useRouteParam } from './useRouteParam';
 
 export {
   readPersistedLocale,

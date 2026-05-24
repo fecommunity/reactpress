@@ -135,7 +135,12 @@ function createThemeApp(manifest) {
         honorPreview: process.env.REACTPRESS_HONOR_PREVIEW === '1',
       });
     } catch (error) {
-      console.error('[reactpress] fetchVisitorContext failed', error);
+      const code = error?.code ?? error?.cause?.code;
+      if (code === 'ECONNREFUSED') {
+        console.warn('[reactpress] API unavailable during startup, using default visitor context');
+      } else {
+        console.error('[reactpress] fetchVisitorContext failed', error);
+      }
     }
 
     const draftMods = parsePreviewModsFromNextCtx(appContext.ctx);

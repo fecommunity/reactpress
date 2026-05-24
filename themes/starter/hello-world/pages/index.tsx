@@ -32,7 +32,7 @@ export default function Home({ articles = [], categories = [], tags = [] }: Home
           <meta name="description" content="ReactPress hello-world theme" />
         </>
       }
-      header={<Header currentPage="home" />}
+      header={<Header />}
       footer={<Footer />}
     >
       <h1 className="section-title">Archives</h1>

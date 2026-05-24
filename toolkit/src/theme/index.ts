@@ -15,17 +15,32 @@ export type { ApiEnvelope } from './api-data';
 
 export {
   createDefaultVisitorContext,
+  createArchiveGetStaticProps,
+  fetchArticlePageProps,
   fetchCategoryArchive,
+  fetchCategoryIndex,
   fetchSearchArticles,
   fetchSingleArticle,
   fetchSiteMeta,
   fetchSiteSettings,
   fetchTagArchive,
+  fetchTagIndex,
   fetchThemeCatalog,
   fetchVisitorContext,
+  sanitizeNextProps,
   themeStaticProps,
+  withApiRetry,
+  withThemeStaticProps,
   THEME_ISR_REVALIDATE_SECONDS,
 } from './fetch';
+export type { FetchVisitorContextOptions, ThemeArchiveKind, VisitorContextProps } from './fetch';
+
+export {
+  resolveArchiveExcerpt,
+  stripHtml,
+  truncateWords,
+} from './excerpt';
+export type { ArchiveExcerptMode, ResolveArchiveExcerptOptions } from './excerpt';
 
 export {
   formatPublishDate,
@@ -64,8 +79,6 @@ export type { ResolveThemeRuntimeOptions, ThemeRuntime } from './runtime';
 export { DEFAULT_SITE_META, parseSiteMeta, unwrapSetting } from './setting';
 export type { SiteMeta } from './setting';
 
-export type { FetchVisitorContextOptions, VisitorContextProps } from './fetch';
-
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 export const createThemeApp = require('./createApp').createThemeApp as (
   manifest: { id: string },
@@ -90,16 +103,22 @@ export type { ThemeManifestLike, ThemeTemplateSlug } from './templates';
 
 /** Headless theme UI — also available from `@fecommunity/reactpress-toolkit/ui`. */
 export {
+  ArchiveEmptyState,
+  ArchivePageLayout,
+  ArticleCard,
   ArticleList,
   BaseGlobalStyles,
   LocaleProvider,
   LocaleSwitcher,
   NavMenu,
+  NotFoundPanel,
   PageHeader,
   ReactPressProvider,
   SiteBranding,
-  SiteLogo,
   SiteDocument,
+  SiteDocumentFallback,
+  SiteLogo,
+  SiteTagline,
   TaxonomyList,
   ThemeCssVars,
   ThemeLayout,
@@ -110,6 +129,7 @@ export {
   useLocale,
   useNavActive,
   useReportArticleView,
+  useRouteParam,
   useSiteMeta,
   useThemeId,
   useThemeMod,
@@ -117,6 +137,11 @@ export {
   useThemeRuntime,
 } from '../ui';
 export type {
+  ArchiveEmptyStateProps,
+  ArchivePageLayoutProps,
+  ArticleCardArticle,
+  ArticleCardLinkProps,
+  ArticleCardProps,
   ArticleListProps,
   BaseGlobalStylesProps,
   LocaleContextValue,
@@ -124,11 +149,14 @@ export type {
   LocaleSwitcherProps,
   NavMenuProps,
   NavMenuRenderLinkProps,
+  NotFoundPanelProps,
   PageHeaderProps,
   ReactPressProviderProps,
   SiteBrandingProps,
-  SiteLogoProps,
+  SiteDocumentFallbackProps,
   SiteDocumentProps,
+  SiteLogoProps,
+  SiteTaglineProps,
   TaxonomyItem,
   TaxonomyListProps,
   TaxonomyListRenderLinkProps,

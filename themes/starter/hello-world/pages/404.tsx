@@ -7,7 +7,7 @@ export default function NotFound() {
   return (
     <SiteDocument
       head={<title>404</title>}
-      header={<Header currentPage="home" />}
+      header={<Header />}
       footer={<Footer />}
       globalCss="html, body { background: #fff; }"
     >

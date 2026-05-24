@@ -15,6 +15,8 @@ export interface SiteDocumentProps {
   wrapContent?: boolean;
   globalCss?: string;
   skipBaseStyles?: boolean;
+  /** Skip CSS vars when `createThemeApp` already injects `ThemeCssVars` in `_app`. */
+  skipCssVars?: boolean;
 }
 
 /**
@@ -31,11 +33,12 @@ export function SiteDocument({
   wrapContent = true,
   globalCss,
   skipBaseStyles = false,
+  skipCssVars = true,
 }: SiteDocumentProps) {
   return (
     <>
       {head}
-      <ThemeCssVars />
+      {!skipCssVars ? <ThemeCssVars /> : null}
       <ThemeLayout
         className={className}
         mainClassName={mainClassName}

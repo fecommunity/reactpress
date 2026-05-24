@@ -6,13 +6,15 @@ import Footer from '../../components/Footer';
 import PostEntry from '../../components/PostEntry';
 import Sidebar from '../../components/Sidebar';
 import {
+  ArchiveEmptyState,
   ArticleList,
+  createArchiveGetStaticProps,
   fetchCategoryArchive,
+  PageHeader,
   SiteDocument,
-  themeApi,
-  themeNotFound,
+  SiteDocumentFallback,
   themeOnDemandPaths,
-  themeStaticProps,
+  useRouteParam,
 } from '@fecommunity/reactpress-toolkit/theme';
 
 interface CategoryProps {
@@ -27,25 +29,26 @@ interface CategoryProps {
   categories: Array<{ value: string; label: string; articleCount?: number }>;
 }
 
+const shellProps = {
+  header: <Header />,
+  footer: <Footer />,
+  globalCss: 'html, body { background: #fff; }',
+} as const;
+
 export default function CategoryPage({
   category: categoryProp,
   articles = [],
   categories = [],
 }: CategoryProps) {
   const router = useRouter();
-  const category =
-    categoryProp ?? (typeof router.query.category === 'string' ? router.query.category : '');
+  const category = useRouteParam(categoryProp, 'category');
 
   if (router.isFallback) {
     return (
-      <SiteDocument
+      <SiteDocumentFallback
+        {...shellProps}
         head={<title>Loading…</title>}
-        header={<Header currentPage="category" />}
-        footer={<Footer />}
-        globalCss="html, body { background: #fff; }"
-      >
-        <p className="empty-state">Loading…</p>
-      </SiteDocument>
+      />
     );
   }
 
@@ -54,20 +57,20 @@ export default function CategoryPage({
 
   return (
     <SiteDocument
+      {...shellProps}
       head={
         <>
           <title>{`Category: ${categoryName}`}</title>
           <meta name="description" content={`Articles in ${categoryName}`} />
         </>
       }
-      header={<Header currentPage="category" />}
-      footer={<Footer />}
-      globalCss="html, body { background: #fff; }"
     >
-      <h1 className="section-title">Category: {categoryName}</h1>
-      <p className="page-desc">
-        {articles.length} article{articles.length === 1 ? '' : 's'}
-      </p>
+      <PageHeader
+        className="section-title"
+        title={`Category: ${categoryName}`}
+        description={`${articles.length} article${articles.length === 1 ? '' : 's'}`}
+        descriptionClassName="page-desc"
+      />
 
       <div className="content-layout">
         <section>
@@ -78,14 +81,14 @@ export default function CategoryPage({
               renderArticle={(article) => <PostEntry key={article.id} article={article} />}
             />
           ) : (
-            <>
-              <p className="empty-state">No articles in this category yet.</p>
-              <p>
-                <Link href="/">
-                  <a>← Back to archives</a>
+            <ArchiveEmptyState
+              message="No articles in this category yet."
+              renderBackLink={({ href, label }) => (
+                <Link href={href}>
+                  <a>{label}</a>
                 </Link>
-              </p>
-            </>
+              )}
+            />
           )}
         </section>
         <Sidebar categories={categories} currentCategory={category} />
@@ -96,15 +99,8 @@ export default function CategoryPage({
 
 export const getStaticPaths: GetStaticPaths = async () => themeOnDemandPaths;
 
-export const getStaticProps: GetStaticProps<CategoryProps> = async ({ params }) => {
-  const category = params?.category as string | undefined;
-  if (!category) return themeNotFound();
-
-  try {
-    const data = await fetchCategoryArchive(themeApi, category);
-    return themeStaticProps(data);
-  } catch (error) {
-    console.error('[hello-world] fetch category failed', error);
-    return themeStaticProps({ category, articles: [], categories: [] });
-  }
-};
+export const getStaticProps: GetStaticProps<CategoryProps> = createArchiveGetStaticProps(
+  'category',
+  fetchCategoryArchive,
+  (category) => ({ category, articles: [], categories: [] }),
+);

@@ -6,13 +6,15 @@ import Footer from '../../components/Footer';
 import PostEntry from '../../components/PostEntry';
 import Sidebar from '../../components/Sidebar';
 import {
+  ArchiveEmptyState,
   ArticleList,
+  createArchiveGetStaticProps,
   fetchTagArchive,
+  PageHeader,
   SiteDocument,
-  themeApi,
-  themeNotFound,
+  SiteDocumentFallback,
   themeOnDemandPaths,
-  themeStaticProps,
+  useRouteParam,
 } from '@fecommunity/reactpress-toolkit/theme';
 
 interface TagProps {
@@ -27,20 +29,22 @@ interface TagProps {
   tags: Array<{ value: string; label: string; articleCount?: number }>;
 }
 
+const shellProps = {
+  header: <Header />,
+  footer: <Footer />,
+  globalCss: 'html, body { background: #fff; }',
+} as const;
+
 export default function TagPage({ tag: tagProp, articles = [], tags = [] }: TagProps) {
   const router = useRouter();
-  const tag = tagProp ?? (typeof router.query.tag === 'string' ? router.query.tag : '');
+  const tag = useRouteParam(tagProp, 'tag');
 
   if (router.isFallback) {
     return (
-      <SiteDocument
+      <SiteDocumentFallback
+        {...shellProps}
         head={<title>Loading…</title>}
-        header={<Header currentPage="tag" />}
-        footer={<Footer />}
-        globalCss="html, body { background: #fff; }"
-      >
-        <p className="empty-state">Loading…</p>
-      </SiteDocument>
+      />
     );
   }
 
@@ -49,20 +53,20 @@ export default function TagPage({ tag: tagProp, articles = [], tags = [] }: TagP
 
   return (
     <SiteDocument
+      {...shellProps}
       head={
         <>
           <title>{`Tag: ${tagName}`}</title>
           <meta name="description" content={`Articles tagged ${tagName}`} />
         </>
       }
-      header={<Header currentPage="tag" />}
-      footer={<Footer />}
-      globalCss="html, body { background: #fff; }"
     >
-      <h1 className="section-title">Tag: {tagName}</h1>
-      <p className="page-desc">
-        {articles.length} article{articles.length === 1 ? '' : 's'}
-      </p>
+      <PageHeader
+        className="section-title"
+        title={`Tag: ${tagName}`}
+        description={`${articles.length} article${articles.length === 1 ? '' : 's'}`}
+        descriptionClassName="page-desc"
+      />
 
       <div className="content-layout">
         <section>
@@ -73,14 +77,14 @@ export default function TagPage({ tag: tagProp, articles = [], tags = [] }: TagP
               renderArticle={(article) => <PostEntry key={article.id} article={article} />}
             />
           ) : (
-            <>
-              <p className="empty-state">No articles with this tag yet.</p>
-              <p>
-                <Link href="/">
-                  <a>← Back to archives</a>
+            <ArchiveEmptyState
+              message="No articles with this tag yet."
+              renderBackLink={({ href, label }) => (
+                <Link href={href}>
+                  <a>{label}</a>
                 </Link>
-              </p>
-            </>
+              )}
+            />
           )}
         </section>
         <Sidebar tags={tags} currentTag={tag} />
@@ -91,15 +95,8 @@ export default function TagPage({ tag: tagProp, articles = [], tags = [] }: TagP
 
 export const getStaticPaths: GetStaticPaths = async () => themeOnDemandPaths;
 
-export const getStaticProps: GetStaticProps<TagProps> = async ({ params }) => {
-  const tag = params?.tag as string | undefined;
-  if (!tag) return themeNotFound();
-
-  try {
-    const data = await fetchTagArchive(themeApi, tag);
-    return themeStaticProps(data);
-  } catch (error) {
-    console.error('[hello-world] fetch tag failed', error);
-    return themeStaticProps({ tag, articles: [], tags: [] });
-  }
-};
+export const getStaticProps: GetStaticProps<TagProps> = createArchiveGetStaticProps(
+  'tag',
+  fetchTagArchive,
+  (tag) => ({ tag, articles: [], tags: [] }),
+);

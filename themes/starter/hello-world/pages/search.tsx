@@ -41,7 +41,7 @@ export default function SearchPage({ query = '', articles = [] }: SearchProps) {
           <meta name="description" content="Search articles" />
         </>
       }
-      header={<Header currentPage="search" />}
+      header={<Header />}
       footer={<Footer />}
       globalCss="html, body { background: #fff; }"
     >

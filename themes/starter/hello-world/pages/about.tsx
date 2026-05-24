@@ -22,7 +22,7 @@ export default function About({ siteInfo }: AboutProps) {
           <meta name="description" content="About this site" />
         </>
       }
-      header={<Header currentPage="home" />}
+      header={<Header />}
       footer={<Footer />}
       globalCss="html, body { background: #fff; }"
     >

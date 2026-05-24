@@ -5,12 +5,17 @@ import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import TagsCloud from '../../components/TagsCloud';
 import {
+  ArchiveEmptyState,
   categoryPath,
+  fetchArticlePageProps,
   formatPublishDate,
   SiteDocument,
-  tagPath,
+  SiteDocumentFallback,
   themeApi,
-  unpackOne,
+  themeOnDemandPaths,
+  useReportArticleView,
+  useRouteParam,
+  withThemeStaticProps,
 } from '@fecommunity/reactpress-toolkit/theme';
 
 interface ArticleProps {
@@ -27,52 +32,59 @@ interface ArticleProps {
   } | null;
 }
 
+const shellProps = {
+  footer: <Footer />,
+  globalCss: 'html, body { background: #fff; }',
+} as const;
+
 export default function ArticlePage({ article }: ArticleProps) {
   const router = useRouter();
+  const routeArticleId = useRouteParam(article?.id, 'id');
+  const viewCount = useReportArticleView(
+    !router.isFallback && article ? routeArticleId : undefined,
+    article?.views,
+  );
 
   if (router.isFallback) {
     return (
-      <SiteDocument
+      <SiteDocumentFallback
+        {...shellProps}
+        header={<Header />}
         head={<title>Loading…</title>}
-        header={<Header currentPage="article" />}
-        footer={<Footer />}
-        globalCss="html, body { background: #fff; }"
-      >
-        <p className="empty-state">Loading…</p>
-      </SiteDocument>
+      />
     );
   }
 
   if (!article) {
     return (
       <SiteDocument
-        head={<title>Article not found</title>}
+        {...shellProps}
         header={<Header />}
-        footer={<Footer />}
-        globalCss="html, body { background: #fff; }"
+        head={<title>Article not found</title>}
       >
         <h1 className="section-title">Not found</h1>
-        <p className="empty-state">This article does not exist or was removed.</p>
-        <p>
-          <Link href="/">
-            <a>← Back to archives</a>
-          </Link>
-        </p>
+        <ArchiveEmptyState
+          message="This article does not exist or was removed."
+          renderBackLink={({ href, label }) => (
+            <Link href={href}>
+              <a>{label}</a>
+            </Link>
+          )}
+        />
       </SiteDocument>
     );
   }
 
   return (
     <SiteDocument
+      {...shellProps}
+      header={<Header />}
       head={
         <>
           <title>{article.title}</title>
           <meta name="description" content={article.summary || article.title} />
         </>
       }
-      header={<Header currentPage="article" />}
-      footer={<Footer />}
-      globalCss="html, body { background: #fff; }"
     >
       <article>
         <header className="article-header">
@@ -88,7 +100,7 @@ export default function ArticlePage({ article }: ArticleProps) {
                 </Link>
               </span>
             ) : null}
-            {article.views != null ? <span>{article.views} views</span> : null}
+            {viewCount != null ? <span>{viewCount} views</span> : null}
           </p>
         </header>
 
@@ -107,13 +119,7 @@ export default function ArticlePage({ article }: ArticleProps) {
         {article.tags && article.tags.length > 0 ? (
           <footer className="article-tags">
             <h2>Tags</h2>
-            <div className="tags-cloud">
-              {article.tags.map((tag) => (
-                <Link key={tag.value} href={tagPath(tag.value)}>
-                  <a>{tag.label}</a>
-                </Link>
-              ))}
-            </div>
+            <TagsCloud tags={article.tags} />
           </footer>
         ) : null}
 
@@ -127,25 +133,13 @@ export default function ArticlePage({ article }: ArticleProps) {
   );
 }
 
-export const getStaticPaths: GetStaticPaths = async () => ({
-  paths: [],
-  fallback: true,
-});
+export const getStaticPaths: GetStaticPaths = async () => themeOnDemandPaths;
 
 export const getStaticProps: GetStaticProps<ArticleProps> = async ({ params }) => {
   const id = params?.id as string | undefined;
-  if (!id) {
-    return { props: { article: null }, revalidate: 60 };
-  }
-
-  try {
-    const article = unpackOne(await themeApi.article.findById(id));
-    return {
-      props: { article: article || null },
-      revalidate: 60,
-    };
-  } catch (error) {
-    console.error('[hello-world] fetch article failed', error);
-    return { props: { article: null }, revalidate: 60 };
-  }
+  return withThemeStaticProps(
+    'fetch article failed',
+    () => fetchArticlePageProps(themeApi, id),
+    { article: null },
+  );
 };
