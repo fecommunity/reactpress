@@ -2,14 +2,9 @@ import { GetStaticPaths, GetStaticProps } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { http } from '@fecommunity/reactpress-toolkit';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
-
-// Create a custom API instance with the desired baseURL
-const customApi = http.createApiInstance({
-  baseURL: 'https://api.gaoredu.com/'
-});
+import { themeApi } from '../../lib/api';
 
 interface ArticleProps {
   article: any | null;
@@ -726,7 +721,7 @@ export const getStaticProps: GetStaticProps<ArticleProps> = async ({ params }) =
     }
 
     // Cast to any to access the actual response data
-    const articleResponse: any = await customApi.article.findById(id);
+    const articleResponse: any = await themeApi.article.findById(id);
     // Extract the actual article data from the response
     // The API response is wrapped in { statusCode, msg, success, data }
     // So we need to access response.data.data to get the actual article

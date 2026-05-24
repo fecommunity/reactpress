@@ -28,6 +28,7 @@ export const appearanceModule: AdminModule = {
       ],
     });
     routes.registerRoute({ path: "/appearance/themes", permission: "extension:manage" });
+    routes.registerRoute({ path: "/appearance/themes/preview", permission: "extension:manage" });
     routes.registerRoute({ path: "/appearance/customize", permission: "setting:manage" });
   },
 };

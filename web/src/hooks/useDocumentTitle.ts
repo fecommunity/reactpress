@@ -37,6 +37,9 @@ function resolveExtraTitleKey(pathname: string): string | null {
   if (pathname === "/article/editor") return "article.writeArticle";
   if (/^\/page\/editor\/.+/.test(pathname)) return "page.editTitle";
   if (pathname === "/page/editor") return "placeholder.newPage";
+  if (pathname.startsWith("/appearance/themes/preview")) return "appearance.preview";
+  if (pathname.startsWith("/appearance/customize")) return "menu.appearance.customize";
+  if (pathname.startsWith("/appearance/themes")) return "menu.appearance.themes";
   return null;
 }
 

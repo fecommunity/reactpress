@@ -2,15 +2,10 @@ import { GetStaticProps } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { http } from '@fecommunity/reactpress-toolkit';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import TagsCloud from '../components/TagsCloud';
-
-// Create a custom API instance with the desired baseURL
-const customApi = http.createApiInstance({
-  baseURL: 'https://api.gaoredu.com/'
-});
+import { themeApi } from '../lib/api';
 
 interface HomeProps {
   initialArticles: any[];
@@ -505,9 +500,9 @@ export const getStaticProps: GetStaticProps<HomeProps> = async () => {
   try {
     // Fetch articles, categories, and tags using the custom toolkit instance
     const [articlesResponse, categoriesResponse, tagsResponse] = await Promise.all([
-      customApi.article.findAll(),
-      customApi.category.findAll(),
-      customApi.tag.findAll(),
+      themeApi.article.findAll(),
+      themeApi.category.findAll(),
+      themeApi.tag.findAll(),
     ]);
 
     // Extract data from responses

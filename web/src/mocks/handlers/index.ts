@@ -5,6 +5,7 @@ import { tagHandlers } from "./tag";
 import { commentHandlers } from "./comment";
 import { userHandlers } from "./user";
 import { pageHandlers, fileHandlers, settingHandlers, viewHandlers, apiKeyHandlers } from "./page";
+import { themeHandlers } from "./themes";
 
 export const handlers = [
   ...authHandlers,
@@ -18,4 +19,5 @@ export const handlers = [
   ...settingHandlers,
   ...viewHandlers,
   ...apiKeyHandlers,
+  ...themeHandlers,
 ];

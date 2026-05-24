@@ -158,6 +158,12 @@ const main = async () => {
     console.log(`[ReactPress] Project root determined to be: ${projectRoot}`);
     
     if (fs.existsSync(envPath)) {
+      if (process.env.REACTPRESS_API_ENTRY === 'starter') {
+        console.log(
+          '[ReactPress] API dev uses nest starter entry; skip main bootstrap (see server npm run dev)',
+        );
+        return;
+      }
       console.log('[ReactPress] Environment file exists, starting main application');
       await startMainApplication();
       return;
@@ -343,4 +349,6 @@ const startMainApplication = async (): Promise<void> => {
   }
 };
 
-main();
+if (require.main === module) {
+  main();
+}

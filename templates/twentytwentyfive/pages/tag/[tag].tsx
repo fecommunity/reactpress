@@ -1,15 +1,10 @@
 import { GetStaticPaths, GetStaticProps } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
-import { http } from '@fecommunity/reactpress-toolkit';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import TagsCloud from '../../components/TagsCloud';
-
-// Create a custom API instance with the desired baseURL
-const customApi = http.createApiInstance({
-  baseURL: 'https://api.gaoredu.com/'
-});
+import { themeApi } from '../../lib/api';
 
 interface TagProps {
   tag: string;
@@ -480,8 +475,8 @@ export const getStaticProps: GetStaticProps<TagProps> = async ({ params }) => {
     // Fetch articles for this tag and all tags
     // Cast to any to access the actual response data
     const [articlesResponse, tagsResponse] = await Promise.all([
-      customApi.article.findArticlesByTag(tag) as any,
-      customApi.tag.findAll() as any,
+      themeApi.article.findArticlesByTag(tag) as any,
+      themeApi.tag.findAll() as any,
     ]);
 
     // Extract the actual data from the responses

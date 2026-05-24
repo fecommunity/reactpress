@@ -11,7 +11,8 @@
     "./utils": "./dist/utils/index.js",
     "./config": "./dist/config/index.js",
     "./admin": "./dist/admin/index.js",
-    "./react": "./dist/react/index.js"
+    "./react": "./dist/react/index.js",
+    "./extension": "./dist/extension/index.js"
   },
   "peerDependencies": {
     "@tanstack/react-query": ">=5",

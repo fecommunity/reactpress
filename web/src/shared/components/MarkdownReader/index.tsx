@@ -1,4 +1,6 @@
 import hljs from "highlight.js";
+import githubDarkCss from "highlight.js/styles/github-dark.min.css?url";
+import githubLightCss from "highlight.js/styles/github.min.css?url";
 import { App } from "antd";
 import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
@@ -18,11 +20,7 @@ function useHighlightTheme() {
       link.rel = "stylesheet";
       document.head.appendChild(link);
     }
-    void import(
-      darkMode ? "highlight.js/styles/github-dark.min.css" : "highlight.js/styles/github.min.css"
-    ).then((mod) => {
-      link!.href = mod.default;
-    });
+    link.href = darkMode ? githubDarkCss : githubLightCss;
   }, [darkMode]);
 }
 

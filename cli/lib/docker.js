@@ -69,6 +69,38 @@ function stopDockerServices(projectRoot) {
   console.log(t('docker.stopped'));
 }
 
+function parseEnvValue(projectRoot, key, fallback) {
+  const envPath = path.join(projectRoot, '.env');
+  try {
+    const content = fs.readFileSync(envPath, 'utf8');
+    const match = content.match(new RegExp(`^${key}=(.+)$`, 'm'));
+    if (match) return match[1].trim().replace(/^['"]|['"]$/g, '');
+  } catch {
+    // ignore
+  }
+  return fallback;
+}
+
+function parseDbPort(projectRoot) {
+  const raw = parseEnvValue(projectRoot, 'DB_PORT', '3306');
+  const port = parseInt(raw, 10);
+  return Number.isFinite(port) && port > 0 ? port : 3306;
+}
+
+function isPortListening(port, host = '127.0.0.1') {
+  const byLsof = spawnSync('lsof', [`-iTCP:${port}`, '-sTCP:LISTEN'], { encoding: 'utf8' });
+  if (byLsof.status === 0 && byLsof.stdout.trim()) return true;
+  const byNc = spawnSync('nc', ['-z', host, String(port)], { stdio: 'ignore' });
+  return byNc.status === 0;
+}
+
+function isDbContainerRunning(container) {
+  const res = spawnSync('docker', ['inspect', '-f', '{{.State.Running}}', container], {
+    encoding: 'utf8',
+  });
+  return res.status === 0 && res.stdout.trim() === 'true';
+}
+
 function startDockerServices(projectRoot) {
   console.log(t('docker.starting'));
   if (!isDockerRunning()) {
@@ -84,11 +116,67 @@ function startDockerServices(projectRoot) {
     console.warn(t('nginx.ensureWarn', { message: err.message || err }));
   }
   const ctx = resolveComposeContext(projectRoot);
-  const result = runCompose(['up', '-d'], ctx);
-  if (result.status !== 0) {
+  const dbPort = parseDbPort(projectRoot);
+
+  if (isPortListening(dbPort)) {
+    console.warn(t('docker.dbPortInUse', { port: dbPort }));
+    spawnSync('docker', ['rm', '-f', 'reactpress_db'], { stdio: 'ignore' });
+    const result = runCompose(['up', '-d', '--no-deps', 'nginx'], ctx);
+    if (result.status !== 0) {
+      throw new Error(t('docker.notRunning'));
+    }
+    console.log(t('docker.started'));
+    return;
+  }
+
+  const dbResult = runCompose(['up', '-d', 'db'], ctx);
+  if (dbResult.status !== 0) {
+    throw new Error(t('docker.notRunning'));
+  }
+  const nginxResult = runCompose(['up', '-d', '--no-deps', 'nginx'], ctx);
+  if (nginxResult.status !== 0) {
     throw new Error(t('docker.notRunning'));
   }
   console.log(t('docker.started'));
+}
+
+async function ensureDevDatabase(projectRoot) {
+  if (await probeMysqlHost(projectRoot)) return;
+
+  console.log(t('docker.ensureDevDb'));
+  if (!isDockerRunning()) {
+    throw new Error(t('docker.notRunning'));
+  }
+
+  const ctx = resolveComposeContext(projectRoot);
+  const dbPort = parseDbPort(projectRoot);
+  const container = resolveDbContainerName(ctx, projectRoot);
+
+  for (const name of new Set([container, 'reactpress_db', 'reactpress_cli_db'])) {
+    spawnSync('docker', ['start', name], { stdio: 'ignore' });
+  }
+  await new Promise((r) => setTimeout(r, 2500));
+  if (await probeMysqlHost(projectRoot)) return;
+
+  if (!isPortListening(dbPort)) {
+    const dbResult = runCompose(['up', '-d', 'db'], ctx);
+    if (dbResult.status !== 0) {
+      throw new Error(t('docker.mysqlNotReady'));
+    }
+  } else {
+    console.warn(t('docker.dbPortInUse', { port: dbPort }));
+    spawnSync('docker', ['rm', '-f', 'reactpress_db'], { stdio: 'ignore' });
+    await new Promise((r) => setTimeout(r, 500));
+    if (await probeMysqlHost(projectRoot)) return;
+  }
+
+  if (await waitForMysql(projectRoot, 45)) return;
+
+  throw new Error(
+    t('docker.dbPortConflict', {
+      port: dbPort,
+    }),
+  );
 }
 
 function resolveDbContainerName(ctx, projectRoot) {
@@ -112,10 +200,56 @@ function resolveDbCredentialsFromEnv(projectRoot) {
   return { user, password };
 }
 
+async function probeMysqlHost(projectRoot) {
+  const host = parseEnvValue(projectRoot, 'DB_HOST', '127.0.0.1');
+  const port = parseDbPort(projectRoot);
+  const user = parseEnvValue(projectRoot, 'DB_USER', 'reactpress');
+  const password =
+    parseEnvValue(projectRoot, 'DB_PASSWD', '') ||
+    parseEnvValue(projectRoot, 'DB_PASSWORD', 'reactpress');
+  const database = parseEnvValue(projectRoot, 'DB_DATABASE', 'reactpress');
+
+  let mysql;
+  try {
+    mysql = require('mysql2/promise');
+  } catch {
+    try {
+      mysql = require(path.join(projectRoot, 'server/node_modules/mysql2/promise'));
+    } catch {
+      return false;
+    }
+  }
+
+  try {
+    const conn = await mysql.createConnection({
+      host,
+      port,
+      user,
+      password,
+      database,
+      connectTimeout: 3000,
+    });
+    await conn.ping();
+    await conn.end();
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 async function waitForMysql(projectRoot, maxAttempts = 30) {
   const ctx = resolveComposeContext(projectRoot);
   const container = resolveDbContainerName(ctx, projectRoot);
   const { user, password } = resolveDbCredentialsFromEnv(projectRoot);
+  const dbPort = parseDbPort(projectRoot);
+
+  if (!isDbContainerRunning(container) && isPortListening(dbPort)) {
+    const ready = await probeMysqlHost(projectRoot);
+    if (ready) {
+      console.log(t('docker.mysqlExternalReady', { port: dbPort }));
+      return true;
+    }
+  }
 
   const spinner = ora({
     text: t('docker.waitingMysql'),
@@ -125,13 +259,18 @@ async function waitForMysql(projectRoot, maxAttempts = 30) {
 
   let attempts = 0;
   while (attempts < maxAttempts) {
-    const probe = spawnSync(
-      'docker',
-      ['exec', container, 'mysql', `-u${user}`, `-p${password}`, '-e', 'SELECT 1'],
-      { stdio: 'ignore' }
-    );
-    if (probe.status === 0) {
-      spinner.succeed(t('docker.mysqlReady'));
+    if (isDbContainerRunning(container)) {
+      const probe = spawnSync(
+        'docker',
+        ['exec', container, 'mysql', `-u${user}`, `-p${password}`, '-e', 'SELECT 1'],
+        { stdio: 'ignore' }
+      );
+      if (probe.status === 0) {
+        spinner.succeed(t('docker.mysqlReady'));
+        return true;
+      }
+    } else if (await probeMysqlHost(projectRoot)) {
+      spinner.succeed(t('docker.mysqlExternalReady', { port: dbPort }));
       return true;
     }
     attempts += 1;
@@ -268,6 +407,8 @@ module.exports = {
   startDockerServices,
   stopDockerServices,
   waitForMysql,
+  ensureDevDatabase,
+  probeMysqlHost,
   isDockerRunning,
   resolveComposeContext,
   pickDockerComposeCommand,

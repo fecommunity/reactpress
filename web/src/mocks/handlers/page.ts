@@ -27,9 +27,30 @@ const MOCK_PAGES = [
 let mockSettings: Record<string, unknown> = {
   systemTitle: "ReactPress",
   systemUrl: "http://localhost:3001",
-  globalSetting: "{}",
+  globalSetting: JSON.stringify({
+    theme: {
+      activeTheme: "twentytwentyfive",
+      installedThemes: ["twentytwentyfive"],
+      mods: {},
+      previewThemeId: "twentytwentyfive",
+    },
+  }),
   oss: "{}",
 };
+
+export function patchMockGlobalSettingTheme(theme: Record<string, unknown>) {
+  try {
+    const raw = mockSettings.globalSetting;
+    const global = typeof raw === "string" ? JSON.parse(raw) : (raw ?? {});
+    global.theme = theme;
+    mockSettings = { ...mockSettings, globalSetting: JSON.stringify(global) };
+  } catch {
+    mockSettings = {
+      ...mockSettings,
+      globalSetting: JSON.stringify({ theme }),
+    };
+  }
+}
 
 export const pageHandlers = [
   http.get("/api/page", async ({ request }) => {

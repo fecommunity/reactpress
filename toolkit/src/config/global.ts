@@ -1,3 +1,6 @@
+import { defaultSiteThemeState } from '../extension/theme';
+import type { SiteThemeState } from '../extension/theme';
+
 interface NavItem {
   label: string;
   key: string;
@@ -423,12 +426,14 @@ const en: LanguageConfig = {
 interface GlobalSetting {
   zh: LanguageConfig;
   en: LanguageConfig;
+  theme: SiteThemeState;
 }
 
 const globalSetting: GlobalSetting = {
   zh,
   en,
+  theme: defaultSiteThemeState,
 };
 
-export type { GlobalSetting, LanguageConfig, GlobalConfig, NavConfig, NavItem, UrlCategory };
+export type { GlobalSetting, LanguageConfig, GlobalConfig, NavConfig, NavItem, UrlCategory, SiteThemeState };
 export { globalSetting };

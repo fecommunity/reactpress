@@ -39,7 +39,7 @@
     "build": "nest build && npm run copy-assets",
     "copy-assets": "cp -r public dist/ 2>/dev/null || true",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "dev": "nest start --watch",
+    "dev": "cross-env REACTPRESS_API_ENTRY=starter nest start --watch",
     "debug": "nest start --debug --watch",
     "start": "cross-env NODE_ENV=production node dist/main",
     "pm2": "pm2 start npm --name @fecommunity/reactpress-server -- start",

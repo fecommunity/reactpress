@@ -1,6 +1,120 @@
-import { SettingsTabForm } from "@/modules/settings/components/SettingsTabForm";
+import { Button, Spin, Typography } from "antd";
+import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import {
+  getThemeStateFromGlobalSetting,
+  type ThemeMods,
+} from "@fecommunity/reactpress-toolkit/extension";
+import { useSiteSettings } from "@/hooks/useSiteSettings";
+import { useThemes, useThemeMutations } from "@/hooks/useThemes";
+import { ThemeCustomizerPanel } from "@/modules/appearance/components/ThemeCustomizerPanel";
+import { ThemePreviewFrame } from "@/modules/appearance/components/ThemePreviewFrame";
+import { ModulePlaceholder } from "@/shared/components/ModulePlaceholder";
+import styles from "@/modules/appearance/components/themes-page.module.css";
 
-/** Site customization uses globalSetting JSON from settings API. */
 export function CustomizePage() {
-  return <SettingsTabForm tab="reading" />;
+  const { t } = useTranslation();
+  const { data: settings, isLoading: settingsLoading } = useSiteSettings();
+  const { data: themes, isLoading: themesLoading, isError } = useThemes();
+  const { modsMutation } = useThemeMutations();
+
+  const themeState = useMemo(() => {
+    try {
+      const raw = settings?.globalSetting;
+      const parsed = typeof raw === "string" ? JSON.parse(raw) : raw;
+      return getThemeStateFromGlobalSetting(parsed);
+    } catch {
+      return getThemeStateFromGlobalSetting(null);
+    }
+  }, [settings?.globalSetting]);
+
+  const themeId = themeState.previewThemeId ?? themeState.activeTheme;
+  const activeTheme = themes?.find((th) => th.id === themeId);
+
+  const savedMods = useMemo(() => themeState.mods[themeId] ?? {}, [themeState.mods, themeId]);
+  const [draftMods, setDraftMods] = useState<ThemeMods>(savedMods);
+  const [debouncedMods, setDebouncedMods] = useState<ThemeMods>(savedMods);
+  useEffect(() => {
+    setDraftMods(savedMods);
+    setDebouncedMods(savedMods);
+  }, [themeId, savedMods]);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setDebouncedMods(draftMods), 280);
+    return () => window.clearTimeout(timer);
+  }, [draftMods]);
+
+  const [previewRefreshKey, setPreviewRefreshKey] = useState(0);
+  const siteUrl = typeof settings?.systemUrl === "string" ? settings.systemUrl.trim() : undefined;
+
+  const handleModsChange = (mods: ThemeMods) => {
+    setDraftMods(mods);
+  };
+
+  const handleSave = async (mods: ThemeMods) => {
+    if (!themeId) return;
+    await modsMutation.mutateAsync({ themeId, mods });
+    setDebouncedMods(mods);
+    setPreviewRefreshKey((k) => k + 1);
+  };
+
+  if (isError) {
+    return (
+      <ModulePlaceholder
+        title={t("placeholder.customize")}
+        description={t("appearance.loadError")}
+      />
+    );
+  }
+
+  if (settingsLoading || themesLoading) {
+    return <Spin />;
+  }
+
+  if (!activeTheme) {
+    return (
+      <ModulePlaceholder
+        title={t("placeholder.customize")}
+        description={t("appearance.noActiveTheme")}
+      />
+    );
+  }
+
+  return (
+    <>
+      <div className={styles.pageHeader}>
+        <Typography.Title level={4} style={{ margin: 0 }}>
+          {t("placeholder.customize")}
+        </Typography.Title>
+        <Button onClick={() => setPreviewRefreshKey((k) => k + 1)}>
+          {t("appearance.refreshPreview")}
+        </Button>
+      </div>
+
+      <div className={styles.customizeLayout}>
+        <aside className={styles.customizeSidebar}>
+          <ThemeCustomizerPanel
+            theme={activeTheme}
+            mods={draftMods}
+            onModsChange={handleModsChange}
+            onSave={handleSave}
+            saving={modsMutation.isPending}
+          />
+        </aside>
+        <div className={styles.previewWrap}>
+          <div className={styles.previewToolbar}>
+            <Typography.Text type="secondary">{t("appearance.livePreview")}</Typography.Text>
+          </div>
+          <ThemePreviewFrame
+            themeId={themeId}
+            activeThemeId={themeState.activeTheme}
+            mods={debouncedMods}
+            siteUrl={siteUrl}
+            title={t("appearance.livePreview")}
+            refreshKey={String(previewRefreshKey)}
+          />
+        </div>
+      </div>
+    </>
+  );
 }

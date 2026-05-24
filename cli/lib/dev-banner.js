@@ -18,6 +18,7 @@ const {
   getHealthUrl,
 } = require('./http');
 const { hasWeb } = require('./project-type');
+const { nginxEntryUrl } = require('./nginx');
 const { t } = require('./i18n');
 
 function getDevUrls(projectRoot) {
@@ -42,7 +43,10 @@ function urlLine(key, url, { underline = true } = {}) {
   return `  ${brand.accent('▸ ')}${keyCol}  ${value}`;
 }
 
-function printDevReadyBanner(projectRoot, { apiOnly = false, webOnly = false } = {}) {
+function printDevReadyBanner(
+  projectRoot,
+  { apiOnly = false, webOnly = false, nginx = false, hasThemeSite = false } = {}
+) {
   const urls = getDevUrls(projectRoot);
   const w = Math.min(terminalWidth() - 4, 56);
   const readyKey = apiOnly ? 'devBanner.readyApi' : webOnly ? 'devBanner.readyWeb' : 'devBanner.ready';
@@ -53,15 +57,29 @@ function printDevReadyBanner(projectRoot, { apiOnly = false, webOnly = false } =
   );
   console.log(`  ${brand.primary('╔' + '═'.repeat(w) + '╗')}`);
 
-  if (!apiOnly) {
-    if (!webOnly) {
-      console.log(urlLine(t('devBanner.site'), urls.site));
+  if (nginx) {
+    const entry = nginxEntryUrl(projectRoot);
+    if (!apiOnly && (hasThemeSite || !webOnly)) {
+      console.log(urlLine(t('devBanner.site'), entry));
     }
-    console.log(urlLine(t('devBanner.admin'), urls.admin));
+    if (!apiOnly && hasWeb(projectRoot)) {
+      console.log(urlLine(t('devBanner.admin'), `${entry}/admin/`));
+    }
+    console.log(urlLine(t('devBanner.api'), `${entry}/api`, { underline: false }));
+    console.log(
+      `  ${brand.muted('  ')}${brand.dim(t('devBanner.nginxHint'))}`
+    );
+  } else {
+    if (!apiOnly) {
+      if (!webOnly) {
+        console.log(urlLine(t('devBanner.site'), urls.site));
+      }
+      console.log(urlLine(t('devBanner.admin'), urls.admin));
+    }
+    console.log(urlLine(t('devBanner.api'), urls.api));
+    console.log(urlLine(t('devBanner.swagger'), urls.swagger));
+    console.log(urlLine(t('devBanner.health'), urls.health, { underline: false }));
   }
-  console.log(urlLine(t('devBanner.api'), urls.api));
-  console.log(urlLine(t('devBanner.swagger'), urls.swagger));
-  console.log(urlLine(t('devBanner.health'), urls.health, { underline: false }));
 
   const pulseWidth = Math.min(20, w - 4);
   if (pulseWidth > 6) {

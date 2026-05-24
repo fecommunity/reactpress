@@ -16,11 +16,21 @@ export const API_BASE_URL = resolveApiBaseUrl();
 /** `mock` = MSW scaffold (admin/admin); `server` = Nest JWT (`name` + `password`) */
 export const AUTH_MODE = import.meta.env.VITE_AUTH_MODE ?? "mock";
 
+/**
+ * Resolve a `public/` file path against Vite `base` (e.g. `/admin/` behind nginx).
+ * Use for `<img src>`, favicon, MSW assets — not for API routes.
+ */
+export function publicAssetUrl(path: string): string {
+  const base = import.meta.env.BASE_URL || "/";
+  const segment = path.replace(/^\//, "");
+  return `${base}${segment}`;
+}
+
 /** Favicon path under `public/` (browser tab icon). */
-export const APP_FAVICON_SRC = "/favicon.png";
+export const APP_FAVICON_SRC = publicAssetUrl("/favicon.png");
 
 /** Brand logo for login and in-app branding (`public/logo.svg`). */
-export const APP_LOGO_SRC = "/logo.svg";
+export const APP_LOGO_SRC = publicAssetUrl("/logo.svg");
 
 /** Product / brand name (login header, sidebar logo text, etc.). */
 export const APP_BRAND_NAME = "ReactPress";

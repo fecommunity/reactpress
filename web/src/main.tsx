@@ -10,8 +10,22 @@ import { bootstrapAdmin, getMenuTreeForPermissions } from "./shell/bootstrap";
 import { adminMenuToSidebar } from "./shared/menu";
 import { useAuthStore } from "./stores/auth";
 import { fetchSessionAndApplyToStore } from "./utils/session";
+import { AUTH_MODE } from "./utils/constants";
+import {
+  clearInvalidServerSession,
+  isMockAccessToken,
+  validateServerAuthSession,
+} from "./shared/auth/session";
 
-const router = createRouter({ routeTree });
+const routerBase =
+  import.meta.env.BASE_URL && import.meta.env.BASE_URL !== "/"
+    ? import.meta.env.BASE_URL.replace(/\/$/, "")
+    : undefined;
+
+const router = createRouter({
+  routeTree,
+  ...(routerBase ? { basepath: routerBase } : {}),
+});
 
 declare module "@tanstack/react-router" {
   interface Register {
@@ -38,9 +52,10 @@ async function enableMocking() {
   }
   if (!import.meta.env.DEV && !enableMockInBuild) return;
   const { worker } = await import("./mocks/browser");
+  const swUrl = `${import.meta.env.BASE_URL}mockServiceWorker.js`.replace(/\/{2,}/g, "/");
   return worker.start({
     onUnhandledRequest: "bypass",
-    serviceWorker: { url: "/mockServiceWorker.js" },
+    serviceWorker: { url: swUrl },
   });
 }
 
@@ -51,9 +66,25 @@ enableMocking()
     await useSettingsStore.persist.rehydrate();
     const { locale } = useSettingsStore.getState();
     await i18n.changeLanguage(locale);
-    const { isAuthenticated, tokens } = useAuthStore.getState();
-    const { user } = useAuthStore.getState();
-    if (user?.permissions?.length) {
+    const { isAuthenticated, tokens, user } = useAuthStore.getState();
+
+    if (AUTH_MODE === "server" && isAuthenticated) {
+      if (isMockAccessToken(tokens?.accessToken)) {
+        clearInvalidServerSession();
+      } else {
+        try {
+          await validateServerAuthSession();
+          const currentUser = useAuthStore.getState().user;
+          if (currentUser?.permissions?.length) {
+            useAuthStore
+              .getState()
+              .setMenus(adminMenuToSidebar(getMenuTreeForPermissions(currentUser.permissions)));
+          }
+        } catch {
+          clearInvalidServerSession();
+        }
+      }
+    } else if (user?.permissions?.length) {
       useAuthStore
         .getState()
         .setMenus(adminMenuToSidebar(getMenuTreeForPermissions(user.permissions)));

@@ -171,7 +171,7 @@ function nginxUp(projectRoot, options = {}) {
   const ctx = resolveNginxComposeContext(projectRoot, mode);
 
   if (fs.existsSync(ctx.composeFile) && composeDefinesNginxService(ctx.composeFile)) {
-    const result = runComposeOnContext(ctx, ['up', '-d', ctx.service]);
+    const result = runComposeOnContext(ctx, ['up', '-d', '--no-deps', ctx.service]);
     if (result.status !== 0) {
       throw new Error(t('nginx.startFailed'));
     }
@@ -179,8 +179,10 @@ function nginxUp(projectRoot, options = {}) {
     startNginxContainer(configPath, port);
   }
 
-  console.log(t('nginx.started', { url: nginxEntryUrl(projectRoot) }));
-  console.log(t('nginx.configPath', { path: configPath }));
+  if (!options.quiet) {
+    console.log(t('nginx.started', { url: nginxEntryUrl(projectRoot) }));
+    console.log(t('nginx.configPath', { path: configPath }));
+  }
 }
 
 function nginxDown(projectRoot, options = {}) {
@@ -287,6 +289,44 @@ async function checkNginx(projectRoot) {
   };
 }
 
+/**
+ * Start dev reverse proxy (Docker). Returns false when skipped or failed (non-fatal).
+ * @returns {Promise<boolean>}
+ */
+async function startDevNginx(projectRoot) {
+  if (process.env.REACTPRESS_SKIP_NGINX === '1') {
+    return false;
+  }
+  if (!isDockerRunning()) {
+    console.warn(t('dev.nginxSkippedDocker'));
+    return false;
+  }
+  try {
+    const configPath = resolveNginxConfigPath(projectRoot, 'dev');
+    const needsRefresh =
+      !fs.existsSync(configPath) ||
+      !fs.readFileSync(configPath, 'utf8').includes('location /admin/');
+    ensureNginxConfig(projectRoot, { mode: 'dev', force: needsRefresh });
+    nginxUp(projectRoot, { quiet: true });
+    const healthy = await probeNginxHealth(projectRoot, 15_000);
+    if (!healthy) {
+      console.warn(t('dev.nginxSlow', { url: nginxEntryUrl(projectRoot) }));
+    }
+    return true;
+  } catch (err) {
+    console.warn(t('dev.nginxStartFailed', { message: err.message || String(err) }));
+    return false;
+  }
+}
+
+function stopDevNginx(projectRoot) {
+  try {
+    nginxDown(projectRoot);
+  } catch {
+    stopNginxContainer();
+  }
+}
+
 async function runNginxCommand(command, projectRoot, extraArgs = [], options = {}) {
   switch (command) {
     case 'ensure': {
@@ -339,4 +379,6 @@ module.exports = {
   probeNginxHealth,
   checkNginx,
   runNginxCommand,
+  startDevNginx,
+  stopDevNginx,
 };

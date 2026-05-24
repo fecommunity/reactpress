@@ -1,4 +1,7 @@
+import { INestApplication } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import * as http from 'http';
+import * as net from 'net';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as bodyParser from 'body-parser';
 import * as compression from 'compression';
@@ -12,8 +15,67 @@ import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './filters/http-exception.filter';
 import { TransformInterceptor } from './interceptors/transform.interceptor';
 
+let nestApp: INestApplication | null = null;
+
+function isPortOpen(port: number): Promise<boolean> {
+  return new Promise((resolve) => {
+    const socket = net.createConnection({ port, host: '127.0.0.1' }, () => {
+      socket.destroy();
+      resolve(true);
+    });
+    socket.on('error', () => resolve(false));
+    socket.setTimeout(800, () => {
+      socket.destroy();
+      resolve(false);
+    });
+  });
+}
+
+function probeApiHealth(port: number, prefix = '/api'): Promise<boolean> {
+  return new Promise((resolve) => {
+    const req = http.request(
+      {
+        hostname: '127.0.0.1',
+        port,
+        path: `${prefix.replace(/\/$/, '')}/health`,
+        method: 'GET',
+        timeout: 2000,
+      },
+      (res) => {
+        let body = '';
+        res.on('data', (c) => {
+          body += c;
+        });
+        res.on('end', () => {
+          if (res.statusCode !== 200) {
+            resolve(false);
+            return;
+          }
+          try {
+            const data = JSON.parse(body);
+            resolve(data?.status === 'ok' || data?.status === 'OK');
+          } catch {
+            resolve(true);
+          }
+        });
+      },
+    );
+    req.on('error', () => resolve(false));
+    req.on('timeout', () => {
+      req.destroy();
+      resolve(false);
+    });
+    req.end();
+  });
+}
+
 export async function bootstrap() {
   try {
+    if (nestApp) {
+      await nestApp.close();
+      nestApp = null;
+    }
+
     const app = await NestFactory.create(AppModule);
     const configService = app.get('ConfigService');
 
@@ -72,9 +134,23 @@ export async function bootstrap() {
     // 设置 Swagger UI
     SwaggerModule.setup('api', app, document, options);
 
-    const configuredPort = configService.get('SERVER_PORT', 3002);
-    
+    const configuredPort = Number(configService.get('SERVER_PORT', 3002));
+    const apiPrefix = String(configService.get('SERVER_API_PREFIX', '/api'));
+
+    if (
+      process.env.REACTPRESS_API_ENTRY === 'starter' &&
+      (await isPortOpen(configuredPort)) &&
+      (await probeApiHealth(configuredPort, apiPrefix))
+    ) {
+      console.log(
+        `[ReactPress] API already healthy on :${configuredPort} (nest watch reload — skip duplicate listen)`,
+      );
+      await app.close();
+      return null;
+    }
+
     await app.listen(configuredPort);
+    nestApp = app;
     console.log(`[ReactPress] Application started on http://localhost:${configuredPort}`);
     console.log(`[ReactPress] API Documentation available at http://localhost:${configuredPort}/api`);
     
@@ -84,20 +160,49 @@ export async function bootstrap() {
     console.error('[ReactPress] Failed to start application:', error);
     
     if (error.code === 'EADDRINUSE') {
+      const port = Number(process.env.SERVER_PORT || 3002);
+      const prefix = process.env.SERVER_API_PREFIX || '/api';
+      if (
+        process.env.REACTPRESS_API_ENTRY === 'starter' &&
+        (await probeApiHealth(port, prefix))
+      ) {
+        console.log(
+          `[ReactPress] Port :${port} in use but API healthy — treating watch reload as success`,
+        );
+        return null;
+      }
       console.error('[ReactPress] Port is already in use. Please check for other running instances.');
       console.error('[ReactPress] You can change the port in your .env file or terminate the conflicting process.');
     }
-    
+
     throw error;
   }
 }
 
-process.on('SIGINT', () => {
-  console.log('\n[ReactPress] Application shutting down gracefully...');
+async function shutdownNest(signal: string) {
+  console.log(`\n[ReactPress] Received ${signal}, shutting down…`);
+  if (nestApp) {
+    try {
+      await nestApp.close();
+    } catch {
+      // ignore
+    }
+    nestApp = null;
+  }
   process.exit(0);
+}
+
+process.on('SIGINT', () => {
+  void shutdownNest('SIGINT');
 });
 
 process.on('SIGTERM', () => {
-  console.log('\n[ReactPress] Application shutting down gracefully...');
-  process.exit(0);
+  void shutdownNest('SIGTERM');
 });
+
+if (require.main === module) {
+  bootstrap().catch((err) => {
+    console.error('[ReactPress] Failed to start:', err);
+    process.exit(1);
+  });
+}

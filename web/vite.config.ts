@@ -8,9 +8,15 @@ import { tanstackRouter } from "@tanstack/router-plugin/vite";
 
 const mode = process.env.NODE_ENV === "production" ? "production" : "development";
 const env = loadEnv(mode, process.cwd(), "");
-const apiProxyTarget = env.VITE_DEV_API_PROXY_TARGET?.trim() || "https://api.gaoredu.com";
+const apiProxyTarget =
+  process.env.VITE_DEV_API_PROXY_TARGET?.trim() ||
+  env.VITE_DEV_API_PROXY_TARGET?.trim() ||
+  "https://api.gaoredu.com";
+/** Dev behind nginx: `reactpress dev` sets process.env.VITE_ADMIN_BASE=/admin/ */
+const adminBase = process.env.VITE_ADMIN_BASE?.trim() || env.VITE_ADMIN_BASE?.trim() || "/";
 
 export default defineConfig({
+  base: adminBase,
   staged: {
     "*": "vp check --fix",
   },
@@ -23,6 +29,7 @@ export default defineConfig({
     react(),
   ],
   server: {
+    host: true,
     proxy: {
       "/api": {
         target: apiProxyTarget,
@@ -41,6 +48,10 @@ export default defineConfig({
       "@fecommunity/reactpress-toolkit/react": path.resolve(
         __dirname,
         "../toolkit/src/react/index.ts",
+      ),
+      "@fecommunity/reactpress-toolkit/extension": path.resolve(
+        __dirname,
+        "../toolkit/src/extension/index.ts",
       ),
     },
   },

@@ -11,6 +11,10 @@ export function requiredPermissionForPath(pathname: string): string | null {
   if (p in map) return map[p] ?? null;
 
   if (p.startsWith("/settings/")) return "setting:manage";
+  if (p.startsWith("/appearance/")) {
+    if (p.includes("/customize")) return "setting:manage";
+    return "extension:manage";
+  }
   if (p.startsWith("/plugins/") && p.endsWith("/settings")) return "extension:manage";
   if (p.startsWith("/article/editor")) return "article:write";
   if (p.startsWith("/page/editor")) return "page:manage";

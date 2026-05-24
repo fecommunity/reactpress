@@ -1,4 +1,5 @@
 import { permissionsForRole } from "@fecommunity/reactpress-toolkit/admin";
+import { resolveApiBaseUrl } from "@fecommunity/reactpress-toolkit/react";
 import { AUTH_ENDPOINTS } from "@/api/auth";
 import {
   AuthTokensSchema,
@@ -8,9 +9,46 @@ import {
 } from "@/api/schemas";
 import { getMenuTreeForPermissions } from "@/shell/bootstrap";
 import { adminMenuToSidebar } from "@/shared/menu";
-import { getToolkitClient } from "@/shared/client";
+import { getToolkitClient, resetToolkitClient } from "@/shared/client";
 import { httpClient } from "@/utils/http";
+import { API_BASE_URL } from "@/utils/constants";
 import { useAuthStore } from "@/stores/auth";
+
+export function isMockAccessToken(token: string | undefined): boolean {
+  return !token || token.startsWith("mock-");
+}
+
+function redirectToLogin() {
+  const base = import.meta.env.BASE_URL || "/";
+  const loginPath = `${base}${base.endsWith("/") ? "" : "/"}login`.replace(/\/{2,}/g, "/");
+  if (typeof window !== "undefined" && !window.location.pathname.includes("/login")) {
+    window.location.assign(loginPath);
+  }
+}
+
+export function clearInvalidServerSession() {
+  useAuthStore.getState().logout();
+  resetToolkitClient();
+  redirectToLogin();
+}
+
+/** Verify JWT against Nest when running with VITE_AUTH_MODE=server. */
+export async function validateServerAuthSession(): Promise<void> {
+  const token = useAuthStore.getState().tokens?.accessToken;
+  if (isMockAccessToken(token)) {
+    throw new Error("mock token");
+  }
+  const base = await resolveApiBaseUrl(API_BASE_URL || "/api");
+  const res = await fetch(`${base}/extension/themes`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (res.status === 401) {
+    throw new Error("unauthorized");
+  }
+  if (!res.ok) {
+    throw new Error(`validate failed: ${res.status}`);
+  }
+}
 
 function mapServerUser(raw: Record<string, unknown>) {
   const role = String(raw.role ?? "admin");
@@ -44,8 +82,7 @@ export async function fetchSessionFromServer(
     applySession(user, user.permissions);
     return;
   }
-  const api = await getToolkitClient();
-  void api;
+  await validateServerAuthSession();
   const { user } = useAuthStore.getState();
   if (user) {
     applySession(user, user.permissions);

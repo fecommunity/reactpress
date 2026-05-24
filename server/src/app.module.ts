@@ -48,6 +48,7 @@ import { ArticleRevision } from './modules/article/article-revision.entity';
 import { HealthModule } from './modules/health/health.module';
 import { Webhook } from './modules/webhook/webhook.entity';
 import { WebhookModule } from './modules/webhook/webhook.module';
+import { ExtensionModule } from './modules/extension/extension.module';
 
 @Module({
   imports: [
@@ -100,6 +101,7 @@ import { WebhookModule } from './modules/webhook/webhook.module';
     HealthModule,
     ApiKeyModule,
     WebhookModule,
+    ExtensionModule,
   ],
   controllers: [],
   providers: [],
