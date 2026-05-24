@@ -88,13 +88,77 @@
   },
   "login": {
     "title": "Sign in",
+    "welcome": "Sign in to admin",
+    "brandWelcome": "Welcome to {{brand}}",
+    "subtitle": "Use your administrator account to continue.",
+    "signInToBrand": "Sign in to {{brand}} administration",
+    "authPanelHint": "Admin console",
+    "authFooterPrefix": "New here? Read the",
+    "authFooterDocs": "documentation",
+    "authFooterSuffix": "for setup and deployment.",
+    "heroTitle": "ReactPress",
+    "heroTagline": "Modern content management for React-powered publishing.",
+    "showcase": {
+      "aria": "ReactPress product overview",
+      "mobileAria": "ReactPress quick start and links",
+      "linksAria": "ReactPress links",
+      "tagline": "One package, one minute to your own CMS.",
+      "getStarted": "Get Started",
+      "whatsNew": "What's New in 3.0",
+      "liveDemo": "Live Demo",
+      "github": "GitHub",
+      "featuresTitle": "Platform capabilities",
+      "readDocs": "Read full documentation"
+    },
+    "cli": {
+      "quickStart": "Quick start commands",
+      "title": "reactpress",
+      "copy": "Copy",
+      "copied": "Copied!",
+      "running": "Running",
+      "copyAria": "Copy quick start commands",
+      "copyFailed": "Could not copy to clipboard. Copy the commands manually.",
+      "terminalAria": "ReactPress quick start command demo"
+    },
+    "heroSlides": {
+      "zeroConfig": {
+        "title": "Zero-config setup",
+        "description": "Two commands set up your site and database — no manual environment configuration."
+      },
+      "cli": {
+        "title": "All-in-one CLI",
+        "description": "Initialize, develop, self-check, and view status from a single command line tool."
+      },
+      "gettingStarted": {
+        "title": "Easy to get started",
+        "description": "Interactive guides, environment checks, and status tips — open your site and admin right after startup."
+      },
+      "modernUi": {
+        "title": "Modern interface",
+        "description": "A polished admin and public site with light and dark theme support."
+      },
+      "content": {
+        "title": "Content & authoring",
+        "description": "Built-in Markdown editor; articles, categories, tags, pages, comments, and media in one place."
+      },
+      "integrations": {
+        "title": "Open integrations",
+        "description": "Open APIs, access keys, and event callbacks for external systems and automation."
+      },
+      "i18n": {
+        "title": "Internationalization",
+        "description": "Chinese and English UI, comfortable on desktop, tablet, and mobile."
+      }
+    },
     "username": "Username",
     "password": "Password",
+    "usernamePlaceholder": "Enter username",
+    "passwordPlaceholder": "Enter password",
+    "invalidCredentials": "Incorrect username or password. Please try again.",
     "usernameRequired": "Please enter username",
     "passwordRequired": "Please enter password",
-    "autoLogin": "Auto login",
-    "forgotPassword": "Forgot password?",
     "signIn": "Sign In",
+    "poweredBy": "Powered by <1>ReactPress</1>",
     "success": "Login successful",
     "failed": "Login failed",
     "apiConnectionError": "Cannot connect to API. Run pnpm dev:web or pnpm dev:api, and avoid setting VITE_API_BASE_URL to a cross-origin absolute URL."

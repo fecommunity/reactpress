@@ -1,0 +1,81 @@
+.wrap {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  gap: 0.75rem;
+  padding: 0 1.25rem 1rem;
+  background: transparent;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.cliFold {
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.cliFoldSummary {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.75);
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+
+.cliFoldSummary::-webkit-details-marker {
+  display: none;
+}
+
+.cliFoldSummary::before {
+  content: "▸";
+  display: inline-block;
+  margin-right: 0.4rem;
+  transition: transform 0.15s ease;
+}
+
+.cliFold[open] .cliFoldSummary::before {
+  transform: rotate(90deg);
+}
+
+.cliFold[open] .cliFoldSummary {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem 1rem;
+  font-size: 0.8125rem;
+}
+
+.links a {
+  color: #9ee8f7;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.15s ease;
+}
+
+.links a:hover {
+  color: #fff;
+}
+
+.linkMuted {
+  color: rgba(255, 255, 255, 0.55) !important;
+}
+
+.linkMuted:hover {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+@media (min-width: 900px) {
+  .wrap {
+    display: none;
+  }
+}

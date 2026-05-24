@@ -1,0 +1,25 @@
+.mark {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.375rem;
+  text-align: center;
+}
+
+.heading {
+  margin: 0;
+  font-size: clamp(1.625rem, 3.5vw, 2rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.15;
+  color: var(--rp-text, #0f1720);
+}
+
+.subtitle {
+  margin: 0;
+  max-width: 18rem;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: var(--rp-text-secondary, #4a5568);
+}

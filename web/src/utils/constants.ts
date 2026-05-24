@@ -16,11 +16,28 @@ export const API_BASE_URL = resolveApiBaseUrl();
 /** `mock` = MSW scaffold (admin/admin); `server` = Nest JWT (`name` + `password`) */
 export const AUTH_MODE = import.meta.env.VITE_AUTH_MODE ?? "mock";
 
-/** Favicon path under `public/` (Vite serves as site root). */
-export const APP_FAVICON_SRC = "/favicon.svg";
+/** Favicon path under `public/` (browser tab icon). */
+export const APP_FAVICON_SRC = "/favicon.png";
+
+/** Brand logo for login and in-app branding (`public/logo.svg`). */
+export const APP_LOGO_SRC = "/logo.svg";
 
 /** Product / brand name (login header, sidebar logo text, etc.). */
 export const APP_BRAND_NAME = "ReactPress";
 
 /** Official ReactPress monorepo on GitHub. */
 export const REACTPRESS_GITHUB_URL = "https://github.com/fecommunity/reactpress";
+
+/** Public docs site (Docusaurus). Override with `VITE_REACTPRESS_DOCS_URL`. */
+export const REACTPRESS_DOCS_BASE_URL =
+  import.meta.env.VITE_REACTPRESS_DOCS_URL?.trim().replace(/\/$/, "") ||
+  "https://reactpress.surge.sh";
+
+/** Live demo site (public blog). */
+export const REACTPRESS_DEMO_URL = "https://blog.gaoredu.com";
+
+export function reactpressDocsPath(locale: string, path: string): string {
+  const normalized = path.startsWith("/") ? path : `/${path}`;
+  const prefix = locale === "zh" ? "/zh" : "";
+  return `${REACTPRESS_DOCS_BASE_URL}${prefix}${normalized}`;
+}

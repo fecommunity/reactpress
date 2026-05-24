@@ -88,13 +88,77 @@
   },
   "login": {
     "title": "登录",
+    "welcome": "登录管理后台",
+    "brandWelcome": "Welcome to {{brand}}",
+    "subtitle": "使用管理员账号进入控制台。",
+    "signInToBrand": "登录 {{brand}} 管理后台",
+    "authPanelHint": "管理端",
+    "authFooterPrefix": "首次使用？阅读",
+    "authFooterDocs": "文档",
+    "authFooterSuffix": "了解安装与部署。",
+    "heroTitle": "ReactPress",
+    "heroTagline": "面向 React 生态的现代化内容发布与管理平台。",
+    "showcase": {
+      "aria": "ReactPress 产品介绍",
+      "mobileAria": "ReactPress 快速开始与相关链接",
+      "linksAria": "ReactPress 相关链接",
+      "tagline": "装一个包、一分钟拥有自己的 CMS。",
+      "getStarted": "快速开始",
+      "whatsNew": "3.0 新特性",
+      "liveDemo": "在线演示",
+      "github": "GitHub",
+      "featuresTitle": "平台能力",
+      "readDocs": "阅读完整文档"
+    },
+    "cli": {
+      "quickStart": "快速开始命令",
+      "title": "reactpress",
+      "copy": "复制",
+      "copied": "已复制",
+      "running": "运行中",
+      "copyAria": "复制快速开始命令",
+      "copyFailed": "无法复制到剪贴板，请手动复制命令。",
+      "terminalAria": "ReactPress 快速开始命令演示"
+    },
+    "heroSlides": {
+      "zeroConfig": {
+        "title": "零配置安装",
+        "description": "两条命令即可完成站点与数据库初始化，无需手动配置环境。"
+      },
+      "cli": {
+        "title": "一体化 CLI",
+        "description": "全局安装后，可在终端完成初始化、开发、自检与状态查看。"
+      },
+      "gettingStarted": {
+        "title": "轻松上手",
+        "description": "交互式引导、环境检查与状态提示，启动后即可打开站点与后台。"
+      },
+      "modernUi": {
+        "title": "现代化界面",
+        "description": "精致的管理后台与前台站点，支持浅色与深色主题。"
+      },
+      "content": {
+        "title": "内容与创作",
+        "description": "内置 Markdown 编辑器，文章、分类、标签、页面、评论与媒体统一管理。"
+      },
+      "integrations": {
+        "title": "开放集成",
+        "description": "开放 API、访问密钥与事件回调，便于对接外部系统与自动化。"
+      },
+      "i18n": {
+        "title": "国际化",
+        "description": "中英文界面，在桌面、平板与手机上均有良好体验。"
+      }
+    },
     "username": "用户名",
     "password": "密码",
+    "usernamePlaceholder": "请输入用户名",
+    "passwordPlaceholder": "请输入密码",
+    "invalidCredentials": "用户名或密码错误，请重新输入",
     "usernameRequired": "请输入用户名",
     "passwordRequired": "请输入密码",
-    "autoLogin": "自动登录",
-    "forgotPassword": "忘记密码？",
     "signIn": "登录",
+    "poweredBy": "由 <1>ReactPress</1> 提供技术支持",
     "success": "登录成功",
     "failed": "登录失败",
     "apiConnectionError": "无法连接 API：请确认已运行 pnpm dev:web 或 pnpm dev:api，且勿将 VITE_API_BASE_URL 设为跨域绝对地址"
