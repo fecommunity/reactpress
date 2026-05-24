@@ -1,19 +1,35 @@
-import { Button, Spin, Typography } from "antd";
+import { Button, Spin } from "antd";
+import { ChevronLeft } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "@tanstack/react-router";
 import {
   getThemeStateFromGlobalSetting,
   type ThemeMods,
 } from "@fecommunity/reactpress-toolkit/extension";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
+import { useThemePreviewSession } from "@/hooks/useThemePreviewSession";
 import { useThemes, useThemeMutations } from "@/hooks/useThemes";
+import { resolveLiveSitePreviewUrl } from "@/shared/theme/previewUrl";
+import {
+  PreviewDeviceToolbar,
+  type PreviewDevice,
+} from "@/modules/appearance/components/PreviewDeviceToolbar";
 import { ThemeCustomizerPanel } from "@/modules/appearance/components/ThemeCustomizerPanel";
 import { ThemePreviewFrame } from "@/modules/appearance/components/ThemePreviewFrame";
+import { ThemePreviewPaneLoading } from "@/modules/appearance/components/ThemePreviewPaneLoading";
 import { ModulePlaceholder } from "@/shared/components/ModulePlaceholder";
 import styles from "@/modules/appearance/components/themes-page.module.css";
 
+const deviceFrameClass: Record<PreviewDevice, string> = {
+  desktop: styles.previewFrameWrapDesktop,
+  tablet: styles.previewFrameWrapTablet,
+  mobile: styles.previewFrameWrapMobile,
+};
+
 export function CustomizePage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { data: settings, isLoading: settingsLoading } = useSiteSettings();
   const { data: themes, isLoading: themesLoading, isError } = useThemes();
   const { modsMutation } = useThemeMutations();
@@ -30,6 +46,8 @@ export function CustomizePage() {
 
   const themeId = themeState.previewThemeId ?? themeState.activeTheme;
   const activeTheme = themes?.find((th) => th.id === themeId);
+  const siteTitle =
+    typeof settings?.systemTitle === "string" ? settings.systemTitle.trim() : undefined;
 
   const savedMods = useMemo(() => themeState.mods[themeId] ?? {}, [themeState.mods, themeId]);
   const [draftMods, setDraftMods] = useState<ThemeMods>(savedMods);
@@ -45,7 +63,23 @@ export function CustomizePage() {
   }, [draftMods]);
 
   const [previewRefreshKey, setPreviewRefreshKey] = useState(0);
+  const [device, setDevice] = useState<PreviewDevice>("desktop");
   const siteUrl = typeof settings?.systemUrl === "string" ? settings.systemUrl.trim() : undefined;
+  const {
+    ready: previewSessionReady,
+    switching: previewSwitching,
+    previewSiteUrl,
+  } = useThemePreviewSession(themeId, siteUrl, themeState.activeTheme);
+  const mayUseLiveSite =
+    themeId === themeState.activeTheme
+      ? Boolean(
+          resolveLiveSitePreviewUrl(siteUrl, {
+            themeId,
+            activeThemeId: themeState.activeTheme,
+            previewSessionReady: true,
+          }),
+        )
+      : true;
 
   const handleModsChange = (mods: ThemeMods) => {
     setDraftMods(mods);
@@ -68,7 +102,7 @@ export function CustomizePage() {
   }
 
   if (settingsLoading || themesLoading) {
-    return <Spin />;
+    return <Spin fullscreen />;
   }
 
   if (!activeTheme) {
@@ -81,40 +115,62 @@ export function CustomizePage() {
   }
 
   return (
-    <>
-      <div className={styles.pageHeader}>
-        <Typography.Title level={4} style={{ margin: 0 }}>
-          {t("placeholder.customize")}
-        </Typography.Title>
-        <Button onClick={() => setPreviewRefreshKey((k) => k + 1)}>
-          {t("appearance.refreshPreview")}
-        </Button>
-      </div>
-
-      <div className={styles.customizeLayout}>
-        <aside className={styles.customizeSidebar}>
+    <div className={styles.customizeShell}>
+      <aside className={styles.customizeSidebar}>
+        <div className={styles.customizeSidebarHeader}>
+          <Button
+            type="link"
+            icon={<ChevronLeft size={14} />}
+            className={styles.customizeBack}
+            onClick={() => void navigate({ to: "/appearance/themes" })}
+          >
+            {t("appearance.backToThemes")}
+          </Button>
+        </div>
+        <div className={styles.customizeSidebarScroll}>
           <ThemeCustomizerPanel
             theme={activeTheme}
+            siteTitle={siteTitle}
             mods={draftMods}
             onModsChange={handleModsChange}
             onSave={handleSave}
             saving={modsMutation.isPending}
           />
-        </aside>
-        <div className={styles.previewWrap}>
-          <div className={styles.previewToolbar}>
-            <Typography.Text type="secondary">{t("appearance.livePreview")}</Typography.Text>
-          </div>
-          <ThemePreviewFrame
-            themeId={themeId}
-            activeThemeId={themeState.activeTheme}
-            mods={debouncedMods}
-            siteUrl={siteUrl}
-            title={t("appearance.livePreview")}
-            refreshKey={String(previewRefreshKey)}
+        </div>
+        <footer className={styles.customizeSidebarFooter}>
+          <PreviewDeviceToolbar
+            device={device}
+            onDeviceChange={setDevice}
+            onRefresh={() => setPreviewRefreshKey((k) => k + 1)}
           />
+        </footer>
+      </aside>
+
+      <div className={styles.customizePreviewPane}>
+        <div className={styles.previewWrap}>
+          <div className={`${styles.previewFrameWrap} ${deviceFrameClass[device]}`}>
+            {mayUseLiveSite && previewSwitching ? (
+              <ThemePreviewPaneLoading themeName={activeTheme.name} />
+            ) : (
+              <ThemePreviewFrame
+                themeId={themeId}
+                activeThemeId={themeState.activeTheme}
+                mods={debouncedMods}
+                siteUrl={siteUrl}
+                title={t("appearance.livePreview")}
+                previewSiteUrl={previewSiteUrl}
+                previewSessionReady={previewSessionReady}
+                refreshKey={
+                  previewSessionReady
+                    ? `${themeId}-${previewRefreshKey}`
+                    : String(previewRefreshKey)
+                }
+                style={{ minHeight: "100%" }}
+              />
+            )}
+          </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

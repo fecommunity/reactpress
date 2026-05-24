@@ -1,6 +1,12 @@
 const fs = require('fs');
 const http = require('http');
 const path = require('path');
+const { DEV_PORTS } = require('./ports');
+const {
+  normalizeHealthPayload,
+  isHealthPayloadReady,
+  isHealthHttpReady,
+} = require('./health-parse');
 
 function loadServerSiteUrl(projectRoot) {
   const envPath = path.join(projectRoot, '.env');
@@ -20,14 +26,21 @@ function loadWebAdminUrl(projectRoot) {
   const envPath = path.join(projectRoot, '.env');
   try {
     const content = fs.readFileSync(envPath, 'utf8');
-    const match = content.match(/^WEB_ADMIN_URL=(.+)$/m);
-    if (match) {
-      return match[1].trim().replace(/^['"]|['"]$/g, '');
+    const urlMatch = content.match(/^WEB_ADMIN_URL=(.+)$/m);
+    if (urlMatch) {
+      return urlMatch[1].trim().replace(/^['"]|['"]$/g, '');
+    }
+    const portMatch = content.match(/^WEB_ADMIN_PORT=(.+)$/m);
+    if (portMatch) {
+      const port = parseInt(portMatch[1].trim(), 10);
+      if (Number.isInteger(port) && port > 0) {
+        return `http://localhost:${port}`;
+      }
     }
   } catch {
     // ignore
   }
-  return 'http://localhost:5173';
+  return `http://localhost:${DEV_PORTS.ADMIN_WEB}`;
 }
 
 function loadClientSiteUrl(projectRoot) {
@@ -64,11 +77,25 @@ function getHealthUrl(projectRoot) {
   return `${base}${prefix}/health`;
 }
 
+/** Use IPv4 loopback for probes — `localhost` often resolves to `::1` while Nest binds IPv4. */
+function parseProbeTarget(urlString) {
+  const parsed = new URL(urlString);
+  const host = parsed.hostname;
+  if (host === 'localhost' || host === '::1' || host === '[::1]') {
+    parsed.hostname = '127.0.0.1';
+  }
+  return parsed;
+}
+
+function normalizeProbeUrl(urlString) {
+  return parseProbeTarget(urlString).toString();
+}
+
 function probeHttp(url, timeoutMs = 3000) {
   return new Promise((resolve) => {
     let parsed;
     try {
-      parsed = new URL(url);
+      parsed = parseProbeTarget(url);
     } catch {
       resolve({ ok: false, statusCode: 0, data: null });
       return;
@@ -78,6 +105,7 @@ function probeHttp(url, timeoutMs = 3000) {
       {
         hostname: parsed.hostname,
         port,
+        family: 4,
         path: parsed.pathname + (parsed.search || ''),
         method: 'GET',
         timeout: timeoutMs,
@@ -113,12 +141,18 @@ function probeHttp(url, timeoutMs = 3000) {
  * for older bundled servers that omit the health route.
  */
 async function checkHealth(url, timeoutMs = 3000) {
-  const primary = await probeHttp(url, timeoutMs);
-  if (primary.ok) return primary;
+  const primary = await probeHttp(normalizeProbeUrl(url), timeoutMs);
+  const payload = normalizeHealthPayload(primary.data);
+  if (isHealthHttpReady(primary.statusCode, primary.data)) {
+    return { ok: true, statusCode: primary.statusCode, data: payload };
+  }
+  if (primary.ok) {
+    return { ok: false, statusCode: primary.statusCode, data: payload ?? primary.data };
+  }
 
   if (primary.statusCode === 404 || primary.statusCode === 0) {
     try {
-      const parsed = new URL(url);
+      const parsed = parseProbeTarget(url);
       const prefix = parsed.pathname.replace(/\/health\/?$/, '') || '/api';
       const candidates = [
         `${parsed.origin}${prefix}/`,
@@ -129,9 +163,9 @@ async function checkHealth(url, timeoutMs = 3000) {
         const alt = await probeHttp(fallback, timeoutMs);
         if (alt.statusCode === 200) {
           return {
-            ok: true,
+            ok: false,
             statusCode: 200,
-            data: { status: 'ok', database: 'unknown' },
+            data: { status: 'degraded', database: 'unknown' },
           };
         }
       }
@@ -147,7 +181,7 @@ function isHttpResponding(url, timeoutMs = 2000) {
   return new Promise((resolve) => {
     let parsed;
     try {
-      parsed = new URL(url);
+      parsed = parseProbeTarget(url);
     } catch {
       resolve(false);
       return;
@@ -158,6 +192,7 @@ function isHttpResponding(url, timeoutMs = 2000) {
       {
         hostname: parsed.hostname,
         port,
+        family: 4,
         path: parsed.pathname || '/',
         method: 'GET',
         timeout: timeoutMs,
@@ -186,11 +221,13 @@ async function waitForHttp(url, timeoutMs = 120_000, intervalMs = 500) {
 }
 
 module.exports = {
+  isHealthPayloadReady,
   loadServerSiteUrl,
   loadWebAdminUrl,
   loadClientSiteUrl,
   getApiPrefix,
   getHealthUrl,
+  normalizeProbeUrl,
   checkHealth,
   isHttpResponding,
   waitForHttp,

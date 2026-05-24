@@ -1,22 +1,43 @@
-import { App, Badge, Button, Col, Row, Spin, Tag, Typography } from "antd";
+import { App, Badge, Button, Col, Row, Spin, Typography } from "antd";
+import { Plus } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "@tanstack/react-router";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useThemes, useThemeMutations } from "@/hooks/useThemes";
+import { ActiveThemePanel } from "@/modules/appearance/components/ActiveThemePanel";
 import { ThemeCard } from "@/modules/appearance/components/ThemeCard";
-import { ThemeFlowGuide } from "@/modules/appearance/components/ThemeFlowGuide";
+import {
+  ThemeCatalogToolbar,
+  type ThemeCatalogFilter,
+} from "@/modules/appearance/components/ThemeCatalogToolbar";
 import { ModulePlaceholder } from "@/shared/components/ModulePlaceholder";
 import styles from "@/modules/appearance/components/themes-page.module.css";
+
+function matchesSearch(theme: { name: string; description?: string; tags?: string[] }, q: string) {
+  const needle = q.trim().toLowerCase();
+  if (!needle) return true;
+  if (theme.name.toLowerCase().includes(needle)) return true;
+  if (theme.description?.toLowerCase().includes(needle)) return true;
+  return theme.tags?.some((tag) => tag.toLowerCase().includes(needle)) ?? false;
+}
 
 export function ThemesPage() {
   const { t } = useTranslation();
   const { message } = App.useApp();
-  const navigate = useNavigate();
   const { data: themes, isLoading, isError, error, refetch } = useThemes();
   const { installMutation, activateMutation } = useThemeMutations();
+  const [filter, setFilter] = useState<ThemeCatalogFilter>("all");
+  const [search, setSearch] = useState("");
 
   const activeTheme = useMemo(() => themes?.find((th) => th.active), [themes]);
-  const catalog = useMemo(() => themes?.filter((th) => !th.active) ?? [], [themes]);
+  const catalogBase = useMemo(() => themes?.filter((th) => !th.active) ?? [], [themes]);
+
+  const catalog = useMemo(() => {
+    return catalogBase.filter((theme) => {
+      if (filter === "installed" && !theme.installed) return false;
+      if (filter === "available" && theme.installed) return false;
+      return matchesSearch(theme, search);
+    });
+  }, [catalogBase, filter, search]);
 
   const handleInstall = async (id: string) => {
     try {
@@ -56,99 +77,69 @@ export function ThemesPage() {
   }
 
   if (isLoading) {
-    return <Spin />;
+    return (
+      <div className={styles.themesPage}>
+        <Spin />
+      </div>
+    );
   }
 
   return (
-    <>
-      <ThemeFlowGuide />
-
-      <div className={styles.pageHeader}>
-        <Typography.Title level={4} style={{ margin: 0 }}>
-          {t("placeholder.themes")}
-          <Badge count={themes?.length ?? 0} style={{ marginLeft: 8 }} showZero color="#646970" />
-        </Typography.Title>
-        <Button type="primary" onClick={() => void refetch()}>
-          {t("appearance.refreshCatalog")}
+    <div className={styles.themesPage}>
+      <header className={styles.pageHeader}>
+        <div className={styles.pageHeaderTitle}>
+          <Typography.Title level={2} className={styles.pageTitle}>
+            {t("placeholder.themes")}
+          </Typography.Title>
+          <Badge
+            count={themes?.length ?? 0}
+            className={styles.themeCountBadge}
+            showZero
+            color="#646970"
+          />
+        </div>
+        <Button type="default" icon={<Plus size={14} />} onClick={() => void refetch()}>
+          {t("appearance.addNewTheme")}
         </Button>
-      </div>
+      </header>
 
-      {activeTheme && (
-        <section className={styles.activePanel}>
-          <div>
-            {activeTheme.screenshotUrl ? (
-              <img
-                className={styles.previewShot}
-                src={activeTheme.screenshotUrl}
-                alt={activeTheme.name}
-                onError={(e) => {
-                  (e.target as HTMLImageElement).style.display = "none";
-                }}
-              />
-            ) : (
-              <div className={styles.previewPlaceholder}>{activeTheme.name}</div>
-            )}
-          </div>
-          <div>
-            <Tag color="default">{t("appearance.activeTheme")}</Tag>
-            <Typography.Title level={3} style={{ marginTop: 8 }}>
-              {activeTheme.name}
-            </Typography.Title>
-            <Typography.Text type="secondary">
-              {t("appearance.version", { version: activeTheme.version })}
-            </Typography.Text>
-            {activeTheme.author && (
-              <Typography.Paragraph type="secondary" style={{ marginBottom: 8 }}>
-                {t("appearance.author", { author: activeTheme.author })}
-              </Typography.Paragraph>
-            )}
-            {activeTheme.description && (
-              <Typography.Paragraph>{activeTheme.description}</Typography.Paragraph>
-            )}
-            {activeTheme.tags && activeTheme.tags.length > 0 && (
-              <div style={{ marginBottom: 16 }}>
-                <Typography.Text type="secondary">{t("appearance.tags")}: </Typography.Text>
-                {activeTheme.tags.map((tag) => (
-                  <Tag key={tag}>{tag}</Tag>
-                ))}
-              </div>
-            )}
-            <Button
-              type="primary"
-              onClick={() => void navigate({ to: "/appearance/customize" })}
-              style={{ marginRight: 8 }}
-            >
-              {t("appearance.customize")}
-            </Button>
-            <Button
-              onClick={() =>
-                void navigate({
-                  to: "/appearance/themes/preview",
-                  search: { theme: activeTheme.id },
-                })
-              }
-            >
-              {t("appearance.preview")}
-            </Button>
-          </div>
-        </section>
-      )}
+      <Typography.Paragraph className={styles.pageIntro} type="secondary">
+        {t("appearance.themesDesc")}
+      </Typography.Paragraph>
 
-      <Typography.Title level={5}>{t("appearance.catalogTitle")}</Typography.Title>
-      <Typography.Paragraph type="secondary">{t("appearance.catalogDesc")}</Typography.Paragraph>
-      <Row gutter={[16, 16]} className={styles.themeGrid}>
-        {catalog.map((theme) => (
-          <Col xs={24} sm={12} md={8} lg={6} key={theme.id}>
-            <ThemeCard
-              theme={theme}
-              onInstall={(id) => void handleInstall(id)}
-              onActivate={(id) => void handleActivate(id)}
-              installing={installMutation.isPending && installMutation.variables === theme.id}
-              activating={activateMutation.isPending && activateMutation.variables === theme.id}
-            />
-          </Col>
-        ))}
-      </Row>
-    </>
+      {activeTheme ? <ActiveThemePanel theme={activeTheme} /> : null}
+
+      <section id="theme-catalog" className={styles.catalogSection}>
+        <Typography.Title level={4} className={styles.catalogHeading}>
+          {t("appearance.catalogTitle")}
+        </Typography.Title>
+        <ThemeCatalogToolbar
+          total={catalogBase.length}
+          filter={filter}
+          onFilterChange={setFilter}
+          search={search}
+          onSearchChange={setSearch}
+        />
+        {catalog.length === 0 ? (
+          <Typography.Text type="secondary" className={styles.catalogEmpty}>
+            {t("appearance.catalogEmpty")}
+          </Typography.Text>
+        ) : (
+          <Row gutter={[20, 20]} className={styles.themeGrid}>
+            {catalog.map((theme) => (
+              <Col xs={24} sm={12} lg={8} xl={6} key={theme.id}>
+                <ThemeCard
+                  theme={theme}
+                  onInstall={(id) => void handleInstall(id)}
+                  onActivate={(id) => void handleActivate(id)}
+                  installing={installMutation.isPending && installMutation.variables === theme.id}
+                  activating={activateMutation.isPending && activateMutation.variables === theme.id}
+                />
+              </Col>
+            ))}
+          </Row>
+        )}
+      </section>
+    </div>
   );
 }

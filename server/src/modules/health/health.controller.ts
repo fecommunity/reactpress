@@ -13,10 +13,8 @@ export class HealthController {
   async check() {
     let database: 'up' | 'down' = 'down';
     try {
-      if (this.connection.isConnected) {
-        await this.connection.query('SELECT 1');
-        database = 'up';
-      }
+      await this.connection.query('SELECT 1');
+      database = 'up';
     } catch {
       database = 'down';
     }

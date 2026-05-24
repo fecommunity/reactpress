@@ -1,3 +1,9 @@
+# 用户安装的主题副本（官方源码在 themes/starter/）
+themes/*
+!themes/starter/
+!themes/.gitkeep
+!themes/README.md
+
 node_modules
 .DS_Store
 .idea
@@ -15,6 +21,7 @@ sitemap.xml
 
 lib
 !cli/lib
+!themes/starter/**/lib/
 dist
 dist-ssr
 coverage

@@ -1,0 +1,41 @@
+{
+  "id": "twentytwentyfive",
+  "name": "Twenty Twenty-Five",
+  "version": "1.0.0",
+  "description": "支持多栏布局的现代博客主题，自适应桌面与移动端。",
+  "author": "ReactPress",
+  "tags": ["博客", "自适应", "多栏", "SEO"],
+  "reactpress": {
+    "requires": ">=3.0.0",
+    "templates": {
+      "home": "pages/index.tsx",
+      "single": "pages/article/[id].tsx",
+      "page": "pages/about.tsx",
+      "archive-category": "pages/category/[category].tsx",
+      "archive-tag": "pages/tag/[tag].tsx",
+      "search": "pages/search.tsx",
+      "404": "pages/404.tsx"
+    },
+    "supports": { "darkMode": true, "menus": ["primary", "footer"] }
+  },
+  "customizer": {
+    "sections": [
+      {
+        "id": "colors",
+        "title": "颜色",
+        "settings": [
+          { "id": "primaryColor", "type": "color", "label": "主色", "default": "#1a1a1a" },
+          { "id": "accentColor", "type": "color", "label": "强调色", "default": "#d63638" },
+          { "id": "backgroundColor", "type": "color", "label": "背景色", "default": "#ffffff" }
+        ]
+      },
+      {
+        "id": "identity",
+        "title": "站点身份",
+        "settings": [
+          { "id": "displayTitle", "type": "text", "label": "展示标题", "default": "Twenty Twenty-Five" }
+        ]
+      }
+    ]
+  }
+}

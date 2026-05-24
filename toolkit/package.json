@@ -12,19 +12,24 @@
     "./config": "./dist/config/index.js",
     "./admin": "./dist/admin/index.js",
     "./react": "./dist/react/index.js",
-    "./extension": "./dist/extension/index.js"
+    "./extension": "./dist/extension/index.js",
+    "./theme": "./dist/theme/index.js",
+    "./theme/next-config": "./dist/theme/next-config.js",
+    "./ui": "./dist/ui/index.js"
   },
   "peerDependencies": {
     "@tanstack/react-query": ">=5",
-    "react": ">=18"
+    "next": ">=12",
+    "react": ">=17"
   },
   "peerDependenciesMeta": {
     "@tanstack/react-query": { "optional": true },
+    "next": { "optional": true },
     "react": { "optional": true }
   },
   "scripts": {
     "generate": "node scripts/generate-swagger.js",
-    "build": "tsc && cp -r src/locales dist/"
+    "build": "tsc && cp -r src/locales dist/ && cp src/theme/createApp.js dist/theme/createApp.js"
   },
   "files": [
     "dist"
@@ -42,6 +47,9 @@
   },
   "devDependencies": {
     "@types/fs-extra": "^9.0.13",
-    "@types/node": "^17.0.22"
+    "@types/node": "^17.0.22",
+    "@types/next": "12.3.4",
+    "@types/react": "17.0.42",
+    "react": "17.0.2"
   }
 }

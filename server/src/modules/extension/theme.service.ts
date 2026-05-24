@@ -14,17 +14,26 @@ import type { SiteThemeState, ThemeManifest, ThemeMods } from '@fecommunity/reac
 import { Setting } from '../setting/setting.entity';
 
 export interface ThemeListItem extends ThemeManifest {
-  source: 'bundled' | 'installed';
+  source: 'starter' | 'installed';
   installed: boolean;
   active: boolean;
   screenshotUrl?: string;
 }
+
+export type ThemePreviewSessionResult = SiteThemeState & {
+  siteUrl: string;
+  /** Separate dev URL when preview theme ≠ active (e.g. http://localhost:3003/). */
+  previewSiteUrl?: string;
+};
 
 function projectRoot(): string {
   return process.env.REACTPRESS_ORIGINAL_CWD || process.cwd();
 }
 
 const THEME_ID_RE = /^[a-z0-9][a-z0-9-]*$/i;
+/** Reserved under `themes/` — official starter packages, not user installs */
+const THEMES_STARTER_SUBDIR = 'starter';
+const THEMES_LEGACY_STARTER_SUBDIRS = ['bundled', 'core'];
 
 @Injectable()
 export class ThemeService {
@@ -45,12 +54,24 @@ export class ThemeService {
     private readonly settingRepository: Repository<Setting>,
   ) {}
 
-  private bundledDir(): string {
-    return path.join(projectRoot(), 'templates');
+  private themesRoot(): string {
+    return path.join(projectRoot(), 'themes');
+  }
+
+  private starterDir(): string {
+    return path.join(this.themesRoot(), THEMES_STARTER_SUBDIR);
+  }
+
+  private legacyStarterDirs(): string[] {
+    return THEMES_LEGACY_STARTER_SUBDIRS.map((name) => path.join(this.themesRoot(), name));
   }
 
   private installedDir(): string {
-    return path.join(projectRoot(), 'themes');
+    return this.themesRoot();
+  }
+
+  private legacyBundledDir(): string {
+    return path.join(projectRoot(), 'templates');
   }
 
   private readManifest(themeDir: string): ThemeManifest | null {
@@ -70,11 +91,16 @@ export class ThemeService {
     }
   }
 
-  private listDirThemes(dir: string, source: 'bundled' | 'installed'): ThemeManifest[] {
+  private listDirThemes(
+    dir: string,
+    source: 'starter' | 'installed',
+    options?: { skipDirNames?: Set<string> },
+  ): ThemeManifest[] {
     if (!fs.existsSync(dir)) return [];
+    const skip = options?.skipDirNames;
     return fs
       .readdirSync(dir, { withFileTypes: true })
-      .filter((d) => d.isDirectory())
+      .filter((d) => d.isDirectory() && !(skip && skip.has(d.name)))
       .map((d) => this.readManifest(path.join(dir, d.name)))
       .filter((m): m is ThemeManifest => m !== null);
   }
@@ -113,7 +139,7 @@ export class ThemeService {
     const installedSet = new Set(state.installedThemes);
     const byId = new Map<string, ThemeListItem>();
 
-    const add = (manifest: ThemeManifest, source: 'bundled' | 'installed') => {
+    const add = (manifest: ThemeManifest, source: 'starter' | 'installed') => {
       const installed = installedSet.has(manifest.id) || source === 'installed';
       byId.set(manifest.id, {
         ...manifest,
@@ -124,10 +150,12 @@ export class ThemeService {
       });
     };
 
-    for (const m of this.listDirThemes(this.bundledDir(), 'bundled')) {
-      add(m, 'bundled');
+    for (const m of this.listDirThemes(this.starterDir(), 'starter')) {
+      add(m, 'starter');
     }
-    for (const m of this.listDirThemes(this.installedDir(), 'installed')) {
+    for (const m of this.listDirThemes(this.installedDir(), 'installed', {
+      skipDirNames: new Set([THEMES_STARTER_SUBDIR, ...THEMES_LEGACY_STARTER_SUBDIRS]),
+    })) {
       add(m, 'installed');
     }
 
@@ -153,7 +181,13 @@ export class ThemeService {
   private isSafeThemeDirRel(themeDirRel: string | null): boolean {
     if (themeDirRel == null) return true;
     if (themeDirRel.includes('..') || path.isAbsolute(themeDirRel)) return false;
-    return themeDirRel.startsWith('themes/') || themeDirRel.startsWith('templates/');
+    const allowedPrefixes = [
+      'themes/',
+      `themes/${THEMES_STARTER_SUBDIR}/`,
+      ...THEMES_LEGACY_STARTER_SUBDIRS.map((name) => `themes/${name}/`),
+      'templates/',
+    ];
+    return allowedPrefixes.some((prefix) => themeDirRel.startsWith(prefix));
   }
 
   private resolveThemeDir(id: string): string | null {
@@ -162,9 +196,19 @@ export class ThemeService {
     if (fs.existsSync(installed) && this.isUnderDir(installed, this.installedDir())) {
       return installed;
     }
-    const bundled = path.join(this.bundledDir(), id);
-    if (fs.existsSync(bundled) && this.isUnderDir(bundled, this.bundledDir())) {
-      return bundled;
+    const starter = path.join(this.starterDir(), id);
+    if (fs.existsSync(starter) && this.isUnderDir(starter, this.starterDir())) {
+      return starter;
+    }
+    for (const legacyStarter of this.legacyStarterDirs()) {
+      const legacy = path.join(legacyStarter, id);
+      if (fs.existsSync(legacy) && this.isUnderDir(legacy, legacyStarter)) {
+        return legacy;
+      }
+    }
+    const legacyBundled = path.join(this.legacyBundledDir(), id);
+    if (fs.existsSync(legacyBundled) && this.isUnderDir(legacyBundled, this.legacyBundledDir())) {
+      return legacyBundled;
     }
     return null;
   }
@@ -173,17 +217,17 @@ export class ThemeService {
     if (!this.isValidThemeId(id)) {
       throw new BadRequestException(`Invalid theme id "${id}"`);
     }
-    const bundledPath = path.join(this.bundledDir(), id);
-    if (!fs.existsSync(bundledPath)) {
-      throw new NotFoundException(`Bundled theme "${id}" not found`);
+    const starterPath = path.join(this.starterDir(), id);
+    if (!fs.existsSync(starterPath)) {
+      throw new NotFoundException(`Starter theme "${id}" not found`);
     }
     const targetDir = path.join(this.installedDir(), id);
     fs.mkdirSync(this.installedDir(), { recursive: true });
     if (fs.existsSync(targetDir)) {
       this.removeDir(targetDir);
     }
-    this.copyDir(bundledPath, targetDir);
-    this.linkBundledNodeModules(bundledPath, targetDir);
+    this.copyDir(starterPath, targetDir);
+    this.linkStarterNodeModules(starterPath, targetDir);
 
     const state = await this.getThemeState();
     const installedThemes = state.installedThemes.includes(id)
@@ -192,11 +236,14 @@ export class ThemeService {
     return this.saveThemeState({ installedThemes });
   }
 
-  private syncActiveThemeManifest(themeId: string): void {
+  private writeThemeDevManifest(
+    fileName: 'active-theme.json' | 'preview-theme.json',
+    themeId: string,
+  ): void {
     if (!this.isValidThemeId(themeId)) return;
     const themeDir = this.resolveThemeDir(themeId);
     const manifestDir = path.join(projectRoot(), '.reactpress');
-    const manifestPath = path.join(manifestDir, 'active-theme.json');
+    const manifestPath = path.join(manifestDir, fileName);
     const themeDirRel = themeDir ? path.relative(projectRoot(), themeDir) : null;
 
     if (!this.isSafeThemeDirRel(themeDirRel)) return;
@@ -224,6 +271,33 @@ export class ThemeService {
     fs.writeFileSync(manifestPath, JSON.stringify(payload, null, 2), 'utf8');
   }
 
+  private syncActiveThemeManifest(themeId: string): void {
+    this.writeThemeDevManifest('active-theme.json', themeId);
+  }
+
+  /** Isolated dev manifest for admin preview — must not touch active-theme.json. */
+  private syncPreviewThemeManifest(themeId: string): void {
+    this.writeThemeDevManifest('preview-theme.json', themeId);
+  }
+
+  private clearPreviewThemeManifest(): void {
+    const manifestPath = path.join(projectRoot(), '.reactpress', 'preview-theme.json');
+    if (fs.existsSync(manifestPath)) {
+      fs.unlinkSync(manifestPath);
+    }
+  }
+
+  private resolvePreviewSiteUrl(siteUrl: string): string {
+    const previewPort = process.env.REACTPRESS_PREVIEW_PORT || '3003';
+    try {
+      const url = new URL(siteUrl);
+      url.port = previewPort;
+      return `${url.origin}/`;
+    } catch {
+      return `http://localhost:${previewPort}/`;
+    }
+  }
+
   async activateTheme(id: string): Promise<SiteThemeState & { siteUrl?: string }> {
     if (!this.isValidThemeId(id)) {
       throw new BadRequestException(`Invalid theme id "${id}"`);
@@ -241,6 +315,7 @@ export class ThemeService {
       installedThemes,
       previewThemeId: id,
     });
+    this.clearPreviewThemeManifest();
     this.syncActiveThemeManifest(id);
 
     const row = await this.getSettingRow();
@@ -268,6 +343,46 @@ export class ThemeService {
     const state = await this.getThemeState();
     const nextMods = { ...state.mods, [themeId]: { ...(state.mods[themeId] ?? {}), ...mods } };
     return this.saveThemeState({ mods: nextMods, previewThemeId: themeId });
+  }
+
+  /**
+   * Point local theme dev (active-theme.json) at `themeId` without changing DB activeTheme.
+   * Ensures admin iframe preview matches the real Next.js theme package.
+   */
+  async beginPreviewSession(themeId: string): Promise<ThemePreviewSessionResult> {
+    if (!this.isValidThemeId(themeId)) {
+      throw new BadRequestException(`Invalid theme id "${themeId}"`);
+    }
+    const themeDir = this.resolveThemeDir(themeId);
+    if (!themeDir) throw new NotFoundException(`Theme "${themeId}" not found`);
+
+    const state = await this.getThemeState();
+    const saved = await this.saveThemeState({ previewThemeId: themeId });
+
+    if (themeId !== state.activeTheme) {
+      this.syncPreviewThemeManifest(themeId);
+    } else {
+      this.clearPreviewThemeManifest();
+    }
+
+    const row = await this.getSettingRow();
+    const siteUrl = this.resolveSiteUrlFromRow(row);
+    return {
+      ...saved,
+      activeTheme: state.activeTheme,
+      siteUrl,
+      previewSiteUrl:
+        themeId !== state.activeTheme ? this.resolvePreviewSiteUrl(siteUrl) : undefined,
+    };
+  }
+
+  /** End admin preview — clear preview dev manifest only (active theme unchanged). */
+  async endPreviewSession(): Promise<SiteThemeState & { siteUrl: string }> {
+    const state = await this.getThemeState();
+    this.clearPreviewThemeManifest();
+    const saved = await this.saveThemeState({ previewThemeId: state.activeTheme });
+    const row = await this.getSettingRow();
+    return { ...saved, siteUrl: this.resolveSiteUrlFromRow(row) };
   }
 
   getScreenshotPath(id: string): string | null {
@@ -443,9 +558,9 @@ export class ThemeService {
     }
   }
 
-  /** Reuse bundled node_modules in monorepo dev (pnpm symlinks cannot be copyFileSync'd). */
-  private linkBundledNodeModules(bundledPath: string, targetDir: string): void {
-    const srcModules = path.join(bundledPath, 'node_modules');
+  /** Reuse starter theme node_modules in monorepo dev (pnpm symlinks cannot be copyFileSync'd). */
+  private linkStarterNodeModules(starterPath: string, targetDir: string): void {
+    const srcModules = path.join(starterPath, 'node_modules');
     const destModules = path.join(targetDir, 'node_modules');
     if (!fs.existsSync(srcModules) || fs.existsSync(destModules)) return;
     const linkTarget = path.relative(targetDir, srcModules);

@@ -533,7 +533,7 @@ flowchart TB
 |------|------|------|
 | **A. 本地包（推荐）** | 离线安装、固定版本 | `BrowserWindow` 加载 `file://` 或 `app://` 协议下的 `web/dist/index.html` |
 | **B. 远程 URL** | 内网统一发版、免重装 | 加载 `https://admin.example.com`，适合企业内网 |
-| **C. 开发** | 本地联调 | 加载 `http://localhost:5173`（Vite dev） |
+| **C. 开发** | 本地联调 | 加载 `http://localhost:3000`（Vite dev） |
 
 生产默认 **模式 A**：构建时把 `web/dist` 复制进 Electron 包，版本与 Web 对齐。
 
@@ -550,7 +550,7 @@ const win = new BrowserWindow({
 });
 
 if (isDev) {
-  win.loadURL('http://localhost:5173');
+  win.loadURL('http://localhost:3000');
 } else {
   win.loadFile(path.join(__dirname, '../renderer/index.html'));
 }
@@ -816,8 +816,10 @@ reactpress/
 │       ├── shell/          # Layout、Registry、bootstrap
 │       ├── modules/        # Feature Modules
 │       └── shared/         # 仅 web 内共享
-├── themes/                 # 用户可安装主题（或 templates/ 作官方源）
-│   └── twentytwentyfive/
+├── themes/
+│   ├── starter/            # 官方入门主题（只读源码）
+│   │   └── twentytwentyfive/
+│   └── {theme-id}/         # 用户安装后的可编辑副本（gitignore）
 ├── plugins/                # 官方插件示例
 │   └── seo/
 ├── desktop/                # Electron 壳（可选，加载 web/dist）

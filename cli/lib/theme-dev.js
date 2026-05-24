@@ -5,8 +5,11 @@ const { loadClientSiteUrl, loadServerSiteUrl, getApiPrefix, waitForHttp } = requ
 const { nginxEntryUrl } = require('./nginx');
 const {
   readActiveThemeManifest,
+  readPreviewThemeManifest,
   resolveThemeDirectory,
   readManifestSignature,
+  readPreviewManifestSignature,
+  getPreviewThemePort,
   isThemePackageDir,
   isAllowedThemePort,
 } = require('./theme-runtime');
@@ -17,6 +20,12 @@ let themeWatchStop = null;
 let runningSignature = null;
 let trackedThemePid = null;
 let restartChain = Promise.resolve();
+
+let previewThemeChild = null;
+let previewWatchStop = null;
+let previewRunningSignature = null;
+let trackedPreviewThemePid = null;
+let previewRestartChain = Promise.resolve();
 
 function getClientPort(projectRoot) {
   try {
@@ -53,6 +62,39 @@ function getProcessCwd(pid) {
   return parts[parts.length - 1] || null;
 }
 
+function isUnderThemesDir(projectRoot, cwd) {
+  if (!cwd) return false;
+  const themesRoot = path.join(path.resolve(projectRoot), 'themes');
+  const resolved = path.resolve(cwd);
+  return resolved === themesRoot || resolved.startsWith(`${themesRoot}${path.sep}`);
+}
+
+/** Child PIDs of `rootPid` (pnpm → next dev tree). */
+function collectDescendantPids(rootPid) {
+  const root = parseInt(rootPid, 10);
+  if (!Number.isFinite(root) || root <= 0) return [];
+
+  const out = [];
+  const queue = [String(root)];
+  const seen = new Set();
+
+  while (queue.length) {
+    const pid = queue.shift();
+    if (!pid || seen.has(pid)) continue;
+    seen.add(pid);
+
+    const children = spawnSync('pgrep', ['-P', pid], { encoding: 'utf8' });
+    if (children.status !== 0 || !children.stdout?.trim()) continue;
+
+    for (const child of children.stdout.trim().split(/\s+/)) {
+      if (!child || seen.has(child)) continue;
+      out.push(child);
+      queue.push(child);
+    }
+  }
+  return out;
+}
+
 function isPidSafeToSignal(pid) {
   const n = parseInt(pid, 10);
   if (!Number.isFinite(n) || n <= 1) return false;
@@ -61,24 +103,35 @@ function isPidSafeToSignal(pid) {
   return true;
 }
 
-/** Only LISTEN pids whose cwd is a theme package, or the tracked theme child tree. */
+/** LISTEN pids for this theme dev port (package cwd, themes/, or tracked child tree). */
 function getThemeListenerPids(projectRoot, port) {
   const result = spawnSync('lsof', [`-tiTCP:${port}`, '-sTCP:LISTEN'], { encoding: 'utf8' });
   if (result.status !== 0 || !result.stdout?.trim()) return [];
 
-  const allowed = [];
-  for (const pid of result.stdout.trim().split(/\s+/)) {
-    if (!isPidSafeToSignal(pid)) continue;
-    if (trackedThemePid && parseInt(pid, 10) === trackedThemePid) {
-      allowed.push(pid);
-      continue;
-    }
-    const cwd = getProcessCwd(pid);
-    if (cwd && isThemePackageDir(projectRoot, cwd)) {
-      allowed.push(pid);
+  const allowed = new Set();
+
+  if (trackedThemePid && isPidSafeToSignal(trackedThemePid)) {
+    allowed.add(String(trackedThemePid));
+    for (const child of collectDescendantPids(trackedThemePid)) {
+      if (isPidSafeToSignal(child)) allowed.add(child);
     }
   }
-  return allowed;
+
+  for (const pid of result.stdout.trim().split(/\s+/)) {
+    if (!isPidSafeToSignal(pid)) continue;
+    const cwd = getProcessCwd(pid);
+    if (
+      cwd &&
+      (isThemePackageDir(projectRoot, cwd) || isUnderThemesDir(projectRoot, cwd))
+    ) {
+      allowed.add(pid);
+      for (const child of collectDescendantPids(pid)) {
+        if (isPidSafeToSignal(child)) allowed.add(child);
+      }
+    }
+  }
+
+  return [...allowed];
 }
 
 function signalPids(pids, signal) {
@@ -106,20 +159,38 @@ function waitForPortFree(port, timeoutMs = 10_000) {
         resolve(false);
         return;
       }
-      setTimeout(tick, 200);
+      setTimeout(tick, 250);
     };
     tick();
   });
 }
 
-async function releaseThemePort(projectRoot, port) {
-  stopThemeProcess();
-
-  for (let attempt = 0; attempt < 3; attempt += 1) {
-    killThemeListenersOnPort(projectRoot, port, attempt < 2 ? 'TERM' : 'KILL');
-    const freed = await waitForPortFree(port, attempt === 0 ? 8000 : 5000);
-    if (freed) return true;
+async function releaseThemePort(projectRoot, port, { preview = false } = {}) {
+  if (preview) {
+    stopPreviewThemeProcess();
+  } else {
+    stopActiveThemeProcess();
   }
+
+  for (let attempt = 0; attempt < 4; attempt += 1) {
+    const signal = attempt < 2 ? 'TERM' : 'KILL';
+    killThemeListenersOnPort(projectRoot, port, signal);
+    const trackedPid = preview ? trackedPreviewThemePid : trackedThemePid;
+    if (trackedPid && isPidSafeToSignal(trackedPid)) {
+      const tree = [String(trackedPid), ...collectDescendantPids(trackedPid)];
+      signalPids(tree, signal);
+    }
+    const waitMs = attempt === 0 ? 12_000 : 6000;
+    const freed = await waitForPortFree(port, waitMs);
+    if (freed) {
+      if (preview) trackedPreviewThemePid = null;
+      else trackedThemePid = null;
+      return true;
+    }
+  }
+
+  if (preview) trackedPreviewThemePid = null;
+  else trackedThemePid = null;
   return false;
 }
 
@@ -168,32 +239,59 @@ function buildThemeChildEnv(projectRoot, { port, serverApiUrl, publicApiUrl }) {
   };
 }
 
-function stopThemeProcess() {
-  if (!themeChild || themeChild.killed) {
-    themeChild = null;
-    trackedThemePid = null;
+function stopThemeProcess(childRef, trackedPidRef) {
+  const child = childRef.current;
+  if (!child || child.killed) {
+    childRef.current = null;
     return;
   }
 
-  const pid = themeChild.pid;
-  trackedThemePid = pid;
+  const pid = child.pid;
+  if (pid && isPidSafeToSignal(pid)) {
+    trackedPidRef.current = pid;
+  }
   try {
     if (process.platform !== 'win32' && pid && isPidSafeToSignal(pid)) {
       try {
         process.kill(-pid, 'SIGTERM');
       } catch {
-        if (isPidSafeToSignal(pid)) {
-          spawnSync('pkill', ['-TERM', '-P', String(pid)], { stdio: 'ignore' });
-          themeChild.kill('SIGTERM');
+        spawnSync('pkill', ['-TERM', '-P', String(pid)], { stdio: 'ignore' });
+        child.kill('SIGTERM');
+      }
+      for (const descendant of collectDescendantPids(pid)) {
+        if (isPidSafeToSignal(descendant)) {
+          spawnSync('kill', ['-TERM', descendant], { stdio: 'ignore' });
         }
       }
     } else if (pid && isPidSafeToSignal(pid)) {
-      themeChild.kill('SIGTERM');
+      child.kill('SIGTERM');
     }
   } catch {
     // ignore — process may already be gone
   }
-  themeChild = null;
+  childRef.current = null;
+}
+
+const activeChildRef = { get current() { return themeChild; }, set current(v) { themeChild = v; } };
+const activeTrackedPidRef = {
+  get current() { return trackedThemePid; },
+  set current(v) { trackedThemePid = v; },
+};
+const previewChildRef = {
+  get current() { return previewThemeChild; },
+  set current(v) { previewThemeChild = v; },
+};
+const previewTrackedPidRef = {
+  get current() { return trackedPreviewThemePid; },
+  set current(v) { trackedPreviewThemePid = v; },
+};
+
+function stopActiveThemeProcess() {
+  stopThemeProcess(activeChildRef, activeTrackedPidRef);
+}
+
+function stopPreviewThemeProcess() {
+  stopThemeProcess(previewChildRef, previewTrackedPidRef);
 }
 
 function stopThemeSite() {
@@ -201,9 +299,16 @@ function stopThemeSite() {
     themeWatchStop();
     themeWatchStop = null;
   }
-  stopThemeProcess();
+  if (previewWatchStop) {
+    previewWatchStop();
+    previewWatchStop = null;
+  }
+  stopActiveThemeProcess();
+  stopPreviewThemeProcess();
   runningSignature = null;
+  previewRunningSignature = null;
   restartChain = Promise.resolve();
+  previewRestartChain = Promise.resolve();
 }
 
 function spawnThemeSite(projectRoot, { onClose } = {}) {
@@ -268,6 +373,86 @@ function spawnThemeSite(projectRoot, { onClose } = {}) {
   return themeChild;
 }
 
+function getPreviewSiteUrl(projectRoot) {
+  const port = getPreviewThemePort();
+  try {
+    const url = new URL(loadClientSiteUrl(projectRoot));
+    url.port = port;
+    return url.toString().replace(/\/$/, '');
+  } catch {
+    return `http://localhost:${port}`;
+  }
+}
+
+function spawnPreviewThemeSite(projectRoot, { onClose } = {}) {
+  const signature = readPreviewManifestSignature(projectRoot);
+  if (!signature) {
+    previewRunningSignature = null;
+    return null;
+  }
+
+  const previewManifest = readPreviewThemeManifest(projectRoot);
+  if (!previewManifest) {
+    previewRunningSignature = null;
+    return null;
+  }
+
+  const { activeTheme } = previewManifest;
+  const themeDir = resolveThemeDirectory(projectRoot, activeTheme);
+  const port = assertThemePort(getPreviewThemePort());
+  const serverApiUrl = buildThemeServerApiUrl(projectRoot);
+  const publicApiUrl = buildThemePublicApiUrl(projectRoot);
+  const previewUrl = getPreviewSiteUrl(projectRoot);
+
+  if (!themeDir || !isThemePackageDir(projectRoot, themeDir)) {
+    console.warn(
+      `[reactpress] ${t('themeDev.notFound', { id: activeTheme })} — ${previewUrl} ${t('themeDev.unavailable')}`,
+    );
+    previewRunningSignature = null;
+    return null;
+  }
+
+  const relDir = path.relative(projectRoot, themeDir) || themeDir;
+  console.log(
+    `[reactpress] Preview theme "${activeTheme}" → ${previewUrl} (port ${port}, ${relDir})`,
+  );
+
+  previewThemeChild = spawn('pnpm', ['run', 'dev'], {
+    cwd: themeDir,
+    detached: process.platform !== 'win32',
+    stdio: 'inherit',
+    env: {
+      ...buildThemeChildEnv(projectRoot, { port, serverApiUrl, publicApiUrl }),
+      REACTPRESS_HONOR_PREVIEW: '1',
+    },
+  });
+
+  const child = previewThemeChild;
+  trackedPreviewThemePid = child.pid ?? null;
+  previewRunningSignature = signature;
+
+  child.on('close', (code) => {
+    if (previewThemeChild === child) {
+      previewThemeChild = null;
+      trackedPreviewThemePid = null;
+      if (previewRunningSignature === signature) {
+        previewRunningSignature = null;
+      }
+    }
+    if (onClose) onClose(code);
+  });
+
+  waitForHttp(previewUrl, 120_000).then((ready) => {
+    if (ready && previewRunningSignature === signature) {
+      console.log(`[reactpress] Preview ready: ${previewUrl} (theme: ${activeTheme})`);
+    } else if (!ready && previewRunningSignature === signature) {
+      console.warn(t('themeDev.slow', { url: previewUrl }));
+    }
+  });
+
+  return previewThemeChild;
+}
+
 async function restartThemeSite(projectRoot, { onClose } = {}) {
   const signature = readManifestSignature(projectRoot);
   if (!signature) return;
@@ -277,13 +462,51 @@ async function restartThemeSite(projectRoot, { onClose } = {}) {
   }
 
   const port = assertThemePort(getClientPort(projectRoot));
-  const freed = await releaseThemePort(projectRoot, port);
-  if (!freed) {
+  let freed = await releaseThemePort(projectRoot, port);
+  if (!freed || isPortListening(port)) {
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+    freed = await releaseThemePort(projectRoot, port);
+  }
+  if (!freed || isPortListening(port)) {
     console.warn(`[reactpress] ${t('themeDev.portBusy', { port })}`);
+    console.warn(
+      `[reactpress] ${t('themeDev.portBusyHint', {
+        port,
+        cmd: `lsof -tiTCP:${port} -sTCP:LISTEN | xargs kill -9`,
+      })}`,
+    );
     return;
   }
 
   spawnThemeSite(projectRoot, { onClose });
+}
+
+async function restartPreviewThemeSite(projectRoot, { onClose } = {}) {
+  const signature = readPreviewManifestSignature(projectRoot);
+  const port = assertThemePort(getPreviewThemePort());
+
+  if (!signature) {
+    stopPreviewThemeProcess();
+    await releaseThemePort(projectRoot, port, { preview: true });
+    previewRunningSignature = null;
+    return;
+  }
+
+  if (signature === previewRunningSignature && previewThemeChild && !previewThemeChild.killed) {
+    return;
+  }
+
+  let freed = await releaseThemePort(projectRoot, port, { preview: true });
+  if (!freed || isPortListening(port)) {
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+    freed = await releaseThemePort(projectRoot, port, { preview: true });
+  }
+  if (!freed || isPortListening(port)) {
+    console.warn(`[reactpress] ${t('themeDev.portBusy', { port })}`);
+    return;
+  }
+
+  spawnPreviewThemeSite(projectRoot, { onClose });
 }
 
 function watchActiveThemeManifest(projectRoot, onChange) {
@@ -319,10 +542,81 @@ function watchActiveThemeManifest(projectRoot, onChange) {
   };
 }
 
-function startThemeSiteWithWatch(projectRoot, { onClose } = {}) {
-  const restart = () => restartThemeSite(projectRoot, { onClose });
+function watchPreviewThemeManifest(projectRoot, onChange) {
+  const manifestPath = path.join(projectRoot, '.reactpress', 'preview-theme.json');
+  const dir = path.dirname(manifestPath);
+  fs.mkdirSync(dir, { recursive: true });
+
+  let lastSignature = readPreviewManifestSignature(projectRoot);
+  let debounce = null;
+
+  const scheduleCheck = () => {
+    clearTimeout(debounce);
+    debounce = setTimeout(() => {
+      const next = readPreviewManifestSignature(projectRoot);
+      if (next === lastSignature) return;
+      lastSignature = next;
+      if (next) {
+        console.log('\n[reactpress] preview-theme.json changed — restarting preview theme…');
+      }
+      previewRestartChain = previewRestartChain
+        .then(() => onChange())
+        .catch((err) => {
+          console.warn(
+            `[reactpress] ${t('themeDev.restartFailed', { message: err.message || err })}`,
+          );
+        });
+    }, 400);
+  };
+
+  const watcher = fs.watch(dir, scheduleCheck);
+  const poller = setInterval(scheduleCheck, 2000);
+
+  return () => {
+    clearTimeout(debounce);
+    clearInterval(poller);
+    watcher.close();
+  };
+}
+
+/** Drop stale preview manifest so `pnpm dev` does not auto-start :3003 from a prior admin session. */
+function clearPreviewThemeManifestFile(projectRoot) {
+  const manifestPath = path.join(projectRoot, '.reactpress', 'preview-theme.json');
+  if (fs.existsSync(manifestPath)) {
+    fs.unlinkSync(manifestPath);
+  }
+}
+
+async function prepareThemeDevBoot(projectRoot) {
+  clearPreviewThemeManifestFile(projectRoot);
+  stopPreviewThemeProcess();
+  stopActiveThemeProcess();
+  previewRunningSignature = null;
+  runningSignature = null;
+  trackedPreviewThemePid = null;
+  trackedThemePid = null;
+
+  const visitorPort = assertThemePort(getClientPort(projectRoot));
+  const previewPort = assertThemePort(getPreviewThemePort());
+  await releaseThemePort(projectRoot, previewPort, { preview: true });
+  await releaseThemePort(projectRoot, visitorPort);
+}
+
+async function startThemeSiteWithWatch(projectRoot, { onClose } = {}) {
+  await prepareThemeDevBoot(projectRoot);
+
+  const restartActive = () => restartThemeSite(projectRoot, { onClose });
+  const restartPreview = () => restartPreviewThemeSite(projectRoot, { onClose });
+
   restartChain = restartChain.then(() => restartThemeSite(projectRoot, { onClose }));
-  themeWatchStop = watchActiveThemeManifest(projectRoot, restart);
+
+  const stopActiveWatch = watchActiveThemeManifest(projectRoot, restartActive);
+  const stopPreviewWatch = watchPreviewThemeManifest(projectRoot, restartPreview);
+
+  themeWatchStop = () => {
+    stopActiveWatch();
+    stopPreviewWatch();
+  };
 }
 
 module.exports = {

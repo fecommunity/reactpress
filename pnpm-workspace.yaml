@@ -19,5 +19,5 @@ packages:
   - 'docs'
   # 工具包
   - 'toolkit'
-  # 模板
-  - 'templates/*'
+  # 官方主题包
+  - 'themes/starter/*'

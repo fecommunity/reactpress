@@ -31,6 +31,28 @@ function isPortOpen(port: number): Promise<boolean> {
   });
 }
 
+function normalizeHealthPayload(raw: unknown): Record<string, unknown> | null {
+  if (!raw || typeof raw !== 'object') return null;
+  const body = raw as Record<string, unknown>;
+  const nested = body.data;
+  if (
+    nested &&
+    typeof nested === 'object' &&
+    ('status' in (nested as object) || 'database' in (nested as object))
+  ) {
+    return nested as Record<string, unknown>;
+  }
+  return body;
+}
+
+function isHealthPayloadReady(payload: Record<string, unknown> | null): boolean {
+  if (!payload) return false;
+  if (Object.prototype.hasOwnProperty.call(payload, 'database')) {
+    return payload.status === 'ok' && payload.database === 'up';
+  }
+  return payload.status === 'ok' || payload.status === 'OK';
+}
+
 function probeApiHealth(port: number, prefix = '/api'): Promise<boolean> {
   return new Promise((resolve) => {
     const req = http.request(
@@ -52,10 +74,10 @@ function probeApiHealth(port: number, prefix = '/api'): Promise<boolean> {
             return;
           }
           try {
-            const data = JSON.parse(body);
-            resolve(data?.status === 'ok' || data?.status === 'OK');
+            const payload = normalizeHealthPayload(JSON.parse(body));
+            resolve(isHealthPayloadReady(payload));
           } catch {
-            resolve(true);
+            resolve(false);
           }
         });
       },
@@ -70,6 +92,20 @@ function probeApiHealth(port: number, prefix = '/api'): Promise<boolean> {
 }
 
 export async function bootstrap() {
+  const configuredPort = Number(process.env.SERVER_PORT || 3002);
+  const apiPrefix = String(process.env.SERVER_API_PREFIX || '/api');
+
+  if (
+    process.env.REACTPRESS_API_ENTRY === 'starter' &&
+    (await isPortOpen(configuredPort)) &&
+    (await probeApiHealth(configuredPort, apiPrefix))
+  ) {
+    console.log(
+      `[ReactPress] API already healthy on :${configuredPort} (nest watch reload — skip bootstrap)`,
+    );
+    return null;
+  }
+
   try {
     if (nestApp) {
       await nestApp.close();
@@ -134,25 +170,25 @@ export async function bootstrap() {
     // 设置 Swagger UI
     SwaggerModule.setup('api', app, document, options);
 
-    const configuredPort = Number(configService.get('SERVER_PORT', 3002));
-    const apiPrefix = String(configService.get('SERVER_API_PREFIX', '/api'));
+    const listenPort = Number(configService.get('SERVER_PORT', configuredPort));
+    const listenPrefix = String(configService.get('SERVER_API_PREFIX', apiPrefix));
 
     if (
       process.env.REACTPRESS_API_ENTRY === 'starter' &&
-      (await isPortOpen(configuredPort)) &&
-      (await probeApiHealth(configuredPort, apiPrefix))
+      (await isPortOpen(listenPort)) &&
+      (await probeApiHealth(listenPort, listenPrefix))
     ) {
       console.log(
-        `[ReactPress] API already healthy on :${configuredPort} (nest watch reload — skip duplicate listen)`,
+        `[ReactPress] API already healthy on :${listenPort} (nest watch reload — skip duplicate listen)`,
       );
       await app.close();
       return null;
     }
 
-    await app.listen(configuredPort);
+    await app.listen(listenPort);
     nestApp = app;
-    console.log(`[ReactPress] Application started on http://localhost:${configuredPort}`);
-    console.log(`[ReactPress] API Documentation available at http://localhost:${configuredPort}/api`);
+    console.log(`[ReactPress] Application started on http://localhost:${listenPort}`);
+    console.log(`[ReactPress] API Documentation available at http://localhost:${listenPort}/api`);
     
     return app;
     

@@ -11,7 +11,7 @@ const MOCK_THEMES = [
     description: "支持多栏布局的现代博客主题。",
     author: "ReactPress",
     tags: ["博客", "自适应"],
-    source: "bundled" as const,
+    source: "starter" as const,
     installed: true,
     active: true,
     screenshotUrl: "/api/extension/themes/twentytwentyfive/screenshot",
@@ -43,7 +43,7 @@ const MOCK_THEMES = [
     description: "极简入门主题。",
     author: "ReactPress",
     tags: ["极简", "入门"],
-    source: "bundled" as const,
+    source: "starter" as const,
     installed: true,
     active: false,
     screenshotUrl: "/api/extension/themes/hello-world/screenshot",
@@ -196,6 +196,27 @@ export const themeHandlers = [
     };
     patchMockGlobalSettingTheme(themeState);
     return successResponse(themeState);
+  }),
+
+  http.post("/api/extension/themes/:id/preview-session", async ({ params }) => {
+    await withDelay(80);
+    const id = String(params.id);
+    themeState = { ...themeState, previewThemeId: id };
+    patchMockGlobalSettingTheme(themeState);
+    const siteUrl = "http://localhost:3001";
+    return successResponse({
+      ...themeState,
+      activeTheme: themeState.activeTheme,
+      siteUrl,
+      previewSiteUrl: id !== themeState.activeTheme ? "http://localhost:3003/" : undefined,
+    });
+  }),
+
+  http.post("/api/extension/themes/preview-session/end", async () => {
+    await withDelay(80);
+    themeState = { ...themeState, previewThemeId: themeState.activeTheme };
+    patchMockGlobalSettingTheme(themeState);
+    return successResponse({ ...themeState, siteUrl: "http://localhost:3001" });
   }),
 
   http.post("/api/extension/themes/:id/mods", async ({ params, request }) => {

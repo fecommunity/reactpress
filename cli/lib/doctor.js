@@ -263,4 +263,8 @@ async function runDoctor(projectRoot) {
   return failed === 0 ? 0 : 1;
 }
 
-module.exports = { runDoctor };
+module.exports = {
+  runDoctor,
+  checkNodeVersion,
+  checkDocker,
+};

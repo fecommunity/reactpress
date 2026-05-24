@@ -15,7 +15,7 @@ export interface ThemeListItem {
   description?: string;
   author?: string;
   tags?: string[];
-  source: "bundled" | "installed";
+  source: "starter" | "installed";
   installed: boolean;
   active: boolean;
   screenshotUrl?: string;
@@ -89,6 +89,24 @@ export function saveThemeMods(themeId: string, mods: ThemeMods) {
   return themeFetch<SiteThemeState>(`/extension/themes/${themeId}/mods`, {
     method: "POST",
     body: JSON.stringify({ mods }),
+  });
+}
+
+export type ThemePreviewSessionResult = SiteThemeState & {
+  siteUrl?: string;
+  /** Separate dev URL when preview theme ≠ active (e.g. http://localhost:3003/). */
+  previewSiteUrl?: string;
+};
+
+export function beginThemePreviewSession(themeId: string) {
+  return themeFetch<ThemePreviewSessionResult>(`/extension/themes/${themeId}/preview-session`, {
+    method: "POST",
+  });
+}
+
+export function endThemePreviewSession() {
+  return themeFetch<ThemePreviewSessionResult>("/extension/themes/preview-session/end", {
+    method: "POST",
   });
 }
 

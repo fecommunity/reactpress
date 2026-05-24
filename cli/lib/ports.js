@@ -1,0 +1,364 @@
+const fs = require('fs');
+const path = require('path');
+const { spawnSync } = require('child_process');
+
+/**
+ * Local dev port map (keep in sync with `.env`, README, and `theme.service.ts` defaults).
+ *
+ * | Port | Service |
+ * |------|---------|
+ * | 3000 | Admin SPA — Vite (`web/`, `WEB_ADMIN_URL`) |
+ * | 3001 | Visitor site — active theme Next.js (`CLIENT_SITE_URL`) |
+ * | 3002 | API server (`SERVER_PORT`) |
+ * | 3003 | Admin theme preview only (`REACTPRESS_PREVIEW_PORT`, `preview-theme.json`) |
+ * | 3306 | MySQL (`DB_PORT`) |
+ */
+const DEV_PORTS = {
+  ADMIN_WEB: 3000,
+  VISITOR: 3001,
+  API: 3002,
+  THEME_PREVIEW: 3003,
+  MYSQL: 3306,
+};
+
+/** Ports theme `next dev` must not bind to (reserved for other services). 3003 is allowed — preview theme. */
+/** Never kill listeners on DB / infra ports during dev port cleanup. */
+const PROTECTED_KILL_PORTS = new Set([3306, 3307, 5432, 6379]);
+
+const BLOCKED_THEME_DEV_PORTS = new Set([
+  22,
+  80,
+  443,
+  3000,
+  3002,
+  5173,
+  5432,
+  6379,
+  8080,
+  8443,
+  3306,
+  3307,
+]);
+
+function readEnvPort(projectRoot, key, fallback) {
+  try {
+    const content = fs.readFileSync(path.join(projectRoot, '.env'), 'utf8');
+    const match = content.match(new RegExp(`^${key}=(.+)$`, 'm'));
+    if (match) {
+      const n = parseInt(match[1].trim().replace(/^['"]|['"]$/g, ''), 10);
+      if (Number.isInteger(n) && n > 0) return n;
+    }
+  } catch {
+    // ignore
+  }
+  return fallback;
+}
+
+function readVisitorPort(projectRoot) {
+  const fromEnv = readEnvPort(projectRoot, 'CLIENT_PORT', null);
+  if (fromEnv) return fromEnv;
+  try {
+    const content = fs.readFileSync(path.join(projectRoot, '.env'), 'utf8');
+    const match = content.match(/^CLIENT_SITE_URL=(.+)$/m);
+    if (match) {
+      const url = new URL(match[1].trim().replace(/^['"]|['"]$/g, ''));
+      const n = parseInt(url.port || String(DEV_PORTS.VISITOR), 10);
+      if (Number.isInteger(n) && n > 0) return n;
+    }
+  } catch {
+    // ignore
+  }
+  return DEV_PORTS.VISITOR;
+}
+
+function isPortListening(port) {
+  const n = parseInt(port, 10);
+  if (!Number.isInteger(n) || n < 1) return false;
+  const result = spawnSync('lsof', [`-tiTCP:${n}`, '-sTCP:LISTEN'], { encoding: 'utf8' });
+  return result.status === 0 && Boolean(result.stdout?.trim());
+}
+
+/** Kill processes listening on `port`. Returns PIDs signalled. */
+function killPortListeners(port, signal = 'KILL') {
+  const n = parseInt(port, 10);
+  if (!Number.isInteger(n) || n < 1) return [];
+
+  const flag = signal === 'TERM' ? '-TERM' : '-9';
+  const result = spawnSync('lsof', [`-tiTCP:${n}`, '-sTCP:LISTEN'], { encoding: 'utf8' });
+  if (result.status !== 0 || !result.stdout?.trim()) return [];
+
+  const pids = [];
+  for (const pid of result.stdout.trim().split(/\s+/)) {
+    if (!pid) continue;
+    spawnSync('kill', [flag, pid], { stdio: 'ignore' });
+    pids.push(pid);
+  }
+  return pids;
+}
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function getListenerPids(port) {
+  const n = parseInt(port, 10);
+  if (!Number.isInteger(n) || n < 1) return [];
+  const result = spawnSync('lsof', [`-tiTCP:${n}`, '-sTCP:LISTEN'], { encoding: 'utf8' });
+  if (result.status !== 0 || !result.stdout?.trim()) return [];
+  return result.stdout.trim().split(/\s+/).filter(Boolean);
+}
+
+function collectDescendantPids(rootPid) {
+  const root = parseInt(rootPid, 10);
+  if (!Number.isFinite(root) || root <= 0) return [];
+
+  const out = [];
+  const queue = [String(root)];
+  const seen = new Set();
+
+  while (queue.length) {
+    const pid = queue.shift();
+    if (!pid || seen.has(pid)) continue;
+    seen.add(pid);
+
+    const children = spawnSync('pgrep', ['-P', pid], { encoding: 'utf8' });
+    if (children.status !== 0 || !children.stdout?.trim()) continue;
+
+    for (const child of children.stdout.trim().split(/\s+/)) {
+      if (!child || seen.has(child)) continue;
+      out.push(child);
+      queue.push(child);
+    }
+  }
+  return out;
+}
+
+function collectAncestorPids(pid, maxDepth = 10) {
+  const out = [];
+  let current = parseInt(pid, 10);
+  for (let i = 0; i < maxDepth; i += 1) {
+    if (!Number.isFinite(current) || current <= 1) break;
+    const ppidRes = spawnSync('ps', ['-o', 'ppid=', '-p', String(current)], { encoding: 'utf8' });
+    const parent = parseInt(ppidRes.stdout?.trim(), 10);
+    if (!Number.isFinite(parent) || parent <= 1) break;
+    out.push(String(parent));
+    current = parent;
+  }
+  return out;
+}
+
+function getProcessCommand(pid) {
+  const res = spawnSync('ps', ['-o', 'args=', '-p', String(pid)], { encoding: 'utf8' });
+  return (res.stdout || '').trim();
+}
+
+function isDockerInfrastructureProcess(pid) {
+  const cmd = getProcessCommand(pid).toLowerCase();
+  if (!cmd) return false;
+  return (
+    cmd.includes('com.docker') ||
+    cmd.includes('docker desktop') ||
+    cmd.includes('dockerd') ||
+    cmd.includes('vpnkit') ||
+    cmd.includes('containerd') ||
+    (cmd.includes('docker') && cmd.includes('proxy'))
+  );
+}
+
+/** Nest / pnpm API dev parent — killing only the listener leaves watch respawning children. */
+function isReactPressApiProcess(pid, projectRoot) {
+  if (isDockerInfrastructureProcess(pid)) return false;
+  const cmd = getProcessCommand(pid);
+  if (!cmd) return false;
+  if (
+    /nest start|api-dev-runner|server\/dist\/starter|@nestjs\/cli|reactpress\.js/.test(cmd)
+  ) {
+    return true;
+  }
+  const serverDir = path.join(path.resolve(projectRoot), 'server');
+  const res = spawnSync('lsof', ['-p', String(pid)], { encoding: 'utf8' });
+  if (res.status !== 0) return false;
+  return res.stdout.split('\n').some((line) => {
+    if (!line.includes(' cwd ')) return false;
+    const parts = line.trim().split(/\s+/);
+    const cwd = parts[parts.length - 1];
+    return cwd === serverDir || cwd.startsWith(`${serverDir}${path.sep}`);
+  });
+}
+
+function signalPidSet(pids, signal) {
+  const flag = signal === 'TERM' ? '-TERM' : '-9';
+  for (const pid of pids) {
+    if (!pid || pid === String(process.pid)) continue;
+    spawnSync('kill', [flag, pid], { stdio: 'ignore' });
+  }
+}
+
+function collectApiPortProcessTree(projectRoot, port) {
+  const toSignal = new Set();
+  for (const pid of getListenerPids(port)) {
+    if (isDockerInfrastructureProcess(pid)) continue;
+    toSignal.add(pid);
+    for (const child of collectDescendantPids(pid)) {
+      if (!isDockerInfrastructureProcess(child)) toSignal.add(child);
+    }
+    for (const ancestor of collectAncestorPids(pid)) {
+      if (isReactPressApiProcess(ancestor, projectRoot)) toSignal.add(ancestor);
+    }
+  }
+  return toSignal;
+}
+
+/** Stop Nest / api-dev listeners on `port` (TERM then KILL). */
+async function stopApiPortListeners(projectRoot, port, { label = 'API' } = {}) {
+  const n = parseInt(port, 10);
+  if (!Number.isInteger(n) || n < 1 || !isPortListening(n)) return true;
+
+  console.warn(
+    `[reactpress] Port ${n} (${label}) is busy — stopping existing API processes…`,
+  );
+
+  const toSignal = collectApiPortProcessTree(projectRoot, n);
+  signalPidSet(toSignal, 'TERM');
+  await sleep(600);
+
+  const deadline = Date.now() + 10_000;
+  while (Date.now() < deadline) {
+    if (!isPortListening(n)) return true;
+    for (const pid of getListenerPids(n)) {
+      toSignal.add(pid);
+      for (const child of collectDescendantPids(pid)) toSignal.add(child);
+    }
+    signalPidSet(toSignal, 'KILL');
+    await sleep(500);
+  }
+
+  if (isPortListening(n)) {
+    console.warn(
+      `[reactpress] Port ${n} (${label}) still in use — try: lsof -tiTCP:${n} -sTCP:LISTEN | xargs kill -9`,
+    );
+    return false;
+  }
+  return true;
+}
+
+/**
+ * Free API port: skip when health check passes; otherwise stop listener + nest watch tree.
+ * @returns {{ reused: boolean, port: number }}
+ */
+async function ensureApiPortFree(projectRoot, { allowReuse = true } = {}) {
+  const port = readEnvPort(projectRoot, 'SERVER_PORT', DEV_PORTS.API);
+  const { getHealthUrl, checkHealth } = require('./http');
+  if (allowReuse) {
+    const health = await checkHealth(getHealthUrl(projectRoot), 1500);
+    if (health.ok) {
+      return { reused: true, port };
+    }
+  }
+
+  if (!isPortListening(port)) {
+    return { reused: false, port };
+  }
+
+  await stopApiPortListeners(projectRoot, port);
+  return { reused: false, port };
+}
+
+/** Always stop API listeners — used when replacing a prior `reactpress dev` session. */
+async function forceReleaseApiPort(projectRoot) {
+  const port = readEnvPort(projectRoot, 'SERVER_PORT', DEV_PORTS.API);
+  if (!isPortListening(port)) return port;
+  console.warn(`[reactpress] Releasing API port ${port} for new dev session…`);
+  await stopApiPortListeners(projectRoot, port);
+  return port;
+}
+
+/** Stop orphaned dev-stack listeners after session takeover or crash. */
+async function forceReleaseDevStackPorts(projectRoot) {
+  await forceReleaseApiPort(projectRoot);
+
+  const previewPort = readEnvPort(
+    projectRoot,
+    'REACTPRESS_PREVIEW_PORT',
+    DEV_PORTS.THEME_PREVIEW,
+  );
+  const adminPort = readEnvPort(projectRoot, 'WEB_ADMIN_PORT', DEV_PORTS.ADMIN_WEB);
+  const visitorPort = readVisitorPort(projectRoot);
+
+  for (const [port, label] of [
+    [adminPort, 'admin'],
+    [visitorPort, 'visitor site'],
+    [previewPort, 'theme preview'],
+  ]) {
+    await ensurePortFree(port, { label });
+  }
+}
+
+/**
+ * If `port` is in use, terminate listeners (TERM then KILL) and wait until free.
+ */
+async function ensurePortFree(port, { label = 'service', maxWaitMs = 8000 } = {}) {
+  const n = parseInt(port, 10);
+  if (!Number.isInteger(n) || n < 1) return false;
+
+  if (PROTECTED_KILL_PORTS.has(n)) {
+    if (isPortListening(n)) {
+      console.warn(`[reactpress] Port ${n} (${label}) is protected — leaving existing listener`);
+    }
+    return true;
+  }
+
+  if (!isPortListening(n)) return true;
+
+  console.warn(`[reactpress] Port ${n} (${label}) is busy — stopping existing listener…`);
+  killPortListeners(n, 'TERM');
+  await sleep(500);
+
+  const deadline = Date.now() + maxWaitMs;
+  while (Date.now() < deadline) {
+    if (!isPortListening(n)) return true;
+    killPortListeners(n, 'KILL');
+    await sleep(500);
+  }
+
+  if (isPortListening(n)) {
+    console.warn(
+      `[reactpress] Port ${n} (${label}) still in use — try: lsof -tiTCP:${n} -sTCP:LISTEN | xargs kill -9`,
+    );
+    return false;
+  }
+  return true;
+}
+
+/** Free theme/admin ports (API handled in {@link forceReleaseDevStackPorts} / {@link spawnApi}). */
+async function ensureDevStackPorts(projectRoot) {
+  const previewPort = readEnvPort(
+    projectRoot,
+    'REACTPRESS_PREVIEW_PORT',
+    DEV_PORTS.THEME_PREVIEW,
+  );
+  const adminPort = readEnvPort(projectRoot, 'WEB_ADMIN_PORT', DEV_PORTS.ADMIN_WEB);
+  const visitorPort = readVisitorPort(projectRoot);
+
+  for (const [port, label] of [
+    [adminPort, 'admin'],
+    [visitorPort, 'visitor site'],
+    [previewPort, 'theme preview'],
+  ]) {
+    await ensurePortFree(port, { label });
+  }
+}
+
+module.exports = {
+  DEV_PORTS,
+  BLOCKED_THEME_DEV_PORTS,
+  readEnvPort,
+  readVisitorPort,
+  isPortListening,
+  killPortListeners,
+  ensurePortFree,
+  ensureApiPortFree,
+  forceReleaseApiPort,
+  forceReleaseDevStackPorts,
+  ensureDevStackPorts,
+};

@@ -10,6 +10,8 @@ const {
 const { stopApi } = require('./lifecycle');
 const { ensureOriginalCwd } = require('./root');
 const { t } = require('./i18n');
+const { ensureApiPortFree } = require('./ports');
+const { ensureDevDatabase } = require('./docker');
 
 let apiChild;
 
@@ -59,11 +61,22 @@ function startApiDev(projectRoot) {
 }
 
 async function runApiDev(projectRoot = ensureOriginalCwd()) {
-  try {
-    await ensureProjectEnvironment(projectRoot);
-  } catch (err) {
-    console.error(t('dev.envFailed'), err.message || err);
-    process.exit(1);
+  const skipEnvBootstrap = process.env.REACTPRESS_DEV_DB_READY === '1';
+
+  if (!skipEnvBootstrap) {
+    try {
+      await ensureProjectEnvironment(projectRoot);
+    } catch (err) {
+      console.error(t('dev.envFailed'), err.message || err);
+      process.exit(1);
+    }
+
+    try {
+      await ensureDevDatabase(projectRoot);
+    } catch (err) {
+      console.error(t('dev.dbEnsureFailed', { message: err.message || err }));
+      process.exit(1);
+    }
   }
 
   process.on('SIGINT', () => {
@@ -74,6 +87,14 @@ async function runApiDev(projectRoot = ensureOriginalCwd()) {
     stopApiDev(projectRoot);
     process.exit(0);
   });
+
+  if (process.env.REACTPRESS_DEV_PORTS_READY !== '1') {
+    const { reused, port: apiPort } = await ensureApiPortFree(projectRoot);
+    if (reused) {
+      console.log(t('dev.apiReusing', { port: apiPort }));
+      return;
+    }
+  }
 
   startApiDev(projectRoot);
 }

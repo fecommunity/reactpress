@@ -27,7 +27,7 @@ reactpress/
 ├── server/          # NestJS API (primary backend in this repo)
 ├── client/          # Next.js frontend
 ├── toolkit/         # OpenAPI-generated API SDK
-├── templates/       # Starter templates
+├── themes/          # Visitor themes (starter/ + installed copies)
 ├── scripts/         # dev, deploy, lifecycle
 ├── docs/            # Docusaurus site
 └── .reactpress/     # Local CLI config
@@ -71,7 +71,7 @@ pnpm login
 pnpm run release
 ```
 
-Packages: root meta, **server**, client, toolkit, templates.  
+Packages: root meta, **server**, client, toolkit, themes/starter.  
 `@fecommunity/reactpress-cli` is used for `init` and optional Docker database only.
 
 ## Architecture

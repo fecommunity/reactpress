@@ -68,7 +68,7 @@ async function initMonorepoProject(projectRoot, { force = false } = {}) {
   };
 }
 
-async function ensureProjectEnvironment(projectRoot = ensureOriginalCwd()) {
+async function ensureProjectEnvironment(projectRoot = ensureOriginalCwd(), options = {}) {
   const root = path.resolve(projectRoot);
   const { setProjectCwd } = await importCliModule('utils/cli-context.js');
   setProjectCwd(root);
@@ -94,6 +94,10 @@ async function ensureProjectEnvironment(projectRoot = ensureOriginalCwd()) {
   }
 
   const config = await loadConfig(root);
+  if (options.skipDatabase) {
+    return { ok: true, projectRoot: root, message: null };
+  }
+
   await ensureDatabaseHostPort(root, undefined, config);
   const dbResult = await ensureDatabase(root, config);
   if (!dbResult.ok) {

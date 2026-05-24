@@ -13,7 +13,7 @@ export default defineConfig({
   workers: ci ? 1 : undefined,
   reporter: "html",
   use: {
-    baseURL: "http://localhost:5173",
+    baseURL: "http://localhost:3000",
     trace: "on-first-retry",
   },
   projects: [
@@ -25,7 +25,7 @@ export default defineConfig({
   webServer: {
     command:
       "VITE_ENABLE_MOCK=true VITE_AUTH_MODE=mock VITE_DEV_API_PROXY_TARGET=http://localhost:3002 vp dev",
-    url: "http://localhost:5173",
+    url: "http://localhost:3000",
     reuseExistingServer: !ci,
   },
 });

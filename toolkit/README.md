@@ -74,6 +74,80 @@ const article: types.IArticle = {
 const formattedDate = utils.formatDate(new Date());
 ```
 
+## Theme development (`/theme`)
+
+Next.js visitor themes share API wiring and response unpacking. Import from `@fecommunity/reactpress-toolkit/theme` instead of copying `lib/api.ts` into each template:
+
+```typescript
+import {
+  themeApi,
+  fetchThemeCatalog,
+  themeStaticProps,
+  unpackList,
+} from '@fecommunity/reactpress-toolkit/theme';
+```
+
+```javascript
+// next.config.js
+const { createReactPressNextConfig } = require('@fecommunity/reactpress-toolkit/theme/next-config');
+module.exports = createReactPressNextConfig();
+```
+
+`themeApi` respects `REACTPRESS_API_URL` (SSR) and `NEXT_PUBLIC_REACTPRESS_API_URL` (browser), as set by `reactpress theme dev`.
+
+### Headless UI (`/ui`)
+
+Source lives in `toolkit/src/ui/` (components + hooks). Import from `/ui` or re-exported `/theme`:
+
+```typescript
+import { NavMenu, ArticleList } from '@fecommunity/reactpress-toolkit/ui';
+// same symbols: @fecommunity/reactpress-toolkit/theme
+```
+
+| Export | Role |
+|--------|------|
+| `ThemeLayout` | `header` / `main` / `footer` shell |
+| `NavMenu` | Config-driven nav via `renderLink` (works with Next `Link`) |
+| `ArticleList` | Map articles with `renderArticle` |
+| `TaxonomyList` | Categories/tags (`variant: 'list' \| 'inline'`) |
+| `useNavActive` | Match `router.pathname` to nav items |
+
+Data helpers (`formatPublishDate`, `fetchSiteSettings`, `themeApi`, …) stay under `/theme`.
+
+### Context & hooks (`ReactPressProvider`)
+
+Load once in `pages/_app.tsx`, then use hooks in any page/component:
+
+| Hook | Purpose |
+|------|---------|
+| `useLocale()` | `locale`, `locales`, `setLocale`, `t('archives')` |
+| `useThemeRuntime()` | `themeId`, `activeThemeId`, `mods`, `isPreview` |
+| `useThemeMod('primaryColor')` | Single customizer value |
+| `useThemeId()` / `useActiveThemeId()` | Shorthand accessors |
+
+```typescript
+import { fetchVisitorContext, ReactPressProvider, themeApi } from '@fecommunity/reactpress-toolkit/theme';
+import themeManifest from '../theme.json';
+
+// _app getInitialProps
+const reactPress = await fetchVisitorContext(themeApi, { themeId: themeManifest.id });
+```
+
+```tsx
+const { t, locale, setLocale } = useLocale();
+const primary = useThemeMod('primaryColor', '#2271b1');
+```
+
+```tsx
+<NavMenu
+  items={NAV_ITEMS}
+  activeId={currentPage}
+  renderLink={({ item, active }) => (
+    <Link href={item.href}><a className={active ? 'active' : ''}>{item.label}</a></Link>
+  )}
+/>
+```
+
 ## Configuration
 
 You can create a custom API instance with specific configuration:

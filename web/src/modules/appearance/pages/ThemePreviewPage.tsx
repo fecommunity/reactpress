@@ -1,13 +1,15 @@
-import { App, Button, Spin, Tag, Typography } from "antd";
+import { App, Button, Spin } from "antd";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "@tanstack/react-router";
 import { getThemeStateFromGlobalSetting } from "@fecommunity/reactpress-toolkit/extension";
-import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 import { useThemes, useThemeMutations } from "@/hooks/useThemes";
 import { ThemePreviewFrame } from "@/modules/appearance/components/ThemePreviewFrame";
-import { canUseLiveSitePreview } from "@/shared/theme/previewUrl";
+import { ThemePreviewPaneLoading } from "@/modules/appearance/components/ThemePreviewPaneLoading";
+import { useThemePreviewSession } from "@/hooks/useThemePreviewSession";
+import { resolveLiveSitePreviewUrl } from "@/shared/theme/previewUrl";
 import styles from "@/modules/appearance/components/themes-page.module.css";
 
 export function ThemePreviewPage({ themeIdFromSearch }: { themeIdFromSearch?: string }) {
@@ -34,12 +36,35 @@ export function ThemePreviewPage({ themeIdFromSearch }: { themeIdFromSearch?: st
     list.findIndex((th) => th.id === (themeIdFromSearch ?? themeState.activeTheme)),
   );
   const current = list[currentIndex];
+  const canSwitchTheme = list.length > 1;
 
   const previewMods = current?.id ? (themeState.mods[current.id] ?? {}) : {};
   const siteUrl = typeof settings?.systemUrl === "string" ? settings.systemUrl.trim() : undefined;
+  const {
+    ready: previewSessionReady,
+    switching: previewSwitching,
+    previewSiteUrl,
+  } = useThemePreviewSession(current?.id, siteUrl, themeState.activeTheme);
   const isLivePreview = current?.id
-    ? canUseLiveSitePreview(current.id, themeState.activeTheme, siteUrl)
+    ? Boolean(
+        resolveLiveSitePreviewUrl(siteUrl, {
+          themeId: current.id,
+          activeThemeId: themeState.activeTheme,
+          previewSiteUrl,
+          previewSessionReady,
+        }),
+      )
     : false;
+  const mayUseLiveSite =
+    current?.id === themeState.activeTheme
+      ? Boolean(
+          resolveLiveSitePreviewUrl(siteUrl, {
+            themeId: current.id,
+            activeThemeId: themeState.activeTheme,
+            previewSessionReady: true,
+          }),
+        )
+      : true;
 
   const goTo = (index: number) => {
     const next = list[index];
@@ -82,72 +107,99 @@ export function ThemePreviewPage({ themeIdFromSearch }: { themeIdFromSearch?: st
   return (
     <div className={styles.previewShell}>
       <aside className={styles.previewSidebar}>
-        <div className={styles.previewSidebarToolbar}>
+        <div className={styles.previewSidebarHeader}>
           <Button
-            disabled={currentIndex <= 0}
-            aria-label={t("appearance.prevTheme")}
-            onClick={() => goTo(currentIndex - 1)}
+            type="link"
+            icon={<ChevronLeft size={14} />}
+            className={styles.customizeBack}
+            onClick={() => void navigate({ to: "/appearance/themes" })}
           >
-            ←
+            {t("appearance.backToThemes")}
           </Button>
-          <Button
-            disabled={currentIndex >= list.length - 1}
-            aria-label={t("appearance.nextTheme")}
-            onClick={() => goTo(currentIndex + 1)}
-          >
-            →
-          </Button>
-          <div className={styles.previewSidebarToolbarSpacer}>
-            <LanguageSwitcher size="small" compact />
-            <Button onClick={() => void navigate({ to: "/appearance/themes" })}>
-              {t("appearance.closePreview")}
-            </Button>
-          </div>
         </div>
 
-        <div className={styles.previewSidebarMeta}>
-          <Typography.Text type="secondary">{t("appearance.previewPanelTitle")}</Typography.Text>
-          <div className={styles.previewSidebarTags}>
-            {current.active ? <Tag color="blue">{t("appearance.active")}</Tag> : null}
-            {current.installed ? (
-              <Tag color="default">{t("appearance.installed")}</Tag>
-            ) : (
-              <Tag>{t("appearance.notInstalled")}</Tag>
-            )}
-          </div>
-          <Typography.Title level={4} className={styles.previewSidebarTitle}>
-            {current.name}
-          </Typography.Title>
-          {current.author ? (
-            <Typography.Text type="secondary">
-              {t("appearance.author", { author: current.author })}
-            </Typography.Text>
-          ) : null}
-          <Typography.Text type="secondary" style={{ display: "block", marginTop: 8 }}>
-            {t("appearance.version", { version: current.version })}
-          </Typography.Text>
-          {current.description ? (
-            <Typography.Paragraph style={{ marginTop: 12, marginBottom: 12 }}>
-              {current.description}
-            </Typography.Paragraph>
-          ) : null}
-          {current.tags && current.tags.length > 0 ? (
-            <div style={{ marginBottom: 12 }}>
-              <Typography.Text type="secondary">{t("appearance.tags")}: </Typography.Text>
-              {current.tags.map((tag) => (
-                <Tag key={tag}>{tag}</Tag>
-              ))}
+        <div className={styles.previewSidebarScroll}>
+          {canSwitchTheme ? (
+            <div
+              className={styles.previewSidebarNav}
+              role="toolbar"
+              aria-label={t("appearance.previewPanelTitle")}
+            >
+              <button
+                type="button"
+                className={styles.sidebarToolBtn}
+                disabled={currentIndex <= 0}
+                aria-label={t("appearance.prevTheme")}
+                onClick={() => goTo(currentIndex - 1)}
+              >
+                <ChevronLeft size={16} aria-hidden />
+              </button>
+              <button
+                type="button"
+                className={styles.sidebarToolBtn}
+                disabled={currentIndex >= list.length - 1}
+                aria-label={t("appearance.nextTheme")}
+                onClick={() => goTo(currentIndex + 1)}
+              >
+                <ChevronRight size={16} aria-hidden />
+              </button>
+              <span className={styles.previewThemeIndex}>
+                {currentIndex + 1} / {list.length}
+              </span>
             </div>
           ) : null}
-          <Typography.Text type="secondary" style={{ display: "block" }}>
-            {isLivePreview ? t("appearance.previewLiveHint") : t("appearance.previewStubHint")}
-          </Typography.Text>
+
+          <div className={styles.previewSidebarMeta}>
+            <span className={styles.sidebarMuted}>{t("appearance.previewPanelTitle")}</span>
+
+            <div className={styles.previewBadgeRow}>
+              {current.active ? (
+                <span className={styles.previewActiveBadge}>{t("appearance.activeTheme")}</span>
+              ) : null}
+              <span className={styles.previewStatusBadge}>
+                {current.installed ? t("appearance.installed") : t("appearance.notInstalled")}
+              </span>
+            </div>
+
+            <h2 className={styles.previewSidebarTitle}>{current.name}</h2>
+
+            {current.author ? (
+              <span className={styles.sidebarMuted}>
+                {t("appearance.author", { author: current.author })}
+              </span>
+            ) : null}
+            <span className={styles.sidebarMuted} style={{ marginTop: 8 }}>
+              {t("appearance.version", { version: current.version })}
+            </span>
+            {current.description ? (
+              <p className={styles.sidebarBody} style={{ margin: "12px 0" }}>
+                {current.description}
+              </p>
+            ) : null}
+            {current.tags && current.tags.length > 0 ? (
+              <div className={styles.previewFeatureTags}>
+                {current.tags.map((tag) => (
+                  <span key={tag} className={styles.featureTag}>
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            ) : null}
+            <span className={styles.sidebarHint}>
+              {previewSwitching
+                ? t("appearance.previewSwitchingSidebar")
+                : isLivePreview
+                  ? t("appearance.previewLiveHint")
+                  : t("appearance.previewStubHint")}
+            </span>
+          </div>
         </div>
 
         <div className={styles.previewSidebarActions}>
           {!current.installed ? (
             <Button
               type="primary"
+              block
               loading={installMutation.isPending}
               onClick={() => void handleInstall()}
             >
@@ -157,6 +209,7 @@ export function ThemePreviewPage({ themeIdFromSearch }: { themeIdFromSearch?: st
           {!current.active && current.installed ? (
             <Button
               type="primary"
+              block
               loading={activateMutation.isPending}
               onClick={() => void handleActivate()}
             >
@@ -164,27 +217,38 @@ export function ThemePreviewPage({ themeIdFromSearch }: { themeIdFromSearch?: st
             </Button>
           ) : null}
           {current.installed && !current.active ? (
-            <Button onClick={() => void handleInstall()} loading={installMutation.isPending}>
+            <Button block onClick={() => void handleInstall()} loading={installMutation.isPending}>
               {t("appearance.reinstall")}
             </Button>
           ) : null}
           {current.active ? (
-            <Button onClick={() => void navigate({ to: "/appearance/customize" })}>
+            <Button
+              type="primary"
+              block
+              onClick={() => void navigate({ to: "/appearance/customize" })}
+            >
               {t("appearance.customize")}
             </Button>
           ) : null}
         </div>
       </aside>
 
-      <div className={styles.previewWrap} style={{ height: "100vh" }}>
-        <ThemePreviewFrame
-          themeId={current.id}
-          activeThemeId={themeState.activeTheme}
-          mods={previewMods}
-          siteUrl={siteUrl}
-          title={current.name}
-          style={{ height: "100%" }}
-        />
+      <div className={styles.previewMain}>
+        {mayUseLiveSite && previewSwitching ? (
+          <ThemePreviewPaneLoading themeName={current.name} />
+        ) : (
+          <ThemePreviewFrame
+            themeId={current.id}
+            activeThemeId={themeState.activeTheme}
+            mods={previewMods}
+            siteUrl={siteUrl}
+            title={current.name}
+            previewSiteUrl={previewSiteUrl}
+            previewSessionReady={previewSessionReady}
+            refreshKey={previewSessionReady ? current.id : undefined}
+            style={{ flex: 1, minHeight: 0, height: "100%" }}
+          />
+        )}
       </div>
     </div>
   );

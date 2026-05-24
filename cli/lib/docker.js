@@ -101,7 +101,7 @@ function isDbContainerRunning(container) {
   return res.status === 0 && res.stdout.trim() === 'true';
 }
 
-function startDockerServices(projectRoot) {
+async function startDockerServices(projectRoot) {
   console.log(t('docker.starting'));
   if (!isDockerRunning()) {
     throw new Error(t('docker.notRunning'));
@@ -119,7 +119,16 @@ function startDockerServices(projectRoot) {
   const dbPort = parseDbPort(projectRoot);
 
   if (isPortListening(dbPort)) {
-    console.warn(t('docker.dbPortInUse', { port: dbPort }));
+    if (await probeMysqlHost(projectRoot)) {
+      console.log(t('docker.dbReuseExisting', { port: dbPort }));
+      const nginxOnly = runCompose(['up', '-d', '--no-deps', 'nginx'], ctx);
+      if (nginxOnly.status !== 0) {
+        throw new Error(t('docker.notRunning'));
+      }
+      console.log(t('docker.started'));
+      return;
+    }
+    console.warn(t('docker.dbPortInUseRecycle', { port: dbPort }));
     spawnSync('docker', ['rm', '-f', 'reactpress_db'], { stdio: 'ignore' });
     const result = runCompose(['up', '-d', '--no-deps', 'nginx'], ctx);
     if (result.status !== 0) {
@@ -141,42 +150,71 @@ function startDockerServices(projectRoot) {
 }
 
 async function ensureDevDatabase(projectRoot) {
-  if (await probeMysqlHost(projectRoot)) return;
+  const dbPort = parseDbPort(projectRoot);
+  const ctx = resolveComposeContext(projectRoot);
+  const container = resolveDbContainerName(ctx, projectRoot);
+
+  const finishWhenReady = async (maxAttempts = 60) => {
+    if (await waitForMysql(projectRoot, maxAttempts)) return true;
+    return false;
+  };
+
+  if (await probeMysqlHost(projectRoot) && (await finishWhenReady(8))) {
+    return;
+  }
 
   console.log(t('docker.ensureDevDb'));
   if (!isDockerRunning()) {
-    throw new Error(t('docker.notRunning'));
+    throw new Error(t('docker.devStartBlocked', { port: dbPort }));
   }
-
-  const ctx = resolveComposeContext(projectRoot);
-  const dbPort = parseDbPort(projectRoot);
-  const container = resolveDbContainerName(ctx, projectRoot);
 
   for (const name of new Set([container, 'reactpress_db', 'reactpress_cli_db'])) {
     spawnSync('docker', ['start', name], { stdio: 'ignore' });
   }
   await new Promise((r) => setTimeout(r, 2500));
-  if (await probeMysqlHost(projectRoot)) return;
+  if (await finishWhenReady(45)) return;
 
   if (!isPortListening(dbPort)) {
     const dbResult = runCompose(['up', '-d', 'db'], ctx);
     if (dbResult.status !== 0) {
       throw new Error(t('docker.mysqlNotReady'));
     }
+  } else if (await probeMysqlHost(projectRoot)) {
+    console.log(t('docker.dbReuseExisting', { port: dbPort }));
+    if (await finishWhenReady(30)) return;
   } else {
-    console.warn(t('docker.dbPortInUse', { port: dbPort }));
+    console.warn(t('docker.dbPortInUseRecycle', { port: dbPort }));
     spawnSync('docker', ['rm', '-f', 'reactpress_db'], { stdio: 'ignore' });
     await new Promise((r) => setTimeout(r, 500));
-    if (await probeMysqlHost(projectRoot)) return;
+    const recreate = runCompose(['up', '-d', 'db'], ctx);
+    if (recreate.status !== 0) {
+      throw new Error(t('docker.mysqlNotReady'));
+    }
   }
 
-  if (await waitForMysql(projectRoot, 45)) return;
+  if (await finishWhenReady(60)) return;
 
   throw new Error(
     t('docker.dbPortConflict', {
       port: dbPort,
     }),
   );
+}
+
+/** Gate API boot — MySQL must accept connections on DB_PORT (avoids Nest retrying on :3307). */
+async function requireMysqlBeforeApi(projectRoot) {
+  const dbPort = parseDbPort(projectRoot);
+  if (await probeMysqlHost(projectRoot) && (await waitForMysql(projectRoot, 5))) {
+    return;
+  }
+  await ensureDevDatabase(projectRoot);
+  if (!(await probeMysqlHost(projectRoot))) {
+    throw new Error(
+      t('docker.dbPortConflict', {
+        port: dbPort,
+      }),
+    );
+  }
 }
 
 function resolveDbContainerName(ctx, projectRoot) {
@@ -282,7 +320,7 @@ async function waitForMysql(projectRoot, maxAttempts = 30) {
 }
 
 async function dockerStartWithDev(projectRoot) {
-  startDockerServices(projectRoot);
+  await startDockerServices(projectRoot);
   const ready = await waitForMysql(projectRoot);
   if (!ready) {
     throw new Error(t('docker.mysqlNotReady'));
@@ -367,7 +405,7 @@ async function runDockerCommand(command, projectRoot = ensureOriginalCwd(), extr
   const ctx = resolveComposeContext(projectRoot);
   switch (command) {
     case 'up':
-      startDockerServices(projectRoot);
+      await startDockerServices(projectRoot);
       await waitForMysql(projectRoot);
       return;
     case 'down':
@@ -380,7 +418,7 @@ async function runDockerCommand(command, projectRoot = ensureOriginalCwd(), extr
     case 'restart':
       stopDockerServices(projectRoot);
       await new Promise((r) => setTimeout(r, 2000));
-      startDockerServices(projectRoot);
+      await startDockerServices(projectRoot);
       await waitForMysql(projectRoot);
       return;
     case 'status': {
@@ -408,6 +446,7 @@ module.exports = {
   stopDockerServices,
   waitForMysql,
   ensureDevDatabase,
+  requireMysqlBeforeApi,
   probeMysqlHost,
   isDockerRunning,
   resolveComposeContext,

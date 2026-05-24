@@ -33,6 +33,25 @@ export class ThemeController {
     return this.themeService.listThemes();
   }
 
+  @Post('preview-session/end')
+  @Roles('admin')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiResponse({ status: 200, description: 'Restore local dev theme to DB active theme' })
+  endPreviewSession() {
+    return this.themeService.endPreviewSession();
+  }
+
+  @Post(':id/preview-session')
+  @Roles('admin')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiResponse({
+    status: 200,
+    description: 'Run local theme dev for preview without activating in DB',
+  })
+  beginPreviewSession(@Param('id') id: string) {
+    return this.themeService.beginPreviewSession(id);
+  }
+
   @Get(':id/screenshot')
   screenshot(@Param('id') id: string, @Res() res: Response) {
     const filePath = this.themeService.getScreenshotPath(id);

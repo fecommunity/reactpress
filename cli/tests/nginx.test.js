@@ -39,7 +39,10 @@ describe('lib/nginx', () => {
       assert.equal(created, true);
       assert.equal(configPath, target);
       assert.ok(fs.existsSync(target));
-      assert.ok(fs.readFileSync(target, 'utf8').includes('host.docker.internal'));
+      const content = fs.readFileSync(target, 'utf8');
+      assert.ok(content.includes('host.docker.internal'));
+      assert.ok(content.includes('host.docker.internal:3000/admin/'));
+      assert.ok(!content.includes(':5173'));
     } finally {
       rmDir(root);
     }

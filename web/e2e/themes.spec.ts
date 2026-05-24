@@ -25,11 +25,11 @@ test.describe("Theme system flow", () => {
       .filter({ has: page.getByRole("heading", { name: "Hello World", level: 3 }) })
       .getByRole("button", { name: /预览|Preview/i })
       .click();
-    await expect(page.getByRole("heading", { name: "Hello World", level: 4 })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Hello World", level: 2 })).toBeVisible();
     const previewFrame = page.getByTestId("theme-preview-frame");
     await expect(previewFrame).toHaveAttribute("srcdoc", /Hello World/, { timeout: 20000 });
 
-    await page.getByRole("button", { name: /关闭|Close/i }).click();
+    await page.getByRole("button", { name: /返回主题|Back to themes/i }).click();
     await expect(page).toHaveURL(/\/appearance\/themes/);
 
     await page

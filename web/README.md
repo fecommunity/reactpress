@@ -18,7 +18,7 @@ pnpm install
 pnpm dev:web
 ```
 
-默认打开 [http://localhost:5173](http://localhost:5173)（管理后台），API 在 [http://localhost:3002/api](http://localhost:3002/api)。Mock 登录：`admin` / `admin`。
+默认打开 [http://localhost:3000](http://localhost:3000)（管理后台），API 在 [http://localhost:3002/api](http://localhost:3002/api)。Mock 登录：`admin` / `admin`。
 
 仅启动 Vite（不启 API，适合纯 MSW mock）：
 

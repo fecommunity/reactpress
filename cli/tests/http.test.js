@@ -5,6 +5,7 @@ const {
   loadClientSiteUrl,
   getApiPrefix,
   getHealthUrl,
+  normalizeProbeUrl,
 } = require('../lib/http');
 const { createStandaloneProject, rmDir } = require('./helpers/tmp-project');
 
@@ -19,5 +20,16 @@ describe('lib/http', () => {
     } finally {
       rmDir(root);
     }
+  });
+
+  it('normalizes localhost probes to IPv4 loopback', () => {
+    assert.equal(
+      normalizeProbeUrl('http://localhost:3002/api/health'),
+      'http://127.0.0.1:3002/api/health',
+    );
+    assert.equal(
+      normalizeProbeUrl('http://[::1]:3001/'),
+      'http://127.0.0.1:3001/',
+    );
   });
 });

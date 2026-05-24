@@ -80,11 +80,15 @@ reactpress dev
 
 When `dev` is ready, open the URLs printed in the terminal:
 
-| Service     | Typical URL                        |
-| :---------- | :--------------------------------- |
-| Public site | `http://localhost:3001`            |
-| Admin       | `http://localhost:3001/admin`      |
-| API health  | `http://localhost:3002/api/health` |
+| Service              | Port   | Typical URL                          |
+| :------------------- | :----: | :----------------------------------- |
+| Public site (theme)  | 3001   | `http://localhost:3001`              |
+| API                  | 3002   | `http://localhost:3002/api/health`   |
+| Theme preview (admin)| 3003   | `http://localhost:3003`              |
+| Admin Web (Vite)     | 3000   | `http://localhost:3000`              |
+| MySQL                | 3306   | `127.0.0.1:3306`                     |
+
+Port **3001** is the active theme (visitor site), not the admin SPA. Theme preview uses **3003** so the public site stays on the activated theme.
 
 ### Tips
 
@@ -116,7 +120,7 @@ Install, initialize, start dev, and open your site — all from the terminal:
 | :----------------------- | :----------------------------------------------------------------------- |
 | **Go live fast**         | `init` + `dev` — guided setup, automatic database, URLs when ready       |
 | **Publish & manage**     | Posts, pages, media, and site settings from the admin                    |
-| **Customize**            | Themes, light/dark mode, templates from minimal hello-world to full blog |
+| **Customize**            | Themes, light/dark mode, templates from hello-world starter to full blog |
 | **Flexible runtime**     | All-in-one local dev, API-only headless mode, or production deploy       |
 | **Developer experience** | Interactive menu, `doctor`, `status`, and clear error messages           |
 

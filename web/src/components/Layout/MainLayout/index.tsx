@@ -11,9 +11,11 @@ const { Content } = Layout;
 export function MainLayout() {
   useDocumentTitle();
   const { pathname } = useLocation();
-  const isThemePreview = normalizeAppPath(pathname).startsWith("/appearance/themes/preview");
+  const appPath = normalizeAppPath(pathname);
+  const isFullscreenAppearance =
+    appPath.startsWith("/appearance/themes/preview") || appPath === "/appearance/customize";
 
-  if (isThemePreview) {
+  if (isFullscreenAppearance) {
     return <Outlet />;
   }
 

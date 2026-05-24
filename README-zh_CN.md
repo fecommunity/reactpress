@@ -78,11 +78,15 @@ reactpress dev
 
 `dev` 启动成功后，按终端提示打开：
 
-| 服务 | 典型地址 |
-| :--- | :--- |
-| 前台站点 | `http://localhost:3001` |
-| 管理后台 | `http://localhost:3001/admin` |
-| API 健康检查 | `http://localhost:3002/api/health` |
+| 服务 | 端口 | 典型地址 |
+| :--- | :---: | :--- |
+| 访客站（已启用主题） | **3001** | `http://localhost:3001` |
+| API | **3002** | `http://localhost:3002/api/health` |
+| 主题预览（仅后台 iframe） | **3003** | `http://localhost:3003` |
+| 管理后台 Web（Vite） | **3000** | `http://localhost:3000` |
+| MySQL | **3306** | `127.0.0.1:3306` |
+
+> 说明：`3001` 是 Next.js **访客主题**，不是管理后台；后台开发入口在 **3000**。预览未启用的主题时，前台 `:3001` 不变，预览走 `:3003`。
 
 **常用技巧：** 无参数运行 `reactpress` 进入交互菜单；异常时用 `reactpress doctor`、`reactpress status` 排查。
 
@@ -184,12 +188,12 @@ ReactPress 以 **Monorepo** 组织，主要包与模板如下。
 | `@fecommunity/reactpress-server` | **已弃用** — 请使用主包内置 API |
 | `@fecommunity/reactpress-cli` | **已弃用别名** |
 
-### 模板
+### 官方主题
 
-| 模板 | 说明 |
+| 主题 | 说明 |
 | :--- | :--- |
-| [`hello-world`](./templates/hello-world) | 最小可运行模板，适合快速验证 |
-| [`twentytwentyfive`](./templates/twentytwentyfive) | 功能完整的博客模板 |
+| [`hello-world`](./themes/starter/hello-world) | 最小可运行主题，适合快速验证 |
+| [`twentytwentyfive`](./themes/starter/twentytwentyfive) | 功能完整的博客主题 |
 
 ---
 

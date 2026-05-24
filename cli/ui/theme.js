@@ -129,6 +129,9 @@ function statusLights(state = 'online') {
   if (state === 'offline') {
     return `${brand.muted('●')} ${brand.muted('●')} ${brand.muted('●')}`;
   }
+  if (state === 'degraded') {
+    return `${brand.warn('●')} ${brand.muted('●')} ${brand.muted('○')}`;
+  }
   if (state === 'pending') {
     return `${brand.warn('●')} ${brand.warn('●')} ${brand.muted('○')}`;
   }

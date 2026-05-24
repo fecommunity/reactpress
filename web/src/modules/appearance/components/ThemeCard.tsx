@@ -1,4 +1,4 @@
-import { Button, Card, Tag, Typography } from "antd";
+import { Button, Typography } from "antd";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "@tanstack/react-router";
 import type { ThemeListItem } from "@/hooks/useThemes";
@@ -27,10 +27,9 @@ export function ThemeCard({ theme, onInstall, onActivate, installing, activating
   ) : null;
 
   return (
-    <Card
+    <article
       className={`${styles.themeCard} ${theme.active ? styles.themeCardActive : ""}`}
       data-testid={`theme-card-${theme.id}`}
-      styles={{ body: { padding: 0 } }}
     >
       <div className={styles.cardThumb}>
         {thumb}
@@ -58,20 +57,17 @@ export function ThemeCard({ theme, onInstall, onActivate, installing, activating
           ) : null}
         </div>
       </div>
-      <div className={styles.cardFooter}>
-        <Typography.Text strong>{theme.name}</Typography.Text>
-        <div style={{ marginTop: 4 }}>
-          {theme.active && (
-            <Tag color="blue" style={{ marginRight: 4 }}>
-              {t("appearance.active")}
-            </Tag>
-          )}
-          {theme.installed && !theme.active && (
-            <Tag style={{ marginRight: 4 }}>{t("appearance.installed")}</Tag>
-          )}
-          {!theme.installed && <Tag>{t("appearance.notInstalled")}</Tag>}
-        </div>
-      </div>
-    </Card>
+      <footer className={styles.cardFooter}>
+        <Typography.Text strong className={styles.cardName}>
+          {theme.name}
+        </Typography.Text>
+        {theme.installed && !theme.active ? (
+          <span className={styles.cardStatus}>{t("appearance.installed")}</span>
+        ) : null}
+        {!theme.installed ? (
+          <span className={styles.cardStatusMuted}>{t("appearance.notInstalled")}</span>
+        ) : null}
+      </footer>
+    </article>
   );
 }

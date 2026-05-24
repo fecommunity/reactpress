@@ -52,14 +52,145 @@ function nginxEntryUrl(projectRoot) {
   return port === 80 ? 'http://localhost' : `http://localhost:${port}`;
 }
 
+function readDevNginxPorts(projectRoot) {
+  const { DEV_PORTS, readEnvPort, readVisitorPort } = require('./ports');
+  return {
+    adminPort: readEnvPort(projectRoot, 'WEB_ADMIN_PORT', DEV_PORTS.ADMIN_WEB),
+    visitorPort: readVisitorPort(projectRoot),
+    apiPort: readEnvPort(projectRoot, 'SERVER_PORT', DEV_PORTS.API),
+  };
+}
+
+function renderDevNginxConfig({ adminPort, visitorPort, apiPort }) {
+  return `server {
+    listen 80;
+    server_name localhost;
+    charset utf-8;
+
+    # Visitor site (active theme Next.js on host :${visitorPort})
+    location / {
+        proxy_pass http://host.docker.internal:${visitorPort};
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+        proxy_read_timeout 300;
+        proxy_connect_timeout 300;
+        proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
+        proxy_redirect off;
+    }
+
+    # Admin SPA (Vite base /admin/, host :${adminPort})
+    location /admin/ {
+        proxy_pass http://host.docker.internal:${adminPort}/admin/;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+        proxy_read_timeout 300;
+        proxy_connect_timeout 300;
+    }
+
+    location = /admin {
+        return 301 /admin/;
+    }
+
+    # REST API (Nest on host :${apiPort}, keep /api prefix)
+    location /api {
+        proxy_pass http://host.docker.internal:${apiPort};
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+        proxy_read_timeout 300;
+        proxy_connect_timeout 300;
+        proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
+        proxy_redirect off;
+    }
+
+    location /_next/static/ {
+        proxy_pass http://host.docker.internal:${visitorPort};
+        proxy_cache_valid 200 302 1y;
+        proxy_cache_valid 404 1m;
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+        proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
+    }
+
+    location /health {
+        access_log off;
+        return 200 "healthy\\n";
+        add_header Content-Type text/plain;
+    }
+
+    error_page 500 502 503 504 /50x.html;
+    location = /50x.html {
+        root /usr/share/nginx/html;
+    }
+}
+`;
+}
+
+function isDevNginxConfigStale(projectRoot, configPath) {
+  const { adminPort, visitorPort, apiPort } = readDevNginxPorts(projectRoot);
+  let content;
+  try {
+    content = fs.readFileSync(configPath, 'utf8');
+  } catch {
+    return true;
+  }
+  if (content.includes(':5173')) return true;
+  if (!content.includes(`host.docker.internal:${adminPort}/admin/`)) return true;
+  if (!content.includes(`host.docker.internal:${visitorPort}`)) return true;
+  if (!content.includes(`host.docker.internal:${apiPort}`)) return true;
+  return false;
+}
+
+function writeDevNginxConfig(projectRoot) {
+  const configPath = resolveNginxConfigPath(projectRoot, 'dev');
+  const ports = readDevNginxPorts(projectRoot);
+  const content = renderDevNginxConfig(ports);
+  fs.mkdirSync(path.dirname(configPath), { recursive: true });
+  const existed = fs.existsSync(configPath);
+  const previous = existed ? fs.readFileSync(configPath, 'utf8') : '';
+  fs.writeFileSync(configPath, content, 'utf8');
+  return {
+    configPath,
+    changed: content !== previous,
+    created: !existed,
+    mode: 'dev',
+  };
+}
+
 /**
  * Write default nginx config from CLI templates when missing (or when force).
  *
- * @returns {{ configPath: string, created: boolean, mode: 'dev' | 'prod' }}
+ * @returns {{ configPath: string, created: boolean, mode: 'dev' | 'prod', changed?: boolean }}
  */
 function ensureNginxConfig(projectRoot, options = {}) {
   const mode = resolveNginxMode(options);
   const configPath = resolveNginxConfigPath(projectRoot, mode);
+
+  if (mode === 'dev') {
+    if (options.force || !fs.existsSync(configPath) || isDevNginxConfigStale(projectRoot, configPath)) {
+      const result = writeDevNginxConfig(projectRoot);
+      return { configPath: result.configPath, created: result.created || result.changed, changed: result.changed, mode };
+    }
+    return { configPath, created: false, changed: false, mode };
+  }
+
   const templatePath = bundledTemplatePath(mode);
   if (!fs.existsSync(templatePath)) {
     throw new Error(t('nginx.templateMissing', { path: templatePath }));
@@ -302,12 +433,15 @@ async function startDevNginx(projectRoot) {
     return false;
   }
   try {
-    const configPath = resolveNginxConfigPath(projectRoot, 'dev');
-    const needsRefresh =
-      !fs.existsSync(configPath) ||
-      !fs.readFileSync(configPath, 'utf8').includes('location /admin/');
-    ensureNginxConfig(projectRoot, { mode: 'dev', force: needsRefresh });
+    const { changed } = writeDevNginxConfig(projectRoot);
     nginxUp(projectRoot, { quiet: true });
+    if (changed && isNginxContainerRunning()) {
+      try {
+        nginxReload();
+      } catch {
+        nginxRestart(projectRoot, { quiet: true });
+      }
+    }
     const healthy = await probeNginxHealth(projectRoot, 15_000);
     if (!healthy) {
       console.warn(t('dev.nginxSlow', { url: nginxEntryUrl(projectRoot) }));

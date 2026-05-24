@@ -45,15 +45,17 @@ function urlLine(key, url, { underline = true } = {}) {
 
 function printDevReadyBanner(
   projectRoot,
-  { apiOnly = false, webOnly = false, nginx = false, hasThemeSite = false } = {}
+  { apiOnly = false, webOnly = false, nginx = false, hasThemeSite = false, dbOk = true } = {}
 ) {
   const urls = getDevUrls(projectRoot);
   const w = Math.min(terminalWidth() - 4, 56);
   const readyKey = apiOnly ? 'devBanner.readyApi' : webOnly ? 'devBanner.readyWeb' : 'devBanner.ready';
 
   console.log('');
+  const lights = dbOk ? 'online' : 'degraded';
+  const readyGradient = dbOk ? [palette.green, palette.accent] : [palette.amber, palette.muted];
   console.log(
-    `  ${icon.ok}  ${gradientText(t(readyKey), [palette.green, palette.accent], { bold: true })}  ${statusLights('online')}`
+    `  ${dbOk ? icon.ok : icon.warn}  ${gradientText(t(readyKey), readyGradient, { bold: true })}  ${statusLights(lights)}`
   );
   console.log(`  ${brand.primary('╔' + '═'.repeat(w) + '╗')}`);
 
@@ -84,7 +86,11 @@ function printDevReadyBanner(
   const pulseWidth = Math.min(20, w - 4);
   if (pulseWidth > 6) {
     console.log(
-      `  ${brand.muted('  ')}${pulseBar(pulseWidth, pulseWidth)}  ${brand.success(t('devBanner.allSystemsGo'))}`
+      `  ${brand.muted('  ')}${pulseBar(pulseWidth, pulseWidth)}  ${
+        dbOk
+          ? brand.success(t('devBanner.allSystemsGo'))
+          : brand.warn(t('devBanner.dbDegraded'))
+      }`
     );
   }
 

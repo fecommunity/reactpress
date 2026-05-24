@@ -14,6 +14,12 @@ const apiProxyTarget =
   "https://api.gaoredu.com";
 /** Dev behind nginx: `reactpress dev` sets process.env.VITE_ADMIN_BASE=/admin/ */
 const adminBase = process.env.VITE_ADMIN_BASE?.trim() || env.VITE_ADMIN_BASE?.trim() || "/";
+const adminPort = Number(
+  process.env.WEB_ADMIN_PORT?.trim() ||
+    env.WEB_ADMIN_PORT?.trim() ||
+    process.env.PORT?.trim() ||
+    "3000",
+);
 
 export default defineConfig({
   base: adminBase,
@@ -30,6 +36,8 @@ export default defineConfig({
   ],
   server: {
     host: true,
+    port: adminPort,
+    strictPort: true,
     proxy: {
       "/api": {
         target: apiProxyTarget,
