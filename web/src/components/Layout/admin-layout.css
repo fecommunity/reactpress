@@ -215,6 +215,23 @@
   font-size: 20px;
 }
 
+.admin-sidebar .admin-sidebar__dashicon {
+  color: inherit;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  vertical-align: middle;
+}
+
+.admin-sidebar__collapseBtn .admin-sidebar__dashicon {
+  color: var(--admin-bar-text-muted);
+}
+
+.admin-sidebar__collapseBtn:hover .admin-sidebar__dashicon {
+  color: var(--admin-bar-text);
+}
+
 .admin-sidebar .admin-sidebar__menu .ant-menu-title-content {
   overflow: visible;
   white-space: normal;

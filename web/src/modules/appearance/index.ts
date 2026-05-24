@@ -8,7 +8,7 @@ export const appearanceModule: AdminModule = {
       id: "appearance",
       title: "外观",
       path: "/appearance/themes",
-      icon: "IconLucidePalette",
+      icon: "admin-appearance",
       sort: 35,
       children: [
         {

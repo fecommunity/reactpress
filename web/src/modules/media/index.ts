@@ -8,7 +8,7 @@ export const mediaModule: AdminModule = {
       id: "media",
       title: "媒体",
       path: "/media",
-      icon: "IconLucideImage",
+      icon: "admin-media",
       permissions: ["media:manage"],
       sort: 20,
     });

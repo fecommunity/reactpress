@@ -14,7 +14,7 @@ export const settingsModule: AdminModule = {
       id: "settings",
       title: "设置",
       path: "/settings/general",
-      icon: "IconLucideSettings",
+      icon: "admin-settings",
       permissions: ["setting:manage"],
       sort: 60,
       children: SETTING_TABS.map((tab) => ({

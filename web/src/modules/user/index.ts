@@ -8,7 +8,7 @@ export const userModule: AdminModule = {
       id: "users",
       title: "用户",
       path: "/users",
-      icon: "IconLucideUsers",
+      icon: "admin-users",
       permissions: ["user:manage"],
       sort: 45,
       children: [

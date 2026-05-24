@@ -8,7 +8,7 @@ export const dataModule: AdminModule = {
       id: "tools",
       title: "工具",
       path: "/data/export",
-      icon: "IconLucideWrench",
+      icon: "admin-tools",
       sort: 50,
       children: [
         {

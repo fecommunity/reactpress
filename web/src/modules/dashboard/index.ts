@@ -8,7 +8,7 @@ export const dashboardModule: AdminModule = {
       id: "dashboard",
       title: "仪表盘",
       path: "/dashboard",
-      icon: "IconLucideLayoutDashboard",
+      icon: "dashboard",
       sort: 0,
     });
     routes.registerRoute({ path: "/dashboard", permission: null });

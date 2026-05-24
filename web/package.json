@@ -24,6 +24,7 @@
     "@tanstack/react-router": "^1.167.4",
     "antd": "^6.3.3",
     "classnames": "^2.3.1",
+    "dashicons": "0.0.2",
     "highlight.js": "^11.11.1",
     "i18next": "^26.2.0",
     "lucide-react": "^1.7.0",

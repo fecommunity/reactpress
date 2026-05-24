@@ -8,7 +8,7 @@ export const articleModule: AdminModule = {
       id: "article",
       title: "文章",
       path: "/article",
-      icon: "IconLucideBookOpen",
+      icon: "admin-post",
       permissions: ["article:read"],
       sort: 10,
       children: [

@@ -8,7 +8,7 @@ export const pageModule: AdminModule = {
       id: "page",
       title: "页面",
       path: "/page",
-      icon: "IconLucideFileText",
+      icon: "admin-page",
       permissions: ["page:manage"],
       sort: 25,
       children: [

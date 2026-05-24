@@ -8,7 +8,7 @@ export const pluginsModule: AdminModule = {
       id: "plugins",
       title: "插件",
       path: "/plugins",
-      icon: "IconLucidePuzzle",
+      icon: "admin-plugins",
       permissions: ["extension:manage"],
       sort: 40,
     });

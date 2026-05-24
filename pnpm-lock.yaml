@@ -644,6 +644,9 @@ importers:
       classnames:
         specifier: ^2.3.1
         version: 2.5.1
+      dashicons:
+        specifier: 0.0.2
+        version: 0.0.2
       highlight.js:
         specifier: ^11.11.1
         version: 11.11.1
@@ -6742,6 +6745,9 @@ packages:
 
   dasherize@2.0.0:
     resolution: {integrity: sha512-APql/TZ6FdLEpf2z7/X2a2zyqK8juYtqaSVqxw9mYoQ64CXkfU15AeLh8pUszT8+fnYjgm6t0aIYpWKJbnLkuA==}
+
+  dashicons@0.0.2:
+    resolution: {integrity: sha512-yBtN1oQw7O8zq38/Jja2nJJ+lCKVpv6p7Q4CgSuQ1xlaUMJP3kn/fY3rZaHedOIZkBJI0Ym4wdVD8yR8ncYTYA==}
 
   data-uri-to-buffer@4.0.1:
     resolution: {integrity: sha512-0R9ikRb668HB7QDxT1vkpuUBtqc53YyAwMwGeUFKRojY/NWKvdZ+9UYtRfGmhqNbRkTSVpMbmyhXipFFv2cb/A==}
@@ -23490,6 +23496,8 @@ snapshots:
       assert-plus: 1.0.0
 
   dasherize@2.0.0: {}
+
+  dashicons@0.0.2: {}
 
   data-uri-to-buffer@4.0.1: {}
 

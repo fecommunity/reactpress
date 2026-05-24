@@ -2,27 +2,7 @@ import { Menu, Layout, Grid, Drawer, Button } from "antd";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { useNavigate, useLocation } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
-import {
-  Book,
-  Briefcase,
-  CircleDashed,
-  FileText,
-  Folder,
-  Home,
-  Image,
-  MessageSquare,
-  Palette,
-  PanelLeftClose,
-  PanelLeftOpen,
-  Puzzle,
-  SlidersHorizontal,
-  Star,
-  User,
-  Users,
-  Wrench,
-  Zap,
-} from "lucide-react";
-import type { LucideIcon } from "lucide-react";
+import { Dashicon, renderDashicon } from "@/shared/components/Dashicon";
 import { usePendingCommentCount } from "@/hooks/usePendingCommentCount";
 import { useAuthStore } from "@/stores/auth";
 import { useSettingsStore } from "@/stores/settings";
@@ -41,28 +21,8 @@ type BuildMenuResult = {
 
 const COMMENTS_MENU_ID = "comments";
 
-const MENU_ICON_MAP: Record<string, LucideIcon> = {
-  IconLucideLayoutDashboard: Home,
-  IconLucideUsers: Users,
-  IconLucideUserList: User,
-  IconLucideHistory: MessageSquare,
-  IconLucideMessageSquare: MessageSquare,
-  IconLucideStar: Star,
-  IconLucideSettings: SlidersHorizontal,
-  IconLucideBriefcase: Briefcase,
-  IconLucideBookOpen: Book,
-  IconLucideFolderKanban: Folder,
-  IconLucideSparkles: Zap,
-  IconLucideFileText: FileText,
-  IconLucideImage: Image,
-  IconLucidePalette: Palette,
-  IconLucidePuzzle: Puzzle,
-  IconLucideWrench: Wrench,
-};
-
-function renderMenuIcon(icon: string | null, size = 20) {
-  const Icon = (icon && MENU_ICON_MAP[icon]) || CircleDashed;
-  return <Icon size={size} aria-hidden />;
+function renderMenuIcon(icon: string | null) {
+  return renderDashicon(icon);
 }
 
 function menuContainsId(menus: MenuItemType[], id: string): boolean {
@@ -101,7 +61,6 @@ function buildMenuItems(
   menus: MenuItemType[],
   translate: (key: string, fallback: string) => string,
   collapsed = false,
-  iconSize = 20,
   parentKeys: string[] = [],
   isTopLevel = true,
   menuBadges: Record<string, number> = {},
@@ -121,7 +80,6 @@ function buildMenuItems(
         menu.children,
         translate,
         collapsed,
-        iconSize,
         parentKeys,
         isTopLevel,
         menuBadges,
@@ -145,7 +103,6 @@ function buildMenuItems(
         menu.children,
         translate,
         collapsed,
-        iconSize,
         nextParents,
         false,
         menuBadges,
@@ -159,14 +116,14 @@ function buildMenuItems(
       items.push({
         key,
         label,
-        icon: isTopLevel ? renderMenuIcon(menu.icon, iconSize) : undefined,
+        icon: isTopLevel ? renderMenuIcon(menu.icon) : undefined,
         children,
       });
     } else {
       items.push({
         key,
         label,
-        icon: isTopLevel ? renderMenuIcon(menu.icon, iconSize) : undefined,
+        icon: isTopLevel ? renderMenuIcon(menu.icon) : undefined,
       });
     }
   }
@@ -195,7 +152,6 @@ export function Sidebar() {
   const { t } = useTranslation();
   const menus = useAuthStore((s) => s.menus);
   const collapsed = useSettingsStore((s) => s.sidebarCollapsed);
-  const setSidebarCollapsed = useSettingsStore((s) => s.setSidebarCollapsed);
   const toggleSidebar = useSettingsStore((s) => s.toggleSidebar);
   const mobileSidebarOpen = useSettingsStore((s) => s.mobileSidebarOpen);
   const setMobileSidebarOpen = useSettingsStore((s) => s.setMobileSidebarOpen);
@@ -218,7 +174,6 @@ export function Sidebar() {
         menus,
         (key, fallback) => t(key, { defaultValue: fallback }),
         !isMobile && collapsed,
-        20,
         [],
         true,
         menuBadges,
@@ -254,7 +209,12 @@ export function Sidebar() {
         type="text"
         className={`admin-sidebar__collapseBtn ${isCollapsed ? "admin-sidebar__collapseBtn--icon" : ""}`}
         onClick={toggleSidebar}
-        icon={isCollapsed ? <PanelLeftOpen size={18} /> : <PanelLeftClose size={18} />}
+        icon={
+          <Dashicon
+            name={isCollapsed ? "arrow-right-alt2" : "arrow-left-alt2"}
+            className="admin-sidebar__dashicon"
+          />
+        }
         aria-label={t("admin.collapseMenu")}
       >
         {isCollapsed ? null : t("admin.collapseMenu")}

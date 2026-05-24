@@ -8,7 +8,7 @@ export const commentModule: AdminModule = {
       id: "comments",
       title: "评论",
       path: "/article/comment",
-      icon: "IconLucideMessageSquare",
+      icon: "admin-comments",
       permissions: ["comment:manage"],
       sort: 30,
     });
