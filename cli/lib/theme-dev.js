@@ -210,8 +210,30 @@ async function releaseThemePort(projectRoot, port, { preview = false } = {}) {
   return false;
 }
 
+/** Optional theme-only API override (admin / Nest API stay on SERVER_SITE_URL). */
+function readThemeApiOverride(projectRoot, envKey) {
+  const fromShell = process.env[envKey]?.trim();
+  if (fromShell) return fromShell.replace(/\/$/, '');
+
+  const envPath = path.join(projectRoot, '.env');
+  try {
+    const content = fs.readFileSync(envPath, 'utf8');
+    const match = content.match(new RegExp(`^${envKey}=(.+)$`, 'm'));
+    if (match) {
+      const raw = match[1].trim().replace(/^['"]|['"]$/g, '');
+      if (raw) return raw.replace(/\/$/, '');
+    }
+  } catch {
+    // ignore
+  }
+  return null;
+}
+
 /** Direct Nest API — used for Next.js SSR (runs before nginx is up). */
 function buildThemeServerApiUrl(projectRoot) {
+  const override = readThemeApiOverride(projectRoot, 'REACTPRESS_THEME_API_URL');
+  if (override) return override;
+
   const server = loadServerSiteUrl(projectRoot).replace(/\/$/, '');
   const prefix = getApiPrefix(projectRoot).replace(/\/$/, '') || '/api';
   return `${server}${prefix.startsWith('/') ? prefix : `/${prefix}`}`;
@@ -219,6 +241,12 @@ function buildThemeServerApiUrl(projectRoot) {
 
 /** Browser-facing API — nginx unified entry when behind proxy. */
 function buildThemePublicApiUrl(projectRoot) {
+  const publicOverride = readThemeApiOverride(projectRoot, 'REACTPRESS_THEME_PUBLIC_API_URL');
+  if (publicOverride) return publicOverride;
+
+  const themeOverride = readThemeApiOverride(projectRoot, 'REACTPRESS_THEME_API_URL');
+  if (themeOverride) return themeOverride;
+
   if (process.env.REACTPRESS_BEHIND_NGINX === '1') {
     return `${nginxEntryUrl(projectRoot).replace(/\/$/, '')}/api`;
   }
@@ -230,7 +258,7 @@ function buildThemeApiUrl(projectRoot) {
   return buildThemeServerApiUrl(projectRoot);
 }
 
-function buildThemeChildEnv(projectRoot, { port, serverApiUrl, publicApiUrl }) {
+function buildThemeChildEnv(projectRoot, { port, serverApiUrl, publicApiUrl, themeId }) {
   const keys = [
     'PATH',
     'HOME',
@@ -250,6 +278,7 @@ function buildThemeChildEnv(projectRoot, { port, serverApiUrl, publicApiUrl }) {
     PORT: String(port),
     REACTPRESS_API_URL: serverApiUrl,
     NEXT_PUBLIC_REACTPRESS_API_URL: publicApiUrl,
+    REACTPRESS_THEME_ID: themeId || '',
     REACTPRESS_ORIGINAL_CWD: projectRoot,
     NEXT_IGNORE_INCORRECT_LOCKFILE: '1',
   };
@@ -352,9 +381,7 @@ function spawnThemeSite(projectRoot, { onClose } = {}) {
 
   const relDir = path.relative(projectRoot, themeDir) || themeDir;
   console.log(t('themeDev.starting', { id: activeTheme, port, url: siteUrl, dir: relDir }));
-  if (serverApiUrl !== publicApiUrl) {
-    console.log(t('themeDev.apiSplit', { ssr: serverApiUrl, browser: publicApiUrl }));
-  }
+  console.log(t('themeDev.apiSplit', { ssr: serverApiUrl, browser: publicApiUrl }));
 
   cleanStaleThemeDevCache(themeDir);
 
@@ -362,7 +389,7 @@ function spawnThemeSite(projectRoot, { onClose } = {}) {
     cwd: themeDir,
     detached: process.platform !== 'win32',
     stdio: 'inherit',
-    env: buildThemeChildEnv(projectRoot, { port, serverApiUrl, publicApiUrl }),
+    env: buildThemeChildEnv(projectRoot, { port, serverApiUrl, publicApiUrl, themeId: activeTheme }),
   });
 
   const child = themeChild;
@@ -443,7 +470,12 @@ function spawnPreviewThemeSite(projectRoot, { onClose } = {}) {
     detached: process.platform !== 'win32',
     stdio: 'inherit',
     env: {
-      ...buildThemeChildEnv(projectRoot, { port, serverApiUrl, publicApiUrl }),
+      ...buildThemeChildEnv(projectRoot, {
+        port,
+        serverApiUrl,
+        publicApiUrl,
+        themeId: activeTheme,
+      }),
       REACTPRESS_HONOR_PREVIEW: '1',
     },
   });

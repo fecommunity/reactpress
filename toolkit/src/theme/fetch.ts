@@ -68,6 +68,36 @@ export function themeStaticProps<T extends Record<string, unknown>>(
   return { props: sanitizeNextProps(props), revalidate };
 }
 
+let staticVisitorContextPromise: Promise<VisitorContextProps> | null = null;
+let staticVisitorContextKey = '';
+
+/** Visitor context for `getStaticProps` — `_app.getInitialProps` does not run on SSR for static pages. */
+export async function resolveStaticVisitorContext(): Promise<VisitorContextProps> {
+  const themeId = process.env.REACTPRESS_THEME_ID?.trim() || 'starter-theme';
+  const honorPreview = process.env.REACTPRESS_HONOR_PREVIEW === '1';
+  const cacheKey = `${themeId}:${honorPreview ? '1' : '0'}`;
+
+  if (staticVisitorContextPromise && staticVisitorContextKey === cacheKey) {
+    return staticVisitorContextPromise;
+  }
+
+  staticVisitorContextKey = cacheKey;
+  staticVisitorContextPromise = (async () => {
+    try {
+      return await fetchVisitorContext(themeApi, { themeId, honorPreview });
+    } catch (error) {
+      const code = (error as { code?: string; cause?: { code?: string } })?.code
+        ?? (error as { cause?: { code?: string } })?.cause?.code;
+      if (code !== 'ECONNREFUSED') {
+        console.error('[reactpress] resolveStaticVisitorContext failed', error);
+      }
+      return createDefaultVisitorContext(themeId);
+    }
+  })();
+
+  return staticVisitorContextPromise;
+}
+
 /** All categories — `getStaticProps` for `pages/category/index.tsx`. */
 export async function fetchCategoryIndex(api: ThemeApi) {
   return { categories: unpackList(await api.category.findAll()) };
@@ -228,13 +258,14 @@ export async function withThemeStaticProps<T extends Record<string, unknown>>(
   fetchFn: () => Promise<T>,
   fallback: T | ((error: unknown) => T),
 ) {
+  const reactPress = await resolveStaticVisitorContext();
   try {
     const data = await withApiRetry(fetchFn);
-    return themeStaticProps(data);
+    return themeStaticProps({ ...data, reactPress });
   } catch (error) {
     console.error(`[reactpress] ${label}`, error);
     const props = typeof fallback === 'function' ? fallback(error) : fallback;
-    return themeStaticProps(props);
+    return themeStaticProps({ ...props, reactPress });
   }
 }
 

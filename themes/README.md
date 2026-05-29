@@ -18,6 +18,7 @@
 | `themes/starter/` | 官方入门主题（随仓库发布） |
 | `themes/starter/hello-world` | **最低成本**入门主题（推荐新主题复制） |
 | `themes/starter/twentytwentyfive` | 完整博客（分类/标签/搜索/文章） |
+| `themes/starter/twentytwentysix` | **client 迁移主题**（双栏 + 知识库/归档/导航/RSS） |
 | `themes/{theme-id}/` | 用户安装后的可编辑副本（默认 gitignore） |
 
 ## WordPress 概念对照

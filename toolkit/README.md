@@ -19,6 +19,26 @@ The ReactPress Toolkit is an API client library that provides strongly-typed int
 
 The toolkit is automatically generated from the ReactPress backend's OpenAPI specification, ensuring that it's always in sync with the latest API changes. This eliminates manual API client maintenance and reduces the likelihood of API integration errors.
 
+## Source layout
+
+`src/` follows one rule: **only modules with a `package.json` export path may live as a first-level directory**. Everything else belongs under the matching parent module.
+
+| `src/` directory | Package export | Role |
+|------------------|----------------|------|
+| `api/` | `@fecommunity/reactpress-toolkit/api` | OpenAPI-generated HTTP clients |
+| `types/` | `@fecommunity/reactpress-toolkit/types` | Shared request/response types |
+| `utils/` | `@fecommunity/reactpress-toolkit/utils` | Generic helpers |
+| `config/` | `@fecommunity/reactpress-toolkit/config` | Env, i18n, global defaults (`config/locales/*.json` for admin copy) |
+| `admin/` | `@fecommunity/reactpress-toolkit/admin` | Admin registry & permissions |
+| `react/` | `@fecommunity/reactpress-toolkit/react` | Browser/Electron client factory |
+| `extension/` | `@fecommunity/reactpress-toolkit/extension` | Theme/plugin manifest types |
+| `theme/` | `@fecommunity/reactpress-toolkit/theme` | Theme SSR fetch, nav, static props |
+| `ui/` | `@fecommunity/reactpress-toolkit/ui` | Headless theme components & hooks |
+
+The root `index.ts` re-exports `api`, `types`, `utils`, `config`, and `http`, plus namespaces `admin` and `react`. Subpath imports (`/theme`, `/ui`, …) are preferred when you only need one surface.
+
+Internal-only assets (for example locale JSON consumed by `config/i18n.ts`) stay under their parent module — not as a sibling top-level folder.
+
 ## Installation
 
 ```bash

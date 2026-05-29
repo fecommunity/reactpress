@@ -27,6 +27,7 @@ export {
   fetchTagIndex,
   fetchThemeCatalog,
   fetchVisitorContext,
+  resolveStaticVisitorContext,
   sanitizeNextProps,
   themeStaticProps,
   withApiRetry,

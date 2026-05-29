@@ -86,25 +86,17 @@ function DevChunkRecovery() {
 function createThemeApp(manifest) {
   function ThemeApp({ Component, pageProps }) {
     const { reactPress, ...rest } = pageProps;
+    const visitorContext = reactPress ?? createDefaultVisitorContext(manifest.id);
     const [mods, setMods] = React.useState(() =>
-      reactPress ? mergeModsWithPreviewQuery(reactPress.mods) : {},
+      mergeModsWithPreviewQuery(visitorContext.mods),
     );
 
     React.useEffect(() => {
-      if (!reactPress) return;
-      setMods(mergeModsWithPreviewQuery(reactPress.mods));
+      const ctx = reactPress ?? createDefaultVisitorContext(manifest.id);
+      setMods(mergeModsWithPreviewQuery(ctx.mods));
     }, [reactPress]);
 
-    if (!reactPress) {
-      return React.createElement(
-        React.Fragment,
-        null,
-        React.createElement(DevChunkRecovery, null),
-        React.createElement(Component, rest),
-      );
-    }
-
-    const providerProps = { ...reactPress, mods };
+    const providerProps = { ...visitorContext, mods };
 
     return React.createElement(
       ReactPressProvider,

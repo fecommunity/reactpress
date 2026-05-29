@@ -29,7 +29,7 @@
   },
   "scripts": {
     "generate": "node scripts/generate-swagger.js",
-    "build": "tsc && cp -r src/locales dist/ && cp src/theme/createApp.js dist/theme/createApp.js"
+    "build": "tsc && rm -rf dist/config/locales && cp -r src/config/locales dist/config/locales && cp src/theme/createApp.js dist/theme/createApp.js"
   },
   "files": [
     "dist"
