@@ -27,7 +27,6 @@ export default createReactPressApp(themeManifest, {
       <>
         <AntdStyleTransitionFix />
         <ConfigProvider
-          key={isDark ? 'dark' : 'light'}
           locale={{ locale }}
           theme={{ token: { colorPrimary: primary }, algorithm }}
         >

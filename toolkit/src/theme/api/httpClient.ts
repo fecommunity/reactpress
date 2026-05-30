@@ -19,14 +19,12 @@ export interface CreateThemeAxiosClientOptions {
   unwrapEnvelope?: boolean;
 }
 
-/** Legacy theme env vars plus toolkit defaults. */
+/**
+ * Theme axios base URL (SSR + client).
+ * Do not read `process.env.SERVER_API_URL` here — Next inlines it from next.config at compile time
+ * and stale values (e.g. localhost:3002) break `--remote-origin` dev.
+ */
 export function resolveThemeAxiosBaseUrl(): string {
-  if (process.env.SERVER_API_URL) {
-    return process.env.SERVER_API_URL;
-  }
-  if (process.env.SERVER_SITE_URL) {
-    return `${process.env.SERVER_SITE_URL}/api`;
-  }
   return resolveThemeApiBaseUrl();
 }
 
@@ -91,10 +89,8 @@ export function createThemeAxiosClient(options: CreateThemeAxiosClientOptions = 
       const payload = response.data;
       if (!payload?.success) {
         onError?.(payload?.msg || 'Request failed');
-        return Promise.reject({
-          statusCode: payload?.statusCode,
-          message: payload?.msg,
-        });
+      const message = payload?.msg || `Request failed (${payload?.statusCode ?? 'unknown'})`;
+      return Promise.reject(new Error(message));
       }
       return payload.data as never;
     },
@@ -109,10 +105,8 @@ export function createThemeAxiosClient(options: CreateThemeAxiosClientOptions = 
         onError?.(msg || 'Server error', status);
       }
 
-      return Promise.reject({
-        statusCode: status,
-        message: msg,
-      });
+      const message = msg || err?.message || `HTTP ${status ?? 'error'}`;
+      return Promise.reject(new Error(message));
     },
   );
 

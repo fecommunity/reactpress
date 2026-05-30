@@ -2,20 +2,18 @@ const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const withPlugins = require('next-compose-plugins');
 const withPWA = require('next-pwa');
 const { config } = require('@fecommunity/reactpress-toolkit');
-const { createReactPressNextConfig } = require('@fecommunity/reactpress-toolkit/theme/next-config');
+const {
+  createReactPressNextConfig,
+  resolveThemeNextEnv,
+} = require('@fecommunity/reactpress-toolkit/theme/next-config');
 
-const getServerApiUrl = () => {
-  if (config.SERVER_URL) {
-    return `${config.SERVER_SITE_URL}/api`;
-  }
-  return config.SERVER_API_URL || `${process.env.SERVER_SITE_URL}/api` || 'http://localhost:3002/api';
-};
+const themeApiEnv = resolveThemeNextEnv();
 
 /** @type {import('next').NextConfig} */
 const nextConfig = createReactPressNextConfig({
   assetPrefix: config.CLIENT_ASSET_PREFIX || '/',
   env: {
-    SERVER_API_URL: getServerApiUrl(),
+    ...themeApiEnv,
     GITHUB_CLIENT_ID: config.GITHUB_CLIENT_ID,
   },
   webpack: (config) => {

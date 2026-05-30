@@ -12,6 +12,7 @@ const { brand, divider } = require('../ui/theme');
 const { ensureOriginalCwd } = require('../lib/root');
 const { ensureProjectEnvironment, initMonorepoProject } = require('../lib/bootstrap');
 const { runDev, runWebDev, runThemeDev } = require('../lib/dev');
+const { resolveDevApiOrigins, applyDevApiOriginsToEnv } = require('../lib/remote-dev');
 const { runApiDev } = require('../lib/api-dev');
 const { runLifecycleCommand } = require('../lib/lifecycle');
 const { runDockerCommand } = require('../lib/docker');
@@ -61,22 +62,62 @@ program
   .option('--api-only', t('cli.dev.apiOnly'))
   .option('--client-only', t('cli.dev.clientOnly'))
   .option('--web-only', t('cli.dev.webOnly'))
+  .option('--remote-origin <url>', t('cli.dev.remoteOrigin'))
+  .option('--admin-origin <value>', t('cli.dev.adminOrigin'))
+  .option('--client-origin <value>', t('cli.dev.clientOrigin'))
   .action(async (options) => {
     const projectRoot = ensureOriginalCwd();
     try {
+      const hasOriginFlag =
+        options.remoteOrigin !== undefined ||
+        options.adminOrigin !== undefined ||
+        options.clientOrigin !== undefined;
+
+      let apiOrigins = { admin: null, client: null, needsLocalApi: true };
+      if (hasOriginFlag) {
+        const resolved = resolveDevApiOrigins(projectRoot, {
+          remoteOrigin: options.remoteOrigin,
+          adminOrigin: options.adminOrigin,
+          clientOrigin: options.clientOrigin,
+        });
+        if (resolved.error === 'REMOTE_DEFAULT_REQUIRED') {
+          console.error(chalk.red('[reactpress]'), t('cli.dev.remoteDefaultRequired'));
+          process.exit(1);
+        }
+        if (resolved.error === 'INVALID_ORIGIN') {
+          console.error(chalk.red('[reactpress]'), t('cli.dev.invalidOrigin'));
+          process.exit(1);
+        }
+        if (
+          options.remoteOrigin !== undefined &&
+          !resolved.remoteDefault &&
+          options.adminOrigin === undefined &&
+          options.clientOrigin === undefined
+        ) {
+          console.error(chalk.red('[reactpress]'), t('cli.dev.remoteOriginRequired'));
+          process.exit(1);
+        }
+        apiOrigins = resolved;
+        applyDevApiOriginsToEnv(apiOrigins);
+      }
+
       if (options.clientOnly) {
-        await runThemeDev(projectRoot);
+        await runThemeDev(projectRoot, { apiOrigins });
         return;
       }
       if (options.webOnly) {
-        await runWebDev(projectRoot);
+        await runWebDev(projectRoot, { apiOrigins });
         return;
       }
       if (options.apiOnly) {
+        if (!apiOrigins.needsLocalApi) {
+          console.error(chalk.red('[reactpress]'), t('cli.dev.remoteOriginIncompatibleApiOnly'));
+          process.exit(1);
+        }
         await runApiDev(projectRoot);
         return;
       }
-      await runDev(projectRoot);
+      await runDev(projectRoot, { apiOrigins });
     } catch (err) {
       console.error(chalk.red('[reactpress]'), err.message || err);
       process.exit(err.exitCode ?? 1);

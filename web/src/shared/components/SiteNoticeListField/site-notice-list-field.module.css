@@ -66,3 +66,15 @@
   font-size: 13px;
   color: var(--settings-muted, #646970);
 }
+
+:root[data-theme="dark"] .wrap {
+  --settings-surface: var(--ant-color-bg-elevated, #141414);
+  --settings-border: var(--ant-color-border-secondary, #424242);
+  --settings-muted: var(--ant-color-text-secondary, rgba(255, 255, 255, 0.65));
+}
+
+:root[data-theme="dark"] .item :global(.ant-input) {
+  background: var(--ant-color-bg-container, #141414);
+  border-color: var(--ant-color-border, #424242);
+  color: var(--ant-color-text, rgba(255, 255, 255, 0.88));
+}

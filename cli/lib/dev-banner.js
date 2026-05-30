@@ -45,7 +45,15 @@ function urlLine(key, url, { underline = true } = {}) {
 
 function printDevReadyBanner(
   projectRoot,
-  { apiOnly = false, webOnly = false, nginx = false, hasThemeSite = false, dbOk = true } = {}
+  {
+    apiOnly = false,
+    webOnly = false,
+    nginx = false,
+    hasThemeSite = false,
+    dbOk = true,
+    adminApiOrigin = null,
+    clientApiOrigin = null,
+  } = {}
 ) {
   const urls = getDevUrls(projectRoot);
   const w = Math.min(terminalWidth() - 4, 56);
@@ -68,9 +76,18 @@ function printDevReadyBanner(
       console.log(urlLine(t('devBanner.admin'), `${entry}/admin/`));
     }
     console.log(urlLine(t('devBanner.api'), `${entry}/api`, { underline: false }));
-    console.log(
-      `  ${brand.muted('  ')}${brand.dim(t('devBanner.nginxHint'))}`
-    );
+    if (clientApiOrigin) {
+      console.log(
+        `  ${brand.muted('  ')}${brand.dim(t('devBanner.nginxRemoteHint', { url: clientApiOrigin }))}`
+      );
+    } else {
+      console.log(`  ${brand.muted('  ')}${brand.dim(t('devBanner.nginxHint'))}`);
+    }
+    if (adminApiOrigin) {
+      console.log(
+        `  ${brand.muted('  ')}${brand.dim(t('devBanner.adminRemoteHint', { url: adminApiOrigin }))}`
+      );
+    }
   } else {
     if (!apiOnly) {
       if (!webOnly) {

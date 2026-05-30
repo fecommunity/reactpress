@@ -20,7 +20,26 @@ function isConnectionRefused(error: unknown): boolean {
   return err?.code === 'ECONNREFUSED' || err?.cause?.code === 'ECONNREFUSED';
 }
 
-/** Retry SSR API calls while the dev server is still starting (ECONNREFUSED). */
+function isRetryableNetworkError(error: unknown): boolean {
+  if (isConnectionRefused(error)) return true;
+  const err = error as {
+    code?: string;
+    message?: string;
+    cause?: { code?: string; message?: string };
+  };
+  const code = err?.code || err?.cause?.code;
+  const message = `${err?.message || ''} ${err?.cause?.message || ''}`.toLowerCase();
+  return (
+    code === 'ECONNRESET' ||
+    code === 'ETIMEDOUT' ||
+    code === 'EPIPE' ||
+    message.includes('socket hang up') ||
+    message.includes('network error') ||
+    message.includes('timeout')
+  );
+}
+
+/** Retry SSR API calls during dev startup or flaky remote connections. */
 export async function withApiRetry<T>(fn: () => Promise<T>, attempts = 8, delayMs = 400): Promise<T> {
   let lastError: unknown;
   for (let i = 0; i < attempts; i += 1) {
@@ -28,7 +47,7 @@ export async function withApiRetry<T>(fn: () => Promise<T>, attempts = 8, delayM
       return await fn();
     } catch (error) {
       lastError = error;
-      if (!isConnectionRefused(error) || i >= attempts - 1) {
+      if (!isRetryableNetworkError(error) || i >= attempts - 1) {
         throw error;
       }
       await new Promise((resolve) => {

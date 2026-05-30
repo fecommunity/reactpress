@@ -6,6 +6,7 @@ const {
   resolveNginxConfigPath,
   resolveNginxComposeContext,
   ensureNginxConfig,
+  renderDevNginxConfig,
 } = require('../lib/nginx');
 const { createStandaloneProject, createMonorepoFixture, rmDir } = require('./helpers/tmp-project');
 
@@ -47,6 +48,15 @@ describe('lib/nginx', () => {
     } finally {
       rmDir(root);
     }
+  });
+
+  it('renderDevNginxConfig uses local API port by default', () => {
+    const content = renderDevNginxConfig({
+      adminPort: 3000,
+      visitorPort: 3001,
+      apiPort: 3002,
+    });
+    assert.ok(content.includes('host.docker.internal:3002'));
   });
 
   it('uses docker-compose.dev.yml for monorepo dev nginx', () => {

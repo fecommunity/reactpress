@@ -6,6 +6,7 @@ const open = require('open');
 const { detectProjectType } = require('./project-type');
 const { isDockerRunning, pickDockerComposeCommand } = require('./docker');
 const { t } = require('./i18n');
+const { readDevClientApiOrigin } = require('./remote-dev');
 
 const NGINX_CONTAINER = 'reactpress_nginx';
 const DEFAULT_NGINX_PORT = 80;
@@ -61,7 +62,56 @@ function readDevNginxPorts(projectRoot) {
   };
 }
 
-function renderDevNginxConfig({ adminPort, visitorPort, apiPort }) {
+function resolveRemoteUpstreamHost(remoteApiOrigin) {
+  try {
+    return new URL(remoteApiOrigin).host;
+  } catch {
+    return remoteApiOrigin.replace(/^https?:\/\//i, '').split('/')[0];
+  }
+}
+
+function renderApiProxyBlock(remoteApiOrigin, apiPort) {
+  if (remoteApiOrigin) {
+    const upstreamHost = resolveRemoteUpstreamHost(remoteApiOrigin);
+    return `    # REST API (remote upstream)
+    location /api {
+        proxy_pass ${remoteApiOrigin};
+        proxy_ssl_server_name on;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host ${upstreamHost};
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+        proxy_read_timeout 300;
+        proxy_connect_timeout 300;
+        proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
+        proxy_redirect off;
+    }`;
+  }
+
+  return `    # REST API (Nest on host :${apiPort}, keep /api prefix)
+    location /api {
+        proxy_pass http://host.docker.internal:${apiPort};
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+        proxy_read_timeout 300;
+        proxy_connect_timeout 300;
+        proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
+        proxy_redirect off;
+    }`;
+}
+
+function renderDevNginxConfig({ adminPort, visitorPort, apiPort, clientApiOrigin = null }) {
+  const apiBlock = renderApiProxyBlock(clientApiOrigin, apiPort);
   return `server {
     listen 80;
     server_name localhost;
@@ -103,22 +153,7 @@ function renderDevNginxConfig({ adminPort, visitorPort, apiPort }) {
         return 301 /admin/;
     }
 
-    # REST API (Nest on host :${apiPort}, keep /api prefix)
-    location /api {
-        proxy_pass http://host.docker.internal:${apiPort};
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_cache_bypass $http_upgrade;
-        proxy_read_timeout 300;
-        proxy_connect_timeout 300;
-        proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
-        proxy_redirect off;
-    }
+${apiBlock}
 
     # Next.js dev/HMR rewrites chunks frequently — never cache /_next (prod nginx keeps long cache).
     location /_next/ {
@@ -153,6 +188,7 @@ function renderDevNginxConfig({ adminPort, visitorPort, apiPort }) {
 
 function isDevNginxConfigStale(projectRoot, configPath) {
   const { adminPort, visitorPort, apiPort } = readDevNginxPorts(projectRoot);
+  const clientApiOrigin = readDevClientApiOrigin(projectRoot);
   let content;
   try {
     content = fs.readFileSync(configPath, 'utf8');
@@ -162,7 +198,12 @@ function isDevNginxConfigStale(projectRoot, configPath) {
   if (content.includes(':5173')) return true;
   if (!content.includes(`host.docker.internal:${adminPort}/admin/`)) return true;
   if (!content.includes(`host.docker.internal:${visitorPort}`)) return true;
-  if (!content.includes(`host.docker.internal:${apiPort}`)) return true;
+  if (clientApiOrigin) {
+    if (!content.includes(`proxy_pass ${clientApiOrigin}`)) return true;
+    if (content.includes(`host.docker.internal:${apiPort}`)) return true;
+  } else if (!content.includes(`host.docker.internal:${apiPort}`)) {
+    return true;
+  }
   // Dev must not long-cache Next chunks (breaks client-side nav after on-demand compile).
   if (content.includes('expires 1y') && content.includes('/_next/')) return true;
   return false;
@@ -171,7 +212,8 @@ function isDevNginxConfigStale(projectRoot, configPath) {
 function writeDevNginxConfig(projectRoot) {
   const configPath = resolveNginxConfigPath(projectRoot, 'dev');
   const ports = readDevNginxPorts(projectRoot);
-  const content = renderDevNginxConfig(ports);
+  const clientApiOrigin = readDevClientApiOrigin(projectRoot);
+  const content = renderDevNginxConfig({ ...ports, clientApiOrigin });
   fs.mkdirSync(path.dirname(configPath), { recursive: true });
   const existed = fs.existsSync(configPath);
   const previous = existed ? fs.readFileSync(configPath, 'utf8') : '';
@@ -524,6 +566,7 @@ module.exports = {
   resolveNginxConfigPath,
   resolveNginxComposeContext,
   ensureNginxConfig,
+  renderDevNginxConfig,
   nginxEntryUrl,
   resolveNginxPort,
   isNginxContainerRunning,

@@ -316,6 +316,8 @@ function buildThemeChildEnv(projectRoot, { port, serverApiUrl, publicApiUrl, the
   return {
     ...env,
     PORT: String(port),
+    // Next inlines SERVER_API_URL from next.config (localhost); override for remote dev SSR.
+    SERVER_API_URL: serverApiUrl,
     REACTPRESS_API_URL: serverApiUrl,
     NEXT_PUBLIC_REACTPRESS_API_URL: publicApiUrl,
     REACTPRESS_THEME_ID: themeId || '',

@@ -10,8 +10,8 @@ const {
   resolveClientThemeMode,
   resolveInitialColorModeState,
   persistColorMode,
-  persistVisitorLocale,
 } = require('../theme/visitor/colorMode');
+const { persistVisitorLocale } = require('../theme/visitor/visitorLocale');
 const {
   clearThemeSession,
   persistThemeSession,
@@ -21,6 +21,15 @@ const { RouteProgress } = require('../ui/components/RouteProgress');
 const { SiteAnalytics } = require('../ui/components/SiteAnalytics');
 const { SiteCatalogProvider } = require('../ui/context/SiteCatalogContext');
 const { useReportPageView } = require('../ui/hooks/useReportPageView');
+const { safeJsonParse } = require('../theme/api/json');
+
+function resolveGlobalSettingForLocale(setting, locale, fallback) {
+  if (!setting?.globalSetting) return fallback;
+  const raw = setting.globalSetting;
+  const parsed =
+    typeof raw === 'string' ? safeJsonParse(raw, {}) : raw && typeof raw === 'object' ? raw : {};
+  return parsed[locale] ?? fallback;
+}
 
 function readInitialColorMode() {
   if (typeof window === 'undefined') return 'light';
@@ -89,8 +98,15 @@ function createReactPressApp(manifest, options = {}) {
     };
 
     changeLocale = (key) => {
+      if (!key) return;
+      const active =
+        this.state.locale ||
+        this.props.initialLocale ||
+        (Array.isArray(this.props.locales) && this.props.locales[0]) ||
+        'zh';
+      if (key === active) return;
       persistVisitorLocale(key);
-      window.location.reload();
+      this.setState({ locale: key });
     };
 
     setUser = (user) => {

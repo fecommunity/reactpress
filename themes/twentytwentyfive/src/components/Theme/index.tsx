@@ -2,11 +2,6 @@ import cls from 'classnames';
 import React, { useContext } from 'react';
 
 import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
-import {
-  applyColorModeClass,
-  persistColorMode,
-} from '@fecommunity/reactpress-toolkit/theme';
-
 import styles from './index.module.scss';
 
 interface IProps {}
@@ -16,12 +11,7 @@ export const Theme = (_props: IProps) => {
   const dark = theme === 'dark';
 
   const modifyTheme = () => {
-    const nextDark = !dark;
-    const nextTheme = nextDark ? 'dark' : 'light';
-
-    applyColorModeClass(nextDark);
-    persistColorMode(nextDark);
-    changeTheme?.(nextTheme);
+    changeTheme?.(dark ? 'light' : 'dark');
   };
 
   return (

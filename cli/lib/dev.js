@@ -1,5 +1,6 @@
 const { spawn } = require('child_process');
 const { spawnDevChild } = require('./dev-child-io');
+const fs = require('fs');
 const path = require('path');
 const ora = require('ora');
 const { runBuild } = require('./build');
@@ -20,6 +21,7 @@ const {
   hasResolvableActiveTheme,
   hasThemePackages,
   readActiveThemeManifest,
+  resolveThemeDirectory,
 } = require('./theme-runtime');
 const { shouldBuildToolkit } = require('./toolkit-build');
 const { startThemeSiteWithWatch, stopThemeSite } = require('./theme-dev');
@@ -43,6 +45,11 @@ const {
   logDevTimingSummary,
 } = require('./dev-log');
 const { t } = require('./i18n');
+const {
+  resolveRemoteThemeApiBase,
+  readDevClientApiOrigin,
+  normalizeRemoteOrigin,
+} = require('./remote-dev');
 
 const CLIENT_READY_TIMEOUT_MS = 120_000;
 const API_READY_TIMEOUT_MS = 180_000;
@@ -196,7 +203,12 @@ async function waitForApiReady(
 
 async function spawnAdminWeb(
   projectRoot,
-  { behindNginx = false, integratedStack = false, waitForReady = true } = {},
+  {
+    behindNginx = false,
+    integratedStack = false,
+    adminApiOrigin = null,
+    waitForReady = true,
+  } = {},
 ) {
   const adminPort = readEnvPort(projectRoot, 'WEB_ADMIN_PORT', DEV_PORTS.ADMIN_WEB);
   await ensurePortFree(adminPort, { label: 'admin' });
@@ -217,10 +229,15 @@ async function spawnAdminWeb(
     process.env.REACTPRESS_BEHIND_NGINX = '1';
   }
   // Full stack (API + theme site): theme install/activate must hit Nest, not MSW.
-  if (integratedStack) {
+  if (integratedStack || adminApiOrigin) {
     adminEnv.VITE_ENABLE_MOCK = 'false';
     adminEnv.VITE_AUTH_MODE = 'server';
-    adminEnv.VITE_DEV_API_PROXY_TARGET = loadServerSiteUrl(projectRoot).replace(/\/$/, '');
+    if (adminApiOrigin) {
+      // Vite proxies `/api` → `${target}/api/...`; target is host-only origin.
+      adminEnv.VITE_DEV_API_PROXY_TARGET = normalizeRemoteOrigin(adminApiOrigin) || adminApiOrigin;
+    } else {
+      adminEnv.VITE_DEV_API_PROXY_TARGET = loadServerSiteUrl(projectRoot).replace(/\/$/, '');
+    }
   }
 
   webChild = spawnDevChild('pnpm', ['run', '--dir', './web', 'dev'], {
@@ -268,12 +285,13 @@ function assertDevPrerequisites() {
   logDevStatus('dev.prerequisitesOk', { version: process.version });
 }
 
-async function prepareDevInfrastructure(projectRoot) {
+async function prepareDevInfrastructure(projectRoot, { needsLocalApi = true } = {}) {
   await acquireDevSession(projectRoot);
   const planNginx = process.env.REACTPRESS_SKIP_NGINX !== '1';
+  const clientApiOrigin = readDevClientApiOrigin(projectRoot);
 
   const [, nginxResult] = await Promise.all([
-    ensureDevDatabase(projectRoot, { quiet: true }),
+    needsLocalApi ? ensureDevDatabase(projectRoot, { quiet: true }) : Promise.resolve(true),
     planNginx ? startDevNginx(projectRoot) : Promise.resolve(false),
   ]);
 
@@ -281,26 +299,42 @@ async function prepareDevInfrastructure(projectRoot) {
   if (nginxEnabled) {
     process.env.REACTPRESS_NGINX_ENTRY_URL = nginxEntryUrl(projectRoot);
     delete process.env.REACTPRESS_SKIP_DEV_PORT_REDIRECT;
-    logDevStatus('dev.nginxReady', { url: nginxEntryUrl(projectRoot) });
+    if (clientApiOrigin) {
+      logDevStatus('dev.nginxReadyRemote', {
+        url: nginxEntryUrl(projectRoot),
+        api: clientApiOrigin,
+      });
+    } else {
+      logDevStatus('dev.nginxReady', { url: nginxEntryUrl(projectRoot) });
+    }
   } else {
     delete process.env.REACTPRESS_NGINX_ENTRY_URL;
     process.env.REACTPRESS_SKIP_DEV_PORT_REDIRECT = '1';
   }
 }
 
-async function startDevStack(projectRoot, { webOnly = false, themeOnly = false, infraDone = false } = {}) {
+async function startDevStack(
+  projectRoot,
+  {
+    webOnly = false,
+    themeOnly = false,
+    infraDone = false,
+    apiOrigins = { admin: null, client: null, needsLocalApi: true },
+  } = {},
+) {
+  const { admin: adminApiOrigin, client: clientApiOrigin, needsLocalApi } = apiOrigins;
   if (!infraDone) {
     logDevPhase(1, 3, 'dev.phasePrerequisites');
     assertDevPrerequisites();
     logDevPhase(2, 3, 'dev.phaseInfra');
     try {
-      await prepareDevInfrastructure(projectRoot);
+      await prepareDevInfrastructure(projectRoot, { needsLocalApi });
     } catch (err) {
       console.error(t('dev.dbEnsureFailed', { message: err.message || err }));
       console.error(formatDevFailureHint());
       process.exit(1);
     }
-  } else if (!(await probeMysqlHost(projectRoot))) {
+  } else if (needsLocalApi && !(await probeMysqlHost(projectRoot))) {
     console.error(
       t('dev.dbEnsureFailed', {
         message: t('docker.devStartBlocked', {
@@ -328,17 +362,29 @@ async function startDevStack(projectRoot, { webOnly = false, themeOnly = false, 
     logDevPhase(3, 3, 'dev.phaseServices');
   }
 
-  logDevStatus('dev.phaseApi');
   markDevPhase('services');
-  const apiSpawn = await spawnApi(projectRoot);
-  const readyMessageKey = webOnly || hasWeb(projectRoot) ? 'dev.apiReadyAdmin' : 'dev.apiReady';
+  const readinessWaits = [];
+  let apiSpawn = null;
 
-  const readinessWaits = [
-    waitForApiReady(projectRoot, {
-      readyMessageKey,
-      alreadyHealthy: Boolean(apiSpawn?.reused),
-    }),
-  ];
+  if (adminApiOrigin || clientApiOrigin) {
+    if (adminApiOrigin) {
+      logDevStatus('dev.adminApiRemote', { url: adminApiOrigin });
+    }
+    if (clientApiOrigin) {
+      logDevStatus('dev.clientApiRemote', { url: clientApiOrigin });
+    }
+  }
+  if (needsLocalApi) {
+    logDevStatus('dev.phaseApi');
+    apiSpawn = await spawnApi(projectRoot);
+    const readyMessageKey = webOnly || hasWeb(projectRoot) ? 'dev.apiReadyAdmin' : 'dev.apiReady';
+    readinessWaits.push(
+      waitForApiReady(projectRoot, {
+        readyMessageKey,
+        alreadyHealthy: Boolean(apiSpawn?.reused),
+      }),
+    );
+  }
 
   if (!includeAdmin && !includeThemeSite && !includeWebInStack) {
     await Promise.all(readinessWaits);
@@ -357,6 +403,7 @@ async function startDevStack(projectRoot, { webOnly = false, themeOnly = false, 
     spawnAdminWeb(projectRoot, {
       behindNginx: planNginx,
       integratedStack: true,
+      adminApiOrigin,
       waitForReady: false,
     });
     const adminBase = loadWebAdminUrl(projectRoot).replace(/\/$/, '');
@@ -367,6 +414,7 @@ async function startDevStack(projectRoot, { webOnly = false, themeOnly = false, 
     spawnAdminWeb(projectRoot, {
       behindNginx: planNginx,
       integratedStack: false,
+      adminApiOrigin,
       waitForReady: false,
     });
     const adminBase = loadWebAdminUrl(projectRoot).replace(/\/$/, '');
@@ -381,7 +429,24 @@ async function startDevStack(projectRoot, { webOnly = false, themeOnly = false, 
       port: readEnvPort(projectRoot, 'CLIENT_PORT', DEV_PORTS.VISITOR),
     });
     if (planNginx) process.env.REACTPRESS_BEHIND_NGINX = '1';
-    process.env.REACTPRESS_DEV_FORCE_LOCAL_THEME_API = '1';
+    if (clientApiOrigin) {
+      delete process.env.REACTPRESS_DEV_FORCE_LOCAL_THEME_API;
+      const themeApiBase = resolveRemoteThemeApiBase(clientApiOrigin);
+      process.env.REACTPRESS_THEME_API_URL = themeApiBase;
+      process.env.REACTPRESS_THEME_PUBLIC_API_URL = planNginx
+        ? `${nginxEntryUrl(projectRoot).replace(/\/$/, '')}/api`
+        : themeApiBase;
+      const themeDir = resolveThemeDirectory(projectRoot, activeTheme);
+      if (themeDir) {
+        const nextCache = path.join(themeDir, '.next');
+        if (fs.existsSync(nextCache)) {
+          fs.rmSync(nextCache, { recursive: true, force: true });
+          logDevDetail('dev.themeCacheClearedForRemote');
+        }
+      }
+    } else {
+      process.env.REACTPRESS_DEV_FORCE_LOCAL_THEME_API = '1';
+    }
     const themeBoot = startThemeSiteWithWatch(projectRoot);
     const themeWait = themeBoot.then(async (started) => {
       themeSiteStarted = started;
@@ -438,8 +503,8 @@ async function startDevStack(projectRoot, { webOnly = false, themeOnly = false, 
     });
   }
 
-  const dbOk = await probeMysqlHost(projectRoot);
-  if (!dbOk) {
+  const dbOk = needsLocalApi ? await probeMysqlHost(projectRoot) : true;
+  if (needsLocalApi && !dbOk) {
     console.warn(t('dev.mysqlUnreachable'));
   }
 
@@ -448,6 +513,8 @@ async function startDevStack(projectRoot, { webOnly = false, themeOnly = false, 
     nginx: nginxEnabled,
     hasThemeSite: includeThemeSite,
     dbOk,
+    adminApiOrigin,
+    clientApiOrigin,
   });
 
   logDevTimingSummary({
@@ -455,7 +522,10 @@ async function startDevStack(projectRoot, { webOnly = false, themeOnly = false, 
   });
 }
 
-async function runDevStartup(projectRoot, { webOnly = false, themeOnly = false } = {}) {
+async function runDevStartup(
+  projectRoot,
+  { webOnly = false, themeOnly = false, apiOrigins = { admin: null, client: null, needsLocalApi: true } } = {},
+) {
   startDevTimer();
   try {
     const result = await ensureProjectEnvironment(projectRoot, { skipDatabase: true });
@@ -471,7 +541,10 @@ async function runDevStartup(projectRoot, { webOnly = false, themeOnly = false }
 
   logDevPhase(2, 3, 'dev.phaseInfra');
   try {
-    await Promise.all([prepareDevInfrastructure(projectRoot), buildToolkit(projectRoot)]);
+    await Promise.all([
+      prepareDevInfrastructure(projectRoot, { needsLocalApi: apiOrigins.needsLocalApi }),
+      buildToolkit(projectRoot),
+    ]);
     markDevPhase('infra');
   } catch (err) {
     console.error(t('dev.dbEnsureFailed', { message: err.message || err }));
@@ -479,10 +552,13 @@ async function runDevStartup(projectRoot, { webOnly = false, themeOnly = false }
     process.exit(1);
   }
 
-  await startDevStack(projectRoot, { webOnly, themeOnly, infraDone: true });
+  await startDevStack(projectRoot, { webOnly, themeOnly, infraDone: true, apiOrigins });
 }
 
-async function runThemeDev(projectRoot = ensureOriginalCwd()) {
+async function runThemeDev(
+  projectRoot = ensureOriginalCwd(),
+  { apiOrigins = { admin: null, client: null, needsLocalApi: true } } = {},
+) {
   if (!hasResolvableActiveTheme(projectRoot)) {
     console.error(t('dev.themeSiteSkipped'));
     process.exit(1);
@@ -498,10 +574,13 @@ async function runThemeDev(projectRoot = ensureOriginalCwd()) {
     }
   });
 
-  await runDevStartup(projectRoot, { themeOnly: true });
+  await runDevStartup(projectRoot, { themeOnly: true, apiOrigins });
 }
 
-async function runWebDev(projectRoot = ensureOriginalCwd()) {
+async function runWebDev(
+  projectRoot = ensureOriginalCwd(),
+  { apiOrigins = { admin: null, client: null, needsLocalApi: true } } = {},
+) {
   if (!hasWeb(projectRoot)) {
     console.error(t('dev.noWeb'));
     process.exit(1);
@@ -517,10 +596,13 @@ async function runWebDev(projectRoot = ensureOriginalCwd()) {
     }
   });
 
-  await runDevStartup(projectRoot, { webOnly: true });
+  await runDevStartup(projectRoot, { webOnly: true, apiOrigins });
 }
 
-async function runDev(projectRoot = ensureOriginalCwd()) {
+async function runDev(
+  projectRoot = ensureOriginalCwd(),
+  { apiOrigins = { admin: null, client: null, needsLocalApi: true } } = {},
+) {
   process.on('SIGINT', () => shutdown('SIGINT'));
   process.on('SIGTERM', () => shutdown('SIGTERM'));
   process.on('exit', () => {
@@ -531,7 +613,7 @@ async function runDev(projectRoot = ensureOriginalCwd()) {
     }
   });
 
-  await runDevStartup(projectRoot);
+  await runDevStartup(projectRoot, { apiOrigins });
 }
 
 module.exports = {
