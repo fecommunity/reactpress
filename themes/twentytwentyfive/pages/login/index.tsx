@@ -1,11 +1,13 @@
 import { Spin } from 'antd';
 import { NextPage } from 'next';
 import { useTranslations } from 'next-intl';
+import Head from 'next/head';
 import Router from 'next/router';
 import { useContext, useEffect } from 'react';
 
 import { GlobalContext } from '@/context/global';
 import { UserProvider } from '@/providers/user';
+import { getPageTitle } from '@/utils/seo';
 
 import style from './index.module.scss';
 
@@ -16,7 +18,7 @@ interface IProps {
 
 const Page: NextPage<IProps> = ({ code, from }: IProps) => {
   const t = useTranslations();
-  const { setUser } = useContext(GlobalContext);
+  const { setUser, setting } = useContext(GlobalContext);
 
   useEffect(() => {
     if (!code) return;
@@ -32,6 +34,9 @@ const Page: NextPage<IProps> = ({ code, from }: IProps) => {
 
   return (
     <div id="js-page-wrapper" className={style.container}>
+      <Head>
+        <title>{getPageTitle(t('logingWithGithub'), setting)}</title>
+      </Head>
       <Spin size="large" tip={t('logingWithGithub') as string} />
     </div>
   );

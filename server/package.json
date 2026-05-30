@@ -74,9 +74,7 @@
     "axios": "^0.23.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
-    "chalk": "^4.1.2",
     "class-transformer": "^0.2.3",
-    "commander": "^9.4.1",
     "compression": "^1.7.4",
     "cross-env": "^7.0.3",
     "date-fns": "^2.17.0",
@@ -87,7 +85,6 @@
     "fs-extra": "^10.0.0",
     "helmet": "^3.21.2",
     "highlight.js": "^9.18.0",
-    "inquirer": "^8.2.4",
     "lodash": "^4.17.21",
     "log4js": "^6.1.0",
     "marked": "^0.8.0",
@@ -123,7 +120,6 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "jest": "^24.9.0",
-    "next-transpile-modules": "^6.3.0",
     "prettier": "^1.18.2",
     "supertest": "^4.0.2",
     "ts-jest": "^24.1.0",
@@ -131,7 +127,7 @@
     "ts-node": "^8.4.1",
     "tsconfig-paths": "^3.9.0",
     "tslint": "^5.20.0",
-    "typescript": "~4.1.6"
+    "typescript": "~4.9.5"
   },
   "jest": {
     "moduleFileExtensions": [

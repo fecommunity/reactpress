@@ -1,5 +1,5 @@
 import { GithubOutlined, UserOutlined, CheckCircleOutlined } from '@ant-design/icons';
-import { Alert, Avatar, Button, Dropdown, Form, Input, Menu, Modal, Tooltip, message, Divider } from 'antd';
+import { Alert, Avatar, Button, Dropdown, Form, Input, Modal, Space, Tooltip, message, Divider } from 'antd';
 import Router, { useRouter } from 'next/router';
 import { useTranslations } from 'next-intl';
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
@@ -100,32 +100,39 @@ export const UserInfo: React.FC<{
     )
   ) : user ? (
     <Dropdown
-      overlay={
-        <Menu>
-          <Menu.Item>
-            <a
-              href={process.env.NEXT_PUBLIC_REACTPRESS_ADMIN_URL || 'http://localhost:3000'}
-              target="_blank"
-              rel="noreferrer"
-            >
-              {user.name}
-            </a>
-          </Menu.Item>
-          <Menu.Item onClick={removeUser}>{t('logout')}</Menu.Item>
-        </Menu>
-      }
+      menu={{
+        items: [
+          {
+            key: 'profile',
+            label: (
+              <a
+                href={process.env.NEXT_PUBLIC_REACTPRESS_ADMIN_URL || 'http://localhost:3000'}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {user.name}
+              </a>
+            ),
+          },
+          {
+            key: 'logout',
+            label: t('logout'),
+            onClick: removeUser,
+          },
+        ],
+      }}
     >
       {user.avatar ? <Avatar alt={user.name} size={28} src={user.avatar}></Avatar> : <Avatar size={28}>{user.name?.charAt(0)}</Avatar>}
     </Dropdown>
   ) : (
-    <Button.Group>
+    <Space.Compact>
       <Button onClick={toggleVisible} size="middle">
         {t('userInfoConfirm')}
       </Button>
       <Button onClick={toggleLoginVisible} size="middle">
         {t('register')}
       </Button>
-    </Button.Group>
+    </Space.Compact>
   );
 
   useEffect(() => {
@@ -148,7 +155,7 @@ export const UserInfo: React.FC<{
         transitionName={''}
         maskTransitionName={''}
         width="26.5em"
-        destroyOnClose
+        destroyOnHidden
         className={styles.userModal}
       >
         <Form name="user-info" onFinish={submit}>
@@ -200,7 +207,7 @@ export const UserInfo: React.FC<{
         transitionName={''}
         maskTransitionName={''}
         width="26.5em"
-        destroyOnClose
+        destroyOnHidden
         className={styles.userModal}
       >
         <Form name="user-info" onFinish={submitRegister}>

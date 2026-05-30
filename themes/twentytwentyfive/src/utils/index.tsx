@@ -236,22 +236,21 @@ export function getIconByName (name) {
   return IconComponent;
 };
 
-export function getFirstLevelRoute(path) {
-  // 确保路径以斜杠开头，如果不是则添加斜杠
+export function getFirstLevelRoute(path, locales: string[] = ['zh', 'en']) {
   if (!path.startsWith('/')) {
     path = '/' + path;
   }
 
-  // 去除路径末尾的斜杠（如果有的话）
-  if (path.endsWith('/')) {
+  if (path.endsWith('/') && path.length > 1) {
     path = path.slice(0, -1);
   }
 
-  // 查找第一个斜杠之后和下一个斜杠（如果有）之前的部分
-  const firstSlashIndex = path.indexOf('/'); // 实际上这个索引在这里总是0
-  const secondSlashIndex = path.indexOf('/', firstSlashIndex + 1);
+  const segments = path.split('/').filter(Boolean);
+  if (segments.length > 0 && locales.includes(segments[0])) {
+    segments.shift();
+    path = segments.length ? `/${segments.join('/')}` : '/';
+  }
 
-  // 如果没有找到第二个斜杠，说明路径只有一级
-  const finalPath = secondSlashIndex === -1 ? path : path.slice(0, secondSlashIndex);
-  return finalPath || '/';
+  const secondSlashIndex = path.indexOf('/', 1);
+  return secondSlashIndex === -1 ? path : path.slice(0, secondSlashIndex);
 }

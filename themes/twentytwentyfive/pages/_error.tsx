@@ -1,7 +1,11 @@
 import { Button, Result } from 'antd';
 import { useTranslations } from 'next-intl';
+import Head from 'next/head';
 import { default as Router } from 'next/router';
-import React from 'react';
+import React, { useContext } from 'react';
+
+import { GlobalContext } from '@/context/global';
+import { getPageTitle, getSiteTitle } from '@/utils/seo';
 
 const style = {
   display: 'flex',
@@ -13,9 +17,13 @@ const style = {
 
 export const Error404 = () => {
   const t = useTranslations();
+  const { setting } = useContext(GlobalContext);
 
   return (
     <div style={style}>
+      <Head>
+        <title>{getPageTitle('404', setting)}</title>
+      </Head>
       <Result
         status="404"
         title="404"
@@ -32,9 +40,13 @@ export const Error404 = () => {
 
 const ServerError = ({ statusCode }) => {
   const t = useTranslations();
+  const { setting } = useContext(GlobalContext);
 
   return (
     <div style={style}>
+      <Head>
+        <title>{getPageTitle(String(statusCode), setting)}</title>
+      </Head>
       <Result
         status={statusCode}
         title={statusCode}
@@ -50,8 +62,17 @@ const ServerError = ({ statusCode }) => {
 };
 
 function Error({ statusCode }) {
+  const { setting } = useContext(GlobalContext);
+
   if (!statusCode) {
-    return <p style={{ textAlign: 'center', padding: '1rem 0' }}>An error occurred on client</p>;
+    return (
+      <>
+        <Head>
+          <title>{getSiteTitle(setting)}</title>
+        </Head>
+        <p style={{ textAlign: 'center', padding: '1rem 0' }}>An error occurred on client</p>
+      </>
+    );
   }
 
   if (+statusCode === 404) {

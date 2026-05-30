@@ -1,17 +1,13 @@
-const path = require('path');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const withPlugins = require('next-compose-plugins');
-const withLess = require('next-with-less');
 const withPWA = require('next-pwa');
 const { config } = require('@fecommunity/reactpress-toolkit');
-const antdVariablesFilePath = path.resolve(__dirname, './antd-custom.less');
 
 const getServerApiUrl = () => {
   if (config.SERVER_URL) {
     return `${config.SERVER_SITE_URL}/api`;
-  } else {
-    return config.SERVER_API_URL || `${process.env.SERVER_SITE_URL}/api` || 'http://localhost:3002/api';
   }
+  return config.SERVER_API_URL || `${process.env.SERVER_SITE_URL}/api` || 'http://localhost:3002/api';
 };
 
 /** @type {import('next').NextConfig} */
@@ -25,7 +21,7 @@ const nextConfig = {
     SERVER_API_URL: getServerApiUrl(),
     GITHUB_CLIENT_ID: config.GITHUB_CLIENT_ID,
   },
-  webpack: (config, { dev, isServer }) => {
+  webpack: (config) => {
     config.resolve.plugins.push(new TsconfigPathsPlugin());
     return config;
   },
@@ -70,14 +66,6 @@ const withComposedPlugins = withPlugins(
           disable: process.env.NODE_ENV !== 'production',
           dest: '.next',
           sw: 'service-worker.js',
-        },
-      },
-    ],
-    [
-      withLess,
-      {
-        lessLoaderOptions: {
-          additionalData: (content) => `${content}\n\n@import '${antdVariablesFilePath}';`,
         },
       },
     ],

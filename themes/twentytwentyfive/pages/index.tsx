@@ -3,18 +3,19 @@ import { ArticleCarousel } from '@components/ArticleCarousel';
 import { ArticleList } from '@components/ArticleList';
 import { Tags } from '@components/Tags';
 import { Menu } from 'antd';
-import cls from 'classnames';
 import { NextPage } from 'next';
 import { useTranslations } from 'next-intl';
+import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 
 import { ArticleRecommend } from '@/components/ArticleRecommend';
 import { GlobalContext } from '@/context/global';
 import { DoubleColumnLayout } from '@/layout/DoubleColumnLayout';
 import { ArticleProvider } from '@/providers/article';
+import { getSiteTitle } from '@/utils/seo';
 
 import style from './index.module.scss';
 
@@ -27,39 +28,43 @@ const pageSize = 12;
 export const CategoryMenu = ({ categories }) => {
   const t = useTranslations();
   const router = useRouter();
-  const { asPath } = router;
-  return (
-    <Menu mode="horizontal" className={style.menu}>
-      {[
-        {
-          label: t('all'),
-          path: '/',
-        },
-        ...categories,
-      ].map((category, index) => (
-        <Menu.Item
-          key={index}
-          className={cls({
-            ['ant-menu-item-selected']:
-              index === 0 ? asPath === category.path : asPath.replace('/category/', '') === category.value,
-          })}
-        >
-          <Link
-            {...(index === 0
-              ? { href: '/' }
-              : {
-                  href: '/category/[category]',
-                  as: `/category/` + category.value,
-                })}
-            shallow={false}
-          >
+  const { asPath, pathname } = router;
+  const isHome = pathname === '/';
+
+  const selectedKey = useMemo(() => {
+    if (isHome) return 'all';
+    const active = categories.find((category) => asPath.replace('/category/', '') === category.value);
+    return active?.value ?? '';
+  }, [asPath, categories, isHome]);
+
+  const menuItems = useMemo(
+    () => [
+      {
+        key: 'all',
+        label: (
+          <Link href="/" shallow={false}>
+            <a aria-label={t('all')}>
+              <span>{t('all')}</span>
+            </a>
+          </Link>
+        ),
+      },
+      ...categories.map((category) => ({
+        key: category.value,
+        label: (
+          <Link href="/category/[category]" as={`/category/${category.value}`} shallow={false}>
             <a aria-label={category.label}>
               <span>{category.label}</span>
             </a>
           </Link>
-        </Menu.Item>
-      ))}
-    </Menu>
+        ),
+      })),
+    ],
+    [categories, t],
+  );
+
+  return (
+    <Menu mode="horizontal" className={style.menu} selectedKeys={selectedKey ? [selectedKey] : []} items={menuItems} />
   );
 };
 const Home: NextPage<IHomeProps> = ({ articles: defaultArticles = [], recommendedArticles = [], total = 0 }) => {
@@ -82,6 +87,9 @@ const Home: NextPage<IHomeProps> = ({ articles: defaultArticles = [], recommende
   }, []);
   return (
     <div className={style.wrapper}>
+      <Head>
+        <title>{getSiteTitle(setting)}</title>
+      </Head>
       <DoubleColumnLayout
         leftNode={
           <>

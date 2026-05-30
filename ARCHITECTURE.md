@@ -634,7 +634,6 @@ pnpm run build:toolkit      # 重新生成 toolkit 的 api/types
 
 ### 当前遗留项
 
-- `themes/twentytwentyfive` 仍保留部分 admin 时代依赖（如 `@ant-design/pro-layout`），后续可进一步精简 package.json
 - `server` npm 包标记 deprecated，推荐使用 CLI 内置 API
 - `dev:client` 脚本名保留，实际启动的是激活主题（`--client-only` → API + theme）
 

@@ -35,12 +35,13 @@ const getTimeago = (date) => {
 };
 
 export const LocaleTime: React.FC<Props> = ({ date, timeago, format = 'yyyy-MM-dd HH:mm:ss' }) => {
-  const [_, setMinutesMounted] = useState(0); // eslint-disable-line no-unused-vars
+  const [mounted, setMinutesMounted] = useState(0);
   const callback = useRef<() => void>();
 
   useEffect(() => {
+    setMinutesMounted(1);
     callback.current = eachMinute(() => {
-      setMinutesMounted((state) => ++state);
+      setMinutesMounted((state) => state + 1);
     });
 
     return () => {
@@ -51,6 +52,7 @@ export const LocaleTime: React.FC<Props> = ({ date, timeago, format = 'yyyy-MM-d
   }, []);
 
   const formated = dateFormat(new Date(date), format);
+  const showTimeago = Boolean(timeago && mounted);
 
-  return <time dateTime={formated}>{timeago ? getTimeago(date) : formated}</time>;
+  return <time dateTime={formated} suppressHydrationWarning={Boolean(timeago)}>{showTimeago ? getTimeago(date) : formated}</time>;
 };

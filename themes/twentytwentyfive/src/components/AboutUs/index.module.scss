@@ -49,6 +49,12 @@
     }
   }
 
+  .iconTrigger {
+    display: inline-flex;
+    cursor: pointer;
+    font-size: 24px;
+  }
+
   li {
     display: inline-block;
     font-size: 24px;

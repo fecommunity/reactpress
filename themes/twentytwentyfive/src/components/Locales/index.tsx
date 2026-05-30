@@ -1,7 +1,7 @@
-import { Dropdown, Menu } from 'antd';
+import { Dropdown } from 'antd';
 import { useRouter } from 'next/router';
 import { useTranslations } from 'next-intl';
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useMemo } from 'react';
 
 import { GlobalContext } from '@/context/global';
 
@@ -10,28 +10,26 @@ export function Locales() {
   const { locale: defaultLocale } = useRouter();
   const { i18n, locales = [], changeLocale } = useContext(GlobalContext);
 
-  const menu = (
-    <Menu>
-      {locales.map((locale) => {
-        return (
-          <Menu.Item key={locale} onClick={() => changeLocale(locale)}>
-            {t(locale)}
-          </Menu.Item>
-        );
-      })}
-    </Menu>
+  const menuItems = useMemo(
+    () =>
+      locales.map((locale) => ({
+        key: locale,
+        label: t(locale),
+        onClick: () => changeLocale(locale),
+      })),
+    [locales, t, changeLocale],
   );
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    const local = defaultLocale || window.localStorage.getItem('locale');
-    if (local && i18n[local]) {
-      changeLocale(local);
+    const stored = window.localStorage.getItem('locale');
+    if (stored && stored !== defaultLocale && i18n[stored]) {
+      changeLocale(stored);
     }
   }, [i18n, defaultLocale, changeLocale]);
 
   return (
-    <Dropdown overlay={menu}>
+    <Dropdown menu={{ items: menuItems }}>
       <div style={{ display: 'flex', alignItems: 'center', width: 24, height: 24, cursor: 'pointer' }}>
         <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em">
           <path

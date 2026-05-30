@@ -15,29 +15,27 @@ export const RSS = () => {
 
   return (
     <Popover content={t('rssSubscribe')}>
-      <li>
-        <a aria-label="rss" className={style.github} href="/rss" target="_blank" rel="noopener noreferrer">
-          <Icon
-            component={() => (
-              <svg
-                viewBox="0 0 1024 1024"
-                version="1.1"
-                xmlnsXlink="http://www.w3.org/1999/xlink"
-                width="24"
-                height="24"
-              >
-                <defs>
-                  <style type="text/css"></style>
-                </defs>
-                <path
-                  d="M512 0C230.4 0 0 230.4 0 512s230.4 512 512 512 512-230.4 512-512S793.6 0 512 0z m-182.4 768C288 768 256 736 256 694.4s32-73.6 73.6-73.6 73.6 32 73.6 73.6-32 73.6-73.6 73.6z m185.6 0c0-144-115.2-259.2-259.2-259.2v-80c185.6 0 339.2 150.4 339.2 339.2h-80z m172.8 0c0-240-195.2-432-432-432V256c281.6 0 512 230.4 512 512h-80z"
-                  fill="currentColor"
-                ></path>
-              </svg>
-            )}
-          />
-        </a>
-      </li>
+      <a aria-label="rss" className={style.github} href="/rss" target="_blank" rel="noopener noreferrer">
+        <Icon
+          component={() => (
+            <svg
+              viewBox="0 0 1024 1024"
+              version="1.1"
+              xmlnsXlink="http://www.w3.org/1999/xlink"
+              width="24"
+              height="24"
+            >
+              <defs>
+                <style type="text/css"></style>
+              </defs>
+              <path
+                d="M512 0C230.4 0 0 230.4 0 512s230.4 512 512 512 512-230.4 512-512S793.6 0 512 0z m-182.4 768C288 768 256 736 256 694.4s32-73.6 73.6-73.6 73.6 32 73.6 73.6-32 73.6-73.6 73.6z m185.6 0c0-144-115.2-259.2-259.2-259.2v-80c185.6 0 339.2 150.4 339.2 339.2h-80z m172.8 0c0-240-195.2-432-432-432V256c281.6 0 512 230.4 512 512h-80z"
+                fill="currentColor"
+              ></path>
+            </svg>
+          )}
+        />
+      </a>
     </Popover>
   );
 };
@@ -45,17 +43,15 @@ export const RSS = () => {
 export const GitHub = () => {
   return (
     <Popover content="Github">
-      <li>
-        <a
-          aria-label="Github"
-          className={style.github}
-          href="https://github.com/fecommunity/reactpress"
-          target="_blank"
-          rel="noopener noreferrer nofollow"
-        >
-          <GithubOutlined />
-        </a>
-      </li>
+      <a
+        aria-label="Github"
+        className={style.github}
+        href="https://github.com/fecommunity/reactpress"
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+      >
+        <GithubOutlined />
+      </a>
     </Popover>
   );
 };
@@ -64,12 +60,12 @@ export const Comment = () => {
   return (
     <Popover
       content={
-        <img height={200} width={200} src="https://www.gaoredu.com/wp-content/uploads/2024/08/WechatIMG23.jpg" />
+        <img height={200} width={200} src="https://www.gaoredu.com/wp-content/uploads/2024/08/WechatIMG23.jpg" alt="" />
       }
     >
-      <li>
+      <span className={style.iconTrigger} role="img" aria-label="comment">
         <CommentOutlined />
-      </li>
+      </span>
     </Popover>
   );
 };
@@ -77,11 +73,11 @@ export const Comment = () => {
 export const WeChat = () => {
   return (
     <Popover
-      content={<img height={200} width={300} src="https://www.gaoredu.com/wp-content/uploads/2024/11/wechat.png" />}
+      content={<img height={200} width={300} src="https://www.gaoredu.com/wp-content/uploads/2024/11/wechat.png" alt="" />}
     >
-      <li>
+      <span className={style.iconTrigger} role="img" aria-label="wechat">
         <WechatOutlined />
-      </li>
+      </span>
     </Popover>
   );
 };
@@ -90,19 +86,27 @@ export const ContactInfo = () => {
   return (
     <div className={style.icons}>
       <ul>
-        <RSS />
+        <li>
+          <RSS />
+        </li>
 
         <Divider type="vertical" />
 
-        <GitHub />
+        <li>
+          <GitHub />
+        </li>
 
         <Divider type="vertical" />
 
-        <Comment />
+        <li>
+          <Comment />
+        </li>
 
         <Divider type="vertical" />
 
-        <WeChat />
+        <li>
+          <WeChat />
+        </li>
       </ul>
     </div>
   );

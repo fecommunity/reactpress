@@ -24,12 +24,13 @@ import cls from 'classnames';
 import Link from 'next/link';
 import { default as Router, useRouter } from 'next/router';
 import { useTranslations } from 'next-intl';
-import React, { useEffect, useMemo } from 'react';
+import React, { useContext, useEffect, useMemo } from 'react';
 
 import { Locales } from '@/components/Locales';
 import { Search } from '@/components/Search';
 import { Theme } from '@/components/Theme';
 import { UserInfo } from '@/components/UserInfo';
+import { GlobalContext } from '@/context/global';
 import { useToggle } from '@/hooks/useToggle';
 import { getDocumentScrollTop, getFirstLevelRoute, getIconByName } from '@/utils';
 
@@ -71,11 +72,12 @@ export const Header: React.FC<HeaderProps> = ({ setting, tags, pages, hasBg = fa
   const t = useTranslations();
   const router = useRouter();
   const { asPath } = router;
+  const { locales = [] } = useContext(GlobalContext);
   const [affix, setAffix] = useToggle(false);
   const [affixVisible, setAffixVisible] = useToggle(false);
   const [visible, setVisible] = useToggle(false);
   const [showSearch, toggleSearch] = useToggle(false);
-  const mainPath = getFirstLevelRoute(asPath);
+  const mainPath = getFirstLevelRoute(asPath, locales);
 
   // Handle route change to close mobile menu
   useEffect(() => {
