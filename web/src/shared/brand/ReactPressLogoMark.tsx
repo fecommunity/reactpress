@@ -1,6 +1,15 @@
-import React from 'react';
+/** Rounded “P” path (no webfont) — soft terminals for the center badge */
+const P_LETTER_PATH =
+  "M47.4 40.8c0-1.4 1.1-2.5 2.5-2.5h9.2c4.4 0 7.8 3.2 7.8 7.4s-3.4 7.4-7.8 7.4h-4.6v8.6c0 1.5-1.2 2.7-2.7 2.7h-2c-1.5 0-2.7-1.2-2.7-2.7V40.8zm4.4 2.5v6.9h4.8c2.4 0 4.1-1.6 4.1-3.8s-1.7-3.8-4.1-3.8h-4.8z";
 
-function Logo({ className }) {
+type ReactPressLogoMarkProps = {
+  className?: string;
+};
+
+/**
+ * React atom orbits + transparent center with “P” (Press).
+ */
+export function ReactPressLogoMark({ className }: ReactPressLogoMarkProps) {
   return (
     <svg
       className={className}
@@ -26,12 +35,7 @@ function Logo({ className }) {
           d="M35.215 39.165c-14.727 25.509-17.36 51.56-5.882 58.188 11.48 6.627 32.724-8.68 47.451-34.188 14.728-25.51 17.362-51.56 5.883-58.188-11.48-6.628-32.724 8.679-47.452 34.188Z"
         />
       </g>
-      <path
-        fill="var(--logo)"
-        d="M47.4 40.8c0-1.4 1.1-2.5 2.5-2.5h9.2c4.4 0 7.8 3.2 7.8 7.4s-3.4 7.4-7.8 7.4h-4.6v8.6c0 1.5-1.2 2.7-2.7 2.7h-2c-1.5 0-2.7-1.2-2.7-2.7V40.8zm4.4 2.5v6.9h4.8c2.4 0 4.1-1.6 4.1-3.8s-1.7-3.8-4.1-3.8h-4.8z"
-      />
+      <path fill="var(--logo)" d={P_LETTER_PATH} />
     </svg>
   );
 }
-
-export default Logo;
