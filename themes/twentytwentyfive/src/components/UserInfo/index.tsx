@@ -9,7 +9,6 @@ import { useToggle } from '@/hooks/useToggle';
 import { UserProvider } from '@/providers/user';
 
 import styles from './index.module.scss';
-import Link from 'next/link';
 
 const emailRegexp = /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/;
 
@@ -104,7 +103,13 @@ export const UserInfo: React.FC<{
       overlay={
         <Menu>
           <Menu.Item>
-            <Link href="/admin">{user.name}</Link>
+            <a
+              href={process.env.NEXT_PUBLIC_REACTPRESS_ADMIN_URL || 'http://localhost:3000'}
+              target="_blank"
+              rel="noreferrer"
+            >
+              {user.name}
+            </a>
           </Menu.Item>
           <Menu.Item onClick={removeUser}>{t('logout')}</Menu.Item>
         </Menu>

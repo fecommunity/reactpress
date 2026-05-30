@@ -11,7 +11,7 @@ const chalk = require('chalk');
 const { brand, divider } = require('../ui/theme');
 const { ensureOriginalCwd } = require('../lib/root');
 const { ensureProjectEnvironment, initMonorepoProject } = require('../lib/bootstrap');
-const { runDev, runWebDev } = require('../lib/dev');
+const { runDev, runWebDev, runThemeDev } = require('../lib/dev');
 const { runApiDev } = require('../lib/api-dev');
 const { runLifecycleCommand } = require('../lib/lifecycle');
 const { runDockerCommand } = require('../lib/docker');
@@ -22,7 +22,7 @@ const { runDbBackup } = require('../lib/db-backup');
 const { runBuild } = require('../lib/build');
 const { startApiWithPm2 } = require('../lib/pm2');
 const { runNodeScript, runReactpressCli } = require('../lib/spawn');
-const { getClientBin } = require('../lib/paths');
+const { getThemeBin } = require('../lib/paths');
 const { runInteractiveLoop } = require('../ui/interactive');
 const { t } = require('../lib/i18n');
 
@@ -65,7 +65,7 @@ program
     const projectRoot = ensureOriginalCwd();
     try {
       if (options.clientOnly) {
-        await runNodeScript(getClientBin(), [], { cwd: projectRoot });
+        await runThemeDev(projectRoot);
         return;
       }
       if (options.webOnly) {
@@ -128,7 +128,7 @@ clientCmd
   .option('--pm2', t('cli.client.start.pm2'))
   .action(async (options) => {
     const args = options.pm2 ? ['--pm2'] : [];
-    await runNodeScript(getClientBin(), args, { cwd: ensureOriginalCwd() });
+    await runNodeScript(getThemeBin(), args, { cwd: ensureOriginalCwd() });
   });
 
 program
@@ -333,18 +333,21 @@ program
   .description(t('cli.start.description'))
   .action(async () => {
     const projectRoot = ensureOriginalCwd();
-    const { hasClient } = require('../lib/project-type');
     const code = await runLifecycleCommand('start', projectRoot);
     if (code !== 0) process.exit(code);
-    if (!hasClient(projectRoot)) {
+
+    const { resolveThemeDirectory, readActiveThemeManifest } = require('../lib/theme-runtime');
+    const { activeTheme } = readActiveThemeManifest(projectRoot);
+    const themeDir = resolveThemeDirectory(projectRoot, activeTheme);
+    if (!themeDir) {
       console.log(t('dev.standaloneHint'));
       return;
     }
     const { spawn } = require('child_process');
-    const child = spawn('pnpm', ['run', '--dir', './client', 'start'], {
+    const child = spawn('pnpm', ['run', 'start'], {
       stdio: 'inherit',
       shell: true,
-      cwd: projectRoot,
+      cwd: themeDir,
     });
     child.on('close', (c) => process.exit(c ?? 0));
   });

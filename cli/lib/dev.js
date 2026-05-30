@@ -15,7 +15,7 @@ const {
 const { printDevReadyBanner } = require('./dev-banner');
 const { startDevNginx, stopDevNginx, nginxEntryUrl } = require('./nginx');
 const { ensureOriginalCwd } = require('./root');
-const { detectProjectType, hasClient, hasWeb, hasToolkit } = require('./project-type');
+const { detectProjectType, hasWeb, hasToolkit } = require('./project-type');
 const {
   hasResolvableActiveTheme,
   hasThemePackages,
@@ -245,34 +245,6 @@ async function spawnAdminWeb(
   });
 }
 
-/** Legacy client when no theme packages in monorepo. */
-function spawnLegacyClient(projectRoot) {
-  webChild = spawn('pnpm', ['run', '--dir', './client', 'dev'], {
-    stdio: 'inherit',
-    shell: true,
-    cwd: projectRoot,
-  });
-
-  const readyUrl = loadClientSiteUrl(projectRoot);
-  waitForHttp(readyUrl, CLIENT_READY_TIMEOUT_MS).then((clientReady) => {
-    if (clientReady) {
-      printDevReadyBanner(projectRoot, { webOnly: false });
-    } else {
-      console.warn(
-        t('dev.clientSlow', {
-          seconds: CLIENT_READY_TIMEOUT_MS / 1000,
-          url: readyUrl,
-        })
-      );
-    }
-  });
-
-  webChild.on('close', (code) => {
-    if (!shuttingDown) shutdown('SIGINT');
-    process.exit(code ?? 0);
-  });
-}
-
 function assertDevPrerequisites() {
   const node = checkNodeVersion();
   if (!node.ok) {
@@ -306,7 +278,7 @@ async function prepareDevInfrastructure(projectRoot) {
   }
 }
 
-async function startDevStack(projectRoot, { webOnly = false, infraDone = false } = {}) {
+async function startDevStack(projectRoot, { webOnly = false, themeOnly = false, infraDone = false } = {}) {
   if (!infraDone) {
     logDevPhase(1, 3, 'dev.phasePrerequisites');
     assertDevPrerequisites();
@@ -331,16 +303,16 @@ async function startDevStack(projectRoot, { webOnly = false, infraDone = false }
   }
 
   const includeAdmin = webOnly && hasWeb(projectRoot);
-  const includeThemeSite = !webOnly && hasResolvableActiveTheme(projectRoot);
-  if (!webOnly && hasThemePackages(projectRoot) && !includeThemeSite) {
+  const includeThemeSite =
+    themeOnly || (!webOnly && hasResolvableActiveTheme(projectRoot));
+  if (!webOnly && !themeOnly && hasThemePackages(projectRoot) && !includeThemeSite) {
     const { activeTheme } = readActiveThemeManifest(projectRoot);
     console.warn(
       `[reactpress] ${t('themeDev.notFound', { id: activeTheme })} — ${t('dev.themeSiteSkipped')}`,
     );
   }
-  const includeLegacyClient = !webOnly && !includeThemeSite && hasClient(projectRoot);
   const planNginx = process.env.REACTPRESS_SKIP_NGINX !== '1';
-  const includeWebInStack = hasWeb(projectRoot) && !webOnly;
+  const includeWebInStack = hasWeb(projectRoot) && !webOnly && !themeOnly;
 
   if (infraDone) {
     logDevPhase(3, 3, 'dev.phaseServices');
@@ -358,7 +330,7 @@ async function startDevStack(projectRoot, { webOnly = false, infraDone = false }
     }),
   ];
 
-  if (!includeAdmin && !includeThemeSite && !includeLegacyClient && !includeWebInStack) {
+  if (!includeAdmin && !includeThemeSite && !includeWebInStack) {
     await Promise.all(readinessWaits);
     printDevReadyBanner(projectRoot, { apiOnly: true, nginx: nginxEnabled });
     console.log(t('dev.standaloneHint'));
@@ -432,12 +404,6 @@ async function startDevStack(projectRoot, { webOnly = false, infraDone = false }
     }
   }
 
-  if (includeLegacyClient) {
-    console.log(t('dev.phaseClient'));
-    spawnLegacyClient(projectRoot);
-    readinessWaits.push(waitForHttp(loadClientSiteUrl(projectRoot), 120_000, DEV_POLL_MS));
-  }
-
   if (readinessWaits.length > 1) {
     logDevStatus('dev.waitingProxies');
   }
@@ -479,7 +445,7 @@ async function startDevStack(projectRoot, { webOnly = false, infraDone = false }
   });
 }
 
-async function runDevStartup(projectRoot, { webOnly = false } = {}) {
+async function runDevStartup(projectRoot, { webOnly = false, themeOnly = false } = {}) {
   startDevTimer();
   try {
     const result = await ensureProjectEnvironment(projectRoot, { skipDatabase: true });
@@ -503,7 +469,26 @@ async function runDevStartup(projectRoot, { webOnly = false } = {}) {
     process.exit(1);
   }
 
-  await startDevStack(projectRoot, { webOnly, infraDone: true });
+  await startDevStack(projectRoot, { webOnly, themeOnly, infraDone: true });
+}
+
+async function runThemeDev(projectRoot = ensureOriginalCwd()) {
+  if (!hasResolvableActiveTheme(projectRoot)) {
+    console.error(t('dev.themeSiteSkipped'));
+    process.exit(1);
+  }
+
+  process.on('SIGINT', () => shutdown('SIGINT'));
+  process.on('SIGTERM', () => shutdown('SIGTERM'));
+  process.on('exit', () => {
+    try {
+      releaseDevSession(projectRoot);
+    } catch {
+      // ignore
+    }
+  });
+
+  await runDevStartup(projectRoot, { themeOnly: true });
 }
 
 async function runWebDev(projectRoot = ensureOriginalCwd()) {
@@ -542,6 +527,7 @@ async function runDev(projectRoot = ensureOriginalCwd()) {
 module.exports = {
   runDev,
   runWebDev,
+  runThemeDev,
   runDevStartup,
   buildToolkit,
   assertDevPrerequisites,

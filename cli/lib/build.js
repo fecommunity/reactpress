@@ -14,7 +14,7 @@ const BUILD_STEPS = {
   toolkit: [{ script: 'build:toolkit', labelKey: 'build.label.toolkit' }],
   server: [{ script: 'build:server', labelKey: 'build.label.server' }],
   web: [{ script: 'build:web', labelKey: 'build.label.web' }],
-  client: [{ script: 'build:client', labelKey: 'build.label.client' }],
+  theme: [{ script: 'build:theme', labelKey: 'build.label.theme' }],
   docs: [{ script: 'build:docs', labelKey: 'build.label.docs' }],
 };
 
@@ -32,7 +32,7 @@ function getBuildSteps(target, projectRoot) {
   if (hasWeb(projectRoot)) {
     steps.push({ script: 'build:web', labelKey: 'build.label.web' });
   }
-  steps.push({ script: 'build:client', labelKey: 'build.label.client' });
+  steps.push({ script: 'build:theme', labelKey: 'build.label.theme' });
   return steps;
 }
 
@@ -82,10 +82,12 @@ function resolveBuildInvocation(script, projectRoot) {
     return null;
   }
 
-  if (script === 'build:client') {
-    const clientDir = path.join(root, 'client');
-    if (fs.existsSync(path.join(clientDir, 'package.json'))) {
-      return { command: 'pnpm', args: ['run', 'build'], cwd: clientDir };
+  if (script === 'build:theme') {
+    const { readActiveThemeManifest, resolveThemeDirectory } = require('./theme-runtime');
+    const { activeTheme } = readActiveThemeManifest(root);
+    const themeDir = resolveThemeDirectory(root, activeTheme);
+    if (themeDir && fs.existsSync(path.join(themeDir, 'package.json'))) {
+      return { command: 'pnpm', args: ['run', 'build'], cwd: themeDir };
     }
   }
 

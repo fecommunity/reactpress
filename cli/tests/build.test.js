@@ -17,10 +17,10 @@ describe('lib/build', () => {
     }
   });
 
-  it('skips client build when client/ is missing', () => {
+  it('skips theme build when active theme is missing', () => {
     const root = createStandaloneProject();
     try {
-      const inv = resolveBuildInvocation('build:client', root);
+      const inv = resolveBuildInvocation('build:theme', root);
       assert.equal(inv, null);
     } finally {
       rmDir(root);

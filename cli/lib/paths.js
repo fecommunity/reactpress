@@ -68,21 +68,31 @@ function canStartLocalApi(projectRoot) {
   );
 }
 
-function getClientBin(projectRoot) {
-  const binPath = path.join(
-    resolveProjectRoot(projectRoot),
-    'client',
-    'bin',
-    'reactpress-client.js'
-  );
+function getThemeBin(projectRoot) {
+  const { readActiveThemeManifest, resolveThemeDirectory } = require('./theme-runtime');
+  const { activeTheme } = readActiveThemeManifest(projectRoot);
+  const themeDir = resolveThemeDirectory(projectRoot, activeTheme);
+  if (!themeDir) {
+    const err = new Error(
+      `Active theme not found: ${activeTheme}. Activate a theme in Admin → Appearance.`
+    );
+    err.code = 'REACTPRESS_THEME_NOT_FOUND';
+    throw err;
+  }
+  const binPath = path.join(themeDir, 'bin', 'reactpress-client.js');
   if (!fs.existsSync(binPath)) {
     const err = new Error(
-      `Client entry not found: ${binPath}. Run from a ReactPress monorepo root or use reactpress dev --client-only with a remote API.`
+      `Theme entry not found: ${binPath}. Run from a ReactPress project with an installed theme.`
     );
-    err.code = 'REACTPRESS_CLIENT_NOT_FOUND';
+    err.code = 'REACTPRESS_THEME_BIN_NOT_FOUND';
     throw err;
   }
   return binPath;
+}
+
+/** @deprecated Use getThemeBin */
+function getClientBin(projectRoot) {
+  return getThemeBin(projectRoot);
 }
 
 function getPidFile(projectRoot) {
@@ -103,6 +113,7 @@ module.exports = {
   getServerBin,
   getSwaggerPath,
   getServerMain,
+  getThemeBin,
   getClientBin,
   getPidFile,
 };

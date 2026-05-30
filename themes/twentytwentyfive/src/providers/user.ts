@@ -9,10 +9,6 @@ export class UserProvider {
     return httpProvider.post('/auth/login', data);
   }
 
-  static async checkAdmin(data): Promise<IUser> {
-    return httpProvider.post('/auth/admin', data);
-  }
-
   static async loginWithGithub(code): Promise<IUser> {
     return httpProvider.post('/auth/github', { code });
   }

@@ -11,7 +11,6 @@ import { CommentProvider } from '@/providers/comment';
 
 import { Emoji } from './Emoji';
 import styles from './index.module.scss';
-import { default as Router } from 'next/router';
 
 const { TextArea } = Input;
 
@@ -115,7 +114,7 @@ export const CommentEditor: React.FC<Props> = ({ hostId, parentComment, replyCom
               onClick={() => {
                 if (user) {
                   message.warning(t('toggleNeedSetInfo'));
-                  Router.push('/admin/ownspace');
+                  toggleNeedSetInfo(true);
                 } else {
                   toggleNeedSetInfo(true);
                 }

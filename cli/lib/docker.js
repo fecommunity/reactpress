@@ -3,7 +3,7 @@ const path = require('path');
 const { spawn, execSync, spawnSync } = require('child_process');
 const ora = require('ora');
 const { ensureOriginalCwd } = require('./root');
-const { detectProjectType, hasClient } = require('./project-type');
+const { detectProjectType } = require('./project-type');
 const { t } = require('./i18n');
 
 function isDockerRunning() {
@@ -333,50 +333,8 @@ async function dockerStartWithDev(projectRoot) {
     throw new Error(t('docker.mysqlNotReady'));
   }
 
-  if (!hasClient(projectRoot)) {
-    console.log(t('dev.standaloneHint'));
-    return;
-  }
-
-  const { buildToolkit } = require('./dev');
-  await buildToolkit(projectRoot);
-
-  const apiRunner = path.join(__dirname, 'api-dev-runner.js');
-  console.log(t('docker.startDevStack'));
-  console.log(t('docker.visitUrls'));
-
-  return new Promise((resolve, reject) => {
-    const child = spawn(
-      'npx',
-      [
-        'concurrently',
-        '-n',
-        'api,web',
-        '-c',
-        'blue,green',
-        `node "${apiRunner}"`,
-        'pnpm run --dir ./client dev',
-      ],
-      {
-        stdio: 'inherit',
-        shell: true,
-        cwd: projectRoot,
-        env: {
-          ...process.env,
-          REACTPRESS_ORIGINAL_CWD: projectRoot,
-        },
-      }
-    );
-
-    child.on('error', reject);
-    child.on('close', (code) => {
-      if (code !== 0) {
-        reject(Object.assign(new Error(t('docker.devProcessExit', { code })), { exitCode: code }));
-        return;
-      }
-      resolve();
-    });
-  });
+  const { runDev } = require('./dev');
+  await runDev(projectRoot);
 }
 
 /**

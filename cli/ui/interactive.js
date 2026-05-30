@@ -15,9 +15,10 @@ const {
   padRight,
 } = require('./theme');
 const { ensureOriginalCwd } = require('../lib/root');
-const { describeProject, hasClient } = require('../lib/project-type');
+const { describeProject } = require('../lib/project-type');
+const { hasResolvableActiveTheme } = require('../lib/theme-runtime');
 const { ensureProjectEnvironment } = require('../lib/bootstrap');
-const { runDev } = require('../lib/dev');
+const { runDev, runThemeDev } = require('../lib/dev');
 const { runApiDev } = require('../lib/api-dev');
 const { runLifecycleCommand } = require('../lib/lifecycle');
 const { runDockerCommand } = require('../lib/docker');
@@ -25,8 +26,6 @@ const { runNginxCommand } = require('../lib/nginx');
 const { printUnifiedStatus } = require('../lib/status');
 const { runDoctor } = require('../lib/doctor');
 const { runBuild, TARGETS } = require('../lib/build');
-const { runNodeScript } = require('../lib/spawn');
-const { getClientBin } = require('../lib/paths');
 const { loadClientSiteUrl, loadServerSiteUrl, isHttpResponding } = require('../lib/http');
 const { isDockerRunning } = require('../lib/docker');
 const { t } = require('../lib/i18n');
@@ -68,7 +67,7 @@ function choice(labelKey, value, hintKey) {
 function getMenuActions(project) {
   const standalone = project.type === 'standalone';
   const monorepo = project.type === 'monorepo';
-  const showClient = hasClient(project.root);
+  const showTheme = hasResolvableActiveTheme(project.root);
 
   const items = [
     menuSection(t('menu.section.run')),
@@ -80,7 +79,7 @@ function getMenuActions(project) {
     choice('menu.devApi', 'dev:api', 'menu.hint.devApi'),
   ];
 
-  if (showClient) {
+  if (showTheme) {
     items.push(choice('menu.devClient', 'dev:client', 'menu.hint.devClient'));
   }
 
@@ -240,7 +239,7 @@ async function runMenuAction(action, projectRoot, project) {
       await runApiDev(projectRoot);
       return false;
     case 'dev:client':
-      await runNodeScript(getClientBin(), [], { cwd: projectRoot });
+      await runThemeDev(projectRoot);
       return false;
     case 'server:start': {
       const code = await withSpinner(t('menu.startingApi'), () =>

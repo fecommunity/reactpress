@@ -17,9 +17,7 @@ import { CategoryProvider } from '@/providers/category';
 import { PageProvider } from '@/providers/page';
 import { SettingProvider } from '@/providers/setting';
 import { TagProvider } from '@/providers/tag';
-import { UserProvider } from '@/providers/user';
 import { safeJsonParse } from '@/utils/json';
-import { toLogin } from '@/utils/login';
 
 Router.events.on('routeChangeComplete', () => {
   setTimeout(() => {
@@ -86,31 +84,10 @@ class MyApp extends App<
     this.setState({ theme });
   };
 
-
   getSetting = () => {
     SettingProvider.getSetting().then((res) => {
       this.setState({ setting: res });
     });
-  };
-
-  isAdminPage = () => {
-    const isAdminPage = this.props?.router?.route?.startsWith('/admin');
-    return isAdminPage;
-  }
-
-  getUserFromStorage = () => {
-    const str = localStorage.getItem('user');
-    const isAdminPage = this.isAdminPage();
-    if (!isAdminPage) {
-      return;
-    }
-    if (str) {
-      const user = JSON.parse(str);
-      this.setUser(user);
-      UserProvider.checkAdmin(user);
-    } else {
-      toLogin();
-    }
   };
 
   toggleCollapse = () => {
@@ -122,7 +99,6 @@ class MyApp extends App<
     if (userStr) {
       this.setState({ user: safeJsonParse(userStr) });
     }
-    this.getUserFromStorage();
   }
 
   render() {
@@ -136,8 +112,6 @@ class MyApp extends App<
     const { needLayoutFooter = true, hasBg = false } = pageProps;
     const message = i18n[locale] || {};
     const algorithm = this.state.theme === 'dark' ? theme.darkAlgorithm : theme.defaultAlgorithm;
-    const isAdminPage = this.isAdminPage();
-    const hasFooter = !isAdminPage && needLayoutFooter;
 
     return (
       <GlobalContext.Provider
@@ -168,13 +142,13 @@ class MyApp extends App<
             }}
             theme={{
               token: {
-                colorPrimary: isAdminPage ? '#1677ff' : '#f44336',
+                colorPrimary: '#f44336',
               },
               algorithm,
             }}
           >
-            <AppLayout needHeader={!isAdminPage} needFooter={hasFooter} hasBg={hasBg}>
-              {!isAdminPage && <NProgress />}
+            <AppLayout needHeader needFooter={needLayoutFooter} hasBg={hasBg}>
+              <NProgress />
               <Component {...pageProps} />
             </AppLayout>
           </ConfigProvider>
