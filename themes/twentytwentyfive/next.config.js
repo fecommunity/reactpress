@@ -13,10 +13,6 @@ const getServerApiUrl = () => {
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   assetPrefix: config.CLIENT_ASSET_PREFIX || '/',
-  i18n: {
-    locales: config.locales && config.locales.length > 0 ? config.locales : ['zh', 'en'],
-    defaultLocale: config.defaultLocale || 'zh',
-  },
   env: {
     SERVER_API_URL: getServerApiUrl(),
     GITHUB_CLIENT_ID: config.GITHUB_CLIENT_ID,

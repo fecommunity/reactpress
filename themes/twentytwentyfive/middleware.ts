@@ -6,9 +6,25 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
 const visitorPort = parseInt(process.env.PORT || process.env.CLIENT_PORT || '3001', 10);
+const localePrefix = /^\/(zh|en)(?=\/|$)/;
 
 export function middleware(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
+
+  const localeMatch = pathname.match(localePrefix);
+  if (localeMatch) {
+    const locale = localeMatch[1];
+    const stripped = pathname.replace(localePrefix, '') || '/';
+    const url = request.nextUrl.clone();
+    url.pathname = stripped;
+    const response = NextResponse.redirect(url, 308);
+    response.cookies.set('reactpress-locale', locale, {
+      path: '/',
+      maxAge: 60 * 60 * 24 * 365,
+      sameSite: 'lax',
+    });
+    return response;
+  }
 
   if (
     !shouldRedirectDevPortToNginx({

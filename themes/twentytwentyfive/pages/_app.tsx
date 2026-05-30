@@ -27,6 +27,7 @@ import { PageProvider } from '@/providers/page';
 import { SettingProvider } from '@/providers/setting';
 import { TagProvider } from '@/providers/tag';
 import { safeJsonParse } from '@/utils/json';
+import { persistVisitorLocale, resolveVisitorLocale } from '@/utils/locale';
 
 Router.events.on('routeChangeComplete', () => {
   setTimeout(() => {
@@ -39,8 +40,14 @@ Router.events.on('routeChangeComplete', () => {
   }, 0);
 });
 
+interface MyAppInitialProps extends IGlobalContext {
+  initialLocale?: string;
+  themeMods?: ThemeMods;
+  colorPrimary?: string;
+}
+
 class MyApp extends App<
-  IGlobalContext,
+  MyAppInitialProps,
   { needLayoutFooter?: boolean; hasBg?: boolean; [key: string]: unknown }
 > {
   state = {
@@ -61,7 +68,8 @@ class MyApp extends App<
     ]);
     const i18n = safeJsonParse(setting.i18n);
     const globalSettingRaw = safeJsonParse(setting.globalSetting);
-    const locale = ctx?.locale || 'zh';
+    const localeKeys = Object.keys(i18n);
+    const locale = resolveVisitorLocale(localeKeys, ctx.req);
     const globalSetting = globalSettingRaw?.[locale];
 
     const preview = await resolveThemePreviewContext({
@@ -84,15 +92,16 @@ class MyApp extends App<
       i18n,
       globalSetting,
       siteConfig: preview.siteConfig,
-      locales: Object.keys(i18n),
+      locales: localeKeys,
+      initialLocale: locale,
       colorPrimary: preview.colorPrimary,
       themeMods: preview.effectiveMods,
     };
   };
 
   changeLocale = (key) => {
-    window.localStorage.setItem('locale', key);
-    this.setState({ locale: key });
+    persistVisitorLocale(key);
+    window.location.reload();
   };
 
   setUser = (user) => {
@@ -128,11 +137,19 @@ class MyApp extends App<
   }
 
   render() {
-    const { Component, pageProps, i18n, globalSetting, siteConfig, locales, router, ...contextValue } = this.props;
+    const {
+      Component,
+      pageProps,
+      i18n,
+      globalSetting,
+      siteConfig,
+      locales,
+      initialLocale,
+      ...contextValue
+    } = this.props;
     const locale =
       this.state.locale ||
-      router.locale ||
-      router.defaultLocale ||
+      initialLocale ||
       (Array.isArray(locales) && locales.length > 0 ? locales[0] : null) ||
       'zh';
     const { needLayoutFooter = true, hasBg = false } = pageProps;

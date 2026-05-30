@@ -1,32 +1,26 @@
 import { Dropdown } from 'antd';
-import { useRouter } from 'next/router';
 import { useTranslations } from 'next-intl';
-import React, { useContext, useEffect, useMemo } from 'react';
+import React, { useContext, useMemo } from 'react';
 
 import { GlobalContext } from '@/context/global';
 
 export function Locales() {
   const t = useTranslations();
-  const { locale: defaultLocale } = useRouter();
-  const { i18n, locales = [], changeLocale } = useContext(GlobalContext);
+  const { locale, i18n, locales = [], changeLocale } = useContext(GlobalContext);
 
   const menuItems = useMemo(
     () =>
-      locales.map((locale) => ({
-        key: locale,
-        label: t(locale),
-        onClick: () => changeLocale(locale),
+      locales.map((item) => ({
+        key: item,
+        label: t(item),
+        onClick: () => {
+          if (item !== locale && i18n?.[item]) {
+            changeLocale?.(item);
+          }
+        },
       })),
-    [locales, t, changeLocale],
+    [locales, t, changeLocale, locale, i18n],
   );
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const stored = window.localStorage.getItem('locale');
-    if (stored && stored !== defaultLocale && i18n[stored]) {
-      changeLocale(stored);
-    }
-  }, [i18n, defaultLocale, changeLocale]);
 
   return (
     <Dropdown menu={{ items: menuItems }}>
