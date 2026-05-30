@@ -4,7 +4,7 @@ import { Alert } from 'antd';
 import React, { useContext } from 'react';
 import TextLoop from 'react-text-loop';
 
-import { GlobalContext } from '@/context/global';
+import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
 
 import style from './index.module.scss';
 

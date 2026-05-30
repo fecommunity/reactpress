@@ -5,7 +5,7 @@ import {
 import { Button, Menu } from 'antd';
 import React, { useContext, useMemo, useState } from 'react';
 
-import { GlobalContext } from '@/context/global';
+import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
 import { getIconByName } from '@/utils';
 
 import { CategoryItem } from '.';

@@ -6,9 +6,9 @@ import { useContext } from 'react';
 import { AdvanceSearch } from '@/components/AdvanceSearch';
 import NavCard from '@/components/NavCard';
 import SystemNotification from '@/components/Setting/SystemNotification';
-import { GlobalContext } from '@/context/global';
-import { ArticleProvider } from '@/providers/article';
-import { CategoryProvider } from '@/providers/category';
+import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
+import { ArticleProvider } from '@/providers';
+import { CategoryProvider } from '@/providers';
 
 import style from './index.module.scss';
 

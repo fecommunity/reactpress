@@ -5,10 +5,10 @@ import { useContext, useEffect } from 'react';
 
 import { ArticleRecommend } from '@/components/ArticleRecommend';
 import { Comment } from '@/components/Comment';
-import { ImageViewer } from '@/components/ImageViewer';
-import { MarkdownReader } from '@/components/MarkdownReader';
-import { GlobalContext } from '@/context/global';
-import { PageProvider } from '@/providers/page';
+import { ImageViewer } from '@fecommunity/reactpress-toolkit/theme';
+import { HtmlContent } from '@fecommunity/reactpress-toolkit/theme';
+import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
+import { PageProvider } from '@/providers';
 
 import style from './index.module.scss';
 
@@ -47,7 +47,7 @@ const Page: NextPage<IProps> = ({ page }) => {
               </div>
             )}
             <div className={style.content}>
-              <MarkdownReader content={page.html} />
+              <HtmlContent content={page.html} />
             </div>
           </div>
         </div>

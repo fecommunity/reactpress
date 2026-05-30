@@ -1,11 +1,9 @@
+import { SiteSeo, SiteCatalogContext as GlobalContext, useToggle } from '@fecommunity/reactpress-toolkit/theme';
+import React, { useContext, useEffect, useMemo } from 'react';
+
 import { Footer } from '@components/Footer';
 import { Header } from '@components/Header';
 import { FloatButton } from 'antd';
-import React, { useContext, useEffect, useMemo } from 'react';
-
-import { Seo } from '@/components/Seo';
-import { GlobalContext } from '@/context/global';
-import { useToggle } from '@/hooks/useToggle';
 
 import style from './index.module.scss';
 
@@ -41,7 +39,12 @@ export const AppLayout: React.FC<IProps> = ({ children, needFooter = true, needH
 
   return (
     <div className={style.wrapper}>
-      <Seo />
+      <SiteSeo>
+        <link
+          href="//fonts.googleapis.com/css?family=Nunito:400,400i,700,700i&amp;display=swap"
+          rel="stylesheet"
+        />
+      </SiteSeo>
       {needHeader && <Header setting={setting} tags={tags} pages={pages} hasBg={customBg} />}
       <main className={style.main} style={{ backgroundColor: customBg ? 'transparent' : 'var(--bg-body)' }}>
         {children}

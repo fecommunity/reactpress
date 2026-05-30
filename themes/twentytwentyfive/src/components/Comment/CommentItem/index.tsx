@@ -7,8 +7,8 @@ import React, { useMemo } from 'react';
 
 import { Opacity } from '@/components/Animation/Opacity';
 import { ConditionTransition } from '@/components/Animation/Transition';
-import { LocaleTime } from '@/components/LocaleTime';
-import { useToggle } from '@/hooks/useToggle';
+import { LocaleTime } from '@fecommunity/reactpress-toolkit/theme';
+import { useToggle } from '@fecommunity/reactpress-toolkit/theme';
 import { getRandomColor } from '@/utils';
 
 import { CommentEditor } from '../CommentEditor';

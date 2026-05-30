@@ -18,6 +18,16 @@ export {
   stripHtml,
   truncateWords,
 } from './content/excerpt';
+export type { AppBootstrapResult, FetchAppBootstrapOptions } from './ssr/bootstrap';
+export {
+  fetchAppBootstrap,
+  fetchArchives,
+  fetchCmsPage,
+  fetchKnowledgeDetail,
+  fetchKnowledgeList,
+  fetchPublishedPages,
+  fetchRecommendArticles,
+} from './ssr/bootstrap';
 export type { FetchVisitorContextOptions, ThemeArchiveKind, VisitorContextProps } from './ssr/fetch';
 export {
   createArchiveGetStaticProps,
@@ -99,8 +109,6 @@ export {
   encodeAxiosUrlPath,
   resolveThemeAxiosBaseUrl,
 } from './api/httpClient';
-export type { CreateAntdThemeDocumentOptions } from './build/antdDocument';
-export { createAntdThemeDocument } from './build/antdDocument';
 export type {
   LocaleCatalog,
   LocaleMessages,
@@ -124,10 +132,20 @@ export { resolveThemeRuntime } from './visitor/runtime';
 export type { SiteMeta } from './ssr/setting';
 export { DEFAULT_SITE_META, parseSiteMeta, unwrapSetting } from './ssr/setting';
 
+// App factories — also available from `@fecommunity/reactpress-toolkit/app`.
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-export const createThemeApp = require('./createApp').createThemeApp as (
+export const createThemeApp = require('../app/createThemeApp').createThemeApp as (
   manifest: { id: string },
 ) => unknown;
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+export const createReactPressApp = require('../app/createReactPressApp').createReactPressApp as (
+  manifest: { id: string; options?: unknown },
+  options: import('../app').CreateReactPressAppOptions,
+) => unknown;
+/** @deprecated Use `createReactPressApp`. */
+export const createCatalogThemeApp = createReactPressApp;
+export { createThemeProviders } from './providers';
+export type { ThemeProviders } from './providers';
 export { defaultModsFromManifest } from './visitor/appearance';
 export type ThemeManifestRef = { id: string };
 
@@ -166,6 +184,19 @@ export type {
   ThemeLayoutProps,
   ThemeRuntimeContextValue,
   ThemeRuntimeProviderProps,
+  SiteCatalogContextValue,
+  SiteCatalogSiteConfig,
+  SiteConfigNav,
+  SiteSeoProps,
+  RouteProgressProps,
+  SiteAnalyticsProps,
+  ArticleReaderProps,
+  ArticleReaderArticle,
+  ArticleTocProps,
+  HtmlContentProps,
+  ImageViewerProps,
+  LocaleTimeProps,
+  TocItem,
 } from '../ui';
 export {
   ArchiveEmptyState,
@@ -189,7 +220,6 @@ export {
   ThemeCssVars,
   ThemeLayout,
   ThemeRuntimeProvider,
-  AntdStyleTransitionFix,
   useActiveThemeId,
   useIsThemePreview,
   useLocale,
@@ -207,4 +237,20 @@ export {
   useThemeMod,
   useThemeModBool,
   useThemeRuntime,
+  SiteCatalogContext,
+  SiteCatalogProvider,
+  SiteSeo,
+  RouteProgress,
+  SiteAnalytics,
+  ArticleReader,
+  ArticleToc,
+  HtmlContent,
+  ImageViewer,
+  LocaleTime,
+  parseArticleToc,
+  useSiteCatalog,
+  useSiteSetting,
+  useSiteUser,
+  useColorMode,
+  useSiteConfig,
 } from '../ui';

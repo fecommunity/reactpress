@@ -4,9 +4,9 @@ import { useTranslations } from 'next-intl';
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 import { isValidUser } from '@/components/UserInfo';
-import { GlobalContext } from '@/context/global';
-import { useAsyncLoading } from '@/hooks/useAsyncLoading';
-import { CommentProvider } from '@/providers/comment';
+import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
+import { useAsyncLoading } from '@fecommunity/reactpress-toolkit/theme';
+import { CommentProvider } from '@/providers';
 import {
   getCommentEmailError,
   isValidCommentEmail,

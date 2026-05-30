@@ -13,6 +13,11 @@
     "./theme": "./dist/theme/index.js",
     "./theme/next-config": "./dist/theme/next-config.js",
     "./theme/node": "./dist/theme/node.js",
+    "./theme/providers": "./dist/theme/providers/index.js",
+    "./app": {
+      "types": "./dist/app/index.d.ts",
+      "default": "./dist/app/index.js"
+    },
     "./ui": "./dist/ui/index.js",
     "./plugin": "./dist/plugin/index.js",
     "./plugin/admin": "./dist/plugin/admin/index.js",

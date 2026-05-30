@@ -2,7 +2,7 @@ import { Dropdown } from 'antd';
 import { useTranslations } from 'next-intl';
 import React, { useContext, useMemo } from 'react';
 
-import { GlobalContext } from '@/context/global';
+import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
 
 export function Locales() {
   const t = useTranslations();

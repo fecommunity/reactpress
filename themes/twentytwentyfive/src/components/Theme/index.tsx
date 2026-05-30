@@ -1,7 +1,7 @@
 import cls from 'classnames';
 import React, { useContext } from 'react';
 
-import { GlobalContext } from '@/context/global';
+import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
 import {
   applyColorModeClass,
   persistColorMode,

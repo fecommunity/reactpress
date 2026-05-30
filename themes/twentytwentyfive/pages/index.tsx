@@ -12,9 +12,9 @@ import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 
 import { ArticleRecommend } from '@/components/ArticleRecommend';
-import { GlobalContext } from '@/context/global';
+import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
 import { DoubleColumnLayout } from '@/layout/DoubleColumnLayout';
-import { ArticleProvider } from '@/providers/article';
+import { ArticleProvider } from '@/providers';
 import { getSiteTitle } from '@fecommunity/reactpress-toolkit/theme';
 
 import style from './index.module.scss';

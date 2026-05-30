@@ -22,15 +22,17 @@ export const Toc: React.FC<{ tocs: Array<IToc>; maxHeight?: string | number; has
   hasHeader = true,
 }) => {
   const t = useTranslations();
-  const ref = useRef<HTMLDivElement>();
+  const ref = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
-  const goto = useCallback((toc) => {
+  const goto = useCallback((toc: IToc) => {
     try {
       const el = document.getElementById(toc.id);
       if (el) {
         el.scrollIntoView();
       }
-    } catch (e) {} // eslint-disable-line no-empty
+    } catch {
+      // ignore scroll errors
+    }
   }, []);
 
   useEffect(() => {
@@ -42,7 +44,7 @@ export const Toc: React.FC<{ tocs: Array<IToc>; maxHeight?: string | number; has
         }
         if (elementInViewport(el)) {
           setActive(index);
-          ref.current.scrollTop = HEIGHT * index;
+          if (ref.current) ref.current.scrollTop = HEIGHT * index;
         }
         return _;
       }, null);
@@ -89,7 +91,7 @@ export const Toc: React.FC<{ tocs: Array<IToc>; maxHeight?: string | number; has
                     }
                     onClick={() => goto(toc)}
                   >
-                    <div className={style.tocText} title={toc.text} dangerouslySetInnerHTML={{ __html: toc.text }}/>
+                    <div className={style.tocText} title={toc.text} dangerouslySetInnerHTML={{ __html: toc.text }} />
                   </div>
                 );
               }}

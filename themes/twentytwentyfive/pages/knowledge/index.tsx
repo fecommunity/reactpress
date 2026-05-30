@@ -7,9 +7,9 @@ import { useCallback, useContext, useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 
 import { ArticleRecommend } from '@/components/ArticleRecommend';
-import { GlobalContext } from '@/context/global';
+import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
 import { DoubleColumnLayout } from '@/layout/DoubleColumnLayout';
-import { KnowledgeProvider } from '@/providers/knowledge';
+import { KnowledgeProvider } from '@/providers';
 
 interface IHomeProps {
   books: IKnowledge[];

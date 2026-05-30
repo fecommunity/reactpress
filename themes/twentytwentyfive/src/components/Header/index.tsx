@@ -30,8 +30,8 @@ import { Locales } from '@/components/Locales';
 import { Search } from '@/components/Search';
 import { Theme } from '@/components/Theme';
 import { UserInfo } from '@/components/UserInfo';
-import { GlobalContext } from '@/context/global';
-import { useToggle } from '@/hooks/useToggle';
+import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
+import { useToggle } from '@fecommunity/reactpress-toolkit/theme';
 import { getDocumentScrollTop, getFirstLevelRoute, getIconByName } from '@/utils';
 
 import { GitHub } from '../AboutUs';

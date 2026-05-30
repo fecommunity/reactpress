@@ -2,10 +2,10 @@ import { SearchOutlined } from '@ant-design/icons';
 import { AutoComplete, Button, Input, Spin, Tabs } from 'antd';
 import React, { useContext, useEffect, useState } from 'react';
 
-import { GlobalContext } from '@/context/global';
-import { useAsyncLoading } from '@/hooks/useAsyncLoading';
-import { ArticleProvider } from '@/providers/article';
-import { SearchProvider } from '@/providers/search';
+import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
+import { useAsyncLoading } from '@fecommunity/reactpress-toolkit/theme';
+import { ArticleProvider } from '@/providers';
+import { SearchProvider } from '@/providers';
 import { jsonp } from '@fecommunity/reactpress-toolkit/theme';
 
 import styles from './index.module.scss';

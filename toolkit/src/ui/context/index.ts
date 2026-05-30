@@ -17,3 +17,17 @@ export type {
   ReactPressProviderProps,
   ThemeRuntimeContextValue,
 } from './types';
+export type {
+  SiteCatalogContextValue,
+  SiteCatalogSiteConfig,
+  SiteConfigNav,
+} from './SiteCatalogContext';
+export {
+  SiteCatalogContext,
+  SiteCatalogProvider,
+  useColorMode,
+  useSiteCatalog,
+  useSiteConfig,
+  useSiteSetting,
+  useSiteUser,
+} from './SiteCatalogContext';

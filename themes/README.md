@@ -56,8 +56,7 @@
 
 ```ts
 import { createThemeApp, fetchVisitorContext } from '@fecommunity/reactpress-toolkit/theme';
-import { AntdStyleTransitionFix } from '@fecommunity/reactpress-toolkit/ui';
-import { createThemeAxiosClient } from '@fecommunity/reactpress-toolkit/theme';
+import { createThemeAxiosClient, createThemeProviders } from '@fecommunity/reactpress-toolkit/theme';
 ```
 
 **仍应留在主题内的**：布局壳（Header/Footer）、视觉组件、页面路由与业务 UI。
@@ -93,13 +92,13 @@ export const getStaticProps = async ({ params }) => {
 | 数据 | `@fecommunity/reactpress-toolkit/theme` | API、`fetch*`、`themeStaticProps`、`createThemeApp` |
 | UI | `@fecommunity/reactpress-toolkit/ui` | 无样式组件（也可从 `/theme` 导入） |
 
-常用 `fetch*`：`fetchThemeCatalog`、`fetchCategoryArchive`、`fetchTagArchive`、`fetchSingleArticle`、`fetchSearchArticles`、`fetchSiteMeta`、`fetchVisitorContext`。
+常用 `fetch*`：`fetchThemeCatalog`、`fetchCategoryArchive`、`fetchTagArchive`、`fetchSingleArticle`、`fetchSearchArticles`、`fetchSiteMeta`、`fetchVisitorContext`、`fetchAppBootstrap`、`fetchArchives`、`fetchKnowledgeList`、`fetchPublishedPages`。
 
-常用 UI：`SiteDocument`、`PageHeader`、`NavMenu`、`ArticleList`、`TaxonomyList`、`SiteBranding`、`LocaleSwitcher`。
+常用 UI：`SiteDocument`、`PageHeader`、`NavMenu`、`ArticleList`、`TaxonomyList`、`SiteBranding`、`LocaleSwitcher`、`SiteSeo`、`RouteProgress`。
 
-### 按需扩展模板
+### 完整功能主题
 
-在 `theme.json` 声明 `templates`，从 `twentytwentyfive` 复制对应 `pages/` 文件，将 `getStaticProps` 改为 toolkit 的 `fetch*` 即可。
+若需要评论、知识库、网址导航等，复制 `twentytwentyfive` 的 `pages/` 与 `components/`。`_app` 用 `createReactPressApp`（`@fecommunity/reactpress-toolkit/app`），Ant Design 写在 `wrapContent`；文章页用 `ArticleReader` / `HtmlContent`；数据层用 `src/providers.ts`。
 
 ## 品牌资源
 

@@ -4,9 +4,9 @@ import Router, { useRouter } from 'next/router';
 import { useTranslations } from 'next-intl';
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 
-import { GlobalContext } from '@/context/global';
-import { useToggle } from '@/hooks/useToggle';
-import { UserProvider } from '@/providers/user';
+import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
+import { useToggle } from '@fecommunity/reactpress-toolkit/theme';
+import { UserProvider } from '@/providers';
 
 import styles from './index.module.scss';
 

@@ -346,3 +346,33 @@ $languages: ts js typescript javascript html css php go sql json bash less scss 
   content: attr(data-num);
   width: max-content;
 }
+
+.rp-copy-code-btn {
+  position: absolute;
+  top: 8px;
+  right: 5px;
+  font-size: 12px;
+  line-height: 1;
+  color: hsl(0deg 0% 54.9% / 80%);
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  padding: 0;
+
+  &:hover {
+    opacity: 0.6;
+  }
+}
+
+.rp-code-window-dots {
+  position: absolute;
+  top: 0;
+
+  i {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 6px;
+    margin-left: 6px;
+  }
+}

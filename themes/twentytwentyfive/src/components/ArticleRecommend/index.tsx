@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import React, { useEffect, useState } from 'react';
 
-import { ArticleProvider } from '@/providers/article';
+import { ArticleProvider } from '@/providers';
 
 import style from './index.module.scss';
 

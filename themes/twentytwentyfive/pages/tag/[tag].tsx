@@ -10,10 +10,10 @@ import InfiniteScroll from 'react-infinite-scroller';
 
 import AboutUs from '@/components/AboutUs';
 import { ArticleRecommend } from '@/components/ArticleRecommend';
-import { GlobalContext } from '@/context/global';
+import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
 import { DoubleColumnLayout } from '@/layout/DoubleColumnLayout';
-import { ArticleProvider } from '@/providers/article';
-import { TagProvider } from '@/providers/tag';
+import { ArticleProvider } from '@/providers';
+import { TagProvider } from '@/providers';
 import { getArchiveBannerImage } from '@/utils/archiveBanner';
 
 import style from '../index.module.scss';

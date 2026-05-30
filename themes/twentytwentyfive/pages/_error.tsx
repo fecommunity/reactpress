@@ -4,7 +4,7 @@ import { default as Router } from 'next/router';
 import { useTranslations } from 'next-intl';
 import React, { useContext } from 'react';
 
-import { GlobalContext } from '@/context/global';
+import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
 import { getPageTitle, getSiteTitle } from '@fecommunity/reactpress-toolkit/theme';
 
 const style = {

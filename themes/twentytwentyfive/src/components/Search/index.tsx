@@ -4,8 +4,8 @@ import { useTranslations } from 'next-intl';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import { ListTrail } from '@/components/Animation/Trail';
-import { useAsyncLoading } from '@/hooks/useAsyncLoading';
-import { SearchProvider } from '@/providers/search';
+import { useAsyncLoading } from '@fecommunity/reactpress-toolkit/theme';
+import { SearchProvider } from '@/providers';
 
 import styles from './index.module.scss';
 

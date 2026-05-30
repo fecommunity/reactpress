@@ -9,10 +9,10 @@ import { useCallback, useContext, useMemo } from 'react';
 
 import { ListTrail } from '@/components/Animation/Trail';
 import { KnowledgeList } from '@/components/KnowledgeList';
-import { LocaleTime } from '@/components/LocaleTime';
-import { GlobalContext } from '@/context/global';
+import { LocaleTime } from '@fecommunity/reactpress-toolkit/theme';
+import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
 import { DoubleColumnLayout } from '@/layout/DoubleColumnLayout';
-import { KnowledgeProvider } from '@/providers/knowledge';
+import { KnowledgeProvider } from '@/providers';
 
 import style from './index.module.scss';
 

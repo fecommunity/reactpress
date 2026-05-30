@@ -53,7 +53,7 @@ src/
 │   ├── visitor/      # 语言、会话、配色、运行时 mods
 │   ├── content/      # SEO、导航路径、摘要、静态资源 URL
 │   ├── preview/      # 预览 token / mods / config 查询参数
-│   ├── build/        # next-config、antd Document
+│   ├── createCatalogApp.js  # 完整主题 _app 工厂（无 UI 框架依赖）
 │   ├── createApp.js  # Next `_app` 工厂（allowJs，随 tsc 输出到 dist）
 │   ├── extension/    # theme.json  schema、站点配置、与服务端共享的类型
 │   ├── node.ts       # → build/node
@@ -131,6 +131,22 @@ import { permissionsForRole } from '@fecommunity/reactpress-toolkit/plugin/admin
 import { createClient, resolveApiBaseUrl } from '@fecommunity/reactpress-toolkit/plugin/client';
 ```
 
+## App 工厂（`./app`）
+
+主题 `_app.tsx` 的入口工厂，与 UI 框架无关：
+
+| 工厂 | 用途 |
+|------|------|
+| `createThemeApp` | 极简主题（hello-world）：`ReactPressProvider` + `ThemeCssVars` |
+| `createReactPressApp` | 完整主题：SSR catalog、i18n、统计、PV；通过 `wrapContent` 注入 Ant Design 等 |
+
+```typescript
+import { createThemeApp } from '@fecommunity/reactpress-toolkit/app';
+import { createReactPressApp } from '@fecommunity/reactpress-toolkit/app';
+```
+
+也可从 `./theme`  re-export 导入（兼容旧路径）。
+
 ## 主题开发（`./theme`）
 
 Next.js 访客主题应使用 toolkit 提供的 API 与 SSR 辅助，避免在每个主题里复制 `lib/api.ts`。
@@ -142,8 +158,8 @@ import {
   fetchThemeCatalog,
   themeStaticProps,
   unpackList,
-  createThemeApp,
 } from '@fecommunity/reactpress-toolkit/theme';
+import { createThemeApp } from '@fecommunity/reactpress-toolkit/app';
 ```
 
 ```javascript
@@ -157,6 +173,35 @@ module.exports = createReactPressNextConfig();
 import themeManifest from '../theme.json';
 
 export default createThemeApp(themeManifest);
+```
+
+**完整功能主题** — 使用 `createReactPressApp`（UI 框架无关），Ant Design 等重型依赖留在主题内：
+
+```typescript
+import { createReactPressApp } from '@fecommunity/reactpress-toolkit/app';
+import { ConfigProvider } from 'antd';
+import { NextIntlProvider } from 'next-intl';
+
+export default createReactPressApp(themeManifest, {
+  Layout: AppLayout,
+  IntlProvider: NextIntlProvider,
+  wrapContent: (content, { locale, isDark, colorPrimary }) => (
+    <ConfigProvider locale={{ locale }} theme={{ token: { colorPrimary } }}>
+      {content}
+    </ConfigProvider>
+  ),
+});
+```
+
+`createReactPressApp` 内置：SSR 站点数据、预览 mods、SiteCatalogProvider、路由进度条、统计脚本、PV 上报。**不含** Ant Design / cssinjs。
+
+**REST Provider** — 无需在每个主题复制 14 个 Provider 文件：
+
+```typescript
+import { createThemeAxiosClient, createThemeProviders } from '@fecommunity/reactpress-toolkit/theme';
+
+export const httpProvider = createThemeAxiosClient({ onError, onUnauthorized });
+export const { ArticleProvider, CategoryProvider, TagProvider } = createThemeProviders(httpProvider);
 ```
 
 环境变量：`REACTPRESS_API_URL`（SSR）、`NEXT_PUBLIC_REACTPRESS_API_URL`（浏览器），由 `reactpress theme dev` 注入。
@@ -180,6 +225,12 @@ import { NavMenu, ArticleList, ReactPressProvider, useLocale } from '@fecommunit
 | `useWarningOnExit` | 离开页面前确认（Next Router） |
 | `NavMenu` | 配置驱动导航，通过 `renderLink` 接 Next `Link` |
 | `ArticleList` | 列表渲染，通过 `renderArticle` 自定义卡片 |
+| `SiteCatalogProvider` / `useSiteSetting` / `useSiteUser` | 全站 catalog + 用户会话 |
+| `SiteSeo` / `RouteProgress` / `SiteAnalytics` | SEO meta、路由进度条、GA/百度统计 |
+| `ArticleReader` / `HtmlContent` / `ArticleToc` | 文章阅读、HTML 渲染、目录 |
+| `ImageViewer` / `LocaleTime` | 图片预览、本地化时间 |
+| `createReactPressApp` | 完整主题 `_app` 工厂（`@fecommunity/reactpress-toolkit/app`） |
+| `fetchAppBootstrap` | `_app.getInitialProps` SSR 数据（setting / taxonomy / preview） |
 
 ### 扩展配置类型
 

@@ -21,7 +21,8 @@
       "@fecommunity/reactpress-toolkit/api": ["../../toolkit/dist/api/index.d.ts"],
       "@fecommunity/reactpress-toolkit/types": ["../../toolkit/dist/types/index.d.ts"],
       "@fecommunity/reactpress-toolkit/utils": ["../../toolkit/dist/utils/index.d.ts"],
-      "@fecommunity/reactpress-toolkit/theme": ["../../toolkit/dist/theme/index.d.ts"]
+      "@fecommunity/reactpress-toolkit/theme": ["../../toolkit/dist/theme/index.d.ts"],
+      "@fecommunity/reactpress-toolkit/app": ["../../toolkit/dist/app/index.d.ts"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

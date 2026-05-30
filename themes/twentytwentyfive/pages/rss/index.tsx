@@ -1,8 +1,8 @@
 import { NextPage } from 'next';
 
-import { ArticleProvider } from '@/providers/article';
-import { CategoryProvider } from '@/providers/category';
-import { SettingProvider } from '@/providers/setting';
+import { ArticleProvider } from '@/providers';
+import { CategoryProvider } from '@/providers';
+import { SettingProvider } from '@/providers';
 import RSS from '@/rss/index.js';
 const url = require('url');
 

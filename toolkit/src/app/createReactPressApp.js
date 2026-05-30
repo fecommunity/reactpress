@@ -1,0 +1,232 @@
+const React = require('react');
+const App = require('next/app').default;
+const Router = require('next/router').default;
+
+const { fetchAppBootstrap } = require('../theme/ssr/bootstrap');
+const { createThemeAxiosClient } = require('../theme/api/httpClient');
+const { createThemeProviders } = require('../theme/providers');
+const {
+  applyColorModeClass,
+  resolveClientThemeMode,
+  resolveInitialColorModeState,
+  persistColorMode,
+  persistVisitorLocale,
+} = require('../theme/visitor/colorMode');
+const {
+  clearThemeSession,
+  persistThemeSession,
+  resolveStoredUser,
+} = require('../theme/visitor/authSession');
+const { RouteProgress } = require('../ui/components/RouteProgress');
+const { SiteAnalytics } = require('../ui/components/SiteAnalytics');
+const { SiteCatalogProvider } = require('../ui/context/SiteCatalogContext');
+const { useReportPageView } = require('../ui/hooks/useReportPageView');
+
+function readInitialColorMode() {
+  if (typeof window === 'undefined') return 'light';
+  return resolveClientThemeMode();
+}
+
+function ViewStatisticsBridge() {
+  useReportPageView();
+  return null;
+}
+
+/**
+ * Full-featured theme `_app` factory (UI-framework agnostic).
+ * Alias: `createCatalogThemeApp` (deprecated name).
+ */
+function createReactPressApp(manifest, options = {}) {
+  const {
+    Layout,
+    buildAppearanceCss,
+    httpClientOptions = {},
+    scrollToTopOnRouteChange = true,
+    IntlProvider,
+    wrapContent,
+  } = options;
+
+  if (!Layout) {
+    throw new Error('createReactPressApp: options.Layout is required');
+  }
+  if (!IntlProvider) {
+    throw new Error(
+      'createReactPressApp: options.IntlProvider is required — import { NextIntlProvider } from "next-intl" in your theme',
+    );
+  }
+
+  if (scrollToTopOnRouteChange) {
+    Router.events.on('routeChangeComplete', () => {
+      setTimeout(() => {
+        if (document.documentElement.scrollTop > 0) {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }, 0);
+    });
+  }
+
+  class ReactPressThemeApp extends App {
+    state = {
+      locale: '',
+      user: null,
+      theme: readInitialColorMode(),
+      collapsed: false,
+      setting: null,
+    };
+
+    static getInitialProps = async (appContext) => {
+      const appProps = await App.getInitialProps(appContext);
+      const bootstrap = await fetchAppBootstrap({
+        manifest,
+        ctx: appContext.ctx,
+      });
+
+      return {
+        ...appProps,
+        ...bootstrap,
+        pageProps: appProps.pageProps,
+      };
+    };
+
+    changeLocale = (key) => {
+      persistVisitorLocale(key);
+      window.location.reload();
+    };
+
+    setUser = (user) => {
+      persistThemeSession(user);
+      this.setState({ user });
+    };
+
+    removeUser = () => {
+      clearThemeSession();
+      this.setState({ user: null });
+      window.location.reload();
+    };
+
+    changeTheme = (nextTheme) => {
+      const isDark = nextTheme === 'dark';
+      applyColorModeClass(isDark);
+      persistColorMode(isDark);
+      this.setState({ theme: nextTheme });
+    };
+
+    getSetting = () => {
+      const http = createThemeAxiosClient(httpClientOptions);
+      const { SettingProvider } = createThemeProviders(http);
+      SettingProvider.getSetting().then((res) => {
+        this.setState({ setting: res });
+      });
+    };
+
+    toggleCollapse = () => {
+      this.setState({ collapsed: !this.state.collapsed });
+    };
+
+    componentDidMount() {
+      const user = resolveStoredUser();
+      if (user) {
+        persistThemeSession(user);
+        this.setState({ user });
+      }
+
+      const preferred = resolveInitialColorModeState() ?? 'light';
+      applyColorModeClass(preferred === 'dark');
+      if (this.state.theme !== preferred) {
+        this.setState({ theme: preferred });
+      }
+    }
+
+    componentDidUpdate(_prevProps, prevState) {
+      if (prevState.theme !== this.state.theme) {
+        applyColorModeClass(this.state.theme === 'dark');
+      }
+    }
+
+    render() {
+      const {
+        Component,
+        pageProps,
+        i18n,
+        globalSetting,
+        siteConfig,
+        locales,
+        initialLocale,
+        tags,
+        categories,
+        pages,
+        colorPrimary,
+        themeMods = {},
+        ...rest
+      } = this.props;
+
+      const locale =
+        this.state.locale ||
+        initialLocale ||
+        (Array.isArray(locales) && locales.length > 0 ? locales[0] : null) ||
+        'zh';
+
+      const { needLayoutFooter = true, hasBg = false } = pageProps;
+      const message = i18n?.[locale] || {};
+      const isDark = this.state.theme === 'dark';
+      const appearanceCss = buildAppearanceCss?.(themeMods);
+      const setting = this.state.setting ?? rest.setting;
+
+      const catalogValue = {
+        setting,
+        i18n,
+        locale,
+        locales,
+        globalSetting,
+        siteConfig,
+        tags,
+        categories,
+        pages,
+        theme: this.state.theme,
+        collapsed: this.state.collapsed,
+        changeLocale: this.changeLocale,
+        user: this.state.user,
+        setUser: this.setUser,
+        removeUser: this.removeUser,
+        changeTheme: this.changeTheme,
+        getSetting: this.getSetting,
+        toggleCollapse: this.toggleCollapse,
+      };
+
+      const layout = React.createElement(
+        Layout,
+        {
+          needHeader: true,
+          needFooter: needLayoutFooter,
+          hasBg,
+        },
+        React.createElement(RouteProgress, null),
+        React.createElement(Component, pageProps),
+      );
+
+      const runtime = { locale, isDark, colorPrimary, themeMods, colorMode: this.state.theme };
+      const content = wrapContent ? wrapContent(layout, runtime) : layout;
+
+      return React.createElement(
+        SiteCatalogProvider,
+        { value: catalogValue },
+        React.createElement(
+          IntlProvider,
+          { messages: message, locale },
+          appearanceCss
+            ? React.createElement('style', {
+                dangerouslySetInnerHTML: { __html: appearanceCss },
+              })
+            : null,
+          React.createElement(ViewStatisticsBridge, null),
+          React.createElement(SiteAnalytics, null),
+          content,
+        ),
+      );
+    }
+  }
+
+  return ReactPressThemeApp;
+}
+
+module.exports = { createReactPressApp };

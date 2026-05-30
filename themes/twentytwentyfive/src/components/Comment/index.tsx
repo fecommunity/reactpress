@@ -2,9 +2,9 @@ import { Button, Pagination } from 'antd';
 import { useTranslations } from 'next-intl';
 import React, { useRef } from 'react';
 
-import { usePagination } from '@/hooks/usePagination';
-import { useToggle } from '@/hooks/useToggle';
-import { CommentProvider } from '@/providers/comment';
+import { usePagination } from '@fecommunity/reactpress-toolkit/theme';
+import { useToggle } from '@fecommunity/reactpress-toolkit/theme';
+import { CommentProvider } from '@/providers';
 
 import { CommentEditor } from './CommentEditor';
 import { Comments } from './CommentItem';

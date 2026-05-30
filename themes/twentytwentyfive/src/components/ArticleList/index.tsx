@@ -23,8 +23,8 @@ import { useTranslations } from 'next-intl';
 import React, { useContext, useMemo } from 'react';
 import LazyLoad from 'react-lazyload';
 
-import { LocaleTime } from '@/components/LocaleTime';
-import { GlobalContext } from '@/context/global';
+import { LocaleTime } from '@fecommunity/reactpress-toolkit/theme';
+import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
 import { getColorFromNumber } from '@/utils';
 
 import LogoSvg from '../../assets/LogoSvg';

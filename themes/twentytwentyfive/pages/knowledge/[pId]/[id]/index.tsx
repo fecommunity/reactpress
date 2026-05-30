@@ -8,13 +8,15 @@ import { useTranslations } from 'next-intl';
 import { useContext, useEffect, useMemo } from 'react';
 
 import { Comment } from '@/components/Comment';
-import { ImageViewer } from '@/components/ImageViewer';
-import { LocaleTime } from '@/components/LocaleTime';
-import { MarkdownReader } from '@/components/MarkdownReader';
-import { Toc } from '@/components/Toc';
-import { GlobalContext } from '@/context/global';
+import {
+  ArticleToc,
+  HtmlContent,
+  ImageViewer,
+  LocaleTime,
+  SiteCatalogContext as GlobalContext,
+} from '@fecommunity/reactpress-toolkit/theme';
 import { DoubleColumnLayout } from '@/layout/DoubleColumnLayout';
-import { KnowledgeProvider } from '@/providers/knowledge';
+import { KnowledgeProvider } from '@/providers';
 
 import style from './index.module.scss';
 
@@ -110,7 +112,7 @@ const Page: NextPage<IProps> = ({ pId, id, book, chapter }) => {
                     </p>
                   </div>
                   <div>
-                    <MarkdownReader content={chapter.html || chapter.content} />
+                    <HtmlContent content={chapter.html || chapter.content} />
                   </div>
                   <div className={style.copyrightInfo}>
                     {t('publishAt')}
@@ -180,7 +182,9 @@ const Page: NextPage<IProps> = ({ pId, id, book, chapter }) => {
                             {chapter.title}
                           </a>
                         </Link>
-                        {chapter.id === id && <Toc hasHeader={false} key={chapter.id} tocs={tocs} />}
+                        {chapter.id === id && tocs.length ? (
+                          <ArticleToc items={tocs} showTitle={false} maxHeight="40vh" />
+                        ) : null}
                       </li>
                     );
                   })}

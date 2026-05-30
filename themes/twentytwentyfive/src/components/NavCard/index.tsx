@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 
-import { GlobalContext } from '@/context/global';
+import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
 
 import Category from './Category';
 import styles from './index.module.scss';
