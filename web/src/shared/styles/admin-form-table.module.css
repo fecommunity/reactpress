@@ -29,7 +29,16 @@
 
 .description {
   margin: 8px 0 0;
-  max-width: 520px;
+  max-width: 960px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--admin-form-muted, #646970);
+}
+
+/* Page-level hints above the form table (e.g. settings general / SEO intro) */
+.formIntro {
+  margin: 0 0 16px;
+  max-width: 960px;
   font-size: 13px;
   line-height: 1.5;
   color: var(--admin-form-muted, #646970);
@@ -86,7 +95,8 @@
   --admin-form-text: rgba(255, 255, 255, 0.88);
 }
 
-:root[data-theme="dark"] .description {
+:root[data-theme="dark"] .description,
+:root[data-theme="dark"] .formIntro {
   --admin-form-muted: rgba(255, 255, 255, 0.45);
 }
 

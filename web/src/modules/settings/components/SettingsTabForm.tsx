@@ -240,10 +240,10 @@ export function SettingsTabForm({ tab }: SettingsTabFormProps) {
       }}
     >
       {tab === "general" || tab === "seo" ? (
-        <p className={formStyles.description}>{t("settings.hints.themeInheritDefaults")}</p>
+        <p className={formStyles.formIntro}>{t("settings.hints.themeInheritDefaults")}</p>
       ) : null}
       {fields.length === 0 ? (
-        <p className={formStyles.description}>
+        <p className={formStyles.formIntro}>
           {t(`settings.${tab}Desc`, { defaultValue: t("settings.tabEmptyHint") })}
         </p>
       ) : null}
