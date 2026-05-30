@@ -28,6 +28,9 @@ const MOCK_PAGES = [
 let mockSettings: Record<string, unknown> = {
   systemTitle: "ReactPress",
   systemUrl: "http://localhost:3001",
+  aboutUsGithubUrl: "https://github.com/fecommunity/reactpress",
+  aboutUsCommentQr: "https://www.gaoredu.com/wp-content/uploads/2024/08/WechatIMG23.jpg",
+  aboutUsWechatQr: "https://www.gaoredu.com/wp-content/uploads/2024/11/wechat.png",
   globalSetting: JSON.stringify({
     theme: {
       activeTheme: "twentytwentyfive",

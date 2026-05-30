@@ -55,12 +55,29 @@ const TAB_FIELDS: Record<string, FieldDef[]> = {
       type: "textarea",
       wide: true,
     },
+  ],
+  about: [
     {
       name: "systemFooterInfo",
       labelKey: "settings.fields.systemFooterInfo",
       hintKey: "settings.hints.systemFooterInfo",
       type: "textarea",
       wide: true,
+    },
+    {
+      name: "aboutUsGithubUrl",
+      labelKey: "settings.fields.aboutUsGithubUrl",
+      hintKey: "settings.hints.aboutUsGithubUrl",
+    },
+    {
+      name: "aboutUsCommentQr",
+      labelKey: "settings.fields.aboutUsCommentQr",
+      hintKey: "settings.hints.aboutUsCommentQr",
+    },
+    {
+      name: "aboutUsWechatQr",
+      labelKey: "settings.fields.aboutUsWechatQr",
+      hintKey: "settings.hints.aboutUsWechatQr",
     },
   ],
   email: [

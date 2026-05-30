@@ -2,13 +2,24 @@ import Icon, { CommentOutlined, GithubOutlined, ProfileOutlined, WechatOutlined 
 import { Card, Divider, Popover } from 'antd';
 import cls from 'classnames';
 import { useTranslations } from 'next-intl';
+import { Fragment, type ReactNode } from 'react';
 import style from './index.module.scss';
 
+export interface AboutUsSetting {
+  systemSubTitle?: string;
+  systemFooterInfo?: string;
+  aboutUsGithubUrl?: string;
+  aboutUsCommentQr?: string;
+  aboutUsWechatQr?: string;
+}
+
 interface IProps {
-  setting: any;
+  setting?: AboutUsSetting;
   className?: string;
   hasBg?: boolean;
 }
+
+const trimUrl = (value?: string) => (value ?? '').trim();
 
 export const RSS = () => {
   const t = useTranslations();
@@ -40,13 +51,16 @@ export const RSS = () => {
   );
 };
 
-export const GitHub = () => {
+export const GitHub = ({ url }: { url?: string }) => {
+  const githubUrl = trimUrl(url);
+  if (!githubUrl) return null;
+
   return (
     <Popover content="Github">
       <a
         aria-label="Github"
         className={style.github}
-        href="https://github.com/fecommunity/reactpress"
+        href={githubUrl}
         target="_blank"
         rel="noopener noreferrer nofollow"
       >
@@ -56,13 +70,12 @@ export const GitHub = () => {
   );
 };
 
-export const Comment = () => {
+export const Comment = ({ imageUrl }: { imageUrl?: string }) => {
+  const qrUrl = trimUrl(imageUrl);
+  if (!qrUrl) return null;
+
   return (
-    <Popover
-      content={
-        <img height={200} width={200} src="https://www.gaoredu.com/wp-content/uploads/2024/08/WechatIMG23.jpg" alt="" />
-      }
-    >
+    <Popover content={<img height={200} width={200} src={qrUrl} alt="" />}>
       <span className={style.iconTrigger} role="img" aria-label="comment">
         <CommentOutlined />
       </span>
@@ -70,11 +83,12 @@ export const Comment = () => {
   );
 };
 
-export const WeChat = () => {
+export const WeChat = ({ imageUrl }: { imageUrl?: string }) => {
+  const qrUrl = trimUrl(imageUrl);
+  if (!qrUrl) return null;
+
   return (
-    <Popover
-      content={<img height={200} width={300} src="https://www.gaoredu.com/wp-content/uploads/2024/11/wechat.png" alt="" />}
-    >
+    <Popover content={<img height={200} width={300} src={qrUrl} alt="" />}>
       <span className={style.iconTrigger} role="img" aria-label="wechat">
         <WechatOutlined />
       </span>
@@ -82,31 +96,23 @@ export const WeChat = () => {
   );
 };
 
-export const ContactInfo = () => {
+export const ContactInfo = ({ setting }: { setting?: AboutUsSetting }) => {
+  const contactItems = [
+    <RSS key="rss" />,
+    trimUrl(setting?.aboutUsGithubUrl) ? <GitHub key="github" url={setting?.aboutUsGithubUrl} /> : null,
+    trimUrl(setting?.aboutUsCommentQr) ? <Comment key="comment" imageUrl={setting?.aboutUsCommentQr} /> : null,
+    trimUrl(setting?.aboutUsWechatQr) ? <WeChat key="wechat" imageUrl={setting?.aboutUsWechatQr} /> : null,
+  ].filter(Boolean) as ReactNode[];
+
   return (
     <div className={style.icons}>
       <ul>
-        <li>
-          <RSS />
-        </li>
-
-        <Divider type="vertical" />
-
-        <li>
-          <GitHub />
-        </li>
-
-        <Divider type="vertical" />
-
-        <li>
-          <Comment />
-        </li>
-
-        <Divider type="vertical" />
-
-        <li>
-          <WeChat />
-        </li>
+        {contactItems.map((item, index) => (
+          <Fragment key={index}>
+            {index > 0 ? <Divider type="vertical" /> : null}
+            <li>{item}</li>
+          </Fragment>
+        ))}
       </ul>
     </div>
   );
@@ -125,6 +131,9 @@ const AboutUs = ({ setting, className = '', hasBg = false }: IProps) => {
       className={style.card}
     >
       <div className={style.wrapper}>
+        {setting?.systemSubTitle ? (
+          <p className={style.subtitle}>{setting.systemSubTitle}</p>
+        ) : null}
         {setting?.systemFooterInfo && (
           <div
             className={style.copyright}
@@ -136,7 +145,7 @@ const AboutUs = ({ setting, className = '', hasBg = false }: IProps) => {
         <div className={cls(style.footer, className, hasBg && style.hasBg)}>
           <div className={style.container}>
             <Divider dashed />
-            <ContactInfo />
+            <ContactInfo setting={setting} />
           </div>
         </div>
       </div>

@@ -78,6 +78,15 @@
   word-break: break-all;
 }
 
+.subtitle {
+  margin: 0 0 12px;
+  font-size: 14px;
+  line-height: 24px;
+  color: var(--second-text-color, var(--main-text-color));
+  text-align: left;
+  word-break: break-word;
+}
+
 .container {
   display: flex;
   flex-direction: column;

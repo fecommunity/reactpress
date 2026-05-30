@@ -39,6 +39,9 @@ import { renderHeaderLogo } from './renderHeaderLogo';
 
 import { GitHub } from '../AboutUs';
 
+/** 是否在 Header 显示「专辑」(/knowledge) 入口，暂时关闭 */
+const SHOW_KNOWLEDGE_NAV = false;
+
 // Navigation links configuration
 const NAV_LINKS = [
   {
@@ -61,7 +64,7 @@ const NAV_LINKS = [
     locale: 'archives',
     icon: <HistoryOutlined />,
   },
-];
+].filter((nav) => nav.path !== '/knowledge' || SHOW_KNOWLEDGE_NAV);
 
 interface HeaderProps {
   setting: ISetting;
@@ -215,9 +218,11 @@ export const Header: React.FC<HeaderProps> = ({ setting, tags, pages, hasBg = fa
               <li className={style.toolWrapper}>
                 <Locales />
               </li>
-              <li className={style.toolWrapper}>
-                <GitHub />
-              </li>
+              {setting.aboutUsGithubUrl?.trim() ? (
+                <li className={style.toolWrapper}>
+                  <GitHub url={setting.aboutUsGithubUrl} />
+                </li>
+              ) : null}
               <li className={style.toolWrapper}>
                 <UserInfo />
               </li>

@@ -35,6 +35,9 @@ export interface ISetting {
   systemFavicon: string;
   systemNoticeInfo: string;
   systemFooterInfo: string;
+  aboutUsGithubUrl: string;
+  aboutUsCommentQr: string;
+  aboutUsWechatQr: string;
   adminSystemUrl: string;
   baiduAnalyticsId: string;
   googleAnalyticsId: string;

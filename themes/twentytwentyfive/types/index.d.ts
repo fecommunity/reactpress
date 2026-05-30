@@ -332,6 +332,12 @@ interface ISetting {
   systemFavicon?: string;
   /** 系统页脚信息(可选) */
   systemFooterInfo?: string;
+  /** 关于我们 GitHub 链接(可选) */
+  aboutUsGithubUrl?: string;
+  /** 关于我们 社群/评论二维码(可选) */
+  aboutUsCommentQr?: string;
+  /** 关于我们 微信二维码(可选) */
+  aboutUsWechatQr?: string;
   /** 系统通知信息(可选) */
   systemNoticeInfo?: string;
   /** 后台系统地址(可选) */

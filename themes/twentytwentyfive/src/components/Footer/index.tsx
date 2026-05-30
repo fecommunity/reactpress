@@ -13,7 +13,7 @@
  * - HTML content support for footer info
  */
 
-import { ContactInfo } from '@/components/AboutUs';
+import { ContactInfo, type AboutUsSetting } from '@/components/AboutUs';
 import cls from 'classnames';
 import { useTranslations } from 'next-intl';
 import React from 'react';
@@ -21,9 +21,7 @@ import React from 'react';
 import style from './index.module.scss';
 
 interface FooterProps {
-  setting: {
-    systemFooterInfo?: string;
-  };
+  setting: AboutUsSetting;
   className?: string;
   hasBg?: boolean;
 }
@@ -65,7 +63,7 @@ export const Footer: React.FC<FooterProps> = ({
         </ul>
 
         {/* Right Section - Contact Information */}
-        <ContactInfo />
+        <ContactInfo setting={setting} />
       </div>
     </footer>
   );
