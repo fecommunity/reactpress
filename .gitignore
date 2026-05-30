@@ -1,6 +1,8 @@
-# 用户安装的主题副本（官方源码在 themes/starter/）
+# 运行时主题副本（官方模板在 themes/{id}/，运行时副本在 themes/runtime/）
 themes/*
-!themes/starter/
+!themes/hello-world/
+!themes/twentytwentyfive/
+!themes/twentytwentysix/
 !themes/.gitkeep
 !themes/README.md
 
@@ -21,7 +23,9 @@ sitemap.xml
 
 lib
 !cli/lib
-!themes/starter/**/lib/
+!themes/hello-world/**/lib/
+!themes/twentytwentyfive/**/lib/
+!themes/twentytwentysix/**/lib/
 dist
 dist-ssr
 coverage
