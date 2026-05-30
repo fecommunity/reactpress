@@ -108,7 +108,8 @@ const Home: NextPage<IProps> = ({ articles: defaultArticles = [], total, categor
 
 // 服务端预取数据
 Home.getInitialProps = async (ctx) => {
-  const { category: categoryValue } = ctx.query;
+  const rawCategory = ctx.query.category;
+  const categoryValue = Array.isArray(rawCategory) ? rawCategory[0] : rawCategory;
   const [articles, category] = await Promise.all([
     ArticleProvider.getArticlesByCategory(categoryValue, {
       page: 1,

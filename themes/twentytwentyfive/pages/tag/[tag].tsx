@@ -31,7 +31,7 @@ const Home: NextPage<IProps> = ({ articles: defaultArticles = [], total, tag }) 
   const { setting, tags, categories } = useContext(GlobalContext);
   const [page, setPage] = useState(1);
   const [articles, setArticles] = useState<IArticle[]>(defaultArticles);
-  const bgImg = articles?.filter((article) => article.cover)?.[0]?.cover || defaultImgSrc;
+  const banner = getArchiveBannerImage(articles);
 
   useEffect(() => {
     setArticles(defaultArticles);
@@ -106,7 +106,8 @@ const Home: NextPage<IProps> = ({ articles: defaultArticles = [], total, tag }) 
 
 // 服务端预取数据
 Home.getInitialProps = async (ctx) => {
-  const { tag: tagValue } = ctx.query;
+  const rawTag = ctx.query.tag;
+  const tagValue = Array.isArray(rawTag) ? rawTag[0] : rawTag;
   const [articles, tag] = await Promise.all([
     ArticleProvider.getArticlesByTag(tagValue, {
       page: 1,

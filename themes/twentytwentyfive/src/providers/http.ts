@@ -24,8 +24,32 @@ export const httpProvider = axios.create({
 
 const isBrowser = typeof window !== 'undefined';
 
+/** Encode dynamic path segments (e.g. Chinese tag names) for Node fetch / axios. */
+function encodeUrlPath(url: string): string {
+  const qIndex = url.indexOf('?');
+  const pathname = qIndex === -1 ? url : url.slice(0, qIndex);
+  const search = qIndex === -1 ? '' : url.slice(qIndex);
+
+  const encodedPath = pathname
+    .split('/')
+    .map((segment) => {
+      if (!segment) return segment;
+      try {
+        return encodeURIComponent(decodeURIComponent(segment));
+      } catch {
+        return encodeURIComponent(segment);
+      }
+    })
+    .join('/');
+
+  return encodedPath + search;
+}
+
 httpProvider.interceptors.request.use(
   (config) => {
+    if (config.url) {
+      config.url = encodeUrlPath(config.url);
+    }
     if (isBrowser) {
       const token = window.localStorage.getItem('token');
       if (config && config.headers && token) {
