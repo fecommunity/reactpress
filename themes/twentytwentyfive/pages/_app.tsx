@@ -124,7 +124,12 @@ class MyApp extends App<IGlobalContext, unknown> {
 
   render() {
     const { Component, pageProps, i18n, globalSetting, locales, router, ...contextValue } = this.props;
-    const locale = this.state.locale || router.locale;
+    const locale =
+      this.state.locale ||
+      router.locale ||
+      router.defaultLocale ||
+      (Array.isArray(locales) && locales.length > 0 ? locales[0] : null) ||
+      'zh';
     const { needLayoutFooter = true, hasBg = false } = pageProps;
     const message = i18n[locale] || {};
     const algorithm = this.state.theme === 'dark' ? theme.darkAlgorithm : theme.defaultAlgorithm;

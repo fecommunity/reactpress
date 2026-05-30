@@ -1,10 +1,17 @@
 const { describe, it } = require('node:test');
 const assert = require('node:assert/strict');
 const path = require('path');
-const { pageFileToRoute, collectWarmupRoutes } = require('../lib/theme-warmup');
+const { pageFileToRoute, collectWarmupRoutes, isWarmupSafeRoute } = require('../lib/theme-warmup');
 const { createMonorepoFixture, rmDir } = require('./helpers/tmp-project');
 
 describe('lib/theme-warmup', () => {
+  it('filters dynamic and admin routes from warmup', () => {
+    assert.equal(isWarmupSafeRoute('/'), true);
+    assert.equal(isWarmupSafeRoute('/archives'), true);
+    assert.equal(isWarmupSafeRoute('/tag/__reactpress_dev_warmup__'), false);
+    assert.equal(isWarmupSafeRoute('/admin/article'), false);
+  });
+
   it('maps template files to warmup routes', () => {
     assert.equal(pageFileToRoute('pages/index.tsx'), '/');
     assert.equal(pageFileToRoute('pages/about.tsx'), '/about');
@@ -39,7 +46,7 @@ describe('lib/theme-warmup', () => {
       const routes = collectWarmupRoutes(themeDir);
       assert.ok(routes.includes('/'));
       assert.ok(routes.includes('/search'));
-      assert.ok(routes.includes('/tag/__reactpress_dev_warmup__'));
+      assert.ok(!routes.some((r) => r.includes('__reactpress_dev_warmup__')));
       assert.ok(routes.includes('/404'));
     } finally {
       rmDir(root);

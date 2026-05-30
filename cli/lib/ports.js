@@ -295,6 +295,47 @@ async function forceReleaseDevStackPorts(projectRoot) {
 }
 
 /**
+ * Free only unhealthy or non-API listeners — keeps a healthy API to skip Nest cold compile.
+ */
+async function releaseStaleDevStackPorts(projectRoot) {
+  if (process.env.REACTPRESS_FORCE_PORT_RESET === '1') {
+    await forceReleaseDevStackPorts(projectRoot);
+    return;
+  }
+
+  const { getHealthUrl, checkHealth } = require('./http');
+  const apiPort = readEnvPort(projectRoot, 'SERVER_PORT', DEV_PORTS.API);
+
+  if (isPortListening(apiPort)) {
+    const health = await checkHealth(getHealthUrl(projectRoot), 2000);
+    if (health.ok) {
+      const { logDevDetail } = require('./dev-log');
+      logDevDetail('dev.apiKept', { port: apiPort });
+    } else {
+      await forceReleaseApiPort(projectRoot);
+    }
+  }
+
+  const previewPort = readEnvPort(
+    projectRoot,
+    'REACTPRESS_PREVIEW_PORT',
+    DEV_PORTS.THEME_PREVIEW,
+  );
+  const adminPort = readEnvPort(projectRoot, 'WEB_ADMIN_PORT', DEV_PORTS.ADMIN_WEB);
+  const visitorPort = readVisitorPort(projectRoot);
+
+  for (const [port, label] of [
+    [adminPort, 'admin'],
+    [visitorPort, 'visitor site'],
+    [previewPort, 'theme preview'],
+  ]) {
+    if (isPortListening(port)) {
+      await ensurePortFree(port, { label, maxWaitMs: 5000 });
+    }
+  }
+}
+
+/**
  * If `port` is in use, terminate listeners (TERM then KILL) and wait until free.
  */
 async function ensurePortFree(port, { label = 'service', maxWaitMs = 8000 } = {}) {
@@ -360,5 +401,6 @@ module.exports = {
   ensureApiPortFree,
   forceReleaseApiPort,
   forceReleaseDevStackPorts,
+  releaseStaleDevStackPorts,
   ensureDevStackPorts,
 };

@@ -2,9 +2,9 @@ import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { APP_LOGO_SRC } from "@/utils/constants";
 import { useMinWidth } from "@/hooks/useMinWidth";
-import { LOGIN_HERO_SLIDES, type LoginHeroSlideId } from "./loginHeroSlides";
-import { LoginCliSnippet } from "./LoginCliSnippet";
-import { LoginHeroLinks } from "./LoginHeroLinks";
+import { LOGIN_HERO_SLIDES, type LoginHeroSlideId } from "./-loginHeroSlides";
+import { LoginCliSnippet } from "./-LoginCliSnippet";
+import { LoginHeroLinks } from "./-LoginHeroLinks";
 import styles from "./login-hero-panel.module.css";
 
 const SLIDE_INTERVAL_MS = 6000;

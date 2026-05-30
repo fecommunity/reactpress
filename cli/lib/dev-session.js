@@ -45,10 +45,10 @@ async function acquireDevSession(projectRoot) {
       );
       try {
         process.kill(existing.pid, 'SIGTERM');
-        await sleep(2500);
+        await sleep(1200);
         if (isPidAlive(existing.pid)) {
           process.kill(existing.pid, 'SIGKILL');
-          await sleep(400);
+          await sleep(200);
         }
       } catch {
         // prior session may have exited during signal
@@ -57,8 +57,8 @@ async function acquireDevSession(projectRoot) {
     }
   }
 
-  const { forceReleaseDevStackPorts } = require('./ports');
-  await forceReleaseDevStackPorts(resolvedRoot);
+  const { releaseStaleDevStackPorts } = require('./ports');
+  await releaseStaleDevStackPorts(resolvedRoot);
 
   fs.mkdirSync(path.dirname(lockPath), { recursive: true });
   fs.writeFileSync(

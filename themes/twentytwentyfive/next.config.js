@@ -42,7 +42,26 @@ const nextConfig = {
   },
 };
 
-module.exports = withPlugins(
+const STRIP_ROOT_KEYS = ['webpackDevMiddleware', 'configOrigin', 'target', 'webpack5'];
+
+function sanitizeExportedConfig(config) {
+  const out = { ...config };
+  for (const key of STRIP_ROOT_KEYS) {
+    delete out[key];
+  }
+  if (out.amp?.canonicalBase === '') delete out.amp;
+  if (out.experimental?.outputFileTracingRoot === '') {
+    const { outputFileTracingRoot, ...experimental } = out.experimental;
+    if (Object.keys(experimental).length > 0) {
+      out.experimental = experimental;
+    } else {
+      delete out.experimental;
+    }
+  }
+  return out;
+}
+
+const withComposedPlugins = withPlugins(
   [
     [
       withPWA,
@@ -65,3 +84,12 @@ module.exports = withPlugins(
   ],
   nextConfig
 );
+
+/** next-compose-plugins returns a function — must not spread it into a plain object. */
+module.exports = (phase, ctx) => {
+  const resolved =
+    typeof withComposedPlugins === 'function'
+      ? withComposedPlugins(phase, ctx)
+      : withComposedPlugins;
+  return sanitizeExportedConfig(resolved);
+};

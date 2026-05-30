@@ -21,9 +21,10 @@ try {
   } else {
     cliDev.nextDev(['-p', port]);
   }
-  console.log(`[reactpress] 客户端已启动，端口：${port}`, `访问地址：http://localhost:${port}`);
-  // 尝试自动打开
-  open(`http://localhost:${port}`);
+  if (process.env.REACTPRESS_SKIP_BROWSER_OPEN !== '1') {
+    console.log(`[reactpress] 客户端已启动，端口：${port}，访问：http://localhost:${port}`);
+    open(`http://localhost:${port}`).catch(() => {});
+  }
 } catch (err) {
   console.log(`[reactpress] 客户端启动失败！${err.message || err}`);
 }

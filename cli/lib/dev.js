@@ -1,4 +1,5 @@
 const { spawn } = require('child_process');
+const { spawnDevChild } = require('./dev-child-io');
 const path = require('path');
 const ora = require('ora');
 const { runBuild } = require('./build');
@@ -22,19 +23,39 @@ const {
 } = require('./theme-runtime');
 const { shouldBuildToolkit } = require('./toolkit-build');
 const { startThemeSiteWithWatch, stopThemeSite } = require('./theme-dev');
-const { warmupThemeDevRoutes } = require('./theme-warmup');
-const { DEV_PORTS, ensureDevStackPorts, ensureApiPortFree, ensurePortFree, readEnvPort, isPortListening } =
+const {
+  shouldBlockOnThemeWarmup,
+  warmupThemeDevRoutes,
+  warmupThemeDevRoutesInBackground,
+} = require('./theme-warmup');
+const { DEV_PORTS, ensureApiPortFree, ensurePortFree, readEnvPort, isPortListening } =
   require('./ports');
 const { ensureDevDatabase, probeMysqlHost } = require('./docker');
 const { acquireDevSession, releaseDevSession } = require('./dev-session');
 const { checkNodeVersion, checkDocker } = require('./doctor');
+const {
+  startDevTimer,
+  markDevPhase,
+  isDevVerbose,
+  logDevLine,
+  logDevDetail,
+  logDevStatus,
+  logDevTimingSummary,
+} = require('./dev-log');
 const { t } = require('./i18n');
 
 const CLIENT_READY_TIMEOUT_MS = 120_000;
 const API_READY_TIMEOUT_MS = 180_000;
+const DEV_POLL_MS = 250;
+const DEV_POLL_FAST_MS = 150;
+
+function shouldWaitForThemeInForeground() {
+  return process.env.REACTPRESS_DEV_WAIT_THEME === '1';
+}
 
 function logDevPhase(step, total, messageKey, vars = {}) {
-  console.log(`\n[reactpress] (${step}/${total}) ${t(messageKey, vars)}\n`);
+  console.log('');
+  console.log(`[reactpress] [${step}/${total}] ${t(messageKey, vars)}`);
 }
 
 function formatDevFailureHint() {
@@ -68,21 +89,21 @@ function shutdown(signal = 'SIGINT') {
 async function buildToolkit(projectRoot) {
   if (!hasToolkit(projectRoot)) return;
   if (!shouldBuildToolkit(projectRoot)) {
-    console.log(`[reactpress] ${t('dev.toolkitUpToDate')}`);
+    logDevDetail('dev.toolkitUpToDate');
     return;
   }
   await runBuild('toolkit', projectRoot);
 }
 
 async function spawnApi(projectRoot) {
-  const { reused, port: apiPort } = await ensureApiPortFree(projectRoot, { allowReuse: false });
+  const { reused, port: apiPort } = await ensureApiPortFree(projectRoot, { allowReuse: true });
   if (reused) {
-    console.log(t('dev.apiReusing', { port: apiPort }));
-    return;
+    logDevStatus('dev.apiReusing', { port: apiPort });
+    return { reused: true, port: apiPort };
   }
 
   const apiDevRunner = path.join(__dirname, 'api-dev-runner.js');
-  console.log(t('dev.startingApi'));
+  logDevStatus('dev.startingApi');
   apiChild = spawn(process.execPath, [apiDevRunner], {
     stdio: 'inherit',
     cwd: projectRoot,
@@ -103,16 +124,33 @@ async function spawnApi(projectRoot) {
     if (webChild && !webChild.killed) webChild.kill('SIGINT');
     process.exit(code ?? 1);
   });
+  return { reused: false, port: apiPort };
 }
 
-async function waitForApiReady(projectRoot, { readyMessageKey = 'dev.apiReady' } = {}) {
+async function waitForApiReady(
+  projectRoot,
+  { readyMessageKey = 'dev.apiReady', alreadyHealthy = false } = {},
+) {
   const healthUrl = getHealthUrl(projectRoot);
   const apiPort = readEnvPort(projectRoot, 'SERVER_PORT', DEV_PORTS.API);
-  const spinner = ora({
-    text: t('dev.waitingApi', { url: healthUrl }),
-    color: 'magenta',
-    spinner: 'dots',
-  }).start();
+
+  if (alreadyHealthy) {
+    const health = await checkHealth(healthUrl, 2000);
+    if (health.ok) {
+      logDevStatus(readyMessageKey);
+      return;
+    }
+  }
+
+  const useSpinner = isDevVerbose() && process.stdout.isTTY;
+  const spinner = useSpinner
+    ? ora({
+        text: t('dev.waitingApi', { url: healthUrl }),
+        color: 'magenta',
+        spinner: 'dots',
+      }).start()
+    : null;
+  if (!useSpinner) logDevStatus('dev.waitingApiQuiet');
 
   const deadline = Date.now() + API_READY_TIMEOUT_MS;
   let lastHint = '';
@@ -120,14 +158,17 @@ async function waitForApiReady(projectRoot, { readyMessageKey = 'dev.apiReady' }
   while (Date.now() < deadline) {
     if (!isPortListening(apiPort)) {
       lastHint = t('dev.waitingApiCompile', { port: apiPort });
-      spinner.text = `${t('dev.waitingApi', { url: healthUrl })} — ${lastHint}`;
-      await new Promise((r) => setTimeout(r, 500));
+      if (spinner) {
+        spinner.text = `${t('dev.waitingApi', { url: healthUrl })} — ${lastHint}`;
+      }
+      await new Promise((r) => setTimeout(r, DEV_POLL_MS));
       continue;
     }
 
-    const health = await checkHealth(healthUrl, 4000);
+    const health = await checkHealth(healthUrl, 2500);
     if (health.ok) {
-      spinner.succeed(t(readyMessageKey));
+      if (spinner) spinner.succeed(t(readyMessageKey));
+      else logDevStatus(readyMessageKey);
       return;
     }
 
@@ -141,22 +182,26 @@ async function waitForApiReady(projectRoot, { readyMessageKey = 'dev.apiReady' }
       lastHint = `HTTP ${health.statusCode}`;
     }
 
-    if (lastHint) {
+    if (spinner && lastHint) {
       spinner.text = `${t('dev.waitingApi', { url: healthUrl })} — ${lastHint}`;
     }
-    await new Promise((r) => setTimeout(r, 500));
+    await new Promise((r) => setTimeout(r, DEV_POLL_FAST_MS));
   }
 
-  spinner.fail(t('dev.apiTimeout', { seconds: API_READY_TIMEOUT_MS / 1000 }));
+  if (spinner) spinner.fail(t('dev.apiTimeout', { seconds: API_READY_TIMEOUT_MS / 1000 }));
+  else console.error(t('dev.apiTimeout', { seconds: API_READY_TIMEOUT_MS / 1000 }));
   shutdown('SIGINT');
   process.exit(1);
 }
 
-async function spawnAdminWeb(projectRoot, { behindNginx = false, integratedStack = false } = {}) {
+async function spawnAdminWeb(
+  projectRoot,
+  { behindNginx = false, integratedStack = false, waitForReady = true } = {},
+) {
   const adminPort = readEnvPort(projectRoot, 'WEB_ADMIN_PORT', DEV_PORTS.ADMIN_WEB);
   await ensurePortFree(adminPort, { label: 'admin' });
 
-  console.log(t('dev.startingAdmin', { url: loadWebAdminUrl(projectRoot) }));
+  logDevDetail('dev.startingAdmin', { url: loadWebAdminUrl(projectRoot) });
   const adminEnv = {
     ...process.env,
     REACTPRESS_ORIGINAL_CWD: projectRoot,
@@ -173,8 +218,7 @@ async function spawnAdminWeb(projectRoot, { behindNginx = false, integratedStack
     adminEnv.VITE_DEV_API_PROXY_TARGET = loadServerSiteUrl(projectRoot).replace(/\/$/, '');
   }
 
-  webChild = spawn('pnpm', ['run', '--dir', './web', 'dev'], {
-    stdio: 'inherit',
+  webChild = spawnDevChild('pnpm', ['run', '--dir', './web', 'dev'], {
     shell: true,
     cwd: projectRoot,
     env: adminEnv,
@@ -185,8 +229,10 @@ async function spawnAdminWeb(projectRoot, { behindNginx = false, integratedStack
     process.exit(code ?? 0);
   });
 
+  if (!waitForReady) return Promise.resolve(true);
+
   const readyUrl = loadWebAdminUrl(projectRoot);
-  return waitForHttp(readyUrl, CLIENT_READY_TIMEOUT_MS).then((ready) => {
+  return waitForHttp(readyUrl, CLIENT_READY_TIMEOUT_MS, DEV_POLL_MS).then((ready) => {
     if (!ready) {
       console.warn(
         t('dev.adminSlow', {
@@ -235,8 +281,6 @@ function assertDevPrerequisites() {
     console.error(formatDevFailureHint());
     process.exit(1);
   }
-  console.log(`[reactpress] ✓ ${t('dev.checkNodeOk', { version: process.version })}`);
-
   const docker = checkDocker();
   if (!docker.ok) {
     console.error(`[reactpress] ${docker.message}`);
@@ -244,19 +288,21 @@ function assertDevPrerequisites() {
     console.error(formatDevFailureHint());
     process.exit(1);
   }
-  console.log(`[reactpress] ✓ ${t('dev.checkDockerOk')}`);
+  logDevStatus('dev.prerequisitesOk', { version: process.version });
 }
 
 async function prepareDevInfrastructure(projectRoot) {
   await acquireDevSession(projectRoot);
-  await ensureDevDatabase(projectRoot);
-
   const planNginx = process.env.REACTPRESS_SKIP_NGINX !== '1';
-  if (planNginx) {
-    nginxEnabled = await startDevNginx(projectRoot);
-    if (nginxEnabled) {
-      console.log(t('dev.nginxReady', { url: nginxEntryUrl(projectRoot) }));
-    }
+
+  const [, nginxResult] = await Promise.all([
+    ensureDevDatabase(projectRoot, { quiet: true }),
+    planNginx ? startDevNginx(projectRoot) : Promise.resolve(false),
+  ]);
+
+  nginxEnabled = nginxResult;
+  if (nginxEnabled) {
+    logDevStatus('dev.nginxReady', { url: nginxEntryUrl(projectRoot) });
   }
 }
 
@@ -300,14 +346,15 @@ async function startDevStack(projectRoot, { webOnly = false, infraDone = false }
     logDevPhase(3, 3, 'dev.phaseServices');
   }
 
-  await ensureDevStackPorts(projectRoot);
-
-  console.log(t('dev.phaseApi'));
-  await spawnApi(projectRoot);
+  logDevStatus('dev.phaseApi');
+  markDevPhase('services');
+  const apiSpawn = await spawnApi(projectRoot);
+  const readyMessageKey = webOnly || hasWeb(projectRoot) ? 'dev.apiReadyAdmin' : 'dev.apiReady';
 
   const readinessWaits = [
     waitForApiReady(projectRoot, {
-      readyMessageKey: webOnly || hasWeb(projectRoot) ? 'dev.apiReadyAdmin' : 'dev.apiReady',
+      readyMessageKey,
+      alreadyHealthy: Boolean(apiSpawn?.reused),
     }),
   ];
 
@@ -318,77 +365,101 @@ async function startDevStack(projectRoot, { webOnly = false, infraDone = false }
     return;
   }
 
+  const waitThemeInForeground = includeThemeSite && shouldWaitForThemeInForeground();
   let themeSiteStarted = false;
 
   if (includeWebInStack) {
-    console.log(t('dev.phaseAdmin'));
+    logDevDetail('dev.phaseAdmin');
     if (planNginx) process.env.REACTPRESS_BEHIND_NGINX = '1';
+    logDevDetail('dev.startingAdmin', { url: loadWebAdminUrl(projectRoot) });
+    spawnAdminWeb(projectRoot, {
+      behindNginx: planNginx,
+      integratedStack: true,
+      waitForReady: false,
+    });
     const adminBase = loadWebAdminUrl(projectRoot).replace(/\/$/, '');
     const adminProbe = planNginx ? `${adminBase}/admin/` : `${adminBase}/`;
-    readinessWaits.push(
-      spawnAdminWeb(projectRoot, { behindNginx: planNginx, integratedStack: true }).then(() =>
-        waitForHttp(adminProbe, 120_000),
-      ),
-    );
+    readinessWaits.push(waitForHttp(adminProbe, 120_000, DEV_POLL_MS));
   } else if (includeAdmin) {
-    console.log(t('dev.phaseAdmin'));
+    logDevDetail('dev.phaseAdmin');
+    spawnAdminWeb(projectRoot, {
+      behindNginx: planNginx,
+      integratedStack: false,
+      waitForReady: false,
+    });
     const adminBase = loadWebAdminUrl(projectRoot).replace(/\/$/, '');
     const adminProbe = planNginx ? `${adminBase}/admin/` : `${adminBase}/`;
-    readinessWaits.push(
-      spawnAdminWeb(projectRoot, { behindNginx: planNginx, integratedStack: false }).then(() =>
-        waitForHttp(adminProbe, 120_000),
-      ),
-    );
+    readinessWaits.push(waitForHttp(adminProbe, 120_000, DEV_POLL_MS));
   }
 
   if (includeThemeSite) {
-    console.log(t('dev.phaseTheme'));
+    const { activeTheme } = readActiveThemeManifest(projectRoot);
+    logDevStatus('dev.themeStarting', {
+      id: activeTheme,
+      port: readEnvPort(projectRoot, 'CLIENT_PORT', DEV_PORTS.VISITOR),
+    });
     if (planNginx) process.env.REACTPRESS_BEHIND_NGINX = '1';
-    themeSiteStarted = await startThemeSiteWithWatch(projectRoot);
-    if (themeSiteStarted) {
+    process.env.REACTPRESS_DEV_FORCE_LOCAL_THEME_API = '1';
+    const themeBoot = startThemeSiteWithWatch(projectRoot);
+    const themeWait = themeBoot.then(async (started) => {
+      themeSiteStarted = started;
+      if (!started) return true;
       const clientUrl = loadClientSiteUrl(projectRoot);
-      readinessWaits.push(
-        waitForHttp(clientUrl, 120_000).then(async (ready) => {
-          if (ready) await warmupThemeDevRoutes(projectRoot);
-          return ready;
-        }),
-      );
+      const port = readEnvPort(projectRoot, 'CLIENT_PORT', DEV_PORTS.VISITOR);
+      const portOpen = await (async () => {
+        const deadline = Date.now() + 120_000;
+        while (Date.now() < deadline) {
+          if (isPortListening(port)) return true;
+          await new Promise((r) => setTimeout(r, DEV_POLL_MS));
+        }
+        return false;
+      })();
+      if (portOpen) {
+        if (shouldBlockOnThemeWarmup()) {
+          await warmupThemeDevRoutes(projectRoot);
+        } else {
+          warmupThemeDevRoutesInBackground(projectRoot);
+        }
+      }
+      return portOpen;
+    });
+    if (waitThemeInForeground) {
+      readinessWaits.push(themeWait);
+    } else {
+      themeWait.then((ready) => {
+        if (ready) logDevDetail('dev.themeReadyQuiet', { url: loadClientSiteUrl(projectRoot) });
+      });
     }
   }
 
   if (includeLegacyClient) {
     console.log(t('dev.phaseClient'));
     spawnLegacyClient(projectRoot);
-    readinessWaits.push(waitForHttp(loadClientSiteUrl(projectRoot), 120_000));
+    readinessWaits.push(waitForHttp(loadClientSiteUrl(projectRoot), 120_000, DEV_POLL_MS));
   }
 
-  const needsProxyWait = readinessWaits.length > 1 || includeLegacyClient;
+  if (readinessWaits.length > 1) {
+    logDevStatus('dev.waitingProxies');
+  }
+  await Promise.all(readinessWaits);
+  if (readinessWaits.length > 1) {
+    logDevStatus('dev.proxiesReady');
+  }
 
-  if (needsProxyWait) {
-    const waitSpinner = ora({
-      text: t('dev.waitingProxies'),
-      color: 'cyan',
-      spinner: 'dots',
-    }).start();
-    await Promise.all(readinessWaits);
-    if (includeWebInStack && planNginx && nginxEnabled) {
-      const adminViaNginx = `${nginxEntryUrl(projectRoot).replace(/\/$/, '')}/admin/`;
-      const adminOk = await waitForHttp(adminViaNginx, 60_000);
+  if (includeWebInStack && planNginx && nginxEnabled) {
+    const adminViaNginx = `${nginxEntryUrl(projectRoot).replace(/\/$/, '')}/admin/`;
+    waitForHttp(adminViaNginx, 15_000, DEV_POLL_MS).then((adminOk) => {
       if (!adminOk) {
         console.warn(t('dev.adminNginxSlow', { url: adminViaNginx }));
       }
-    }
-    if (planNginx && !nginxEnabled) {
-      nginxEnabled = await startDevNginx(projectRoot);
-      if (nginxEnabled) {
+    });
+  } else if (planNginx && !nginxEnabled) {
+    startDevNginx(projectRoot).then((enabled) => {
+      nginxEnabled = enabled;
+      if (enabled) {
         console.log(t('dev.nginxReady', { url: nginxEntryUrl(projectRoot) }));
       }
-    }
-    waitSpinner.succeed(
-      nginxEnabled ? t('dev.nginxReady', { url: nginxEntryUrl(projectRoot) }) : t('dev.proxiesReady'),
-    );
-  } else {
-    await Promise.all(readinessWaits);
+    });
   }
 
   const dbOk = await probeMysqlHost(projectRoot);
@@ -402,12 +473,17 @@ async function startDevStack(projectRoot, { webOnly = false, infraDone = false }
     hasThemeSite: includeThemeSite,
     dbOk,
   });
+
+  logDevTimingSummary({
+    apiReused: Boolean(apiSpawn?.reused),
+  });
 }
 
 async function runDevStartup(projectRoot, { webOnly = false } = {}) {
+  startDevTimer();
   try {
     const result = await ensureProjectEnvironment(projectRoot, { skipDatabase: true });
-    if (result.message) console.log(`[reactpress] ${result.message}`);
+    if (result.message && isDevVerbose()) console.log(`[reactpress] ${result.message}`);
   } catch (err) {
     console.error(t('dev.envFailed'), err.message || err);
     console.error(formatDevFailureHint());
@@ -420,6 +496,7 @@ async function runDevStartup(projectRoot, { webOnly = false } = {}) {
   logDevPhase(2, 3, 'dev.phaseInfra');
   try {
     await Promise.all([prepareDevInfrastructure(projectRoot), buildToolkit(projectRoot)]);
+    markDevPhase('infra');
   } catch (err) {
     console.error(t('dev.dbEnsureFailed', { message: err.message || err }));
     console.error(formatDevFailureHint());

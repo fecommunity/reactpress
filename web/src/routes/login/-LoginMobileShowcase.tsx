@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
-import { LoginCliSnippet } from "./LoginCliSnippet";
-import { LoginHeroLinks } from "./LoginHeroLinks";
+import { LoginCliSnippet } from "./-LoginCliSnippet";
+import { LoginHeroLinks } from "./-LoginHeroLinks";
 import styles from "./login-mobile-showcase.module.css";
 
 export function LoginMobileShowcase() {

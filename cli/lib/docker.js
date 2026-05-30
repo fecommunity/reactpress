@@ -149,13 +149,13 @@ async function startDockerServices(projectRoot) {
   console.log(t('docker.started'));
 }
 
-async function ensureDevDatabase(projectRoot) {
+async function ensureDevDatabase(projectRoot, { quiet = false } = {}) {
   const dbPort = parseDbPort(projectRoot);
   const ctx = resolveComposeContext(projectRoot);
   const container = resolveDbContainerName(ctx, projectRoot);
 
   const finishWhenReady = async (maxAttempts = 60) => {
-    if (await waitForMysql(projectRoot, maxAttempts)) return true;
+    if (await waitForMysql(projectRoot, maxAttempts, { quiet })) return true;
     return false;
   };
 
@@ -163,7 +163,7 @@ async function ensureDevDatabase(projectRoot) {
     return;
   }
 
-  console.log(t('docker.ensureDevDb'));
+  if (!quiet) console.log(t('docker.ensureDevDb'));
   if (!isDockerRunning()) {
     throw new Error(t('docker.devStartBlocked', { port: dbPort }));
   }
@@ -174,19 +174,21 @@ async function ensureDevDatabase(projectRoot) {
   await new Promise((r) => setTimeout(r, 1000));
   if (await finishWhenReady(45)) return;
 
+  const composeStdio = quiet ? 'ignore' : 'inherit';
+
   if (!isPortListening(dbPort)) {
-    const dbResult = runCompose(['up', '-d', 'db'], ctx);
+    const dbResult = runCompose(['up', '-d', '--remove-orphans', 'db'], ctx, { stdio: composeStdio });
     if (dbResult.status !== 0) {
       throw new Error(t('docker.mysqlNotReady'));
     }
   } else if (await probeMysqlHost(projectRoot)) {
-    console.log(t('docker.dbReuseExisting', { port: dbPort }));
+    if (!quiet) console.log(t('docker.dbReuseExisting', { port: dbPort }));
     if (await finishWhenReady(30)) return;
   } else {
-    console.warn(t('docker.dbPortInUseRecycle', { port: dbPort }));
+    if (!quiet) console.warn(t('docker.dbPortInUseRecycle', { port: dbPort }));
     spawnSync('docker', ['rm', '-f', 'reactpress_db'], { stdio: 'ignore' });
     await new Promise((r) => setTimeout(r, 500));
-    const recreate = runCompose(['up', '-d', 'db'], ctx);
+    const recreate = runCompose(['up', '-d', '--remove-orphans', 'db'], ctx, { stdio: composeStdio });
     if (recreate.status !== 0) {
       throw new Error(t('docker.mysqlNotReady'));
     }
@@ -275,7 +277,7 @@ async function probeMysqlHost(projectRoot) {
   }
 }
 
-async function waitForMysql(projectRoot, maxAttempts = 30) {
+async function waitForMysql(projectRoot, maxAttempts = 30, { quiet = false } = {}) {
   const ctx = resolveComposeContext(projectRoot);
   const container = resolveDbContainerName(ctx, projectRoot);
   const { user, password } = resolveDbCredentialsFromEnv(projectRoot);
@@ -284,16 +286,19 @@ async function waitForMysql(projectRoot, maxAttempts = 30) {
   if (!isDbContainerRunning(container) && isPortListening(dbPort)) {
     const ready = await probeMysqlHost(projectRoot);
     if (ready) {
-      console.log(t('docker.mysqlExternalReady', { port: dbPort }));
+      if (!quiet) console.log(t('docker.mysqlExternalReady', { port: dbPort }));
       return true;
     }
   }
 
-  const spinner = ora({
-    text: t('docker.waitingMysql'),
-    color: 'magenta',
-    spinner: 'dots',
-  }).start();
+  const useSpinner = !quiet && process.stdout.isTTY;
+  const spinner = useSpinner
+    ? ora({
+        text: t('docker.waitingMysql'),
+        color: 'magenta',
+        spinner: 'dots',
+      }).start()
+    : null;
 
   let attempts = 0;
   while (attempts < maxAttempts) {
@@ -304,18 +309,20 @@ async function waitForMysql(projectRoot, maxAttempts = 30) {
         { stdio: 'ignore' }
       );
       if (probe.status === 0) {
-        spinner.succeed(t('docker.mysqlReady'));
+        if (spinner) spinner.succeed(t('docker.mysqlReady'));
         return true;
       }
     } else if (await probeMysqlHost(projectRoot)) {
-      spinner.succeed(t('docker.mysqlExternalReady', { port: dbPort }));
+      if (spinner) spinner.succeed(t('docker.mysqlExternalReady', { port: dbPort }));
       return true;
     }
     attempts += 1;
-    spinner.text = t('docker.waitingMysqlProgress', { attempts, max: maxAttempts });
+    if (spinner) {
+      spinner.text = t('docker.waitingMysqlProgress', { attempts, max: maxAttempts });
+    }
     await new Promise((r) => setTimeout(r, 1000));
   }
-  spinner.fail(t('docker.mysqlTimeout'));
+  if (spinner) spinner.fail(t('docker.mysqlTimeout'));
   return false;
 }
 

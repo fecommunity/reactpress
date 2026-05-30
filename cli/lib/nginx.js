@@ -312,7 +312,10 @@ function nginxUp(projectRoot, options = {}) {
   const ctx = resolveNginxComposeContext(projectRoot, mode);
 
   if (fs.existsSync(ctx.composeFile) && composeDefinesNginxService(ctx.composeFile)) {
-    const result = runComposeOnContext(ctx, ['up', '-d', '--no-deps', ctx.service]);
+    const composeArgs = ['up', '-d', '--no-deps', '--remove-orphans', ctx.service];
+    const result = runComposeOnContext(ctx, composeArgs, {
+      stdio: options.quiet ? 'ignore' : 'inherit',
+    });
     if (result.status !== 0) {
       throw new Error(t('nginx.startFailed'));
     }
@@ -452,7 +455,11 @@ async function startDevNginx(projectRoot) {
         nginxRestart(projectRoot, { quiet: true });
       }
     }
-    const healthy = await probeNginxHealth(projectRoot, 15_000);
+    const probeMs = Math.max(
+      1000,
+      parseInt(process.env.REACTPRESS_NGINX_PROBE_MS || '4000', 10) || 4000,
+    );
+    const healthy = await probeNginxHealth(projectRoot, probeMs);
     if (!healthy) {
       console.warn(t('dev.nginxSlow', { url: nginxEntryUrl(projectRoot) }));
     }

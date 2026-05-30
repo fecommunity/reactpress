@@ -1,4 +1,5 @@
-const { spawn, spawnSync } = require('child_process');
+const { spawnSync } = require('child_process');
+const { spawnDevChild } = require('./dev-child-io');
 const path = require('path');
 const fs = require('fs');
 const { loadClientSiteUrl, loadServerSiteUrl, getApiPrefix, waitForHttp } = require('./http');
@@ -13,6 +14,7 @@ const {
   isThemePackageDir,
   isAllowedThemePort,
 } = require('./theme-runtime');
+const { isDevVerbose, logDevDetail, logDevLine } = require('./dev-log');
 const { t } = require('./i18n');
 
 let themeChild = null;
@@ -27,16 +29,39 @@ let previewRunningSignature = null;
 let trackedPreviewThemePid = null;
 let previewRestartChain = Promise.resolve();
 
-/** Remove `.next` when it still contains Next 12 / React 17 chunks after a theme upgrade. */
+/** Drop `.next` only when it does not match the theme package React major (avoids wiping React 17 caches). */
 function cleanStaleThemeDevCache(themeDir) {
+  if (process.env.REACTPRESS_KEEP_THEME_CACHE === '1') return;
+
   const nextDir = path.join(themeDir, '.next');
   if (!fs.existsSync(nextDir)) return;
+
+  if (process.env.REACTPRESS_CLEAR_THEME_CACHE === '1') {
+    fs.rmSync(nextDir, { recursive: true, force: true });
+    logDevDetail('themeDev.cacheCleared');
+    return;
+  }
+
+  let expectedMajor = '17';
   try {
-    const result = spawnSync('grep', ['-rl', 'react@17.0.2', nextDir], { encoding: 'utf8' });
-    if (result.stdout?.trim()) {
-      fs.rmSync(nextDir, { recursive: true, force: true });
-      console.log('[reactpress] Cleared stale theme .next cache (react@17 chunks).');
-    }
+    const pkg = JSON.parse(fs.readFileSync(path.join(themeDir, 'package.json'), 'utf8'));
+    const reactDep = pkg.dependencies?.react || pkg.devDependencies?.react || '';
+    const match = String(reactDep).match(/(\d+)/);
+    if (match) expectedMajor = match[1];
+  } catch {
+    return;
+  }
+
+  try {
+    const marker = `react@${expectedMajor}`;
+    const result = spawnSync('grep', ['-rl', marker, nextDir], {
+      encoding: 'utf8',
+      maxBuffer: 1024 * 1024,
+    });
+    if (result.stdout?.trim()) return;
+
+    fs.rmSync(nextDir, { recursive: true, force: true });
+    logDevDetail('themeDev.cacheStaleCleared', { marker });
   } catch {
     // ignore grep / rm failures
   }
@@ -228,28 +253,44 @@ function readThemeApiOverride(projectRoot, envKey) {
   return null;
 }
 
-/** Direct Nest API — used for Next.js SSR (runs before nginx is up). */
-function buildThemeServerApiUrl(projectRoot) {
-  const override = readThemeApiOverride(projectRoot, 'REACTPRESS_THEME_API_URL');
-  if (override) return override;
+function useLocalThemeApiInDev() {
+  return process.env.REACTPRESS_DEV_FORCE_LOCAL_THEME_API === '1';
+}
 
+function buildLocalThemeApiUrl(projectRoot, { forBrowser = false } = {}) {
+  if (forBrowser && process.env.REACTPRESS_BEHIND_NGINX === '1') {
+    return `${nginxEntryUrl(projectRoot).replace(/\/$/, '')}/api`;
+  }
   const server = loadServerSiteUrl(projectRoot).replace(/\/$/, '');
   const prefix = getApiPrefix(projectRoot).replace(/\/$/, '') || '/api';
   return `${server}${prefix.startsWith('/') ? prefix : `/${prefix}`}`;
 }
 
+/** Direct Nest API — used for Next.js SSR (runs before nginx is up). */
+function buildThemeServerApiUrl(projectRoot) {
+  if (useLocalThemeApiInDev()) {
+    return buildLocalThemeApiUrl(projectRoot, { forBrowser: false });
+  }
+
+  const override = readThemeApiOverride(projectRoot, 'REACTPRESS_THEME_API_URL');
+  if (override) return override;
+
+  return buildLocalThemeApiUrl(projectRoot);
+}
+
 /** Browser-facing API — nginx unified entry when behind proxy. */
 function buildThemePublicApiUrl(projectRoot) {
+  if (useLocalThemeApiInDev()) {
+    return buildLocalThemeApiUrl(projectRoot, { forBrowser: true });
+  }
+
   const publicOverride = readThemeApiOverride(projectRoot, 'REACTPRESS_THEME_PUBLIC_API_URL');
   if (publicOverride) return publicOverride;
 
   const themeOverride = readThemeApiOverride(projectRoot, 'REACTPRESS_THEME_API_URL');
   if (themeOverride) return themeOverride;
 
-  if (process.env.REACTPRESS_BEHIND_NGINX === '1') {
-    return `${nginxEntryUrl(projectRoot).replace(/\/$/, '')}/api`;
-  }
-  return buildThemeServerApiUrl(projectRoot);
+  return buildLocalThemeApiUrl(projectRoot);
 }
 
 /** @deprecated use buildThemeServerApiUrl / buildThemePublicApiUrl */
@@ -279,7 +320,9 @@ function buildThemeChildEnv(projectRoot, { port, serverApiUrl, publicApiUrl, the
     NEXT_PUBLIC_REACTPRESS_API_URL: publicApiUrl,
     REACTPRESS_THEME_ID: themeId || '',
     REACTPRESS_ORIGINAL_CWD: projectRoot,
+    REACTPRESS_SKIP_BROWSER_OPEN: '1',
     NEXT_IGNORE_INCORRECT_LOCKFILE: '1',
+    NEXT_TELEMETRY_DISABLED: '1',
   };
 }
 
@@ -379,15 +422,17 @@ function spawnThemeSite(projectRoot, { onClose } = {}) {
   }
 
   const relDir = path.relative(projectRoot, themeDir) || themeDir;
-  console.log(t('themeDev.starting', { id: activeTheme, port, url: siteUrl, dir: relDir }));
-  console.log(t('themeDev.apiSplit', { ssr: serverApiUrl, browser: publicApiUrl }));
+  logDevDetail('themeDev.startingShort', { id: activeTheme, port, dir: relDir });
+  if (isDevVerbose()) {
+    logDevLine('themeDev.apiSplit', { ssr: serverApiUrl, browser: publicApiUrl });
+  }
 
   cleanStaleThemeDevCache(themeDir);
 
-  themeChild = spawn('pnpm', ['run', 'dev'], {
+  themeChild = spawnDevChild('pnpm', ['run', 'dev'], {
     cwd: themeDir,
     detached: process.platform !== 'win32',
-    stdio: 'inherit',
+    shell: process.platform === 'win32',
     env: buildThemeChildEnv(projectRoot, { port, serverApiUrl, publicApiUrl, themeId: activeTheme }),
   });
 
@@ -406,13 +451,15 @@ function spawnThemeSite(projectRoot, { onClose } = {}) {
     if (onClose) onClose(code);
   });
 
-  waitForHttp(siteUrl, 120_000).then((ready) => {
-    if (ready && runningSignature === signature) {
-      console.log(t('themeDev.ready', { url: siteUrl, id: activeTheme }));
-    } else if (!ready && runningSignature === signature) {
-      console.warn(t('themeDev.slow', { url: siteUrl }));
-    }
-  });
+  if (process.env.REACTPRESS_DEV_FORCE_LOCAL_THEME_API !== '1') {
+    waitForHttp(siteUrl, 120_000).then((ready) => {
+      if (ready && runningSignature === signature) {
+        console.log(t('themeDev.ready', { url: siteUrl, id: activeTheme }));
+      } else if (!ready && runningSignature === signature) {
+        console.warn(t('themeDev.slow', { url: siteUrl }));
+      }
+    });
+  }
 
   return themeChild;
 }
@@ -665,6 +712,11 @@ function clearPreviewThemeManifestFile(projectRoot) {
   }
 }
 
+async function releaseThemePortIfBusy(projectRoot, port, options) {
+  if (!isPortListening(port)) return true;
+  return releaseThemePort(projectRoot, port, options);
+}
+
 async function prepareThemeDevBoot(projectRoot) {
   clearPreviewThemeManifestFile(projectRoot);
   stopPreviewThemeProcess();
@@ -676,8 +728,8 @@ async function prepareThemeDevBoot(projectRoot) {
 
   const visitorPort = assertThemePort(getClientPort(projectRoot));
   const previewPort = assertThemePort(getPreviewThemePort());
-  await releaseThemePort(projectRoot, previewPort, { preview: true });
-  await releaseThemePort(projectRoot, visitorPort);
+  await releaseThemePortIfBusy(projectRoot, previewPort, { preview: true });
+  await releaseThemePortIfBusy(projectRoot, visitorPort);
 }
 
 async function startThemeSiteWithWatch(projectRoot, { onClose } = {}) {

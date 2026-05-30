@@ -15,9 +15,9 @@ import { Theme } from "@/components/Icon";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { useMinWidth } from "@/hooks/useMinWidth";
-import { LoginBrandMark } from "./LoginBrandMark";
-import { LoginHeroPanel } from "./LoginHeroPanel";
-import { LoginMobileShowcase } from "./LoginMobileShowcase";
+import { LoginBrandMark } from "./-LoginBrandMark";
+import { LoginHeroPanel } from "./-LoginHeroPanel";
+import { LoginMobileShowcase } from "./-LoginMobileShowcase";
 import pageStyles from "./login-page.module.css";
 
 export const Route = createFileRoute("/login/")({
