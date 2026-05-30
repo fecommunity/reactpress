@@ -182,10 +182,30 @@
     "usernameRequired": "请输入用户名",
     "passwordRequired": "请输入密码",
     "signIn": "登录",
+    "noAccount": "没有账号？",
+    "signUpLink": "立即注册",
     "poweredBy": "由 <1>ReactPress</1> 提供技术支持",
     "success": "登录成功",
     "failed": "登录失败",
     "apiConnectionError": "无法连接 API：请确认已运行 pnpm dev:web 或 pnpm dev:api，且勿将 VITE_API_BASE_URL 设为跨域绝对地址"
+  },
+  "register": {
+    "title": "注册",
+    "subtitle": "创建账号以访问管理后台。",
+    "email": "邮箱",
+    "emailPlaceholder": "请输入邮箱（选填）",
+    "emailInvalid": "请输入有效的邮箱地址",
+    "confirmPassword": "确认密码",
+    "confirmPasswordPlaceholder": "请再次输入密码",
+    "passwordMismatch": "两次输入的密码不一致",
+    "signUp": "注册",
+    "success": "注册成功，请登录",
+    "failed": "注册失败",
+    "hasAccount": "已有账号？",
+    "signInLink": "去登录",
+    "scroll": {
+      "screenAuth": "注册"
+    }
   },
   "dashboard": {
     "title": "仪表盘",

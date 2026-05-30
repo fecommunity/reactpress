@@ -2,6 +2,7 @@ import { http } from "msw";
 
 import { ERROR_CODES, errorResponse, successResponse, withDelay } from "../createHandler";
 import { MOCK_USERS } from "../data";
+import { verifyMockCredential } from "../mockCredentials";
 
 export const authHandlers = [
   http.post("/api/auth/login", async ({ request }) => {
@@ -11,6 +12,12 @@ export const authHandlers = [
       password: string;
     };
     if (body.username === "admin" && body.password === "admin") {
+      return successResponse({
+        accessToken: "mock-access-token",
+        refreshToken: "mock-refresh-token",
+      });
+    }
+    if (verifyMockCredential(body.username, body.password)) {
       return successResponse({
         accessToken: "mock-access-token",
         refreshToken: "mock-refresh-token",

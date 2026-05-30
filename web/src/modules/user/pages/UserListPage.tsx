@@ -22,6 +22,7 @@ import {
 } from "@/modules/user/userListApi";
 import { FormModal, type UserFormValues } from "@/routes/_auth/users/-FormModal";
 import { ModulePlaceholder } from "@/shared/components/ModulePlaceholder";
+import { getApiErrorMessage } from "@/shared/api/getApiErrorMessage";
 import { AUTH_MODE } from "@/utils/constants";
 
 export type { UserListSearch };
@@ -86,7 +87,7 @@ export function UserListPage({ search, routePath }: UserListPageProps) {
       setModalOpen(false);
       form.resetFields();
     },
-    onError: () => message.error(t("common.createFailed")),
+    onError: (err) => message.error(getApiErrorMessage(err, t, "common.createFailed")),
   });
 
   const updateMutation = useMutation({
@@ -98,7 +99,7 @@ export function UserListPage({ search, routePath }: UserListPageProps) {
       setEditingUser(null);
       form.resetFields();
     },
-    onError: () => message.error(t("common.updateFailed")),
+    onError: (err) => message.error(getApiErrorMessage(err, t, "common.updateFailed")),
   });
 
   const deleteMutation = useMutation({
@@ -107,7 +108,7 @@ export function UserListPage({ search, routePath }: UserListPageProps) {
       invalidateUsers();
       message.success(t("common.deletedSuccess"));
     },
-    onError: () => message.error(t("common.deleteFailed")),
+    onError: (err) => message.error(getApiErrorMessage(err, t, "common.deleteFailed")),
   });
 
   const bulkDeleteMutation = useMutation({
@@ -120,7 +121,7 @@ export function UserListPage({ search, routePath }: UserListPageProps) {
       setBulkAction(undefined);
       message.success(t("users.bulkSuccess"));
     },
-    onError: () => message.error(t("common.deleteFailed")),
+    onError: (err) => message.error(getApiErrorMessage(err, t, "common.deleteFailed")),
   });
 
   const bulkStatusMutation = useMutation({
@@ -132,7 +133,7 @@ export function UserListPage({ search, routePath }: UserListPageProps) {
       setBulkAction(undefined);
       message.success(t("users.statusUpdated"));
     },
-    onError: () => message.error(t("common.updateFailed")),
+    onError: (err) => message.error(getApiErrorMessage(err, t, "common.updateFailed")),
   });
 
   const statusMutation = useMutation({
@@ -142,7 +143,7 @@ export function UserListPage({ search, routePath }: UserListPageProps) {
       invalidateUsers();
       message.success(t("users.statusUpdated"));
     },
-    onError: () => message.error(t("common.updateFailed")),
+    onError: (err) => message.error(getApiErrorMessage(err, t, "common.updateFailed")),
   });
 
   const roleChangeMutation = useMutation({
@@ -153,7 +154,7 @@ export function UserListPage({ search, routePath }: UserListPageProps) {
       setRoleChange(undefined);
       message.success(t("users.roleChangeSuccess"));
     },
-    onError: () => message.error(t("common.updateFailed")),
+    onError: (err) => message.error(getApiErrorMessage(err, t, "common.updateFailed")),
   });
 
   const applySearch = useCallback(

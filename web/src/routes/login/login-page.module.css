@@ -193,7 +193,13 @@
 .authForm :global(#login-username:-webkit-autofill),
 .authForm :global(#login-username:autofill),
 .authForm :global(#login-password:-webkit-autofill),
-.authForm :global(#login-password:autofill) {
+.authForm :global(#login-password:autofill),
+.authForm :global(#register-username:-webkit-autofill),
+.authForm :global(#register-username:autofill),
+.authForm :global(#register-password:-webkit-autofill),
+.authForm :global(#register-password:autofill),
+.authForm :global(#register-confirm-password:-webkit-autofill),
+.authForm :global(#register-confirm-password:autofill) {
   background-color: var(--rp-autofill-bg) !important;
   background-image: none !important;
   -webkit-box-shadow: 0 0 0 1000px var(--rp-autofill-bg) inset !important;
@@ -212,7 +218,13 @@
 .authForm :global(#login-username:-webkit-autofill:hover),
 .authForm :global(#login-username:-webkit-autofill:focus),
 .authForm :global(#login-password:-webkit-autofill:hover),
-.authForm :global(#login-password:-webkit-autofill:focus) {
+.authForm :global(#login-password:-webkit-autofill:focus),
+.authForm :global(#register-username:-webkit-autofill:hover),
+.authForm :global(#register-username:-webkit-autofill:focus),
+.authForm :global(#register-password:-webkit-autofill:hover),
+.authForm :global(#register-password:-webkit-autofill:focus),
+.authForm :global(#register-confirm-password:-webkit-autofill:hover),
+.authForm :global(#register-confirm-password:-webkit-autofill:focus) {
   border-color: var(--rp-brand) !important;
   background-color: var(--rp-autofill-bg) !important;
   -webkit-box-shadow:
@@ -267,6 +279,10 @@
 .authMeta {
   margin-top: 1rem;
   text-align: center;
+}
+
+.authMeta .authFooter + .authFooter {
+  margin-top: 0.5rem;
 }
 
 .authFooter {

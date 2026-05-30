@@ -1,37 +1,20 @@
 import { ERROR_CODES } from "@/mocks/createHandler";
-import { ApiError, HttpError } from "@/utils/http";
+import { extractApiErrorMessage } from "@/shared/api/getApiErrorMessage";
+import { ApiError } from "@/utils/http";
 
 type Translate = (key: string) => string;
 
-function getHttpStatus(err: unknown): number | undefined {
-  if (err instanceof HttpError) return err.status;
-  if (typeof err === "object" && err !== null) {
-    const candidate = err as { status?: number; response?: { status?: number } };
-    return candidate.response?.status ?? candidate.status;
-  }
-  return undefined;
-}
-
-function isInvalidCredentialsError(err: unknown): boolean {
+function isLikelyInvalidCredentials(err: unknown, message: string): boolean {
   if (err instanceof ApiError && err.code === ERROR_CODES.INVALID_CREDENTIALS) {
     return true;
   }
 
-  const status = getHttpStatus(err);
-  if (status === 400 || status === 401) {
-    return true;
-  }
-
-  if (err instanceof Error) {
-    const message = err.message.toLowerCase();
-    return (
-      message.includes("invalid username or password") ||
-      message.includes("status code 400") ||
-      message.includes("status code 401")
-    );
-  }
-
-  return false;
+  const lower = message.toLowerCase();
+  return (
+    lower.includes("invalid username or password") ||
+    lower.includes("invalid credentials") ||
+    lower.includes("incorrect username or password")
+  );
 }
 
 export function getLoginErrorMessage(err: unknown, t: Translate): string {
@@ -39,12 +22,12 @@ export function getLoginErrorMessage(err: unknown, t: Translate): string {
     return t("login.apiConnectionError");
   }
 
-  if (isInvalidCredentialsError(err)) {
-    return t("login.invalidCredentials");
-  }
-
-  if (err instanceof Error && err.message) {
-    return err.message;
+  const serverMessage = extractApiErrorMessage(err);
+  if (serverMessage) {
+    if (isLikelyInvalidCredentials(err, serverMessage)) {
+      return t("login.invalidCredentials");
+    }
+    return serverMessage;
   }
 
   return t("login.failed");

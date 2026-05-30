@@ -5,6 +5,7 @@ import { useSiteSettings } from "@/hooks/useSiteSettings";
 import formStyles from "@/shared/styles/admin-form-table.module.css";
 import styles from "@/modules/settings/components/settings-form.module.css";
 import { ModulePlaceholder } from "@/shared/components/ModulePlaceholder";
+import { getApiErrorMessage } from "@/shared/api/getApiErrorMessage";
 
 type FieldDef = {
   name: string;
@@ -252,7 +253,7 @@ export function SettingsTabForm({ tab }: SettingsTabFormProps) {
         }
         saveMutation.mutate(patch, {
           onSuccess: () => message.success(t("settings.savedSuccess")),
-          onError: () => message.error(t("common.saveFailed")),
+          onError: (err) => message.error(getApiErrorMessage(err, t, "common.saveFailed")),
         });
       }}
     >

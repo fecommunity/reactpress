@@ -10,9 +10,13 @@ export type LoginScreenId = "auth" | "hero" | "features";
 
 type LoginSnapNavProps = {
   scrollerRef: React.RefObject<HTMLElement | null>;
+  authScreenLabelKey?: string;
 };
 
-export function LoginSnapNav({ scrollerRef }: LoginSnapNavProps) {
+export function LoginSnapNav({
+  scrollerRef,
+  authScreenLabelKey = "login.scroll.screenAuth",
+}: LoginSnapNavProps) {
   const { t } = useAppLocale();
   const [active, setActive] = useState<LoginScreenId>("auth");
 
@@ -50,7 +54,7 @@ export function LoginSnapNav({ scrollerRef }: LoginSnapNavProps) {
   );
 
   const screens: { id: LoginScreenId; label: string }[] = [
-    { id: "auth", label: t("login.scroll.screenAuth") },
+    { id: "auth", label: t(authScreenLabelKey) },
     { id: "hero", label: t("login.scroll.screenHero") },
     { id: "features", label: t("login.scroll.screenFeatures") },
   ];

@@ -4,68 +4,68 @@ import { App, Button, Form, Input, Space } from "antd";
 import { useRef } from "react";
 import { Trans } from "react-i18next";
 
-import { AUTH_ENDPOINTS } from "@/api/auth";
-import type { LoginRequest } from "@/api/schemas";
-import { AuthTokensSchema, LoginRequestSchema } from "@/api/schemas";
 import { Theme } from "@/components/Icon";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useAppLocale } from "@/hooks/useAppLocale";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
-import { getLoginErrorMessage } from "@/shared/auth/loginErrorMessage";
-import { fetchSessionFromMockApi, loginWithServerCredentials } from "@/shared/auth/session";
+import { registerAccount } from "@/shared/auth/registerAccount";
+import { showApiErrorToast } from "@/shared/api/getApiErrorMessage";
 import { useAuthStore } from "@/stores/auth";
 import { useSettingsStore } from "@/stores/settings";
-import { AUTH_MODE, REACTPRESS_GITHUB_URL, reactpressDocsPath } from "@/utils/constants";
-import { httpClient } from "@/utils/http";
+import { REACTPRESS_GITHUB_URL } from "@/utils/constants";
 
-import { LoginBrandMark } from "./-LoginBrandMark";
-import { LoginSnapNav } from "./-LoginSnapNav";
-import { LoginDocsHome } from "./docs-home";
-import homeStyles from "./docs-home/login-docs-home.module.css";
-import pageStyles from "./login-page.module.css";
+import { LoginBrandMark } from "../login/-LoginBrandMark";
+import { LoginSnapNav } from "../login/-LoginSnapNav";
+import { LoginDocsHome } from "../login/docs-home";
+import homeStyles from "../login/docs-home/login-docs-home.module.css";
+import pageStyles from "../login/login-page.module.css";
 
-export const Route = createFileRoute("/login/")({
+export const Route = createFileRoute("/register/")({
   beforeLoad: () => {
     const { isAuthenticated } = useAuthStore.getState();
     if (isAuthenticated) {
       throw redirect({ to: "/dashboard" });
     }
   },
-  component: LoginPage,
+  component: RegisterPage,
 });
 
-function LoginPage() {
-  useDocumentTitle("login.title");
+type RegisterFormValues = {
+  username: string;
+  email?: string;
+  password: string;
+  confirmPassword: string;
+};
+
+function RegisterPage() {
+  useDocumentTitle("register.title");
   const navigate = useNavigate();
   const { message } = App.useApp();
   const { t } = useAppLocale();
-  const locale = useSettingsStore((s) => s.locale);
-  const setTokens = useAuthStore((s) => s.setTokens);
   const toggleDarkMode = useSettingsStore((s) => s.toggleDarkMode);
   const scrollerRef = useRef<HTMLDivElement>(null);
 
-  const docsUrl = reactpressDocsPath(locale, "/docs/tutorial-basics/start");
-
-  const loginMutation = useMutation({
-    mutationFn: async (values: LoginRequest) => {
-      const parsed = LoginRequestSchema.parse(values);
-      if (AUTH_MODE === "server") {
-        await loginWithServerCredentials(parsed.username, parsed.password);
-        return;
-      }
-      const tokens = await httpClient.post(AUTH_ENDPOINTS.login, parsed);
-      const validTokens = AuthTokensSchema.parse(tokens);
-      setTokens(validTokens);
-      await fetchSessionFromMockApi();
+  const registerMutation = useMutation({
+    mutationFn: async (values: RegisterFormValues) => {
+      await registerAccount({
+        username: values.username.trim(),
+        email: values.email?.trim() || null,
+        password: values.password,
+      });
     },
     onSuccess: () => {
-      message.success(t("login.success"));
-      void navigate({ to: "/dashboard" });
-    },
-    onError: (err) => {
-      message.error(getLoginErrorMessage(err, t));
+      message.success(t("register.success"));
+      void navigate({ to: "/login" });
     },
   });
+
+  const handleRegister = async (values: RegisterFormValues) => {
+    try {
+      await registerMutation.mutateAsync(values);
+    } catch (err) {
+      showApiErrorToast(message, err, t, "register.failed");
+    }
+  };
 
   return (
     <div className={pageStyles.page}>
@@ -82,7 +82,7 @@ function LoginPage() {
         </Space>
       </header>
 
-      <LoginSnapNav scrollerRef={scrollerRef} />
+      <LoginSnapNav scrollerRef={scrollerRef} authScreenLabelKey="register.scroll.screenAuth" />
 
       <div
         className={`${pageStyles.snapScroller} ${homeStyles.themeScope}`}
@@ -95,15 +95,17 @@ function LoginPage() {
         >
           <main className={pageStyles.authMain}>
             <div className={pageStyles.authStack}>
-              <LoginBrandMark />
+              <LoginBrandMark
+                titleKey="register.title"
+                subtitleKey="register.subtitle"
+                headingId="register-page-heading"
+              />
 
-              <section className={pageStyles.authCard} aria-labelledby="login-page-heading">
-                <Form
+              <section className={pageStyles.authCard} aria-labelledby="register-page-heading">
+                <Form<RegisterFormValues>
                   className={pageStyles.authForm}
                   layout="vertical"
-                  onFinish={(values: unknown) => {
-                    loginMutation.mutate(LoginRequestSchema.parse(values));
-                  }}
+                  onFinish={handleRegister}
                   requiredMark={false}
                 >
                   <Form.Item
@@ -112,12 +114,26 @@ function LoginPage() {
                     rules={[{ required: true, message: t("login.usernameRequired") }]}
                   >
                     <Input
-                      id="login-username"
+                      id="register-username"
                       aria-label={t("login.username")}
                       placeholder={t("login.usernamePlaceholder")}
                       size="large"
                       autoComplete="username"
                       autoFocus
+                    />
+                  </Form.Item>
+
+                  <Form.Item
+                    name="email"
+                    label={t("register.email")}
+                    rules={[{ type: "email", message: t("register.emailInvalid") }]}
+                  >
+                    <Input
+                      id="register-email"
+                      aria-label={t("register.email")}
+                      placeholder={t("register.emailPlaceholder")}
+                      size="large"
+                      autoComplete="email"
                     />
                   </Form.Item>
 
@@ -128,11 +144,37 @@ function LoginPage() {
                   >
                     <Input
                       type="password"
-                      id="login-password"
+                      id="register-password"
                       aria-label={t("login.password")}
                       placeholder={t("login.passwordPlaceholder")}
                       size="large"
-                      autoComplete="current-password"
+                      autoComplete="new-password"
+                    />
+                  </Form.Item>
+
+                  <Form.Item
+                    name="confirmPassword"
+                    label={t("register.confirmPassword")}
+                    dependencies={["password"]}
+                    rules={[
+                      { required: true, message: t("login.passwordRequired") },
+                      ({ getFieldValue }) => ({
+                        validator(_, value) {
+                          if (!value || getFieldValue("password") === value) {
+                            return Promise.resolve();
+                          }
+                          return Promise.reject(new Error(t("register.passwordMismatch")));
+                        },
+                      }),
+                    ]}
+                  >
+                    <Input
+                      type="password"
+                      id="register-confirm-password"
+                      aria-label={t("register.confirmPassword")}
+                      placeholder={t("register.confirmPasswordPlaceholder")}
+                      size="large"
+                      autoComplete="new-password"
                     />
                   </Form.Item>
 
@@ -140,10 +182,10 @@ function LoginPage() {
                     <Button
                       type="primary"
                       htmlType="submit"
-                      loading={loginMutation.isPending}
+                      loading={registerMutation.isPending}
                       size="large"
                     >
-                      {t("login.signIn")}
+                      {t("register.signUp")}
                     </Button>
                   </Form.Item>
                 </Form>
@@ -151,14 +193,7 @@ function LoginPage() {
 
               <div className={pageStyles.authMeta}>
                 <p className={pageStyles.authFooter}>
-                  {t("login.noAccount")} <Link to="/register">{t("login.signUpLink")}</Link>
-                </p>
-                <p className={pageStyles.authFooter}>
-                  {t("login.authFooterPrefix")}{" "}
-                  <a href={docsUrl} target="_blank" rel="noopener noreferrer">
-                    {t("login.authFooterDocs")}
-                  </a>{" "}
-                  {t("login.authFooterSuffix")}
+                  {t("register.hasAccount")} <Link to="/login">{t("register.signInLink")}</Link>
                 </p>
               </div>
             </div>

@@ -10,6 +10,7 @@ import {
   uploadAvatar,
   type ProfileFormValues,
 } from "@/modules/user/profileApi";
+import { getApiErrorMessage } from "@/shared/api/getApiErrorMessage";
 import { useAuthStore } from "@/stores/auth";
 
 type ProfileFormState = ProfileFormValues & {
@@ -139,10 +140,10 @@ export function ProfilePage() {
         return;
       }
       if (showPasswordFields) {
-        message.error(t("profile.passwordUpdateFailed"));
+        message.error(getApiErrorMessage(error, t, "profile.passwordUpdateFailed"));
         return;
       }
-      message.error(t("common.saveFailed"));
+      message.error(getApiErrorMessage(error, t, "common.saveFailed"));
     },
   });
 

@@ -2,15 +2,25 @@ import { useAppLocale } from "@/hooks/useAppLocale";
 
 import styles from "./login-brand-mark.module.css";
 
-export function LoginBrandMark() {
+type LoginBrandMarkProps = {
+  titleKey?: string;
+  subtitleKey?: string;
+  headingId?: string;
+};
+
+export function LoginBrandMark({
+  titleKey = "login.title",
+  subtitleKey = "login.subtitle",
+  headingId = "login-page-heading",
+}: LoginBrandMarkProps) {
   const { t } = useAppLocale();
 
   return (
     <header className={styles.mark}>
-      <h1 id="login-page-heading" className={styles.heading}>
-        {t("login.title")}
+      <h1 id={headingId} className={styles.heading}>
+        {t(titleKey)}
       </h1>
-      <p className={styles.subtitle}>{t("login.subtitle")}</p>
+      <p className={styles.subtitle}>{t(subtitleKey)}</p>
     </header>
   );
 }

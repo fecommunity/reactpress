@@ -33,6 +33,7 @@ function walkMenus(
 /** Routes that are not exact menu paths but need a dedicated tab title. */
 function resolveExtraTitleKey(pathname: string): string | null {
   if (pathname === "/login") return "login.title";
+  if (pathname === "/register") return "register.title";
   if (pathname === "/403") return "error.403Title";
   if (/^\/article\/editor\/.+/.test(pathname)) return "article.editArticle";
   if (pathname === "/article/editor") return "article.writeArticle";

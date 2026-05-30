@@ -182,10 +182,30 @@
     "usernameRequired": "Please enter username",
     "passwordRequired": "Please enter password",
     "signIn": "Sign In",
+    "noAccount": "Don't have an account?",
+    "signUpLink": "Sign up",
     "poweredBy": "Powered by <1>ReactPress</1>",
     "success": "Login successful",
     "failed": "Login failed",
     "apiConnectionError": "Cannot connect to API. Run pnpm dev:web or pnpm dev:api, and avoid setting VITE_API_BASE_URL to a cross-origin absolute URL."
+  },
+  "register": {
+    "title": "Sign up",
+    "subtitle": "Create an account to access the admin console.",
+    "email": "Email",
+    "emailPlaceholder": "Enter email (optional)",
+    "emailInvalid": "Please enter a valid email address",
+    "confirmPassword": "Confirm password",
+    "confirmPasswordPlaceholder": "Re-enter password",
+    "passwordMismatch": "Passwords do not match",
+    "signUp": "Sign Up",
+    "success": "Registration successful. Please sign in.",
+    "failed": "Registration failed",
+    "hasAccount": "Already have an account?",
+    "signInLink": "Sign in",
+    "scroll": {
+      "screenAuth": "Sign up"
+    }
   },
   "dashboard": {
     "title": "Dashboard",

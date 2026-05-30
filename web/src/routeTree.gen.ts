@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as RegisterIndexRouteImport } from './routes/register/index'
 import { Route as LoginIndexRouteImport } from './routes/login/index'
 import { Route as R404IndexRouteImport } from './routes/404/index'
 import { Route as AuthUsersIndexRouteImport } from './routes/_auth/users/index'
@@ -45,6 +46,11 @@ const AuthRoute = AuthRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RegisterIndexRoute = RegisterIndexRouteImport.update({
+  id: '/register/',
+  path: '/register/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginIndexRoute = LoginIndexRouteImport.update({
@@ -187,6 +193,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/404/': typeof R404IndexRoute
   '/login/': typeof LoginIndexRoute
+  '/register/': typeof RegisterIndexRoute
   '/403/': typeof Auth403IndexRoute
   '/article/': typeof AuthArticleIndexRoute
   '/dashboard/': typeof AuthDashboardIndexRoute
@@ -216,6 +223,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/404': typeof R404IndexRoute
   '/login': typeof LoginIndexRoute
+  '/register': typeof RegisterIndexRoute
   '/403': typeof Auth403IndexRoute
   '/article': typeof AuthArticleIndexRoute
   '/dashboard': typeof AuthDashboardIndexRoute
@@ -247,6 +255,7 @@ export interface FileRoutesById {
   '/_auth': typeof AuthRouteWithChildren
   '/404/': typeof R404IndexRoute
   '/login/': typeof LoginIndexRoute
+  '/register/': typeof RegisterIndexRoute
   '/_auth/403/': typeof Auth403IndexRoute
   '/_auth/article/': typeof AuthArticleIndexRoute
   '/_auth/dashboard/': typeof AuthDashboardIndexRoute
@@ -278,6 +287,7 @@ export interface FileRouteTypes {
     | '/'
     | '/404/'
     | '/login/'
+    | '/register/'
     | '/403/'
     | '/article/'
     | '/dashboard/'
@@ -307,6 +317,7 @@ export interface FileRouteTypes {
     | '/'
     | '/404'
     | '/login'
+    | '/register'
     | '/403'
     | '/article'
     | '/dashboard'
@@ -337,6 +348,7 @@ export interface FileRouteTypes {
     | '/_auth'
     | '/404/'
     | '/login/'
+    | '/register/'
     | '/_auth/403/'
     | '/_auth/article/'
     | '/_auth/dashboard/'
@@ -368,6 +380,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRouteWithChildren
   R404IndexRoute: typeof R404IndexRoute
   LoginIndexRoute: typeof LoginIndexRoute
+  RegisterIndexRoute: typeof RegisterIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -384,6 +397,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/register/': {
+      id: '/register/'
+      path: '/register'
+      fullPath: '/register/'
+      preLoaderRoute: typeof RegisterIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login/': {
@@ -632,6 +652,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,
   R404IndexRoute: R404IndexRoute,
   LoginIndexRoute: LoginIndexRoute,
+  RegisterIndexRoute: RegisterIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

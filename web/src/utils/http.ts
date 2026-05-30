@@ -45,6 +45,27 @@ function getAuthHeaders(): Record<string, string> {
   return {};
 }
 
+function readApiMessage(value: unknown): string | null {
+  if (typeof value === "string") {
+    const trimmed = value.trim();
+    return trimmed ? trimmed : null;
+  }
+
+  if (Array.isArray(value)) {
+    const parts = value
+      .map((item) => readApiMessage(item))
+      .filter((item): item is string => Boolean(item));
+    return parts.length ? parts.join(", ") : null;
+  }
+
+  if (value && typeof value === "object") {
+    const payload = value as Record<string, unknown>;
+    return readApiMessage(payload.message) ?? readApiMessage(payload.msg);
+  }
+
+  return null;
+}
+
 async function request<T>(
   method: string,
   path: string,
@@ -65,25 +86,49 @@ async function request<T>(
     ...options,
   });
 
+  let json: unknown = null;
+  try {
+    json = await res.json();
+  } catch {
+    json = null;
+  }
+
   if (!res.ok) {
+    if (json && typeof json === "object") {
+      const payload = json as Record<string, unknown>;
+      if (typeof payload.code === "number" && payload.code !== 0) {
+        throw new ApiError(payload.code, readApiMessage(payload.message) ?? "Unknown error");
+      }
+      const msg = readApiMessage(payload.msg) ?? readApiMessage(payload.message);
+      if (msg) {
+        throw new ApiError(Number(payload.statusCode ?? res.status), msg);
+      }
+    }
     throw new HttpError(res.status, `HTTP ${res.status}: ${res.statusText}`);
   }
 
-  const json = await res.json();
+  if (json && typeof json === "object") {
+    const payload = json as Record<string, unknown>;
 
-  if (json.code !== undefined && json.code !== 0) {
-    throw new ApiError(json.code, json.message ?? "Unknown error");
+    if (payload.code !== undefined && payload.code !== 0) {
+      throw new ApiError(Number(payload.code), readApiMessage(payload.message) ?? "Unknown error");
+    }
+
+    if (payload.success === false) {
+      throw new ApiError(
+        Number(payload.statusCode ?? 500),
+        readApiMessage(payload.msg) ?? "Request failed",
+      );
+    }
+
+    if (payload.success === true && "data" in payload) {
+      return payload.data as T;
+    }
+
+    return payload.data !== undefined ? (payload.data as T) : (json as T);
   }
 
-  if (json.success === false) {
-    throw new ApiError(json.statusCode ?? 500, json.msg ?? "Request failed");
-  }
-
-  if (json.success === true && "data" in json) {
-    return json.data as T;
-  }
-
-  return json.data !== undefined ? json.data : json;
+  return json as T;
 }
 
 export const httpClient = {

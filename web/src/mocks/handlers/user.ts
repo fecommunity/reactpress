@@ -2,6 +2,7 @@ import { http } from "msw";
 
 import { ERROR_CODES, errorResponse, successResponse, withDelay } from "../createHandler";
 import { MOCK_USERS } from "../data";
+import { setMockCredential } from "../mockCredentials";
 import { filterUsers, paginateList, parsePaginationParams } from "../utils";
 
 type MockUserRow = (typeof MOCK_USERS)[number] & { status: "active" | "locked" };
@@ -37,10 +38,16 @@ export const userHandlers = [
   http.post("/api/user/register", async ({ request }) => {
     await withDelay(200);
     const body = (await request.json()) as Record<string, unknown>;
+    const username = String(body.name ?? body.username);
+    if (users.some((user) => user.username === username)) {
+      return errorResponse(ERROR_CODES.BAD_REQUEST, "Username already exists");
+    }
     const role = String(body.role ?? "visitor");
+    const password = typeof body.password === "string" ? body.password : username;
+    setMockCredential(username, password);
     const newUser = {
       id: String(users.length + 1),
-      username: String(body.name ?? body.username),
+      username,
       avatar: null,
       email: typeof body.email === "string" ? body.email : null,
       roles: [role],
