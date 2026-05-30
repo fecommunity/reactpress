@@ -72,9 +72,9 @@ export const REACT_PRESS_WORDMARK_LAYOUT = {
   textWeight: 600,
   textLetterSpacing: "-0.03em",
   /** “ReactPress” render width at textSize (resvg bbox). */
-  textWidth: 176,
+  textWidth: 180,
   /** Extra right inset so the last glyph is not clipped on export. */
-  textPadEnd: 10,
+  textPadEnd: 14,
 } as const;
 
 const wordmarkIconWidth = REACT_PRESS_ICON_VIEWBOX.width * REACT_PRESS_WORDMARK_LAYOUT.iconScale;

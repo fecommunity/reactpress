@@ -11,7 +11,7 @@
  */
 
 /** Horizontal wordmark (`logo-wordmark.svg` → `logo.png`, export width 800px). */
-export const REACT_PRESS_WORDMARK_VIEWBOX = { width: 310, height: 96 } as const;
+export const REACT_PRESS_WORDMARK_VIEWBOX = { width: 318, height: 96 } as const;
 
 export const REACT_PRESS_WORDMARK_ASPECT =
   REACT_PRESS_WORDMARK_VIEWBOX.width / REACT_PRESS_WORDMARK_VIEWBOX.height;

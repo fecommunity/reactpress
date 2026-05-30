@@ -10,10 +10,18 @@
   padding: 16px 0;
   margin-bottom: 1rem;
   text-align: center;
+  background-position: center;
+  background-repeat: no-repeat;
   background-size: cover;
   height: 280px;
   border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
+
+  /** Wordmark fallback (`logo.png`) — avoid cropping the last glyph. */
+  &.tagOrCategoryDetailBrand {
+    background-size: contain;
+    background-color: var(--bg-second);
+  }
   i {
     font-size: 2.5rem;
     color: var(--disable-text-color);

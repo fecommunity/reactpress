@@ -12,8 +12,9 @@ import { DoubleColumnLayout } from '@/layout/DoubleColumnLayout';
 import { ArticleProvider } from '@/providers/article';
 import { CategoryProvider } from '@/providers/category';
 
-import { defaultImgSrc } from '@/assets/LogoSvg';
 import AboutUs from '@/components/AboutUs';
+import { getArchiveBannerImage } from '@/utils/archiveBanner';
+import cls from 'classnames';
 import { CategoryMenu } from '../index';
 import style from '../index.module.scss';
 
@@ -30,7 +31,7 @@ const Home: NextPage<IProps> = ({ articles: defaultArticles = [], total, categor
   const { setting, tags, categories } = useContext(GlobalContext);
   const [page, setPage] = useState(1);
   const [articles, setArticles] = useState<IArticle[]>(defaultArticles);
-  const bgImg = articles?.filter((article) => article.cover)?.[0]?.cover || defaultImgSrc;
+  const banner = getArchiveBannerImage(articles);
 
   useEffect(() => {
     setArticles(defaultArticles);
@@ -58,7 +59,13 @@ const Home: NextPage<IProps> = ({ articles: defaultArticles = [], total, categor
       <DoubleColumnLayout
         leftNode={
           <>
-            <div className={style.tagOrCategoryDetail} style={{ backgroundImage: `url(${bgImg})` }}>
+            <div
+              className={cls(
+                style.tagOrCategoryDetail,
+                banner.isBrandFallback && style.tagOrCategoryDetailBrand,
+              )}
+              style={{ backgroundImage: `url(${banner.url})` }}
+            >
               <p>
                 <span>{category && category.label}</span> {t('categoryArticle')}
               </p>

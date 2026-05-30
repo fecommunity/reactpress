@@ -25,8 +25,8 @@ export const REACT_PRESS_WORDMARK_LAYOUT = {
   textSize: 35,
   textWeight: 600,
   textLetterSpacing: "-0.03em",
-  textWidth: 176,
-  textPadEnd: 10,
+  textWidth: 180,
+  textPadEnd: 14,
 };
 
 const ICON_W = 112;

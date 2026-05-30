@@ -13,8 +13,9 @@ import { DoubleColumnLayout } from '@/layout/DoubleColumnLayout';
 import { ArticleProvider } from '@/providers/article';
 import { TagProvider } from '@/providers/tag';
 
-import { defaultImgSrc } from '@/assets/LogoSvg';
 import AboutUs from '@/components/AboutUs';
+import { getArchiveBannerImage } from '@/utils/archiveBanner';
+import cls from 'classnames';
 import style from '../index.module.scss';
 
 interface IProps {
@@ -58,7 +59,13 @@ const Home: NextPage<IProps> = ({ articles: defaultArticles = [], total, tag }) 
             <Head>
               <title>{`${tag.label} - ${t('tagTitle')} - ${setting.systemTitle}`}</title>
             </Head>
-            <div className={style.tagOrCategoryDetail} style={{ backgroundImage: `url(${bgImg})` }}>
+            <div
+              className={cls(
+                style.tagOrCategoryDetail,
+                banner.isBrandFallback && style.tagOrCategoryDetailBrand,
+              )}
+              style={{ backgroundImage: `url(${banner.url})` }}
+            >
               <p>
                 {t('yu')} <span>{tag.label}</span> {t('tagRelativeArticles')}
               </p>

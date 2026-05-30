@@ -2,7 +2,7 @@ $height: 64px;
 /** Match `REACT_PRESS_HEADER_*` / `REACT_PRESS_HEADER_SPACING` in `src/assets/brand.ts`. */
 $header-logo-padding-y: 8px;
 $header-logo-content-height: $height - 2 * $header-logo-padding-y;
-$header-logo-max-width: 155px; /* 48 × (310/96) — sync REACT_PRESS_HEADER_LOGO.maxDisplayWidth */
+$header-logo-max-width: 159px; /* 48 × (318/96) — sync REACT_PRESS_HEADER_LOGO.maxDisplayWidth */
 $header-logo-nav-gap: 12px;
 $header-nav-item-padding-x: 16px;
 $header-nav-first-padding-start: 4px;
