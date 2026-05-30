@@ -132,18 +132,6 @@ export { resolveThemeRuntime } from './visitor/runtime';
 export type { SiteMeta } from './ssr/setting';
 export { DEFAULT_SITE_META, parseSiteMeta, unwrapSetting } from './ssr/setting';
 
-// App factories — also available from `@fecommunity/reactpress-toolkit/app`.
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-export const createThemeApp = require('../app/createThemeApp').createThemeApp as (
-  manifest: { id: string },
-) => unknown;
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-export const createReactPressApp = require('../app/createReactPressApp').createReactPressApp as (
-  manifest: { id: string; options?: unknown },
-  options: import('../app').CreateReactPressAppOptions,
-) => unknown;
-/** @deprecated Use `createReactPressApp`. */
-export const createCatalogThemeApp = createReactPressApp;
 export { createThemeProviders } from './providers';
 export type { ThemeProviders } from './providers';
 export { defaultModsFromManifest } from './visitor/appearance';
