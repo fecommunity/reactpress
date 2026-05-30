@@ -176,7 +176,7 @@ export async function bootstrap() {
     const options = {
       customCss: theme.getBuffer(SwaggerThemeNameEnum.MATERIAL), // 应用主题
       customSiteTitle: 'ReactPress API Documentation',
-      customfavIcon: '/public/logo.svg',
+      customfavIcon: '/public/favicon.ico',
       swaggerOptions: {
         docExpansion: 'list',
         filter: true,

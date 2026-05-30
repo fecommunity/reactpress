@@ -1,7 +1,10 @@
 #!/usr/bin/env node
 /**
- * Regenerate logo.svg / logo-wordmark.svg / logo.png from brand source.
- * Run: node scripts/export-brand-assets.mjs
+ * Export ReactPress brand assets (SVG, PNG, ICO) from canonical SVG sources.
+ *
+ *   pnpm export:brand
+ *
+ * Root `public/` layout: `brand/`, `favicon/`, `icons/` (see `public/README.md`).
  */
 import { execSync } from "node:child_process";
 import fs from "node:fs";
@@ -9,94 +12,172 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import {
-  REACT_PRESS_BRAND_FONT,
-  REACT_PRESS_ICON_P,
-  REACT_PRESS_WORDMARK_LAYOUT,
-  REACT_PRESS_WORDMARK_VIEWBOX,
-  wordmarkTextX,
-} from "./brand-wordmark-layout.mjs";
+  BRAND_EXPORT_MANIFEST,
+  ROOT_PUBLIC_DIRS,
+  ROOT_PUBLIC_LEGACY_BRAND_FILES,
+  buildIconSvg,
+  buildWordmarkSvg,
+} from "./brand-assets.mjs";
+import { REACT_PRESS_WORDMARK_VIEWBOX } from "./brand-wordmark-layout.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const tmpDir = path.join(root, ".brand-export");
 
-const ORBITS = [
-  "M56 75.165c29.455 0 53.333-10.745 53.333-24s-23.878-24-53.333-24-53.334 10.745-53.334 24 23.879 24 53.334 24Z",
-  "M35.215 63.165c14.728 25.509 35.972 40.815 47.451 34.188 11.48-6.628 8.846-32.68-5.882-58.188-14.727-25.51-35.972-40.816-47.45-34.188-11.48 6.627-8.846 32.679 5.881 58.188Z",
-  "M35.215 39.165c-14.727 25.509-17.36 51.56-5.882 58.188 11.48 6.627 32.724-8.68 47.451-34.188 14.728-25.51 17.362-51.56 5.883-58.188-11.48-6.628-32.724 8.679-47.452 34.188Z",
-];
-const FILL = "#087ea4";
-
-function iconSvg() {
-  const orbits = ORBITS.map(
-    (d) =>
-      `<path fill="none" stroke="${FILL}" stroke-width="5.333" stroke-linecap="round" d="${d}"/>`,
-  ).join("\n    ");
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 112 102" fill="none" role="img" aria-label="ReactPress">
-  <title>ReactPress</title>
-  <g>${orbits}</g>
-  <text x="56" y="52" text-anchor="middle" dominant-baseline="central" fill="${FILL}" font-family="${REACT_PRESS_BRAND_FONT}" font-size="${REACT_PRESS_ICON_P.fontSize}" font-weight="${REACT_PRESS_ICON_P.fontWeight}" letter-spacing="${REACT_PRESS_ICON_P.letterSpacing}">P</text>
-</svg>`;
+function ensureDir(filePath) {
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
 }
 
-function wordmarkSvg() {
-  const { padX, padY, iconScale, textY, textSize, textWeight, textLetterSpacing } =
-    REACT_PRESS_WORDMARK_LAYOUT;
-  const { width, height } = REACT_PRESS_WORDMARK_VIEWBOX;
-  const orbits = ORBITS.map(
-    (d) =>
-      `<path fill="none" stroke="${FILL}" stroke-width="5.333" stroke-linecap="round" d="${d}"/>`,
-  ).join("\n      ");
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" fill="none" role="img" aria-label="ReactPress">
-  <title>ReactPress</title>
-  <g transform="translate(${padX} ${padY}) scale(${iconScale})">
-    <g>${orbits}</g>
-    <text x="56" y="52" text-anchor="middle" dominant-baseline="central" fill="${FILL}" font-family="${REACT_PRESS_BRAND_FONT}" font-size="${REACT_PRESS_ICON_P.fontSize}" font-weight="${REACT_PRESS_ICON_P.fontWeight}" letter-spacing="${REACT_PRESS_ICON_P.letterSpacing}">P</text>
-  </g>
-  <text x="${wordmarkTextX}" y="${textY}" dominant-baseline="central" fill="${FILL}" font-family="${REACT_PRESS_BRAND_FONT}" font-size="${textSize}" font-weight="${textWeight}" letter-spacing="${textLetterSpacing}">ReactPress</text>
-</svg>`;
+function writeText(relPath, content) {
+  const dest = path.join(root, relPath);
+  ensureDir(dest);
+  fs.writeFileSync(dest, content);
 }
 
-const icon = iconSvg();
-const wordmark = wordmarkSvg();
-
-const svgTargets = [
-  "web/public/logo.svg",
-  "docs/static/img/logo.svg",
-  "themes/twentytwentyfive/public/logo.svg",
-  "cli/server/public/logo.svg",
-  "server/public/logo.svg",
-];
-
-for (const rel of svgTargets) {
-  const dest = path.join(root, rel);
-  fs.mkdirSync(path.dirname(dest), { recursive: true });
-  fs.writeFileSync(dest, icon);
-}
-
-const wordmarkSvgPath = path.join(root, "web/public/logo-wordmark.svg");
-fs.writeFileSync(wordmarkSvgPath, wordmark);
-
-/** Wordmark PNG — site header (`logo.png`), symmetric viewBox, fit-width 800. */
-const pngTargets = [
-  "public/logo.png",
-  "themes/twentytwentyfive/public/logo.png",
-  "web/public/logo.png",
-];
-
-const tmpSvg = path.join(root, "web/public/.logo-wordmark-export.svg");
-fs.writeFileSync(tmpSvg, wordmark);
-
-for (const rel of pngTargets) {
-  const dest = path.join(root, rel);
-  fs.mkdirSync(path.dirname(dest), { recursive: true });
+function resvgPng(svgPath, pngPath, width) {
+  ensureDir(pngPath);
   execSync(
-    `npx --yes @resvg/resvg-js-cli "${tmpSvg}" "${dest}" --fit-width 800`,
-    { stdio: "inherit", cwd: root },
+    `npx --yes @resvg/resvg-js-cli "${svgPath}" "${pngPath}" --fit-width ${width}`,
+    { stdio: "pipe", cwd: root },
   );
 }
 
-fs.unlinkSync(tmpSvg);
+function copyToDirs(tmpFile, dirs, name) {
+  const written = [];
+  for (const dir of dirs) {
+    const dest = path.join(root, dir, name);
+    ensureDir(dest);
+    fs.copyFileSync(tmpFile, dest);
+    written.push(`${dir}/${name}`);
+  }
+  return written;
+}
 
-console.log(
-  `Wordmark viewBox: ${REACT_PRESS_WORDMARK_VIEWBOX.width}×${REACT_PRESS_WORDMARK_VIEWBOX.height}`,
-);
-console.log("Exported:", [...svgTargets, wordmarkSvgPath, ...pngTargets].join("\n  "));
+function mirrorPngGroup(svgPath, items, dirs, label) {
+  const written = [];
+  for (const { name, width } of items) {
+    const tmpPng = path.join(tmpDir, name);
+    resvgPng(svgPath, tmpPng, width);
+    for (const rel of copyToDirs(tmpPng, dirs, name)) {
+      written.push(`${rel} (${width}px, ${label})`);
+    }
+  }
+  return written;
+}
+
+function removeLegacyRootPublicBrand() {
+  for (const rel of ROOT_PUBLIC_LEGACY_BRAND_FILES) {
+    const dest = path.join(root, rel);
+    if (fs.existsSync(dest)) {
+      fs.unlinkSync(dest);
+    }
+  }
+}
+
+async function writeFaviconIco() {
+  const { faviconIcoSizes, faviconIco } = BRAND_EXPORT_MANIFEST;
+  const pngPaths = faviconIcoSizes.map((size) =>
+    path.join(tmpDir, `favicon-${size}.png`),
+  );
+
+  let toIco;
+  try {
+    ({ default: toIco } = await import("to-ico"));
+  } catch {
+    console.warn(
+      "Skip favicon.ico: install devDependency `to-ico` (pnpm add -D to-ico).",
+    );
+    return [];
+  }
+
+  const buf = await toIco(pngPaths.map((p) => fs.readFileSync(p)));
+  const written = [];
+  for (const rel of faviconIco) {
+    const dest = path.join(root, rel);
+    ensureDir(dest);
+    fs.writeFileSync(dest, buf);
+    written.push(rel);
+  }
+  return written;
+}
+
+function cleanup() {
+  fs.rmSync(tmpDir, { recursive: true, force: true });
+}
+
+async function main() {
+  fs.mkdirSync(tmpDir, { recursive: true });
+
+  const iconSvg = buildIconSvg();
+  const wordmarkSvg = buildWordmarkSvg();
+  const {
+    runtimePublicDirs,
+    wordmarkRuntimeDirs,
+    wordmarkRootDir,
+    faviconPng,
+    pwaPng,
+  } = BRAND_EXPORT_MANIFEST;
+
+  const faviconDirs = [...runtimePublicDirs, ROOT_PUBLIC_DIRS.favicon];
+  const pwaDirs = [...runtimePublicDirs, ROOT_PUBLIC_DIRS.icons];
+
+  for (const rel of BRAND_EXPORT_MANIFEST.iconSvg) {
+    writeText(rel, iconSvg);
+  }
+  writeText(BRAND_EXPORT_MANIFEST.wordmarkSvg, wordmarkSvg);
+  for (const rel of BRAND_EXPORT_MANIFEST.wordmarkSvgCopies) {
+    writeText(rel, wordmarkSvg);
+  }
+
+  const iconSvgTmp = path.join(tmpDir, "icon.svg");
+  const wordmarkSvgTmp = path.join(tmpDir, "wordmark.svg");
+  fs.writeFileSync(iconSvgTmp, iconSvg);
+  fs.writeFileSync(wordmarkSvgTmp, wordmarkSvg);
+
+  console.log("SVG");
+  console.log("  icon:", BRAND_EXPORT_MANIFEST.iconSvg.join("\n        "));
+  console.log("  wordmark:", BRAND_EXPORT_MANIFEST.wordmarkSvg);
+  console.log(
+    "  copies:",
+    BRAND_EXPORT_MANIFEST.wordmarkSvgCopies.join(", "),
+  );
+  console.log(
+    `  viewBox: icon 112×102, wordmark ${REACT_PRESS_WORDMARK_VIEWBOX.width}×${REACT_PRESS_WORDMARK_VIEWBOX.height}`,
+  );
+
+  console.log("\nPNG → public/favicon + runtime");
+  for (const line of mirrorPngGroup(iconSvgTmp, faviconPng, faviconDirs, "favicon")) {
+    console.log(`  ${line}`);
+  }
+
+  console.log("\nPNG → public/icons + runtime");
+  for (const line of mirrorPngGroup(iconSvgTmp, pwaPng, pwaDirs, "pwa")) {
+    console.log(`  ${line}`);
+  }
+
+  console.log("\nPNG → public/brand + runtime (wordmark)");
+  for (const line of mirrorPngGroup(
+    wordmarkSvgTmp,
+    BRAND_EXPORT_MANIFEST.wordmarkPng,
+    [...wordmarkRuntimeDirs, wordmarkRootDir],
+    "wordmark",
+  )) {
+    console.log(`  ${line}`);
+  }
+
+  console.log("\nICO");
+  for (const rel of await writeFaviconIco()) {
+    console.log(`  ${rel}`);
+  }
+
+  removeLegacyRootPublicBrand();
+  console.log("\nRemoved legacy flat brand files under public/ (root).");
+
+  cleanup();
+  console.log("\nDone. Root layout:", Object.values(ROOT_PUBLIC_DIRS).join(", "));
+}
+
+main().catch((err) => {
+  cleanup();
+  console.error(err);
+  process.exit(1);
+});

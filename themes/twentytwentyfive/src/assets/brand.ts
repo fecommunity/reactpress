@@ -4,7 +4,7 @@
  * | Asset | Path | Use |
  * |-------|------|-----|
  * | Wordmark PNG | `/logo.png` | Site header, article list placeholder |
- * | Icon SVG | `/logo.svg` | Favicon only |
+ * | Icon SVG / ICO / PNG | `logo.svg`, `favicon.ico`, `favicon-*.png` | Favicon、PWA |
  *
  * Regenerate from repo root: `node scripts/export-brand-assets.mjs`
  * Source viewBox for wordmark: see `scripts/brand-wordmark-layout.mjs` (sync with reactPressLogoPaths.ts).

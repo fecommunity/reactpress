@@ -73,21 +73,23 @@ export const getStaticProps = async ({ params }) => {
 
 在 `theme.json` 声明 `reactpress.templates`，从 `twentytwentyfive` 复制对应 `pages/` 文件，将 `getStaticProps` 改为 toolkit 的 `fetch*` 即可。
 
-## 品牌资源（Header / 占位图）
+## 品牌资源
 
-| 文件 | 规格 | 用途 |
-| :--- | :--- | :--- |
-| `public/logo.png` | 横版字标，源 viewBox **310×96**（Inter 统一字重），导出宽 800px | **Header**、**文章列表无封面占位** |
-| `public/logo.svg` | 图标 **112×102** | Favicon |
-| `public/logo-wordmark.svg` | 与 PNG 同源 | 重新导出 PNG 用 |
-
-在 **twentytwentyfive** 中，尺寸与间距见 `themes/twentytwentyfive/src/assets/brand.ts`（顶栏 **64px**、字标 **48px** 高、与导航间距 **12px**）。全仓库同步资源：
+统一由 `scripts/export-brand-assets.mjs` 生成（配置见 `scripts/brand-assets.mjs`）：
 
 ```bash
-node scripts/export-brand-assets.mjs
+pnpm export:brand
+# 或: node scripts/export-brand-assets.mjs
 ```
 
-后台「站点 Logo」留空时使用主题 `logo.png`；填写 URL 或 `/path.png` 时按同一高度与 `object-fit: contain` 适配。
+| 类型 | 路径示例 | 说明 |
+| :--- | :--- | :--- |
+| 字标 | `public/brand/logo.png`、`wordmark.svg` | 仓库 README / 归档 |
+| 字标 | `web/public/logo.png` 等 | 运行时扁平路径 |
+| Favicon | `public/favicon/favicon.ico` | 根目录按类型分目录 |
+| PWA 图标 | `public/icons/icon-192.png` 等 | Apple Touch / manifest |
+
+在 **twentytwentyfive** 中，顶栏尺寸与间距见 `themes/twentytwentyfive/src/assets/brand.ts`。后台「站点 Logo」留空时使用主题 `logo.png`。
 
 ## 工作流程
 

@@ -27,7 +27,10 @@ export function publicAssetUrl(path: string): string {
 }
 
 /** Favicon path under `public/` (browser tab icon). */
-export const APP_FAVICON_SRC = publicAssetUrl("/logo.svg");
+export const APP_FAVICON_SRC = publicAssetUrl("/favicon.ico");
+
+/** Vector favicon fallback (`public/logo.svg`). */
+export const APP_FAVICON_SVG_SRC = publicAssetUrl("/logo.svg");
 
 /** Brand logo for login and in-app branding (`public/logo.svg`). */
 export const APP_LOGO_SRC = publicAssetUrl("/logo.svg");
