@@ -1,8 +1,15 @@
-import { defaultSiteThemeState } from "@fecommunity/reactpress-toolkit/extension";
-import { http } from "msw";
+import {
+  defaultSiteThemeState,
+  getConfigurationSchemaFromManifest,
+  getMergedThemeConfiguration,
+  TWENTYTWENTYFIVE_CONFIGURATION_SCHEMA,
+  TWENTYTWENTYFIVE_CUSTOMIZER_SECTIONS,
+  validateAndMergeThemeConfiguration,
+} from "@fecommunity/reactpress-toolkit/extension";
+import { http, HttpResponse, passthrough } from "msw";
 
 import { successResponse, withDelay } from "../createHandler";
-import { patchMockGlobalSettingTheme } from "./page";
+import { getMockGlobalSetting, patchMockGlobalSettingTheme, setMockGlobalSetting } from "./page";
 
 const MOCK_THEMES = [
   {
@@ -16,33 +23,8 @@ const MOCK_THEMES = [
     installed: true,
     active: true,
     screenshotUrl: "/api/extension/themes/twentytwentyfive/screenshot",
-    customizer: {
-      sections: [
-        {
-          id: "identity",
-          title: "站点身份",
-          settings: [
-            { id: "siteLogo", type: "image", label: "站点 Logo" },
-            { id: "displayTitle", type: "text", label: "站点标题", default: "Twenty Twenty-Five" },
-            { id: "displayTagline", type: "text", label: "站点副标题" },
-          ],
-        },
-        {
-          id: "colors",
-          title: "颜色与深色模式",
-          settings: [
-            { id: "primaryColor", type: "color", label: "主色", default: "#1a1a1a" },
-            { id: "backgroundColor", type: "color", label: "背景色", default: "#ffffff" },
-            { id: "darkMode", type: "checkbox", label: "启用深色模式", default: "0" },
-          ],
-        },
-        {
-          id: "background",
-          title: "背景图片",
-          settings: [{ id: "backgroundImage", type: "image", label: "背景图" }],
-        },
-      ],
-    },
+    reactpress: { configuration: TWENTYTWENTYFIVE_CONFIGURATION_SCHEMA },
+    customizer: { sections: TWENTYTWENTYFIVE_CUSTOMIZER_SECTIONS },
   },
   {
     id: "hello-world",
@@ -93,6 +75,10 @@ let themeState: typeof defaultSiteThemeState = {
   previewThemeId: defaultSiteThemeState.activeTheme,
 };
 
+function themeManifest(themeId: string) {
+  return MOCK_THEMES.find((t) => t.id === themeId) ?? null;
+}
+
 function screenshotSvg(themeId: string, name: string, primary = "#2271b1", accent = "#72aee6") {
   const safeName = name.replace(/[<>&"']/g, (ch) => {
     const map: Record<string, string> = {
@@ -117,7 +103,7 @@ function previewHtml(themeId: string, mods: Record<string, string> = {}) {
   const theme = MOCK_THEMES.find((t) => t.id === themeId) ?? MOCK_THEMES[0];
   const defaults: Record<string, string> = {};
   for (const section of theme.customizer?.sections ?? []) {
-    for (const s of section.settings) {
+    for (const s of section.settings ?? []) {
       if (s.default) defaults[s.id] = s.default;
     }
   }
@@ -157,30 +143,84 @@ export const themeHandlers = [
     });
   }),
 
+  http.get("/api/extension/themes/:id/configuration-schema", async ({ params }) => {
+    await withDelay(80);
+    const id = String(params.id);
+    const manifest = themeManifest(id);
+    if (!manifest)
+      return HttpResponse.json({ success: false, message: "Not found" }, { status: 404 });
+    const schema = getConfigurationSchemaFromManifest(manifest, id);
+    return successResponse({ themeId: id, schema });
+  }),
+
+  http.get("/api/extension/themes/:id/configuration", async ({ params }) => {
+    await withDelay(80);
+    const id = String(params.id);
+    const manifest = themeManifest(id);
+    if (!manifest)
+      return HttpResponse.json({ success: false, message: "Not found" }, { status: 404 });
+    const configuration = getMergedThemeConfiguration(getMockGlobalSetting(), id, { manifest });
+    return successResponse({ themeId: id, configuration });
+  }),
+
+  http.post("/api/extension/themes/:id/configuration", async ({ params, request }) => {
+    await withDelay(120);
+    const id = String(params.id);
+    const manifest = themeManifest(id);
+    if (!manifest)
+      return HttpResponse.json({ success: false, message: "Not found" }, { status: 404 });
+    const body = (await request.json()) as { configuration?: Record<string, unknown> };
+    const global = getMockGlobalSetting();
+    const result = validateAndMergeThemeConfiguration(
+      id,
+      global,
+      body.configuration ?? {},
+      manifest,
+    );
+    if (!result.ok) {
+      return HttpResponse.json({ success: false, message: result.message }, { status: 400 });
+    }
+    const next = { ...global, config: { ...(global.config as object), [id]: result.config } };
+    setMockGlobalSetting(next);
+    return successResponse({ themeId: id, configuration: result.config });
+  }),
+
   http.get("/api/extension/themes/:id/screenshot", async ({ params }) => {
     await withDelay(60);
     const theme = MOCK_THEMES.find((t) => t.id === params.id) ?? MOCK_THEMES[0];
     const primary =
-      theme.customizer?.sections?.flatMap((s) => s.settings).find((s) => s.id === "primaryColor")
-        ?.default ?? "#2271b1";
+      theme.customizer?.sections
+        ?.flatMap((sec) => sec.settings ?? [])
+        .find((s) => s.id === "primaryColor")?.default ?? "#2271b1";
     const accent =
-      theme.customizer?.sections?.flatMap((s) => s.settings).find((s) => s.id === "accentColor")
-        ?.default ?? "#72aee6";
+      theme.customizer?.sections
+        ?.flatMap((sec) => sec.settings ?? [])
+        .find((s) => s.id === "accentColor")?.default ?? "#d63638";
     return new Response(screenshotSvg(String(params.id), theme.name, primary, accent), {
       headers: { "Content-Type": "image/svg+xml; charset=utf-8" },
     });
   }),
 
+  /** Must hit real API so visitor site (:3001) SSR can read the same in-memory draft. */
+  http.post("/api/extension/themes/preview-draft", () => passthrough()),
+  http.get("/api/extension/themes/preview-draft/:token", () => passthrough()),
+
   http.get("/api/extension/themes/:id/preview", async ({ params, request }) => {
     await withDelay(80);
     const url = new URL(request.url);
     let mods: Record<string, string> = {};
-    const raw = url.searchParams.get("mods");
-    if (raw) {
-      try {
-        mods = JSON.parse(decodeURIComponent(raw)) as Record<string, string>;
-      } catch {
-        mods = {};
+    const token = url.searchParams.get("token");
+    if (token) {
+      /* Live visitor preview uses :3001; stub HTML cannot apply theme configuration. */
+      mods = {};
+    } else {
+      const raw = url.searchParams.get("mods");
+      if (raw) {
+        try {
+          mods = JSON.parse(decodeURIComponent(raw)) as Record<string, string>;
+        } catch {
+          mods = {};
+        }
       }
     }
     return new Response(previewHtml(String(params.id), mods), {

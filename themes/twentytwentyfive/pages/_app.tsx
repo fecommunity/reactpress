@@ -17,6 +17,13 @@ import { CategoryProvider } from '@/providers/category';
 import { PageProvider } from '@/providers/page';
 import { SettingProvider } from '@/providers/setting';
 import { TagProvider } from '@/providers/tag';
+import { httpProvider } from '@/providers/http';
+import {
+  customizerPrimaryColor,
+  normalizePreviewDraftData,
+  previewDraftApiPath,
+  resolveThemePreviewContext,
+} from '@fecommunity/reactpress-toolkit/extension';
 import { safeJsonParse } from '@/utils/json';
 
 Router.events.on('routeChangeComplete', () => {
@@ -51,16 +58,32 @@ class MyApp extends App<
       PageProvider.getAllPublisedPages(),
     ]);
     const i18n = safeJsonParse(setting.i18n);
-    const globalSetting = safeJsonParse(setting.globalSetting)?.[ctx?.locale];
+    const globalSettingRaw = safeJsonParse(setting.globalSetting);
+    const locale = ctx?.locale || 'zh';
+    const globalSetting = globalSettingRaw?.[locale];
+
+    const preview = await resolveThemePreviewContext({
+      globalSettingRaw,
+      setting: setting as Record<string, unknown>,
+      locale,
+      ctx,
+      fetchDraft: async (token) =>
+        normalizePreviewDraftData(
+          await httpProvider.get(previewDraftApiPath(token)),
+        ),
+    });
+
     return {
       pageProps,
-      setting,
+      setting: preview.setting,
       tags,
       categories,
       pages: pages[0] || [],
       i18n,
       globalSetting,
+      siteConfig: preview.siteConfig,
       locales: Object.keys(i18n),
+      colorPrimary: preview.colorPrimary,
     };
   };
 
@@ -102,7 +125,7 @@ class MyApp extends App<
   }
 
   render() {
-    const { Component, pageProps, i18n, globalSetting, locales, router, ...contextValue } = this.props;
+    const { Component, pageProps, i18n, globalSetting, siteConfig, locales, router, ...contextValue } = this.props;
     const locale =
       this.state.locale ||
       router.locale ||
@@ -112,6 +135,10 @@ class MyApp extends App<
     const { needLayoutFooter = true, hasBg = false } = pageProps;
     const message = i18n[locale] || {};
     const algorithm = this.state.theme === 'dark' ? theme.darkAlgorithm : theme.defaultAlgorithm;
+    const colorPrimary =
+      typeof this.props.colorPrimary === 'string' && this.props.colorPrimary.trim()
+        ? this.props.colorPrimary
+        : customizerPrimaryColor({});
 
     return (
       <GlobalContext.Provider
@@ -121,6 +148,7 @@ class MyApp extends App<
           locale,
           locales,
           globalSetting,
+          siteConfig,
           theme: this.state.theme,
           collapsed: this.state.collapsed,
           changeLocale: this.changeLocale,
@@ -142,7 +170,7 @@ class MyApp extends App<
             }}
             theme={{
               token: {
-                colorPrimary: '#f44336',
+                colorPrimary,
               },
               algorithm,
             }}

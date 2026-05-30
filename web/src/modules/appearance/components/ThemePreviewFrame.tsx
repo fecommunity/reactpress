@@ -1,10 +1,11 @@
 import type { ThemeMods } from "@fecommunity/reactpress-toolkit/extension";
-import { appendPreviewModsToUrl } from "@fecommunity/reactpress-toolkit/extension";
+import { appendPreviewTokenToUrl } from "@fecommunity/reactpress-toolkit/extension";
 import { Spin, Typography } from "antd";
 import type { CSSProperties } from "react";
-import { useMemo } from "react";
+import { useEffect, useState } from "react";
 
 import { useThemePreviewHtml } from "@/hooks/useThemePreviewHtml";
+import { createPreviewDraft } from "@/shared/api/themes";
 import styles from "@/modules/appearance/components/themes-page.module.css";
 import { resolveLiveSitePreviewUrl } from "@/shared/theme/previewUrl";
 
@@ -12,12 +13,11 @@ type Props = {
   themeId: string;
   activeThemeId: string;
   mods: ThemeMods;
+  previewConfiguration?: Record<string, unknown>;
   siteUrl?: string;
   title: string;
-  /** Local preview dev URL when themeId ≠ activeThemeId (see useThemePreviewSession). */
   previewSiteUrl?: string;
   previewSessionReady?: boolean;
-  /** Fallback stub HTML when live site is unavailable (MSW / no visitor site). */
   preferModsPreview?: boolean;
   refreshKey?: string;
   className?: string;
@@ -28,6 +28,7 @@ export function ThemePreviewFrame({
   themeId,
   activeThemeId,
   mods,
+  previewConfiguration,
   siteUrl,
   title,
   previewSiteUrl,
@@ -38,26 +39,55 @@ export function ThemePreviewFrame({
   style,
 }: Props) {
   const modsKey = JSON.stringify(mods);
+  const configKey = JSON.stringify(previewConfiguration ?? {});
 
-  const liveUrl = useMemo(() => {
-    if (preferModsPreview) return null;
-    const base = resolveLiveSitePreviewUrl(siteUrl, {
+  const liveBase =
+    !preferModsPreview &&
+    resolveLiveSitePreviewUrl(siteUrl, {
       themeId,
       activeThemeId,
       previewSiteUrl,
       previewSessionReady,
     });
-    if (!base) return null;
-    return appendPreviewModsToUrl(base, mods);
-  }, [
-    preferModsPreview,
-    themeId,
-    activeThemeId,
-    siteUrl,
-    previewSiteUrl,
-    previewSessionReady,
-    modsKey,
-  ]);
+
+  const [liveUrl, setLiveUrl] = useState<string | null>(null);
+  const [liveUrlLoading, setLiveUrlLoading] = useState(Boolean(liveBase));
+  const [liveUrlError, setLiveUrlError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!liveBase) {
+      setLiveUrl(null);
+      setLiveUrlLoading(false);
+      setLiveUrlError(null);
+      return;
+    }
+
+    let cancelled = false;
+    setLiveUrlLoading(true);
+    setLiveUrlError(null);
+
+    void createPreviewDraft({
+      themeId,
+      mods,
+      configuration: previewConfiguration,
+    })
+      .then(({ token }) => {
+        if (cancelled) return;
+        setLiveUrl(appendPreviewTokenToUrl(liveBase, token));
+      })
+      .catch((e) => {
+        if (cancelled) return;
+        setLiveUrlError(e instanceof Error ? e.message : "Preview failed");
+        setLiveUrl(null);
+      })
+      .finally(() => {
+        if (!cancelled) setLiveUrlLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [liveBase, modsKey, configKey, refreshKey]);
 
   const {
     html: previewHtml,
@@ -65,10 +95,20 @@ export function ThemePreviewFrame({
     error: previewError,
   } = useThemePreviewHtml(liveUrl ? undefined : themeId, mods);
 
-  if (liveUrl) {
+  if (liveBase) {
+    if (liveUrlError) {
+      return (
+        <Typography.Text type="danger" style={{ padding: 16 }}>
+          {liveUrlError}
+        </Typography.Text>
+      );
+    }
+    if (liveUrlLoading || !liveUrl) {
+      return <Spin style={{ margin: 48 }} />;
+    }
     return (
       <iframe
-        key={refreshKey ? `${modsKey}-${refreshKey}` : modsKey}
+        key={liveUrl}
         className={className ?? styles.previewFrame}
         style={style}
         title={title}

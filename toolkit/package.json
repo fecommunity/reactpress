@@ -43,6 +43,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "ajv": "^8.17.1",
     "axios": "^1.12.2",
     "dotenv": "^8.6.0",
     "fs-extra": "^10.0.0",

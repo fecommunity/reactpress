@@ -1,15 +1,26 @@
 import { Button, Spin } from "antd";
 import { ChevronLeft } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "@tanstack/react-router";
 import {
   getThemeStateFromGlobalSetting,
+  pickCustomizerSiteSettings,
   type ThemeMods,
 } from "@fecommunity/reactpress-toolkit/extension";
+import {
+  useThemeConfiguration,
+  useThemeConfigurationMutation,
+  useThemeConfigurationSchema,
+} from "@/hooks/useThemeConfiguration";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 import { useThemePreviewSession } from "@/hooks/useThemePreviewSession";
 import { useThemes, useThemeMutations } from "@/hooks/useThemes";
+import {
+  ThemeConfigurationForm,
+  type ThemeConfigurationFormHandle,
+} from "@/modules/appearance/components/ThemeConfigurationForm";
+import { Route } from "@/routes/_auth/appearance/customize/index";
 import { resolveLiveSitePreviewUrl } from "@/shared/theme/previewUrl";
 import {
   PreviewDeviceToolbar,
@@ -30,9 +41,15 @@ const deviceFrameClass: Record<PreviewDevice, string> = {
 export function CustomizePage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { data: settings, isLoading: settingsLoading } = useSiteSettings();
+  const { section: initialSection } = Route.useSearch();
+  const {
+    data: settings,
+    isLoading: settingsLoading,
+    saveMutation: saveSiteSettingsMutation,
+  } = useSiteSettings();
   const { data: themes, isLoading: themesLoading, isError, refetch: refetchThemes } = useThemes();
   const { modsMutation } = useThemeMutations();
+  const configFormRef = useRef<ThemeConfigurationFormHandle>(null);
 
   const themeState = useMemo(() => {
     try {
@@ -45,6 +62,9 @@ export function CustomizePage() {
   }, [settings?.globalSetting]);
 
   const themeId = themeState.previewThemeId ?? themeState.activeTheme;
+  const { data: schemaData, isLoading: schemaLoading } = useThemeConfigurationSchema(themeId);
+  const { data: configData, isLoading: configLoading } = useThemeConfiguration(themeId);
+  const saveConfigMutation = useThemeConfigurationMutation(themeId);
   const activeTheme = themes?.find((th) => th.id === themeId);
   const siteTitle =
     typeof settings?.systemTitle === "string" ? settings.systemTitle.trim() : undefined;
@@ -52,9 +72,16 @@ export function CustomizePage() {
     typeof settings?.systemSubTitle === "string" ? settings.systemSubTitle.trim() : undefined;
 
   const savedMods = useMemo(() => themeState.mods[themeId] ?? {}, [themeState.mods, themeId]);
+  const savedConfiguration = configData?.configuration ?? {};
+
   const [draftMods, setDraftMods] = useState<ThemeMods>(savedMods);
-  /** Applied to preview iframe only when user clicks「预览」or after publish. */
+  /** Shown in iframe only after「预览」or「发布」. */
   const [previewMods, setPreviewMods] = useState<ThemeMods>(savedMods);
+
+  const [draftConfiguration, setDraftConfiguration] =
+    useState<Record<string, unknown>>(savedConfiguration);
+  const [previewConfiguration, setPreviewConfiguration] =
+    useState<Record<string, unknown>>(savedConfiguration);
 
   useEffect(() => {
     void refetchThemes();
@@ -64,6 +91,11 @@ export function CustomizePage() {
     setDraftMods(savedMods);
     setPreviewMods(savedMods);
   }, [themeId, savedMods]);
+
+  useEffect(() => {
+    setDraftConfiguration(savedConfiguration);
+    setPreviewConfiguration(savedConfiguration);
+  }, [themeId, JSON.stringify(savedConfiguration)]);
 
   const [previewRefreshKey, setPreviewRefreshKey] = useState(0);
   const [device, setDevice] = useState<PreviewDevice>("desktop");
@@ -84,20 +116,43 @@ export function CustomizePage() {
         )
       : true;
 
+  const bumpPreview = () => setPreviewRefreshKey((k) => k + 1);
+
   const handleModsChange = (mods: ThemeMods) => {
     setDraftMods(mods);
   };
 
   const handlePreview = (mods: ThemeMods) => {
     setPreviewMods(mods);
-    setPreviewRefreshKey((k) => k + 1);
+    bumpPreview();
+  };
+
+  const handlePreviewConfiguration = () => {
+    const fromForm = configFormRef.current?.getValues();
+    const values = fromForm && Object.keys(fromForm).length > 0 ? fromForm : draftConfiguration;
+    setDraftConfiguration(values);
+    setPreviewConfiguration(values);
+    bumpPreview();
   };
 
   const handleSave = async (mods: ThemeMods) => {
     if (!themeId) return;
     await modsMutation.mutateAsync({ themeId, mods });
+    const sitePatch = pickCustomizerSiteSettings(mods);
+    if (Object.keys(sitePatch).length > 0) {
+      await saveSiteSettingsMutation.mutateAsync(sitePatch);
+    }
+    setDraftMods(mods);
     setPreviewMods(mods);
-    setPreviewRefreshKey((k) => k + 1);
+    bumpPreview();
+  };
+
+  const handleSaveConfiguration = async () => {
+    const values = configFormRef.current?.getValues() ?? draftConfiguration;
+    await saveConfigMutation.mutateAsync(values);
+    setDraftConfiguration(values);
+    setPreviewConfiguration(values);
+    bumpPreview();
   };
 
   if (isError) {
@@ -109,9 +164,23 @@ export function CustomizePage() {
     );
   }
 
-  if (settingsLoading || themesLoading) {
+  if (settingsLoading || themesLoading || schemaLoading || configLoading) {
     return <Spin fullscreen />;
   }
+
+  const configurationPanel =
+    schemaData?.schema != null ? (
+      <ThemeConfigurationForm
+        ref={configFormRef}
+        embedded
+        deferActions
+        schema={schemaData.schema}
+        configuration={savedConfiguration}
+        saving={saveConfigMutation.isPending}
+        onDraftChange={setDraftConfiguration}
+        onSave={handleSaveConfiguration}
+      />
+    ) : undefined;
 
   if (!activeTheme) {
     return (
@@ -140,18 +209,24 @@ export function CustomizePage() {
             theme={activeTheme}
             siteTitle={siteTitle}
             siteDescription={siteDescription}
+            siteSettingSeed={settings ?? undefined}
+            initialSectionId={initialSection ?? null}
+            configurationPanel={configurationPanel}
             mods={draftMods}
             onModsChange={handleModsChange}
             onPreview={handlePreview}
             onSave={handleSave}
             saving={modsMutation.isPending}
+            onPreviewConfiguration={handlePreviewConfiguration}
+            onSaveConfiguration={handleSaveConfiguration}
+            savingConfiguration={saveConfigMutation.isPending}
           />
         </div>
         <footer className={styles.customizeSidebarFooter}>
           <PreviewDeviceToolbar
             device={device}
             onDeviceChange={setDevice}
-            onRefresh={() => setPreviewRefreshKey((k) => k + 1)}
+            onRefresh={bumpPreview}
           />
         </footer>
       </aside>
@@ -166,6 +241,7 @@ export function CustomizePage() {
                 themeId={themeId}
                 activeThemeId={themeState.activeTheme}
                 mods={previewMods}
+                previewConfiguration={previewConfiguration}
                 siteUrl={siteUrl}
                 title={t("appearance.livePreview")}
                 previewSiteUrl={previewSiteUrl}

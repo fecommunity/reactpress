@@ -1,6 +1,11 @@
+import { getThemeConfigurationSeed } from "@fecommunity/reactpress-toolkit/extension";
 import { http } from "msw";
 
 import { successResponse, withDelay } from "../createHandler";
+
+const mockThemeConfigSeed = (getThemeConfigurationSeed("twentytwentyfive", "zh") ?? {}) as {
+  nav?: { urlConfig?: unknown; searchCategories?: unknown };
+};
 
 const MOCK_PAGES = [
   {
@@ -34,26 +39,54 @@ let mockSettings: Record<string, unknown> = {
   globalSetting: JSON.stringify({
     theme: {
       activeTheme: "twentytwentyfive",
-      installedThemes: ["twentytwentyfive"],
+      installedThemes: ["twentytwentyfive", "hello-world"],
       mods: {},
       previewThemeId: "twentytwentyfive",
     },
+    config: {
+      twentytwentyfive: mockThemeConfigSeed,
+    },
+    zh: {
+      globalConfig: {
+        navConfig: mockThemeConfigSeed.nav?.searchCategories,
+        urlConfig: mockThemeConfigSeed.nav?.urlConfig,
+      },
+    },
   }),
   oss: "{}",
+  i18n: JSON.stringify({
+    zh: {
+      home: "首页",
+      nav: "导航",
+      archives: "时光圈",
+      knowledge: "专辑",
+    },
+    en: {
+      home: "Home",
+      nav: "Navigation",
+      archives: "Archives",
+      knowledge: "Knowledge",
+    },
+  }),
 };
 
-export function patchMockGlobalSettingTheme(theme: Record<string, unknown> | object) {
+export function getMockGlobalSetting(): Record<string, unknown> {
   try {
     const raw = mockSettings.globalSetting;
-    const global = typeof raw === "string" ? JSON.parse(raw) : (raw ?? {});
-    global.theme = theme;
-    mockSettings = { ...mockSettings, globalSetting: JSON.stringify(global) };
+    return typeof raw === "string" ? (JSON.parse(raw) as Record<string, unknown>) : {};
   } catch {
-    mockSettings = {
-      ...mockSettings,
-      globalSetting: JSON.stringify({ theme }),
-    };
+    return {};
   }
+}
+
+export function setMockGlobalSetting(global: Record<string, unknown>) {
+  mockSettings = { ...mockSettings, globalSetting: JSON.stringify(global) };
+}
+
+export function patchMockGlobalSettingTheme(theme: Record<string, unknown> | object) {
+  const global = getMockGlobalSetting();
+  global.theme = theme;
+  setMockGlobalSetting(global);
 }
 
 export const pageHandlers = [

@@ -5,13 +5,23 @@ import * as path from 'path';
 import { Repository } from 'typeorm';
 import {
   defaultSiteThemeState,
+  getConfigurationSchemaFromManifest,
+  getMergedThemeConfiguration,
   getThemeStateFromGlobalSetting,
+  mergeConfigIntoGlobalSetting,
   mergeThemeStateIntoGlobalSetting,
   parseThemeManifest,
+  validateAndMergeThemeConfiguration,
 } from '@fecommunity/reactpress-toolkit/extension';
-import type { SiteThemeState, ThemeManifest, ThemeMods } from '@fecommunity/reactpress-toolkit/extension';
+import type {
+  SiteThemeState,
+  ThemeConfigurationSchema,
+  ThemeManifest,
+  ThemeMods,
+} from '@fecommunity/reactpress-toolkit/extension';
 
 import { Setting } from '../setting/setting.entity';
+import { getPreviewDraft, putPreviewDraft } from './preview-draft.store';
 
 export interface ThemeListItem extends ThemeManifest {
   source: 'starter' | 'installed';
@@ -80,8 +90,21 @@ export class ThemeService {
   private applyTemplateCustomizerSchema(manifest: ThemeManifest): ThemeManifest {
     const templatePath = path.join(this.templatesDir(), manifest.id);
     const template = this.readManifest(templatePath);
-    if (!template?.customizer?.sections?.length) return manifest;
-    return { ...manifest, customizer: template.customizer };
+    if (!template) return manifest;
+    let next = manifest;
+    if (template.customizer?.sections?.length) {
+      next = { ...next, customizer: template.customizer };
+    }
+    if (template.reactpress?.configuration) {
+      next = {
+        ...next,
+        reactpress: {
+          ...next.reactpress,
+          configuration: template.reactpress.configuration,
+        },
+      };
+    }
+    return next;
   }
 
   private readManifest(themeDir: string): ThemeManifest | null {
@@ -178,6 +201,68 @@ export class ThemeService {
     const found = items.find((t) => t.id === id);
     if (!found) throw new NotFoundException(`Theme "${id}" not found`);
     return found;
+  }
+
+  private getThemeManifestForConfig(themeId: string): ThemeManifest | null {
+    const dir = this.resolveThemeDir(themeId);
+    if (!dir) return null;
+    return this.applyTemplateCustomizerSchema(this.readManifest(dir) as ThemeManifest);
+  }
+
+  async getThemeConfigurationSchema(themeId: string): Promise<{
+    themeId: string;
+    schema: ThemeConfigurationSchema | null;
+  }> {
+    if (!this.isValidThemeId(themeId)) {
+      throw new BadRequestException(`Invalid theme id "${themeId}"`);
+    }
+    const manifest = this.getThemeManifestForConfig(themeId);
+    if (!manifest) throw new NotFoundException(`Theme "${themeId}" not found`);
+    const schema = getConfigurationSchemaFromManifest(manifest, themeId);
+    return { themeId, schema };
+  }
+
+  async getThemeConfiguration(themeId: string): Promise<{
+    themeId: string;
+    configuration: Record<string, unknown>;
+  }> {
+    if (!this.isValidThemeId(themeId)) {
+      throw new BadRequestException(`Invalid theme id "${themeId}"`);
+    }
+    const manifest = this.getThemeManifestForConfig(themeId);
+    if (!manifest) throw new NotFoundException(`Theme "${themeId}" not found`);
+    const row = await this.getSettingRow();
+    const configuration = getMergedThemeConfiguration(this.parseGlobalSetting(row), themeId, {
+      manifest,
+    });
+    return { themeId, configuration };
+  }
+
+  async updateThemeConfiguration(
+    themeId: string,
+    patch: Record<string, unknown>,
+  ): Promise<{ themeId: string; configuration: Record<string, unknown> }> {
+    if (!this.isValidThemeId(themeId)) {
+      throw new BadRequestException(`Invalid theme id "${themeId}"`);
+    }
+    const manifest = this.getThemeManifestForConfig(themeId);
+    if (!manifest) throw new NotFoundException(`Theme "${themeId}" not found`);
+    const schema = getConfigurationSchemaFromManifest(manifest, themeId);
+    if (!schema) {
+      throw new BadRequestException(`Theme "${themeId}" does not declare reactpress.configuration`);
+    }
+
+    const row = await this.getSettingRow();
+    const globalRaw = this.parseGlobalSetting(row);
+    const result = validateAndMergeThemeConfiguration(themeId, globalRaw, patch, manifest);
+    if (!result.ok) {
+      throw new BadRequestException('message' in result ? result.message : 'Invalid configuration');
+    }
+
+    const mergedGlobal = mergeConfigIntoGlobalSetting(globalRaw, themeId, result.config);
+    row.globalSetting = JSON.stringify(mergedGlobal);
+    await this.settingRepository.save(row);
+    return { themeId, configuration: result.config };
   }
 
   private isValidThemeId(id: string): boolean {
@@ -454,7 +539,7 @@ export class ThemeService {
   private themeCustomizerDefaults(manifest: ThemeManifest | null): ThemeMods {
     const defaults: ThemeMods = {};
     for (const section of manifest?.customizer?.sections ?? []) {
-      for (const setting of section.settings) {
+      for (const setting of section.settings ?? []) {
         if (setting.default) defaults[setting.id] = setting.default;
       }
     }
@@ -587,6 +672,29 @@ export class ThemeService {
     if (overrideMods && Object.keys(overrideMods).length > 0) return overrideMods;
     const state = await this.getThemeState();
     return state.mods[themeId] ?? {};
+  }
+
+  createPreviewDraft(payload: {
+    themeId?: string;
+    mods?: ThemeMods;
+    configuration?: Record<string, unknown>;
+  }): { token: string } {
+    const token = putPreviewDraft(payload);
+    return { token };
+  }
+
+  resolvePreviewDraft(token: string): {
+    themeId?: string;
+    mods?: ThemeMods;
+    configuration?: Record<string, unknown>;
+  } | null {
+    const draft = getPreviewDraft(token);
+    if (!draft) return null;
+    return {
+      themeId: draft.themeId,
+      mods: draft.mods,
+      configuration: draft.configuration,
+    };
   }
 
   async ensureDefaultTheme(): Promise<void> {

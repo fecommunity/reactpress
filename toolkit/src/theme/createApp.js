@@ -4,28 +4,13 @@ const { fetchVisitorContext, createDefaultVisitorContext } = require('./fetch');
 const { themeApi } = require('./api');
 const { ReactPressProvider } = require('../ui/context/ReactPressProvider');
 const { ThemeCssVars } = require('../ui/ThemeCssVars');
-const {
-  PREVIEW_MODS_QUERY_KEY,
-  mergePreviewMods,
-  parsePreviewModsFromNextCtx,
-  parsePreviewModsParam,
-} = require('./preview-mods');
+const { parsePreviewTokenFromNextCtx, PREVIEW_TOKEN_QUERY_KEY } = require('./preview-draft');
+const { fetchPreviewDraft } = require('../extension/preview');
+const { mergePreviewMods } = require('./preview-mods');
 
-/**
- * WordPress-style `functions.php` bootstrap for Next `_app`.
- * @param {{ id: string }} manifest from theme.json
- */
-function mergeModsWithPreviewQuery(baseMods) {
-  let next = baseMods ?? {};
-  if (typeof window !== 'undefined') {
-    const fromUrl = parsePreviewModsParam(
-      new URLSearchParams(window.location.search).get(PREVIEW_MODS_QUERY_KEY),
-    );
-    if (Object.keys(fromUrl).length > 0) {
-      next = mergePreviewMods(next, fromUrl);
-    }
-  }
-  return next;
+function readPreviewTokenFromBrowser() {
+  if (typeof window === 'undefined') return '';
+  return new URLSearchParams(window.location.search).get(PREVIEW_TOKEN_QUERY_KEY)?.trim() ?? '';
 }
 
 /** Dev-only: recover from stale webpack chunks after on-demand page compilation. */
@@ -87,16 +72,30 @@ function createThemeApp(manifest) {
   function ThemeApp({ Component, pageProps }) {
     const { reactPress, ...rest } = pageProps;
     const visitorContext = reactPress ?? createDefaultVisitorContext(manifest.id);
-    const [mods, setMods] = React.useState(() =>
-      mergeModsWithPreviewQuery(visitorContext.mods),
-    );
+    const [mods, setMods] = React.useState(() => visitorContext.mods ?? {});
 
     React.useEffect(() => {
-      const ctx = reactPress ?? createDefaultVisitorContext(manifest.id);
-      setMods(mergeModsWithPreviewQuery(ctx.mods));
-    }, [reactPress]);
+      const base = visitorContext.mods ?? {};
+      const token = readPreviewTokenFromBrowser();
+      if (!token) {
+        setMods(base);
+        return undefined;
+      }
+      let cancelled = false;
+      void fetchPreviewDraft(token).then((draft) => {
+        if (cancelled) return;
+        setMods(mergePreviewMods(base, draft.mods ?? {}));
+      });
+      return () => {
+        cancelled = true;
+      };
+    }, [reactPress, visitorContext.mods]);
 
-    const providerProps = { ...visitorContext, mods };
+    const providerProps = {
+      ...visitorContext,
+      mods,
+      isPreview: visitorContext.isPreview || Boolean(readPreviewTokenFromBrowser()),
+    };
 
     return React.createElement(
       ReactPressProvider,
@@ -135,11 +134,13 @@ function createThemeApp(manifest) {
       }
     }
 
-    const draftMods = parsePreviewModsFromNextCtx(appContext.ctx);
-    if (Object.keys(draftMods).length > 0) {
+    const previewToken = parsePreviewTokenFromNextCtx(appContext.ctx);
+    if (previewToken) {
+      const draft = await fetchPreviewDraft(previewToken);
       reactPress = {
         ...reactPress,
-        mods: mergePreviewMods(reactPress.mods ?? {}, draftMods),
+        mods: mergePreviewMods(reactPress.mods ?? {}, draft.mods ?? {}),
+        isPreview: true,
       };
     }
 

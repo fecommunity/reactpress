@@ -97,6 +97,26 @@ export {
   parsePreviewModsParam,
 } from './preview-mods';
 
+export {
+  PREVIEW_TOKEN_QUERY_KEY,
+  appendPreviewTokenToUrl,
+  parsePreviewTokenFromNextCtx,
+  parsePreviewTokenFromRequestUrl,
+  type PreviewDraftPayload,
+} from './preview-draft';
+
+export {
+  fetchPreviewDraft,
+  normalizePreviewDraftData,
+  previewDraftApiPath,
+  resolveThemePreviewContext,
+  type NextPreviewCtx,
+  type PreviewDraftFetcher,
+  type PreviewDraftResponse,
+  type ResolveThemePreviewContextInput,
+  type ResolvedThemePreviewContext,
+} from '../extension/preview';
+
 export { themeNotFound, themeOnDemandPaths, themeStaticNotFound } from './static';
 
 export { DEFAULT_TEMPLATE_FILES, ThemeTemplate, resolveTemplateFiles } from './templates';

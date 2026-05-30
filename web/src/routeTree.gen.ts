@@ -8,614 +8,630 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './routes/__root'
-import { Route as AuthRouteImport } from './routes/_auth'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as RegisterIndexRouteImport } from './routes/register/index'
-import { Route as LoginIndexRouteImport } from './routes/login/index'
-import { Route as R404IndexRouteImport } from './routes/404/index'
-import { Route as AuthUsersIndexRouteImport } from './routes/_auth/users/index'
-import { Route as AuthSettingsIndexRouteImport } from './routes/_auth/settings/index'
-import { Route as AuthProfileIndexRouteImport } from './routes/_auth/profile/index'
-import { Route as AuthPluginsIndexRouteImport } from './routes/_auth/plugins/index'
-import { Route as AuthPageIndexRouteImport } from './routes/_auth/page/index'
-import { Route as AuthMediaIndexRouteImport } from './routes/_auth/media/index'
-import { Route as AuthDashboardIndexRouteImport } from './routes/_auth/dashboard/index'
-import { Route as AuthArticleIndexRouteImport } from './routes/_auth/article/index'
-import { Route as Auth403IndexRouteImport } from './routes/_auth/403/index'
-import { Route as AuthSettingsTabIndexRouteImport } from './routes/_auth/settings/$tab/index'
-import { Route as AuthPageEditorIndexRouteImport } from './routes/_auth/page/editor/index'
-import { Route as AuthDataImportIndexRouteImport } from './routes/_auth/data/import/index'
-import { Route as AuthDataExportIndexRouteImport } from './routes/_auth/data/export/index'
-import { Route as AuthDataAnalyticsIndexRouteImport } from './routes/_auth/data/analytics/index'
-import { Route as AuthArticleTagsIndexRouteImport } from './routes/_auth/article/tags/index'
-import { Route as AuthArticleEditorIndexRouteImport } from './routes/_auth/article/editor/index'
-import { Route as AuthArticleCommentIndexRouteImport } from './routes/_auth/article/comment/index'
-import { Route as AuthArticleCategoryIndexRouteImport } from './routes/_auth/article/category/index'
-import { Route as AuthAppearanceThemesIndexRouteImport } from './routes/_auth/appearance/themes/index'
-import { Route as AuthAppearanceCustomizeIndexRouteImport } from './routes/_auth/appearance/customize/index'
-import { Route as AuthPageEditorIdRouteImport } from './routes/_auth/page/editor/$id'
-import { Route as AuthArticleEditorIdRouteImport } from './routes/_auth/article/editor/$id'
-import { Route as AuthPluginsIdSettingsIndexRouteImport } from './routes/_auth/plugins/$id/settings/index'
-import { Route as AuthAppearanceThemesPreviewIndexRouteImport } from './routes/_auth/appearance/themes/preview/index'
+import { Route as rootRouteImport } from "./routes/__root";
+import { Route as AuthRouteImport } from "./routes/_auth";
+import { Route as IndexRouteImport } from "./routes/index";
+import { Route as RegisterIndexRouteImport } from "./routes/register/index";
+import { Route as LoginIndexRouteImport } from "./routes/login/index";
+import { Route as R404IndexRouteImport } from "./routes/404/index";
+import { Route as AuthUsersIndexRouteImport } from "./routes/_auth/users/index";
+import { Route as AuthSettingsIndexRouteImport } from "./routes/_auth/settings/index";
+import { Route as AuthProfileIndexRouteImport } from "./routes/_auth/profile/index";
+import { Route as AuthPluginsIndexRouteImport } from "./routes/_auth/plugins/index";
+import { Route as AuthPageIndexRouteImport } from "./routes/_auth/page/index";
+import { Route as AuthMediaIndexRouteImport } from "./routes/_auth/media/index";
+import { Route as AuthDashboardIndexRouteImport } from "./routes/_auth/dashboard/index";
+import { Route as AuthArticleIndexRouteImport } from "./routes/_auth/article/index";
+import { Route as Auth403IndexRouteImport } from "./routes/_auth/403/index";
+import { Route as AuthSettingsTabIndexRouteImport } from "./routes/_auth/settings/$tab/index";
+import { Route as AuthPageEditorIndexRouteImport } from "./routes/_auth/page/editor/index";
+import { Route as AuthDataImportIndexRouteImport } from "./routes/_auth/data/import/index";
+import { Route as AuthDataExportIndexRouteImport } from "./routes/_auth/data/export/index";
+import { Route as AuthDataAnalyticsIndexRouteImport } from "./routes/_auth/data/analytics/index";
+import { Route as AuthArticleTagsIndexRouteImport } from "./routes/_auth/article/tags/index";
+import { Route as AuthArticleEditorIndexRouteImport } from "./routes/_auth/article/editor/index";
+import { Route as AuthArticleCommentIndexRouteImport } from "./routes/_auth/article/comment/index";
+import { Route as AuthArticleCategoryIndexRouteImport } from "./routes/_auth/article/category/index";
+import { Route as AuthAppearanceThemesIndexRouteImport } from "./routes/_auth/appearance/themes/index";
+import { Route as AuthAppearanceCustomizeIndexRouteImport } from "./routes/_auth/appearance/customize/index";
+import { Route as AuthPageEditorIdRouteImport } from "./routes/_auth/page/editor/$id";
+import { Route as AuthArticleEditorIdRouteImport } from "./routes/_auth/article/editor/$id";
+import { Route as AuthPluginsIdSettingsIndexRouteImport } from "./routes/_auth/plugins/$id/settings/index";
+import { Route as AuthAppearanceThemesPreviewIndexRouteImport } from "./routes/_auth/appearance/themes/preview/index";
+import { Route as AuthAppearanceThemesThemeIdSettingsIndexRouteImport } from "./routes/_auth/appearance/themes/$themeId/settings/index";
 
 const AuthRoute = AuthRouteImport.update({
-  id: '/_auth',
+  id: "/_auth",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+  id: "/",
+  path: "/",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const RegisterIndexRoute = RegisterIndexRouteImport.update({
-  id: '/register/',
-  path: '/register/',
+  id: "/register/",
+  path: "/register/",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const LoginIndexRoute = LoginIndexRouteImport.update({
-  id: '/login/',
-  path: '/login/',
+  id: "/login/",
+  path: "/login/",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const R404IndexRoute = R404IndexRouteImport.update({
-  id: '/404/',
-  path: '/404/',
+  id: "/404/",
+  path: "/404/",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const AuthUsersIndexRoute = AuthUsersIndexRouteImport.update({
-  id: '/users/',
-  path: '/users/',
+  id: "/users/",
+  path: "/users/",
   getParentRoute: () => AuthRoute,
-} as any)
+} as any);
 const AuthSettingsIndexRoute = AuthSettingsIndexRouteImport.update({
-  id: '/settings/',
-  path: '/settings/',
+  id: "/settings/",
+  path: "/settings/",
   getParentRoute: () => AuthRoute,
-} as any)
+} as any);
 const AuthProfileIndexRoute = AuthProfileIndexRouteImport.update({
-  id: '/profile/',
-  path: '/profile/',
+  id: "/profile/",
+  path: "/profile/",
   getParentRoute: () => AuthRoute,
-} as any)
+} as any);
 const AuthPluginsIndexRoute = AuthPluginsIndexRouteImport.update({
-  id: '/plugins/',
-  path: '/plugins/',
+  id: "/plugins/",
+  path: "/plugins/",
   getParentRoute: () => AuthRoute,
-} as any)
+} as any);
 const AuthPageIndexRoute = AuthPageIndexRouteImport.update({
-  id: '/page/',
-  path: '/page/',
+  id: "/page/",
+  path: "/page/",
   getParentRoute: () => AuthRoute,
-} as any)
+} as any);
 const AuthMediaIndexRoute = AuthMediaIndexRouteImport.update({
-  id: '/media/',
-  path: '/media/',
+  id: "/media/",
+  path: "/media/",
   getParentRoute: () => AuthRoute,
-} as any)
+} as any);
 const AuthDashboardIndexRoute = AuthDashboardIndexRouteImport.update({
-  id: '/dashboard/',
-  path: '/dashboard/',
+  id: "/dashboard/",
+  path: "/dashboard/",
   getParentRoute: () => AuthRoute,
-} as any)
+} as any);
 const AuthArticleIndexRoute = AuthArticleIndexRouteImport.update({
-  id: '/article/',
-  path: '/article/',
+  id: "/article/",
+  path: "/article/",
   getParentRoute: () => AuthRoute,
-} as any)
+} as any);
 const Auth403IndexRoute = Auth403IndexRouteImport.update({
-  id: '/403/',
-  path: '/403/',
+  id: "/403/",
+  path: "/403/",
   getParentRoute: () => AuthRoute,
-} as any)
+} as any);
 const AuthSettingsTabIndexRoute = AuthSettingsTabIndexRouteImport.update({
-  id: '/settings/$tab/',
-  path: '/settings/$tab/',
+  id: "/settings/$tab/",
+  path: "/settings/$tab/",
   getParentRoute: () => AuthRoute,
-} as any)
+} as any);
 const AuthPageEditorIndexRoute = AuthPageEditorIndexRouteImport.update({
-  id: '/page/editor/',
-  path: '/page/editor/',
+  id: "/page/editor/",
+  path: "/page/editor/",
   getParentRoute: () => AuthRoute,
-} as any)
+} as any);
 const AuthDataImportIndexRoute = AuthDataImportIndexRouteImport.update({
-  id: '/data/import/',
-  path: '/data/import/',
+  id: "/data/import/",
+  path: "/data/import/",
   getParentRoute: () => AuthRoute,
-} as any)
+} as any);
 const AuthDataExportIndexRoute = AuthDataExportIndexRouteImport.update({
-  id: '/data/export/',
-  path: '/data/export/',
+  id: "/data/export/",
+  path: "/data/export/",
   getParentRoute: () => AuthRoute,
-} as any)
+} as any);
 const AuthDataAnalyticsIndexRoute = AuthDataAnalyticsIndexRouteImport.update({
-  id: '/data/analytics/',
-  path: '/data/analytics/',
+  id: "/data/analytics/",
+  path: "/data/analytics/",
   getParentRoute: () => AuthRoute,
-} as any)
+} as any);
 const AuthArticleTagsIndexRoute = AuthArticleTagsIndexRouteImport.update({
-  id: '/article/tags/',
-  path: '/article/tags/',
+  id: "/article/tags/",
+  path: "/article/tags/",
   getParentRoute: () => AuthRoute,
-} as any)
+} as any);
 const AuthArticleEditorIndexRoute = AuthArticleEditorIndexRouteImport.update({
-  id: '/article/editor/',
-  path: '/article/editor/',
+  id: "/article/editor/",
+  path: "/article/editor/",
   getParentRoute: () => AuthRoute,
-} as any)
+} as any);
 const AuthArticleCommentIndexRoute = AuthArticleCommentIndexRouteImport.update({
-  id: '/article/comment/',
-  path: '/article/comment/',
+  id: "/article/comment/",
+  path: "/article/comment/",
   getParentRoute: () => AuthRoute,
-} as any)
-const AuthArticleCategoryIndexRoute =
-  AuthArticleCategoryIndexRouteImport.update({
-    id: '/article/category/',
-    path: '/article/category/',
-    getParentRoute: () => AuthRoute,
-  } as any)
-const AuthAppearanceThemesIndexRoute =
-  AuthAppearanceThemesIndexRouteImport.update({
-    id: '/appearance/themes/',
-    path: '/appearance/themes/',
-    getParentRoute: () => AuthRoute,
-  } as any)
-const AuthAppearanceCustomizeIndexRoute =
-  AuthAppearanceCustomizeIndexRouteImport.update({
-    id: '/appearance/customize/',
-    path: '/appearance/customize/',
-    getParentRoute: () => AuthRoute,
-  } as any)
+} as any);
+const AuthArticleCategoryIndexRoute = AuthArticleCategoryIndexRouteImport.update({
+  id: "/article/category/",
+  path: "/article/category/",
+  getParentRoute: () => AuthRoute,
+} as any);
+const AuthAppearanceThemesIndexRoute = AuthAppearanceThemesIndexRouteImport.update({
+  id: "/appearance/themes/",
+  path: "/appearance/themes/",
+  getParentRoute: () => AuthRoute,
+} as any);
+const AuthAppearanceCustomizeIndexRoute = AuthAppearanceCustomizeIndexRouteImport.update({
+  id: "/appearance/customize/",
+  path: "/appearance/customize/",
+  getParentRoute: () => AuthRoute,
+} as any);
 const AuthPageEditorIdRoute = AuthPageEditorIdRouteImport.update({
-  id: '/page/editor/$id',
-  path: '/page/editor/$id',
+  id: "/page/editor/$id",
+  path: "/page/editor/$id",
   getParentRoute: () => AuthRoute,
-} as any)
+} as any);
 const AuthArticleEditorIdRoute = AuthArticleEditorIdRouteImport.update({
-  id: '/article/editor/$id',
-  path: '/article/editor/$id',
+  id: "/article/editor/$id",
+  path: "/article/editor/$id",
   getParentRoute: () => AuthRoute,
-} as any)
-const AuthPluginsIdSettingsIndexRoute =
-  AuthPluginsIdSettingsIndexRouteImport.update({
-    id: '/plugins/$id/settings/',
-    path: '/plugins/$id/settings/',
+} as any);
+const AuthPluginsIdSettingsIndexRoute = AuthPluginsIdSettingsIndexRouteImport.update({
+  id: "/plugins/$id/settings/",
+  path: "/plugins/$id/settings/",
+  getParentRoute: () => AuthRoute,
+} as any);
+const AuthAppearanceThemesPreviewIndexRoute = AuthAppearanceThemesPreviewIndexRouteImport.update({
+  id: "/appearance/themes/preview/",
+  path: "/appearance/themes/preview/",
+  getParentRoute: () => AuthRoute,
+} as any);
+const AuthAppearanceThemesThemeIdSettingsIndexRoute =
+  AuthAppearanceThemesThemeIdSettingsIndexRouteImport.update({
+    id: "/appearance/themes/$themeId/settings/",
+    path: "/appearance/themes/$themeId/settings/",
     getParentRoute: () => AuthRoute,
-  } as any)
-const AuthAppearanceThemesPreviewIndexRoute =
-  AuthAppearanceThemesPreviewIndexRouteImport.update({
-    id: '/appearance/themes/preview/',
-    path: '/appearance/themes/preview/',
-    getParentRoute: () => AuthRoute,
-  } as any)
+  } as any);
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/404/': typeof R404IndexRoute
-  '/login/': typeof LoginIndexRoute
-  '/register/': typeof RegisterIndexRoute
-  '/403/': typeof Auth403IndexRoute
-  '/article/': typeof AuthArticleIndexRoute
-  '/dashboard/': typeof AuthDashboardIndexRoute
-  '/media/': typeof AuthMediaIndexRoute
-  '/page/': typeof AuthPageIndexRoute
-  '/plugins/': typeof AuthPluginsIndexRoute
-  '/profile/': typeof AuthProfileIndexRoute
-  '/settings/': typeof AuthSettingsIndexRoute
-  '/users/': typeof AuthUsersIndexRoute
-  '/article/editor/$id': typeof AuthArticleEditorIdRoute
-  '/page/editor/$id': typeof AuthPageEditorIdRoute
-  '/appearance/customize/': typeof AuthAppearanceCustomizeIndexRoute
-  '/appearance/themes/': typeof AuthAppearanceThemesIndexRoute
-  '/article/category/': typeof AuthArticleCategoryIndexRoute
-  '/article/comment/': typeof AuthArticleCommentIndexRoute
-  '/article/editor/': typeof AuthArticleEditorIndexRoute
-  '/article/tags/': typeof AuthArticleTagsIndexRoute
-  '/data/analytics/': typeof AuthDataAnalyticsIndexRoute
-  '/data/export/': typeof AuthDataExportIndexRoute
-  '/data/import/': typeof AuthDataImportIndexRoute
-  '/page/editor/': typeof AuthPageEditorIndexRoute
-  '/settings/$tab/': typeof AuthSettingsTabIndexRoute
-  '/appearance/themes/preview/': typeof AuthAppearanceThemesPreviewIndexRoute
-  '/plugins/$id/settings/': typeof AuthPluginsIdSettingsIndexRoute
+  "/": typeof IndexRoute;
+  "/404/": typeof R404IndexRoute;
+  "/login/": typeof LoginIndexRoute;
+  "/register/": typeof RegisterIndexRoute;
+  "/403/": typeof Auth403IndexRoute;
+  "/article/": typeof AuthArticleIndexRoute;
+  "/dashboard/": typeof AuthDashboardIndexRoute;
+  "/media/": typeof AuthMediaIndexRoute;
+  "/page/": typeof AuthPageIndexRoute;
+  "/plugins/": typeof AuthPluginsIndexRoute;
+  "/profile/": typeof AuthProfileIndexRoute;
+  "/settings/": typeof AuthSettingsIndexRoute;
+  "/users/": typeof AuthUsersIndexRoute;
+  "/article/editor/$id": typeof AuthArticleEditorIdRoute;
+  "/page/editor/$id": typeof AuthPageEditorIdRoute;
+  "/appearance/customize/": typeof AuthAppearanceCustomizeIndexRoute;
+  "/appearance/themes/": typeof AuthAppearanceThemesIndexRoute;
+  "/article/category/": typeof AuthArticleCategoryIndexRoute;
+  "/article/comment/": typeof AuthArticleCommentIndexRoute;
+  "/article/editor/": typeof AuthArticleEditorIndexRoute;
+  "/article/tags/": typeof AuthArticleTagsIndexRoute;
+  "/data/analytics/": typeof AuthDataAnalyticsIndexRoute;
+  "/data/export/": typeof AuthDataExportIndexRoute;
+  "/data/import/": typeof AuthDataImportIndexRoute;
+  "/page/editor/": typeof AuthPageEditorIndexRoute;
+  "/settings/$tab/": typeof AuthSettingsTabIndexRoute;
+  "/appearance/themes/preview/": typeof AuthAppearanceThemesPreviewIndexRoute;
+  "/plugins/$id/settings/": typeof AuthPluginsIdSettingsIndexRoute;
+  "/appearance/themes/$themeId/settings/": typeof AuthAppearanceThemesThemeIdSettingsIndexRoute;
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/404': typeof R404IndexRoute
-  '/login': typeof LoginIndexRoute
-  '/register': typeof RegisterIndexRoute
-  '/403': typeof Auth403IndexRoute
-  '/article': typeof AuthArticleIndexRoute
-  '/dashboard': typeof AuthDashboardIndexRoute
-  '/media': typeof AuthMediaIndexRoute
-  '/page': typeof AuthPageIndexRoute
-  '/plugins': typeof AuthPluginsIndexRoute
-  '/profile': typeof AuthProfileIndexRoute
-  '/settings': typeof AuthSettingsIndexRoute
-  '/users': typeof AuthUsersIndexRoute
-  '/article/editor/$id': typeof AuthArticleEditorIdRoute
-  '/page/editor/$id': typeof AuthPageEditorIdRoute
-  '/appearance/customize': typeof AuthAppearanceCustomizeIndexRoute
-  '/appearance/themes': typeof AuthAppearanceThemesIndexRoute
-  '/article/category': typeof AuthArticleCategoryIndexRoute
-  '/article/comment': typeof AuthArticleCommentIndexRoute
-  '/article/editor': typeof AuthArticleEditorIndexRoute
-  '/article/tags': typeof AuthArticleTagsIndexRoute
-  '/data/analytics': typeof AuthDataAnalyticsIndexRoute
-  '/data/export': typeof AuthDataExportIndexRoute
-  '/data/import': typeof AuthDataImportIndexRoute
-  '/page/editor': typeof AuthPageEditorIndexRoute
-  '/settings/$tab': typeof AuthSettingsTabIndexRoute
-  '/appearance/themes/preview': typeof AuthAppearanceThemesPreviewIndexRoute
-  '/plugins/$id/settings': typeof AuthPluginsIdSettingsIndexRoute
+  "/": typeof IndexRoute;
+  "/404": typeof R404IndexRoute;
+  "/login": typeof LoginIndexRoute;
+  "/register": typeof RegisterIndexRoute;
+  "/403": typeof Auth403IndexRoute;
+  "/article": typeof AuthArticleIndexRoute;
+  "/dashboard": typeof AuthDashboardIndexRoute;
+  "/media": typeof AuthMediaIndexRoute;
+  "/page": typeof AuthPageIndexRoute;
+  "/plugins": typeof AuthPluginsIndexRoute;
+  "/profile": typeof AuthProfileIndexRoute;
+  "/settings": typeof AuthSettingsIndexRoute;
+  "/users": typeof AuthUsersIndexRoute;
+  "/article/editor/$id": typeof AuthArticleEditorIdRoute;
+  "/page/editor/$id": typeof AuthPageEditorIdRoute;
+  "/appearance/customize": typeof AuthAppearanceCustomizeIndexRoute;
+  "/appearance/themes": typeof AuthAppearanceThemesIndexRoute;
+  "/article/category": typeof AuthArticleCategoryIndexRoute;
+  "/article/comment": typeof AuthArticleCommentIndexRoute;
+  "/article/editor": typeof AuthArticleEditorIndexRoute;
+  "/article/tags": typeof AuthArticleTagsIndexRoute;
+  "/data/analytics": typeof AuthDataAnalyticsIndexRoute;
+  "/data/export": typeof AuthDataExportIndexRoute;
+  "/data/import": typeof AuthDataImportIndexRoute;
+  "/page/editor": typeof AuthPageEditorIndexRoute;
+  "/settings/$tab": typeof AuthSettingsTabIndexRoute;
+  "/appearance/themes/preview": typeof AuthAppearanceThemesPreviewIndexRoute;
+  "/plugins/$id/settings": typeof AuthPluginsIdSettingsIndexRoute;
+  "/appearance/themes/$themeId/settings": typeof AuthAppearanceThemesThemeIdSettingsIndexRoute;
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/_auth': typeof AuthRouteWithChildren
-  '/404/': typeof R404IndexRoute
-  '/login/': typeof LoginIndexRoute
-  '/register/': typeof RegisterIndexRoute
-  '/_auth/403/': typeof Auth403IndexRoute
-  '/_auth/article/': typeof AuthArticleIndexRoute
-  '/_auth/dashboard/': typeof AuthDashboardIndexRoute
-  '/_auth/media/': typeof AuthMediaIndexRoute
-  '/_auth/page/': typeof AuthPageIndexRoute
-  '/_auth/plugins/': typeof AuthPluginsIndexRoute
-  '/_auth/profile/': typeof AuthProfileIndexRoute
-  '/_auth/settings/': typeof AuthSettingsIndexRoute
-  '/_auth/users/': typeof AuthUsersIndexRoute
-  '/_auth/article/editor/$id': typeof AuthArticleEditorIdRoute
-  '/_auth/page/editor/$id': typeof AuthPageEditorIdRoute
-  '/_auth/appearance/customize/': typeof AuthAppearanceCustomizeIndexRoute
-  '/_auth/appearance/themes/': typeof AuthAppearanceThemesIndexRoute
-  '/_auth/article/category/': typeof AuthArticleCategoryIndexRoute
-  '/_auth/article/comment/': typeof AuthArticleCommentIndexRoute
-  '/_auth/article/editor/': typeof AuthArticleEditorIndexRoute
-  '/_auth/article/tags/': typeof AuthArticleTagsIndexRoute
-  '/_auth/data/analytics/': typeof AuthDataAnalyticsIndexRoute
-  '/_auth/data/export/': typeof AuthDataExportIndexRoute
-  '/_auth/data/import/': typeof AuthDataImportIndexRoute
-  '/_auth/page/editor/': typeof AuthPageEditorIndexRoute
-  '/_auth/settings/$tab/': typeof AuthSettingsTabIndexRoute
-  '/_auth/appearance/themes/preview/': typeof AuthAppearanceThemesPreviewIndexRoute
-  '/_auth/plugins/$id/settings/': typeof AuthPluginsIdSettingsIndexRoute
+  __root__: typeof rootRouteImport;
+  "/": typeof IndexRoute;
+  "/_auth": typeof AuthRouteWithChildren;
+  "/404/": typeof R404IndexRoute;
+  "/login/": typeof LoginIndexRoute;
+  "/register/": typeof RegisterIndexRoute;
+  "/_auth/403/": typeof Auth403IndexRoute;
+  "/_auth/article/": typeof AuthArticleIndexRoute;
+  "/_auth/dashboard/": typeof AuthDashboardIndexRoute;
+  "/_auth/media/": typeof AuthMediaIndexRoute;
+  "/_auth/page/": typeof AuthPageIndexRoute;
+  "/_auth/plugins/": typeof AuthPluginsIndexRoute;
+  "/_auth/profile/": typeof AuthProfileIndexRoute;
+  "/_auth/settings/": typeof AuthSettingsIndexRoute;
+  "/_auth/users/": typeof AuthUsersIndexRoute;
+  "/_auth/article/editor/$id": typeof AuthArticleEditorIdRoute;
+  "/_auth/page/editor/$id": typeof AuthPageEditorIdRoute;
+  "/_auth/appearance/customize/": typeof AuthAppearanceCustomizeIndexRoute;
+  "/_auth/appearance/themes/": typeof AuthAppearanceThemesIndexRoute;
+  "/_auth/article/category/": typeof AuthArticleCategoryIndexRoute;
+  "/_auth/article/comment/": typeof AuthArticleCommentIndexRoute;
+  "/_auth/article/editor/": typeof AuthArticleEditorIndexRoute;
+  "/_auth/article/tags/": typeof AuthArticleTagsIndexRoute;
+  "/_auth/data/analytics/": typeof AuthDataAnalyticsIndexRoute;
+  "/_auth/data/export/": typeof AuthDataExportIndexRoute;
+  "/_auth/data/import/": typeof AuthDataImportIndexRoute;
+  "/_auth/page/editor/": typeof AuthPageEditorIndexRoute;
+  "/_auth/settings/$tab/": typeof AuthSettingsTabIndexRoute;
+  "/_auth/appearance/themes/preview/": typeof AuthAppearanceThemesPreviewIndexRoute;
+  "/_auth/plugins/$id/settings/": typeof AuthPluginsIdSettingsIndexRoute;
+  "/_auth/appearance/themes/$themeId/settings/": typeof AuthAppearanceThemesThemeIdSettingsIndexRoute;
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
+  fileRoutesByFullPath: FileRoutesByFullPath;
   fullPaths:
-    | '/'
-    | '/404/'
-    | '/login/'
-    | '/register/'
-    | '/403/'
-    | '/article/'
-    | '/dashboard/'
-    | '/media/'
-    | '/page/'
-    | '/plugins/'
-    | '/profile/'
-    | '/settings/'
-    | '/users/'
-    | '/article/editor/$id'
-    | '/page/editor/$id'
-    | '/appearance/customize/'
-    | '/appearance/themes/'
-    | '/article/category/'
-    | '/article/comment/'
-    | '/article/editor/'
-    | '/article/tags/'
-    | '/data/analytics/'
-    | '/data/export/'
-    | '/data/import/'
-    | '/page/editor/'
-    | '/settings/$tab/'
-    | '/appearance/themes/preview/'
-    | '/plugins/$id/settings/'
-  fileRoutesByTo: FileRoutesByTo
+    | "/"
+    | "/404/"
+    | "/login/"
+    | "/register/"
+    | "/403/"
+    | "/article/"
+    | "/dashboard/"
+    | "/media/"
+    | "/page/"
+    | "/plugins/"
+    | "/profile/"
+    | "/settings/"
+    | "/users/"
+    | "/article/editor/$id"
+    | "/page/editor/$id"
+    | "/appearance/customize/"
+    | "/appearance/themes/"
+    | "/article/category/"
+    | "/article/comment/"
+    | "/article/editor/"
+    | "/article/tags/"
+    | "/data/analytics/"
+    | "/data/export/"
+    | "/data/import/"
+    | "/page/editor/"
+    | "/settings/$tab/"
+    | "/appearance/themes/preview/"
+    | "/plugins/$id/settings/"
+    | "/appearance/themes/$themeId/settings/";
+  fileRoutesByTo: FileRoutesByTo;
   to:
-    | '/'
-    | '/404'
-    | '/login'
-    | '/register'
-    | '/403'
-    | '/article'
-    | '/dashboard'
-    | '/media'
-    | '/page'
-    | '/plugins'
-    | '/profile'
-    | '/settings'
-    | '/users'
-    | '/article/editor/$id'
-    | '/page/editor/$id'
-    | '/appearance/customize'
-    | '/appearance/themes'
-    | '/article/category'
-    | '/article/comment'
-    | '/article/editor'
-    | '/article/tags'
-    | '/data/analytics'
-    | '/data/export'
-    | '/data/import'
-    | '/page/editor'
-    | '/settings/$tab'
-    | '/appearance/themes/preview'
-    | '/plugins/$id/settings'
+    | "/"
+    | "/404"
+    | "/login"
+    | "/register"
+    | "/403"
+    | "/article"
+    | "/dashboard"
+    | "/media"
+    | "/page"
+    | "/plugins"
+    | "/profile"
+    | "/settings"
+    | "/users"
+    | "/article/editor/$id"
+    | "/page/editor/$id"
+    | "/appearance/customize"
+    | "/appearance/themes"
+    | "/article/category"
+    | "/article/comment"
+    | "/article/editor"
+    | "/article/tags"
+    | "/data/analytics"
+    | "/data/export"
+    | "/data/import"
+    | "/page/editor"
+    | "/settings/$tab"
+    | "/appearance/themes/preview"
+    | "/plugins/$id/settings"
+    | "/appearance/themes/$themeId/settings";
   id:
-    | '__root__'
-    | '/'
-    | '/_auth'
-    | '/404/'
-    | '/login/'
-    | '/register/'
-    | '/_auth/403/'
-    | '/_auth/article/'
-    | '/_auth/dashboard/'
-    | '/_auth/media/'
-    | '/_auth/page/'
-    | '/_auth/plugins/'
-    | '/_auth/profile/'
-    | '/_auth/settings/'
-    | '/_auth/users/'
-    | '/_auth/article/editor/$id'
-    | '/_auth/page/editor/$id'
-    | '/_auth/appearance/customize/'
-    | '/_auth/appearance/themes/'
-    | '/_auth/article/category/'
-    | '/_auth/article/comment/'
-    | '/_auth/article/editor/'
-    | '/_auth/article/tags/'
-    | '/_auth/data/analytics/'
-    | '/_auth/data/export/'
-    | '/_auth/data/import/'
-    | '/_auth/page/editor/'
-    | '/_auth/settings/$tab/'
-    | '/_auth/appearance/themes/preview/'
-    | '/_auth/plugins/$id/settings/'
-  fileRoutesById: FileRoutesById
+    | "__root__"
+    | "/"
+    | "/_auth"
+    | "/404/"
+    | "/login/"
+    | "/register/"
+    | "/_auth/403/"
+    | "/_auth/article/"
+    | "/_auth/dashboard/"
+    | "/_auth/media/"
+    | "/_auth/page/"
+    | "/_auth/plugins/"
+    | "/_auth/profile/"
+    | "/_auth/settings/"
+    | "/_auth/users/"
+    | "/_auth/article/editor/$id"
+    | "/_auth/page/editor/$id"
+    | "/_auth/appearance/customize/"
+    | "/_auth/appearance/themes/"
+    | "/_auth/article/category/"
+    | "/_auth/article/comment/"
+    | "/_auth/article/editor/"
+    | "/_auth/article/tags/"
+    | "/_auth/data/analytics/"
+    | "/_auth/data/export/"
+    | "/_auth/data/import/"
+    | "/_auth/page/editor/"
+    | "/_auth/settings/$tab/"
+    | "/_auth/appearance/themes/preview/"
+    | "/_auth/plugins/$id/settings/"
+    | "/_auth/appearance/themes/$themeId/settings/";
+  fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  AuthRoute: typeof AuthRouteWithChildren
-  R404IndexRoute: typeof R404IndexRoute
-  LoginIndexRoute: typeof LoginIndexRoute
-  RegisterIndexRoute: typeof RegisterIndexRoute
+  IndexRoute: typeof IndexRoute;
+  AuthRoute: typeof AuthRouteWithChildren;
+  R404IndexRoute: typeof R404IndexRoute;
+  LoginIndexRoute: typeof LoginIndexRoute;
+  RegisterIndexRoute: typeof RegisterIndexRoute;
 }
 
-declare module '@tanstack/react-router' {
+declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
-    '/_auth': {
-      id: '/_auth'
-      path: ''
-      fullPath: '/'
-      preLoaderRoute: typeof AuthRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/register/': {
-      id: '/register/'
-      path: '/register'
-      fullPath: '/register/'
-      preLoaderRoute: typeof RegisterIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/login/': {
-      id: '/login/'
-      path: '/login'
-      fullPath: '/login/'
-      preLoaderRoute: typeof LoginIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/404/': {
-      id: '/404/'
-      path: '/404'
-      fullPath: '/404/'
-      preLoaderRoute: typeof R404IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_auth/users/': {
-      id: '/_auth/users/'
-      path: '/users'
-      fullPath: '/users/'
-      preLoaderRoute: typeof AuthUsersIndexRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/_auth/settings/': {
-      id: '/_auth/settings/'
-      path: '/settings'
-      fullPath: '/settings/'
-      preLoaderRoute: typeof AuthSettingsIndexRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/_auth/profile/': {
-      id: '/_auth/profile/'
-      path: '/profile'
-      fullPath: '/profile/'
-      preLoaderRoute: typeof AuthProfileIndexRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/_auth/plugins/': {
-      id: '/_auth/plugins/'
-      path: '/plugins'
-      fullPath: '/plugins/'
-      preLoaderRoute: typeof AuthPluginsIndexRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/_auth/page/': {
-      id: '/_auth/page/'
-      path: '/page'
-      fullPath: '/page/'
-      preLoaderRoute: typeof AuthPageIndexRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/_auth/media/': {
-      id: '/_auth/media/'
-      path: '/media'
-      fullPath: '/media/'
-      preLoaderRoute: typeof AuthMediaIndexRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/_auth/dashboard/': {
-      id: '/_auth/dashboard/'
-      path: '/dashboard'
-      fullPath: '/dashboard/'
-      preLoaderRoute: typeof AuthDashboardIndexRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/_auth/article/': {
-      id: '/_auth/article/'
-      path: '/article'
-      fullPath: '/article/'
-      preLoaderRoute: typeof AuthArticleIndexRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/_auth/403/': {
-      id: '/_auth/403/'
-      path: '/403'
-      fullPath: '/403/'
-      preLoaderRoute: typeof Auth403IndexRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/_auth/settings/$tab/': {
-      id: '/_auth/settings/$tab/'
-      path: '/settings/$tab'
-      fullPath: '/settings/$tab/'
-      preLoaderRoute: typeof AuthSettingsTabIndexRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/_auth/page/editor/': {
-      id: '/_auth/page/editor/'
-      path: '/page/editor'
-      fullPath: '/page/editor/'
-      preLoaderRoute: typeof AuthPageEditorIndexRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/_auth/data/import/': {
-      id: '/_auth/data/import/'
-      path: '/data/import'
-      fullPath: '/data/import/'
-      preLoaderRoute: typeof AuthDataImportIndexRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/_auth/data/export/': {
-      id: '/_auth/data/export/'
-      path: '/data/export'
-      fullPath: '/data/export/'
-      preLoaderRoute: typeof AuthDataExportIndexRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/_auth/data/analytics/': {
-      id: '/_auth/data/analytics/'
-      path: '/data/analytics'
-      fullPath: '/data/analytics/'
-      preLoaderRoute: typeof AuthDataAnalyticsIndexRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/_auth/article/tags/': {
-      id: '/_auth/article/tags/'
-      path: '/article/tags'
-      fullPath: '/article/tags/'
-      preLoaderRoute: typeof AuthArticleTagsIndexRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/_auth/article/editor/': {
-      id: '/_auth/article/editor/'
-      path: '/article/editor'
-      fullPath: '/article/editor/'
-      preLoaderRoute: typeof AuthArticleEditorIndexRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/_auth/article/comment/': {
-      id: '/_auth/article/comment/'
-      path: '/article/comment'
-      fullPath: '/article/comment/'
-      preLoaderRoute: typeof AuthArticleCommentIndexRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/_auth/article/category/': {
-      id: '/_auth/article/category/'
-      path: '/article/category'
-      fullPath: '/article/category/'
-      preLoaderRoute: typeof AuthArticleCategoryIndexRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/_auth/appearance/themes/': {
-      id: '/_auth/appearance/themes/'
-      path: '/appearance/themes'
-      fullPath: '/appearance/themes/'
-      preLoaderRoute: typeof AuthAppearanceThemesIndexRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/_auth/appearance/customize/': {
-      id: '/_auth/appearance/customize/'
-      path: '/appearance/customize'
-      fullPath: '/appearance/customize/'
-      preLoaderRoute: typeof AuthAppearanceCustomizeIndexRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/_auth/page/editor/$id': {
-      id: '/_auth/page/editor/$id'
-      path: '/page/editor/$id'
-      fullPath: '/page/editor/$id'
-      preLoaderRoute: typeof AuthPageEditorIdRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/_auth/article/editor/$id': {
-      id: '/_auth/article/editor/$id'
-      path: '/article/editor/$id'
-      fullPath: '/article/editor/$id'
-      preLoaderRoute: typeof AuthArticleEditorIdRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/_auth/plugins/$id/settings/': {
-      id: '/_auth/plugins/$id/settings/'
-      path: '/plugins/$id/settings'
-      fullPath: '/plugins/$id/settings/'
-      preLoaderRoute: typeof AuthPluginsIdSettingsIndexRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/_auth/appearance/themes/preview/': {
-      id: '/_auth/appearance/themes/preview/'
-      path: '/appearance/themes/preview'
-      fullPath: '/appearance/themes/preview/'
-      preLoaderRoute: typeof AuthAppearanceThemesPreviewIndexRouteImport
-      parentRoute: typeof AuthRoute
-    }
+    "/_auth": {
+      id: "/_auth";
+      path: "";
+      fullPath: "/";
+      preLoaderRoute: typeof AuthRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/": {
+      id: "/";
+      path: "/";
+      fullPath: "/";
+      preLoaderRoute: typeof IndexRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/register/": {
+      id: "/register/";
+      path: "/register";
+      fullPath: "/register/";
+      preLoaderRoute: typeof RegisterIndexRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/login/": {
+      id: "/login/";
+      path: "/login";
+      fullPath: "/login/";
+      preLoaderRoute: typeof LoginIndexRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/404/": {
+      id: "/404/";
+      path: "/404";
+      fullPath: "/404/";
+      preLoaderRoute: typeof R404IndexRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/_auth/users/": {
+      id: "/_auth/users/";
+      path: "/users";
+      fullPath: "/users/";
+      preLoaderRoute: typeof AuthUsersIndexRouteImport;
+      parentRoute: typeof AuthRoute;
+    };
+    "/_auth/settings/": {
+      id: "/_auth/settings/";
+      path: "/settings";
+      fullPath: "/settings/";
+      preLoaderRoute: typeof AuthSettingsIndexRouteImport;
+      parentRoute: typeof AuthRoute;
+    };
+    "/_auth/profile/": {
+      id: "/_auth/profile/";
+      path: "/profile";
+      fullPath: "/profile/";
+      preLoaderRoute: typeof AuthProfileIndexRouteImport;
+      parentRoute: typeof AuthRoute;
+    };
+    "/_auth/plugins/": {
+      id: "/_auth/plugins/";
+      path: "/plugins";
+      fullPath: "/plugins/";
+      preLoaderRoute: typeof AuthPluginsIndexRouteImport;
+      parentRoute: typeof AuthRoute;
+    };
+    "/_auth/page/": {
+      id: "/_auth/page/";
+      path: "/page";
+      fullPath: "/page/";
+      preLoaderRoute: typeof AuthPageIndexRouteImport;
+      parentRoute: typeof AuthRoute;
+    };
+    "/_auth/media/": {
+      id: "/_auth/media/";
+      path: "/media";
+      fullPath: "/media/";
+      preLoaderRoute: typeof AuthMediaIndexRouteImport;
+      parentRoute: typeof AuthRoute;
+    };
+    "/_auth/dashboard/": {
+      id: "/_auth/dashboard/";
+      path: "/dashboard";
+      fullPath: "/dashboard/";
+      preLoaderRoute: typeof AuthDashboardIndexRouteImport;
+      parentRoute: typeof AuthRoute;
+    };
+    "/_auth/article/": {
+      id: "/_auth/article/";
+      path: "/article";
+      fullPath: "/article/";
+      preLoaderRoute: typeof AuthArticleIndexRouteImport;
+      parentRoute: typeof AuthRoute;
+    };
+    "/_auth/403/": {
+      id: "/_auth/403/";
+      path: "/403";
+      fullPath: "/403/";
+      preLoaderRoute: typeof Auth403IndexRouteImport;
+      parentRoute: typeof AuthRoute;
+    };
+    "/_auth/settings/$tab/": {
+      id: "/_auth/settings/$tab/";
+      path: "/settings/$tab";
+      fullPath: "/settings/$tab/";
+      preLoaderRoute: typeof AuthSettingsTabIndexRouteImport;
+      parentRoute: typeof AuthRoute;
+    };
+    "/_auth/page/editor/": {
+      id: "/_auth/page/editor/";
+      path: "/page/editor";
+      fullPath: "/page/editor/";
+      preLoaderRoute: typeof AuthPageEditorIndexRouteImport;
+      parentRoute: typeof AuthRoute;
+    };
+    "/_auth/data/import/": {
+      id: "/_auth/data/import/";
+      path: "/data/import";
+      fullPath: "/data/import/";
+      preLoaderRoute: typeof AuthDataImportIndexRouteImport;
+      parentRoute: typeof AuthRoute;
+    };
+    "/_auth/data/export/": {
+      id: "/_auth/data/export/";
+      path: "/data/export";
+      fullPath: "/data/export/";
+      preLoaderRoute: typeof AuthDataExportIndexRouteImport;
+      parentRoute: typeof AuthRoute;
+    };
+    "/_auth/data/analytics/": {
+      id: "/_auth/data/analytics/";
+      path: "/data/analytics";
+      fullPath: "/data/analytics/";
+      preLoaderRoute: typeof AuthDataAnalyticsIndexRouteImport;
+      parentRoute: typeof AuthRoute;
+    };
+    "/_auth/article/tags/": {
+      id: "/_auth/article/tags/";
+      path: "/article/tags";
+      fullPath: "/article/tags/";
+      preLoaderRoute: typeof AuthArticleTagsIndexRouteImport;
+      parentRoute: typeof AuthRoute;
+    };
+    "/_auth/article/editor/": {
+      id: "/_auth/article/editor/";
+      path: "/article/editor";
+      fullPath: "/article/editor/";
+      preLoaderRoute: typeof AuthArticleEditorIndexRouteImport;
+      parentRoute: typeof AuthRoute;
+    };
+    "/_auth/article/comment/": {
+      id: "/_auth/article/comment/";
+      path: "/article/comment";
+      fullPath: "/article/comment/";
+      preLoaderRoute: typeof AuthArticleCommentIndexRouteImport;
+      parentRoute: typeof AuthRoute;
+    };
+    "/_auth/article/category/": {
+      id: "/_auth/article/category/";
+      path: "/article/category";
+      fullPath: "/article/category/";
+      preLoaderRoute: typeof AuthArticleCategoryIndexRouteImport;
+      parentRoute: typeof AuthRoute;
+    };
+    "/_auth/appearance/themes/": {
+      id: "/_auth/appearance/themes/";
+      path: "/appearance/themes";
+      fullPath: "/appearance/themes/";
+      preLoaderRoute: typeof AuthAppearanceThemesIndexRouteImport;
+      parentRoute: typeof AuthRoute;
+    };
+    "/_auth/appearance/customize/": {
+      id: "/_auth/appearance/customize/";
+      path: "/appearance/customize";
+      fullPath: "/appearance/customize/";
+      preLoaderRoute: typeof AuthAppearanceCustomizeIndexRouteImport;
+      parentRoute: typeof AuthRoute;
+    };
+    "/_auth/page/editor/$id": {
+      id: "/_auth/page/editor/$id";
+      path: "/page/editor/$id";
+      fullPath: "/page/editor/$id";
+      preLoaderRoute: typeof AuthPageEditorIdRouteImport;
+      parentRoute: typeof AuthRoute;
+    };
+    "/_auth/article/editor/$id": {
+      id: "/_auth/article/editor/$id";
+      path: "/article/editor/$id";
+      fullPath: "/article/editor/$id";
+      preLoaderRoute: typeof AuthArticleEditorIdRouteImport;
+      parentRoute: typeof AuthRoute;
+    };
+    "/_auth/plugins/$id/settings/": {
+      id: "/_auth/plugins/$id/settings/";
+      path: "/plugins/$id/settings";
+      fullPath: "/plugins/$id/settings/";
+      preLoaderRoute: typeof AuthPluginsIdSettingsIndexRouteImport;
+      parentRoute: typeof AuthRoute;
+    };
+    "/_auth/appearance/themes/preview/": {
+      id: "/_auth/appearance/themes/preview/";
+      path: "/appearance/themes/preview";
+      fullPath: "/appearance/themes/preview/";
+      preLoaderRoute: typeof AuthAppearanceThemesPreviewIndexRouteImport;
+      parentRoute: typeof AuthRoute;
+    };
+    "/_auth/appearance/themes/$themeId/settings/": {
+      id: "/_auth/appearance/themes/$themeId/settings/";
+      path: "/appearance/themes/$themeId/settings";
+      fullPath: "/appearance/themes/$themeId/settings/";
+      preLoaderRoute: typeof AuthAppearanceThemesThemeIdSettingsIndexRouteImport;
+      parentRoute: typeof AuthRoute;
+    };
   }
 }
 
 interface AuthRouteChildren {
-  Auth403IndexRoute: typeof Auth403IndexRoute
-  AuthArticleIndexRoute: typeof AuthArticleIndexRoute
-  AuthDashboardIndexRoute: typeof AuthDashboardIndexRoute
-  AuthMediaIndexRoute: typeof AuthMediaIndexRoute
-  AuthPageIndexRoute: typeof AuthPageIndexRoute
-  AuthPluginsIndexRoute: typeof AuthPluginsIndexRoute
-  AuthProfileIndexRoute: typeof AuthProfileIndexRoute
-  AuthSettingsIndexRoute: typeof AuthSettingsIndexRoute
-  AuthUsersIndexRoute: typeof AuthUsersIndexRoute
-  AuthArticleEditorIdRoute: typeof AuthArticleEditorIdRoute
-  AuthPageEditorIdRoute: typeof AuthPageEditorIdRoute
-  AuthAppearanceCustomizeIndexRoute: typeof AuthAppearanceCustomizeIndexRoute
-  AuthAppearanceThemesIndexRoute: typeof AuthAppearanceThemesIndexRoute
-  AuthArticleCategoryIndexRoute: typeof AuthArticleCategoryIndexRoute
-  AuthArticleCommentIndexRoute: typeof AuthArticleCommentIndexRoute
-  AuthArticleEditorIndexRoute: typeof AuthArticleEditorIndexRoute
-  AuthArticleTagsIndexRoute: typeof AuthArticleTagsIndexRoute
-  AuthDataAnalyticsIndexRoute: typeof AuthDataAnalyticsIndexRoute
-  AuthDataExportIndexRoute: typeof AuthDataExportIndexRoute
-  AuthDataImportIndexRoute: typeof AuthDataImportIndexRoute
-  AuthPageEditorIndexRoute: typeof AuthPageEditorIndexRoute
-  AuthSettingsTabIndexRoute: typeof AuthSettingsTabIndexRoute
-  AuthAppearanceThemesPreviewIndexRoute: typeof AuthAppearanceThemesPreviewIndexRoute
-  AuthPluginsIdSettingsIndexRoute: typeof AuthPluginsIdSettingsIndexRoute
+  Auth403IndexRoute: typeof Auth403IndexRoute;
+  AuthArticleIndexRoute: typeof AuthArticleIndexRoute;
+  AuthDashboardIndexRoute: typeof AuthDashboardIndexRoute;
+  AuthMediaIndexRoute: typeof AuthMediaIndexRoute;
+  AuthPageIndexRoute: typeof AuthPageIndexRoute;
+  AuthPluginsIndexRoute: typeof AuthPluginsIndexRoute;
+  AuthProfileIndexRoute: typeof AuthProfileIndexRoute;
+  AuthSettingsIndexRoute: typeof AuthSettingsIndexRoute;
+  AuthUsersIndexRoute: typeof AuthUsersIndexRoute;
+  AuthArticleEditorIdRoute: typeof AuthArticleEditorIdRoute;
+  AuthPageEditorIdRoute: typeof AuthPageEditorIdRoute;
+  AuthAppearanceCustomizeIndexRoute: typeof AuthAppearanceCustomizeIndexRoute;
+  AuthAppearanceThemesIndexRoute: typeof AuthAppearanceThemesIndexRoute;
+  AuthArticleCategoryIndexRoute: typeof AuthArticleCategoryIndexRoute;
+  AuthArticleCommentIndexRoute: typeof AuthArticleCommentIndexRoute;
+  AuthArticleEditorIndexRoute: typeof AuthArticleEditorIndexRoute;
+  AuthArticleTagsIndexRoute: typeof AuthArticleTagsIndexRoute;
+  AuthDataAnalyticsIndexRoute: typeof AuthDataAnalyticsIndexRoute;
+  AuthDataExportIndexRoute: typeof AuthDataExportIndexRoute;
+  AuthDataImportIndexRoute: typeof AuthDataImportIndexRoute;
+  AuthPageEditorIndexRoute: typeof AuthPageEditorIndexRoute;
+  AuthSettingsTabIndexRoute: typeof AuthSettingsTabIndexRoute;
+  AuthAppearanceThemesPreviewIndexRoute: typeof AuthAppearanceThemesPreviewIndexRoute;
+  AuthPluginsIdSettingsIndexRoute: typeof AuthPluginsIdSettingsIndexRoute;
+  AuthAppearanceThemesThemeIdSettingsIndexRoute: typeof AuthAppearanceThemesThemeIdSettingsIndexRoute;
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
@@ -643,9 +659,10 @@ const AuthRouteChildren: AuthRouteChildren = {
   AuthSettingsTabIndexRoute: AuthSettingsTabIndexRoute,
   AuthAppearanceThemesPreviewIndexRoute: AuthAppearanceThemesPreviewIndexRoute,
   AuthPluginsIdSettingsIndexRoute: AuthPluginsIdSettingsIndexRoute,
-}
+  AuthAppearanceThemesThemeIdSettingsIndexRoute: AuthAppearanceThemesThemeIdSettingsIndexRoute,
+};
 
-const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren);
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -653,7 +670,7 @@ const rootRouteChildren: RootRouteChildren = {
   R404IndexRoute: R404IndexRoute,
   LoginIndexRoute: LoginIndexRoute,
   RegisterIndexRoute: RegisterIndexRoute,
-}
+};
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+  ._addFileTypes<FileRouteTypes>();

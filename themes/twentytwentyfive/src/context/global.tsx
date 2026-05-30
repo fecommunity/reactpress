@@ -1,8 +1,46 @@
 import React from 'react';
 
+export interface ISiteConfigNav {
+  urlConfig?: Array<{
+    key: string;
+    label: string;
+    icon?: string;
+    children?: Array<{
+      key: string;
+      label: string;
+      url?: string;
+      description?: string;
+      icon?: string;
+      type?: string;
+    }>;
+  }>;
+  searchCategories?: {
+    categories?: Array<{ label: string; key: string }>;
+    subCategories?: Record<
+      string,
+      Array<{ label: string; key: string; url?: string }>
+    >;
+  };
+}
+
+export interface ISiteConfig {
+  header?: {
+    navLinks?: Array<{
+      path: string;
+      locale?: string;
+      label?: string;
+      icon?: string;
+      visible?: boolean;
+    }>;
+  };
+  nav?: ISiteConfigNav;
+}
+
 export interface IGlobalContext {
   setting?: ISetting;
   i18n?: Record<string, unknown>;
+  /** Resolved from globalSetting.config + legacy globalConfig */
+  siteConfig?: ISiteConfig;
   globalSetting?: {
     globalConfig: IGlobalConfig;
   };

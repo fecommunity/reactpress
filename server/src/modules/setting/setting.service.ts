@@ -3,8 +3,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as merge from 'deepmerge';
 import { Repository } from 'typeorm';
 
+import {
+  getThemeConfigurationSeed,
+  getThemeStateFromGlobalSetting,
+} from '@fecommunity/reactpress-toolkit/extension';
+
 import { i18n, settings, UNPROTECTED_KEYS } from './setting.constant';
 import { Setting } from './setting.entity';
+
+const THEMES_WITH_CONFIGURATION = ['twentytwentyfive'] as const;
 
 @Injectable()
 export class SettingService {
@@ -14,6 +21,7 @@ export class SettingService {
   ) {
     this.initI18n();
     this.initGlobalConfig();
+    this.initThemeConfigurations();
   }
 
   /**
@@ -72,6 +80,57 @@ export class SettingService {
     if (!target.globalSetting || target.globalSetting !== mergedSettingsString) {
       target.globalSetting = mergedSettingsString;
       await this.settingRepository.save(target);
+    }
+  }
+
+  /**
+   * 初始化各主题的 schema 默认配置到 globalSetting.config[themeId]
+   */
+  async initThemeConfigurations() {
+    const items = await this.settingRepository.find();
+    const target = (items && items[0]) || ({} as Setting);
+    let gs: Record<string, unknown> = {};
+    try {
+      if (target.globalSetting) {
+        gs = JSON.parse(target.globalSetting) as Record<string, unknown>;
+      }
+    } catch {
+      gs = {};
+    }
+
+    const themeState = getThemeStateFromGlobalSetting(gs);
+    const activeTheme = themeState.activeTheme || 'twentytwentyfive';
+    let config =
+      gs.config && typeof gs.config === 'object'
+        ? ({ ...(gs.config as Record<string, Record<string, unknown>>) } as Record<
+            string,
+            Record<string, unknown>
+          >)
+        : {};
+
+    let changed = false;
+    for (const themeId of THEMES_WITH_CONFIGURATION) {
+      const seed = getThemeConfigurationSeed(themeId, 'zh');
+      if (!seed) continue;
+      const current = config[themeId];
+      const merged = merge({}, seed, current && typeof current === 'object' ? current : {});
+      const mergedStr = JSON.stringify(merged);
+      const prevStr = JSON.stringify(current ?? {});
+      if (mergedStr !== prevStr) {
+        config[themeId] = merged;
+        changed = true;
+      }
+    }
+
+    if (!gs.config && Object.keys(config).length) {
+      changed = true;
+    }
+
+    if (changed) {
+      gs.config = config;
+      target.globalSetting = JSON.stringify(gs);
+      await this.settingRepository.save(target);
+      console.log(`[SettingService] theme config seeded (active: ${activeTheme})`);
     }
   }
 

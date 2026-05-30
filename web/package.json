@@ -22,6 +22,11 @@
   },
   "dependencies": {
     "@fecommunity/reactpress-toolkit": "workspace:*",
+    "@formily/antd-v5": "^1.2.4",
+    "@formily/core": "^2.3.7",
+    "@formily/json-schema": "^2.3.7",
+    "@formily/react": "^2.3.7",
+    "@formily/reactive": "^2.3.7",
     "@monaco-editor/react": "^4.6.0",
     "@tanstack/react-query": "~5.90.21",
     "@tanstack/react-router": "^1.167.4",

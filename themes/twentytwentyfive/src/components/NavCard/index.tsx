@@ -19,8 +19,11 @@ interface NavCardProps {
 }
 
 const NavCardPage: React.FC<NavCardProps> = (props) => {
-  const { globalSetting } = useContext(GlobalContext);
-  const dataSource = props?.dataSource || globalSetting?.globalConfig?.urlConfig;
+  const { siteConfig, globalSetting } = useContext(GlobalContext);
+  const dataSource =
+    props?.dataSource ||
+    siteConfig?.nav?.urlConfig ||
+    globalSetting?.globalConfig?.urlConfig;
   return (
     <div className={styles.navCardWrapper}>
       <Category dataSource={dataSource} />

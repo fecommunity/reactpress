@@ -33,6 +33,38 @@ export class ThemeController {
     return this.themeService.listThemes();
   }
 
+  @Post('preview-draft')
+  @Roles('admin')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiResponse({
+    status: 200,
+    description: 'Store customizer preview payload; returns short token for iframe URL',
+  })
+  createPreviewDraft(
+    @Body()
+    body: {
+      themeId?: string;
+      mods?: Record<string, string>;
+      configuration?: Record<string, unknown>;
+    },
+  ) {
+    return this.themeService.createPreviewDraft({
+      themeId: body?.themeId,
+      mods: body?.mods,
+      configuration: body?.configuration,
+    });
+  }
+
+  @Get('preview-draft/:token')
+  @ApiResponse({ status: 200, description: 'Public read of short-lived preview draft by token' })
+  getPreviewDraft(@Param('token') token: string) {
+    const draft = this.themeService.resolvePreviewDraft(token);
+    if (!draft) {
+      return { mods: {}, configuration: {} };
+    }
+    return draft;
+  }
+
   @Post('preview-session/end')
   @Roles('admin')
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -68,11 +100,15 @@ export class ThemeController {
   @Get(':id/preview')
   async preview(
     @Param('id') id: string,
+    @Query('token') previewToken: string | undefined,
     @Query('mods') modsQuery: string | undefined,
     @Res() res: Response,
   ) {
     let overrideMods: Record<string, string> = {};
-    if (modsQuery) {
+    if (previewToken?.trim()) {
+      const draft = this.themeService.resolvePreviewDraft(previewToken.trim());
+      overrideMods = (draft?.mods ?? {}) as Record<string, string>;
+    } else if (modsQuery) {
       try {
         overrideMods = JSON.parse(decodeURIComponent(modsQuery)) as Record<string, string>;
       } catch {
@@ -83,6 +119,33 @@ export class ThemeController {
     const html = this.themeService.buildPreviewHtml(id, mods);
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
     res.send(html);
+  }
+
+  @Get(':id/configuration-schema')
+  @Roles('admin')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiResponse({ status: 200, description: 'JSON Schema for theme site configuration' })
+  getConfigurationSchema(@Param('id') id: string) {
+    return this.themeService.getThemeConfigurationSchema(id);
+  }
+
+  @Get(':id/configuration')
+  @Roles('admin')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiResponse({ status: 200, description: 'Merged theme configuration (defaults + saved)' })
+  getConfiguration(@Param('id') id: string) {
+    return this.themeService.getThemeConfiguration(id);
+  }
+
+  @Post(':id/configuration')
+  @Roles('admin')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiResponse({ status: 200, description: 'Patch theme configuration (validated against schema)' })
+  updateConfiguration(
+    @Param('id') id: string,
+    @Body() body: { configuration?: Record<string, unknown> },
+  ) {
+    return this.themeService.updateThemeConfiguration(id, body?.configuration ?? {});
   }
 
   @Get(':id')

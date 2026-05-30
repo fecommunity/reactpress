@@ -1,5 +1,7 @@
 /** WordPress-style theme manifest and site theme state (shared by server / web / themes). */
 
+import type { ThemeConfigurationSchema } from './configuration/types';
+
 export interface ThemeCustomizerChoice {
   value: string;
   label: string;
@@ -20,7 +22,95 @@ export interface ThemeCustomizerSetting {
 export interface ThemeCustomizerSection {
   id: string;
   title: string;
-  settings: ThemeCustomizerSetting[];
+  /** Inline controls; omit when `panel` is set. */
+  settings?: ThemeCustomizerSetting[];
+  /** Inline theme JSON Schema form inside customizer (no separate admin page). */
+  panel?: 'configuration';
+  description?: string;
+}
+
+/** Customizer mod id → `Setting` entity column (identity / background overrides). */
+export const CUSTOMIZER_MOD_TO_SETTING_KEY: Record<string, string> = {
+  displayTitle: 'systemTitle',
+  displayTagline: 'systemSubTitle',
+  siteLogo: 'systemLogo',
+  backgroundImage: 'systemBg',
+};
+
+/** Setting fields stored under the same id in mods (about / footer). */
+export const CUSTOMIZER_DIRECT_SETTING_KEYS = [
+  'systemFooterInfo',
+  'aboutUsGithubUrl',
+  'aboutUsCommentQr',
+  'aboutUsWechatQr',
+] as const;
+
+export type CustomizerDirectSettingKey = (typeof CUSTOMIZER_DIRECT_SETTING_KEYS)[number];
+
+/** @deprecated Use CUSTOMIZER_DIRECT_SETTING_KEYS */
+export const CUSTOMIZER_SITE_SETTING_KEYS = CUSTOMIZER_DIRECT_SETTING_KEYS;
+
+export type CustomizerSiteSettingKey = CustomizerDirectSettingKey;
+
+function modValue(mods: ThemeMods, modId: string): string | undefined {
+  const v = mods[modId];
+  if (v == null || String(v).trim() === '') return undefined;
+  return String(v);
+}
+
+/** Values to persist into site `Setting` when publishing customizer mods. */
+export function pickCustomizerSiteSettings(mods: ThemeMods): Record<string, string> {
+  const out: Record<string, string> = {};
+  for (const [modId, settingKey] of Object.entries(CUSTOMIZER_MOD_TO_SETTING_KEY)) {
+    const v = modValue(mods, modId);
+    if (v) out[settingKey] = v;
+  }
+  for (const key of CUSTOMIZER_DIRECT_SETTING_KEYS) {
+    const v = modValue(mods, key);
+    if (v) out[key] = v;
+  }
+  return out;
+}
+
+/** Build form seed from site settings (inverse of mod → setting map). */
+export function seedCustomizerModsFromSiteSetting(
+  setting: Record<string, unknown> | null | undefined,
+  mods: ThemeMods = {},
+): ThemeMods {
+  const merged = { ...mods };
+  for (const [modId, settingKey] of Object.entries(CUSTOMIZER_MOD_TO_SETTING_KEY)) {
+    if (!modValue(merged, modId) && setting?.[settingKey] != null) {
+      merged[modId] = String(setting[settingKey]);
+    }
+  }
+  for (const key of CUSTOMIZER_DIRECT_SETTING_KEYS) {
+    if (!modValue(merged, key) && setting?.[key] != null) {
+      merged[key] = String(setting[key]);
+    }
+  }
+  return merged;
+}
+
+/** Overlay customizer / preview mods onto site setting for the active theme runtime. */
+export function applyCustomizerModsToSiteSetting<T extends Record<string, unknown>>(
+  setting: T,
+  mods: ThemeMods,
+): T {
+  const next = { ...setting };
+  for (const [modId, settingKey] of Object.entries(CUSTOMIZER_MOD_TO_SETTING_KEY)) {
+    const v = modValue(mods, modId);
+    if (v) (next as Record<string, unknown>)[settingKey] = v;
+  }
+  for (const key of CUSTOMIZER_DIRECT_SETTING_KEYS) {
+    const v = modValue(mods, key);
+    if (v) (next as Record<string, unknown>)[key] = v;
+  }
+  return next;
+}
+
+/** Primary color from customizer mods (Ant Design / CSS). */
+export function customizerPrimaryColor(mods: ThemeMods, fallback = '#f44336'): string {
+  return modValue(mods, 'primaryColor') ?? fallback;
 }
 
 export interface ThemeManifest {
@@ -36,6 +126,8 @@ export interface ThemeManifest {
     requires?: string;
     templates?: Record<string, string>;
     supports?: Record<string, unknown>;
+    /** JSON Schema for site config (`globalSetting.config[themeId]`). */
+    configuration?: ThemeConfigurationSchema;
   };
   customizer?: {
     sections: ThemeCustomizerSection[];
@@ -64,6 +156,7 @@ export interface GlobalSettingWithTheme {
   zh?: unknown;
   en?: unknown;
   theme?: SiteThemeState;
+  config?: Record<string, Record<string, unknown>>;
   [key: string]: unknown;
 }
 
@@ -83,7 +176,11 @@ export function parseThemeManifest(raw: unknown): ThemeManifest | null {
     reactpress:
       o.reactpress && typeof o.reactpress === 'object'
         ? (o.reactpress as ThemeManifest['reactpress'])
-        : undefined,
+        : o.configuration && typeof o.configuration === 'object'
+          ? {
+              configuration: o.configuration as ThemeConfigurationSchema,
+            }
+          : undefined,
     customizer:
       o.customizer && typeof o.customizer === 'object'
         ? (o.customizer as ThemeManifest['customizer'])
@@ -121,6 +218,22 @@ export {
   parsePreviewModsFromRequestUrl,
   parsePreviewModsParam,
 } from '../theme/preview-mods';
+
+export {
+  PREVIEW_CONFIG_QUERY_KEY,
+  appendPreviewConfigToUrl,
+  parsePreviewConfigFromNextCtx,
+  parsePreviewConfigFromRequestUrl,
+  parsePreviewConfigParam,
+} from '../theme/preview-config';
+
+export {
+  PREVIEW_TOKEN_QUERY_KEY,
+  appendPreviewTokenToUrl,
+  parsePreviewTokenFromNextCtx,
+  parsePreviewTokenFromRequestUrl,
+  type PreviewDraftPayload,
+} from '../theme/preview-draft';
 
 export function mergeThemeStateIntoGlobalSetting(
   raw: unknown,

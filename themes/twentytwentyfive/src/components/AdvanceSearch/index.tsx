@@ -15,8 +15,13 @@ interface IProps {
 }
 
 export const AdvanceSearch: React.FC<IProps> = (props) => {
-  const { globalSetting } = useContext(GlobalContext);
-  const { subCategories = {}, categories } = globalSetting?.globalConfig?.navConfig || props.globalSetting || {};
+  const { siteConfig, globalSetting } = useContext(GlobalContext);
+  const navSearch =
+    siteConfig?.nav?.searchCategories ||
+    globalSetting?.globalConfig?.navConfig ||
+    props.globalSetting ||
+    {};
+  const { subCategories = {}, categories } = navSearch;
   const [category, setCategory] = useState(categories?.[0]?.key);
   const [subCategory, setSubCategory] = useState(subCategories?.[category]?.[0]?.key);
   const [options, setOptions] = useState<any[]>([]);

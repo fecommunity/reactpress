@@ -8,6 +8,72 @@
   "reactpress": {
     "requires": ">=3.0.0",
     "supports": { "darkMode": false, "menus": ["primary"] },
+    "configuration": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Twenty Twenty-Five",
+      "description": "顶栏导航与 /nav 网址导航、聚合搜索",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "header": {
+          "type": "object",
+          "title": "顶栏",
+          "properties": {
+            "navLinks": {
+              "type": "array",
+              "title": "固定导航链接",
+              "default": [
+                { "path": "/", "locale": "home", "icon": "HomeOutlined", "visible": true },
+                { "path": "/nav", "locale": "nav", "icon": "GlobalOutlined", "visible": true },
+                { "path": "/knowledge", "locale": "knowledge", "icon": "BookOutlined", "visible": false },
+                { "path": "/archives", "locale": "archives", "icon": "HistoryOutlined", "visible": true }
+              ],
+              "items": {
+                "type": "object",
+                "required": ["path"],
+                "properties": {
+                  "path": { "type": "string", "title": "路径" },
+                  "locale": {
+                    "type": "string",
+                    "title": "i18n 键",
+                    "description": "站点 i18n 包中的键名（如 home、nav）。中英文译文在数据库 setting.i18n 中按 zh/en 维护，默认与 toolkit 语言包合并。"
+                  },
+                  "label": {
+                    "type": "string",
+                    "title": "固定文案",
+                    "description": "各语言显示相同文字；留空则根据 locale 键自动翻译。"
+                  },
+                  "icon": { "type": "string" },
+                  "visible": { "type": "boolean", "default": true }
+                }
+              },
+              "x-ui": { "widget": "navLinkList", "section": "header", "order": 10 }
+            }
+          }
+        },
+        "nav": {
+          "type": "object",
+          "title": "网址导航",
+          "properties": {
+            "urlConfig": {
+              "type": "array",
+              "title": "导航卡片分组",
+              "x-ui": { "widget": "urlConfigEditor", "section": "nav", "order": 20 },
+              "items": { "type": "object" }
+            },
+            "searchCategories": {
+              "type": "object",
+              "title": "聚合搜索分类",
+              "x-ui": { "widget": "navSearchEditor", "section": "nav", "order": 30 },
+              "properties": {
+                "categories": { "type": "array", "items": { "type": "object" } },
+                "subCategories": { "type": "object" }
+              }
+            }
+          }
+        }
+      }
+    },
     "templates": {
       "home": "pages/index.tsx",
       "single": "pages/article/[id].tsx",
@@ -18,5 +84,89 @@
       "search": "pages/nav/index.tsx",
       "404": "pages/404.tsx"
     }
+  },
+  "customizer": {
+    "sections": [
+      {
+        "id": "identity",
+        "title": "站点身份",
+        "settings": [
+          {
+            "id": "siteLogo",
+            "type": "image",
+            "label": "站点 Logo",
+            "description": "留空则使用后台「站点 Logo」(systemLogo)"
+          },
+          {
+            "id": "displayTitle",
+            "type": "text",
+            "label": "站点标题",
+            "description": "留空则使用后台「站点标题」(systemTitle)"
+          },
+          {
+            "id": "displayTagline",
+            "type": "text",
+            "label": "站点副标题",
+            "description": "留空则使用后台「站点副标题」(systemSubTitle)"
+          }
+        ]
+      },
+      {
+        "id": "colors",
+        "title": "颜色",
+        "settings": [
+          { "id": "primaryColor", "type": "color", "label": "主色", "default": "#f44336" },
+          { "id": "backgroundColor", "type": "color", "label": "背景色", "default": "#ffffff" }
+        ]
+      },
+      {
+        "id": "background",
+        "title": "背景图片",
+        "settings": [
+          {
+            "id": "backgroundImage",
+            "type": "image",
+            "label": "背景图",
+            "description": "设置后将覆盖纯色背景（宽屏可见）"
+          }
+        ]
+      },
+      {
+        "id": "about",
+        "title": "关于我们与页脚",
+        "settings": [
+          {
+            "id": "systemFooterInfo",
+            "type": "textarea",
+            "label": "页脚说明",
+            "description": "支持 HTML；同步保存到站点设置"
+          },
+          {
+            "id": "aboutUsGithubUrl",
+            "type": "text",
+            "label": "GitHub 链接",
+            "description": "页头与页脚 GitHub 图标；留空不显示"
+          },
+          {
+            "id": "aboutUsCommentQr",
+            "type": "image",
+            "label": "社群/评论二维码",
+            "description": "悬停展示的图片地址"
+          },
+          {
+            "id": "aboutUsWechatQr",
+            "type": "image",
+            "label": "微信二维码",
+            "description": "悬停展示的图片地址"
+          }
+        ]
+      },
+      {
+        "id": "themeConfiguration",
+        "title": "顶栏与网址导航",
+        "panel": "configuration",
+        "description": "固定导航、/nav 卡片与聚合搜索"
+      }
+    ]
   }
 }

@@ -21,10 +21,11 @@ interface IProps {
 
 const Article: NextPage<IProps> = ({ siteKey }) => {
   const t = useTranslations();
-  const { setting, tags, globalSetting } = useContext(GlobalContext);
+  const { setting, tags, siteConfig, globalSetting } = useContext(GlobalContext);
 
   const article = useMemo(() => {
-    const urlItem = globalSetting?.globalConfig?.urlConfig
+    const urlConfig = siteConfig?.nav?.urlConfig ?? globalSetting?.globalConfig?.urlConfig ?? [];
+    const urlItem = urlConfig
       .map((item) => item.children)
       .flat()
       .find((item) => item.key === siteKey);

@@ -1,4 +1,8 @@
-import type { SiteThemeState, ThemeMods } from "@fecommunity/reactpress-toolkit/extension";
+import type {
+  SiteThemeState,
+  ThemeConfigurationSchema,
+  ThemeMods,
+} from "@fecommunity/reactpress-toolkit/extension";
 import { resolveApiBaseUrl } from "@fecommunity/reactpress-toolkit/react";
 
 import { clearInvalidServerSession } from "@/shared/auth/session";
@@ -20,11 +24,14 @@ export interface ThemeListItem {
     sections: Array<{
       id: string;
       title: string;
-      settings: Array<{
+      panel?: "configuration";
+      description?: string;
+      settings?: Array<{
         id: string;
         type: string;
         label: string;
         default?: string;
+        description?: string;
       }>;
     }>;
   };
@@ -107,12 +114,47 @@ export function endThemePreviewSession() {
   });
 }
 
-export async function buildThemePreviewUrl(themeId: string, mods: ThemeMods): Promise<string> {
+export type PreviewDraftInput = {
+  themeId?: string;
+  mods?: ThemeMods;
+  configuration?: Record<string, unknown>;
+};
+
+export function createPreviewDraft(payload: PreviewDraftInput) {
+  return themeFetch<{ token: string }>("/extension/themes/preview-draft", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function buildThemePreviewUrl(
+  themeId: string,
+  payload: PreviewDraftInput,
+): Promise<string> {
   const base = await resolveApiBaseUrl(API_BASE_URL || "/api");
-  const q = encodeURIComponent(JSON.stringify(mods));
-  return `${base}/extension/themes/${themeId}/preview?mods=${q}`;
+  const { token } = await createPreviewDraft(payload);
+  return `${base}/extension/themes/${themeId}/preview?token=${encodeURIComponent(token)}`;
 }
 
 export function themeScreenshotUrl(themeId: string): string {
   return `/api/extension/themes/${themeId}/screenshot`;
+}
+
+export function fetchThemeConfigurationSchema(themeId: string) {
+  return themeFetch<{ themeId: string; schema: ThemeConfigurationSchema | null }>(
+    `/extension/themes/${themeId}/configuration-schema`,
+  );
+}
+
+export function fetchThemeConfiguration(themeId: string) {
+  return themeFetch<{ themeId: string; configuration: Record<string, unknown> }>(
+    `/extension/themes/${themeId}/configuration`,
+  );
+}
+
+export function patchThemeConfiguration(themeId: string, configuration: Record<string, unknown>) {
+  return themeFetch<{ themeId: string; configuration: Record<string, unknown> }>(
+    `/extension/themes/${themeId}/configuration`,
+    { method: "POST", body: JSON.stringify({ configuration }) },
+  );
 }

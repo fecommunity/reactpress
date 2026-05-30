@@ -6,7 +6,7 @@ export function defaultModsFromManifest(manifest: ThemeManifest | null | undefin
   const mods: ThemeMods = {};
   const sections = manifest?.customizer?.sections ?? [];
   for (const section of sections) {
-    for (const setting of section.settings) {
+    for (const setting of section.settings ?? []) {
       if (setting.id && setting.default != null) {
         mods[setting.id] = String(setting.default);
       }

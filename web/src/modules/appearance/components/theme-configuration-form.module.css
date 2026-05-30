@@ -1,0 +1,93 @@
+.formRoot {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  width: 100%;
+}
+
+.embeddedRoot {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  width: 100%;
+}
+
+.embeddedToolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-shrink: 0;
+}
+
+.embeddedScroll {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding-right: 4px;
+}
+
+.embeddedScroll :global([data-vscode-section]) {
+  margin-bottom: 8px;
+}
+
+.form {
+  width: 100%;
+  max-width: none;
+}
+
+.form :global(.ant-form),
+.form :global(.formily-form),
+.form :global(.formily-layout) {
+  width: 100%;
+  max-width: none;
+}
+
+/* VS Code section wrapper — no card chrome */
+.form :global(.ant-formily-item:has([data-vscode-section])) {
+  display: block;
+  margin: 0;
+}
+
+.form :global(.ant-formily-item:has([data-vscode-section]) > .ant-formily-item-label) {
+  display: none !important;
+  width: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.form :global(.ant-formily-item:has([data-vscode-section]) > .ant-formily-item-control) {
+  flex: none;
+  width: 100%;
+  max-width: 100%;
+}
+
+.form :global([data-vscode-section]) {
+  width: 100%;
+}
+
+.form :global(.ant-formily-item:has([data-setting-row])) {
+  padding: 0;
+  margin: 0;
+}
+
+.form :global(.ant-formily-item:has([data-setting-row]) > .ant-formily-item-control) {
+  width: 100%;
+  max-width: none;
+}
+
+.form :global(.ant-formily-item:has([data-setting-row]) .ant-formily-item-control-content),
+.form :global(.ant-formily-item:has([data-setting-row]) .ant-formily-item-control-input),
+.form :global(.ant-formily-item:has([data-setting-row]) .ant-formily-item-control-input-content) {
+  width: 100%;
+  max-width: none;
+}
+
+/* Legacy FormItem rows (fallback) */
+.form :global(.ant-formily-item:not(:has([data-vscode-section])):not(:has([data-setting-row]))) {
+  margin-bottom: 0;
+  flex-direction: column;
+  padding: 12px 16px 14px;
+  border-bottom: 1px solid var(--vscode-widget-border, var(--ant-color-border-secondary));
+}

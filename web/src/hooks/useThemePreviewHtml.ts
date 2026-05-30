@@ -24,7 +24,7 @@ export function useThemePreviewHtml(themeId: string | undefined, mods: ThemeMods
     void (async () => {
       try {
         const parsedMods = JSON.parse(modsKey) as ThemeMods;
-        const url = await buildThemePreviewUrl(themeId, parsedMods);
+        const url = await buildThemePreviewUrl(themeId, { mods: parsedMods });
         const res = await fetch(url);
         if (!res.ok) {
           throw new Error(`Preview failed: ${res.status}`);

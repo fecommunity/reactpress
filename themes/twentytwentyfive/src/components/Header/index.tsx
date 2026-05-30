@@ -18,7 +18,7 @@
  * - Search functionality
  */
 
-import { SearchOutlined, HomeOutlined, GlobalOutlined, BookOutlined, HistoryOutlined } from '@ant-design/icons';
+import { SearchOutlined } from '@ant-design/icons';
 import { Menu } from 'antd';
 import cls from 'classnames';
 import Link from 'next/link';
@@ -39,33 +39,6 @@ import { renderHeaderLogo } from './renderHeaderLogo';
 
 import { GitHub } from '../AboutUs';
 
-/** 是否在 Header 显示「专辑」(/knowledge) 入口，暂时关闭 */
-const SHOW_KNOWLEDGE_NAV = false;
-
-// Navigation links configuration
-const NAV_LINKS = [
-  {
-    path: '/',
-    locale: 'home',
-    icon: <HomeOutlined />,
-  },
-  {
-    path: '/nav',
-    locale: 'nav',
-    icon: <GlobalOutlined />,
-  },
-  {
-    path: '/knowledge',
-    locale: 'knowledge',
-    icon: <BookOutlined />,
-  },
-  {
-    path: '/archives',
-    locale: 'archives',
-    icon: <HistoryOutlined />,
-  },
-].filter((nav) => nav.path !== '/knowledge' || SHOW_KNOWLEDGE_NAV);
-
 interface HeaderProps {
   setting: ISetting;
   tags: ITag[];
@@ -77,7 +50,8 @@ export const Header: React.FC<HeaderProps> = ({ setting, tags, pages, hasBg = fa
   const t = useTranslations();
   const router = useRouter();
   const { asPath } = router;
-  const { locales = [] } = useContext(GlobalContext);
+  const { locales = [], siteConfig } = useContext(GlobalContext);
+  const navLinks = siteConfig?.header?.navLinks ?? [];
   const [affix, setAffix] = useToggle(false);
   const [affixVisible, setAffixVisible] = useToggle(false);
   const [visible, setVisible] = useToggle(false);
@@ -120,17 +94,21 @@ export const Header: React.FC<HeaderProps> = ({ setting, tags, pages, hasBg = fa
 
   // Generate menu items for navigation
   const menuItems = useMemo(() => {
-    const navMenu = NAV_LINKS.map((nav) => ({
-      label: (
-        <Link href={nav.path} key={nav.path}>
-          <a aria-label={nav.locale}>
-            <span>{t(nav.locale)}</span>
-          </a>
-        </Link>
-      ),
-      key: nav.path,
-      icon: nav.icon,
-    }));
+    const navMenu = navLinks.map((nav) => {
+      const Icon = getIconByName(nav.icon);
+      const labelText = nav.label || (nav.locale ? t(nav.locale) : nav.path);
+      return {
+        label: (
+          <Link href={nav.path} key={nav.path}>
+            <a aria-label={nav.locale || nav.path}>
+              <span>{labelText}</span>
+            </a>
+          </Link>
+        ),
+        key: nav.path,
+        icon: Icon ? <Icon /> : null,
+      };
+    });
 
     const pageMenu = pages.map((menu, index) => {
       const Icon = getIconByName(menu.path);
@@ -145,7 +123,7 @@ export const Header: React.FC<HeaderProps> = ({ setting, tags, pages, hasBg = fa
       }
     });
     return navMenu.concat(pageMenu);
-  }, [pages, t]);
+  }, [navLinks, pages, t]);
 
   // Notify other components about header state
   useEffect(() => {
