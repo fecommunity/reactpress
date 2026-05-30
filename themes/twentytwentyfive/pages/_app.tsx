@@ -215,7 +215,6 @@ class MyApp extends App<
           <ViewStatistics />
           <Analytics />
           <ConfigProvider
-            key={isDark ? 'dark' : 'light'}
             locale={{
               locale,
             }}
