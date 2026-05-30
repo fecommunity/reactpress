@@ -6,14 +6,16 @@ import { useTranslation } from "react-i18next";
 
 import styles from "@/modules/appearance/components/themes-page.module.css";
 import { MediaSelectDrawer } from "@/shared/components/MediaSelectDrawer";
+import { SiteNoticeListField } from "@/shared/components/SiteNoticeListField";
 
 type SettingDef = ThemeCustomizerSetting & { type: string };
 
 type Props = {
   setting: SettingDef;
+  siteSettingSeed?: Record<string, unknown>;
 };
 
-export function CustomizerSettingField({ setting }: Props) {
+export function CustomizerSettingField({ setting, siteSettingSeed }: Props) {
   const { t } = useTranslation();
   const { message } = App.useApp();
   const [mediaOpen, setMediaOpen] = useState(false);
@@ -72,6 +74,18 @@ export function CustomizerSettingField({ setting }: Props) {
     return (
       <Form.Item name={setting.id} label={setting.label} extra={description}>
         <Input.TextArea rows={8} spellCheck={false} className={styles.customizerCodeArea} />
+      </Form.Item>
+    );
+  }
+
+  if (setting.type === "noticeList") {
+    const inheritFrom =
+      siteSettingSeed?.systemNoticeInfo != null
+        ? String(siteSettingSeed.systemNoticeInfo)
+        : undefined;
+    return (
+      <Form.Item name={setting.id} label={setting.label} extra={description}>
+        <SiteNoticeListField inheritFrom={inheritFrom} showInheritHint />
       </Form.Item>
     );
   }

@@ -1,4 +1,5 @@
 import { GlobalContext } from '@/context/global';
+import { siteNoticeDisplayLines } from '@fecommunity/reactpress-toolkit/extension';
 import { BellFilled } from '@ant-design/icons';
 import { Alert } from 'antd';
 import React, { useContext } from 'react';
@@ -7,7 +8,7 @@ import style from './index.module.scss';
 
 const SystemNotification: React.FC = () => {
   const { setting } = useContext(GlobalContext);
-  const notices = setting?.systemNoticeInfo?.split('\n').filter(Boolean);
+  const notices = siteNoticeDisplayLines(setting?.systemNoticeInfo);
   return !!notices?.length ? (
     <Alert
       className={style.alert}

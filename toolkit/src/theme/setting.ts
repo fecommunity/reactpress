@@ -29,18 +29,24 @@ export const DEFAULT_SITE_META: SiteMeta = {
   siteDescription: 'A ReactPress powered site',
 };
 
+/** Parse branding from an effective Setting row (mods overlay applied by API). */
 export function parseSiteMeta(row: Record<string, unknown> | null): SiteMeta {
   if (!row) {
     return { ...DEFAULT_SITE_META };
   }
   return {
-    siteName: String(row.systemTitle ?? 'ReactPress Site'),
-    siteDescription: String(row.systemSubTitle ?? 'A ReactPress powered site'),
-    siteUrl: row.systemUrl != null ? String(row.systemUrl) : undefined,
+    siteName: String(row.systemTitle ?? 'ReactPress Site').trim() || DEFAULT_SITE_META.siteName,
+    siteDescription:
+      String(row.systemSubTitle ?? DEFAULT_SITE_META.siteDescription).trim() ||
+      DEFAULT_SITE_META.siteDescription,
+    siteUrl: row.systemUrl != null ? String(row.systemUrl).trim() || undefined : undefined,
     siteLogo:
       row.systemLogo != null && String(row.systemLogo).trim()
         ? String(row.systemLogo).trim()
         : undefined,
-    siteFavicon: row.systemFavicon != null ? String(row.systemFavicon) : undefined,
+    siteFavicon:
+      row.systemFavicon != null && String(row.systemFavicon).trim()
+        ? String(row.systemFavicon).trim()
+        : undefined,
   };
 }

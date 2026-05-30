@@ -10,108 +10,105 @@ export interface ThemeCustomizerChoice {
 /** WordPress Customizer–style control (declared in `theme.json` → `customizer.sections`). */
 export interface ThemeCustomizerSetting {
   id: string;
-  type: 'color' | 'text' | 'image' | 'textarea' | 'checkbox' | 'select';
+  type: 'color' | 'text' | 'image' | 'textarea' | 'checkbox' | 'select' | 'noticeList';
   label: string;
   default?: string;
   /** Shown below the control (like WP customize control descriptions). */
   description?: string;
   /** For `type: "select"`. */
   choices?: ThemeCustomizerChoice[];
+  /** Sub-group within a section panel (e.g. light vs dark colors). */
+  settingGroup?: string;
+}
+
+/** Sidebar nav category (基础 / 样式 / 布局). */
+export interface ThemeCustomizerGroup {
+  id: string;
+  title: string;
+  description?: string;
+}
+
+/** Visual block inside a section detail panel. */
+export interface ThemeCustomizerSettingGroup {
+  id: string;
+  title: string;
+  description?: string;
 }
 
 export interface ThemeCustomizerSection {
   id: string;
   title: string;
+  /** Nav category id (`customizer.groups[].id`). */
+  group?: string;
   /** Inline controls; omit when `panel` is set. */
   settings?: ThemeCustomizerSetting[];
+  /** Blocks inside the section panel (e.g. 浅色 / 深色). */
+  settingGroups?: ThemeCustomizerSettingGroup[];
   /** Inline theme JSON Schema form inside customizer (no separate admin page). */
   panel?: 'configuration';
   description?: string;
 }
 
-/** Customizer mod id → `Setting` entity column (identity / background overrides). */
-export const CUSTOMIZER_MOD_TO_SETTING_KEY: Record<string, string> = {
-  displayTitle: 'systemTitle',
-  displayTagline: 'systemSubTitle',
-  siteLogo: 'systemLogo',
-  backgroundImage: 'systemBg',
-};
+export interface ThemeCustomizerManifest {
+  groups?: ThemeCustomizerGroup[];
+  sections: ThemeCustomizerSection[];
+}
 
-/** Setting fields stored under the same id in mods (about / footer). */
-export const CUSTOMIZER_DIRECT_SETTING_KEYS = [
-  'systemFooterInfo',
-  'aboutUsGithubUrl',
-  'aboutUsCommentQr',
-  'aboutUsWechatQr',
-] as const;
+import {
+  applyCustomizerModsToSiteSetting,
+  brandingModValue,
+  seedThemeModsFromLegacySetting,
+  THEME_BRANDING_DIRECT_MODS,
+  THEME_BRANDING_MOD_TO_SETTING,
+  type ThemeMods,
+} from './branding-mods';
 
-export type CustomizerDirectSettingKey = (typeof CUSTOMIZER_DIRECT_SETTING_KEYS)[number];
+export {
+  applyCustomizerModsToSiteSetting,
+  seedThemeModsFromLegacySetting,
+  THEME_BRANDING_DIRECT_MODS,
+  THEME_BRANDING_MOD_TO_SETTING,
+} from './branding-mods';
 
-/** @deprecated Use CUSTOMIZER_DIRECT_SETTING_KEYS */
-export const CUSTOMIZER_SITE_SETTING_KEYS = CUSTOMIZER_DIRECT_SETTING_KEYS;
+/** @deprecated Use THEME_BRANDING_MOD_TO_SETTING */
+export const CUSTOMIZER_MOD_TO_SETTING_KEY = THEME_BRANDING_MOD_TO_SETTING;
+
+/** @deprecated Use THEME_BRANDING_DIRECT_MODS */
+export const CUSTOMIZER_DIRECT_SETTING_KEYS = THEME_BRANDING_DIRECT_MODS;
+
+export type CustomizerDirectSettingKey = (typeof THEME_BRANDING_DIRECT_MODS)[number];
+
+/** @deprecated Use THEME_BRANDING_DIRECT_MODS */
+export const CUSTOMIZER_SITE_SETTING_KEYS = THEME_BRANDING_DIRECT_MODS;
 
 export type CustomizerSiteSettingKey = CustomizerDirectSettingKey;
 
-function modValue(mods: ThemeMods, modId: string): string | undefined {
-  const v = mods[modId];
-  if (v == null || String(v).trim() === '') return undefined;
-  return String(v);
-}
-
-/** Values to persist into site `Setting` when publishing customizer mods. */
+/**
+ * @deprecated Appearance is stored in `globalSetting.theme.mods`; do not PATCH Setting columns.
+ */
 export function pickCustomizerSiteSettings(mods: ThemeMods): Record<string, string> {
   const out: Record<string, string> = {};
-  for (const [modId, settingKey] of Object.entries(CUSTOMIZER_MOD_TO_SETTING_KEY)) {
-    const v = modValue(mods, modId);
+  for (const [modId, settingKey] of Object.entries(THEME_BRANDING_MOD_TO_SETTING)) {
+    const v = brandingModValue(mods, modId);
     if (v) out[settingKey] = v;
   }
-  for (const key of CUSTOMIZER_DIRECT_SETTING_KEYS) {
-    const v = modValue(mods, key);
+  for (const key of THEME_BRANDING_DIRECT_MODS) {
+    const v = brandingModValue(mods, key);
     if (v) out[key] = v;
   }
   return out;
 }
 
-/** Build form seed from site settings (inverse of mod → setting map). */
-export function seedCustomizerModsFromSiteSetting(
-  setting: Record<string, unknown> | null | undefined,
-  mods: ThemeMods = {},
-): ThemeMods {
-  const merged = { ...mods };
-  for (const [modId, settingKey] of Object.entries(CUSTOMIZER_MOD_TO_SETTING_KEY)) {
-    if (!modValue(merged, modId) && setting?.[settingKey] != null) {
-      merged[modId] = String(setting[settingKey]);
-    }
-  }
-  for (const key of CUSTOMIZER_DIRECT_SETTING_KEYS) {
-    if (!modValue(merged, key) && setting?.[key] != null) {
-      merged[key] = String(setting[key]);
-    }
-  }
-  return merged;
-}
+/** @deprecated Use seedThemeModsFromLegacySetting */
+export const seedCustomizerModsFromSiteSetting = seedThemeModsFromLegacySetting;
 
-/** Overlay customizer / preview mods onto site setting for the active theme runtime. */
-export function applyCustomizerModsToSiteSetting<T extends Record<string, unknown>>(
-  setting: T,
-  mods: ThemeMods,
-): T {
-  const next = { ...setting };
-  for (const [modId, settingKey] of Object.entries(CUSTOMIZER_MOD_TO_SETTING_KEY)) {
-    const v = modValue(mods, modId);
-    if (v) (next as Record<string, unknown>)[settingKey] = v;
-  }
-  for (const key of CUSTOMIZER_DIRECT_SETTING_KEYS) {
-    const v = modValue(mods, key);
-    if (v) (next as Record<string, unknown>)[key] = v;
-  }
-  return next;
-}
-
-/** Primary color from customizer mods (Ant Design / CSS). */
+/** Primary color from customizer mods (Ant Design / CSS), light mode. */
 export function customizerPrimaryColor(mods: ThemeMods, fallback = '#f44336'): string {
-  return modValue(mods, 'primaryColor') ?? fallback;
+  const v = brandingModValue(mods, 'primaryColor');
+  return v && String(v).trim() ? String(v).trim() : fallback;
 }
+
+export { customizerPrimaryColorForMode } from './twentytwentyfive-vars';
 
 export interface ThemeManifest {
   id: string;
@@ -129,12 +126,10 @@ export interface ThemeManifest {
     /** JSON Schema for site config (`globalSetting.config[themeId]`). */
     configuration?: ThemeConfigurationSchema;
   };
-  customizer?: {
-    sections: ThemeCustomizerSection[];
-  };
+  customizer?: ThemeCustomizerManifest;
 }
 
-export type ThemeMods = Record<string, string>;
+export type { ThemeMods } from './branding-mods';
 
 export interface SiteThemeState {
   activeTheme: string;

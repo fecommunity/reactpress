@@ -4,11 +4,15 @@ import * as merge from 'deepmerge';
 import { Repository } from 'typeorm';
 
 import {
+  buildPublicSettingView,
   getThemeConfigurationSeed,
   getThemeStateFromGlobalSetting,
+  migrateLegacyAppearanceToThemeMods,
+  pickSystemSettingPatch,
+  resolveEffectiveSettingRow,
 } from '@fecommunity/reactpress-toolkit/extension';
 
-import { i18n, settings, UNPROTECTED_KEYS } from './setting.constant';
+import { i18n, settings } from './setting.constant';
 import { Setting } from './setting.entity';
 
 const THEMES_WITH_CONFIGURATION = ['twentytwentyfive'] as const;
@@ -21,6 +25,7 @@ export class SettingService {
   ) {
     this.initI18n();
     this.initGlobalConfig();
+    this.migrateLegacyAppearance();
     this.initThemeConfigurations();
   }
 
@@ -66,20 +71,54 @@ export class SettingService {
   async initGlobalConfig() {
     const items = await this.settingRepository.find();
     const target = (items && items[0]) || ({} as Setting);
-    let data = {};
+    let data: Record<string, unknown> = {};
     try {
       if (target.globalSetting) {
-        data = JSON.parse(target.globalSetting);
+        data = JSON.parse(target.globalSetting) as Record<string, unknown>;
       }
-    } catch (e) {
+    } catch {
       data = {};
     }
-    const mergedSettings = merge({}, settings, data);
+    const themeState = getThemeStateFromGlobalSetting(data);
+    const defaultTheme = getThemeStateFromGlobalSetting(settings);
+    const mergedTheme = {
+      ...defaultTheme,
+      ...themeState,
+      mods: { ...defaultTheme.mods, ...themeState.mods },
+      installedThemes:
+        themeState.installedThemes?.length > 0
+          ? themeState.installedThemes
+          : defaultTheme.installedThemes,
+    };
+    const mergedSettings = { ...data, theme: mergedTheme };
     const mergedSettingsString = JSON.stringify(mergedSettings);
-    
+
     if (!target.globalSetting || target.globalSetting !== mergedSettingsString) {
       target.globalSetting = mergedSettingsString;
       await this.settingRepository.save(target);
+    }
+  }
+
+  /** 将旧版 Setting 表中的外观字段迁入 `globalSetting.theme.mods`。 */
+  async migrateLegacyAppearance() {
+    const items = await this.settingRepository.find();
+    const target = (items && items[0]) || ({} as Setting);
+    if (!target.id && !target.globalSetting) return;
+
+    let gs: Record<string, unknown> = {};
+    try {
+      if (target.globalSetting) {
+        gs = JSON.parse(target.globalSetting) as Record<string, unknown>;
+      }
+    } catch {
+      gs = {};
+    }
+
+    const { global, changed } = migrateLegacyAppearanceToThemeMods(gs, target as unknown as Record<string, unknown>);
+    if (changed) {
+      target.globalSetting = JSON.stringify(global);
+      await this.settingRepository.save(target);
+      console.log('[SettingService] legacy appearance migrated to theme mods');
     }
   }
 
@@ -147,29 +186,34 @@ export class SettingService {
     if (!res) {
       return {} as Setting;
     }
-    if (innerInvoke || isAdmin) {
+    if (isAdmin && !innerInvoke) {
       return res;
     }
-    const filterRes = UNPROTECTED_KEYS.reduce((a, c) => {
-      a[c] = res[c];
-      return a;
-    }, {}) as Setting;
 
-    return filterRes;
+    const effective = resolveEffectiveSettingRow(
+      res as unknown as Record<string, unknown>,
+    ) as unknown as Setting;
+
+    if (innerInvoke) {
+      return effective;
+    }
+    return buildPublicSettingView(
+      effective as unknown as Record<string, unknown>,
+    ) as unknown as Setting;
   }
 
-  /**
-   * 更新系统设置
-   * @param id
-   * @param setting
-   */
+  /** 更新系统设置（站点/SEO 为全站默认，主题 customizer 可覆盖） */
   async update(setting: Partial<Setting>): Promise<Setting> {
     const old = await this.settingRepository.find();
+    const sanitized = pickSystemSettingPatch(setting as Record<string, unknown>);
+    if (Object.keys(sanitized).length === 0) {
+      return old[0] ?? ({} as Setting);
+    }
 
     const updatedTag =
       old && old[0]
-        ? await this.settingRepository.merge(old[0], setting)
-        : await this.settingRepository.create(setting);
+        ? await this.settingRepository.merge(old[0], sanitized as Partial<Setting>)
+        : await this.settingRepository.create(sanitized as Partial<Setting>);
     return this.settingRepository.save(updatedTag);
   }
 }

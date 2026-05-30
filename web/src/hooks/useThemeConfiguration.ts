@@ -29,8 +29,8 @@ export function useThemeConfigurationMutation(themeId: string | undefined) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (configuration: Record<string, unknown>) =>
-      patchThemeConfiguration(themeId!, configuration),
+    mutationFn: (input: { configuration: Record<string, unknown>; replace?: boolean }) =>
+      patchThemeConfiguration(themeId!, input.configuration, { replace: input.replace }),
     onSuccess: (data) => {
       queryClient.setQueryData(configKey(themeId!), data);
       void queryClient.invalidateQueries({ queryKey: ["site-settings"] });

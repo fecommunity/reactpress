@@ -2,9 +2,8 @@ import type { AdminModule } from "@fecommunity/reactpress-toolkit/admin";
 
 const SETTING_TABS = [
   { id: "general", title: "常规", path: "/settings/general", sort: 0 },
-  { id: "about", title: "关于我们", path: "/settings/about", sort: 1 },
+  { id: "seo", title: "SEO", path: "/settings/seo", sort: 1 },
   { id: "email", title: "邮件", path: "/settings/email", sort: 2 },
-  { id: "seo", title: "SEO", path: "/settings/seo", sort: 3 },
 ] as const;
 
 export const settingsModule: AdminModule = {

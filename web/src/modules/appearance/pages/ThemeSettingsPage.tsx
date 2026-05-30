@@ -85,7 +85,7 @@ export function ThemeSettingsPage() {
             saving={saveMutation.isPending}
             onSave={async (values) => {
               try {
-                await saveMutation.mutateAsync(values);
+                await saveMutation.mutateAsync({ configuration: values });
                 message.success(t("appearance.themeSettingsSaved"));
               } catch (err) {
                 const msg = err instanceof Error ? err.message : t("appearance.actionFailed");

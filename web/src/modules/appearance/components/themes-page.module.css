@@ -538,7 +538,9 @@
 .customizerActions {
   flex-shrink: 0;
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
+  align-items: center;
   margin-top: 0;
   padding: 12px 16px;
   border-top: 1px solid #dcdcde;
@@ -548,8 +550,18 @@
 
 .customizerPreviewBtn,
 .customizerPublishBtn {
-  flex: 1;
+  flex: 1 1 0;
+  min-width: 72px;
   margin-top: 0 !important;
+}
+
+.customizerResetBtn {
+  flex: 0 0 auto;
+  margin-top: 0 !important;
+  padding-inline: 4px !important;
+  height: auto !important;
+  line-height: 1.4 !important;
+  white-space: nowrap;
 }
 
 .customizerForm {
@@ -559,20 +571,59 @@
 .customizerNav {
   display: flex;
   flex-direction: column;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid #dcdcde;
+}
+
+.customizerNavGroupHead {
+  padding: 12px 0 6px;
+}
+
+.customizerNavGroupTitle {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #646970;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.customizerNavGroupDesc {
+  display: block;
+  margin-top: 2px;
+  font-size: 11px;
+  color: #a7aaad;
+  line-height: 1.4;
+}
+
+.customizerNavGroupList {
   margin: 0;
   padding: 0;
   list-style: none;
-  border-top: 1px solid #dcdcde;
+  border: 1px solid #dcdcde;
+  border-radius: 4px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.customizerNavGroupList .customizerNavItem {
+  border-bottom: 1px solid #dcdcde;
+}
+
+.customizerNavGroupList li:last-child .customizerNavItem {
+  border-bottom: none;
 }
 
 .customizerNavItem {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 8px;
   width: 100%;
-  padding: 14px 4px;
+  padding: 10px 12px;
   border: 0;
-  border-bottom: 1px solid #dcdcde;
   background: transparent;
   color: var(--appearance-text, #1d2327);
   font-size: 14px;
@@ -582,22 +633,37 @@
 }
 
 .customizerNavItem:hover {
+  background: #f6f7f7;
   color: #2271b1;
 }
 
-.customizerNavItem > span:first-child {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
+.customizerNavItemLabel {
+  flex: 1;
   min-width: 0;
 }
 
-.customizerNavHint {
+.customizerSettingGroup {
+  margin-bottom: 20px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.customizerSettingGroup:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.customizerSettingGroupTitle {
   display: block;
-  font-size: 12px;
-  font-weight: 400;
-  color: #646970;
-  line-height: 1.35;
+  margin-bottom: 4px !important;
+  font-size: 13px !important;
+}
+
+.customizerSettingGroupDesc {
+  margin: 0 0 12px !important;
+  font-size: 12px !important;
+  line-height: 1.5 !important;
 }
 
 .customizerSectionBack {
@@ -610,6 +676,12 @@
   margin: 0 0 12px !important;
   font-weight: 600 !important;
   font-size: 1rem !important;
+}
+
+.customizerSectionDesc {
+  margin: -4px 0 12px !important;
+  font-size: 12px !important;
+  line-height: 1.5 !important;
 }
 
 .customizerConfigurationWrap {

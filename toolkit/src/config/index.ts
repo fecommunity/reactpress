@@ -3,7 +3,7 @@
  */
 import { config as envConfig, file } from './env';
 import { messages, locales, defaultLocale } from './i18n';
-import { globalSetting } from './global';
+import { globalSetting, systemGlobalSettingDefaults } from './global';
 
 // Create a unified config object that includes all configuration properties
 const config = {
@@ -15,6 +15,6 @@ const config = {
   file
 };
 
-export { config, file, messages, locales, defaultLocale, globalSetting };
+export { config, file, messages, locales, defaultLocale, globalSetting, systemGlobalSettingDefaults };
 
 export default config;

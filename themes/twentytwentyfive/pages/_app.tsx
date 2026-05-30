@@ -19,10 +19,12 @@ import { SettingProvider } from '@/providers/setting';
 import { TagProvider } from '@/providers/tag';
 import { httpProvider } from '@/providers/http';
 import {
-  customizerPrimaryColor,
+  buildTwentyTwentyFiveCustomizerCss,
+  customizerPrimaryColorForMode,
   normalizePreviewDraftData,
   previewDraftApiPath,
   resolveThemePreviewContext,
+  type ThemeMods,
 } from '@fecommunity/reactpress-toolkit/extension';
 import { safeJsonParse } from '@/utils/json';
 
@@ -84,6 +86,7 @@ class MyApp extends App<
       siteConfig: preview.siteConfig,
       locales: Object.keys(i18n),
       colorPrimary: preview.colorPrimary,
+      themeMods: preview.effectiveMods,
     };
   };
 
@@ -134,11 +137,11 @@ class MyApp extends App<
       'zh';
     const { needLayoutFooter = true, hasBg = false } = pageProps;
     const message = i18n[locale] || {};
-    const algorithm = this.state.theme === 'dark' ? theme.darkAlgorithm : theme.defaultAlgorithm;
-    const colorPrimary =
-      typeof this.props.colorPrimary === 'string' && this.props.colorPrimary.trim()
-        ? this.props.colorPrimary
-        : customizerPrimaryColor({});
+    const isDark = this.state.theme === 'dark';
+    const algorithm = isDark ? theme.darkAlgorithm : theme.defaultAlgorithm;
+    const themeMods = (this.props.themeMods ?? {}) as ThemeMods;
+    const colorPrimary = customizerPrimaryColorForMode(themeMods, isDark);
+    const customizerCss = buildTwentyTwentyFiveCustomizerCss(themeMods);
 
     return (
       <GlobalContext.Provider
@@ -161,6 +164,7 @@ class MyApp extends App<
         }}
       >
         <NextIntlProvider messages={message as IntlMessages} locale={locale}>
+          {customizerCss ? <style dangerouslySetInnerHTML={{ __html: customizerCss }} /> : null}
           <FixAntdStyleTransition />
           <ViewStatistics />
           <Analytics />

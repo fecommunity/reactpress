@@ -1,11 +1,11 @@
-import { Button, Spin } from "antd";
+import { getThemeConfigurationSeed } from "@fecommunity/reactpress-toolkit/extension";
+import { App, Button, Spin } from "antd";
 import { ChevronLeft } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "@tanstack/react-router";
 import {
   getThemeStateFromGlobalSetting,
-  pickCustomizerSiteSettings,
   type ThemeMods,
 } from "@fecommunity/reactpress-toolkit/extension";
 import {
@@ -31,6 +31,7 @@ import { ThemePreviewFrame } from "@/modules/appearance/components/ThemePreviewF
 import { ThemePreviewPaneLoading } from "@/modules/appearance/components/ThemePreviewPaneLoading";
 import { ModulePlaceholder } from "@/shared/components/ModulePlaceholder";
 import styles from "@/modules/appearance/components/themes-page.module.css";
+import { buildClearThemeModsPayload } from "@/shared/theme/clearThemeMods";
 
 const deviceFrameClass: Record<PreviewDevice, string> = {
   desktop: styles.previewFrameWrapDesktop,
@@ -40,13 +41,10 @@ const deviceFrameClass: Record<PreviewDevice, string> = {
 
 export function CustomizePage() {
   const { t } = useTranslation();
+  const { message } = App.useApp();
   const navigate = useNavigate();
   const { section: initialSection } = Route.useSearch();
-  const {
-    data: settings,
-    isLoading: settingsLoading,
-    saveMutation: saveSiteSettingsMutation,
-  } = useSiteSettings();
+  const { data: settings, isLoading: settingsLoading } = useSiteSettings();
   const { data: themes, isLoading: themesLoading, isError, refetch: refetchThemes } = useThemes();
   const { modsMutation } = useThemeMutations();
   const configFormRef = useRef<ThemeConfigurationFormHandle>(null);
@@ -66,15 +64,17 @@ export function CustomizePage() {
   const { data: configData, isLoading: configLoading } = useThemeConfiguration(themeId);
   const saveConfigMutation = useThemeConfigurationMutation(themeId);
   const activeTheme = themes?.find((th) => th.id === themeId);
-  const siteTitle =
-    typeof settings?.systemTitle === "string" ? settings.systemTitle.trim() : undefined;
-  const siteDescription =
-    typeof settings?.systemSubTitle === "string" ? settings.systemSubTitle.trim() : undefined;
 
   const savedMods = useMemo(() => themeState.mods[themeId] ?? {}, [themeState.mods, themeId]);
   const savedConfiguration = configData?.configuration ?? {};
 
   const [draftMods, setDraftMods] = useState<ThemeMods>(savedMods);
+  const siteTitle =
+    draftMods.displayTitle?.trim() ||
+    (typeof settings?.systemTitle === "string" ? settings.systemTitle.trim() : undefined);
+  const siteDescription =
+    draftMods.displayTagline?.trim() ||
+    (typeof settings?.systemSubTitle === "string" ? settings.systemSubTitle.trim() : undefined);
   /** Shown in iframe only after「预览」or「发布」. */
   const [previewMods, setPreviewMods] = useState<ThemeMods>(savedMods);
 
@@ -138,10 +138,6 @@ export function CustomizePage() {
   const handleSave = async (mods: ThemeMods) => {
     if (!themeId) return;
     await modsMutation.mutateAsync({ themeId, mods });
-    const sitePatch = pickCustomizerSiteSettings(mods);
-    if (Object.keys(sitePatch).length > 0) {
-      await saveSiteSettingsMutation.mutateAsync(sitePatch);
-    }
     setDraftMods(mods);
     setPreviewMods(mods);
     bumpPreview();
@@ -149,10 +145,55 @@ export function CustomizePage() {
 
   const handleSaveConfiguration = async () => {
     const values = configFormRef.current?.getValues() ?? draftConfiguration;
-    await saveConfigMutation.mutateAsync(values);
+    await saveConfigMutation.mutateAsync({ configuration: values });
     setDraftConfiguration(values);
     setPreviewConfiguration(values);
     bumpPreview();
+  };
+
+  const configLocale = useMemo(() => {
+    try {
+      const raw = settings?.globalSetting;
+      const parsed = typeof raw === "string" ? JSON.parse(raw) : raw;
+      if (parsed && typeof parsed === "object" && "zh" in parsed) return "zh";
+      if (parsed && typeof parsed === "object" && "en" in parsed) return "en";
+    } catch {
+      /* ignore */
+    }
+    return "zh";
+  }, [settings?.globalSetting]);
+
+  const handleRestoreMods = async () => {
+    if (!themeId || !activeTheme) return;
+    try {
+      const payload = buildClearThemeModsPayload(savedMods, activeTheme);
+      await modsMutation.mutateAsync({ themeId, mods: payload });
+      setDraftMods({});
+      setPreviewMods({});
+      bumpPreview();
+      message.success(t("appearance.restoreSystemDefaultsSuccess"));
+    } catch {
+      message.error(t("appearance.actionFailed"));
+      throw new Error("restore mods failed");
+    }
+  };
+
+  const handleRestoreConfiguration = async () => {
+    if (!themeId) return;
+    try {
+      const seed = getThemeConfigurationSeed(themeId, configLocale) ?? {};
+      const data = await saveConfigMutation.mutateAsync({
+        configuration: seed,
+        replace: true,
+      });
+      setDraftConfiguration(data.configuration);
+      setPreviewConfiguration(data.configuration);
+      bumpPreview();
+      message.success(t("appearance.restoreSystemDefaultsSuccess"));
+    } catch {
+      message.error(t("appearance.actionFailed"));
+      throw new Error("restore configuration failed");
+    }
   };
 
   if (isError) {
@@ -213,6 +254,7 @@ export function CustomizePage() {
             initialSectionId={initialSection ?? null}
             configurationPanel={configurationPanel}
             mods={draftMods}
+            savedMods={savedMods}
             onModsChange={handleModsChange}
             onPreview={handlePreview}
             onSave={handleSave}
@@ -220,6 +262,9 @@ export function CustomizePage() {
             onPreviewConfiguration={handlePreviewConfiguration}
             onSaveConfiguration={handleSaveConfiguration}
             savingConfiguration={saveConfigMutation.isPending}
+            onRestoreMods={handleRestoreMods}
+            onRestoreConfiguration={handleRestoreConfiguration}
+            restoring={modsMutation.isPending || saveConfigMutation.isPending}
           />
         </div>
         <footer className={styles.customizeSidebarFooter}>

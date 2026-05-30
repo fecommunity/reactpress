@@ -7,11 +7,13 @@ import {
   defaultSiteThemeState,
   getConfigurationSchemaFromManifest,
   getMergedThemeConfiguration,
+  getThemeConfigurationSeed,
   getThemeStateFromGlobalSetting,
   mergeConfigIntoGlobalSetting,
   mergeThemeStateIntoGlobalSetting,
   parseThemeManifest,
   validateAndMergeThemeConfiguration,
+  validateThemeConfiguration,
 } from '@fecommunity/reactpress-toolkit/extension';
 import type {
   SiteThemeState,
@@ -241,6 +243,7 @@ export class ThemeService {
   async updateThemeConfiguration(
     themeId: string,
     patch: Record<string, unknown>,
+    options?: { replace?: boolean; locale?: string },
   ): Promise<{ themeId: string; configuration: Record<string, unknown> }> {
     if (!this.isValidThemeId(themeId)) {
       throw new BadRequestException(`Invalid theme id "${themeId}"`);
@@ -254,6 +257,22 @@ export class ThemeService {
 
     const row = await this.getSettingRow();
     const globalRaw = this.parseGlobalSetting(row);
+    const locale = options?.locale ?? 'zh';
+
+    if (options?.replace) {
+      const seed =
+        getThemeConfigurationSeed(themeId, locale) ??
+        getMergedThemeConfiguration(globalRaw, themeId, { locale, manifest });
+      const validation = validateThemeConfiguration(schema, seed);
+      if (!validation.valid) {
+        throw new BadRequestException(validation.message ?? 'Invalid configuration');
+      }
+      const mergedGlobal = mergeConfigIntoGlobalSetting(globalRaw, themeId, seed);
+      row.globalSetting = JSON.stringify(mergedGlobal);
+      await this.settingRepository.save(row);
+      return { themeId, configuration: seed };
+    }
+
     const result = validateAndMergeThemeConfiguration(themeId, globalRaw, patch, manifest);
     if (!result.ok) {
       throw new BadRequestException('message' in result ? result.message : 'Invalid configuration');

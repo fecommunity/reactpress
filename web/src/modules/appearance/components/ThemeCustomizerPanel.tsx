@@ -1,19 +1,19 @@
 import {
   seedCustomizerModsFromSiteSetting,
   type ThemeCustomizerSection,
-  type ThemeCustomizerSetting,
   type ThemeMods,
 } from "@fecommunity/reactpress-toolkit/extension";
 import { useNavigate } from "@tanstack/react-router";
-import { App, Button, Form, Typography } from "antd";
+import { App, Button, Form, Popconfirm, Typography } from "antd";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 
 import type { ThemeListItem } from "@/hooks/useThemes";
-import { CustomizerSettingField } from "@/modules/appearance/components/CustomizerSettingField";
+import { CustomizerSectionFields } from "@/modules/appearance/components/CustomizerSectionFields";
+import { buildCustomizerNavGroups } from "@/modules/appearance/utils/customizerNav";
 import styles from "@/modules/appearance/components/themes-page.module.css";
-import { normalizeThemeMods } from "@/shared/theme/normalizeMods";
+import { finalizeThemeModsForSave, normalizeThemeMods } from "@/shared/theme/normalizeMods";
 
 type Props = {
   theme: ThemeListItem;
@@ -21,6 +21,7 @@ type Props = {
   siteDescription?: string;
   siteSettingSeed?: Record<string, unknown>;
   mods: ThemeMods;
+  savedMods: ThemeMods;
   onModsChange: (mods: ThemeMods) => void;
   onPreview: (mods: ThemeMods) => void;
   onSave: (mods: ThemeMods) => Promise<void>;
@@ -30,6 +31,9 @@ type Props = {
   onPreviewConfiguration?: () => void;
   onSaveConfiguration?: () => Promise<void>;
   savingConfiguration?: boolean;
+  onRestoreMods?: () => Promise<void>;
+  onRestoreConfiguration?: () => Promise<void>;
+  restoring?: boolean;
 };
 
 function defaultModsFromTheme(theme: ThemeListItem): ThemeMods {
@@ -48,6 +52,7 @@ export function ThemeCustomizerPanel({
   siteDescription,
   siteSettingSeed,
   mods,
+  savedMods,
   onModsChange,
   onPreview,
   onSave,
@@ -57,6 +62,9 @@ export function ThemeCustomizerPanel({
   onPreviewConfiguration,
   onSaveConfiguration,
   savingConfiguration,
+  onRestoreMods,
+  onRestoreConfiguration,
+  restoring,
 }: Props) {
   const { t } = useTranslation();
   const { message } = App.useApp();
@@ -66,17 +74,22 @@ export function ThemeCustomizerPanel({
 
   const defaults = useMemo(() => defaultModsFromTheme(theme), [theme]);
   const sections = theme.customizer?.sections ?? [];
+  const navGroups = useMemo(() => buildCustomizerNavGroups(theme), [theme]);
   const displaySite = siteTitle?.trim() || t("appearance.yourSite");
   const activeSection = sections.find((s) => s.id === activeSectionId);
   const activePanel = (activeSection as ThemeCustomizerSection | undefined)?.panel;
   const isConfigurationPanel = activePanel === "configuration";
 
   useEffect(() => {
-    setActiveSectionId(initialSectionId);
+    const sectionId = initialSectionId === "colorsDark" ? "colors" : initialSectionId;
+    setActiveSectionId(sectionId);
   }, [theme.id, initialSectionId]);
 
   useEffect(() => {
     let merged = seedCustomizerModsFromSiteSetting(siteSettingSeed, { ...defaults, ...mods });
+    if (!mods.siteNotice?.trim()) {
+      delete merged.siteNotice;
+    }
     if (!mods.displayTitle?.trim() && siteTitle?.trim()) {
       merged = { ...merged, displayTitle: siteTitle.trim() };
     }
@@ -160,36 +173,44 @@ export function ThemeCustomizerPanel({
                 <Typography.Title level={5} className={styles.customizerSectionTitle}>
                   {activeSection.title}
                 </Typography.Title>
-                {(activeSection.settings ?? []).map((setting) => (
-                  <CustomizerSettingField
-                    key={setting.id}
-                    setting={setting as ThemeCustomizerSetting}
-                  />
-                ))}
+                {(activeSection as ThemeCustomizerSection).description ? (
+                  <Typography.Paragraph type="secondary" className={styles.customizerSectionDesc}>
+                    {(activeSection as ThemeCustomizerSection).description}
+                  </Typography.Paragraph>
+                ) : null}
+                <CustomizerSectionFields
+                  section={activeSection as ThemeCustomizerSection}
+                  siteSettingSeed={siteSettingSeed}
+                />
               </div>
             ) : (
               <nav className={styles.customizerNav} aria-label={t("appearance.customizerNav")}>
-                {sections.map((section) => {
-                  const panelSection = section as ThemeCustomizerSection;
-                  return (
-                    <button
-                      key={section.id}
-                      type="button"
-                      className={styles.customizerNavItem}
-                      onClick={() => setActiveSectionId(section.id)}
-                    >
-                      <span>
-                        {section.title}
-                        {panelSection.description ? (
-                          <span className={styles.customizerNavHint}>
-                            {panelSection.description}
-                          </span>
+                {navGroups.map((group) => (
+                  <div key={group.id} className={styles.customizerNavGroup}>
+                    {group.title ? (
+                      <div className={styles.customizerNavGroupHead}>
+                        <span className={styles.customizerNavGroupTitle}>{group.title}</span>
+                        {group.description ? (
+                          <span className={styles.customizerNavGroupDesc}>{group.description}</span>
                         ) : null}
-                      </span>
-                      <ChevronRight size={16} aria-hidden />
-                    </button>
-                  );
-                })}
+                      </div>
+                    ) : null}
+                    <ul className={styles.customizerNavGroupList}>
+                      {group.sections.map((section) => (
+                        <li key={section.id}>
+                          <button
+                            type="button"
+                            className={styles.customizerNavItem}
+                            onClick={() => setActiveSectionId(section.id)}
+                          >
+                            <span className={styles.customizerNavItemLabel}>{section.title}</span>
+                            <ChevronRight size={16} aria-hidden />
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
               </nav>
             )}
           </Form>
@@ -204,8 +225,9 @@ export function ThemeCustomizerPanel({
               onPreviewConfiguration?.();
               return;
             }
-            const normalized = normalizeThemeMods(
-              form.getFieldsValue(true) as Record<string, unknown>,
+            const normalized = finalizeThemeModsForSave(
+              normalizeThemeMods(form.getFieldsValue(true) as Record<string, unknown>),
+              siteSettingSeed,
             );
             onPreview(normalized);
           }}
@@ -223,8 +245,9 @@ export function ThemeCustomizerPanel({
                 message.success(t("appearance.themeSettingsSaved"));
                 return;
               }
-              const normalized = normalizeThemeMods(
-                form.getFieldsValue(true) as Record<string, unknown>,
+              const normalized = finalizeThemeModsForSave(
+                normalizeThemeMods(form.getFieldsValue(true) as Record<string, unknown>),
+                siteSettingSeed,
               );
               await onSave(normalized);
               message.success(t("appearance.saveModsSuccess"));
@@ -235,6 +258,33 @@ export function ThemeCustomizerPanel({
         >
           {t("appearance.publish")}
         </Button>
+        <Popconfirm
+          title={t("appearance.restoreSystemDefaultsTitle")}
+          description={t("appearance.restoreSystemDefaultsDesc")}
+          okText={t("common.confirm")}
+          cancelText={t("common.cancel")}
+          onConfirm={async () => {
+            try {
+              if (isConfigurationPanel) {
+                await onRestoreConfiguration?.();
+                return;
+              }
+              await onRestoreMods?.();
+            } catch {
+              message.error(t("appearance.actionFailed"));
+            }
+          }}
+        >
+          <Button
+            type="link"
+            size="small"
+            className={styles.customizerResetBtn}
+            loading={restoring}
+            disabled={!isConfigurationPanel && Object.keys(savedMods).length === 0}
+          >
+            {t("appearance.restoreSystemDefaults")}
+          </Button>
+        </Popconfirm>
       </div>
     </div>
   );

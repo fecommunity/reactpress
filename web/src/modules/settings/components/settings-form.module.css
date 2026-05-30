@@ -111,6 +111,13 @@
   padding-top: 2px;
 }
 
+.faviconActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
 .faviconInput:global(.ant-input) {
   width: 100%;
   max-width: 400px;

@@ -1,4 +1,7 @@
-import type { ThemeMods } from "@fecommunity/reactpress-toolkit/extension";
+import {
+  siteNoticeModInheritsSystem,
+  type ThemeMods,
+} from "@fecommunity/reactpress-toolkit/extension";
 
 type ColorLike = {
   toHexString?: () => string;
@@ -45,4 +48,16 @@ export function normalizeThemeMods(values: Record<string, unknown>): ThemeMods {
     }
   }
   return out;
+}
+
+/** Drop `siteNotice` mod when empty or unchanged from system settings (keep inherit). */
+export function finalizeThemeModsForSave(
+  mods: ThemeMods,
+  siteSettings?: Record<string, unknown> | null,
+): ThemeMods {
+  const next = { ...mods };
+  if (siteNoticeModInheritsSystem(next.siteNotice, siteSettings?.systemNoticeInfo)) {
+    delete next.siteNotice;
+  }
+  return next;
 }

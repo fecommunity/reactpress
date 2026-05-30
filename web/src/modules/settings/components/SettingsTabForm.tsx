@@ -1,20 +1,28 @@
+import { resolvePublicAssetUrl } from "@fecommunity/reactpress-toolkit/extension";
 import { App, Button, Form, Input, Spin } from "antd";
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 import formStyles from "@/shared/styles/admin-form-table.module.css";
 import styles from "@/modules/settings/components/settings-form.module.css";
+import {
+  mergeSiteSettingFormValues,
+  siteSettingPlaceholder,
+} from "@/modules/settings/siteSettingDefaults";
 import { ModulePlaceholder } from "@/shared/components/ModulePlaceholder";
+import { SiteNoticeListField } from "@/shared/components/SiteNoticeListField";
+import { MediaSelectDrawer } from "@/shared/components/MediaSelectDrawer";
 import { getApiErrorMessage } from "@/shared/api/getApiErrorMessage";
 
 type FieldDef = {
   name: string;
   labelKey: string;
   hintKey?: string;
-  type?: "text" | "password" | "textarea" | "json";
+  type?: "text" | "password" | "textarea" | "json" | "noticeList";
   wide?: boolean;
 };
 
+/** 全站默认（主题 customizer 留空时继承；也可在主题内单独覆盖）。 */
 const TAB_FIELDS: Record<string, FieldDef[]> = {
   general: [
     { name: "systemTitle", labelKey: "settings.fields.systemTitle" },
@@ -44,41 +52,23 @@ const TAB_FIELDS: Record<string, FieldDef[]> = {
       hintKey: "settings.hints.systemLogo",
     },
     {
-      name: "systemBg",
-      labelKey: "settings.fields.systemBg",
-      hintKey: "settings.hints.systemBg",
-    },
-    {
       name: "systemNoticeInfo",
       labelKey: "settings.fields.systemNoticeInfo",
       hintKey: "settings.hints.systemNoticeInfo",
-      type: "textarea",
-      wide: true,
+      type: "noticeList",
     },
   ],
-  about: [
+  seo: [
+    { name: "seoKeyword", labelKey: "settings.fields.seoKeyword" },
     {
-      name: "systemFooterInfo",
-      labelKey: "settings.fields.systemFooterInfo",
-      hintKey: "settings.hints.systemFooterInfo",
+      name: "seoDesc",
+      labelKey: "settings.fields.seoDesc",
+      hintKey: "settings.hints.seoDesc",
       type: "textarea",
       wide: true,
     },
-    {
-      name: "aboutUsGithubUrl",
-      labelKey: "settings.fields.aboutUsGithubUrl",
-      hintKey: "settings.hints.aboutUsGithubUrl",
-    },
-    {
-      name: "aboutUsCommentQr",
-      labelKey: "settings.fields.aboutUsCommentQr",
-      hintKey: "settings.hints.aboutUsCommentQr",
-    },
-    {
-      name: "aboutUsWechatQr",
-      labelKey: "settings.fields.aboutUsWechatQr",
-      hintKey: "settings.hints.aboutUsWechatQr",
-    },
+    { name: "baiduAnalyticsId", labelKey: "settings.fields.baiduAnalyticsId" },
+    { name: "googleAnalyticsId", labelKey: "settings.fields.googleAnalyticsId" },
   ],
   email: [
     { name: "smtpHost", labelKey: "settings.fields.smtpHost" },
@@ -96,27 +86,12 @@ const TAB_FIELDS: Record<string, FieldDef[]> = {
     },
     { name: "smtpFromUser", labelKey: "settings.fields.smtpFromUser" },
   ],
-  seo: [
-    { name: "seoKeyword", labelKey: "settings.fields.seoKeyword" },
-    {
-      name: "seoDesc",
-      labelKey: "settings.fields.seoDesc",
-      hintKey: "settings.hints.seoDesc",
-      type: "textarea",
-      wide: true,
-    },
-    { name: "baiduAnalyticsId", labelKey: "settings.fields.baiduAnalyticsId" },
-    { name: "googleAnalyticsId", labelKey: "settings.fields.googleAnalyticsId" },
-  ],
 };
 
 type SettingsFieldProps = {
   label: string;
   description?: string;
   children?: ReactNode;
-};
-
-type SettingsFieldRowProps = SettingsFieldProps & {
   rowClassName?: string;
   hideDescription?: boolean;
 };
@@ -127,7 +102,7 @@ function SettingsField({
   children,
   rowClassName,
   hideDescription,
-}: SettingsFieldRowProps) {
+}: SettingsFieldProps) {
   return (
     <tr className={rowClassName}>
       <th scope="row">{label}</th>
@@ -150,64 +125,72 @@ type SiteFaviconFieldProps = {
 
 function SiteFaviconField({ siteTitle, value, description, onChange }: SiteFaviconFieldProps) {
   const { t } = useTranslation();
+  const { message } = App.useApp();
+  const [mediaOpen, setMediaOpen] = useState(false);
   const faviconUrl = (value ?? "").trim();
   const displayTitle = siteTitle.trim() || t("settings.fields.systemTitle");
+  const previewSrc = faviconUrl ? resolvePublicAssetUrl(faviconUrl) : "";
 
   return (
     <div className={styles.faviconField}>
       <div className={styles.faviconMain}>
         <div className={styles.faviconPreviewCol}>
           <div className={styles.faviconTabMock} aria-hidden>
-            {faviconUrl ? (
-              <img src={faviconUrl} alt="" />
+            {previewSrc ? (
+              <img src={previewSrc} alt="" />
             ) : (
               <span className={styles.faviconTabMockFallback} aria-hidden />
             )}
             <span className={styles.faviconTabMockTitle}>{displayTitle}</span>
           </div>
-          {faviconUrl ? (
-            <img className={styles.faviconLarge} src={faviconUrl} alt="" />
+          {previewSrc ? (
+            <img className={styles.faviconLarge} src={previewSrc} alt="" />
           ) : (
             <div className={styles.faviconPlaceholder}>{t("settings.faviconPlaceholder")}</div>
           )}
         </div>
         <div className={styles.faviconControlCol}>
-          <Input
-            className={styles.faviconInput}
-            value={value}
-            placeholder="https://"
-            onChange={(e) => onChange?.(e.target.value)}
-          />
-          {faviconUrl ? (
-            <Button type="link" className={styles.linkButtonDanger} onClick={() => onChange?.("")}>
-              {t("settings.removeFavicon")}
+          <div className={styles.faviconActions}>
+            <Button type="primary" onClick={() => setMediaOpen(true)}>
+              {faviconUrl ? t("appearance.changeImage") : t("settings.selectOrUploadFavicon")}
             </Button>
-          ) : null}
+            {faviconUrl ? (
+              <Button
+                type="link"
+                className={styles.linkButtonDanger}
+                onClick={() => onChange?.("")}
+              >
+                {t("settings.removeFavicon")}
+              </Button>
+            ) : null}
+          </div>
         </div>
       </div>
       {description ? (
         <p className={`${formStyles.description} ${styles.faviconHint}`}>{description}</p>
       ) : null}
+      <MediaSelectDrawer
+        open={mediaOpen}
+        onClose={() => setMediaOpen(false)}
+        imageOnly
+        onSelect={(url) => {
+          onChange?.(url);
+          message.success(t("appearance.imageSelected"));
+        }}
+      />
     </div>
   );
 }
 
-function renderFieldControl(
-  field: FieldDef,
-  inputClass: string,
-  textareaClass: string,
-  jsonClass: string,
-) {
+function renderFieldControl(field: FieldDef, inputClass: string, textareaClass: string) {
+  const placeholder = siteSettingPlaceholder(field.name);
   if (field.type === "textarea") {
-    return <Input.TextArea className={textareaClass} rows={4} />;
-  }
-  if (field.type === "json") {
-    return <Input.TextArea className={jsonClass} rows={12} />;
+    return <Input.TextArea className={textareaClass} rows={4} placeholder={placeholder} />;
   }
   if (field.type === "password") {
     return <Input.Password className={inputClass} autoComplete="new-password" />;
   }
-  return <Input className={inputClass} type="text" />;
+  return <Input className={inputClass} type="text" placeholder={placeholder} />;
 }
 
 type SettingsTabFormProps = {
@@ -220,22 +203,14 @@ export function SettingsTabForm({ tab }: SettingsTabFormProps) {
   const [form] = Form.useForm();
   const { data, isLoading, isError, saveMutation } = useSiteSettings();
   const fields = TAB_FIELDS[tab] ?? [];
+  const fieldNames = fields.map((f) => f.name);
 
   const siteTitle = Form.useWatch("systemTitle", form) ?? data?.systemTitle ?? "";
 
   useEffect(() => {
     if (!data) return;
-    const values: Record<string, string> = {};
-    for (const field of fields) {
-      const raw = data[field.name];
-      if (field.type === "json" && raw != null) {
-        values[field.name] = typeof raw === "string" ? raw : JSON.stringify(raw, null, 2);
-      } else {
-        values[field.name] = raw != null ? String(raw) : "";
-      }
-    }
-    form.setFieldsValue(values);
-  }, [data, fields, form]);
+    form.setFieldsValue(mergeSiteSettingFormValues(data, fieldNames));
+  }, [data, fieldNames.join(","), form]);
 
   if (isError) {
     return <ModulePlaceholder title={t("settings.title")} description={t("settings.loadError")} />;
@@ -247,7 +222,6 @@ export function SettingsTabForm({ tab }: SettingsTabFormProps) {
 
   const inputClass = formStyles.fieldInput;
   const textareaClass = formStyles.fieldInputWide;
-  const jsonClass = `${formStyles.fieldInputWide} ${styles.fieldJson}`;
 
   return (
     <Form
@@ -256,17 +230,7 @@ export function SettingsTabForm({ tab }: SettingsTabFormProps) {
       onFinish={(values) => {
         const patch: Record<string, unknown> = {};
         for (const field of fields) {
-          const raw = values[field.name];
-          if (field.type === "json") {
-            try {
-              patch[field.name] = raw ? JSON.parse(String(raw)) : null;
-            } catch {
-              message.error(t("settings.invalidJson"));
-              return;
-            }
-          } else {
-            patch[field.name] = raw ?? "";
-          }
+          patch[field.name] = values[field.name] ?? "";
         }
         saveMutation.mutate(patch, {
           onSuccess: () => message.success(t("settings.savedSuccess")),
@@ -274,6 +238,9 @@ export function SettingsTabForm({ tab }: SettingsTabFormProps) {
         });
       }}
     >
+      {tab === "general" || tab === "seo" ? (
+        <p className={formStyles.description}>{t("settings.hints.themeInheritDefaults")}</p>
+      ) : null}
       {fields.length === 0 ? (
         <p className={formStyles.description}>
           {t(`settings.${tab}Desc`, { defaultValue: t("settings.tabEmptyHint") })}
@@ -283,8 +250,17 @@ export function SettingsTabForm({ tab }: SettingsTabFormProps) {
         <tbody>
           {fields.map((field) => {
             const hint = field.hintKey ? t(field.hintKey) : undefined;
-            const controlClass =
-              field.type === "json" ? jsonClass : field.wide ? textareaClass : inputClass;
+            const controlClass = field.wide ? textareaClass : inputClass;
+
+            if (field.name === "systemNoticeInfo" && field.type === "noticeList") {
+              return (
+                <SettingsField key={field.name} label={t(field.labelKey)} description={hint}>
+                  <Form.Item name={field.name} noStyle>
+                    <SiteNoticeListField />
+                  </Form.Item>
+                </SettingsField>
+              );
+            }
 
             if (field.name === "systemFavicon" && tab === "general") {
               return (
@@ -304,7 +280,7 @@ export function SettingsTabForm({ tab }: SettingsTabFormProps) {
             return (
               <SettingsField key={field.name} label={t(field.labelKey)} description={hint}>
                 <Form.Item name={field.name} noStyle>
-                  {renderFieldControl(field, inputClass, controlClass, jsonClass)}
+                  {renderFieldControl(field, inputClass, controlClass)}
                 </Form.Item>
               </SettingsField>
             );

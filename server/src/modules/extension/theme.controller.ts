@@ -143,9 +143,11 @@ export class ThemeController {
   @ApiResponse({ status: 200, description: 'Patch theme configuration (validated against schema)' })
   updateConfiguration(
     @Param('id') id: string,
-    @Body() body: { configuration?: Record<string, unknown> },
+    @Body() body: { configuration?: Record<string, unknown>; replace?: boolean },
   ) {
-    return this.themeService.updateThemeConfiguration(id, body?.configuration ?? {});
+    return this.themeService.updateThemeConfiguration(id, body?.configuration ?? {}, {
+      replace: body?.replace === true,
+    });
   }
 
   @Get(':id')

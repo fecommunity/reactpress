@@ -435,5 +435,10 @@ const globalSetting: GlobalSetting = {
   theme: defaultSiteThemeState,
 };
 
+/** Persisted in DB `Setting.globalSetting` — theme runtime only (nav/content lives in `config[themeId]`). */
+export const systemGlobalSettingDefaults = {
+  theme: defaultSiteThemeState,
+};
+
 export type { GlobalSetting, LanguageConfig, GlobalConfig, NavConfig, NavItem, UrlCategory, SiteThemeState };
 export { globalSetting };

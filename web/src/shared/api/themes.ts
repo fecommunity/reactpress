@@ -21,17 +21,29 @@ export interface ThemeListItem {
   active: boolean;
   screenshotUrl?: string;
   customizer?: {
+    groups?: Array<{
+      id: string;
+      title: string;
+      description?: string;
+    }>;
     sections: Array<{
       id: string;
       title: string;
+      group?: string;
       panel?: "configuration";
       description?: string;
+      settingGroups?: Array<{
+        id: string;
+        title: string;
+        description?: string;
+      }>;
       settings?: Array<{
         id: string;
         type: string;
         label: string;
         default?: string;
         description?: string;
+        settingGroup?: string;
       }>;
     }>;
   };
@@ -152,9 +164,16 @@ export function fetchThemeConfiguration(themeId: string) {
   );
 }
 
-export function patchThemeConfiguration(themeId: string, configuration: Record<string, unknown>) {
+export function patchThemeConfiguration(
+  themeId: string,
+  configuration: Record<string, unknown>,
+  options?: { replace?: boolean },
+) {
   return themeFetch<{ themeId: string; configuration: Record<string, unknown> }>(
     `/extension/themes/${themeId}/configuration`,
-    { method: "POST", body: JSON.stringify({ configuration }) },
+    {
+      method: "POST",
+      body: JSON.stringify({ configuration, replace: options?.replace === true }),
+    },
   );
 }

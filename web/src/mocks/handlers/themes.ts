@@ -2,8 +2,9 @@ import {
   defaultSiteThemeState,
   getConfigurationSchemaFromManifest,
   getMergedThemeConfiguration,
+  getThemeConfigurationSeed,
   TWENTYTWENTYFIVE_CONFIGURATION_SCHEMA,
-  TWENTYTWENTYFIVE_CUSTOMIZER_SECTIONS,
+  TWENTYTWENTYFIVE_CUSTOMIZER,
   validateAndMergeThemeConfiguration,
 } from "@fecommunity/reactpress-toolkit/extension";
 import { http, HttpResponse, passthrough } from "msw";
@@ -24,7 +25,7 @@ const MOCK_THEMES = [
     active: true,
     screenshotUrl: "/api/extension/themes/twentytwentyfive/screenshot",
     reactpress: { configuration: TWENTYTWENTYFIVE_CONFIGURATION_SCHEMA },
-    customizer: { sections: TWENTYTWENTYFIVE_CUSTOMIZER_SECTIONS },
+    customizer: TWENTYTWENTYFIVE_CUSTOMIZER,
   },
   {
     id: "hello-world",
@@ -169,20 +170,32 @@ export const themeHandlers = [
     const manifest = themeManifest(id);
     if (!manifest)
       return HttpResponse.json({ success: false, message: "Not found" }, { status: 404 });
-    const body = (await request.json()) as { configuration?: Record<string, unknown> };
+    const body = (await request.json()) as {
+      configuration?: Record<string, unknown>;
+      replace?: boolean;
+    };
     const global = getMockGlobalSetting();
-    const result = validateAndMergeThemeConfiguration(
-      id,
-      global,
-      body.configuration ?? {},
-      manifest,
-    );
-    if (!result.ok) {
-      return HttpResponse.json({ success: false, message: result.message }, { status: 400 });
+    let storedConfig: Record<string, unknown>;
+    if (body.replace === true) {
+      storedConfig =
+        getThemeConfigurationSeed(id, "zh") ??
+        getMergedThemeConfiguration(global, id, { manifest });
+    } else {
+      const result = validateAndMergeThemeConfiguration(
+        id,
+        global,
+        body.configuration ?? {},
+        manifest,
+      );
+      if (!result.ok) {
+        return HttpResponse.json({ success: false, message: result.message }, { status: 400 });
+      }
+      storedConfig = result.config;
     }
-    const next = { ...global, config: { ...(global.config as object), [id]: result.config } };
+    const next = { ...global, config: { ...(global.config as object), [id]: storedConfig } };
     setMockGlobalSetting(next);
-    return successResponse({ themeId: id, configuration: result.config });
+    const configuration = getMergedThemeConfiguration(next, id, { manifest });
+    return successResponse({ themeId: id, configuration });
   }),
 
   http.get("/api/extension/themes/:id/screenshot", async ({ params }) => {
