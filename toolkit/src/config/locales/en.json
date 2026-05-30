@@ -69,7 +69,9 @@
     "openAuth": "Use third-party login",
     "areYouHasAccount": "Do you already have an account?",
     "loginNow": "Login now",
-    "toggleNeedSetInfo": "Incomplete email information, please complete personal information."
+    "toggleNeedSetInfo": "Incomplete email information, please complete personal information.",
+    "guestCommentLead": "Enter your name and email to comment — no login required.",
+    "commentingAs": "Commenting as {name}"
   },
   "loading": "Loading",
   "copySuccess": "Copy successfully",

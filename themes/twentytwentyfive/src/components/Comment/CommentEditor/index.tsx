@@ -1,13 +1,19 @@
 import { Button, Input, message } from 'antd';
 import cls from 'classnames';
 import { useTranslations } from 'next-intl';
-import React, { useCallback, useContext, useMemo, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
-import { isValidUser, UserInfo } from '@/components/UserInfo';
+import { isValidUser } from '@/components/UserInfo';
 import { GlobalContext } from '@/context/global';
 import { useAsyncLoading } from '@/hooks/useAsyncLoading';
-import { useToggle } from '@/hooks/useToggle';
 import { CommentProvider } from '@/providers/comment';
+import {
+  getCommentEmailError,
+  isValidCommentEmail,
+  persistCommentAuthor,
+  readCommentAuthor,
+  type CommentAuthor,
+} from '@/utils/commentAuthor';
 
 import { Emoji } from './Emoji';
 import styles from './index.module.scss';
@@ -23,20 +29,72 @@ interface Props {
   small?: boolean;
 }
 
+function resolveInitialAuthor(user: IUser | Partial<IUser> | null | undefined): CommentAuthor {
+  if (isValidUser(user)) {
+    return { name: user.name, email: user.email };
+  }
+  const saved = readCommentAuthor();
+  if (saved) return saved;
+  return {
+    name: typeof user?.name === 'string' ? user.name : '',
+    email: typeof user?.email === 'string' ? user.email : '',
+  };
+}
+
 export const CommentEditor: React.FC<Props> = ({ hostId, parentComment, replyComment, onOk, onClose, small }) => {
   const t = useTranslations('commentNamespace');
   const { user } = useContext(GlobalContext);
   const [addComment, loading] = useAsyncLoading(CommentProvider.addComment);
-  const [needSetInfo, toggleNeedSetInfo] = useToggle(false);
+  const [author, setAuthor] = useState<CommentAuthor>(() => resolveInitialAuthor(user));
   const [content, setContent] = useState('');
-  // @ts-ignore
-  const hasValidUser = useMemo(() => isValidUser(user), [user]);
+  const [emailTouched, setEmailTouched] = useState(false);
+  const loggedInAuthor = useMemo(() => (isValidUser(user) ? user : null), [user]);
+
+  const effectiveAuthor = useMemo((): CommentAuthor => {
+    if (loggedInAuthor) {
+      return { name: loggedInAuthor.name, email: loggedInAuthor.email };
+    }
+    return author;
+  }, [loggedInAuthor, author]);
+
+  useEffect(() => {
+    if (loggedInAuthor) return;
+    const saved = readCommentAuthor();
+    if (saved) {
+      setAuthor(saved);
+      return;
+    }
+    if (user?.name || user?.email) {
+      setAuthor((prev) => ({
+        name: user.name || prev.name,
+        email: user.email || prev.email,
+      }));
+    }
+  }, [loggedInAuthor, user?.name, user?.email]);
+
   const textareaPlaceholder = useMemo(
     () => (replyComment ? `${t('reply')} ${replyComment.name}` : t('replyPlaceholder')),
-    [t, replyComment]
+    [t, replyComment],
   );
   const textareaSize = useMemo(() => (small ? { minRows: 3, maxRows: 6 } : { minRows: 4, maxRows: 8 }), [small]);
   const btnSize = useMemo(() => (small ? 'small' : 'middle'), [small]);
+  const showAuthorFields = !loggedInAuthor;
+  const emailError = useMemo(
+    () =>
+      showAuthorFields
+        ? getCommentEmailError(author.email, {
+            required: t('userInfoEmailValidMsg') as string,
+            invalid: t('userInfoIllegalEmailValidMsg') as string,
+          }, { touched: emailTouched })
+        : '',
+    [author.email, emailTouched, showAuthorFields, t],
+  );
+  const canSubmit = useMemo(() => {
+    if (!content.trim()) return false;
+    if (!showAuthorFields) return true;
+    return Boolean(author.name.trim() && isValidCommentEmail(author.email));
+  }, [author.email, author.name, content, showAuthorFields]);
+
   const emojiTrigger = (
     <span className={styles.emojiTrigger}>
       <svg viewBox="0 0 1024 1024" width="18px" height="18px">
@@ -49,37 +107,41 @@ export const CommentEditor: React.FC<Props> = ({ hostId, parentComment, replyCom
     </span>
   );
 
-  const onInput = useCallback(
-    (e) => {
-      if (!hasValidUser) {
-        return;
-      }
-      setContent(e.target.value);
-    },
-    [hasValidUser]
-  );
-
-  const addEmoji = useCallback(
-    (emoji) => {
-      if (!hasValidUser) {
-        return;
-      }
-      setContent(`${content}${emoji}`);
-    },
-    [content, hasValidUser]
-  );
+  const addEmoji = useCallback((emoji: string) => {
+    setContent((prev) => `${prev}${emoji}`);
+  }, []);
 
   const submit = useCallback(() => {
+    const trimmedName = effectiveAuthor.name.trim();
+    const trimmedEmail = effectiveAuthor.email.trim();
+    const trimmedContent = content.trim();
+
+    if (!loggedInAuthor) {
+      setEmailTouched(true);
+    }
+
+    if (!trimmedName) {
+      message.warning(t('userInfoNameValidMsg'));
+      return;
+    }
+    if (!isValidCommentEmail(trimmedEmail)) {
+      message.warning(t('userInfoIllegalEmailValidMsg'));
+      return;
+    }
+    if (!trimmedContent) {
+      return;
+    }
+
     const data = {
       hostId,
-      name: user.name,
-      email: user.email,
-      avatar: user.avatar || '',
-      content,
+      name: trimmedName,
+      email: trimmedEmail,
+      avatar: loggedInAuthor?.avatar || '',
+      content: trimmedContent,
       url: window.location.pathname,
     };
 
-    if (parentComment && parentComment.id) {
+    if (parentComment?.id) {
       Object.assign(data, { parentCommentId: parentComment.id });
     }
 
@@ -91,57 +153,58 @@ export const CommentEditor: React.FC<Props> = ({ hostId, parentComment, replyCom
     }
 
     addComment(data).then(() => {
+      if (!loggedInAuthor) {
+        persistCommentAuthor({ name: trimmedName, email: trimmedEmail });
+      }
       message.success(t('commentSuccess'));
       setContent('');
-      onOk && onOk();
+      onOk?.();
     });
-  }, [t, hostId, parentComment, replyComment, onOk, user, content, addComment]);
+  }, [t, hostId, parentComment, replyComment, onOk, effectiveAuthor, content, addComment, loggedInAuthor]);
 
   return (
-    <div className={cls(styles.wrapper)}>
-      <main>
-        <UserInfo
-          {...{
-            defaultVisible: needSetInfo,
-            onCancel: toggleNeedSetInfo,
-            hidden: true,
-          }}
-        />
-        <div className={styles.textareaWrapper}>
-          {!hasValidUser && (
-            <div
-              className={styles.mask}
-              onClick={() => {
-                if (user) {
-                  message.warning(t('toggleNeedSetInfo'));
-                  toggleNeedSetInfo(true);
-                } else {
-                  toggleNeedSetInfo(true);
-                }
-              }}
-            ></div>
-          )}
-          <TextArea
-            placeholder={textareaPlaceholder as string}
-            autoSize={textareaSize}
-            value={content}
-            onChange={onInput}
+    <div className={cls(styles.wrapper, small && styles.small)}>
+      {!small && !loggedInAuthor ? <p className={styles.lead}>{t('guestCommentLead')}</p> : null}
+      {loggedInAuthor ? (
+        <p className={styles.lead}>{t('commentingAs', { name: loggedInAuthor.name })}</p>
+      ) : null}
+      {showAuthorFields ? (
+        <div className={styles.authorFields}>
+          <Input
+            value={author.name}
+            placeholder={t('userInfoName') as string}
+            onChange={(e) => setAuthor((prev) => ({ ...prev, name: e.target.value }))}
           />
+          <div className={styles.emailField}>
+            <Input
+              type="email"
+              value={author.email}
+              placeholder={t('userInfoEmail') as string}
+              status={emailError ? 'error' : undefined}
+              onBlur={() => setEmailTouched(true)}
+              onChange={(e) => setAuthor((prev) => ({ ...prev, email: e.target.value }))}
+            />
+            {emailError ? <span className={styles.fieldError}>{emailError}</span> : null}
+          </div>
         </div>
-      </main>
+      ) : null}
+      <div className={styles.textareaWrapper}>
+        <TextArea
+          placeholder={textareaPlaceholder as string}
+          autoSize={textareaSize}
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+        />
+      </div>
       <footer>
-        {hasValidUser ? (
-          <Emoji onClickEmoji={addEmoji}>{emojiTrigger}</Emoji>
-        ) : (
-          <div onClick={toggleNeedSetInfo}>{emojiTrigger}</div>
-        )}
+        <Emoji onClickEmoji={addEmoji}>{emojiTrigger}</Emoji>
         <div>
-          {onClose && (
+          {onClose ? (
             <Button onClick={onClose} style={{ marginRight: 16 }} size={btnSize}>
               {t('close')}
             </Button>
-          )}
-          <Button loading={loading} onClick={submit} type="primary" disabled={!content} size={btnSize}>
+          ) : null}
+          <Button loading={loading} onClick={submit} type="primary" disabled={!canSubmit} size={btnSize}>
             {t('publish')}
           </Button>
         </div>

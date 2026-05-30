@@ -26,6 +26,7 @@ import { httpProvider } from '@/providers/http';
 import { PageProvider } from '@/providers/page';
 import { SettingProvider } from '@/providers/setting';
 import { TagProvider } from '@/providers/tag';
+import { persistThemeSession, resolveStoredUser } from '@/utils/authSession';
 import { safeJsonParse } from '@/utils/json';
 import { persistVisitorLocale, resolveVisitorLocale } from '@/utils/locale';
 
@@ -105,7 +106,7 @@ class MyApp extends App<
   };
 
   setUser = (user) => {
-    window.localStorage.setItem('user', JSON.stringify(user));
+    persistThemeSession(user);
     this.setState({ user });
   };
 
@@ -130,9 +131,10 @@ class MyApp extends App<
   };
 
   componentDidMount() {
-    const userStr = window.localStorage.getItem('user');
-    if (userStr) {
-      this.setState({ user: safeJsonParse(userStr) });
+    const user = resolveStoredUser();
+    if (user) {
+      persistThemeSession(user);
+      this.setState({ user });
     }
   }
 

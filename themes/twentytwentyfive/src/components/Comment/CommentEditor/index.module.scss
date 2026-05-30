@@ -1,24 +1,44 @@
 .wrapper {
-  main {
+  .lead {
+    margin: 0 0 12px;
+    color: var(--second-text-color);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .authorFields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 12px;
+
+    :global {
+      .ant-input {
+        border-color: var(--comment-editor-border-color);
+        color: var(--main-text-color);
+        background-color: var(--bg-second);
+      }
+
+      .ant-input-status-error {
+        border-color: #ff4d4f !important;
+      }
+    }
+  }
+
+  .emailField {
     display: flex;
-    flex-wrap: nowrap;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .fieldError {
+    color: #ff4d4f;
+    font-size: 12px;
+    line-height: 1.4;
   }
 
   .textareaWrapper {
-    position: relative;
-    flex: 1;
-    margin-left: 16px;
-
-    .mask {
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 1;
-      width: 100%;
-      height: 100%;
-      cursor: pointer;
-    }
-
     textarea {
       border-color: var(--comment-editor-border-color);
       color: var(--main-text-color);
@@ -31,7 +51,6 @@
     display: flex;
     justify-content: space-between;
     padding-top: 8px;
-    padding-left: 44px;
 
     :global {
       .ant-btn-primary[disabled] {
@@ -56,5 +75,24 @@
         transform: translateY(1px);
       }
     }
+  }
+
+  &.small {
+    .authorFields {
+      grid-template-columns: 1fr;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .lead {
+      margin-bottom: 8px;
+      font-size: 12px;
+    }
+  }
+}
+
+@media (max-width: 640px) {
+  .wrapper .authorFields {
+    grid-template-columns: 1fr;
   }
 }

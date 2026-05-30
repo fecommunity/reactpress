@@ -1,6 +1,8 @@
 import { message } from 'antd';
 import axios, { AxiosResponse } from 'axios';
 
+import { getStoredAccessToken } from '@/utils/authSession';
+
 // 最小化修复：确保正确的baseURL
 const getBaseURL = () => {
   // 首先检查环境变量
@@ -51,7 +53,7 @@ httpProvider.interceptors.request.use(
       config.url = encodeUrlPath(config.url);
     }
     if (isBrowser) {
-      const token = window.localStorage.getItem('token');
+      const token = getStoredAccessToken();
       if (config && config.headers && token) {
         config.headers.Authorization = `Bearer ${token}`;
       }

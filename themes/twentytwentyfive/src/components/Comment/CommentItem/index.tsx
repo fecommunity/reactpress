@@ -77,7 +77,7 @@ export function CommentItem({ comment, parentComment, isChild = false, isLast = 
             visible={editorVisible}
             options={{
               from: { opacity: 0, height: 0 },
-              enter: { opacity: 1, height: 155 },
+              enter: { opacity: 1, height: 320 },
               leave: { opacity: 0, height: 0 },
             }}
           >
