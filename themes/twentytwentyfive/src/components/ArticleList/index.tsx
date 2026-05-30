@@ -67,7 +67,7 @@ const ArticleCard: React.FC<{ article: Article; categoryIndex: number }> = ({ ar
             </div>
           </LazyLoad>
         ) : (
-          <LogoSvg />
+          <LogoSvg className={style.coverLogo} />
         )}
       </div>
 

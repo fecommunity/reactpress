@@ -20,7 +20,7 @@
   }
 
   &:hover {
-    img {
+    img:not(.coverLogo) {
       transform: scale(1.1);
       transition: all 0.2s ease-in;
     }
@@ -37,6 +37,10 @@
   }
 
   .coverWrapper {
+    /* Match `REACT_PRESS_LIST_PLACEHOLDER` in `src/assets/brand.ts`. */
+    --list-placeholder-max-height: 48px;
+    --list-placeholder-max-width: 155px;
+
     position: relative;
     height: 114px;
     width: 200px;
@@ -49,10 +53,18 @@
     border-radius: 5px;
     cursor: pointer;
 
-    img {
+    img:not(.coverLogo) {
       width: 100%;
       height: 100%;
       object-fit: cover;
+    }
+
+    .coverLogo {
+      width: auto !important;
+      height: auto !important;
+      max-width: var(--list-placeholder-max-width);
+      max-height: var(--list-placeholder-max-height);
+      object-fit: contain;
     }
   }
 

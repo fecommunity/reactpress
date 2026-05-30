@@ -1,0 +1,24 @@
+/** Base mark — sizing is set by parent (header) or `.coverLogo` (article list). */
+.mark {
+  display: block;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+/** Horizontal wordmark (`logo.png`) in header — width follows aspect ratio. */
+.wordmark {
+  width: auto;
+  height: auto;
+  max-height: var(--site-header-logo-height, 48px);
+  max-width: var(--site-header-logo-max-width, 155px);
+}
+
+/** Fills the header logo slot (`64px` bar); sizing via CSS, not nav line-height. */
+.headerBar {
+  display: block;
+  height: 100%;
+  max-height: 100%;
+  width: auto;
+  max-width: var(--site-header-logo-max-width, 155px);
+  object-fit: contain;
+}

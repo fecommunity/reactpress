@@ -35,6 +35,8 @@ import { useToggle } from '@/hooks/useToggle';
 import { getDocumentScrollTop, getFirstLevelRoute, getIconByName } from '@/utils';
 
 import style from './index.module.scss';
+import { renderHeaderLogo } from './renderHeaderLogo';
+
 import { GitHub } from '../AboutUs';
 
 // Navigation links configuration
@@ -168,26 +170,9 @@ export const Header: React.FC<HeaderProps> = ({ setting, tags, pages, hasBg = fa
         <div className={cls('container')}>
           {/* Logo Section */}
           <div className={style.logo}>
-            {/^http/.test(setting.systemLogo) ? (
-              <Link href="/" scroll={false}>
-                <a aria-label="home">
-                  <img height="36" src={setting.systemLogo} alt="logo" />
-                </a>
-              </Link>
-            ) : (
-                <Link href="/" scroll={false}>
-                  {
-                    setting.systemLogo
-                      ?
-                      <a aria-label="home" dangerouslySetInnerHTML={{ __html: setting.systemLogo }}></a>
-                      :
-                      <a aria-label="home">
-                        <img height="36" src="/logo.png" alt="logo" />
-                      </a>
-                  }
-
-                </Link>
-              )}
+            <Link href="/" scroll={false}>
+              <a aria-label="home">{renderHeaderLogo({ systemLogo: setting.systemLogo })}</a>
+            </Link>
           </div>
 
           {/* Mobile Menu Trigger */}

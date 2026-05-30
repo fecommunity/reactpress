@@ -35,7 +35,7 @@ function preserveServerBundlePlugin(): Plugin {
 const config: Config = {
   title: 'ReactPress',
   tagline: 'One package. Your CMS in about a minute.',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/logo.svg',
 
   // Set the production url of your site here
   url: 'https://reactpress.surge.sh',

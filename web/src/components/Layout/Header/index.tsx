@@ -10,6 +10,7 @@ import { useSiteSettings } from "@/hooks/useSiteSettings";
 import { defaultMediaSearch, defaultUsersSearch } from "@/routes/searchDefaults";
 import { useAuthStore } from "@/stores/auth";
 import { useSettingsStore } from "@/stores/settings";
+import { ReactPressLogoMark } from "@/shared/brand";
 import { APP_BRAND_NAME, REACTPRESS_GITHUB_URL } from "@/utils/constants";
 
 const { Header: AntHeader } = Layout;
@@ -102,6 +103,9 @@ export function Header() {
             aria-expanded={mobileSidebarOpen}
           />
         ) : null}
+        <span className="admin-bar__brandMark" aria-hidden>
+          <ReactPressLogoMark />
+        </span>
         <a
           href={siteUrl ?? "#"}
           className="admin-bar__site"

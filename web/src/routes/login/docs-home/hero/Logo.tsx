@@ -1,4 +1,4 @@
-import { ReactPressLogoMark } from "@/shared/brand/ReactPressLogoMark";
+import { ReactPressLogoMark } from "@/shared/brand";
 
 type LogoProps = {
   className?: string;

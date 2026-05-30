@@ -1,4 +1,11 @@
 $height: 64px;
+/** Match `REACT_PRESS_HEADER_*` / `REACT_PRESS_HEADER_SPACING` in `src/assets/brand.ts`. */
+$header-logo-padding-y: 8px;
+$header-logo-content-height: $height - 2 * $header-logo-padding-y;
+$header-logo-max-width: 155px; /* 48 × (310/96) — sync REACT_PRESS_HEADER_LOGO.maxDisplayWidth */
+$header-logo-nav-gap: 12px;
+$header-nav-item-padding-x: 16px;
+$header-nav-first-padding-start: 4px;
 
 .header {
   position: relative;
@@ -50,54 +57,91 @@ $height: 64px;
     position: relative;
     display: flex;
     align-items: center;
+    gap: 0;
     height: 100%;
   }
 
   .logo {
+    --site-header-logo-height: #{$header-logo-content-height};
+    --site-header-logo-max-width: #{$header-logo-max-width};
+    --header-logo-nav-gap: #{$header-logo-nav-gap};
+
+    box-sizing: border-box;
     display: inline-flex;
+    align-self: stretch;
     height: $height;
-    margin-right: 8px;
-    line-height: $height;
+    padding: $header-logo-padding-y 0;
+    margin-right: 0;
     color: var(--main-text-color);
     text-align: left;
     align-items: center;
-    width: 140px;
+    width: fit-content;
+    max-width: $header-logo-max-width;
+    margin-right: $header-logo-nav-gap;
+    flex-shrink: 0;
 
-    &:hover {
-      transform: scale(1.2);
+    &:hover img,
+    &:hover svg {
+      opacity: 0.85;
     }
 
-    @keyframes n-blink {
+    @keyframes logo-blink {
       from {
-        left: -100px;
-        top: 0;
+        transform: translateX(-120%) rotate(-45deg);
       }
       to {
-        left: 100px;
-        top: 0;
+        transform: translateX(220%) rotate(-45deg);
       }
     }
 
     a {
+      position: relative;
+      z-index: 1;
       display: flex;
       align-items: center;
-      height: 62px;
+      overflow: hidden;
+      width: fit-content;
+      height: 100%;
+      max-height: $header-logo-content-height;
+      max-width: $header-logo-max-width;
+      border-radius: 2px;
 
       &::before {
         content: '';
         position: absolute;
-        width: 150px;
-        height: 10px;
+        z-index: 2;
+        top: 50%;
+        left: 0;
+        width: 55%;
+        height: 6px;
+        margin-top: -3px;
+        pointer-events: none;
         background-color: var(--blink-bg-color);
-        -webkit-transform: rotate(-45deg);
-        transform: rotate(-45deg); /*角度倾斜45*/
-        -webkit-animation: n-blink 1s ease-in 1.5s infinite; /*光扫过去的时间，自己修改，可以加快*/
-        animation: n-blink 1.5s ease-in 1.5s infinite; /*光扫过去的时间，自己修改，可以加快*/
+        opacity: 0.85;
+        transform: translateX(-120%) rotate(-45deg);
+        animation: logo-blink 2s ease-in-out 1.5s infinite;
       }
     }
 
-    img {
+    img,
+    :global(svg),
+    span {
+      position: relative;
+      z-index: 1;
+      display: block;
+      width: auto;
       height: 100%;
+      max-height: 100%;
+      max-width: $header-logo-max-width;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+
+    span :global(svg) {
+      height: 100%;
+      max-height: 100%;
+      max-width: $header-logo-max-width;
+      width: auto;
     }
   }
 
@@ -140,15 +184,34 @@ $height: 64px;
     border: none;
     display: flex;
     align-items: flex-end;
-    min-width: 80px;
-    width: 100%;
+    flex: 0 1 auto;
+    min-width: 0;
     height: 100%;
     background-color: var(--bg-box);
+
     .menu {
-      width: 100%;
+      width: auto;
+      min-width: 0;
       background-color: var(--bg-box);
       height: calc(100% - 12px);
       border: none;
+
+      &:global(.ant-menu) {
+        flex: 0 1 auto;
+        padding-inline: 0;
+        margin-inline: 0;
+        column-gap: 0;
+      }
+
+      &:global(.ant-menu-horizontal > .ant-menu-item),
+      &:global(.ant-menu-horizontal > .ant-menu-submenu) {
+        padding-inline: $header-nav-item-padding-x;
+      }
+
+      &:global(.ant-menu-horizontal > .ant-menu-item:first-child),
+      &:global(.ant-menu-horizontal > .ant-menu-submenu:first-child) {
+        padding-inline-start: $header-nav-first-padding-start;
+      }
     }
   }
 
@@ -156,10 +219,12 @@ $height: 64px;
     display: flex;
     font-size: 16px;
     color: var(--main-text-color);
-    flex: 1;
-    justify-content: space-between;
+    flex: 1 1 auto;
+    margin-left: auto;
+    justify-content: flex-end;
     align-items: center;
     height: 100%;
+    min-width: 0;
 
     > ul {
       position: relative;
