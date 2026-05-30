@@ -69,9 +69,10 @@ function canStartLocalApi(projectRoot) {
 }
 
 function getThemeBin(projectRoot) {
+  const root = resolveProjectRoot(projectRoot);
   const { readActiveThemeManifest, resolveThemeDirectory } = require('./theme-runtime');
-  const { activeTheme } = readActiveThemeManifest(projectRoot);
-  const themeDir = resolveThemeDirectory(projectRoot, activeTheme);
+  const { activeTheme } = readActiveThemeManifest(root);
+  const themeDir = resolveThemeDirectory(root, activeTheme);
   if (!themeDir) {
     const err = new Error(
       `Active theme not found: ${activeTheme}. Activate a theme in Admin → Appearance.`
@@ -80,14 +81,18 @@ function getThemeBin(projectRoot) {
     throw err;
   }
   const binPath = path.join(themeDir, 'bin', 'reactpress-client.js');
-  if (!fs.existsSync(binPath)) {
-    const err = new Error(
-      `Theme entry not found: ${binPath}. Run from a ReactPress project with an installed theme.`
-    );
-    err.code = 'REACTPRESS_THEME_BIN_NOT_FOUND';
-    throw err;
+  if (fs.existsSync(binPath)) {
+    return binPath;
   }
-  return binPath;
+  const genericBin = path.join(getCliPackageRoot(), 'bin', 'reactpress-theme-client.js');
+  if (fs.existsSync(genericBin)) {
+    return genericBin;
+  }
+  const err = new Error(
+    `Theme entry not found: ${binPath}. Run from a ReactPress project with an installed theme.`
+  );
+  err.code = 'REACTPRESS_THEME_BIN_NOT_FOUND';
+  throw err;
 }
 
 /** @deprecated Use getThemeBin */

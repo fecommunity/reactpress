@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { ReactElement, ReactNode } from 'react';
 import { useEffect } from 'react';
 
 export interface ImageViewerProps {
@@ -8,7 +8,7 @@ export interface ImageViewerProps {
 }
 
 /** Wrap content and enable viewerjs image zoom (peer dep in theme). */
-export function ImageViewer({ containerSelector, children }: ImageViewerProps) {
+export function ImageViewer({ containerSelector, children }: ImageViewerProps): ReactElement {
   useEffect(() => {
     type ViewerCtor = new (el: Element, options: { inline: boolean }) => {
       update: () => void;
@@ -40,5 +40,5 @@ export function ImageViewer({ containerSelector, children }: ImageViewerProps) {
     };
   }, [containerSelector]);
 
-  return children ?? null;
+  return <>{children}</>;
 }

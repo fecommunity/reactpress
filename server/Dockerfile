@@ -1,38 +1,32 @@
-# Use Node.js 18 as the base image
 FROM node:18-alpine
 
-# Set working directory
 WORKDIR /app
 
-# Install pnpm globally
 RUN npm install -g pnpm
 
-# Copy ALL files from the project root
-COPY . .
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
+COPY toolkit/package.json ./toolkit/
+COPY server/package.json ./server/
+COPY cli/package.json ./cli/
+COPY web/package.json ./web/
+COPY themes/twentytwentyfive/package.json ./themes/twentytwentyfive/
+COPY themes/hello-world/package.json ./themes/hello-world/
 
-# Debug: Show what files were copied
-RUN echo "=== Files in /app ===" && ls -la
-RUN echo "=== pnpm-lock.yaml exists? ===" && test -f pnpm-lock.yaml && echo "YES" || echo "NO"
-RUN echo "=== pnpm-workspace.yaml exists? ===" && test -f pnpm-workspace.yaml && echo "YES" || echo "NO"
-RUN echo "=== server/package.json exists? ===" && test -f server/package.json && echo "YES" || echo "NO"
+RUN pnpm install --frozen-lockfile
 
-# Install dependencies - ALWAYS use --no-frozen-lockfile to avoid issues
-RUN pnpm install --no-frozen-lockfile
+COPY toolkit ./toolkit
+COPY server ./server
 
-# Build the server application
+RUN pnpm run --dir toolkit build
 WORKDIR /app/server
 RUN pnpm run build
 
-# Expose port
 EXPOSE 3002
 
-# Create a non-root user
 RUN addgroup -g 1001 -S nodejs && \
-    adduser -S nestjs -u 1001
+    adduser -S nestjs -u 1001 && \
+    chown -R nestjs:nodejs /app
 
-# Change ownership of the app directory
-RUN chown -R nestjs:nodejs /app
 USER nestjs
 
-# Start the application
 CMD ["pnpm", "run", "start"]

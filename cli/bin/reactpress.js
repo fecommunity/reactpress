@@ -168,8 +168,48 @@ clientCmd
   .description(t('cli.client.start'))
   .option('--pm2', t('cli.client.start.pm2'))
   .action(async (options) => {
+    const projectRoot = ensureOriginalCwd();
+    const { resolveThemeDirectory, readActiveThemeManifest } = require('../lib/theme-runtime');
+    const { resolveProductionThemeEnv } = require('../lib/theme-prod');
+    const { activeTheme } = readActiveThemeManifest(projectRoot);
+    const themeDir = resolveThemeDirectory(projectRoot, activeTheme);
     const args = options.pm2 ? ['--pm2'] : [];
-    await runNodeScript(getThemeBin(), args, { cwd: ensureOriginalCwd() });
+    const env =
+      themeDir && options.pm2
+        ? resolveProductionThemeEnv(projectRoot, themeDir)
+        : themeDir
+          ? { REACTPRESS_THEME_DIR: themeDir }
+          : undefined;
+    await runNodeScript(getThemeBin(projectRoot), args, {
+      cwd: projectRoot,
+      env,
+    });
+  });
+
+clientCmd
+  .command('restart')
+  .description(t('cli.client.restart'))
+  .option('--pm2', t('cli.client.start.pm2'))
+  .action(async (options) => {
+    try {
+      const projectRoot = ensureOriginalCwd();
+      const { restartProductionVisitorClient } = require('../lib/theme-prod');
+      if (options.pm2) {
+        await restartProductionVisitorClient(projectRoot);
+      } else {
+        const { buildActiveTheme } = require('../lib/theme-prod');
+        const { activeTheme, themeDir } = buildActiveTheme(projectRoot);
+        const args = [];
+        await runNodeScript(getThemeBin(projectRoot), args, {
+          cwd: projectRoot,
+          env: { REACTPRESS_THEME_DIR: themeDir },
+        });
+        console.log(`[reactpress] ${require('../lib/i18n').t('themeProd.restarted', { id: activeTheme })}`);
+      }
+    } catch (err) {
+      console.error(chalk.red('[reactpress]'), err.message || err);
+      process.exit(1);
+    }
   });
 
 program

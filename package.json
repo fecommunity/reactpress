@@ -32,6 +32,7 @@
     "start": "node ./cli/bin/reactpress.js server start",
     "start:bg": "node ./cli/bin/reactpress.js server start --bg",
     "start:all": "node ./cli/bin/reactpress.js start",
+    "pm2": "node ./cli/bin/reactpress.js server start --pm2 && node ./cli/bin/reactpress.js client start --pm2",
     "stop": "node ./cli/bin/reactpress.js server stop",
     "restart": "node ./cli/bin/reactpress.js server restart",
     "status": "node ./cli/bin/reactpress.js status",

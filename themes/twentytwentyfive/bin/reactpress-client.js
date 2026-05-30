@@ -118,10 +118,36 @@ function startWithPM2() {
     pm2Command = 'pm2';
   }
   
+  const visitorPort = process.env.CLIENT_PORT || process.env.PORT || '3001';
+  const apiPort = process.env.SERVER_PORT || '3002';
+  const nginxEntry = (process.env.REACTPRESS_NGINX_ENTRY_URL || process.env.NGINX_ENTRY_URL || '')
+    .replace(/\/$/, '');
+  const pm2Env = {
+    ...process.env,
+    NODE_ENV: 'production',
+    PORT: String(visitorPort),
+    CLIENT_PORT: String(visitorPort),
+    REACTPRESS_ORIGINAL_CWD: process.env.REACTPRESS_ORIGINAL_CWD || originalCwd,
+    REACTPRESS_API_URL:
+      process.env.REACTPRESS_API_URL || `http://127.0.0.1:${apiPort}/api`,
+    SERVER_API_URL:
+      process.env.SERVER_API_URL || `http://127.0.0.1:${apiPort}/api`,
+    NEXT_PUBLIC_REACTPRESS_API_URL:
+      process.env.NEXT_PUBLIC_REACTPRESS_API_URL ||
+      (nginxEntry ? `${nginxEntry}/api` : `http://127.0.0.1:${apiPort}/api`),
+    ...(nginxEntry
+      ? {
+          REACTPRESS_NGINX_ENTRY_URL: nginxEntry,
+          NGINX_ENTRY_URL: nginxEntry,
+        }
+      : { REACTPRESS_SKIP_DEV_PORT_REDIRECT: '1' }),
+  };
+
   // Start with PM2 using direct command
-  const pm2 = spawn(pm2Command, ['start', 'npm', '--name', 'reactpress-client', '--', 'run', 'start'], {
+  const pm2 = spawn(pm2Command, ['start', 'npm', '--name', 'reactpress-client', '--update-env', '--', 'run', 'start'], {
     stdio: 'inherit',
-    cwd: clientDir
+    cwd: clientDir,
+    env: pm2Env,
   });
   
   pm2.on('close', (code) => {

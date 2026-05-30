@@ -19,7 +19,7 @@ reactpress start        # 生产模式启动 API + 前台
 
 ```bash
 reactpress build
-reactpress start:api    # 或 pm2 管理 API
+reactpress server start --bg    # 或 reactpress server start --pm2
 docker compose -f docker-compose.prod.yml up -d
 ```
 

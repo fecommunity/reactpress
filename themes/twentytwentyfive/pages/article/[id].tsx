@@ -34,7 +34,7 @@ const Article: NextPage<IProps> = ({ article }) => {
   const [shouldCheckPassWord, setShouldCheckPassword] = useState(article && article.needPassword);
   const tocs = parseArticleToc(article?.toc);
   const keywords = [article.title]
-    .concat(article?.tags.map((tag) => tag?.label))
+    .concat((article?.tags ?? []).map((tag) => (typeof tag === 'string' ? tag : tag?.label)))
     .concat(setting.seoKeyword?.split(','))
     .filter(Boolean)
     .join(',');

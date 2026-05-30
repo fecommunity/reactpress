@@ -12,6 +12,18 @@ import styles from './index.module.scss';
 
 const emailRegexp = /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/;
 
+/** Admin SPA URL (nginx `/admin/` in production; dev may still use :3000 with redirect). */
+function resolveAdminHref(): string {
+  const configured = process.env.NEXT_PUBLIC_REACTPRESS_ADMIN_URL?.trim();
+  if (configured) {
+    return configured.endsWith('/') ? configured : `${configured}/`;
+  }
+  if (typeof window !== 'undefined') {
+    return `${window.location.origin}/admin/`;
+  }
+  return 'http://localhost/admin/';
+}
+
 export type IUser = {
   name: string;
   email: string;
@@ -111,7 +123,7 @@ export const UserInfo: React.FC<{
             key: 'profile',
             label: (
               <a
-                href={process.env.NEXT_PUBLIC_REACTPRESS_ADMIN_URL || 'http://localhost:3000'}
+                href={resolveAdminHref()}
                 target="_blank"
                 rel="noreferrer"
               >

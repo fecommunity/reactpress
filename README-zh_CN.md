@@ -260,14 +260,14 @@ pm2 save
 
 ```bash
 pnpm run build
-pnpm run start        # concurrently: API + client
+pnpm run start:all        # API + 前台（前台进程）
 ```
 
-### Docker 生产（DB + 前端容器，API 在宿主机）
+### Docker 生产（DB + 主题容器，API 在宿主机）
 
 ```bash
 pnpm run build
-pnpm run start:api    # 或 pm2:api，监听 3002
+pnpm run start:bg         # 或 pnpm run pm2，监听 3002
 docker compose -f docker-compose.prod.yml up -d
 ```
 

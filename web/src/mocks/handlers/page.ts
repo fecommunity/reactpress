@@ -34,7 +34,7 @@ let mockSettings: Record<string, unknown> = {
   systemTitle: "ReactPress",
   systemSubTitle: "基于 React 的博客与内容发布平台",
   systemUrl: "http://localhost:3001",
-  adminSystemUrl: "http://localhost:3000",
+  adminSystemUrl: "http://localhost/admin/",
   systemLogo: "/logo.png",
   systemFavicon: "/favicon.png",
   systemNoticeInfo:

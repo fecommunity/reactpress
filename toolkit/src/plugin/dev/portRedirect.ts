@@ -17,8 +17,16 @@ export function resolveDevPortRole(directPort: number): DevPortRole {
   return 'visitor';
 }
 
+/** Unified nginx entry (:80) — dev (`REACTPRESS_NGINX_ENTRY_URL`) or prod (`NGINX_ENTRY_URL`). */
+export function isUnifiedNginxEntryEnabled(): boolean {
+  return Boolean(
+    process.env.REACTPRESS_NGINX_ENTRY_URL?.trim() || process.env.NGINX_ENTRY_URL?.trim(),
+  );
+}
+
+/** @deprecated Use {@link isUnifiedNginxEntryEnabled} */
 export function isNginxDevRedirectEnabled(): boolean {
-  return Boolean(process.env.REACTPRESS_NGINX_ENTRY_URL?.trim());
+  return isUnifiedNginxEntryEnabled();
 }
 
 export function resolveNginxEntryUrl(): string {
@@ -60,9 +68,8 @@ export interface DevPortRedirectOptions {
 }
 
 export function shouldRedirectDevPortToNginx(options: DevPortRedirectOptions): boolean {
-  if (process.env.NODE_ENV === 'production') return false;
   if (process.env.REACTPRESS_SKIP_DEV_PORT_REDIRECT === '1') return false;
-  if (!isNginxDevRedirectEnabled()) return false;
+  if (!isUnifiedNginxEntryEnabled()) return false;
 
   const method = (options.method || 'GET').toUpperCase();
   if (method !== 'GET' && method !== 'HEAD') return false;

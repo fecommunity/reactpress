@@ -1,3 +1,18 @@
+function resolveDefaultAdminSystemUrl(): string {
+  if (typeof window === "undefined") {
+    return "http://localhost/admin/";
+  }
+  const base = import.meta.env.BASE_URL || "/admin/";
+  const normalized = base.endsWith("/") ? base : `${base}/`;
+  if (normalized === "/") {
+    return `${window.location.origin}/admin/`;
+  }
+  const path = normalized.startsWith("/")
+    ? normalized.replace(/\/$/, "")
+    : `/${normalized.replace(/\/$/, "")}`;
+  return `${window.location.origin}${path}/`;
+}
+
 /** 常规 / SEO 表单占位默认值（数据库为空时用于预填与 placeholder）。 */
 export const SITE_SETTING_FIELD_DEFAULTS: Record<string, string> = {
   systemTitle: "ReactPress",
@@ -7,7 +22,7 @@ export const SITE_SETTING_FIELD_DEFAULTS: Record<string, string> = {
       (import.meta as ImportMeta & { env?: { VITE_CLIENT_SITE_URL?: string } }).env
         ?.VITE_CLIENT_SITE_URL) ||
     "http://localhost:3001",
-  adminSystemUrl: typeof window !== "undefined" ? window.location.origin : "http://localhost:3000",
+  adminSystemUrl: resolveDefaultAdminSystemUrl(),
   systemLogo: "/logo.png",
   systemFavicon: "/favicon.png",
   systemNoticeInfo: "[]",

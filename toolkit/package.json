@@ -4,26 +4,74 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
-    ".": "./dist/index.js",
-    "./api": "./dist/api/index.js",
-    "./api/instance": "./dist/api/instance.js",
-    "./types": "./dist/types/index.js",
-    "./utils": "./dist/utils/index.js",
-    "./config": "./dist/config/index.js",
-    "./theme": "./dist/theme/index.js",
-    "./theme/next-config": "./dist/theme/next-config.js",
-    "./theme/node": "./dist/theme/node.js",
-    "./theme/providers": "./dist/theme/providers/index.js",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./api": {
+      "types": "./dist/api/index.d.ts",
+      "default": "./dist/api/index.js"
+    },
+    "./api/instance": {
+      "types": "./dist/api/instance.d.ts",
+      "default": "./dist/api/instance.js"
+    },
+    "./types": {
+      "types": "./dist/types/index.d.ts",
+      "default": "./dist/types/index.js"
+    },
+    "./utils": {
+      "types": "./dist/utils/index.d.ts",
+      "default": "./dist/utils/index.js"
+    },
+    "./config": {
+      "types": "./dist/config/index.d.ts",
+      "default": "./dist/config/index.js"
+    },
+    "./theme": {
+      "types": "./dist/theme/index.d.ts",
+      "default": "./dist/theme/index.js"
+    },
+    "./theme/next-config": {
+      "types": "./dist/theme/next-config.d.ts",
+      "default": "./dist/theme/next-config.js"
+    },
+    "./theme/node": {
+      "types": "./dist/theme/node.d.ts",
+      "default": "./dist/theme/node.js"
+    },
+    "./theme/providers": {
+      "types": "./dist/theme/providers/index.d.ts",
+      "default": "./dist/theme/providers/index.js"
+    },
     "./app": {
       "types": "./dist/app/index.d.ts",
       "default": "./dist/app/index.js"
     },
-    "./ui": "./dist/ui/index.js",
-    "./plugin": "./dist/plugin/index.js",
-    "./plugin/admin": "./dist/plugin/admin/index.js",
-    "./plugin/client": "./dist/plugin/client/index.js",
-    "./plugin/react": "./dist/plugin/react/index.js",
-    "./plugin/dev": "./dist/plugin/dev/index.js"
+    "./ui": {
+      "types": "./dist/ui/index.d.ts",
+      "default": "./dist/ui/index.js"
+    },
+    "./plugin": {
+      "types": "./dist/plugin/index.d.ts",
+      "default": "./dist/plugin/index.js"
+    },
+    "./plugin/admin": {
+      "types": "./dist/plugin/admin/index.d.ts",
+      "default": "./dist/plugin/admin/index.js"
+    },
+    "./plugin/client": {
+      "types": "./dist/plugin/client/index.d.ts",
+      "default": "./dist/plugin/client/index.js"
+    },
+    "./plugin/react": {
+      "types": "./dist/plugin/react/index.d.ts",
+      "default": "./dist/plugin/react/index.js"
+    },
+    "./plugin/dev": {
+      "types": "./dist/plugin/dev/index.d.ts",
+      "default": "./dist/plugin/dev/index.js"
+    }
   },
   "peerDependencies": {
     "@ant-design/cssinjs": ">=1",

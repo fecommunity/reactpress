@@ -20,6 +20,7 @@ import {
 import { readThemeAdminLocaleFile } from '@fecommunity/reactpress-toolkit/theme/node';
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { spawn } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
 import { Repository } from 'typeorm';
@@ -416,6 +417,7 @@ export class ThemeService {
     }
     this.copyDir(templatePath, targetDir);
     this.linkTemplateNodeModules(templatePath, targetDir);
+    this.ensureRuntimeThemeTsconfigBase();
 
     const state = await this.getThemeState();
     const installedThemes = state.installedThemes.includes(id)
@@ -463,6 +465,33 @@ export class ThemeService {
     this.writeThemeDevManifest('active-theme.json', themeId);
   }
 
+  /** Themes under `.reactpress/runtime/*` extend `../tsconfig.base.json`. */
+  private ensureRuntimeThemeTsconfigBase(): void {
+    const baseSrc = path.join(projectRoot(), 'tsconfig.base.json');
+    if (!fs.existsSync(baseSrc)) return;
+    const runtimeBase = path.join(this.runtimeDir(), 'tsconfig.base.json');
+    fs.mkdirSync(this.runtimeDir(), { recursive: true });
+    fs.copyFileSync(baseSrc, runtimeBase);
+  }
+
+  /** Production: rebuild active theme and restart PM2 visitor after admin activation. */
+  private scheduleProductionClientRestart(): void {
+    if (process.env.NODE_ENV !== 'production') return;
+    if (process.env.REACTPRESS_SKIP_CLIENT_RESTART === '1') return;
+
+    const root = projectRoot();
+    const cliBin = path.join(root, 'cli', 'bin', 'reactpress.js');
+    if (!fs.existsSync(cliBin)) return;
+
+    const child = spawn(process.execPath, [cliBin, 'client', 'restart', '--pm2'], {
+      cwd: root,
+      detached: true,
+      stdio: 'ignore',
+      env: { ...process.env, REACTPRESS_ORIGINAL_CWD: root },
+    });
+    child.unref();
+  }
+
   /** Isolated dev manifest for admin preview — must not touch active-theme.json. */
   private syncPreviewThemeManifest(themeId: string): void {
     this.writeThemeDevManifest('preview-theme.json', themeId);
@@ -505,6 +534,7 @@ export class ThemeService {
     });
     this.clearPreviewThemeManifest();
     this.syncActiveThemeManifest(id);
+    this.scheduleProductionClientRestart();
 
     const row = await this.getSettingRow();
     const siteUrl = this.resolveSiteUrlFromRow(row);
@@ -643,6 +673,7 @@ export class ThemeService {
   private resolveSiteUrlFromRow(row: Setting): string {
     return (
       process.env.NGINX_ENTRY_URL ||
+      process.env.REACTPRESS_NGINX_ENTRY_URL ||
       (process.env.NGINX_PORT ? `http://localhost:${process.env.NGINX_PORT}` : null) ||
       row.systemUrl ||
       process.env.CLIENT_SITE_URL ||

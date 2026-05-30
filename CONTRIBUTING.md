@@ -25,9 +25,9 @@ pnpm run dev       # toolkit → API (3002) → client (3001)
 ```
 reactpress/
 ├── server/          # NestJS API (primary backend in this repo)
-├── client/          # Next.js frontend
+├── web/             # Admin SPA (Vite)
+├── themes/          # Visitor theme templates (Next.js)
 ├── toolkit/         # OpenAPI-generated API SDK
-├── themes/          # Visitor theme templates
 ├── scripts/         # dev, deploy, lifecycle
 ├── docs/            # Docusaurus site
 └── .reactpress/     # Local CLI config
@@ -42,17 +42,16 @@ reactpress/
 | Client only | `pnpm dev:client` |
 | Docker MySQL + proxy | `pnpm docker:dev` |
 | Regenerate API types | `pnpm run build:toolkit` |
-| API lifecycle | `pnpm run start:api` / `stop` / `restart` / `status` |
+| API lifecycle | `pnpm run start` / `stop` / `restart` / `status` |
 
 `pnpm dev` builds toolkit first, waits for API health, then starts the client.
 
 ## Building
 
 ```bash
-pnpm run build              # toolkit + server + client
+pnpm run build              # toolkit + server + web + active theme
 pnpm run build:server       # Nest only
-pnpm run build:client       # Next.js only
-pnpm run generate:swagger   # swagger.json from server
+pnpm run build:web          # Admin SPA only
 ```
 
 ## Production

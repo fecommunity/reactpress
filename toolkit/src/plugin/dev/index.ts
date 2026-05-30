@@ -1,4 +1,5 @@
 export type { DevPortRedirectOptions, DevPortRole } from './portRedirect';
+export { isUnifiedNginxEntryEnabled } from './portRedirect';
 export {
   buildDevPortRedirectUrl,
   isDirectDevPortAccess,

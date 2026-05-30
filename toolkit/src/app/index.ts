@@ -1,27 +1,27 @@
 /** Type declarations for `@fecommunity/reactpress-toolkit/app` JS factories. */
+import type { ComponentType, ReactNode } from 'react';
+import type { ThemeMods } from '../theme/extension/branding-mods';
+
 export type CreateThemeApp = (manifest: { id: string }) => unknown;
 
 export type CreateReactPressAppOptions = {
-  Layout: (props: {
-    children?: unknown;
+  Layout: ComponentType<{
+    children?: ReactNode;
     needFooter?: boolean;
     hasBg?: boolean;
     needHeader?: boolean;
-  }) => unknown;
-  IntlProvider: (props: {
-    locale: string;
-    messages: Record<string, unknown>;
-    children?: unknown;
-  }) => unknown;
-  buildAppearanceCss?: (mods: Record<string, unknown>) => string;
+  }>;
+  /** i18n root provider (e.g. next-intl NextIntlProvider). */
+  IntlProvider: ComponentType<Record<string, unknown>>;
+  buildAppearanceCss?: (mods: ThemeMods) => string;
   httpClientOptions?: Record<string, unknown>;
   wrapContent?: (
-    content: unknown,
+    content: ReactNode,
     runtime: {
       locale: string;
       isDark: boolean;
       colorPrimary?: string;
-      themeMods: Record<string, unknown>;
+      themeMods: ThemeMods;
       colorMode: string;
     },
   ) => unknown;

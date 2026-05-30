@@ -22,7 +22,7 @@ Production Docker setup uses multiple services:
 ```
 reactpress/
 ├── docker-compose.prod.yml
-├── client/Dockerfile
+├── themes/twentytwentyfive/Dockerfile
 ├── server/Dockerfile
 └── nginx.conf
 ```

@@ -38,11 +38,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build toolkit
-        run: pnpm run build:toolkit
-
-      - name: Build server
-        run: pnpm run build:server
+      - name: Production build
+        run: pnpm run build
 
       - name: Create test .env
         run: |

@@ -19,37 +19,31 @@ services:
     networks:
       - reactpress-network
 
-  # API 由宿主机 monorepo server/ 提供（pnpm start 或 pm2）
-  # nginx 通过 host.docker.internal:3002 转发 /api
+  # API / 访客站由宿主机 PM2 提供（内部端口 13001 / 13002，见 scripts/deploy.sh）
+  # 对外仅暴露 nginx :80；:3000/:3001/:3002 在 nginx 容器内 301 → http://localhost
 
-  theme:
-    build:
-      context: .
-      dockerfile: themes/twentytwentyfive/Dockerfile
-    container_name: reactpress_theme
-    restart: always
-    environment:
-      - NODE_ENV=production
-      - CLIENT_SITE_URL=${CLIENT_SITE_URL:-http://localhost:3001}
-      - SERVER_API_URL=${SERVER_API_URL:-http://nginx/api}
-    ports:
-      - "3001:3001"
-    networks:
-      - reactpress-network
-
+  # Proxies to host PM2 via host.docker.internal:13001 / :13002
   nginx:
     image: nginx:alpine
     container_name: reactpress_nginx
     ports:
       - "${NGINX_PORT:-80}:80"
-    depends_on:
-      - theme
+      - "${WEB_ADMIN_PORT:-3000}:3000"
+      - "3001:3001"
+      - "3002:3002"
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./web/dist:/usr/share/reactpress-admin:ro
     networks:
       - reactpress-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+      interval: 30s
 
 volumes:
   db_data:
