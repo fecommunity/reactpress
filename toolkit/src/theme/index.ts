@@ -86,7 +86,7 @@ export const createThemeApp = require('./createApp').createThemeApp as (
 ) => unknown;
 export type ThemeManifestRef = { id: string };
 
-export { defaultModsFromManifest } from './customizer';
+export { defaultModsFromManifest } from './appearance';
 
 export {
   PREVIEW_MODS_QUERY_KEY,

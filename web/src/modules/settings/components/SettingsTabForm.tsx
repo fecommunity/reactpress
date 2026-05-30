@@ -22,7 +22,7 @@ type FieldDef = {
   wide?: boolean;
 };
 
-/** 全站默认（主题 customizer 留空时继承；也可在主题内单独覆盖）。 */
+/** 全站默认（主题外观留空时继承；也可在主题内单独覆盖）。 */
 const TAB_FIELDS: Record<string, FieldDef[]> = {
   general: [
     { name: "systemTitle", labelKey: "settings.fields.systemTitle" },

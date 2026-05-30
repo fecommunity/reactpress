@@ -1,4 +1,4 @@
-/** WordPress admin palette (classic light admin). */
+/** Admin palette (classic light admin). */
 export const WP_ADMIN = {
   adminBarBg: "#1d2327",
   sidebarBg: "#1d2327",

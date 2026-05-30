@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import type { MenuProps } from "antd";
 import { Avatar, Button, Dropdown, Flex, Grid, Layout, theme } from "antd";
-import { Home, PanelLeft, Plus } from "lucide-react";
+import { PanelLeft, Plus } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 import { GitHub, Theme } from "@/components/Icon";
@@ -103,17 +103,17 @@ export function Header() {
             aria-expanded={mobileSidebarOpen}
           />
         ) : null}
-        <span className="admin-bar__brandMark" aria-hidden>
-          <ReactPressLogoMark />
-        </span>
         <a
           href={siteUrl ?? "#"}
           className="admin-bar__site"
           target={siteUrl ? "_blank" : undefined}
           rel={siteUrl ? "noopener noreferrer" : undefined}
           onClick={siteUrl ? undefined : (e) => e.preventDefault()}
+          aria-label={siteTitle}
         >
-          <Home size={16} aria-hidden />
+          <span className="admin-bar__brandMark" aria-hidden>
+            <ReactPressLogoMark />
+          </span>
           <span className="admin-bar__siteName">{siteTitle}</span>
         </a>
         <span className="admin-bar__divider" aria-hidden />

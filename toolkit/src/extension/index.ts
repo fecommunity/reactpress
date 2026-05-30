@@ -3,16 +3,17 @@ export * from './configuration';
 export * from './preview';
 export * from './site-settings';
 export * from './site-notices';
+export * from './theme-admin-locale';
 export { systemGlobalSettingDefaults } from '../config/global';
 export {
-  TWENTYTWENTYFIVE_CUSTOMIZER,
-  TWENTYTWENTYFIVE_CUSTOMIZER_GROUPS,
-  TWENTYTWENTYFIVE_CUSTOMIZER_SECTIONS,
-} from './presets/twentytwentyfive-customizer';
+  TWENTYTWENTYFIVE_APPEARANCE,
+  TWENTYTWENTYFIVE_APPEARANCE_PANELS,
+  TWENTYTWENTYFIVE_APPEARANCE_SECTIONS,
+} from './presets/twentytwentyfive-appearance';
 export {
-  buildTwentyTwentyFiveCustomizerCss,
-  customizerBackgroundColor,
-  customizerLinkColor,
-  customizerPrimaryColorForMode,
-  customizerSecondaryBackgroundColor,
+  appearanceBackgroundColor,
+  appearanceLinkColor,
+  appearancePrimaryColorForMode,
+  appearanceSecondaryBackgroundColor,
+  buildTwentyTwentyFiveAppearanceCss,
 } from './twentytwentyfive-vars';

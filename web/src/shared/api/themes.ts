@@ -19,9 +19,9 @@ export interface ThemeListItem {
   source: "starter" | "installed";
   installed: boolean;
   active: boolean;
-  screenshotUrl?: string;
-  customizer?: {
-    groups?: Array<{
+  coverUrl?: string;
+  appearance?: {
+    panels?: Array<{
       id: string;
       title: string;
       description?: string;
@@ -29,10 +29,10 @@ export interface ThemeListItem {
     sections: Array<{
       id: string;
       title: string;
-      group?: string;
-      panel?: "configuration";
+      panel?: string;
+      embed?: "options";
       description?: string;
-      settingGroups?: Array<{
+      groups?: Array<{
         id: string;
         title: string;
         description?: string;
@@ -43,7 +43,7 @@ export interface ThemeListItem {
         label: string;
         default?: string;
         description?: string;
-        settingGroup?: string;
+        group?: string;
       }>;
     }>;
   };
@@ -148,8 +148,8 @@ export async function buildThemePreviewUrl(
   return `${base}/extension/themes/${themeId}/preview?token=${encodeURIComponent(token)}`;
 }
 
-export function themeScreenshotUrl(themeId: string): string {
-  return `/api/extension/themes/${themeId}/screenshot`;
+export function themeCoverUrl(themeId: string): string {
+  return `/api/extension/themes/${themeId}/cover`;
 }
 
 export function fetchThemeConfigurationSchema(themeId: string) {
@@ -161,6 +161,12 @@ export function fetchThemeConfigurationSchema(themeId: string) {
 export function fetchThemeConfiguration(themeId: string) {
   return themeFetch<{ themeId: string; configuration: Record<string, unknown> }>(
     `/extension/themes/${themeId}/configuration`,
+  );
+}
+
+export function fetchThemeAdminLocale(themeId: string, locale: string) {
+  return themeFetch<{ themeId: string; locale: string; messages: Record<string, unknown> }>(
+    `/extension/themes/${themeId}/locales/${locale}`,
   );
 }
 

@@ -1,7 +1,7 @@
 import type { ThemeMods } from "@fecommunity/reactpress-toolkit/extension";
 
-type ThemeCustomizerLike = {
-  customizer?: {
+type ThemeAppearanceLike = {
+  appearance?: {
     sections?: Array<{ settings?: Array<{ id: string }> }>;
   };
 };
@@ -9,10 +9,10 @@ type ThemeCustomizerLike = {
 /** Payload that clears all saved theme mods (API treats `""` as delete). */
 export function buildClearThemeModsPayload(
   savedMods: ThemeMods,
-  theme: ThemeCustomizerLike,
+  theme: ThemeAppearanceLike,
 ): ThemeMods {
   const keys = new Set(Object.keys(savedMods));
-  for (const section of theme.customizer?.sections ?? []) {
+  for (const section of theme.appearance?.sections ?? []) {
     for (const setting of section.settings ?? []) {
       keys.add(setting.id);
     }

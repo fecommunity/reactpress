@@ -13,6 +13,7 @@
     "./admin": "./dist/admin/index.js",
     "./react": "./dist/react/index.js",
     "./extension": "./dist/extension/index.js",
+    "./extension/node": "./dist/extension/node.js",
     "./theme": "./dist/theme/index.js",
     "./theme/next-config": "./dist/theme/next-config.js",
     "./ui": "./dist/ui/index.js",

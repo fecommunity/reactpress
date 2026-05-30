@@ -3,7 +3,7 @@ import type { CSSProperties } from "react";
 
 type ThemeToken = ReturnType<typeof theme.useToken>["token"];
 
-/** Theme-aware CSS variables for WordPress-style admin list pages (light/dark). */
+/** Theme-aware CSS variables for admin list pages (light/dark). */
 export function articleListThemeVars(token: ThemeToken): CSSProperties {
   return {
     "--article-list-text": token.colorText,

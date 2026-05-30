@@ -22,7 +22,7 @@ export type ArticleListTablenavProps = {
   pageSize: number;
   onPageChange: (page: number) => void;
   position?: "top" | "bottom";
-  /** Bottom bar: pagination only (WordPress-style). */
+  /** Bottom bar: pagination only. */
   compact?: boolean;
 };
 

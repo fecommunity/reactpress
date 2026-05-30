@@ -9,8 +9,8 @@ import { mergePreviewMods } from '../theme/preview-mods';
 import { resolveSiteConfig } from './configuration/resolve';
 import type { ResolvedSiteConfig, ThemeConfigurationSchema } from './configuration/types';
 import {
-  applyCustomizerModsToSiteSetting,
-  customizerPrimaryColor,
+  applyThemeModsToSiteSetting,
+  appearancePrimaryColor,
   getThemeStateFromGlobalSetting,
   type ThemeMods,
 } from './theme';
@@ -78,7 +78,7 @@ export type ResolveThemePreviewContextInput = {
   setting: Record<string, unknown>;
   locale?: string;
   ctx?: NextPreviewCtx;
-  manifest?: { reactpress?: { configuration?: ThemeConfigurationSchema } };
+  manifest?: { options?: ThemeConfigurationSchema };
   /** Override draft loader (e.g. theme-local axios with auth interceptors). */
   fetchDraft?: PreviewDraftFetcher;
   apiBaseURL?: string;
@@ -128,8 +128,8 @@ export async function resolveThemePreviewContext(
 
   const savedMods = themeState.mods[configThemeId] ?? {};
   const effectiveMods = mergePreviewMods(savedMods, previewMods);
-  const setting = applyCustomizerModsToSiteSetting(input.setting, effectiveMods);
-  const colorPrimary = customizerPrimaryColor(effectiveMods);
+  const setting = applyThemeModsToSiteSetting(input.setting, effectiveMods);
+  const colorPrimary = appearancePrimaryColor(effectiveMods);
 
   return {
     siteConfig,

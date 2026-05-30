@@ -2,7 +2,7 @@ import type { AdminMenuItem } from "@fecommunity/reactpress-toolkit/admin";
 
 import type { MenuItem } from "@/api/schemas";
 
-/** Flatten legacy group nodes so the sidebar matches WordPress (no section headers). */
+/** Flatten legacy group nodes so the sidebar has no section headers. */
 function flattenAdminGroups(nodes: AdminMenuItem[]): AdminMenuItem[] {
   const out: AdminMenuItem[] = [];
   for (const node of nodes) {

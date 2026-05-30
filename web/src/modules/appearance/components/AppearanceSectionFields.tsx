@@ -1,28 +1,31 @@
 import type {
-  ThemeCustomizerSection,
-  ThemeCustomizerSetting,
+  ThemeAppearanceSection,
+  ThemeAppearanceSetting,
 } from "@fecommunity/reactpress-toolkit/extension";
+
+import { AppearanceSettingField } from "@/modules/appearance/components/AppearanceSettingField";
+import styles from "@/modules/appearance/components/themes-page.module.css";
+import { useThemeAdminLocaleText } from "@/modules/appearance/context/ThemeAdminLocaleContext";
 import { Typography } from "antd";
 
-import { CustomizerSettingField } from "@/modules/appearance/components/CustomizerSettingField";
-import styles from "@/modules/appearance/components/themes-page.module.css";
-
 type Props = {
-  section: ThemeCustomizerSection;
+  section: ThemeAppearanceSection;
   siteSettingSeed?: Record<string, unknown>;
 };
 
-export function CustomizerSectionFields({ section, siteSettingSeed }: Props) {
+export function AppearanceSectionFields({ section, siteSettingSeed }: Props) {
+  const { text } = useThemeAdminLocaleText();
   const settings = section.settings ?? [];
-  const groups = section.settingGroups ?? [];
+  const groups = section.groups ?? [];
+  const groupedIds = new Set(groups.map((g) => g.id));
 
   if (groups.length === 0) {
     return (
       <>
         {settings.map((setting) => (
-          <CustomizerSettingField
+          <AppearanceSettingField
             key={setting.id}
-            setting={setting as ThemeCustomizerSetting}
+            setting={setting as ThemeAppearanceSetting}
             siteSettingSeed={siteSettingSeed}
           />
         ))}
@@ -30,28 +33,27 @@ export function CustomizerSectionFields({ section, siteSettingSeed }: Props) {
     );
   }
 
-  const groupedIds = new Set(groups.map((g) => g.id));
-  const ungrouped = settings.filter((s) => !s.settingGroup || !groupedIds.has(s.settingGroup));
+  const ungrouped = settings.filter((s) => !s.group || !groupedIds.has(s.group));
 
   return (
     <>
       {groups.map((group) => {
-        const groupSettings = settings.filter((s) => s.settingGroup === group.id);
+        const groupSettings = settings.filter((s) => s.group === group.id);
         if (groupSettings.length === 0) return null;
         return (
           <div key={group.id} className={styles.customizerSettingGroup}>
             <Typography.Text strong className={styles.customizerSettingGroupTitle}>
-              {group.title}
+              {text(`sections.${section.id}.groups.${group.id}.title`, group.title)}
             </Typography.Text>
             {group.description ? (
               <Typography.Paragraph type="secondary" className={styles.customizerSettingGroupDesc}>
-                {group.description}
+                {text(`sections.${section.id}.groups.${group.id}.description`, group.description)}
               </Typography.Paragraph>
             ) : null}
             {groupSettings.map((setting) => (
-              <CustomizerSettingField
+              <AppearanceSettingField
                 key={setting.id}
-                setting={setting as ThemeCustomizerSetting}
+                setting={setting as ThemeAppearanceSetting}
                 siteSettingSeed={siteSettingSeed}
               />
             ))}
@@ -59,9 +61,9 @@ export function CustomizerSectionFields({ section, siteSettingSeed }: Props) {
         );
       })}
       {ungrouped.map((setting) => (
-        <CustomizerSettingField
+        <AppearanceSettingField
           key={setting.id}
-          setting={setting as ThemeCustomizerSetting}
+          setting={setting as ThemeAppearanceSetting}
           siteSettingSeed={siteSettingSeed}
         />
       ))}

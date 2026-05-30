@@ -21,7 +21,7 @@ export const ThemeTemplate = {
 
 export type ThemeTemplateSlug = (typeof ThemeTemplate)[keyof typeof ThemeTemplate];
 
-/** Default file mapping (override in `theme.json` → `reactpress.templates`). */
+/** Default file mapping (override in `theme.json` → `templates`). */
 export const DEFAULT_TEMPLATE_FILES: Record<ThemeTemplateSlug, string> = {
   [ThemeTemplate.HOME]: 'pages/index.tsx',
   [ThemeTemplate.SINGLE]: 'pages/article/[id].tsx',
@@ -33,14 +33,12 @@ export const DEFAULT_TEMPLATE_FILES: Record<ThemeTemplateSlug, string> = {
 };
 
 export interface ThemeManifestLike {
-  reactpress?: {
-    templates?: Partial<Record<string, string>>;
-  };
+  templates?: Partial<Record<string, string>>;
 }
 
 export function resolveTemplateFiles(
   manifest?: ThemeManifestLike | null,
 ): Record<ThemeTemplateSlug, string> {
-  const custom = manifest?.reactpress?.templates ?? {};
+  const custom = manifest?.templates ?? {};
   return { ...DEFAULT_TEMPLATE_FILES, ...custom } as Record<ThemeTemplateSlug, string>;
 }

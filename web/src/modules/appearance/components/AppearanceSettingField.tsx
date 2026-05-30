@@ -1,28 +1,34 @@
-import type { ThemeCustomizerSetting } from "@fecommunity/reactpress-toolkit/extension";
+import type { ThemeAppearanceSetting } from "@fecommunity/reactpress-toolkit/extension";
 import { resolvePublicAssetUrl } from "@fecommunity/reactpress-toolkit/extension";
 import { App, Button, ColorPicker, Form, Input, Select, Switch, Typography } from "antd";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import styles from "@/modules/appearance/components/themes-page.module.css";
+import { useThemeAdminLocaleText } from "@/modules/appearance/context/ThemeAdminLocaleContext";
 import { MediaSelectDrawer } from "@/shared/components/MediaSelectDrawer";
 import { SiteNoticeListField } from "@/shared/components/SiteNoticeListField";
 
-type SettingDef = ThemeCustomizerSetting & { type: string };
+type SettingDef = ThemeAppearanceSetting & { type: string };
 
 type Props = {
   setting: SettingDef;
   siteSettingSeed?: Record<string, unknown>;
 };
 
-export function CustomizerSettingField({ setting, siteSettingSeed }: Props) {
+export function AppearanceSettingField({ setting, siteSettingSeed }: Props) {
   const { t } = useTranslation();
+  const { text } = useThemeAdminLocaleText();
   const { message } = App.useApp();
   const [mediaOpen, setMediaOpen] = useState(false);
 
-  const description = setting.description ? (
+  const label = text(`settings.${setting.id}.label`, setting.label);
+  const descriptionText = setting.description
+    ? text(`settings.${setting.id}.description`, setting.description)
+    : undefined;
+  const description = descriptionText ? (
     <Typography.Text type="secondary" className={styles.settingDescription}>
-      {setting.description}
+      {descriptionText}
     </Typography.Text>
   ) : null;
 
@@ -30,7 +36,7 @@ export function CustomizerSettingField({ setting, siteSettingSeed }: Props) {
     return (
       <Form.Item
         name={setting.id}
-        label={setting.label}
+        label={label}
         extra={description}
         getValueFromEvent={(color) =>
           typeof color === "string" ? color : (color?.toHexString?.() ?? "")
@@ -45,7 +51,7 @@ export function CustomizerSettingField({ setting, siteSettingSeed }: Props) {
     return (
       <Form.Item
         name={setting.id}
-        label={setting.label}
+        label={label}
         extra={description}
         valuePropName="checked"
         getValueFromEvent={(checked: boolean) => (checked ? "1" : "0")}
@@ -64,7 +70,7 @@ export function CustomizerSettingField({ setting, siteSettingSeed }: Props) {
       label: c.label,
     }));
     return (
-      <Form.Item name={setting.id} label={setting.label} extra={description}>
+      <Form.Item name={setting.id} label={label} extra={description}>
         <Select options={options} />
       </Form.Item>
     );
@@ -72,7 +78,7 @@ export function CustomizerSettingField({ setting, siteSettingSeed }: Props) {
 
   if (setting.type === "textarea") {
     return (
-      <Form.Item name={setting.id} label={setting.label} extra={description}>
+      <Form.Item name={setting.id} label={label} extra={description}>
         <Input.TextArea rows={8} spellCheck={false} className={styles.customizerCodeArea} />
       </Form.Item>
     );
@@ -84,7 +90,7 @@ export function CustomizerSettingField({ setting, siteSettingSeed }: Props) {
         ? String(siteSettingSeed.systemNoticeInfo)
         : undefined;
     return (
-      <Form.Item name={setting.id} label={setting.label} extra={description}>
+      <Form.Item name={setting.id} label={label} extra={description}>
         <SiteNoticeListField inheritFrom={inheritFrom} showInheritHint />
       </Form.Item>
     );
@@ -92,7 +98,7 @@ export function CustomizerSettingField({ setting, siteSettingSeed }: Props) {
 
   if (setting.type === "image") {
     return (
-      <Form.Item name={setting.id} label={setting.label} extra={description}>
+      <Form.Item name={setting.id} label={label} extra={description}>
         <ImageUrlControl
           mediaOpen={mediaOpen}
           onMediaOpenChange={setMediaOpen}
@@ -103,7 +109,7 @@ export function CustomizerSettingField({ setting, siteSettingSeed }: Props) {
   }
 
   return (
-    <Form.Item name={setting.id} label={setting.label} extra={description}>
+    <Form.Item name={setting.id} label={label} extra={description}>
       <Input />
     </Form.Item>
   );

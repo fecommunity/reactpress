@@ -20,13 +20,14 @@ import {
   ThemeConfigurationForm,
   type ThemeConfigurationFormHandle,
 } from "@/modules/appearance/components/ThemeConfigurationForm";
+import { ThemeAdminLocaleProvider } from "@/modules/appearance/context/ThemeAdminLocaleContext";
 import { Route } from "@/routes/_auth/appearance/customize/index";
 import { resolveLiveSitePreviewUrl } from "@/shared/theme/previewUrl";
 import {
   PreviewDeviceToolbar,
   type PreviewDevice,
 } from "@/modules/appearance/components/PreviewDeviceToolbar";
-import { ThemeCustomizerPanel } from "@/modules/appearance/components/ThemeCustomizerPanel";
+import { ThemeAppearancePanel } from "@/modules/appearance/components/ThemeAppearancePanel";
 import { ThemePreviewFrame } from "@/modules/appearance/components/ThemePreviewFrame";
 import { ThemePreviewPaneLoading } from "@/modules/appearance/components/ThemePreviewPaneLoading";
 import { ModulePlaceholder } from "@/shared/components/ModulePlaceholder";
@@ -209,20 +210,6 @@ export function CustomizePage() {
     return <Spin fullscreen />;
   }
 
-  const configurationPanel =
-    schemaData?.schema != null ? (
-      <ThemeConfigurationForm
-        ref={configFormRef}
-        embedded
-        deferActions
-        schema={schemaData.schema}
-        configuration={savedConfiguration}
-        saving={saveConfigMutation.isPending}
-        onDraftChange={setDraftConfiguration}
-        onSave={handleSaveConfiguration}
-      />
-    ) : undefined;
-
   if (!activeTheme) {
     return (
       <ModulePlaceholder
@@ -233,75 +220,90 @@ export function CustomizePage() {
   }
 
   return (
-    <div className={styles.customizeShell}>
-      <aside className={styles.customizeSidebar}>
-        <div className={styles.customizeSidebarHeader}>
-          <Button
-            type="link"
-            icon={<ChevronLeft size={14} />}
-            className={styles.customizeBack}
-            onClick={() => void navigate({ to: "/appearance/themes" })}
-          >
-            {t("appearance.backToThemes")}
-          </Button>
-        </div>
-        <div className={styles.customizeSidebarScroll}>
-          <ThemeCustomizerPanel
-            theme={activeTheme}
-            siteTitle={siteTitle}
-            siteDescription={siteDescription}
-            siteSettingSeed={settings ?? undefined}
-            initialSectionId={initialSection ?? null}
-            configurationPanel={configurationPanel}
-            mods={draftMods}
-            savedMods={savedMods}
-            onModsChange={handleModsChange}
-            onPreview={handlePreview}
-            onSave={handleSave}
-            saving={modsMutation.isPending}
-            onPreviewConfiguration={handlePreviewConfiguration}
-            onSaveConfiguration={handleSaveConfiguration}
-            savingConfiguration={saveConfigMutation.isPending}
-            onRestoreMods={handleRestoreMods}
-            onRestoreConfiguration={handleRestoreConfiguration}
-            restoring={modsMutation.isPending || saveConfigMutation.isPending}
-          />
-        </div>
-        <footer className={styles.customizeSidebarFooter}>
-          <PreviewDeviceToolbar
-            device={device}
-            onDeviceChange={setDevice}
-            onRefresh={bumpPreview}
-          />
-        </footer>
-      </aside>
+    <ThemeAdminLocaleProvider themeId={themeId}>
+      <div className={styles.customizeShell}>
+        <aside className={styles.customizeSidebar}>
+          <div className={styles.customizeSidebarHeader}>
+            <Button
+              type="link"
+              icon={<ChevronLeft size={14} />}
+              className={styles.customizeBack}
+              onClick={() => void navigate({ to: "/appearance/themes" })}
+            >
+              {t("appearance.backToThemes")}
+            </Button>
+          </div>
+          <div className={styles.customizeSidebarScroll}>
+            <ThemeAppearancePanel
+              theme={activeTheme}
+              siteTitle={siteTitle}
+              siteDescription={siteDescription}
+              siteSettingSeed={settings ?? undefined}
+              initialSectionId={initialSection ?? null}
+              optionsPanel={
+                schemaData?.schema != null ? (
+                  <ThemeConfigurationForm
+                    ref={configFormRef}
+                    embedded
+                    deferActions
+                    schema={schemaData.schema}
+                    configuration={savedConfiguration}
+                    saving={saveConfigMutation.isPending}
+                    onDraftChange={setDraftConfiguration}
+                    onSave={handleSaveConfiguration}
+                  />
+                ) : undefined
+              }
+              mods={draftMods}
+              savedMods={savedMods}
+              onModsChange={handleModsChange}
+              onPreview={handlePreview}
+              onSave={handleSave}
+              saving={modsMutation.isPending}
+              onPreviewOptions={handlePreviewConfiguration}
+              onSaveOptions={handleSaveConfiguration}
+              savingOptions={saveConfigMutation.isPending}
+              onRestoreMods={handleRestoreMods}
+              onRestoreOptions={handleRestoreConfiguration}
+              restoring={modsMutation.isPending || saveConfigMutation.isPending}
+            />
+          </div>
+          <footer className={styles.customizeSidebarFooter}>
+            <PreviewDeviceToolbar
+              device={device}
+              onDeviceChange={setDevice}
+              onRefresh={bumpPreview}
+            />
+          </footer>
+        </aside>
 
-      <div className={styles.customizePreviewPane}>
-        <div className={styles.previewWrap}>
-          <div className={`${styles.previewFrameWrap} ${deviceFrameClass[device]}`}>
-            {mayUseLiveSite && previewSwitching ? (
-              <ThemePreviewPaneLoading themeName={activeTheme.name} />
-            ) : (
-              <ThemePreviewFrame
-                themeId={themeId}
-                activeThemeId={themeState.activeTheme}
-                mods={previewMods}
-                previewConfiguration={previewConfiguration}
-                siteUrl={siteUrl}
-                title={t("appearance.livePreview")}
-                previewSiteUrl={previewSiteUrl}
-                previewSessionReady={previewSessionReady}
-                refreshKey={
-                  previewSessionReady
-                    ? `${themeId}-${previewRefreshKey}`
-                    : String(previewRefreshKey)
-                }
-                style={{ minHeight: "100%" }}
-              />
-            )}
+        <div className={styles.customizePreviewPane}>
+          <div className={styles.previewWrap}>
+            <div className={`${styles.previewFrameWrap} ${deviceFrameClass[device]}`}>
+              {mayUseLiveSite && previewSwitching ? (
+                <ThemePreviewPaneLoading themeName={activeTheme.name} />
+              ) : (
+                <ThemePreviewFrame
+                  themeId={themeId}
+                  activeThemeId={themeState.activeTheme}
+                  mods={previewMods}
+                  previewConfiguration={previewConfiguration}
+                  siteUrl={siteUrl}
+                  title={t("appearance.livePreview")}
+                  previewSiteUrl={previewSiteUrl}
+                  previewSessionReady={previewSessionReady}
+                  refreshKey={
+                    previewSessionReady
+                      ? `${themeId}-${previewRefreshKey}`
+                      : String(previewRefreshKey)
+                  }
+                  style={{ minHeight: "100%" }}
+                />
+              )}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </ThemeAdminLocaleProvider>
   );
 }

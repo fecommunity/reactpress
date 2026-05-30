@@ -5,6 +5,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
+import { useThemeListItemMeta } from "@/hooks/useThemeListItemMeta";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 import { useThemePreviewSession } from "@/hooks/useThemePreviewSession";
 import { useThemeMutations, useThemes } from "@/hooks/useThemes";
@@ -37,6 +38,7 @@ export function ThemePreviewPage({ themeIdFromSearch }: { themeIdFromSearch?: st
     list.findIndex((th) => th.id === (themeIdFromSearch ?? themeState.activeTheme)),
   );
   const current = list[currentIndex];
+  const { description, tags } = useThemeListItemMeta(current);
   const canSwitchTheme = list.length > 1;
 
   const previewMods = current?.id ? (themeState.mods[current.id] ?? {}) : {};
@@ -172,14 +174,14 @@ export function ThemePreviewPage({ themeIdFromSearch }: { themeIdFromSearch?: st
             <span className={styles.sidebarMuted} style={{ marginTop: 8 }}>
               {t("appearance.version", { version: current.version })}
             </span>
-            {current.description ? (
+            {description ? (
               <p className={styles.sidebarBody} style={{ margin: "12px 0" }}>
-                {current.description}
+                {description}
               </p>
             ) : null}
-            {current.tags && current.tags.length > 0 ? (
+            {tags.length > 0 ? (
               <div className={styles.previewFeatureTags}>
-                {current.tags.map((tag) => (
+                {tags.map((tag) => (
                   <span key={tag} className={styles.featureTag}>
                     {tag}
                   </span>

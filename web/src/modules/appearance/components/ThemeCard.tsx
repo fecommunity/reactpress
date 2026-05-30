@@ -17,9 +17,9 @@ export function ThemeCard({ theme, onInstall, onActivate, installing, activating
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const thumb = theme.screenshotUrl ? (
+  const thumb = theme.coverUrl ? (
     <img
-      src={theme.screenshotUrl}
+      src={theme.coverUrl}
       alt={theme.name}
       onError={(e) => {
         (e.target as HTMLImageElement).style.display = "none";

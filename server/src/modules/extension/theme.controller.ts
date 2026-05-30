@@ -84,14 +84,14 @@ export class ThemeController {
     return this.themeService.beginPreviewSession(id);
   }
 
-  @Get(':id/screenshot')
-  screenshot(@Param('id') id: string, @Res() res: Response) {
-    const filePath = this.themeService.getScreenshotPath(id);
+  @Get(':id/cover')
+  cover(@Param('id') id: string, @Res() res: Response) {
+    const filePath = this.themeService.getCoverPath(id);
     if (filePath) {
       res.sendFile(filePath);
       return;
     }
-    const svg = this.themeService.buildPlaceholderScreenshotSvg(id);
+    const svg = this.themeService.buildPlaceholderCoverSvg(id);
     res.setHeader('Content-Type', 'image/svg+xml; charset=utf-8');
     res.setHeader('Cache-Control', 'public, max-age=300');
     res.send(svg);
@@ -119,6 +119,14 @@ export class ThemeController {
     const html = this.themeService.buildPreviewHtml(id, mods);
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
     res.send(html);
+  }
+
+  @Get(':id/locales/:locale')
+  @Roles('admin')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiResponse({ status: 200, description: 'Customizer locale strings bundled with the theme' })
+  getLocale(@Param('id') id: string, @Param('locale') locale: string) {
+    return this.themeService.getThemeAdminLocale(id, locale);
   }
 
   @Get(':id/configuration-schema')

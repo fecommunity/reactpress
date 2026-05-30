@@ -5,7 +5,7 @@ type DashiconProps = {
   className?: string;
 };
 
-/** WordPress Dashicons (font icon). `name` is the suffix, e.g. `dashboard` → `dashicons-dashboard`. */
+/** Admin icon font. `name` is the suffix, e.g. `dashboard` → `dashicons-dashboard`. */
 export function Dashicon({ name, className }: DashiconProps) {
   return <span className={classNames("dashicons", `dashicons-${name}`, className)} aria-hidden />;
 }

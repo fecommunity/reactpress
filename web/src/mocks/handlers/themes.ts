@@ -4,13 +4,20 @@ import {
   getMergedThemeConfiguration,
   getThemeConfigurationSeed,
   TWENTYTWENTYFIVE_CONFIGURATION_SCHEMA,
-  TWENTYTWENTYFIVE_CUSTOMIZER,
+  TWENTYTWENTYFIVE_APPEARANCE,
   validateAndMergeThemeConfiguration,
 } from "@fecommunity/reactpress-toolkit/extension";
 import { http, HttpResponse, passthrough } from "msw";
 
 import { successResponse, withDelay } from "../createHandler";
 import { getMockGlobalSetting, patchMockGlobalSettingTheme, setMockGlobalSetting } from "./page";
+import helloWorldAdminEn from "../../../../themes/hello-world/locales/en.json";
+import twentytwentyfiveAdminEn from "../../../../themes/twentytwentyfive/locales/en.json";
+
+const THEME_ADMIN_LOCALES: Record<string, Record<string, Record<string, unknown>>> = {
+  twentytwentyfive: { en: twentytwentyfiveAdminEn },
+  "hello-world": { en: helloWorldAdminEn },
+};
 
 const MOCK_THEMES = [
   {
@@ -23,9 +30,9 @@ const MOCK_THEMES = [
     source: "starter" as const,
     installed: true,
     active: true,
-    screenshotUrl: "/api/extension/themes/twentytwentyfive/screenshot",
-    reactpress: { configuration: TWENTYTWENTYFIVE_CONFIGURATION_SCHEMA },
-    customizer: TWENTYTWENTYFIVE_CUSTOMIZER,
+    coverUrl: "/api/extension/themes/twentytwentyfive/cover",
+    options: TWENTYTWENTYFIVE_CONFIGURATION_SCHEMA,
+    appearance: TWENTYTWENTYFIVE_APPEARANCE,
   },
   {
     id: "hello-world",
@@ -37,8 +44,8 @@ const MOCK_THEMES = [
     source: "starter" as const,
     installed: true,
     active: false,
-    screenshotUrl: "/api/extension/themes/hello-world/screenshot",
-    customizer: {
+    coverUrl: "/api/extension/themes/hello-world/cover",
+    appearance: {
       sections: [
         {
           id: "identity",
@@ -80,7 +87,7 @@ function themeManifest(themeId: string) {
   return MOCK_THEMES.find((t) => t.id === themeId) ?? null;
 }
 
-function screenshotSvg(themeId: string, name: string, primary = "#2271b1", accent = "#72aee6") {
+function coverSvg(themeId: string, name: string, primary = "#2271b1", accent = "#72aee6") {
   const safeName = name.replace(/[<>&"']/g, (ch) => {
     const map: Record<string, string> = {
       "<": "&lt;",
@@ -103,7 +110,7 @@ function screenshotSvg(themeId: string, name: string, primary = "#2271b1", accen
 function previewHtml(themeId: string, mods: Record<string, string> = {}) {
   const theme = MOCK_THEMES.find((t) => t.id === themeId) ?? MOCK_THEMES[0];
   const defaults: Record<string, string> = {};
-  for (const section of theme.customizer?.sections ?? []) {
+  for (const section of theme.appearance?.sections ?? []) {
     for (const s of section.settings ?? []) {
       if (s.default) defaults[s.id] = s.default;
     }
@@ -142,6 +149,17 @@ export const themeHandlers = [
       active: theme.id === themeState.activeTheme,
       installed: themeState.installedThemes.includes(theme.id),
     });
+  }),
+
+  http.get("/api/extension/themes/:id/locales/:locale", async ({ params }) => {
+    await withDelay(60);
+    const id = String(params.id);
+    const locale = String(params.locale);
+    if (!themeManifest(id)) {
+      return HttpResponse.json({ success: false, message: "Not found" }, { status: 404 });
+    }
+    const messages = THEME_ADMIN_LOCALES[id]?.[locale] ?? {};
+    return successResponse({ themeId: id, locale, messages });
   }),
 
   http.get("/api/extension/themes/:id/configuration-schema", async ({ params }) => {
@@ -198,18 +216,18 @@ export const themeHandlers = [
     return successResponse({ themeId: id, configuration });
   }),
 
-  http.get("/api/extension/themes/:id/screenshot", async ({ params }) => {
+  http.get("/api/extension/themes/:id/cover", async ({ params }) => {
     await withDelay(60);
     const theme = MOCK_THEMES.find((t) => t.id === params.id) ?? MOCK_THEMES[0];
     const primary =
-      theme.customizer?.sections
+      theme.appearance?.sections
         ?.flatMap((sec) => sec.settings ?? [])
         .find((s) => s.id === "primaryColor")?.default ?? "#2271b1";
     const accent =
-      theme.customizer?.sections
+      theme.appearance?.sections
         ?.flatMap((sec) => sec.settings ?? [])
         .find((s) => s.id === "accentColor")?.default ?? "#d63638";
-    return new Response(screenshotSvg(String(params.id), theme.name, primary, accent), {
+    return new Response(coverSvg(String(params.id), theme.name, primary, accent), {
       headers: { "Content-Type": "image/svg+xml; charset=utf-8" },
     });
   }),

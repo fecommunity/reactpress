@@ -19,8 +19,8 @@ import { SettingProvider } from '@/providers/setting';
 import { TagProvider } from '@/providers/tag';
 import { httpProvider } from '@/providers/http';
 import {
-  buildTwentyTwentyFiveCustomizerCss,
-  customizerPrimaryColorForMode,
+  appearancePrimaryColorForMode,
+  buildTwentyTwentyFiveAppearanceCss,
   normalizePreviewDraftData,
   previewDraftApiPath,
   resolveThemePreviewContext,
@@ -140,8 +140,8 @@ class MyApp extends App<
     const isDark = this.state.theme === 'dark';
     const algorithm = isDark ? theme.darkAlgorithm : theme.defaultAlgorithm;
     const themeMods = (this.props.themeMods ?? {}) as ThemeMods;
-    const colorPrimary = customizerPrimaryColorForMode(themeMods, isDark);
-    const customizerCss = buildTwentyTwentyFiveCustomizerCss(themeMods);
+    const colorPrimary = appearancePrimaryColorForMode(themeMods, isDark);
+    const appearanceCss = buildTwentyTwentyFiveAppearanceCss(themeMods);
 
     return (
       <GlobalContext.Provider
@@ -164,7 +164,7 @@ class MyApp extends App<
         }}
       >
         <NextIntlProvider messages={message as IntlMessages} locale={locale}>
-          {customizerCss ? <style dangerouslySetInnerHTML={{ __html: customizerCss }} /> : null}
+          {appearanceCss ? <style dangerouslySetInnerHTML={{ __html: appearanceCss }} /> : null}
           <FixAntdStyleTransition />
           <ViewStatistics />
           <Analytics />

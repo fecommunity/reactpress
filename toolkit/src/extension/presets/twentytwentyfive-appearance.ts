@@ -1,7 +1,7 @@
-import type { ThemeCustomizerGroup, ThemeCustomizerSection } from '../theme';
+import type { ThemeAppearancePanel, ThemeAppearanceSection } from '../theme';
 
-/** Sidebar nav categories for Twenty Twenty-Five customizer. */
-export const TWENTYTWENTYFIVE_CUSTOMIZER_GROUPS: ThemeCustomizerGroup[] = [
+/** Sidebar nav panels for Twenty Twenty-Five appearance editor. */
+export const TWENTYTWENTYFIVE_APPEARANCE_PANELS: ThemeAppearancePanel[] = [
   {
     id: 'basic',
     title: '基础配置',
@@ -19,11 +19,11 @@ export const TWENTYTWENTYFIVE_CUSTOMIZER_GROUPS: ThemeCustomizerGroup[] = [
   },
 ];
 
-/** Default theme customizer sections for Twenty Twenty-Five (also in `themes/.../theme.json`). */
-export const TWENTYTWENTYFIVE_CUSTOMIZER_SECTIONS: ThemeCustomizerSection[] = [
+/** Default appearance sections for Twenty Twenty-Five (also in `themes/.../theme.json`). */
+export const TWENTYTWENTYFIVE_APPEARANCE_SECTIONS: ThemeAppearanceSection[] = [
   {
     id: 'identity',
-    group: 'basic',
+    panel: 'basic',
     title: '站点身份',
     settings: [
       {
@@ -60,7 +60,7 @@ export const TWENTYTWENTYFIVE_CUSTOMIZER_SECTIONS: ThemeCustomizerSection[] = [
   },
   {
     id: 'about',
-    group: 'basic',
+    panel: 'basic',
     title: '关于我们与页脚',
     settings: [
       {
@@ -91,10 +91,10 @@ export const TWENTYTWENTYFIVE_CUSTOMIZER_SECTIONS: ThemeCustomizerSection[] = [
   },
   {
     id: 'colors',
-    group: 'style',
+    panel: 'style',
     title: '颜色',
     description: '与访客站顶栏「日 / 夜」切换对应，可分别配置浅色与深色模式',
-    settingGroups: [
+    groups: [
       {
         id: 'light',
         title: '浅色模式',
@@ -107,10 +107,10 @@ export const TWENTYTWENTYFIVE_CUSTOMIZER_SECTIONS: ThemeCustomizerSection[] = [
       },
     ],
     settings: [
-      { id: 'primaryColor', settingGroup: 'light', type: 'color', label: '主色', default: '#f44336' },
+      { id: 'primaryColor', group: 'light', type: 'color', label: '主色', default: '#f44336' },
       {
         id: 'backgroundColor',
-        settingGroup: 'light',
+        group: 'light',
         type: 'color',
         label: '背景色',
         default: '#ffffff',
@@ -118,7 +118,7 @@ export const TWENTYTWENTYFIVE_CUSTOMIZER_SECTIONS: ThemeCustomizerSection[] = [
       },
       {
         id: 'secondaryBackgroundColor',
-        settingGroup: 'light',
+        group: 'light',
         type: 'color',
         label: '次要背景色',
         default: '#f3f5f7',
@@ -126,7 +126,7 @@ export const TWENTYTWENTYFIVE_CUSTOMIZER_SECTIONS: ThemeCustomizerSection[] = [
       },
       {
         id: 'linkColor',
-        settingGroup: 'light',
+        group: 'light',
         type: 'color',
         label: '链接色',
         default: '#4299e1',
@@ -134,14 +134,14 @@ export const TWENTYTWENTYFIVE_CUSTOMIZER_SECTIONS: ThemeCustomizerSection[] = [
       },
       {
         id: 'darkPrimaryColor',
-        settingGroup: 'dark',
+        group: 'dark',
         type: 'color',
         label: '主色',
         default: '#f44336',
       },
       {
         id: 'darkBackgroundColor',
-        settingGroup: 'dark',
+        group: 'dark',
         type: 'color',
         label: '背景色',
         default: '#1e2a36',
@@ -149,7 +149,7 @@ export const TWENTYTWENTYFIVE_CUSTOMIZER_SECTIONS: ThemeCustomizerSection[] = [
       },
       {
         id: 'darkSecondaryBackgroundColor',
-        settingGroup: 'dark',
+        group: 'dark',
         type: 'color',
         label: '次要背景色',
         default: '#1a242f',
@@ -157,7 +157,7 @@ export const TWENTYTWENTYFIVE_CUSTOMIZER_SECTIONS: ThemeCustomizerSection[] = [
       },
       {
         id: 'darkLinkColor',
-        settingGroup: 'dark',
+        group: 'dark',
         type: 'color',
         label: '链接色',
         default: '#4299e1',
@@ -167,7 +167,7 @@ export const TWENTYTWENTYFIVE_CUSTOMIZER_SECTIONS: ThemeCustomizerSection[] = [
   },
   {
     id: 'background',
-    group: 'style',
+    panel: 'style',
     title: '背景图片',
     settings: [
       {
@@ -180,18 +180,15 @@ export const TWENTYTWENTYFIVE_CUSTOMIZER_SECTIONS: ThemeCustomizerSection[] = [
   },
   {
     id: 'themeConfiguration',
-    group: 'layout',
+    panel: 'layout',
     title: '顶栏与网址导航',
-    panel: 'configuration',
+    embed: 'options',
     description: '固定导航、/nav 卡片与聚合搜索',
   },
 ];
 
-/** Full `theme.json` → `customizer` block for Twenty Twenty-Five. */
-export const TWENTYTWENTYFIVE_CUSTOMIZER: {
-  groups: ThemeCustomizerGroup[];
-  sections: ThemeCustomizerSection[];
-} = {
-  groups: TWENTYTWENTYFIVE_CUSTOMIZER_GROUPS,
-  sections: TWENTYTWENTYFIVE_CUSTOMIZER_SECTIONS,
+/** Full `theme.json` → `appearance` block for Twenty Twenty-Five. */
+export const TWENTYTWENTYFIVE_APPEARANCE = {
+  panels: TWENTYTWENTYFIVE_APPEARANCE_PANELS,
+  sections: TWENTYTWENTYFIVE_APPEARANCE_SECTIONS,
 };

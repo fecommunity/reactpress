@@ -17,6 +17,8 @@ import {
   patchVsCodeFormilySchema,
   type FormilySchemaNode,
 } from "@/modules/appearance/utils/patchVsCodeFormilySchema";
+import { useThemeAdminLocaleTextOptional } from "@/modules/appearance/context/ThemeAdminLocaleContext";
+import { localizeThemeConfigurationSchema } from "@/modules/appearance/utils/resolveAppearanceManifestText";
 import styles from "@/modules/appearance/components/theme-configuration-form.module.css";
 
 ensureFormilyVoidComponentsRegistered();
@@ -54,11 +56,17 @@ export const ThemeConfigurationForm = forwardRef<ThemeConfigurationFormHandle, P
     const { t } = useTranslation();
     const { message } = App.useApp();
     const formRef = useRef<FormilyCoreForm | null>(null);
+    const themeLocale = useThemeAdminLocaleTextOptional();
+
+    const localizedSchema = useMemo(
+      () => localizeThemeConfigurationSchema(schema, themeLocale?.messages),
+      [schema, themeLocale?.messages],
+    );
 
     const formilySchema = useMemo(() => {
-      const base = toFormilyJsonSchema(schema);
+      const base = toFormilyJsonSchema(localizedSchema);
       return patchVsCodeFormilySchema(base as FormilySchemaNode | null);
-    }, [schema]);
+    }, [localizedSchema]);
 
     const configKey = JSON.stringify(configuration);
 
@@ -69,7 +77,7 @@ export const ThemeConfigurationForm = forwardRef<ThemeConfigurationFormHandle, P
       formRef.current = f;
       return f;
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [schema?.title, configKey]);
+    }, [localizedSchema?.title, configKey]);
 
     useEffect(() => {
       form.setValues(configuration);
@@ -156,7 +164,7 @@ export const ThemeConfigurationForm = forwardRef<ThemeConfigurationFormHandle, P
       <div className={styles.formRoot}>
         <FormProvider form={form}>
           <ThemeSettingsEditor
-            schema={schema}
+            schema={localizedSchema}
             saving={saving}
             onSaveClick={handleSaveClick}
             onResetClick={() => form.setValues(configuration)}

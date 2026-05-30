@@ -9,6 +9,7 @@ import {
   useThemeConfigurationSchema,
 } from "@/hooks/useThemeConfiguration";
 import { useTheme } from "@/hooks/useThemes";
+import { ThemeAdminLocaleProvider } from "@/modules/appearance/context/ThemeAdminLocaleContext";
 import { ThemeConfigurationForm } from "@/modules/appearance/components/ThemeConfigurationForm";
 import { Route } from "@/routes/_auth/appearance/themes/$themeId/settings/index";
 import { ModulePlaceholder } from "@/shared/components/ModulePlaceholder";
@@ -79,20 +80,22 @@ export function ThemeSettingsPage() {
 
       <div className={`admin-panel ${pageStyles.panel}`}>
         <div className={`admin-panel__body ${pageStyles.panelBody}`}>
-          <ThemeConfigurationForm
-            schema={schemaData?.schema ?? null}
-            configuration={configData?.configuration ?? {}}
-            saving={saveMutation.isPending}
-            onSave={async (values) => {
-              try {
-                await saveMutation.mutateAsync({ configuration: values });
-                message.success(t("appearance.themeSettingsSaved"));
-              } catch (err) {
-                const msg = err instanceof Error ? err.message : t("appearance.actionFailed");
-                message.error(msg);
-              }
-            }}
-          />
+          <ThemeAdminLocaleProvider themeId={themeId}>
+            <ThemeConfigurationForm
+              schema={schemaData?.schema ?? null}
+              configuration={configData?.configuration ?? {}}
+              saving={saveMutation.isPending}
+              onSave={async (values) => {
+                try {
+                  await saveMutation.mutateAsync({ configuration: values });
+                  message.success(t("appearance.themeSettingsSaved"));
+                } catch (err) {
+                  const msg = err instanceof Error ? err.message : t("appearance.actionFailed");
+                  message.error(msg);
+                }
+              }}
+            />
+          </ThemeAdminLocaleProvider>
         </div>
       </div>
     </div>

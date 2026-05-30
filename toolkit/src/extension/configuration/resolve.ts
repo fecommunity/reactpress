@@ -29,11 +29,15 @@ export function parseGlobalSettingRaw(raw: unknown): GlobalSettingWithConfig {
   return {};
 }
 
+type ManifestWithOptions = {
+  options?: ThemeConfigurationSchema;
+};
+
 export function getConfigurationSchemaFromManifest(
-  manifest: { reactpress?: { configuration?: ThemeConfigurationSchema } } | null | undefined,
+  manifest: ManifestWithOptions | null | undefined,
   themeId: string,
 ): ThemeConfigurationSchema | null {
-  const fromManifest = manifest?.reactpress?.configuration;
+  const fromManifest = manifest?.options;
   if (fromManifest && fromManifest.type === 'object') return fromManifest;
   return getThemeConfigurationSchema(themeId);
 }
@@ -41,7 +45,7 @@ export function getConfigurationSchemaFromManifest(
 export function getMergedThemeConfiguration(
   globalRaw: unknown,
   themeId: string,
-  options?: { locale?: string; manifest?: { reactpress?: { configuration?: ThemeConfigurationSchema } } },
+  options?: { locale?: string; manifest?: ManifestWithOptions },
 ): Record<string, unknown> {
   const gs = parseGlobalSettingRaw(globalRaw);
   const schema =
@@ -90,8 +94,8 @@ export function resolveSiteConfig(
   globalRaw: unknown,
   themeId: string,
   locale = 'zh',
-  manifest?: { reactpress?: { configuration?: ThemeConfigurationSchema } },
-  /** Draft theme config from customizer preview query (not persisted). */
+  manifest?: ManifestWithOptions,
+  /** Draft theme config from appearance preview query (not persisted). */
   configOverride?: Record<string, unknown>,
 ): ResolvedSiteConfig {
   const merged = getMergedThemeConfiguration(globalRaw, themeId, { locale, manifest });
@@ -128,7 +132,7 @@ export function validateAndMergeThemeConfiguration(
   themeId: string,
   globalRaw: unknown,
   patch: Record<string, unknown>,
-  manifest?: { reactpress?: { configuration?: ThemeConfigurationSchema } },
+  manifest?: ManifestWithOptions,
 ): { ok: true; config: Record<string, unknown> } | { ok: false; message: string } {
   const schema = getConfigurationSchemaFromManifest(manifest ?? null, themeId);
   const current = getMergedThemeConfiguration(globalRaw, themeId, { manifest });

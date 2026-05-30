@@ -1,4 +1,4 @@
-import { App, Badge, Button, Col, Row, Spin, Typography } from "antd";
+import { App, Badge, Button, Spin, Typography } from "antd";
 import { Plus } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useMemo, useState } from "react";
@@ -125,19 +125,18 @@ export function ThemesPage() {
             {t("appearance.catalogEmpty")}
           </Typography.Text>
         ) : (
-          <Row gutter={[20, 20]} className={styles.themeGrid}>
+          <div className={styles.themeGrid}>
             {catalog.map((theme) => (
-              <Col xs={24} sm={12} lg={8} xl={6} key={theme.id}>
-                <ThemeCard
-                  theme={theme}
-                  onInstall={(id) => void handleInstall(id)}
-                  onActivate={(id) => void handleActivate(id)}
-                  installing={installMutation.isPending && installMutation.variables === theme.id}
-                  activating={activateMutation.isPending && activateMutation.variables === theme.id}
-                />
-              </Col>
+              <ThemeCard
+                key={theme.id}
+                theme={theme}
+                onInstall={(id) => void handleInstall(id)}
+                onActivate={(id) => void handleActivate(id)}
+                installing={installMutation.isPending && installMutation.variables === theme.id}
+                activating={activateMutation.isPending && activateMutation.variables === theme.id}
+              />
             ))}
-          </Row>
+          </div>
         )}
       </section>
     </div>

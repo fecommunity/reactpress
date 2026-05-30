@@ -5,11 +5,11 @@
  *   SEO, i18n, mail). Edited under admin → 设置.
  * - **Theme mods** (`THEME_BRANDING_*`): per-theme overrides in `globalSetting.theme.mods[themeId]`.
  *   Empty mod → inherit the matching system setting at runtime.
- * - **Theme-only** (footer / 关于我们): customizer only, no system setting column.
+ * - **Theme-only** (footer / 关于我们): appearance only, no system setting column.
  */
 
 import {
-  applyCustomizerModsToSiteSetting,
+  applyThemeModsToSiteSetting,
   seedThemeModsFromLegacySetting,
   THEME_BRANDING_DIRECT_MODS,
   THEME_BRANDING_MOD_TO_SETTING,
@@ -24,7 +24,7 @@ import {
 export {
   THEME_BRANDING_DIRECT_MODS,
   THEME_BRANDING_MOD_TO_SETTING,
-  applyCustomizerModsToSiteSetting,
+  applyThemeModsToSiteSetting,
   seedThemeModsFromLegacySetting,
 } from './branding-mods';
 
@@ -160,7 +160,7 @@ export function resolveEffectiveSettingRow<T extends Record<string, unknown>>(
   );
   const id = themeId ?? themeState.activeTheme;
   const mods = themeState.mods[id] ?? {};
-  return applyCustomizerModsToSiteSetting(row, mods);
+  return applyThemeModsToSiteSetting(row, mods);
 }
 
 /** Public API view: system keys + branding overlay + globalSetting. */

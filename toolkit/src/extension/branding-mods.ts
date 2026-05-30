@@ -48,7 +48,7 @@ export function seedThemeModsFromLegacySetting(
 }
 
 /** Overlay theme mods onto a Setting-shaped object for theme runtime & mail templates. */
-export function applyCustomizerModsToSiteSetting<T extends Record<string, unknown>>(
+export function applyThemeModsToSiteSetting<T extends Record<string, unknown>>(
   setting: T,
   mods: ThemeMods,
 ): T {

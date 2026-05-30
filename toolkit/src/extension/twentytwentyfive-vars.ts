@@ -70,24 +70,20 @@ function buildModeColorDeclarations(mods: ThemeMods, keys: ColorModKeys): string
   return declarations;
 }
 
-/** Page / card background from customizer (`backgroundColor` mod, light mode). */
-export function customizerBackgroundColor(mods: ThemeMods, fallback?: string): string | undefined {
+export function appearanceBackgroundColor(mods: ThemeMods, fallback?: string): string | undefined {
   const v = brandingModValue(mods, LIGHT_COLOR_KEYS.background);
   return normalizeHexColor(v) ?? (fallback ? normalizeHexColor(fallback) : undefined);
 }
 
-/** Secondary surface color (`secondaryBackgroundColor` mod, light mode). */
-export function customizerSecondaryBackgroundColor(mods: ThemeMods): string | undefined {
+export function appearanceSecondaryBackgroundColor(mods: ThemeMods): string | undefined {
   return normalizeHexColor(brandingModValue(mods, LIGHT_COLOR_KEYS.secondaryBackground));
 }
 
-/** Link accent (`linkColor` mod, light mode). */
-export function customizerLinkColor(mods: ThemeMods): string | undefined {
+export function appearanceLinkColor(mods: ThemeMods): string | undefined {
   return normalizeHexColor(brandingModValue(mods, LIGHT_COLOR_KEYS.link));
 }
 
-/** Primary color for Ant Design / CSS (respects light vs dark visitor toggle). */
-export function customizerPrimaryColorForMode(
+export function appearancePrimaryColorForMode(
   mods: ThemeMods,
   dark: boolean,
   fallback = '#f44336',
@@ -100,11 +96,8 @@ export function customizerPrimaryColorForMode(
   );
 }
 
-/**
- * Maps Twenty Twenty-Five customizer color mods to theme CSS variables
- * (`body:not(.dark)` for light, `body.dark` for dark).
- */
-export function buildTwentyTwentyFiveCustomizerCss(mods: ThemeMods): string {
+/** Maps Twenty Twenty-Five appearance color mods to theme CSS variables. */
+export function buildTwentyTwentyFiveAppearanceCss(mods: ThemeMods): string {
   const lightDecl = buildModeColorDeclarations(mods, LIGHT_COLOR_KEYS);
   const darkDecl = buildModeColorDeclarations(mods, DARK_COLOR_KEYS);
   const blocks: string[] = [];

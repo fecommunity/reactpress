@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as fs from 'fs';
 import * as path from 'path';
 import { Repository } from 'typeorm';
+import { readThemeAdminLocaleFile } from '@fecommunity/reactpress-toolkit/extension/node';
 import {
   defaultSiteThemeState,
   getConfigurationSchemaFromManifest,
@@ -17,6 +18,7 @@ import {
 } from '@fecommunity/reactpress-toolkit/extension';
 import type {
   SiteThemeState,
+  ThemeAdminLocaleMessages,
   ThemeConfigurationSchema,
   ThemeManifest,
   ThemeMods,
@@ -29,7 +31,7 @@ export interface ThemeListItem extends ThemeManifest {
   source: 'starter' | 'installed';
   installed: boolean;
   active: boolean;
-  screenshotUrl?: string;
+  coverUrl?: string;
 }
 
 export type ThemePreviewSessionResult = SiteThemeState & {
@@ -88,23 +90,17 @@ export class ThemeService {
     return path.join(projectRoot(), 'templates');
   }
 
-  /** Runtime copies may lag behind templates — keep customizer schema in sync for admin UI. */
-  private applyTemplateCustomizerSchema(manifest: ThemeManifest): ThemeManifest {
+  /** Runtime copies may lag behind templates — keep appearance schema in sync for admin UI. */
+  private applyTemplateAppearanceSchema(manifest: ThemeManifest): ThemeManifest {
     const templatePath = path.join(this.templatesDir(), manifest.id);
     const template = this.readManifest(templatePath);
     if (!template) return manifest;
     let next = manifest;
-    if (template.customizer?.sections?.length) {
-      next = { ...next, customizer: template.customizer };
+    if (template.appearance?.sections?.length) {
+      next = { ...next, appearance: template.appearance };
     }
-    if (template.reactpress?.configuration) {
-      next = {
-        ...next,
-        reactpress: {
-          ...next.reactpress,
-          configuration: template.reactpress.configuration,
-        },
-      };
+    if (template.options) {
+      next = { ...next, options: template.options };
     }
     return next;
   }
@@ -176,13 +172,13 @@ export class ThemeService {
 
     const add = (manifest: ThemeManifest, source: 'starter' | 'installed') => {
       const installed = installedSet.has(manifest.id) || source === 'installed';
-      const merged = this.applyTemplateCustomizerSchema(manifest);
+      const merged = this.applyTemplateAppearanceSchema(manifest);
       byId.set(merged.id, {
         ...merged,
         source,
         installed,
         active: state.activeTheme === merged.id,
-        screenshotUrl: `/api/extension/themes/${merged.id}/screenshot`,
+        coverUrl: `/api/extension/themes/${merged.id}/cover`,
       });
     };
 
@@ -205,10 +201,56 @@ export class ThemeService {
     return found;
   }
 
+  /** Customizer copy from `themes/{id}/locales/{locale}.json`. */
+  async getThemeAdminLocale(
+    themeId: string,
+    locale: string,
+  ): Promise<{ themeId: string; locale: string; messages: ThemeAdminLocaleMessages }> {
+    if (!this.isValidThemeId(themeId)) {
+      throw new BadRequestException(`Invalid theme id "${themeId}"`);
+    }
+    const dirs = this.themeLocaleSearchDirs(themeId);
+    if (dirs.length === 0) {
+      throw new NotFoundException(`Theme "${themeId}" not found`);
+    }
+
+    const safeLocale = /^[a-z]{2}(?:-[a-z]{2})?$/i.test(locale) ? locale : 'en';
+    for (const dir of dirs) {
+      const messages = readThemeAdminLocaleFile(dir, safeLocale);
+      if (messages) {
+        return { themeId, locale: safeLocale, messages };
+      }
+    }
+
+    return { themeId, locale: safeLocale, messages: {} };
+  }
+
+  /** Prefer bundled template copy over ephemeral runtime install. */
+  private themeLocaleSearchDirs(themeId: string): string[] {
+    const seen = new Set<string>();
+    const ordered: string[] = [];
+    const push = (dir: string | null) => {
+      if (!dir || seen.has(dir)) return;
+      seen.add(dir);
+      ordered.push(dir);
+    };
+
+    const template = path.join(this.templatesDir(), themeId);
+    if (
+      fs.existsSync(template) &&
+      !THEMES_RESERVED_SUBDIRS.has(themeId) &&
+      this.isUnderDir(template, this.templatesDir())
+    ) {
+      push(template);
+    }
+    push(this.resolveThemeDir(themeId));
+    return ordered;
+  }
+
   private getThemeManifestForConfig(themeId: string): ThemeManifest | null {
     const dir = this.resolveThemeDir(themeId);
     if (!dir) return null;
-    return this.applyTemplateCustomizerSchema(this.readManifest(dir) as ThemeManifest);
+    return this.applyTemplateAppearanceSchema(this.readManifest(dir) as ThemeManifest);
   }
 
   async getThemeConfigurationSchema(themeId: string): Promise<{
@@ -252,7 +294,7 @@ export class ThemeService {
     if (!manifest) throw new NotFoundException(`Theme "${themeId}" not found`);
     const schema = getConfigurationSchemaFromManifest(manifest, themeId);
     if (!schema) {
-      throw new BadRequestException(`Theme "${themeId}" does not declare reactpress.configuration`);
+      throw new BadRequestException(`Theme "${themeId}" does not declare options schema`);
     }
 
     const row = await this.getSettingRow();
@@ -539,25 +581,25 @@ export class ThemeService {
     return { ...saved, siteUrl: this.resolveSiteUrlFromRow(row) };
   }
 
-  getScreenshotPath(id: string): string | null {
+  getCoverPath(id: string): string | null {
     const dir = this.resolveThemeDir(id);
     if (!dir) return null;
-    const candidates = ['screenshot.png', 'screenshot.jpg', 'screenshot.webp'];
+    const candidates = ['cover.png', 'cover.jpg', 'cover.webp', 'cover.jpeg'];
     for (const file of candidates) {
       const full = path.join(dir, file);
       if (fs.existsSync(full)) return full;
     }
     const manifest = this.readManifest(dir);
-    if (manifest?.screenshot) {
-      const fromManifest = path.join(dir, manifest.screenshot);
+    if (manifest?.cover) {
+      const fromManifest = path.join(dir, manifest.cover);
       if (fs.existsSync(fromManifest)) return fromManifest;
     }
     return null;
   }
 
-  private themeCustomizerDefaults(manifest: ThemeManifest | null): ThemeMods {
+  private themeAppearanceDefaults(manifest: ThemeManifest | null): ThemeMods {
     const defaults: ThemeMods = {};
-    for (const section of manifest?.customizer?.sections ?? []) {
+    for (const section of manifest?.appearance?.sections ?? []) {
       for (const setting of section.settings ?? []) {
         if (setting.default) defaults[setting.id] = setting.default;
       }
@@ -565,11 +607,11 @@ export class ThemeService {
     return defaults;
   }
 
-  buildPlaceholderScreenshotSvg(id: string): string {
+  buildPlaceholderCoverSvg(id: string): string {
     const dir = this.resolveThemeDir(id);
     const manifest = dir ? this.readManifest(dir) : null;
     const name = manifest?.name ?? id;
-    const defaults = this.themeCustomizerDefaults(manifest);
+    const defaults = this.themeAppearanceDefaults(manifest);
     const primary = defaults.primaryColor ?? '#2271b1';
     const accent = defaults.accentColor ?? '#72aee6';
     const safeName = name.replace(/[<>&"']/g, (ch) => {

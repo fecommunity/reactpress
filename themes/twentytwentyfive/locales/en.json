@@ -1,0 +1,153 @@
+{
+  "meta": {
+    "description": "Full-featured blog theme (posts, categories, tags, archives, knowledge base, and custom pages).",
+    "tags": ["Blog", "Full-featured"]
+  },
+  "panels": {
+    "basic": {
+      "title": "Basics",
+      "description": "Site information and footer"
+    },
+    "style": {
+      "title": "Style",
+      "description": "Colors and background"
+    },
+    "layout": {
+      "title": "Layout",
+      "description": "Navigation and page structure"
+    }
+  },
+  "sections": {
+    "identity": {
+      "title": "Site identity"
+    },
+    "about": {
+      "title": "About & footer"
+    },
+    "colors": {
+      "title": "Colors",
+      "description": "Matches the light/dark toggle in the site header; configure light and dark modes separately",
+      "groups": {
+        "light": {
+          "title": "Light mode",
+          "description": "Applies when visitors disable dark mode"
+        },
+        "dark": {
+          "title": "Dark mode",
+          "description": "Applies when visitors enable dark mode"
+        }
+      }
+    },
+    "background": {
+      "title": "Background image"
+    },
+    "themeConfiguration": {
+      "title": "Header & link directory",
+      "description": "Fixed navigation, /nav cards, and aggregated search"
+    }
+  },
+  "settings": {
+    "displayTitle": {
+      "label": "Site title",
+      "description": "Leave empty to inherit from Settings → General"
+    },
+    "displayTagline": {
+      "label": "Site tagline",
+      "description": "Leave empty to inherit from Settings → General"
+    },
+    "siteLogo": {
+      "label": "Site logo",
+      "description": "Leave empty to inherit from Settings → General"
+    },
+    "siteFavicon": {
+      "label": "Site favicon",
+      "description": "Leave empty to inherit from Settings → General"
+    },
+    "siteNotice": {
+      "label": "Site notices",
+      "description": "Inherits from Settings → General when unset; configure multiple notices and order for this theme"
+    },
+    "systemFooterInfo": {
+      "label": "Footer text",
+      "description": "HTML supported"
+    },
+    "aboutUsGithubUrl": {
+      "label": "GitHub link",
+      "description": "Header and footer GitHub icon; hidden when empty"
+    },
+    "aboutUsCommentQr": {
+      "label": "Community / comment QR code",
+      "description": "Image shown on hover"
+    },
+    "aboutUsWechatQr": {
+      "label": "WeChat QR code",
+      "description": "Image shown on hover"
+    },
+    "primaryColor": {
+      "label": "Primary color"
+    },
+    "backgroundColor": {
+      "label": "Background color",
+      "description": "Page and content background; main area becomes transparent when a background image is set"
+    },
+    "secondaryBackgroundColor": {
+      "label": "Secondary background",
+      "description": "Cards, gaps, sidebar areas"
+    },
+    "linkColor": {
+      "label": "Link color",
+      "description": "Links in Markdown body text"
+    },
+    "darkPrimaryColor": {
+      "label": "Primary color"
+    },
+    "darkBackgroundColor": {
+      "label": "Background color",
+      "description": "Page and main content background"
+    },
+    "darkSecondaryBackgroundColor": {
+      "label": "Secondary background",
+      "description": "Cards, header, sidebar areas"
+    },
+    "darkLinkColor": {
+      "label": "Link color",
+      "description": "Links in Markdown body text"
+    },
+    "backgroundImage": {
+      "label": "Background image",
+      "description": "Overrides solid background when set (visible on wide screens)"
+    }
+  },
+  "options": {
+    "title": "Twenty Twenty-Five",
+    "description": "Header navigation, /nav link directory, and aggregated search",
+    "header": {
+      "title": "Header",
+      "navLinks": {
+        "title": "Fixed navigation links",
+        "items": {
+          "path": {
+            "title": "Path"
+          },
+          "locale": {
+            "title": "i18n key",
+            "description": "Key in the site i18n bundle (e.g. home, nav). zh/en strings live in database setting.i18n, merged with toolkit language packs by default."
+          },
+          "label": {
+            "title": "Fixed label",
+            "description": "Same text in every language; leave empty to use the locale key for translation."
+          }
+        }
+      }
+    },
+    "nav": {
+      "title": "Link directory",
+      "urlConfig": {
+        "title": "Navigation card groups"
+      },
+      "searchCategories": {
+        "title": "Aggregated search categories"
+      }
+    }
+  }
+}

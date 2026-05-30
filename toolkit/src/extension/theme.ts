@@ -1,114 +1,74 @@
 /** WordPress-style theme manifest and site theme state (shared by server / web / themes). */
 
 import type { ThemeConfigurationSchema } from './configuration/types';
+import { normalizeAppearance, normalizePlatformFields } from './manifest-normalize';
 
-export interface ThemeCustomizerChoice {
+export interface ThemeAppearanceChoice {
   value: string;
   label: string;
 }
 
-/** WordPress Customizer–style control (declared in `theme.json` → `customizer.sections`). */
-export interface ThemeCustomizerSetting {
+/** Appearance control (declared in `theme.json` → `appearance.sections`). */
+export interface ThemeAppearanceSetting {
   id: string;
   type: 'color' | 'text' | 'image' | 'textarea' | 'checkbox' | 'select' | 'noticeList';
   label: string;
   default?: string;
-  /** Shown below the control (like WP customize control descriptions). */
   description?: string;
-  /** For `type: "select"`. */
-  choices?: ThemeCustomizerChoice[];
-  /** Sub-group within a section panel (e.g. light vs dark colors). */
-  settingGroup?: string;
-}
-
-/** Sidebar nav category (基础 / 样式 / 布局). */
-export interface ThemeCustomizerGroup {
-  id: string;
-  title: string;
-  description?: string;
-}
-
-/** Visual block inside a section detail panel. */
-export interface ThemeCustomizerSettingGroup {
-  id: string;
-  title: string;
-  description?: string;
-}
-
-export interface ThemeCustomizerSection {
-  id: string;
-  title: string;
-  /** Nav category id (`customizer.groups[].id`). */
+  choices?: ThemeAppearanceChoice[];
+  /** Sub-group within a section (e.g. light vs dark colors). */
   group?: string;
-  /** Inline controls; omit when `panel` is set. */
-  settings?: ThemeCustomizerSetting[];
-  /** Blocks inside the section panel (e.g. 浅色 / 深色). */
-  settingGroups?: ThemeCustomizerSettingGroup[];
-  /** Inline theme JSON Schema form inside customizer (no separate admin page). */
-  panel?: 'configuration';
+}
+
+/** Sidebar nav panel (Site Identity, Colors, …). */
+export interface ThemeAppearancePanel {
+  id: string;
+  title: string;
   description?: string;
 }
 
-export interface ThemeCustomizerManifest {
-  groups?: ThemeCustomizerGroup[];
-  sections: ThemeCustomizerSection[];
+/** Control group inside a section panel (e.g. Light / Dark). */
+export interface ThemeAppearanceGroup {
+  id: string;
+  title: string;
+  description?: string;
 }
 
-import {
-  applyCustomizerModsToSiteSetting,
-  brandingModValue,
-  seedThemeModsFromLegacySetting,
-  THEME_BRANDING_DIRECT_MODS,
-  THEME_BRANDING_MOD_TO_SETTING,
-  type ThemeMods,
-} from './branding-mods';
+export interface ThemeAppearanceSection {
+  id: string;
+  title: string;
+  /** Nav panel id (`appearance.panels[].id`). */
+  panel?: string;
+  settings?: ThemeAppearanceSetting[];
+  groups?: ThemeAppearanceGroup[];
+  /** Embed the theme `options` schema form instead of inline controls. */
+  embed?: 'options';
+  description?: string;
+}
+
+export interface ThemeAppearanceManifest {
+  panels?: ThemeAppearancePanel[];
+  sections: ThemeAppearanceSection[];
+}
 
 export {
-  applyCustomizerModsToSiteSetting,
+  applyThemeModsToSiteSetting,
   seedThemeModsFromLegacySetting,
   THEME_BRANDING_DIRECT_MODS,
   THEME_BRANDING_MOD_TO_SETTING,
 } from './branding-mods';
 
-/** @deprecated Use THEME_BRANDING_MOD_TO_SETTING */
-export const CUSTOMIZER_MOD_TO_SETTING_KEY = THEME_BRANDING_MOD_TO_SETTING;
+export type { ThemeMods } from './branding-mods';
 
-/** @deprecated Use THEME_BRANDING_DIRECT_MODS */
-export const CUSTOMIZER_DIRECT_SETTING_KEYS = THEME_BRANDING_DIRECT_MODS;
+import { appearancePrimaryColorForMode } from './twentytwentyfive-vars';
+import type { ThemeMods } from './branding-mods';
 
-export type CustomizerDirectSettingKey = (typeof THEME_BRANDING_DIRECT_MODS)[number];
+export { appearancePrimaryColorForMode } from './twentytwentyfive-vars';
 
-/** @deprecated Use THEME_BRANDING_DIRECT_MODS */
-export const CUSTOMIZER_SITE_SETTING_KEYS = THEME_BRANDING_DIRECT_MODS;
-
-export type CustomizerSiteSettingKey = CustomizerDirectSettingKey;
-
-/**
- * @deprecated Appearance is stored in `globalSetting.theme.mods`; do not PATCH Setting columns.
- */
-export function pickCustomizerSiteSettings(mods: ThemeMods): Record<string, string> {
-  const out: Record<string, string> = {};
-  for (const [modId, settingKey] of Object.entries(THEME_BRANDING_MOD_TO_SETTING)) {
-    const v = brandingModValue(mods, modId);
-    if (v) out[settingKey] = v;
-  }
-  for (const key of THEME_BRANDING_DIRECT_MODS) {
-    const v = brandingModValue(mods, key);
-    if (v) out[key] = v;
-  }
-  return out;
+/** Primary color from appearance mods (Ant Design / CSS), light mode. */
+export function appearancePrimaryColor(mods: ThemeMods, fallback = '#f44336'): string {
+  return appearancePrimaryColorForMode(mods, false, fallback);
 }
-
-/** @deprecated Use seedThemeModsFromLegacySetting */
-export const seedCustomizerModsFromSiteSetting = seedThemeModsFromLegacySetting;
-
-/** Primary color from customizer mods (Ant Design / CSS), light mode. */
-export function customizerPrimaryColor(mods: ThemeMods, fallback = '#f44336'): string {
-  const v = brandingModValue(mods, 'primaryColor');
-  return v && String(v).trim() ? String(v).trim() : fallback;
-}
-
-export { customizerPrimaryColorForMode } from './twentytwentyfive-vars';
 
 export interface ThemeManifest {
   id: string;
@@ -117,25 +77,21 @@ export interface ThemeManifest {
   description?: string;
   author?: string;
   authorUri?: string;
+  themeUri?: string;
   tags?: string[];
-  screenshot?: string;
-  reactpress?: {
-    requires?: string;
-    templates?: Record<string, string>;
-    supports?: Record<string, unknown>;
-    /** JSON Schema for site config (`globalSetting.config[themeId]`). */
-    configuration?: ThemeConfigurationSchema;
-  };
-  customizer?: ThemeCustomizerManifest;
+  /** Theme cover image path (relative to theme root). Shown in admin theme list / preview. */
+  cover?: string;
+  requires?: string;
+  supports?: Record<string, unknown>;
+  templates?: Record<string, string>;
+  options?: ThemeConfigurationSchema;
+  appearance?: ThemeAppearanceManifest;
 }
-
-export type { ThemeMods } from './branding-mods';
 
 export interface SiteThemeState {
   activeTheme: string;
   installedThemes: string[];
   mods: Record<string, ThemeMods>;
-  /** Theme id shown in customizer preview (may differ from active until publish). */
   previewThemeId?: string;
 }
 
@@ -159,6 +115,10 @@ export function parseThemeManifest(raw: unknown): ThemeManifest | null {
   if (!raw || typeof raw !== 'object') return null;
   const o = raw as Record<string, unknown>;
   if (typeof o.id !== 'string' || typeof o.name !== 'string') return null;
+
+  const platform = normalizePlatformFields(o);
+  const appearance = normalizeAppearance(o.appearance);
+
   return {
     id: o.id,
     name: o.name,
@@ -166,20 +126,11 @@ export function parseThemeManifest(raw: unknown): ThemeManifest | null {
     description: typeof o.description === 'string' ? o.description : undefined,
     author: typeof o.author === 'string' ? o.author : undefined,
     authorUri: typeof o.authorUri === 'string' ? o.authorUri : undefined,
+    themeUri: typeof o.themeUri === 'string' ? o.themeUri : undefined,
     tags: Array.isArray(o.tags) ? o.tags.filter((t): t is string => typeof t === 'string') : undefined,
-    screenshot: typeof o.screenshot === 'string' ? o.screenshot : undefined,
-    reactpress:
-      o.reactpress && typeof o.reactpress === 'object'
-        ? (o.reactpress as ThemeManifest['reactpress'])
-        : o.configuration && typeof o.configuration === 'object'
-          ? {
-              configuration: o.configuration as ThemeConfigurationSchema,
-            }
-          : undefined,
-    customizer:
-      o.customizer && typeof o.customizer === 'object'
-        ? (o.customizer as ThemeManifest['customizer'])
-        : undefined,
+    cover: typeof o.cover === 'string' ? o.cover : undefined,
+    ...platform,
+    appearance,
   };
 }
 

@@ -1,24 +1,23 @@
 {
+  "$schema": "../theme.manifest.schema.json",
   "id": "hello-world",
   "name": "Hello World",
   "version": "1.0.0",
   "description": "Hello Elementor 风格的入门主题，含文章、分类、标签与搜索等基础模板。",
   "author": "ReactPress",
   "tags": ["入门", "博客", "Hello"],
-  "reactpress": {
-    "requires": ">=3.0.0",
-    "supports": { "darkMode": true, "menus": ["primary"] },
-    "templates": {
-      "home": "pages/index.tsx",
-      "single": "pages/article/[id].tsx",
-      "page": "pages/about.tsx",
-      "archive-category": "pages/category/[category].tsx",
-      "archive-tag": "pages/tag/[tag].tsx",
-      "search": "pages/search.tsx",
-      "404": "pages/404.tsx"
-    }
+  "requires": ">=3.0.0",
+  "supports": { "darkMode": true, "menus": ["primary"] },
+  "templates": {
+    "home": "pages/index.tsx",
+    "single": "pages/article/[id].tsx",
+    "page": "pages/about.tsx",
+    "archive-category": "pages/category/[category].tsx",
+    "archive-tag": "pages/tag/[tag].tsx",
+    "search": "pages/search.tsx",
+    "404": "pages/404.tsx"
   },
-  "customizer": {
+  "appearance": {
     "sections": [
       {
         "id": "identity",

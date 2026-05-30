@@ -3,6 +3,7 @@ import { Button, Tag, Typography } from "antd";
 import { useTranslation } from "react-i18next";
 
 import type { ThemeListItem } from "@/hooks/useThemes";
+import { useThemeListItemMeta } from "@/hooks/useThemeListItemMeta";
 import styles from "@/modules/appearance/components/themes-page.module.css";
 
 type Props = {
@@ -12,14 +13,15 @@ type Props = {
 export function ActiveThemePanel({ theme }: Props) {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { description, tags } = useThemeListItemMeta(theme);
 
   return (
     <section className={styles.activePanel} data-testid="active-theme-panel">
       <div className={styles.activePreview}>
-        {theme.screenshotUrl ? (
+        {theme.coverUrl ? (
           <img
             className={styles.previewShot}
-            src={theme.screenshotUrl}
+            src={theme.coverUrl}
             alt={theme.name}
             onError={(e) => {
               (e.target as HTMLImageElement).style.display = "none";
@@ -42,14 +44,14 @@ export function ActiveThemePanel({ theme }: Props) {
             {t("appearance.author", { author: theme.author })}
           </Typography.Paragraph>
         ) : null}
-        {theme.description ? (
+        {description ? (
           <Typography.Paragraph className={styles.activeDescription}>
-            {theme.description}
+            {description}
           </Typography.Paragraph>
         ) : null}
-        {theme.tags && theme.tags.length > 0 ? (
+        {tags.length > 0 ? (
           <div className={styles.activeTags}>
-            {theme.tags.map((tag) => (
+            {tags.map((tag) => (
               <Tag key={tag} className={styles.featureTag}>
                 {tag}
               </Tag>

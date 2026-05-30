@@ -1,10 +1,10 @@
 import type { ThemeManifest } from '../extension/theme';
 import type { ThemeMods } from '../extension/theme';
 
-/** Build default customizer mods from `theme.json` (like WP theme_mod defaults). */
+/** Build default theme_mod values from `theme.json` → `appearance.sections`. */
 export function defaultModsFromManifest(manifest: ThemeManifest | null | undefined): ThemeMods {
   const mods: ThemeMods = {};
-  const sections = manifest?.customizer?.sections ?? [];
+  const sections = manifest?.appearance?.sections ?? [];
   for (const section of sections) {
     for (const setting of section.settings ?? []) {
       if (setting.id && setting.default != null) {

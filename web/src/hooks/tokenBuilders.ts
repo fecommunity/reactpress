@@ -71,7 +71,7 @@ export const MENU_DARK = {
   horizontalItemHoverColor: "rgba(255, 255, 255, 0.85)",
 } as const;
 
-/** WordPress admin sidebar (always dark). */
+/** Admin sidebar palette (always dark). */
 export const MENU_WP_SIDEBAR = {
   darkItemBg: WP_ADMIN.sidebarBg,
   darkSubMenuItemBg: WP_ADMIN.sidebarSubmenuBg,

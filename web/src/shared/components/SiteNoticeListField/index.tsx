@@ -14,9 +14,9 @@ import styles from "@/shared/components/SiteNoticeListField/site-notice-list-fie
 export type SiteNoticeListFieldProps = {
   value?: string;
   onChange?: (value: string) => void;
-  /** When `value` is empty, display notices from site settings (theme customizer inherit). */
+  /** When `value` is empty, display notices from site settings (theme appearance inherit). */
   inheritFrom?: string;
-  /** Show「继承全站」banner and reset button (customizer). */
+  /** Show「继承全站」banner and reset button (appearance editor). */
   showInheritHint?: boolean;
 };
 

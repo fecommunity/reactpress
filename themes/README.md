@@ -20,24 +20,28 @@
 | `themes/twentytwentysix` | **client 迁移主题**（双栏 + 知识库/归档/导航/RSS） |
 | `.reactpress/runtime/{theme-id}/` | 安装后的临时运行时副本（随 `.reactpress/` gitignore） |
 
+## Theme Manifest（`theme.json`）
+
+主题清单的字段命名、Customizer 层级与 WordPress 对照见 **[THEME-MANIFEST.md](./THEME-MANIFEST.md)**；JSON Schema 见 **[theme.manifest.schema.json](./theme.manifest.schema.json)**。新建主题时在 `theme.json` 顶部加 `"$schema": "../theme.manifest.schema.json"` 可启用编辑器校验。
+
 ## WordPress 概念对照
 
 | WordPress | ReactPress |
 |-----------|------------|
-| `style.css` + 主题头 | `theme.json` |
+| `style.css` + 主题头 | `theme.json`（见 [THEME-MANIFEST.md](./THEME-MANIFEST.md)） |
 | `functions.php` | `pages/_app.tsx` → `createThemeApp(manifest)` |
 | `header.php` / `footer.php` | `components/Header.tsx` / `Footer.tsx` |
-| 模板层级 `front-page.php` 等 | `theme.json` → `reactpress.templates` + `pages/*` |
+| 模板层级 `front-page.php` 等 | `theme.json` → `templates` + `pages/*` |
 | `get_header()` / `the_loop` | `SiteDocument` + `ArticleList` |
-| `theme_mod` / Customizer | `theme.json` → `customizer.sections`；后台「外观 → 自定义」；`useThemeMod` / `useThemeModBool` + `ThemeCssVars` |
-| Site Identity / Colors / Background / Excerpt / Additional CSS | 在 `customizer.sections` 声明 `text` `color` `image` `checkbox` `select` `textarea` 控件 |
+| `theme_mod` / Customizer | `theme.json` → `appearance.sections`；后台「外观 → 自定义」；`useThemeMod` + `ThemeCssVars` |
+| Site Identity / Colors / Background | 在 `appearance.sections` 声明 `text` `color` `image` `checkbox` `select` `textarea` 控件 |
 | `__()` 翻译 | `useLocale().t('archives')` |
 | `home_url()` | `articlePath` / `categoryPath` / `tagPath` |
 
 ## 开发新主题（最低成本）
 
 1. **复制** `themes/hello-world/` → `themes/my-theme/`
-2. 修改 **`theme.json`**（`id`、`name`、customizer 默认值）
+2. 修改 **`theme.json`**（`id`、`name`、`appearance` 默认值）
 3. 编写 **`components/Header.tsx`**（`NAV` 数组 + `NavMenu`）
 4. 按需增加页面，数据层只用 toolkit：
 
@@ -71,7 +75,7 @@ export const getStaticProps = async ({ params }) => {
 
 ### 按需扩展模板
 
-在 `theme.json` 声明 `reactpress.templates`，从 `twentytwentyfive` 复制对应 `pages/` 文件，将 `getStaticProps` 改为 toolkit 的 `fetch*` 即可。
+在 `theme.json` 声明 `templates`，从 `twentytwentyfive` 复制对应 `pages/` 文件，将 `getStaticProps` 改为 toolkit 的 `fetch*` 即可。
 
 ## 品牌资源
 
