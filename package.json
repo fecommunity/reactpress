@@ -30,6 +30,7 @@
     "build:client": "pnpm run --dir ./client build",
     "build:web": "pnpm run --dir ./toolkit build && pnpm run --dir ./web build",
     "build:docs": "pnpm run --dir ./docs build",
+    "clean": "node ./scripts/clean.mjs",
     "start": "node ./cli/bin/reactpress.js server start",
     "start:bg": "node ./cli/bin/reactpress.js server start --bg",
     "start:client": "pnpm run --dir ./client start",

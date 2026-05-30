@@ -10,4 +10,5 @@ packages:
   # 工具包
   - 'toolkit'
   # 官方主题包
-  - 'themes/*'
+  - 'themes/client'
+  - 'themes/hello-world'
