@@ -1,18 +1,20 @@
 .wrapper {
+  box-sizing: border-box;
   height: 100%;
   display: flex;
   flex-direction: column;
+  padding: 16px;
   background: var(--editor-surface);
 }
 
 .header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 8px 12px;
+  justify-content: space-between;
+  margin-bottom: 12px;
   font-weight: 600;
+  line-height: 22px;
   color: var(--editor-text);
-  border-bottom: 1px solid var(--editor-border-secondary);
 }
 
 .closeBtn {
@@ -32,10 +34,30 @@
   background: var(--editor-hover-bg);
 }
 
-.body {
+.main {
   flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.scroll {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  padding: 0 10px;
   overflow: auto;
-  padding: 8px 12px;
+}
+
+.scroll::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  background: transparent;
+}
+
+.track {
+  position: relative;
+  color: var(--editor-text);
 }
 
 .empty {
@@ -45,14 +67,12 @@
 
 .item {
   position: relative;
+  z-index: 10;
   padding: 4px 0 4px 12px;
-  font-size: 13px;
-  line-height: 1.5;
-  cursor: pointer;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: var(--editor-text-muted);
+  cursor: pointer;
 }
 
 .item:hover,
@@ -64,10 +84,29 @@
   position: absolute;
   top: 50%;
   left: var(--dot-left, 0);
-  width: var(--dot-width, 6px);
   height: var(--dot-width, 6px);
-  margin-top: -3px;
+  margin-top: -2px;
+  background-color: currentcolor;
   border-radius: 50%;
-  background: currentcolor;
   content: "";
+}
+
+.tocText {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.indicator {
+  position: absolute;
+  left: -4px;
+  width: 100%;
+  height: 32px;
+  padding: 4px 0 4px 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  background: var(--editor-code-bg);
+  border-radius: 2px;
+  opacity: 0.5;
+  pointer-events: none;
 }
