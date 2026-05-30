@@ -1,0 +1,65 @@
+.wrapper {
+  .operation {
+    z-index: 1000;
+    display: flex;
+    height: 56px;
+    line-height: 56px;
+    background: var(--bg);
+    justify-content: flex-end;
+    align-items: center;
+
+    button + button {
+      margin-left: 16px;
+    }
+  }
+}
+
+.formItem {
+  display: flex;
+  align-items: center;
+
+  + .formItem {
+    margin-top: 16px;
+  }
+
+  > span {
+    padding-right: 16px;
+  }
+
+  > div {
+    flex: 1;
+  }
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: var(--bg-second);
+
+  .header {
+    z-index: 1000;
+    height: 64px;
+    background-color: var(--bg-box);
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 5%);
+
+    > div {
+      height: 100%;
+    }
+
+    input {
+      padding-right: 0;
+      padding-left: 0;
+      border-top: 0;
+      border-left: 0;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+      border-right: 0;
+    }
+  }
+
+  .main {
+    flex: 1;
+    overflow: hidden;
+  }
+}

@@ -76,6 +76,24 @@ function fetchRoute(baseUrl, routePath) {
   });
 }
 
+async function mapWithConcurrency(items, concurrency, fn) {
+  if (!items.length) return [];
+  const limit = Math.max(1, Math.min(concurrency, items.length));
+  const results = new Array(items.length);
+  let index = 0;
+
+  async function worker() {
+    while (index < items.length) {
+      const i = index;
+      index += 1;
+      results[i] = await fn(items[i], i);
+    }
+  }
+
+  await Promise.all(Array.from({ length: limit }, () => worker()));
+  return results;
+}
+
 /**
  * SSR-hit theme routes on the internal dev port so Next.js compiles page chunks
  * before the browser performs client-side navigation (avoids webpack module mismatch).
@@ -87,9 +105,11 @@ async function warmupThemeDevRoutes(projectRoot) {
 
   const baseUrl = loadClientSiteUrl(projectRoot);
   const routes = collectWarmupRoutes(themeDir);
-  for (const route of routes) {
-    await fetchRoute(baseUrl, route);
-  }
+  const concurrency = Math.max(
+    1,
+    parseInt(process.env.REACTPRESS_THEME_WARMUP_CONCURRENCY || '6', 10) || 6,
+  );
+  await mapWithConcurrency(routes, concurrency, (route) => fetchRoute(baseUrl, route));
   return { ok: true, routes, themeId: activeTheme };
 }
 
@@ -97,5 +117,6 @@ module.exports = {
   WARMUP_PARAM,
   pageFileToRoute,
   collectWarmupRoutes,
+  mapWithConcurrency,
   warmupThemeDevRoutes,
 };

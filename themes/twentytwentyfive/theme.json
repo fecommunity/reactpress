@@ -1,0 +1,22 @@
+{
+  "id": "twentytwentyfive",
+  "name": "Twenty Twenty-Five",
+  "version": "3.0.4",
+  "description": "功能完整的博客主题（文章、分类、标签、归档、知识库与自定义页面）。",
+  "author": "ReactPress",
+  "tags": ["博客", "完整功能"],
+  "reactpress": {
+    "requires": ">=3.0.0",
+    "supports": { "darkMode": false, "menus": ["primary"] },
+    "templates": {
+      "home": "pages/index.tsx",
+      "single": "pages/article/[id].tsx",
+      "page": "pages/page/[id].tsx",
+      "archive-category": "pages/category/[category].tsx",
+      "archive-tag": "pages/tag/[tag].tsx",
+      "archives": "pages/archives/index.tsx",
+      "search": "pages/nav/index.tsx",
+      "404": "pages/404.tsx"
+    }
+  }
+}

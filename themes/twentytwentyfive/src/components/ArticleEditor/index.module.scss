@@ -1,0 +1,31 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: var(--bg-box);
+
+  .header {
+    z-index: 1000;
+    height: 64px;
+    background-color: var(--bg-secord);
+
+    > div {
+      height: 100%;
+    }
+
+    input {
+      padding-right: 0;
+      padding-left: 0;
+      border-top: 0;
+      border-left: 0;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+      border-right: 0;
+    }
+  }
+
+  .main {
+    flex: 1;
+    overflow: hidden;
+  }
+}

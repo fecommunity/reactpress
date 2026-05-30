@@ -205,6 +205,13 @@ function getPreviewThemePort() {
   return String(DEFAULT_PREVIEW_THEME_PORT);
 }
 
+function hasResolvableActiveTheme(projectRoot) {
+  if (!hasThemePackages(projectRoot)) return false;
+  const { activeTheme } = readActiveThemeManifest(projectRoot);
+  const themeDir = resolveThemeDirectory(projectRoot, activeTheme);
+  return Boolean(themeDir && isThemePackageDir(projectRoot, themeDir));
+}
+
 function hasThemePackages(projectRoot) {
   const { themes, runtime, legacyThemesRuntime, legacyStarter, legacyBundled } =
     themeRoots(projectRoot);
@@ -257,5 +264,6 @@ module.exports = {
   readPreviewThemeManifest,
   getPreviewThemePort,
   hasThemePackages,
+  hasResolvableActiveTheme,
   themeRoots,
 };

@@ -1,0 +1,22 @@
+// 标签颜色
+export const TAG_COLORS = [
+  'magenta',
+  'volcano',
+  'orange',
+  'gold',
+  'lime',
+  'green',
+  'cyan',
+  'blue',
+  'geekblue',
+  'purple',
+  '#2db7f5',
+  '#87d068',
+  '#108ee9',
+  '#52c41a',
+  '#f5222d',
+  '#1890ff',
+  '#faad14',
+  '#ff0064',
+  '#722ed1',
+];

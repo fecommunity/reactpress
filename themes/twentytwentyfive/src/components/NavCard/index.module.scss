@@ -1,0 +1,56 @@
+.navCardWrapper {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+
+  .card:not(:first-child) {
+    margin-top: 16px;
+  }
+
+  .icon {
+    margin-right: 8px;
+  }
+
+  .cardWrapper {
+    flex: 1;
+    * {
+      background-color: var(--bg-box) !important;
+      border: none !important;
+    }
+  }
+
+  .listItem {
+    .description {
+      height: 42px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 100%;
+      display: inline-block;
+      white-space: nowrap;
+    }
+  }
+
+  .menuWrapper {
+    margin-right: 16px;
+    display: flex;
+    .menu {
+      height: 100%;
+      padding-top: 44px;
+      background-color: var(--bg-box) !important;
+      border-radius: var(--border-radius);
+    }
+
+    .button {
+      position: absolute;
+      top: 12px;
+      background: none;
+      box-shadow: none;
+      color: var(--main-text-color);
+    }
+  }
+
+  .right {
+    flex: 1;
+    padding-left: 16px;
+  }
+}

@@ -1,0 +1,93 @@
+.container {
+  position: relative;
+  background-color: var(--bg-box);
+}
+
+.coverWrapper {
+  width: 100%;
+  max-width: 768px;
+  padding-bottom: 1.5rem;
+  margin: 0 auto;
+
+  img {
+    display: inline-block;
+    width: 100%;
+    height: auto;
+    border-radius: var(--border-radius);
+  }
+}
+
+.content {
+  max-width: 800px;
+  padding: 0 8px 21px;
+  margin: 0 auto;
+
+  > div {
+    padding-top: 0.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .content {
+    padding-right: 0;
+    padding-left: 0;
+  }
+}
+
+.commentAndArticleWrapper {
+  padding: 1rem 0;
+}
+
+.comments {
+  max-width: 800px;
+  padding: 0 16px;
+  margin: 0 auto;
+
+  .title {
+    margin-bottom: 16px;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 22px;
+    letter-spacing: 0.06em;
+    color: var(--main-text-color);
+    text-align: center;
+  }
+
+  .commentContainer {
+    margin-bottom: 16px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+  }
+}
+
+.recmmendArticles {
+  max-width: 800px;
+  padding: 0 16px;
+  margin: 0 auto;
+
+  p.title {
+    margin-bottom: 16px;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 22px;
+    letter-spacing: 0.06em;
+    color: var(--main-text-color);
+    text-align: center;
+  }
+
+  .articleContainer {
+    box-shadow: var(--box-shadow);
+    border-radius: var(--border-radius);
+
+    > div {
+      background-color: transparent !important;
+      box-shadow: none !important;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .articleContainer {
+      box-shadow: none;
+    }
+  }
+}

@@ -1,0 +1,28 @@
+.editorWrapper {
+  padding: 16px;
+  background-color: var(--bg-box);
+}
+
+.pagination {
+  color: var(--second-text-color);
+  text-align: center;
+  background-color: var(--bg-box);
+
+  :global {
+    .ant-pagination {
+      color: var(--main-text-color);
+
+      a {
+        color: inherit;
+      }
+
+      .ant-pagination-item-link {
+        color: var(--second-text-color);
+      }
+
+      .ant-pagination-item-active a {
+        color: #ff0064;
+      }
+    }
+  }
+}

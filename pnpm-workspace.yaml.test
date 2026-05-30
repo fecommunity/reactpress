@@ -10,5 +10,5 @@ packages:
   # 工具包
   - 'toolkit'
   # 官方主题包
-  - 'themes/client'
+  - 'themes/twentytwentyfive'
   - 'themes/hello-world'

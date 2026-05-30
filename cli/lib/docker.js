@@ -159,7 +159,7 @@ async function ensureDevDatabase(projectRoot) {
     return false;
   };
 
-  if (await probeMysqlHost(projectRoot) && (await finishWhenReady(8))) {
+  if (await probeMysqlHost(projectRoot) && (await finishWhenReady(4))) {
     return;
   }
 
@@ -171,7 +171,7 @@ async function ensureDevDatabase(projectRoot) {
   for (const name of new Set([container, 'reactpress_db', 'reactpress_cli_db'])) {
     spawnSync('docker', ['start', name], { stdio: 'ignore' });
   }
-  await new Promise((r) => setTimeout(r, 2500));
+  await new Promise((r) => setTimeout(r, 1000));
   if (await finishWhenReady(45)) return;
 
   if (!isPortListening(dbPort)) {

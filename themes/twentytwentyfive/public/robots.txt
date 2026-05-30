@@ -1,0 +1,10 @@
+# *
+User-agent: *
+Allow: /
+Disallow: /admin/
+
+# Host
+Host: undefined
+
+# Sitemaps
+Sitemap: undefined/sitemap.xml

@@ -13,7 +13,6 @@ const {
   isThemePackageDir,
   isAllowedThemePort,
 } = require('./theme-runtime');
-const { warmupThemeDevRoutes } = require('./theme-warmup');
 const { t } = require('./i18n');
 
 let themeChild = null;
@@ -407,9 +406,8 @@ function spawnThemeSite(projectRoot, { onClose } = {}) {
     if (onClose) onClose(code);
   });
 
-  waitForHttp(siteUrl, 120_000).then(async (ready) => {
+  waitForHttp(siteUrl, 120_000).then((ready) => {
     if (ready && runningSignature === signature) {
-      await warmupThemeDevRoutes(projectRoot);
       console.log(t('themeDev.ready', { url: siteUrl, id: activeTheme }));
     } else if (!ready && runningSignature === signature) {
       console.warn(t('themeDev.slow', { url: siteUrl }));
@@ -689,6 +687,7 @@ async function startThemeSiteWithWatch(projectRoot, { onClose } = {}) {
   const restartPreview = () => restartPreviewThemeSite(projectRoot, { onClose });
 
   restartChain = restartChain.then(() => restartThemeSite(projectRoot, { onClose }));
+  await restartChain;
 
   const stopActiveWatch = watchActiveThemeManifest(projectRoot, restartActive);
   const stopPreviewWatch = watchPreviewThemeManifest(projectRoot, restartPreview);
@@ -697,6 +696,8 @@ async function startThemeSiteWithWatch(projectRoot, { onClose } = {}) {
     stopActiveWatch();
     stopPreviewWatch();
   };
+
+  return Boolean(runningSignature && themeChild && !themeChild.killed);
 }
 
 module.exports = {

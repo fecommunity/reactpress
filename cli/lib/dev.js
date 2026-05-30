@@ -15,7 +15,12 @@ const { printDevReadyBanner } = require('./dev-banner');
 const { startDevNginx, stopDevNginx, nginxEntryUrl } = require('./nginx');
 const { ensureOriginalCwd } = require('./root');
 const { detectProjectType, hasClient, hasWeb, hasToolkit } = require('./project-type');
-const { hasThemePackages } = require('./theme-runtime');
+const {
+  hasResolvableActiveTheme,
+  hasThemePackages,
+  readActiveThemeManifest,
+} = require('./theme-runtime');
+const { shouldBuildToolkit } = require('./toolkit-build');
 const { startThemeSiteWithWatch, stopThemeSite } = require('./theme-dev');
 const { warmupThemeDevRoutes } = require('./theme-warmup');
 const { DEV_PORTS, ensureDevStackPorts, ensureApiPortFree, ensurePortFree, readEnvPort, isPortListening } =
@@ -62,6 +67,10 @@ function shutdown(signal = 'SIGINT') {
 
 async function buildToolkit(projectRoot) {
   if (!hasToolkit(projectRoot)) return;
+  if (!shouldBuildToolkit(projectRoot)) {
+    console.log(`[reactpress] ${t('dev.toolkitUpToDate')}`);
+    return;
+  }
   await runBuild('toolkit', projectRoot);
 }
 
@@ -171,21 +180,22 @@ async function spawnAdminWeb(projectRoot, { behindNginx = false, integratedStack
     env: adminEnv,
   });
 
+  webChild.on('close', (code) => {
+    if (!shuttingDown) shutdown('SIGINT');
+    process.exit(code ?? 0);
+  });
+
   const readyUrl = loadWebAdminUrl(projectRoot);
-  waitForHttp(readyUrl, CLIENT_READY_TIMEOUT_MS).then((ready) => {
+  return waitForHttp(readyUrl, CLIENT_READY_TIMEOUT_MS).then((ready) => {
     if (!ready) {
       console.warn(
         t('dev.adminSlow', {
           seconds: CLIENT_READY_TIMEOUT_MS / 1000,
           url: readyUrl,
-        })
+        }),
       );
     }
-  });
-
-  webChild.on('close', (code) => {
-    if (!shuttingDown) shutdown('SIGINT');
-    process.exit(code ?? 0);
+    return ready;
   });
 }
 
@@ -275,9 +285,16 @@ async function startDevStack(projectRoot, { webOnly = false, infraDone = false }
   }
 
   const includeAdmin = webOnly && hasWeb(projectRoot);
-  const includeThemeSite = !webOnly && hasThemePackages(projectRoot);
+  const includeThemeSite = !webOnly && hasResolvableActiveTheme(projectRoot);
+  if (!webOnly && hasThemePackages(projectRoot) && !includeThemeSite) {
+    const { activeTheme } = readActiveThemeManifest(projectRoot);
+    console.warn(
+      `[reactpress] ${t('themeDev.notFound', { id: activeTheme })} — ${t('dev.themeSiteSkipped')}`,
+    );
+  }
   const includeLegacyClient = !webOnly && !includeThemeSite && hasClient(projectRoot);
   const planNginx = process.env.REACTPRESS_SKIP_NGINX !== '1';
+  const includeWebInStack = hasWeb(projectRoot) && !webOnly;
 
   if (infraDone) {
     logDevPhase(3, 3, 'dev.phaseServices');
@@ -287,37 +304,65 @@ async function startDevStack(projectRoot, { webOnly = false, infraDone = false }
 
   console.log(t('dev.phaseApi'));
   await spawnApi(projectRoot);
-  await waitForApiReady(projectRoot, {
-    readyMessageKey: webOnly || hasWeb(projectRoot) ? 'dev.apiReadyAdmin' : 'dev.apiReady',
-  });
 
-  if (!includeAdmin && !includeThemeSite && !includeLegacyClient) {
+  const readinessWaits = [
+    waitForApiReady(projectRoot, {
+      readyMessageKey: webOnly || hasWeb(projectRoot) ? 'dev.apiReadyAdmin' : 'dev.apiReady',
+    }),
+  ];
+
+  if (!includeAdmin && !includeThemeSite && !includeLegacyClient && !includeWebInStack) {
+    await Promise.all(readinessWaits);
     printDevReadyBanner(projectRoot, { apiOnly: true, nginx: nginxEnabled });
     console.log(t('dev.standaloneHint'));
     return;
   }
 
-  if (hasWeb(projectRoot)) {
-    console.log(t('dev.phaseAdmin'));
-    await spawnAdminWeb(projectRoot, { behindNginx: planNginx, integratedStack: !webOnly });
-  }
+  let themeSiteStarted = false;
 
-  if (planNginx && includeThemeSite) {
-    process.env.REACTPRESS_BEHIND_NGINX = '1';
+  if (includeWebInStack) {
+    console.log(t('dev.phaseAdmin'));
+    if (planNginx) process.env.REACTPRESS_BEHIND_NGINX = '1';
+    const adminBase = loadWebAdminUrl(projectRoot).replace(/\/$/, '');
+    const adminProbe = planNginx ? `${adminBase}/admin/` : `${adminBase}/`;
+    readinessWaits.push(
+      spawnAdminWeb(projectRoot, { behindNginx: planNginx, integratedStack: true }).then(() =>
+        waitForHttp(adminProbe, 120_000),
+      ),
+    );
+  } else if (includeAdmin) {
+    console.log(t('dev.phaseAdmin'));
+    const adminBase = loadWebAdminUrl(projectRoot).replace(/\/$/, '');
+    const adminProbe = planNginx ? `${adminBase}/admin/` : `${adminBase}/`;
+    readinessWaits.push(
+      spawnAdminWeb(projectRoot, { behindNginx: planNginx, integratedStack: false }).then(() =>
+        waitForHttp(adminProbe, 120_000),
+      ),
+    );
   }
 
   if (includeThemeSite) {
     console.log(t('dev.phaseTheme'));
-    await startThemeSiteWithWatch(projectRoot);
+    if (planNginx) process.env.REACTPRESS_BEHIND_NGINX = '1';
+    themeSiteStarted = await startThemeSiteWithWatch(projectRoot);
+    if (themeSiteStarted) {
+      const clientUrl = loadClientSiteUrl(projectRoot);
+      readinessWaits.push(
+        waitForHttp(clientUrl, 120_000).then(async (ready) => {
+          if (ready) await warmupThemeDevRoutes(projectRoot);
+          return ready;
+        }),
+      );
+    }
   }
 
   if (includeLegacyClient) {
     console.log(t('dev.phaseClient'));
     spawnLegacyClient(projectRoot);
+    readinessWaits.push(waitForHttp(loadClientSiteUrl(projectRoot), 120_000));
   }
 
-  const needsProxyWait =
-    hasWeb(projectRoot) || includeThemeSite || includeLegacyClient;
+  const needsProxyWait = readinessWaits.length > 1 || includeLegacyClient;
 
   if (needsProxyWait) {
     const waitSpinner = ora({
@@ -325,24 +370,13 @@ async function startDevStack(projectRoot, { webOnly = false, infraDone = false }
       color: 'cyan',
       spinner: 'dots',
     }).start();
-    if (hasWeb(projectRoot)) {
-      const adminBase = loadWebAdminUrl(projectRoot).replace(/\/$/, '');
-      const adminProbe = planNginx ? `${adminBase}/admin/` : `${adminBase}/`;
-      await waitForHttp(adminProbe, 120_000);
-      if (planNginx && nginxEnabled) {
-        const adminViaNginx = `${nginxEntryUrl(projectRoot).replace(/\/$/, '')}/admin/`;
-        const adminOk = await waitForHttp(adminViaNginx, 60_000);
-        if (!adminOk) {
-          console.warn(t('dev.adminNginxSlow', { url: adminViaNginx }));
-        }
+    await Promise.all(readinessWaits);
+    if (includeWebInStack && planNginx && nginxEnabled) {
+      const adminViaNginx = `${nginxEntryUrl(projectRoot).replace(/\/$/, '')}/admin/`;
+      const adminOk = await waitForHttp(adminViaNginx, 60_000);
+      if (!adminOk) {
+        console.warn(t('dev.adminNginxSlow', { url: adminViaNginx }));
       }
-    }
-    if (includeThemeSite) {
-      await waitForHttp(loadClientSiteUrl(projectRoot), 120_000);
-      await warmupThemeDevRoutes(projectRoot);
-    }
-    if (includeLegacyClient) {
-      await waitForHttp(loadClientSiteUrl(projectRoot), 120_000);
     }
     if (planNginx && !nginxEnabled) {
       nginxEnabled = await startDevNginx(projectRoot);
@@ -353,6 +387,8 @@ async function startDevStack(projectRoot, { webOnly = false, infraDone = false }
     waitSpinner.succeed(
       nginxEnabled ? t('dev.nginxReady', { url: nginxEntryUrl(projectRoot) }) : t('dev.proxiesReady'),
     );
+  } else {
+    await Promise.all(readinessWaits);
   }
 
   const dbOk = await probeMysqlHost(projectRoot);
@@ -383,14 +419,12 @@ async function runDevStartup(projectRoot, { webOnly = false } = {}) {
 
   logDevPhase(2, 3, 'dev.phaseInfra');
   try {
-    await prepareDevInfrastructure(projectRoot);
+    await Promise.all([prepareDevInfrastructure(projectRoot), buildToolkit(projectRoot)]);
   } catch (err) {
     console.error(t('dev.dbEnsureFailed', { message: err.message || err }));
     console.error(formatDevFailureHint());
     process.exit(1);
   }
-
-  await buildToolkit(projectRoot);
 
   await startDevStack(projectRoot, { webOnly, infraDone: true });
 }

@@ -320,7 +320,7 @@ importers:
         specifier: ~4.1.6
         version: 4.1.6
 
-  themes/client:
+  themes/twentytwentyfive:
     dependencies:
       '@ant-design/compatible':
         specifier: ^1.1.0
