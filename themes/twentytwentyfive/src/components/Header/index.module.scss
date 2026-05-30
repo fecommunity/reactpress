@@ -68,16 +68,13 @@ $header-nav-first-padding-start: 4px;
 
     box-sizing: border-box;
     display: inline-flex;
-    align-self: stretch;
+    align-items: center;
     height: $height;
-    padding: $header-logo-padding-y 0;
-    margin-right: 0;
+    margin-right: $header-logo-nav-gap;
     color: var(--main-text-color);
     text-align: left;
-    align-items: center;
     width: fit-content;
     max-width: $header-logo-max-width;
-    margin-right: $header-logo-nav-gap;
     flex-shrink: 0;
 
     &:hover img,
@@ -101,8 +98,7 @@ $header-nav-first-padding-start: 4px;
       align-items: center;
       overflow: hidden;
       width: fit-content;
-      height: 100%;
-      max-height: $header-logo-content-height;
+      height: $header-logo-content-height;
       max-width: $header-logo-max-width;
       border-radius: 2px;
 
@@ -183,7 +179,7 @@ $header-nav-first-padding-start: 4px;
   .menuWrapper {
     border: none;
     display: flex;
-    align-items: flex-end;
+    align-items: stretch;
     flex: 0 1 auto;
     min-width: 0;
     height: 100%;
@@ -193,19 +189,37 @@ $header-nav-first-padding-start: 4px;
       width: auto;
       min-width: 0;
       background-color: var(--bg-box);
-      height: calc(100% - 12px);
+      height: 100%;
       border: none;
 
       &:global(.ant-menu) {
         flex: 0 1 auto;
+        height: $height;
         padding-inline: 0;
         margin-inline: 0;
         column-gap: 0;
+        line-height: $height;
+        border-bottom: none;
       }
 
       &:global(.ant-menu-horizontal > .ant-menu-item),
       &:global(.ant-menu-horizontal > .ant-menu-submenu) {
+        top: 0 !important;
+        display: inline-flex;
+        align-items: center;
+        height: $height;
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+        padding-block: 0;
         padding-inline: $header-nav-item-padding-x;
+        vertical-align: top;
+        border-bottom: none;
+      }
+
+      &:global(.ant-menu-horizontal > .ant-menu-item::after),
+      &:global(.ant-menu-horizontal > .ant-menu-submenu::after) {
+        inset-block-end: 0 !important;
+        bottom: 0 !important;
       }
 
       &:global(.ant-menu-horizontal > .ant-menu-item:first-child),
