@@ -1,4 +1,4 @@
-import { getThemeConfigurationSeed } from "@fecommunity/reactpress-toolkit/extension";
+import { getThemeConfigurationSeed } from "@fecommunity/reactpress-toolkit/theme";
 import { http } from "msw";
 
 import { successResponse, withDelay } from "../createHandler";

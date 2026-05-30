@@ -4,7 +4,7 @@ import type {
   ThemeConfigurationSchema,
   ThemeManifest,
   ThemeMods,
-} from '@fecommunity/reactpress-toolkit/extension';
+} from '@fecommunity/reactpress-toolkit/theme';
 import {
   defaultSiteThemeState,
   getConfigurationSchemaFromManifest,
@@ -16,8 +16,8 @@ import {
   parseThemeManifest,
   validateAndMergeThemeConfiguration,
   validateThemeConfiguration,
-} from '@fecommunity/reactpress-toolkit/extension';
-import { readThemeAdminLocaleFile } from '@fecommunity/reactpress-toolkit/extension/node';
+} from '@fecommunity/reactpress-toolkit/theme';
+import { readThemeAdminLocaleFile } from '@fecommunity/reactpress-toolkit/theme/node';
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as fs from 'fs';

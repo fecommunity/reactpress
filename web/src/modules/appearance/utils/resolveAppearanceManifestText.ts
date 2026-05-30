@@ -3,7 +3,7 @@ import {
   resolveThemeAdminLocaleText as resolveFromToolkit,
   type ThemeAdminLocaleMessages,
   type ThemeConfigurationSchema,
-} from "@fecommunity/reactpress-toolkit/extension";
+} from "@fecommunity/reactpress-toolkit/theme";
 
 export { resolveFromToolkit as resolveThemeAdminLocaleText };
 

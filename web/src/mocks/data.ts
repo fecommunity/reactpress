@@ -1,4 +1,4 @@
-import { ADMIN_PERMISSIONS } from "@fecommunity/reactpress-toolkit/admin";
+import { ADMIN_PERMISSIONS } from "@fecommunity/reactpress-toolkit/plugin/admin";
 
 import type { User } from "@/api/schemas";
 

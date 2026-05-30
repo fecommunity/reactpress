@@ -2,7 +2,7 @@ import {
   seedThemeModsFromLegacySetting,
   type ThemeAppearanceSection,
   type ThemeMods,
-} from "@fecommunity/reactpress-toolkit/extension";
+} from "@fecommunity/reactpress-toolkit/theme";
 import { useNavigate } from "@tanstack/react-router";
 import { App, Button, Form, Popconfirm, Typography } from "antd";
 import { ChevronLeft, ChevronRight } from "lucide-react";

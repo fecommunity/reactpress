@@ -1,4 +1,4 @@
-import type { ThemeMods } from "@fecommunity/reactpress-toolkit/extension";
+import type { ThemeMods } from "@fecommunity/reactpress-toolkit/theme";
 
 type ThemeAppearanceLike = {
   appearance?: {

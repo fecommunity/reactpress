@@ -15,7 +15,7 @@ import { ArticleRecommend } from '@/components/ArticleRecommend';
 import { GlobalContext } from '@/context/global';
 import { DoubleColumnLayout } from '@/layout/DoubleColumnLayout';
 import { ArticleProvider } from '@/providers/article';
-import { getSiteTitle } from '@/utils/seo';
+import { getSiteTitle } from '@fecommunity/reactpress-toolkit/theme';
 
 import style from './index.module.scss';
 

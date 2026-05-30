@@ -1,4 +1,4 @@
-import type { AdminModule } from "@fecommunity/reactpress-toolkit/admin";
+import type { AdminModule } from "@fecommunity/reactpress-toolkit/plugin/admin";
 
 export const userModule: AdminModule = {
   id: "user",

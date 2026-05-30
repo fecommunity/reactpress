@@ -1,4 +1,4 @@
-import type { ThemeConfigurationSchema } from "@fecommunity/reactpress-toolkit/extension";
+import type { ThemeConfigurationSchema } from "@fecommunity/reactpress-toolkit/theme";
 import { createContext, type ReactNode, useCallback, useContext, useMemo, useState } from "react";
 
 import {

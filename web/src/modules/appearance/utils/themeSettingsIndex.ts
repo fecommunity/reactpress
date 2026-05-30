@@ -1,7 +1,7 @@
 import type {
   ThemeConfigurationPropertySchema,
   ThemeConfigurationSchema,
-} from "@fecommunity/reactpress-toolkit/extension";
+} from "@fecommunity/reactpress-toolkit/theme";
 
 import {
   themeFieldAnchorId,

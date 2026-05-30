@@ -1,4 +1,4 @@
-import type { AdminModule } from "@fecommunity/reactpress-toolkit/admin";
+import type { AdminModule } from "@fecommunity/reactpress-toolkit/plugin/admin";
 
 const SETTING_TABS = [
   { id: "general", title: "常规", path: "/settings/general", sort: 0 },

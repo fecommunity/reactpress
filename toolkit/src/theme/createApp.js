@@ -1,12 +1,12 @@
 const React = require('react');
 const App = require('next/app').default;
-const { fetchVisitorContext, createDefaultVisitorContext } = require('./fetch');
-const { themeApi } = require('./api');
+const { fetchVisitorContext, createDefaultVisitorContext } = require('./ssr/fetch');
+const { themeApi } = require('./api/api');
 const { ReactPressProvider } = require('../ui/context/ReactPressProvider');
-const { ThemeCssVars } = require('../ui/ThemeCssVars');
-const { parsePreviewTokenFromNextCtx, PREVIEW_TOKEN_QUERY_KEY } = require('./preview-draft');
-const { fetchPreviewDraft } = require('../extension/preview');
-const { mergePreviewMods } = require('./preview-mods');
+const { ThemeCssVars } = require('../ui/components/ThemeCssVars');
+const { parsePreviewTokenFromNextCtx, PREVIEW_TOKEN_QUERY_KEY } = require('./preview/preview-draft');
+const { fetchPreviewDraft } = require('./extension/preview');
+const { mergePreviewMods } = require('./preview/preview-mods');
 
 function readPreviewTokenFromBrowser() {
   if (typeof window === 'undefined') return '';

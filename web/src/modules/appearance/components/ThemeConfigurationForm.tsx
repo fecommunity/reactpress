@@ -1,5 +1,5 @@
-import type { ThemeConfigurationSchema } from "@fecommunity/reactpress-toolkit/extension";
-import { toFormilyJsonSchema } from "@fecommunity/reactpress-toolkit/extension";
+import type { ThemeConfigurationSchema } from "@fecommunity/reactpress-toolkit/theme";
+import { toFormilyJsonSchema } from "@fecommunity/reactpress-toolkit/theme";
 import { Form as FormilyForm } from "@formily/antd-v5";
 import type { Form as FormilyCoreForm } from "@formily/core";
 import { createForm, onFormValuesChange } from "@formily/core";

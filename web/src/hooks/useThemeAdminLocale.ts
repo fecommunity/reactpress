@@ -1,4 +1,4 @@
-import type { ThemeAdminLocaleMessages } from "@fecommunity/reactpress-toolkit/extension";
+import type { ThemeAdminLocaleMessages } from "@fecommunity/reactpress-toolkit/theme";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 

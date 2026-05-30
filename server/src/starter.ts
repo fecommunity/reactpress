@@ -111,7 +111,7 @@ export async function bootstrap() {
     const listenPort = Number(configService.get('SERVER_PORT', configuredPort));
 
     app.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
-      const { shouldRedirectDevPortToNginx, buildDevPortRedirectUrl } = require('@fecommunity/reactpress-toolkit/dev');
+      const { shouldRedirectDevPortToNginx, buildDevPortRedirectUrl } = require('@fecommunity/reactpress-toolkit/plugin/dev');
       if (
         !shouldRedirectDevPortToNginx({
           host: req.headers.host,

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
-import { themeApi } from '../../theme/api';
-import { unpackOne } from '../../theme/api-data';
+import { unpackOne } from '../../utils/api-envelope';
+import { themeApi } from '../../theme/api/api';
 
 /**
  * Report article view on mount and return the latest view count for display.

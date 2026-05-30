@@ -1,7 +1,7 @@
 import type {
   ThemeAppearanceSection,
   ThemeAppearanceSetting,
-} from "@fecommunity/reactpress-toolkit/extension";
+} from "@fecommunity/reactpress-toolkit/theme";
 import { Typography } from "antd";
 
 import { AppearanceSettingField } from "@/modules/appearance/components/AppearanceSettingField";

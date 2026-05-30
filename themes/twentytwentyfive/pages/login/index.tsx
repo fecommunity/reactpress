@@ -7,7 +7,7 @@ import { useContext, useEffect } from 'react';
 
 import { GlobalContext } from '@/context/global';
 import { UserProvider } from '@/providers/user';
-import { getPageTitle } from '@/utils/seo';
+import { getPageTitle } from '@fecommunity/reactpress-toolkit/theme';
 
 import style from './index.module.scss';
 

@@ -1,4 +1,4 @@
-import { getThemeStateFromGlobalSetting } from "@fecommunity/reactpress-toolkit/extension";
+import { getThemeStateFromGlobalSetting } from "@fecommunity/reactpress-toolkit/theme";
 import { useNavigate } from "@tanstack/react-router";
 import { App, Button, Spin } from "antd";
 import { ChevronLeft, ChevronRight } from "lucide-react";

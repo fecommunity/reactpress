@@ -13,7 +13,7 @@ import {
   persistCommentAuthor,
   readCommentAuthor,
   type CommentAuthor,
-} from '@/utils/commentAuthor';
+} from '@fecommunity/reactpress-toolkit/theme';
 
 import { Emoji } from './Emoji';
 import styles from './index.module.scss';

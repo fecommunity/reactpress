@@ -1,4 +1,4 @@
-import { ApiError as ToolkitApiError } from "@fecommunity/reactpress-toolkit/react";
+import { ApiError as ToolkitApiError } from "@fecommunity/reactpress-toolkit/plugin/react";
 import type { MessageInstance } from "antd/es/message/interface";
 
 import { ApiError, HttpError } from "@/utils/http";

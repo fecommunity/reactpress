@@ -1,8 +1,8 @@
-import { getThemeConfigurationSeed } from "@fecommunity/reactpress-toolkit/extension";
+import { getThemeConfigurationSeed } from "@fecommunity/reactpress-toolkit/theme";
 import {
   getThemeStateFromGlobalSetting,
   type ThemeMods,
-} from "@fecommunity/reactpress-toolkit/extension";
+} from "@fecommunity/reactpress-toolkit/theme";
 import { useNavigate } from "@tanstack/react-router";
 import { App, Button, Spin } from "antd";
 import { ChevronLeft } from "lucide-react";

@@ -6,11 +6,18 @@ import { NProgress } from '@components/NProgress';
 import {
   appearancePrimaryColorForMode,
   buildTwentyTwentyFiveAppearanceCss,
+  clearThemeSession,
   normalizePreviewDraftData,
+  persistThemeSession,
+  persistVisitorLocale,
   previewDraftApiPath,
+  resolveInitialColorModeState,
+  resolveStoredUser,
   resolveThemePreviewContext,
+  resolveVisitorLocale,
+  safeJsonParse,
   type ThemeMods,
-} from '@fecommunity/reactpress-toolkit/extension';
+} from '@fecommunity/reactpress-toolkit/theme';
 import { ConfigProvider, theme } from 'antd';
 import App from 'next/app';
 import { default as Router } from 'next/router';
@@ -26,10 +33,6 @@ import { httpProvider } from '@/providers/http';
 import { PageProvider } from '@/providers/page';
 import { SettingProvider } from '@/providers/setting';
 import { TagProvider } from '@/providers/tag';
-import { persistThemeSession, resolveStoredUser, clearThemeSession } from '@/utils/authSession';
-import { resolveInitialThemeState } from '@/utils/colorMode';
-import { safeJsonParse } from '@/utils/json';
-import { persistVisitorLocale, resolveVisitorLocale } from '@/utils/locale';
 
 Router.events.on('routeChangeComplete', () => {
   setTimeout(() => {
@@ -55,7 +58,7 @@ class MyApp extends App<
   state = {
     locale: '',
     user: null,
-    theme: resolveInitialThemeState(),
+    theme: resolveInitialColorModeState(),
     collapsed: false,
   };
 
@@ -68,8 +71,8 @@ class MyApp extends App<
       CategoryProvider.getCategory({ articleStatus: 'publish' }),
       PageProvider.getAllPublisedPages(),
     ]);
-    const i18n = safeJsonParse(setting.i18n);
-    const globalSettingRaw = safeJsonParse(setting.globalSetting);
+    const i18n = safeJsonParse(setting.i18n, {});
+    const globalSettingRaw = safeJsonParse(setting.globalSetting, {});
     const localeKeys = Object.keys(i18n);
     const locale = resolveVisitorLocale(localeKeys, ctx.req);
     const globalSetting = globalSettingRaw?.[locale];

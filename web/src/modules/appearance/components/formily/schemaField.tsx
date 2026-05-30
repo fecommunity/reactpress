@@ -1,4 +1,4 @@
-import { getFormilyVoidComponents } from "@fecommunity/reactpress-toolkit/extension";
+import { getFormilyVoidComponents } from "@fecommunity/reactpress-toolkit/theme";
 import {
   ArrayCards,
   Form,

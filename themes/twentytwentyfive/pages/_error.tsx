@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl';
 import React, { useContext } from 'react';
 
 import { GlobalContext } from '@/context/global';
-import { getPageTitle, getSiteTitle } from '@/utils/seo';
+import { getPageTitle, getSiteTitle } from '@fecommunity/reactpress-toolkit/theme';
 
 const style = {
   display: 'flex',

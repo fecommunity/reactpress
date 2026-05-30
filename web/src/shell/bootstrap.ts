@@ -3,7 +3,7 @@ import {
   type AdminMenuItem,
   createAdminRegistry,
   filterMenuByPermissions,
-} from "@fecommunity/reactpress-toolkit/admin";
+} from "@fecommunity/reactpress-toolkit/plugin/admin";
 
 import { appearanceModule } from "@/modules/appearance";
 import { articleModule } from "@/modules/article";

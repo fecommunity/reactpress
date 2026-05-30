@@ -1,9 +1,8 @@
 import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
-import { createTranslator } from '../../theme/locale';
-import type { LocaleCatalog, LocaleMessages } from '../../theme/locale';
+import { createTranslator } from '../../theme/visitor/locale';
+import type { LocaleCatalog, LocaleMessages } from '../../theme/visitor/locale';
+import { VISITOR_LOCALE_COOKIE } from '../../theme/visitor/visitorLocale';
 import type { LocaleContextValue } from './types';
-
-const LOCALE_STORAGE_KEY = 'reactpress-locale';
 
 const LocaleContext = createContext<LocaleContextValue | null>(null);
 
@@ -35,7 +34,7 @@ export function LocaleProvider({
       setLocaleState(next);
       setMessages({ ...(catalog[next] ?? {}) });
       if (persistLocale && typeof window !== 'undefined') {
-        window.localStorage.setItem(LOCALE_STORAGE_KEY, next);
+        window.localStorage.setItem(VISITOR_LOCALE_COOKIE, next);
       }
       onLocaleChange?.(next);
     },
@@ -68,7 +67,7 @@ export function useLocale(): LocaleContextValue {
 export function readPersistedLocale(locales: string[], fallback: string): string {
   if (typeof window === 'undefined') return fallback;
   try {
-    const stored = window.localStorage.getItem(LOCALE_STORAGE_KEY);
+    const stored = window.localStorage.getItem(VISITOR_LOCALE_COOKIE);
     if (stored && locales.includes(stored)) return stored;
   } catch {
     // ignore

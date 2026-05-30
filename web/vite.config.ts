@@ -5,18 +5,28 @@ import { defineConfig, loadEnv } from "vite-plus";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 import react from "@vitejs/plugin-react-swc";
 import { tanstackRouter } from "@tanstack/router-plugin/vite";
-import { devPortRedirectPlugin } from "@fecommunity/reactpress-toolkit/dev";
+import { devPortRedirectPlugin } from "@fecommunity/reactpress-toolkit/plugin/dev";
 
 const toolkitSrc = path.resolve(__dirname, "../toolkit/src");
+const toolkitEntry = (subpath: string) => path.join(toolkitSrc, subpath, "index.ts");
 const toolkitAliases = [
-  "@fecommunity/reactpress-toolkit/react",
-  "@fecommunity/reactpress-toolkit/admin",
-  "@fecommunity/reactpress-toolkit/extension",
-  "@fecommunity/reactpress-toolkit/dev",
-].map((pkg) => ({
-  find: pkg,
-  replacement: path.join(toolkitSrc, pkg.split("/").pop()!, "index.ts"),
-}));
+  {
+    find: "@fecommunity/reactpress-toolkit/plugin/react",
+    replacement: toolkitEntry("plugin/react"),
+  },
+  {
+    find: "@fecommunity/reactpress-toolkit/plugin/admin",
+    replacement: toolkitEntry("plugin/admin"),
+  },
+  {
+    find: "@fecommunity/reactpress-toolkit/plugin/dev",
+    replacement: toolkitEntry("plugin/dev"),
+  },
+  {
+    find: "@fecommunity/reactpress-toolkit/theme",
+    replacement: toolkitEntry("theme"),
+  },
+];
 
 const mode = process.env.NODE_ENV === "production" ? "production" : "development";
 const env = loadEnv(mode, process.cwd(), "");

@@ -6,7 +6,7 @@ import { GlobalContext } from '@/context/global';
 import { useAsyncLoading } from '@/hooks/useAsyncLoading';
 import { ArticleProvider } from '@/providers/article';
 import { SearchProvider } from '@/providers/search';
-import { jsonp } from '@/utils/jsonp';
+import { jsonp } from '@fecommunity/reactpress-toolkit/theme';
 
 import styles from './index.module.scss';
 

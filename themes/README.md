@@ -38,6 +38,30 @@
 | `__()` 翻译 | `useLocale().t('archives')` |
 | `home_url()` | `articlePath` / `categoryPath` / `tagPath` |
 
+## 通用基础设施（toolkit）
+
+`@fecommunity/reactpress-toolkit` 对外仅暴露七个业务子模块：
+
+| 子路径 | 职责 |
+| --- | --- |
+| `/api` | Swagger 生成的 REST 客户端 |
+| `/types` | 共享类型 |
+| `/ui` | Headless 主题 UI 组件 |
+| `/utils` | 通用工具函数 |
+| `/theme` | 主题运行时、manifest/customizer、预览、访客会话等 |
+| `/plugin` | 管理端插件（`/plugin/admin`、`/plugin/react`、`/plugin/dev`） |
+| `/config` | 管理端 env 与 toolkit i18n |
+
+主题开发常用 import 示例：
+
+```ts
+import { createThemeApp, fetchVisitorContext } from '@fecommunity/reactpress-toolkit/theme';
+import { AntdStyleTransitionFix } from '@fecommunity/reactpress-toolkit/ui';
+import { createThemeAxiosClient } from '@fecommunity/reactpress-toolkit/theme';
+```
+
+**仍应留在主题内的**：布局壳（Header/Footer）、视觉组件、页面路由与业务 UI。
+
 ## 开发新主题（最低成本）
 
 1. **复制** `themes/hello-world/` → `themes/my-theme/`

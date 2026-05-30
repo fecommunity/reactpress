@@ -1,5 +1,5 @@
-import type { ThemeAppearanceSetting } from "@fecommunity/reactpress-toolkit/extension";
-import { resolvePublicAssetUrl } from "@fecommunity/reactpress-toolkit/extension";
+import type { ThemeAppearanceSetting } from "@fecommunity/reactpress-toolkit/theme";
+import { resolvePublicAssetUrl } from "@fecommunity/reactpress-toolkit/theme";
 import { App, Button, ColorPicker, Form, Input, Select, Switch, Typography } from "antd";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";

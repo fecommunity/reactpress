@@ -1,5 +1,5 @@
-import { permissionsForRole } from "@fecommunity/reactpress-toolkit/admin";
-import { resolveApiBaseUrl } from "@fecommunity/reactpress-toolkit/react";
+import { permissionsForRole } from "@fecommunity/reactpress-toolkit/plugin/admin";
+import { resolveApiBaseUrl } from "@fecommunity/reactpress-toolkit/plugin/react";
 
 import { AUTH_ENDPOINTS } from "@/api/auth";
 import {

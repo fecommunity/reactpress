@@ -1,5 +1,5 @@
 import { BellFilled } from '@ant-design/icons';
-import { siteNoticeDisplayLines } from '@fecommunity/reactpress-toolkit/extension';
+import { siteNoticeDisplayLines } from '@fecommunity/reactpress-toolkit/theme';
 import { Alert } from 'antd';
 import React, { useContext } from 'react';
 import TextLoop from 'react-text-loop';

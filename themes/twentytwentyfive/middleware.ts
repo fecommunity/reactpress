@@ -1,7 +1,7 @@
 import {
   buildDevPortRedirectUrl,
   shouldRedirectDevPortToNginx,
-} from '@fecommunity/reactpress-toolkit/dev';
+} from '@fecommunity/reactpress-toolkit/plugin/dev';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 

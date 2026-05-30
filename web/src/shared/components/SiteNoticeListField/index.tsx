@@ -3,7 +3,7 @@ import {
   parseSiteNotices,
   serializeSiteNotices,
   type SiteNoticeItem,
-} from "@fecommunity/reactpress-toolkit/extension";
+} from "@fecommunity/reactpress-toolkit/theme";
 import { Button, Input, Switch, Tag } from "antd";
 import { ArrowDown, ArrowUp, Plus, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";

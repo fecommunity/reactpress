@@ -10,6 +10,7 @@
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "node",
     "jsx": "react-jsx",
+    "allowJs": true,
     "baseUrl": "./"
   },
   "include": [

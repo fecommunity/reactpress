@@ -1,4 +1,4 @@
-import type { ThemeAdminLocaleMessages } from "@fecommunity/reactpress-toolkit/extension";
+import type { ThemeAdminLocaleMessages } from "@fecommunity/reactpress-toolkit/theme";
 import { createContext, type ReactNode, useCallback, useContext, useMemo } from "react";
 
 import { useThemeAdminLocaleQuery } from "@/hooks/useThemeAdminLocale";

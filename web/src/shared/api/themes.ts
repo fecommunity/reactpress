@@ -2,8 +2,8 @@ import type {
   SiteThemeState,
   ThemeConfigurationSchema,
   ThemeMods,
-} from "@fecommunity/reactpress-toolkit/extension";
-import { resolveApiBaseUrl } from "@fecommunity/reactpress-toolkit/react";
+} from "@fecommunity/reactpress-toolkit/theme";
+import { resolveApiBaseUrl } from "@fecommunity/reactpress-toolkit/plugin/react";
 
 import { clearInvalidServerSession } from "@/shared/auth/session";
 import { useAuthStore } from "@/stores/auth";

@@ -6,7 +6,7 @@ import {
   TWENTYTWENTYFIVE_APPEARANCE,
   TWENTYTWENTYFIVE_CONFIGURATION_SCHEMA,
   validateAndMergeThemeConfiguration,
-} from "@fecommunity/reactpress-toolkit/extension";
+} from "@fecommunity/reactpress-toolkit/theme";
 import { http, HttpResponse, passthrough } from "msw";
 
 import helloWorldAdminEn from "../../../../themes/hello-world/locales/en.json";

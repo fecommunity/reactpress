@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useMemo } from 'react';
-import type { ThemeMods } from '../../extension/theme';
-import { DEFAULT_SITE_META } from '../../theme/setting';
+import type { ThemeMods } from '../../theme/extension/theme';
+import { DEFAULT_SITE_META } from '../../theme/ssr/setting';
 import type { ThemeRuntimeContextValue } from './types';
 
 const ThemeRuntimeContext = createContext<ThemeRuntimeContextValue | null>(null);

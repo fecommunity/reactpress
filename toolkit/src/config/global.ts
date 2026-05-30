@@ -1,5 +1,5 @@
-import type { SiteThemeState } from '../extension/theme';
-import { defaultSiteThemeState } from '../extension/theme';
+import type { SiteThemeState } from '../theme/extension/theme';
+import { defaultSiteThemeState } from '../theme/extension/theme';
 
 interface NavItem {
   label: string;

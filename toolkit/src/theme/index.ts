@@ -1,24 +1,24 @@
-export type { ThemeApi } from './api';
+export type { ThemeApi } from './api/api';
 export {
   createThemeApi,
   getThemeApiBaseUrl,
   resolveThemeApiBaseUrl,
   themeApi,
-} from './api';
-export type { ApiEnvelope } from './api-data';
+} from './api/api';
+export type { ApiEnvelope } from '../utils/api-envelope';
 export {
   unpackList,
   unpackOne,
   unpackPaginated,
-} from './api-data';
-export { resolvePublicAssetUrl } from './assets';
-export type { ArchiveExcerptMode, ResolveArchiveExcerptOptions } from './excerpt';
+} from '../utils/api-envelope';
+export { resolvePublicAssetUrl } from './content/assets';
+export type { ArchiveExcerptMode, ResolveArchiveExcerptOptions } from './content/excerpt';
 export {
   resolveArchiveExcerpt,
   stripHtml,
   truncateWords,
-} from './excerpt';
-export type { FetchVisitorContextOptions, ThemeArchiveKind, VisitorContextProps } from './fetch';
+} from './content/excerpt';
+export type { FetchVisitorContextOptions, ThemeArchiveKind, VisitorContextProps } from './ssr/fetch';
 export {
   createArchiveGetStaticProps,
   createDefaultVisitorContext,
@@ -39,73 +39,102 @@ export {
   themeStaticProps,
   withApiRetry,
   withThemeStaticProps,
-} from './fetch';
-export type { SettingRow } from './format';
+} from './ssr/fetch';
+export type { SettingRow } from '../utils/setting';
 export {
   formatPublishDate,
   formatPublishDateShort,
-  pickSiteSettings,
-} from './format';
-export { safeJsonParse } from './json';
+} from '../utils/date';
+export { pickSiteSettings } from '../utils/setting';
+export { safeJsonParse } from '../utils/json';
+export type {
+  ThemeSessionUser,
+} from './visitor/authSession';
+export {
+  ADMIN_AUTH_STORAGE_KEY,
+  clearThemeSession,
+  getStoredAccessToken,
+  persistThemeSession,
+  resolveStoredUser,
+  THEME_TOKEN_STORAGE_KEY,
+  THEME_USER_STORAGE_KEY,
+} from './visitor/authSession';
+export type { ThemeColorMode } from './visitor/colorMode';
+export {
+  applyColorModeClass,
+  buildColorModeInitScript,
+  COLOR_MODE_STORAGE_KEY,
+  colorModeInitScript,
+  persistColorMode,
+  resolveInitialColorModeState,
+  resolvePreferredColorMode,
+} from './visitor/colorMode';
+export {
+  LEGACY_LOCALE_STORAGE_KEY,
+  persistVisitorLocale,
+  readRequestCookie,
+  resolveVisitorLocale,
+  VISITOR_LOCALE_COOKIE,
+} from './visitor/visitorLocale';
+export type { CommentAuthor } from './visitor/commentAuthor';
+export {
+  COMMENT_AUTHOR_STORAGE_KEY,
+  COMMENT_EMAIL_REGEXP,
+  getCommentEmailError,
+  isValidCommentAuthor,
+  isValidCommentEmail,
+  persistCommentAuthor,
+  readCommentAuthor,
+} from './visitor/commentAuthor';
+export type { SiteTitleSource } from './content/seo';
+export { getPageTitle, getSiteTitle } from './content/seo';
+export { jsonp } from '../utils/jsonp';
+export type {
+  CreateThemeAxiosClientOptions,
+  ThemeApiEnvelope,
+} from './api/httpClient';
+export {
+  createThemeAxiosClient,
+  encodeAxiosUrlPath,
+  resolveThemeAxiosBaseUrl,
+} from './api/httpClient';
+export type { CreateAntdThemeDocumentOptions } from './build/antdDocument';
+export { createAntdThemeDocument } from './build/antdDocument';
 export type {
   LocaleCatalog,
   LocaleMessages,
   ParseSiteLocaleOptions,
   SiteLocaleState,
-} from './locale';
+} from './visitor/locale';
 export {
   createTranslator,
   parseSiteLocale,
   resolveRequestLocale,
-} from './locale';
-export type { NavItem } from './nav';
+} from './visitor/locale';
+export type { NavItem } from './content/nav';
 export {
   articlePath,
   categoryPath,
   getNavActiveId,
   tagPath,
-} from './nav';
-export type { ResolveThemeRuntimeOptions, ThemeRuntime } from './runtime';
-export { resolveThemeRuntime } from './runtime';
-export type { SiteMeta } from './setting';
-export { DEFAULT_SITE_META, parseSiteMeta, unwrapSetting } from './setting';
+} from './content/nav';
+export type { ResolveThemeRuntimeOptions, ThemeRuntime } from './visitor/runtime';
+export { resolveThemeRuntime } from './visitor/runtime';
+export type { SiteMeta } from './ssr/setting';
+export { DEFAULT_SITE_META, parseSiteMeta, unwrapSetting } from './ssr/setting';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 export const createThemeApp = require('./createApp').createThemeApp as (
   manifest: { id: string },
 ) => unknown;
+export { defaultModsFromManifest } from './visitor/appearance';
 export type ThemeManifestRef = { id: string };
 
-export {
-  fetchPreviewDraft,
-  type NextPreviewCtx,
-  normalizePreviewDraftData,
-  previewDraftApiPath,
-  type PreviewDraftFetcher,
-  type PreviewDraftResponse,
-  type ResolvedThemePreviewContext,
-  resolveThemePreviewContext,
-  type ResolveThemePreviewContextInput,
-} from '../extension/preview';
-export { defaultModsFromManifest } from './appearance';
-export {
-  appendPreviewTokenToUrl,
-  parsePreviewTokenFromNextCtx,
-  parsePreviewTokenFromRequestUrl,
-  PREVIEW_TOKEN_QUERY_KEY,
-  type PreviewDraftPayload,
-} from './preview-draft';
-export {
-  appendPreviewModsToUrl,
-  mergePreviewMods,
-  parsePreviewModsFromNextCtx,
-  parsePreviewModsFromRequestUrl,
-  parsePreviewModsParam,
-  PREVIEW_MODS_QUERY_KEY,
-} from './preview-mods';
-export { themeNotFound, themeOnDemandPaths, themeStaticNotFound } from './static';
-export type { ThemeManifestLike, ThemeTemplateSlug } from './templates';
-export { DEFAULT_TEMPLATE_FILES, resolveTemplateFiles,ThemeTemplate } from './templates';
+export * from './extension';
+
+export { themeNotFound, themeOnDemandPaths, themeStaticNotFound } from './ssr/static';
+export type { ThemeManifestLike, ThemeTemplateSlug } from './ssr/templates';
+export { DEFAULT_TEMPLATE_FILES, resolveTemplateFiles, ThemeTemplate } from './ssr/templates';
 
 /** Headless theme UI — also available from `@fecommunity/reactpress-toolkit/ui`. */
 export type {
@@ -159,12 +188,19 @@ export {
   ThemeCssVars,
   ThemeLayout,
   ThemeRuntimeProvider,
+  AntdStyleTransitionFix,
   useActiveThemeId,
   useIsThemePreview,
   useLocale,
+  useAsyncLoading,
+  useForceUpdate,
   useNavActive,
+  usePagination,
   useReportArticleView,
+  useReportPageView,
   useRouteParam,
+  useToggle,
+  useWarningOnExit,
   useSiteMeta,
   useThemeId,
   useThemeMod,

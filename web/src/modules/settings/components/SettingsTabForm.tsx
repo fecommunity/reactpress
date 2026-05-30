@@ -1,4 +1,4 @@
-import { resolvePublicAssetUrl } from "@fecommunity/reactpress-toolkit/extension";
+import { resolvePublicAssetUrl } from "@fecommunity/reactpress-toolkit/theme";
 import { App, Button, Form, Input, Spin } from "antd";
 import { type ReactNode, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";

@@ -521,6 +521,9 @@ importers:
         specifier: ^12.0.4
         version: 12.0.4(encoding@0.1.13)
     devDependencies:
+      '@ant-design/cssinjs':
+        specifier: ^1.22.0
+        version: 1.24.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@types/fs-extra':
         specifier: ^9.0.13
         version: 9.0.13
@@ -24818,9 +24821,7 @@ snapshots:
       pretty-format: 24.9.0
       throat: 4.1.0
     transitivePeerDependencies:
-      - bufferutil
       - supports-color
-      - utf-8-validate
 
   jest-leak-detector@24.9.0:
     dependencies:

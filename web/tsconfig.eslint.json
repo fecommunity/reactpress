@@ -15,13 +15,16 @@
       "@/*": ["./src/*"],
       "react-i18next": ["./node_modules/react-i18next/index.d.ts"],
       "@fecommunity/reactpress-toolkit": ["../toolkit/dist/index.d.ts"],
-      "@fecommunity/reactpress-toolkit/admin": ["../toolkit/dist/admin/index.d.ts"],
-      "@fecommunity/reactpress-toolkit/react": ["../toolkit/dist/react/index.d.ts"],
-      "@fecommunity/reactpress-toolkit/extension": ["../toolkit/dist/extension/index.d.ts"],
       "@fecommunity/reactpress-toolkit/api": ["../toolkit/dist/api/index.d.ts"],
+      "@fecommunity/reactpress-toolkit/config": ["../toolkit/dist/config/index.d.ts"],
+      "@fecommunity/reactpress-toolkit/plugin": ["../toolkit/dist/plugin/index.d.ts"],
+      "@fecommunity/reactpress-toolkit/plugin/admin": ["../toolkit/dist/plugin/admin/index.d.ts"],
+      "@fecommunity/reactpress-toolkit/plugin/react": ["../toolkit/dist/plugin/react/index.d.ts"],
+      "@fecommunity/reactpress-toolkit/plugin/dev": ["../toolkit/dist/plugin/dev/index.d.ts"],
+      "@fecommunity/reactpress-toolkit/theme": ["../toolkit/dist/theme/index.d.ts"],
       "@fecommunity/reactpress-toolkit/types": ["../toolkit/dist/types/index.d.ts"],
-      "@fecommunity/reactpress-toolkit/utils": ["../toolkit/dist/utils/index.d.ts"],
-      "@fecommunity/reactpress-toolkit/theme": ["../toolkit/dist/theme/index.d.ts"]
+      "@fecommunity/reactpress-toolkit/ui": ["../toolkit/dist/ui/index.d.ts"],
+      "@fecommunity/reactpress-toolkit/utils": ["../toolkit/dist/utils/index.d.ts"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"]

@@ -1,4 +1,4 @@
-import { PUBLIC_SETTING_KEYS, systemGlobalSettingDefaults } from '@fecommunity/reactpress-toolkit/extension';
+import { PUBLIC_SETTING_KEYS, systemGlobalSettingDefaults } from '@fecommunity/reactpress-toolkit/theme';
 
 /**
  * 国际化配置

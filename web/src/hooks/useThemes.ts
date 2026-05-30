@@ -1,4 +1,4 @@
-import type { SiteThemeState, ThemeMods } from "@fecommunity/reactpress-toolkit/extension";
+import type { SiteThemeState, ThemeMods } from "@fecommunity/reactpress-toolkit/theme";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import {

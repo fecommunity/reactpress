@@ -6,7 +6,7 @@ import {
   applyColorModeClass,
   persistColorMode,
   resolvePreferredColorMode,
-} from '@/utils/colorMode';
+} from '@fecommunity/reactpress-toolkit/theme';
 
 import styles from './index.module.scss';
 

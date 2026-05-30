@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 
-import type { NavItem } from '../../theme/nav';
-import { getNavActiveId } from '../../theme/nav';
+import type { NavItem } from '../../theme/content/nav';
+import { getNavActiveId } from '../../theme/content/nav';
 
 /**
  * Derive active nav id from pathname (pass `router.pathname` from `next/router` in client components).
