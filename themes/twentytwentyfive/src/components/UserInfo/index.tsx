@@ -101,6 +101,11 @@ export const UserInfo: React.FC<{
   ) : user ? (
     <Dropdown
       menu={{
+        onClick: ({ key }) => {
+          if (key === 'logout') {
+            removeUser?.();
+          }
+        },
         items: [
           {
             key: 'profile',
@@ -117,7 +122,6 @@ export const UserInfo: React.FC<{
           {
             key: 'logout',
             label: t('logout'),
-            onClick: removeUser,
           },
         ],
       }}

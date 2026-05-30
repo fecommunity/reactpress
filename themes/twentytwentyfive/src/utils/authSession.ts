@@ -89,3 +89,11 @@ export function persistThemeSession(user: IUser): void {
   }
   window.localStorage.setItem('user', JSON.stringify(user));
 }
+
+export function clearThemeSession(): void {
+  if (typeof window === 'undefined') return;
+
+  window.localStorage.removeItem('user');
+  window.localStorage.removeItem('token');
+  window.localStorage.removeItem(ADMIN_AUTH_STORAGE_KEY);
+}

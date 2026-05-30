@@ -1,7 +1,7 @@
 import { message } from 'antd';
 import axios, { AxiosResponse } from 'axios';
 
-import { getStoredAccessToken } from '@/utils/authSession';
+import { getStoredAccessToken, clearThemeSession } from '@/utils/authSession';
 
 // 最小化修复：确保正确的baseURL
 const getBaseURL = () => {
@@ -95,7 +95,7 @@ httpProvider.interceptors.response.use(
         case 401:
           if (isBrowser) {
             message.error((err.response && err.response.data && err.response.data.msg) || '未知错误!');
-            window.localStorage.setItem('user', '');
+            clearThemeSession();
             window.location.reload();
           }
           break;

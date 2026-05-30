@@ -26,7 +26,7 @@ import { httpProvider } from '@/providers/http';
 import { PageProvider } from '@/providers/page';
 import { SettingProvider } from '@/providers/setting';
 import { TagProvider } from '@/providers/tag';
-import { persistThemeSession, resolveStoredUser } from '@/utils/authSession';
+import { persistThemeSession, resolveStoredUser, clearThemeSession } from '@/utils/authSession';
 import { resolveInitialThemeState } from '@/utils/colorMode';
 import { safeJsonParse } from '@/utils/json';
 import { persistVisitorLocale, resolveVisitorLocale } from '@/utils/locale';
@@ -112,7 +112,7 @@ class MyApp extends App<
   };
 
   removeUser = () => {
-    window.localStorage.setItem('user', '');
+    clearThemeSession();
     this.setState({ user: null });
     window.location.reload();
   };
