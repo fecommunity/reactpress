@@ -13,7 +13,7 @@ export const FixAntdStyleTransition = () => {
     <style
       id={id}
       dangerouslySetInnerHTML={{
-        __html: ` * { transition: none !important; }`,
+        __html: `[class^="ant-"], [class*=" ant-"] { transition: none !important; }`,
       }}
     ></style>
   );

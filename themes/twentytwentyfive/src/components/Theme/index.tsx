@@ -1,51 +1,36 @@
 import cls from 'classnames';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 
 import { GlobalContext } from '@/context/global';
-import { useToggle } from '@/hooks/useToggle';
+import {
+  applyColorModeClass,
+  persistColorMode,
+  resolvePreferredColorMode,
+} from '@/utils/colorMode';
 
 import styles from './index.module.scss';
 
+interface IProps {}
 
-interface IProps {
+function readInitialDark(): boolean {
+  if (typeof window === 'undefined') {
+    return false;
+  }
+
+  return document.body.classList.contains('dark') || resolvePreferredColorMode();
 }
 
-export const Theme = (props: IProps) => {
-  const [mounted, setMounted] = useState(false);
-  const [dark, toggleDark] = useToggle(false);
+export const Theme = (_props: IProps) => {
+  const [dark, setDark] = useState(readInitialDark);
   const { changeTheme } = useContext(GlobalContext);
 
-  useEffect(() => {
-    const isSystemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const storageTheme = window.localStorage.getItem('dark');
-    const isLastDark = storageTheme === '1';
-    if (storageTheme != null) {
-      toggleDark(isLastDark);
-    } else {
-      toggleDark(isSystemDark !== isLastDark ? isSystemDark : isLastDark);
-    }
-    setMounted(true);
-  }, [toggleDark]);
-
-  useEffect(() => {
-    if (!mounted) {
-      return;
-    }
-    if (dark) {
-      document.body.classList.add('dark');
-    } else {
-      document.body.classList.remove('dark');
-    }
-    window.localStorage.setItem('dark', dark ? '1' : '-1');
-  }, [mounted, dark]);
-
-  useEffect(() => {
-    changeTheme?.(dark ? 'dark' : 'light');
-  }, [dark, changeTheme]);
-
   const modifyTheme = () => {
-    toggleDark();
-    changeTheme?.(dark ? 'dark' : 'light');
+    const nextDark = !dark;
+
+    setDark(nextDark);
+    applyColorModeClass(nextDark);
+    persistColorMode(nextDark);
+    changeTheme?.(nextDark ? 'dark' : 'light');
   };
 
   return (

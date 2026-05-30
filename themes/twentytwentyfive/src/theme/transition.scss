@@ -1,0 +1,28 @@
+$theme-transition-duration: 0.2s;
+$theme-transition-easing: ease-out;
+
+$theme-color-transition: background-color $theme-transition-duration $theme-transition-easing,
+  color $theme-transition-duration $theme-transition-easing,
+  border-color $theme-transition-duration $theme-transition-easing,
+  box-shadow $theme-transition-duration $theme-transition-easing,
+  fill $theme-transition-duration $theme-transition-easing,
+  stroke $theme-transition-duration $theme-transition-easing;
+
+*,
+*::before,
+*::after {
+  transition: $theme-color-transition;
+}
+
+body {
+  transition: $theme-color-transition;
+}
+
+img {
+  transition: opacity $theme-transition-duration $theme-transition-easing;
+}
+
+[class^='ant-'],
+[class*=' ant-'] {
+  transition: $theme-color-transition !important;
+}

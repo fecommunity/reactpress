@@ -27,6 +27,7 @@ import { PageProvider } from '@/providers/page';
 import { SettingProvider } from '@/providers/setting';
 import { TagProvider } from '@/providers/tag';
 import { persistThemeSession, resolveStoredUser } from '@/utils/authSession';
+import { resolveInitialThemeState } from '@/utils/colorMode';
 import { safeJsonParse } from '@/utils/json';
 import { persistVisitorLocale, resolveVisitorLocale } from '@/utils/locale';
 
@@ -54,7 +55,7 @@ class MyApp extends App<
   state = {
     locale: '',
     user: null,
-    theme: null,
+    theme: resolveInitialThemeState(),
     collapsed: false,
   };
 

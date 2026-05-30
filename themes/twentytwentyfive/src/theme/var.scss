@@ -40,6 +40,14 @@ body {
   }
 }
 
+html {
+  color-scheme: light;
+}
+
+html:has(body.dark) {
+  color-scheme: dark;
+}
+
 body.dark {
   --sun-color: #eec413;
   // 暗黑主题
@@ -66,6 +74,5 @@ body.dark {
   
   img {
     opacity: 0.75;
-    transition: opacity 0.5s ease-in-out;
   }
 }
