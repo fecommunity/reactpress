@@ -20,4 +20,6 @@ packages:
   # 工具包
   - 'toolkit'
   # 官方主题包
-  - 'themes/starter/*'
+  - 'themes/hello-world'
+  - 'themes/twentytwentyfive'
+  - 'themes/twentytwentysix'

@@ -16,7 +16,7 @@ describe('lib/theme-warmup', () => {
   it('collects routes from theme.json templates', () => {
     const root = createMonorepoFixture();
     try {
-      const themeDir = path.join(root, 'themes', 'starter', 'demo-theme');
+      const themeDir = path.join(root, 'themes', 'demo-theme');
       const pagesDir = path.join(themeDir, 'pages');
       require('fs').mkdirSync(path.join(pagesDir, 'tag'), { recursive: true });
       require('fs').writeFileSync(

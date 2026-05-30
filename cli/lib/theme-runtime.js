@@ -8,12 +8,19 @@ const { DEV_PORTS, BLOCKED_THEME_DEV_PORTS } = require('./ports');
 const PREVIEW_MANIFEST_REL = path.join('.reactpress', 'preview-theme.json');
 const DEFAULT_PREVIEW_THEME_PORT = DEV_PORTS.THEME_PREVIEW;
 const THEME_ID_RE = /^[a-z0-9][a-z0-9-]*$/i;
-const THEMES_STARTER_SUBDIR = 'starter';
-const THEMES_LEGACY_STARTER_SUBDIRS = ['bundled', 'core'];
+const THEMES_RUNTIME_SUBDIR = 'runtime';
+/** Reserved under `themes/` — not theme template packages */
+const THEMES_RESERVED_SUBDIRS = [THEMES_RUNTIME_SUBDIR, 'starter', 'bundled', 'core'];
+const THEMES_LEGACY_STARTER_SUBDIRS = ['starter', 'bundled', 'core'];
 const BLOCKED_DEV_PORTS = BLOCKED_THEME_DEV_PORTS;
 
 function isValidThemeId(id) {
   return typeof id === 'string' && THEME_ID_RE.test(id) && id.length <= 64;
+}
+
+function isUnderDir(child, parent) {
+  const rel = path.relative(path.resolve(parent), path.resolve(child));
+  return rel === '' || (!rel.startsWith('..') && !path.isAbsolute(rel));
 }
 
 function themeRoots(projectRoot) {
@@ -21,26 +28,43 @@ function themeRoots(projectRoot) {
   const themes = path.join(root, 'themes');
   return {
     themes,
-    starter: path.join(themes, THEMES_STARTER_SUBDIR),
+    runtime: path.join(themes, THEMES_RUNTIME_SUBDIR),
     legacyStarter: THEMES_LEGACY_STARTER_SUBDIRS.map((name) => path.join(themes, name)),
     legacyBundled: path.join(root, 'templates'),
   };
 }
 
+function isThemePackageAt(dir) {
+  return (
+    fs.existsSync(path.join(dir, 'package.json')) ||
+    fs.existsSync(path.join(dir, 'theme.json'))
+  );
+}
+
 function isThemePackageDir(projectRoot, dir) {
   if (!dir) return false;
   const resolved = path.resolve(dir);
-  const { themes, starter, legacyStarter, legacyBundled } = themeRoots(projectRoot);
-  for (const base of [themes, starter, ...legacyStarter, legacyBundled]) {
-    if (!fs.existsSync(base)) continue;
-    const rel = path.relative(base, resolved);
-    if (rel === '' || (rel && !rel.startsWith('..') && !path.isAbsolute(rel))) {
-      return (
-        fs.existsSync(path.join(resolved, 'package.json')) ||
-        fs.existsSync(path.join(resolved, 'theme.json'))
-      );
+  const { themes, runtime, legacyStarter, legacyBundled } = themeRoots(projectRoot);
+
+  if (isUnderDir(resolved, runtime) && isThemePackageAt(resolved)) {
+    return true;
+  }
+
+  if (isUnderDir(resolved, themes) && !isUnderDir(resolved, runtime)) {
+    const rel = path.relative(themes, resolved);
+    const top = rel.split(path.sep)[0];
+    if (top && !THEMES_RESERVED_SUBDIRS.includes(top) && isThemePackageAt(resolved)) {
+      return true;
     }
   }
+
+  for (const base of [...legacyStarter, legacyBundled]) {
+    if (!fs.existsSync(base)) continue;
+    if (isUnderDir(resolved, base) && isThemePackageAt(resolved)) {
+      return true;
+    }
+  }
+
   return false;
 }
 
@@ -51,13 +75,26 @@ function isAllowedThemePort(port) {
 
 function isAllowedThemeDirRel(themeDir) {
   if (typeof themeDir !== 'string') return false;
-  const allowedPrefixes = [
-    'themes/',
-    `themes/${THEMES_STARTER_SUBDIR}/`,
-    ...THEMES_LEGACY_STARTER_SUBDIRS.map((name) => `themes/${name}/`),
-    'templates/',
-  ];
-  return allowedPrefixes.some((prefix) => themeDir.startsWith(prefix));
+  if (themeDir.includes('..') || path.isAbsolute(themeDir)) return false;
+
+  if (themeDir.startsWith(`themes/${THEMES_RUNTIME_SUBDIR}/`)) {
+    return true;
+  }
+
+  if (themeDir.startsWith('themes/') && !themeDir.startsWith(`themes/${THEMES_RUNTIME_SUBDIR}/`)) {
+    const rest = themeDir.slice('themes/'.length);
+    const top = rest.split('/')[0];
+    if (top && !THEMES_RESERVED_SUBDIRS.includes(top)) {
+      return true;
+    }
+  }
+
+  const legacyPrefixes = THEMES_LEGACY_STARTER_SUBDIRS.map((name) => `themes/${name}/`);
+  if (legacyPrefixes.some((prefix) => themeDir.startsWith(prefix))) {
+    return true;
+  }
+
+  return themeDir.startsWith('templates/');
 }
 
 function readActiveThemeManifest(projectRoot) {
@@ -81,19 +118,21 @@ function readActiveThemeManifest(projectRoot) {
 function resolveThemeDirectory(projectRoot, themeId) {
   if (!isValidThemeId(themeId)) return null;
 
-  const installed = path.join(projectRoot, 'themes', themeId);
-  if (isThemePackageDir(projectRoot, installed)) return installed;
+  const runtime = path.join(projectRoot, 'themes', THEMES_RUNTIME_SUBDIR, themeId);
+  if (isThemePackageAt(runtime)) return runtime;
 
-  const starter = path.join(projectRoot, 'themes', THEMES_STARTER_SUBDIR, themeId);
-  if (isThemePackageDir(projectRoot, starter)) return starter;
+  const template = path.join(projectRoot, 'themes', themeId);
+  if (isThemePackageAt(template) && !THEMES_RESERVED_SUBDIRS.includes(themeId)) {
+    return template;
+  }
 
   for (const legacyStarterName of THEMES_LEGACY_STARTER_SUBDIRS) {
     const legacyStarter = path.join(projectRoot, 'themes', legacyStarterName, themeId);
-    if (isThemePackageDir(projectRoot, legacyStarter)) return legacyStarter;
+    if (isThemePackageAt(legacyStarter)) return legacyStarter;
   }
 
   const legacyBundled = path.join(projectRoot, 'templates', themeId);
-  if (isThemePackageDir(projectRoot, legacyBundled)) return legacyBundled;
+  if (isThemePackageAt(legacyBundled)) return legacyBundled;
 
   return null;
 }
@@ -150,13 +189,31 @@ function getPreviewThemePort() {
 }
 
 function hasThemePackages(projectRoot) {
-  const { starter, legacyStarter, legacyBundled } = themeRoots(projectRoot);
-  for (const dir of [starter, ...legacyStarter, legacyBundled]) {
+  const { themes, runtime, legacyStarter, legacyBundled } = themeRoots(projectRoot);
+
+  if (fs.existsSync(runtime)) {
+    if (fs.readdirSync(runtime, { withFileTypes: true }).some((d) => d.isDirectory())) {
+      return true;
+    }
+  }
+
+  if (fs.existsSync(themes)) {
+    if (
+      fs
+        .readdirSync(themes, { withFileTypes: true })
+        .some((d) => d.isDirectory() && !THEMES_RESERVED_SUBDIRS.includes(d.name))
+    ) {
+      return true;
+    }
+  }
+
+  for (const dir of [...legacyStarter, legacyBundled]) {
     if (!fs.existsSync(dir)) continue;
     if (fs.readdirSync(dir, { withFileTypes: true }).some((d) => d.isDirectory())) {
       return true;
     }
   }
+
   return false;
 }
 
@@ -165,7 +222,8 @@ module.exports = {
   PREVIEW_MANIFEST_REL,
   DEFAULT_PREVIEW_THEME_PORT,
   THEME_ID_RE,
-  THEMES_STARTER_SUBDIR,
+  THEMES_RUNTIME_SUBDIR,
+  THEMES_RESERVED_SUBDIRS,
   THEMES_LEGACY_STARTER_SUBDIRS,
   BLOCKED_DEV_PORTS,
   isValidThemeId,

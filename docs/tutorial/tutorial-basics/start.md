@@ -66,7 +66,7 @@ pnpm install
 ├─ server      # NestJS API（本仓开发用）
 ├─ cli         # @fecommunity/reactpress 发布物
 ├─ toolkit     # OpenAPI 生成的 TS SDK
-├─ themes       # 访客主题（starter/ 官方 + 已安装副本）
+├─ themes       # 访客主题（官方模板 + runtime/ 运行时副本）
 └─ package.json
 ```
 

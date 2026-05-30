@@ -817,7 +817,10 @@ reactpress/
 │       ├── modules/        # Feature Modules
 │       └── shared/         # 仅 web 内共享
 ├── themes/
-│   ├── starter/            # 官方入门主题（只读源码）
+│   ├── hello-world/        # 官方入门主题（只读模板）
+│   ├── twentytwentyfive/
+│   ├── twentytwentysix/
+│   └── runtime/            # 安装后的运行时副本
 │   │   └── twentytwentyfive/
 │   └── {theme-id}/         # 用户安装后的可编辑副本（gitignore）
 ├── plugins/                # 官方插件示例

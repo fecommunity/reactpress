@@ -182,7 +182,7 @@ const STRINGS = {
     'themeDev.slow': '[reactpress] Theme site slow to start: {url}',
     'themeDev.notFound': 'Theme package "{id}" not found',
     'themeDev.invalidManifest':
-      'Ignored invalid active-theme.json (only themes/ or themes/starter/ packages apply)',
+      'Ignored invalid active-theme.json (only themes/ or themes/runtime/ packages apply)',
     'themeDev.unavailable': 'will not listen',
     'themeDev.restart': 'active-theme.json changed — restarting theme on :3001…',
     'themeDev.restartFailed': 'theme restart failed: {message}',
@@ -664,7 +664,7 @@ const STRINGS = {
     'themeDev.slow': '[reactpress] 主题站点启动较慢: {url}',
     'themeDev.notFound': '未找到主题包「{id}」',
     'themeDev.invalidManifest':
-      '已忽略无效的 active-theme.json（仅 themes/ 或 themes/starter/ 下的主题包会生效）',
+      '已忽略无效的 active-theme.json（仅 themes/ 或 themes/runtime/ 下的主题包会生效）',
     'themeDev.unavailable': '无法监听',
     'themeDev.restart': 'active-theme.json 已更新，正在重启 :3001 主题进程…',
     'themeDev.restartFailed': '主题重启失败: {message}',

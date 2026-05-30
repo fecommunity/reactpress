@@ -519,11 +519,11 @@ importers:
         specifier: ~4.1.6
         version: 4.1.6
 
-  themes/starter/hello-world:
+  themes/hello-world:
     dependencies:
       '@fecommunity/reactpress-toolkit':
         specifier: workspace:*
-        version: link:../../../toolkit
+        version: link:../../toolkit
       fs-extra:
         specifier: ^10.0.0
         version: 10.1.0
@@ -547,11 +547,11 @@ importers:
         specifier: 4.6.2
         version: 4.6.2
 
-  themes/starter/twentytwentyfive:
+  themes/twentytwentyfive:
     dependencies:
       '@fecommunity/reactpress-toolkit':
         specifier: workspace:*
-        version: link:../../../toolkit
+        version: link:../../toolkit
       next:
         specifier: ^15.5.12
         version: 15.5.18(@babel/core@7.29.0)(@playwright/test@1.60.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.79.3)
@@ -599,11 +599,11 @@ importers:
         specifier: ^5.7.3
         version: 5.9.3
 
-  themes/starter/twentytwentysix:
+  themes/twentytwentysix:
     dependencies:
       '@fecommunity/reactpress-toolkit':
         specifier: workspace:*
-        version: link:../../../toolkit
+        version: link:../../toolkit
       next:
         specifier: ^15.5.12
         version: 15.5.18(@babel/core@7.29.0)(@playwright/test@1.60.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.79.3)
@@ -18436,7 +18436,7 @@ snapshots:
 
   '@babel/template@7.25.0':
     dependencies:
-      '@babel/code-frame': 7.26.2
+      '@babel/code-frame': 7.29.0
       '@babel/parser': 7.25.6
       '@babel/types': 7.29.0
 
@@ -18454,7 +18454,7 @@ snapshots:
 
   '@babel/traverse@7.25.6':
     dependencies:
-      '@babel/code-frame': 7.26.2
+      '@babel/code-frame': 7.29.0
       '@babel/generator': 7.25.6
       '@babel/parser': 7.25.6
       '@babel/template': 7.26.9
@@ -23252,7 +23252,7 @@ snapshots:
 
   ast-types@0.13.4:
     dependencies:
-      tslib: 2.7.0
+      tslib: 2.8.1
 
   ast-types@0.15.2:
     dependencies:
@@ -24499,7 +24499,7 @@ snapshots:
   cosmiconfig@6.0.0:
     dependencies:
       '@types/parse-json': 4.0.2
-      import-fresh: 3.3.0
+      import-fresh: 3.3.1
       parse-json: 5.2.0
       path-type: 4.0.0
       yaml: 1.10.2
@@ -24643,7 +24643,7 @@ snapshots:
       postcss-modules-scope: 3.2.1(postcss@8.5.14)
       postcss-modules-values: 4.0.0(postcss@8.5.14)
       postcss-value-parser: 4.2.0
-      semver: 7.6.3
+      semver: 7.8.1
     optionalDependencies:
       webpack: 5.98.0
 
@@ -31261,7 +31261,7 @@ snapshots:
       cosmiconfig: 8.3.6(typescript@5.6.3)
       jiti: 1.21.7
       postcss: 8.5.14
-      semver: 7.6.3
+      semver: 7.8.1
       webpack: 5.98.0
     transitivePeerDependencies:
       - typescript

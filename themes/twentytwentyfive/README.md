@@ -3,7 +3,7 @@
 Enterprise-grade modern blog template for ReactPress using Next.js 14 App Router.
 
 [![NPM Version](https://img.shields.io/npm/v/@fecommunity/reactpress-template-twentytwentyfive.svg)](https://www.npmjs.com/package/@fecommunity/reactpress-template-twentytwentyfive)
-[![License](https://img.shields.io/npm/l/@fecommunity/reactpress-template-twentytwentyfive.svg)](https://github.com/fecommunity/reactpress/blob/master/themes/starter/twentytwentyfive/LICENSE)
+[![License](https://img.shields.io/npm/l/@fecommunity/reactpress-template-twentytwentyfive.svg)](https://github.com/fecommunity/reactpress/blob/master/themes/twentytwentyfive/LICENSE)
 [![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-%230074c1.svg)](http://www.typescriptlang.org/)
 [![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org/)
 

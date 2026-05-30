@@ -192,8 +192,8 @@ ReactPress 以 **Monorepo** 组织，主要包与模板如下。
 
 | 主题 | 说明 |
 | :--- | :--- |
-| [`hello-world`](./themes/starter/hello-world) | 最小可运行主题，适合快速验证 |
-| [`twentytwentyfive`](./themes/starter/twentytwentyfive) | 功能完整的博客主题 |
+| [`hello-world`](./themes/hello-world) | 最小可运行主题，适合快速验证 |
+| [`twentytwentyfive`](./themes/twentytwentyfive) | 功能完整的博客主题 |
 
 ---
 

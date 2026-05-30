@@ -31,9 +31,10 @@ function projectRoot(): string {
 }
 
 const THEME_ID_RE = /^[a-z0-9][a-z0-9-]*$/i;
-/** Reserved under `themes/` — official starter packages, not user installs */
-const THEMES_STARTER_SUBDIR = 'starter';
-const THEMES_LEGACY_STARTER_SUBDIRS = ['bundled', 'core'];
+/** Runtime copies live here; official templates sit at `themes/{id}/`. */
+const THEMES_RUNTIME_SUBDIR = 'runtime';
+const THEMES_RESERVED_SUBDIRS = new Set([THEMES_RUNTIME_SUBDIR, 'starter', 'bundled', 'core']);
+const THEMES_LEGACY_STARTER_SUBDIRS = ['starter', 'bundled', 'core'];
 
 @Injectable()
 export class ThemeService {
@@ -58,28 +59,28 @@ export class ThemeService {
     return path.join(projectRoot(), 'themes');
   }
 
-  private starterDir(): string {
-    return path.join(this.themesRoot(), THEMES_STARTER_SUBDIR);
+  private templatesDir(): string {
+    return this.themesRoot();
+  }
+
+  private runtimeDir(): string {
+    return path.join(this.themesRoot(), THEMES_RUNTIME_SUBDIR);
   }
 
   private legacyStarterDirs(): string[] {
     return THEMES_LEGACY_STARTER_SUBDIRS.map((name) => path.join(this.themesRoot(), name));
   }
 
-  private installedDir(): string {
-    return this.themesRoot();
-  }
-
   private legacyBundledDir(): string {
     return path.join(projectRoot(), 'templates');
   }
 
-  /** Installed copies may lag behind `themes/starter/` — keep customizer schema in sync for admin UI. */
-  private applyStarterCustomizerSchema(manifest: ThemeManifest): ThemeManifest {
-    const starterPath = path.join(this.starterDir(), manifest.id);
-    const starter = this.readManifest(starterPath);
-    if (!starter?.customizer?.sections?.length) return manifest;
-    return { ...manifest, customizer: starter.customizer };
+  /** Runtime copies may lag behind templates — keep customizer schema in sync for admin UI. */
+  private applyTemplateCustomizerSchema(manifest: ThemeManifest): ThemeManifest {
+    const templatePath = path.join(this.templatesDir(), manifest.id);
+    const template = this.readManifest(templatePath);
+    if (!template?.customizer?.sections?.length) return manifest;
+    return { ...manifest, customizer: template.customizer };
   }
 
   private readManifest(themeDir: string): ThemeManifest | null {
@@ -149,7 +150,7 @@ export class ThemeService {
 
     const add = (manifest: ThemeManifest, source: 'starter' | 'installed') => {
       const installed = installedSet.has(manifest.id) || source === 'installed';
-      const merged = this.applyStarterCustomizerSchema(manifest);
+      const merged = this.applyTemplateCustomizerSchema(manifest);
       byId.set(merged.id, {
         ...merged,
         source,
@@ -159,12 +160,12 @@ export class ThemeService {
       });
     };
 
-    for (const m of this.listDirThemes(this.starterDir(), 'starter')) {
+    for (const m of this.listDirThemes(this.templatesDir(), 'starter', {
+      skipDirNames: THEMES_RESERVED_SUBDIRS,
+    })) {
       add(m, 'starter');
     }
-    for (const m of this.listDirThemes(this.installedDir(), 'installed', {
-      skipDirNames: new Set([THEMES_STARTER_SUBDIR, ...THEMES_LEGACY_STARTER_SUBDIRS]),
-    })) {
+    for (const m of this.listDirThemes(this.runtimeDir(), 'installed')) {
       add(m, 'installed');
     }
 
@@ -190,35 +191,56 @@ export class ThemeService {
   private isSafeThemeDirRel(themeDirRel: string | null): boolean {
     if (themeDirRel == null) return true;
     if (themeDirRel.includes('..') || path.isAbsolute(themeDirRel)) return false;
-    const allowedPrefixes = [
-      'themes/',
-      `themes/${THEMES_STARTER_SUBDIR}/`,
-      ...THEMES_LEGACY_STARTER_SUBDIRS.map((name) => `themes/${name}/`),
-      'templates/',
-    ];
-    return allowedPrefixes.some((prefix) => themeDirRel.startsWith(prefix));
+
+    if (themeDirRel.startsWith(`themes/${THEMES_RUNTIME_SUBDIR}/`)) {
+      return true;
+    }
+
+    if (themeDirRel.startsWith('themes/') && !themeDirRel.startsWith(`themes/${THEMES_RUNTIME_SUBDIR}/`)) {
+      const rest = themeDirRel.slice('themes/'.length);
+      const top = rest.split('/')[0];
+      if (top && !THEMES_RESERVED_SUBDIRS.has(top)) {
+        return true;
+      }
+    }
+
+    const legacyPrefixes = THEMES_LEGACY_STARTER_SUBDIRS.map((name) => `themes/${name}/`);
+    if (legacyPrefixes.some((prefix) => themeDirRel.startsWith(prefix))) {
+      return true;
+    }
+
+    return themeDirRel.startsWith('templates/');
   }
 
   private resolveThemeDir(id: string): string | null {
     if (!this.isValidThemeId(id)) return null;
-    const installed = path.join(this.installedDir(), id);
-    if (fs.existsSync(installed) && this.isUnderDir(installed, this.installedDir())) {
-      return installed;
+
+    const runtime = path.join(this.runtimeDir(), id);
+    if (fs.existsSync(runtime) && this.isUnderDir(runtime, this.runtimeDir())) {
+      return runtime;
     }
-    const starter = path.join(this.starterDir(), id);
-    if (fs.existsSync(starter) && this.isUnderDir(starter, this.starterDir())) {
-      return starter;
+
+    const template = path.join(this.templatesDir(), id);
+    if (
+      fs.existsSync(template) &&
+      !THEMES_RESERVED_SUBDIRS.has(id) &&
+      this.isUnderDir(template, this.templatesDir())
+    ) {
+      return template;
     }
+
     for (const legacyStarter of this.legacyStarterDirs()) {
       const legacy = path.join(legacyStarter, id);
       if (fs.existsSync(legacy) && this.isUnderDir(legacy, legacyStarter)) {
         return legacy;
       }
     }
+
     const legacyBundled = path.join(this.legacyBundledDir(), id);
     if (fs.existsSync(legacyBundled) && this.isUnderDir(legacyBundled, this.legacyBundledDir())) {
       return legacyBundled;
     }
+
     return null;
   }
 
@@ -226,17 +248,17 @@ export class ThemeService {
     if (!this.isValidThemeId(id)) {
       throw new BadRequestException(`Invalid theme id "${id}"`);
     }
-    const starterPath = path.join(this.starterDir(), id);
-    if (!fs.existsSync(starterPath)) {
-      throw new NotFoundException(`Starter theme "${id}" not found`);
+    const templatePath = path.join(this.templatesDir(), id);
+    if (!fs.existsSync(templatePath) || THEMES_RESERVED_SUBDIRS.has(id)) {
+      throw new NotFoundException(`Theme template "${id}" not found`);
     }
-    const targetDir = path.join(this.installedDir(), id);
-    fs.mkdirSync(this.installedDir(), { recursive: true });
+    const targetDir = path.join(this.runtimeDir(), id);
+    fs.mkdirSync(this.runtimeDir(), { recursive: true });
     if (fs.existsSync(targetDir)) {
       this.removeDir(targetDir);
     }
-    this.copyDir(starterPath, targetDir);
-    this.linkStarterNodeModules(starterPath, targetDir);
+    this.copyDir(templatePath, targetDir);
+    this.linkTemplateNodeModules(templatePath, targetDir);
 
     const state = await this.getThemeState();
     const installedThemes = state.installedThemes.includes(id)
@@ -583,9 +605,9 @@ export class ThemeService {
     }
   }
 
-  /** Reuse starter theme node_modules in monorepo dev (pnpm symlinks cannot be copyFileSync'd). */
-  private linkStarterNodeModules(starterPath: string, targetDir: string): void {
-    const srcModules = path.join(starterPath, 'node_modules');
+  /** Reuse template theme node_modules in monorepo dev (pnpm symlinks cannot be copyFileSync'd). */
+  private linkTemplateNodeModules(templatePath: string, targetDir: string): void {
+    const srcModules = path.join(templatePath, 'node_modules');
     const destModules = path.join(targetDir, 'node_modules');
     if (!fs.existsSync(srcModules) || fs.existsSync(destModules)) return;
     const linkTarget = path.relative(targetDir, srcModules);
