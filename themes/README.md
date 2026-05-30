@@ -18,7 +18,7 @@
 | `themes/hello-world` | **最低成本**入门主题（推荐新主题复制） |
 | `themes/twentytwentyfive` | 完整博客（分类/标签/搜索/文章） |
 | `themes/twentytwentysix` | **client 迁移主题**（双栏 + 知识库/归档/导航/RSS） |
-| `themes/runtime/{theme-id}/` | 安装/激活后的运行时副本（默认 gitignore） |
+| `.reactpress/runtime/{theme-id}/` | 安装后的临时运行时副本（随 `.reactpress/` gitignore） |
 
 ## WordPress 概念对照
 
@@ -76,7 +76,7 @@ export const getStaticProps = async ({ params }) => {
 ## 工作流程
 
 1. 后台浏览官方主题模板（`themes/{theme-id}/`）
-2. 安装 → 复制到 `themes/runtime/{theme-id}/`
+2. 安装 → 复制到 `.reactpress/runtime/{theme-id}/`
 3. `reactpress theme dev` / `pnpm dev` 注入 API 环境变量
 
 > `cli/templates/` 是项目脚手架，与访客主题无关。

@@ -31,9 +31,10 @@ function projectRoot(): string {
 }
 
 const THEME_ID_RE = /^[a-z0-9][a-z0-9-]*$/i;
-/** Runtime copies live here; official templates sit at `themes/{id}/`. */
-const THEMES_RUNTIME_SUBDIR = 'runtime';
-const THEMES_RESERVED_SUBDIRS = new Set([THEMES_RUNTIME_SUBDIR, 'starter', 'bundled', 'core']);
+/** Ephemeral installed copies — under .reactpress/ with active-theme.json */
+const THEME_RUNTIME_REL = path.join('.reactpress', 'runtime');
+const LEGACY_THEMES_RUNTIME_REL = path.join('themes', 'runtime');
+const THEMES_RESERVED_SUBDIRS = new Set(['starter', 'bundled', 'core']);
 const THEMES_LEGACY_STARTER_SUBDIRS = ['starter', 'bundled', 'core'];
 
 @Injectable()
@@ -64,7 +65,7 @@ export class ThemeService {
   }
 
   private runtimeDir(): string {
-    return path.join(this.themesRoot(), THEMES_RUNTIME_SUBDIR);
+    return path.join(projectRoot(), THEME_RUNTIME_REL);
   }
 
   private legacyStarterDirs(): string[] {
@@ -192,11 +193,15 @@ export class ThemeService {
     if (themeDirRel == null) return true;
     if (themeDirRel.includes('..') || path.isAbsolute(themeDirRel)) return false;
 
-    if (themeDirRel.startsWith(`themes/${THEMES_RUNTIME_SUBDIR}/`)) {
+    if (themeDirRel.startsWith(`${THEME_RUNTIME_REL}/`)) {
       return true;
     }
 
-    if (themeDirRel.startsWith('themes/') && !themeDirRel.startsWith(`themes/${THEMES_RUNTIME_SUBDIR}/`)) {
+    if (themeDirRel.startsWith(`${LEGACY_THEMES_RUNTIME_REL}/`)) {
+      return true;
+    }
+
+    if (themeDirRel.startsWith('themes/') && !themeDirRel.startsWith(`${LEGACY_THEMES_RUNTIME_REL}/`)) {
       const rest = themeDirRel.slice('themes/'.length);
       const top = rest.split('/')[0];
       if (top && !THEMES_RESERVED_SUBDIRS.has(top)) {
@@ -218,6 +223,12 @@ export class ThemeService {
     const runtime = path.join(this.runtimeDir(), id);
     if (fs.existsSync(runtime) && this.isUnderDir(runtime, this.runtimeDir())) {
       return runtime;
+    }
+
+    const legacyRuntimeRoot = path.join(projectRoot(), LEGACY_THEMES_RUNTIME_REL);
+    const legacyRuntime = path.join(legacyRuntimeRoot, id);
+    if (fs.existsSync(legacyRuntime) && this.isUnderDir(legacyRuntime, legacyRuntimeRoot)) {
+      return legacyRuntime;
     }
 
     const template = path.join(this.templatesDir(), id);

@@ -27,7 +27,7 @@ reactpress/
 ├── server/          # NestJS API (primary backend in this repo)
 ├── client/          # Next.js frontend
 ├── toolkit/         # OpenAPI-generated API SDK
-├── themes/          # Visitor themes (templates + runtime/)
+├── themes/          # Visitor theme templates
 ├── scripts/         # dev, deploy, lifecycle
 ├── docs/            # Docusaurus site
 └── .reactpress/     # Local CLI config
