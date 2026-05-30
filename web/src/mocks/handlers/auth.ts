@@ -2,7 +2,9 @@ import { http } from "msw";
 
 import { ERROR_CODES, errorResponse, successResponse, withDelay } from "../createHandler";
 import { MOCK_USERS } from "../data";
+import { getMockSessionUsername, setMockSessionUsername } from "../mockSession";
 import { verifyMockCredential } from "../mockCredentials";
+import { findMockUserByUsername } from "./user";
 
 export const authHandlers = [
   http.post("/api/auth/login", async ({ request }) => {
@@ -11,19 +13,26 @@ export const authHandlers = [
       username: string;
       password: string;
     };
-    if (body.username === "admin" && body.password === "admin") {
-      return successResponse({
-        accessToken: "mock-access-token",
-        refreshToken: "mock-refresh-token",
-      });
+    const valid =
+      (body.username === "admin" && body.password === "admin") ||
+      verifyMockCredential(body.username, body.password);
+    if (!valid) {
+      return errorResponse(ERROR_CODES.INVALID_CREDENTIALS, "Invalid username or password");
     }
-    if (verifyMockCredential(body.username, body.password)) {
-      return successResponse({
-        accessToken: "mock-access-token",
-        refreshToken: "mock-refresh-token",
-      });
+
+    const user = findMockUserByUsername(body.username);
+    if (!user || !user.roles.includes("admin")) {
+      return errorResponse(
+        ERROR_CODES.ADMIN_ACCESS_DENIED,
+        "Please contact an administrator for access authorization",
+      );
     }
-    return errorResponse(ERROR_CODES.INVALID_CREDENTIALS, "Invalid username or password");
+
+    setMockSessionUsername(body.username);
+    return successResponse({
+      accessToken: "mock-access-token",
+      refreshToken: "mock-refresh-token",
+    });
   }),
 
   http.post("/api/auth/refresh", async () => {
@@ -37,9 +46,19 @@ export const authHandlers = [
   http.post("/api/auth/logout", () => successResponse(null)),
 
   http.get("/api/auth/user", () => {
-    const { permissions: _permissions, ...userWithoutPermissions } = MOCK_USERS[0]!;
+    const username = getMockSessionUsername();
+    const user = username ? findMockUserByUsername(username) : MOCK_USERS[0];
+    if (!user) {
+      const { permissions: _permissions, ...userWithoutPermissions } = MOCK_USERS[0]!;
+      return successResponse(userWithoutPermissions);
+    }
+    const { permissions: _permissions, ...userWithoutPermissions } = user;
     return successResponse(userWithoutPermissions);
   }),
 
-  http.get("/api/auth/permissions", () => successResponse(MOCK_USERS[0]!.permissions)),
+  http.get("/api/auth/permissions", () => {
+    const username = getMockSessionUsername();
+    const user = username ? findMockUserByUsername(username) : MOCK_USERS[0];
+    return successResponse(user?.permissions ?? MOCK_USERS[0]!.permissions);
+  }),
 ];

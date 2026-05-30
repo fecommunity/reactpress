@@ -7,7 +7,7 @@ import { ApiError, httpClient } from "@/utils/http";
 
 export type RegisterAccountInput = {
   username: string;
-  email?: string | null;
+  email: string;
   password: string;
 };
 
@@ -29,7 +29,7 @@ export async function registerAccount(values: RegisterAccountInput): Promise<voi
         body: {
           name: values.username,
           password: values.password,
-          email: values.email ?? null,
+          email: values.email,
           role,
         },
       } as Parameters<typeof api.user.register>[0]);
@@ -38,7 +38,7 @@ export async function registerAccount(values: RegisterAccountInput): Promise<voi
 
     const payload = CreateUserRequestSchema.parse({
       username: values.username,
-      email: values.email ?? null,
+      email: values.email,
       roles: [role],
     });
 

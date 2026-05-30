@@ -1,3 +1,7 @@
+export function isValidEmail(email: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
 export function isValidUsername(username) {
   // 字符限制，只允许字母、数字、下划线
   const reg = /^[a-zA-Z0-9_]+$/;

@@ -1,14 +1,20 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 
+import { hasAdminConsoleAccess } from "@/shared/auth/adminAccess";
 import { MainLayout } from "@/components/Layout/MainLayout";
 import { useAuthStore } from "@/stores/auth";
 import { canAccessPath, normalizeAppPath } from "@/utils/appMenu";
 
 export const Route = createFileRoute("/_auth")({
   beforeLoad: ({ location }) => {
-    const { isAuthenticated, user } = useAuthStore.getState();
+    const { isAuthenticated, user, logout } = useAuthStore.getState();
     if (!isAuthenticated) {
-      throw redirect({ to: "/login" });
+      throw redirect({ to: "/login", search: {} });
+    }
+
+    if (!hasAdminConsoleAccess(user)) {
+      logout();
+      throw redirect({ to: "/login", search: { reason: "adminRequired" } });
     }
 
     const path = normalizeAppPath(location.pathname);

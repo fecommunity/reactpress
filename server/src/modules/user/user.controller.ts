@@ -16,6 +16,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { ApiMsg } from '../../common/api-messages';
+import { isValidEmail } from '../../utils/user.util';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Roles, RolesGuard } from '../auth/roles.guard';
 import { User } from './user.entity';
@@ -46,6 +47,13 @@ export class UserController {
   @Post('register')
   @HttpCode(HttpStatus.CREATED)
   async register(@Body() user: Partial<User>): Promise<User> {
+    const email = typeof user.email === 'string' ? user.email.trim() : '';
+    if (!email) {
+      throw new HttpException(ApiMsg.EMAIL_REQUIRED, HttpStatus.BAD_REQUEST);
+    }
+    if (!isValidEmail(email)) {
+      throw new HttpException(ApiMsg.EMAIL_INVALID, HttpStatus.BAD_REQUEST);
+    }
     const d = await this.userService.createUser(user);
     return d;
   }

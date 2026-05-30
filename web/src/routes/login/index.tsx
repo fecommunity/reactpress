@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, Link, redirect, useNavigate } from "@tanstack/react-router";
 import { App, Button, Form, Input, Space } from "antd";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Trans } from "react-i18next";
 
 import { AUTH_ENDPOINTS } from "@/api/auth";
@@ -11,6 +11,7 @@ import { Theme } from "@/components/Icon";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useAppLocale } from "@/hooks/useAppLocale";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
+import { AdminAccessDeniedError } from "@/shared/auth/adminAccess";
 import { getLoginErrorMessage } from "@/shared/auth/loginErrorMessage";
 import { fetchSessionFromMockApi, loginWithServerCredentials } from "@/shared/auth/session";
 import { useAuthStore } from "@/stores/auth";
@@ -24,7 +25,14 @@ import { LoginDocsHome } from "./docs-home";
 import homeStyles from "./docs-home/login-docs-home.module.css";
 import pageStyles from "./login-page.module.css";
 
+type LoginSearch = {
+  reason?: string;
+};
+
 export const Route = createFileRoute("/login/")({
+  validateSearch: (search: Record<string, unknown>): LoginSearch => ({
+    reason: typeof search.reason === "string" ? search.reason : undefined,
+  }),
   beforeLoad: () => {
     const { isAuthenticated } = useAuthStore.getState();
     if (isAuthenticated) {
@@ -37,6 +45,7 @@ export const Route = createFileRoute("/login/")({
 function LoginPage() {
   useDocumentTitle("login.title");
   const navigate = useNavigate();
+  const { reason } = Route.useSearch();
   const { message } = App.useApp();
   const { t } = useAppLocale();
   const locale = useSettingsStore((s) => s.locale);
@@ -45,6 +54,12 @@ function LoginPage() {
   const scrollerRef = useRef<HTMLDivElement>(null);
 
   const docsUrl = reactpressDocsPath(locale, "/docs/tutorial-basics/start");
+
+  useEffect(() => {
+    if (reason === "adminRequired") {
+      message.warning(t("login.adminAccessRequired"));
+    }
+  }, [message, reason, t]);
 
   const loginMutation = useMutation({
     mutationFn: async (values: LoginRequest) => {
@@ -63,7 +78,12 @@ function LoginPage() {
       void navigate({ to: "/dashboard" });
     },
     onError: (err) => {
-      message.error(getLoginErrorMessage(err, t));
+      const text = getLoginErrorMessage(err, t);
+      if (err instanceof AdminAccessDeniedError || text === t("login.adminAccessRequired")) {
+        message.warning(text);
+        return;
+      }
+      message.error(text);
     },
   });
 

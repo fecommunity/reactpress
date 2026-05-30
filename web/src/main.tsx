@@ -13,6 +13,7 @@ import {
   isMockAccessToken,
   validateServerAuthSession,
 } from "./shared/auth/session";
+import { hasAdminConsoleAccess } from "./shared/auth/adminAccess";
 import { adminMenuToSidebar } from "./shared/menu";
 import { bootstrapAdmin, getMenuTreeForPermissions } from "./shell/bootstrap";
 import { useAuthStore } from "./stores/auth";
@@ -71,7 +72,9 @@ enableMocking()
     await i18n.changeLanguage(locale);
     const { isAuthenticated, tokens, user } = useAuthStore.getState();
 
-    if (AUTH_MODE === "server" && isAuthenticated) {
+    if (isAuthenticated && user && !hasAdminConsoleAccess(user)) {
+      useAuthStore.getState().logout();
+    } else if (AUTH_MODE === "server" && isAuthenticated) {
       if (isMockAccessToken(tokens?.accessToken)) {
         clearInvalidServerSession();
       } else {

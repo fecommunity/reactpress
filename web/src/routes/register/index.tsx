@@ -32,7 +32,7 @@ export const Route = createFileRoute("/register/")({
 
 type RegisterFormValues = {
   username: string;
-  email?: string;
+  email: string;
   password: string;
   confirmPassword: string;
 };
@@ -49,13 +49,13 @@ function RegisterPage() {
     mutationFn: async (values: RegisterFormValues) => {
       await registerAccount({
         username: values.username.trim(),
-        email: values.email?.trim() || null,
+        email: values.email.trim(),
         password: values.password,
       });
     },
     onSuccess: () => {
       message.success(t("register.success"));
-      void navigate({ to: "/login" });
+      void navigate({ to: "/login", search: {} });
     },
   });
 
@@ -126,7 +126,10 @@ function RegisterPage() {
                   <Form.Item
                     name="email"
                     label={t("register.email")}
-                    rules={[{ type: "email", message: t("register.emailInvalid") }]}
+                    rules={[
+                      { required: true, message: t("register.emailRequired") },
+                      { type: "email", message: t("register.emailInvalid") },
+                    ]}
                   >
                     <Input
                       id="register-email"
@@ -193,7 +196,10 @@ function RegisterPage() {
 
               <div className={pageStyles.authMeta}>
                 <p className={pageStyles.authFooter}>
-                  {t("register.hasAccount")} <Link to="/login">{t("register.signInLink")}</Link>
+                  {t("register.hasAccount")}{" "}
+                  <Link to="/login" search={{}}>
+                    {t("register.signInLink")}
+                  </Link>
                 </p>
               </div>
             </div>

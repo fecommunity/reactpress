@@ -1,3 +1,4 @@
+import { permissionsForRole } from "@fecommunity/reactpress-toolkit/plugin/admin";
 import { http } from "msw";
 
 import { ERROR_CODES, errorResponse, successResponse, withDelay } from "../createHandler";
@@ -8,6 +9,10 @@ import { filterUsers, paginateList, parsePaginationParams } from "../utils";
 type MockUserRow = (typeof MOCK_USERS)[number] & { status: "active" | "locked" };
 
 let users: MockUserRow[] = MOCK_USERS.map((user) => ({ ...user, status: "active" as const }));
+
+export function findMockUserByUsername(username: string): MockUserRow | undefined {
+  return users.find((user) => user.username === username);
+}
 
 function mapMockUserForServer(user: MockUserRow) {
   const role = user.roles[0] ?? "visitor";
@@ -39,6 +44,10 @@ export const userHandlers = [
     await withDelay(200);
     const body = (await request.json()) as Record<string, unknown>;
     const username = String(body.name ?? body.username);
+    const email = typeof body.email === "string" ? body.email.trim() : "";
+    if (!email) {
+      return errorResponse(ERROR_CODES.BAD_REQUEST, "Email is required");
+    }
     if (users.some((user) => user.username === username)) {
       return errorResponse(ERROR_CODES.BAD_REQUEST, "Username already exists");
     }
@@ -49,9 +58,9 @@ export const userHandlers = [
       id: String(users.length + 1),
       username,
       avatar: null,
-      email: typeof body.email === "string" ? body.email : null,
+      email,
       roles: [role],
-      permissions: [],
+      permissions: permissionsForRole(role),
       status: "active" as const,
     };
     users.push(newUser);

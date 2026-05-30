@@ -8,6 +8,7 @@ import {
   PermissionsListSchema,
   UserSchema,
 } from "@/api/schemas";
+import { AdminAccessDeniedError, assertAdminConsoleAccess } from "@/shared/auth/adminAccess";
 import { getToolkitClient, resetToolkitClient } from "@/shared/client";
 import { adminMenuToSidebar } from "@/shared/menu";
 import { getMenuTreeForPermissions } from "@/shell/bootstrap";
@@ -91,6 +92,7 @@ export async function fetchSessionFromServer(
 }
 
 function applySession(user: ReturnType<typeof UserSchema.parse>, permissions: string[]) {
+  assertAdminConsoleAccess(user);
   const menus = adminMenuToSidebar(getMenuTreeForPermissions(permissions));
   const { setUser, setMenus } = useAuthStore.getState();
   setUser(user);
@@ -102,6 +104,10 @@ export async function loginWithServerCredentials(name: string, password: string)
   const data = (await api.auth.login({
     body: { name, password },
   } as Parameters<typeof api.auth.login>[0])) as Record<string, unknown>;
+  const role = String(data.role ?? "");
+  if (role !== "admin") {
+    throw new AdminAccessDeniedError();
+  }
   const token = String(data.token ?? "");
   const tokens = AuthTokensSchema.parse({
     accessToken: token,

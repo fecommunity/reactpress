@@ -114,6 +114,10 @@ export class UserService {
       );
     }
 
+    if (existUser.role !== 'admin') {
+      throw new HttpException(ApiMsg.ADMIN_CONSOLE_ACCESS_REQUIRED, HttpStatus.FORBIDDEN);
+    }
+
     delete existUser.password;
 
     return existUser;

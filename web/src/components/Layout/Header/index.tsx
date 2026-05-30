@@ -83,7 +83,7 @@ export function Header() {
       label: t("common.signOut"),
       onClick: () => {
         logout();
-        void navigate({ to: "/login" });
+        void navigate({ to: "/login", search: {} });
       },
     },
   ];

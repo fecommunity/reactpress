@@ -11,6 +11,9 @@ export const ApiMsg = {
   WEBHOOK_NOT_FOUND: 'Webhook not found',
 
   USERNAME_PASSWORD_REQUIRED: 'Username and password are required',
+  EMAIL_REQUIRED: 'Email is required',
+  EMAIL_INVALID: 'Please enter a valid email address',
+  ADMIN_CONSOLE_ACCESS_REQUIRED: 'Please contact an administrator for access authorization',
   USERNAME_INVALID: 'Username cannot contain spaces or invalid characters',
   USER_EXISTS: 'User already exists',
   INVALID_CREDENTIALS: 'Invalid username or password',
