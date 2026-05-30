@@ -1,0 +1,336 @@
+.section {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1100px;
+  min-height: 100%;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 2.75rem;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.heading {
+  font-size: clamp(1.25rem, 3vw, 1.5rem);
+  font-weight: 700;
+  margin: 0;
+  color: var(--home-text);
+  animation: fadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 1.3rem 1.35rem;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 6px 28px rgba(0, 0, 0, 0.06);
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  overflow: hidden;
+  animation: fadeUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+html[data-theme="light"] .card {
+  background: rgba(255, 255, 255, 0.78);
+  border-color: var(--home-border);
+  box-shadow: 0 6px 28px rgba(8, 126, 164, 0.08);
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--home-button-primary), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.card:hover {
+  border-color: rgba(65, 209, 255, 0.4);
+  box-shadow:
+    0 10px 36px rgba(65, 209, 255, 0.12),
+    0 0 0 1px rgba(65, 209, 255, 0.08);
+  transform: translateY(-3px);
+}
+
+.card:hover::before {
+  opacity: 1;
+}
+
+.icon {
+  font-size: 1.55rem;
+  line-height: 1;
+  display: block;
+  margin-bottom: 0.65rem;
+  filter: drop-shadow(0 0 6px rgba(65, 209, 255, 0.35));
+}
+
+.iconBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-bottom: 0.75rem;
+  border-radius: 10px;
+  color: var(--home-button-primary);
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--home-button-primary) 14%, transparent),
+    color-mix(in srgb, #bd34fe 10%, transparent)
+  );
+  border: 1px solid color-mix(in srgb, var(--home-button-primary) 22%, transparent);
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--home-button-primary) 12%, transparent);
+}
+
+.cardTitle {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 0.45rem;
+  color: var(--home-text);
+}
+
+.cardDesc {
+  font-size: 0.88rem;
+  line-height: 1.55;
+  margin: 0;
+  color: var(--home-secondary-text);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heading,
+  .card {
+    animation: none;
+  }
+}
+
+/* 首屏内嵌：与登录表单同屏 */
+.embedded.section {
+  min-height: unset;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  justify-content: center;
+}
+
+.embedded .header {
+  margin-bottom: 0.75rem;
+  text-align: left;
+}
+
+.embedded .heading {
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  color: var(--rp-text, var(--home-text));
+}
+
+.embeddedGrid {
+  grid-template-columns: 1fr;
+  gap: 0.65rem;
+}
+
+.embedded .card {
+  padding: 0.85rem 1rem;
+  animation: none;
+}
+
+.embedded .icon {
+  font-size: 1.2rem;
+  margin-bottom: 0.4rem;
+}
+
+.embedded .cardTitle {
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+}
+
+.embedded .cardDesc {
+  font-size: 0.75rem;
+  line-height: 1.45;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+html[data-theme="light"] .embedded .card {
+  background: rgba(255, 255, 255, 0.94);
+  border-color: var(--rp-border, var(--home-border));
+}
+
+@media (min-width: 900px) {
+  .embeddedGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 899px) {
+  .embedded .header {
+    text-align: center;
+  }
+
+  .embeddedGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+
+  .embedded .card {
+    padding: 0.65rem 0.5rem;
+  }
+
+  .embedded .cardDesc {
+    -webkit-line-clamp: 3;
+    font-size: 0.6875rem;
+  }
+}
+
+/* 第二屏 Hero 底部 */
+.heroMerged.section {
+  display: flex;
+  flex-direction: column;
+  min-height: unset;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+.heroMerged .header {
+  flex-shrink: 0;
+  margin-bottom: clamp(0.65rem, 1.4vh, 0.85rem);
+  text-align: left;
+}
+
+.heroMerged .heading {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: clamp(0.95rem, 1.7vw, 1.1rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--home-text);
+}
+
+.heroMerged .heading::before {
+  content: "";
+  flex-shrink: 0;
+  width: 3px;
+  height: 1.05em;
+  border-radius: 99px;
+  background: linear-gradient(180deg, #41d1ff, #bd34fe);
+}
+
+.heroMergedGrid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.75rem, 1.5vw, 1rem);
+  align-items: stretch;
+}
+
+.heroMerged .card {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(1.05rem, 2vw, 1.2rem) clamp(1rem, 2vw, 1.15rem);
+  border-radius: 16px;
+  animation: none;
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html[data-theme="light"] .heroMerged .card {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: color-mix(in srgb, var(--home-border) 90%, transparent);
+  box-shadow:
+    0 1px 2px rgba(15, 23, 32, 0.04),
+    0 8px 24px rgba(8, 126, 164, 0.06);
+}
+
+html[data-theme="dark"] .heroMerged .card {
+  background: color-mix(in srgb, var(--home-background) 88%, transparent);
+  border-color: color-mix(in srgb, var(--home-border) 70%, transparent);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.22);
+}
+
+.heroMerged .card:hover {
+  transform: translateY(-2px);
+}
+
+.heroMerged .iconBadge {
+  width: 2.35rem;
+  height: 2.35rem;
+  margin-bottom: 0.65rem;
+}
+
+.heroMerged .cardTitle {
+  font-size: clamp(0.9rem, 1.5vw, 1rem);
+  margin-bottom: 0.3rem;
+  letter-spacing: -0.01em;
+}
+
+.heroMerged .cardDesc {
+  font-size: clamp(0.78rem, 1.25vw, 0.86rem);
+  line-height: 1.55;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+
+@media (max-width: 900px) {
+  .heroMerged .header {
+    text-align: center;
+  }
+}
+
+@media (max-width: 720px) {
+  .heroMergedGrid {
+    grid-template-columns: 1fr;
+    gap: 0.65rem;
+  }
+
+  .heroMerged .card {
+    padding: 1rem 1.1rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .grid:not(.embeddedGrid):not(.heroMergedGrid) {
+    grid-template-columns: 1fr;
+  }
+
+  .section:not(.embedded):not(.heroMerged) {
+    padding-top: 1.5rem;
+  }
+}

@@ -1,6 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { App, Button, Form, Input, Space } from "antd";
+import { useRef } from "react";
 import { Trans } from "react-i18next";
 
 import { AUTH_ENDPOINTS } from "@/api/auth";
@@ -10,7 +11,6 @@ import { Theme } from "@/components/Icon";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useAppLocale } from "@/hooks/useAppLocale";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
-import { useMinWidth } from "@/hooks/useMinWidth";
 import { getLoginErrorMessage } from "@/shared/auth/loginErrorMessage";
 import { fetchSessionFromMockApi, loginWithServerCredentials } from "@/shared/auth/session";
 import { useAuthStore } from "@/stores/auth";
@@ -19,8 +19,9 @@ import { AUTH_MODE, REACTPRESS_GITHUB_URL, reactpressDocsPath } from "@/utils/co
 import { httpClient } from "@/utils/http";
 
 import { LoginBrandMark } from "./-LoginBrandMark";
-import { LoginHeroPanel } from "./-LoginHeroPanel";
-import { LoginMobileShowcase } from "./-LoginMobileShowcase";
+import { LoginSnapNav } from "./-LoginSnapNav";
+import { LoginDocsHome } from "./docs-home";
+import homeStyles from "./docs-home/login-docs-home.module.css";
 import pageStyles from "./login-page.module.css";
 
 export const Route = createFileRoute("/login/")({
@@ -41,7 +42,7 @@ function LoginPage() {
   const locale = useSettingsStore((s) => s.locale);
   const setTokens = useAuthStore((s) => s.setTokens);
   const toggleDarkMode = useSettingsStore((s) => s.toggleDarkMode);
-  const isWide = useMinWidth(900);
+  const scrollerRef = useRef<HTMLDivElement>(null);
 
   const docsUrl = reactpressDocsPath(locale, "/docs/tutorial-basics/start");
 
@@ -68,29 +69,30 @@ function LoginPage() {
 
   return (
     <div className={pageStyles.page}>
-      <div className={pageStyles.shell}>
-        <LoginHeroPanel />
+      <header className={pageStyles.fixedToolbar}>
+        <Space size={4} className={pageStyles.utilities}>
+          <LanguageSwitcher size="small" compact />
+          <Button
+            type="text"
+            size="small"
+            onClick={toggleDarkMode}
+            icon={<Theme size={16} />}
+            aria-label={t("common.toggleTheme")}
+          />
+        </Space>
+      </header>
 
-        <div className={pageStyles.mobileHero}>
-          <p className={pageStyles.mobileHeroTagline}>{t("login.showcase.tagline")}</p>
-        </div>
+      <LoginSnapNav scrollerRef={scrollerRef} />
 
-        <LoginMobileShowcase />
-
-        <div className={pageStyles.authColumn}>
-          <header className={pageStyles.authToolbar}>
-            <Space size={4} className={pageStyles.utilities}>
-              <LanguageSwitcher size="small" compact />
-              <Button
-                type="text"
-                size="small"
-                onClick={toggleDarkMode}
-                icon={<Theme size={16} />}
-                aria-label={t("common.toggleTheme")}
-              />
-            </Space>
-          </header>
-
+      <div
+        className={`${pageStyles.snapScroller} ${homeStyles.themeScope}`}
+        data-login-snap-root
+        ref={scrollerRef}
+      >
+        <section
+          className={`${pageStyles.snapScreen} ${pageStyles.screenAuth}`}
+          data-login-screen="auth"
+        >
           <main className={pageStyles.authMain}>
             <div className={pageStyles.authStack}>
               <LoginBrandMark />
@@ -115,7 +117,7 @@ function LoginPage() {
                       placeholder={t("login.usernamePlaceholder")}
                       size="large"
                       autoComplete="username"
-                      autoFocus={isWide}
+                      autoFocus
                     />
                   </Form.Item>
 
@@ -124,7 +126,8 @@ function LoginPage() {
                     label={t("login.password")}
                     rules={[{ required: true, message: t("login.passwordRequired") }]}
                   >
-                    <Input.Password
+                    <Input
+                      type="password"
                       id="login-password"
                       aria-label={t("login.password")}
                       placeholder={t("login.passwordPlaceholder")}
@@ -168,7 +171,9 @@ function LoginPage() {
               />
             </p>
           </footer>
-        </div>
+        </section>
+
+        <LoginDocsHome />
       </div>
     </div>
   );

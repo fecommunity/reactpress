@@ -1,0 +1,114 @@
+.wrapper {
+  text-align: center;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 100%;
+  background: var(--home-section-bottom);
+}
+
+.wrapper::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% 0%, rgba(189, 52, 254, 0.12), transparent),
+    radial-gradient(ellipse 60% 40% at 80% 100%, rgba(65, 209, 255, 0.1), transparent);
+  pointer-events: none;
+}
+
+.background {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-image: url("/img/cta-bg-pattern.png");
+  background-size: cover;
+  background-position: center center;
+  opacity: 0.06;
+  pointer-events: none;
+}
+
+.container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 3.5rem 1.25rem 4.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header {
+  margin-bottom: 0.75rem;
+}
+
+.title {
+  font-size: clamp(1.5rem, 4vw, 2.1rem);
+  line-height: 1.3;
+  margin: 0 0 0.5rem;
+  background: linear-gradient(120deg, var(--home-text) 30%, var(--home-button-primary));
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+html[data-theme="light"] .title {
+  background: none;
+  -webkit-text-fill-color: unset;
+  color: var(--home-text);
+}
+
+.subtitle {
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--home-secondary-text);
+  max-width: 32rem;
+  margin: 0 auto 1rem;
+}
+
+.footerCta {
+  margin-top: clamp(3rem, 6vh, 4.25rem);
+  padding-top: 0.5rem;
+}
+
+.primaryButton {
+  background: linear-gradient(135deg, #bd34fe 0%, #41d1ff 50%, #087ea4 100%);
+  background-size: 200% auto;
+  color: #fff !important;
+  border: none;
+  padding: 13px 32px;
+  border-radius: 99rem;
+  font-weight: 600;
+  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none !important;
+  box-shadow: 0 8px 32px rgba(189, 52, 254, 0.35);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background-position 0.3s ease;
+}
+
+.primaryButton:hover {
+  color: #fff !important;
+  transform: translateY(-2px);
+  background-position: right center;
+  box-shadow: 0 12px 40px rgba(65, 209, 255, 0.4);
+}
+
+@media (max-width: 600px) {
+  .background {
+    display: none;
+  }
+
+  .container {
+    padding-top: 2.5rem;
+    padding-bottom: 3rem;
+  }
+}

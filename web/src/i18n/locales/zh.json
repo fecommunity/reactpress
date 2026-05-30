@@ -98,6 +98,18 @@
     "authFooterSuffix": "了解安装与部署。",
     "heroTitle": "ReactPress",
     "heroTagline": "面向 React 生态的现代化内容发布与管理平台。",
+    "docsHome": {
+      "highlightsTitle": "3.0 亮点",
+      "featuresTitle": "平台能力",
+      "featuresSubtitle": "从个人博客到团队内容站，开箱即用的发布、管理与协作能力。"
+    },
+    "scroll": {
+      "navAria": "登录页分屏导航",
+      "screenAuth": "登录",
+      "screenHero": "产品介绍",
+      "screenFeatures": "平台能力",
+      "scrollDown": "向下滑动"
+    },
     "showcase": {
       "aria": "ReactPress 产品介绍",
       "mobileAria": "ReactPress 快速开始与相关链接",
@@ -119,6 +131,18 @@
       "copyAria": "复制快速开始命令",
       "copyFailed": "无法复制到剪贴板，请手动复制命令。",
       "terminalAria": "ReactPress 快速开始命令演示"
+    },
+    "cyberTerminal": {
+      "aria": "ReactPress CLI 欢迎横幅",
+      "subtitle": "全栈发布平台 CLI",
+      "modeLabel": "模式",
+      "pathLabel": "路径",
+      "pulseLabel": "准备",
+      "modeStandalone": "独立项目",
+      "pulseReady": "就绪",
+      "systemLabel": "系统",
+      "systemOnline": "在线",
+      "railAria": "ReactPress CLI 命令"
     },
     "heroSlides": {
       "zeroConfig": {

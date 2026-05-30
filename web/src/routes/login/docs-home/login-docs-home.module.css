@@ -1,0 +1,153 @@
+/* Docs 首页 design tokens（与 docs/src/css/customTheme.scss 对齐） */
+
+.themeScope {
+  --logo: #087ea4;
+  --home-hero-floor-background: rgb(236, 248, 250);
+  --home-hero-floor-background-bottom: white;
+  --home-button-primary: #087ea4;
+  --home-button-primary-text: white;
+  --home-button-primary-hover: #4e98b6;
+  --home-button-secondary: white;
+  --home-button-secondary-text: #404756;
+  --home-button-secondary-border: #bcc1cd;
+  --home-button-secondary-hover: #f8f9fa;
+  --home-hero-devices-border: #5e687e;
+  --home-hero-devices-stop: #66728b;
+  --home-hero-devices-skeleton-element: #cfe6ee;
+  --home-hero-devices-background: #fff;
+  --home-hero-devices-icon: #000;
+  --home-hero-devices-icon-border: #e5e7eb;
+  --home-hero-floor: #acddec;
+  --home-hero-grid-icon-background: #f8f9fa;
+  --home-hero-grid-icon: #e1e4e8;
+  --home-hero-grid-grid: #ced4da;
+  --home-section-top: white;
+  --home-section-bottom: #efeff2;
+  --home-secondary-text: #404756;
+  --home-border: #e5e7eb;
+  --home-background: #fff;
+  --home-text: #1c1e21;
+}
+
+:root[data-theme="dark"] .themeScope {
+  --logo: #58c4dc;
+  --home-hero-floor-background: #151517;
+  --home-hero-floor-background-bottom: #1b1b1d;
+  --home-button-primary: #58c4dc;
+  --home-button-primary-text: #1b1b1d;
+  --home-button-primary-hover: #71d6ec;
+  --home-button-secondary: #1b1b1d;
+  --home-button-secondary-text: #f6f7f9;
+  --home-button-secondary-border: #4e5668;
+  --home-button-secondary-hover: #2b2b2d;
+  --home-hero-devices-border: #404756;
+  --home-hero-devices-stop: #4a5160;
+  --home-hero-devices-skeleton-element: #404756;
+  --home-hero-devices-background: #242426;
+  --home-hero-devices-icon: #fff;
+  --home-hero-devices-icon-border: #404756;
+  --home-hero-floor: #30363d;
+  --home-hero-grid-icon-background: #1e2025;
+  --home-hero-grid-icon: #282c36;
+  --home-hero-grid-grid: #30363d;
+  --home-section-top: #1b1b1d;
+  --home-section-bottom: #111113;
+  --home-secondary-text: #c0c1c4;
+  --home-border: #404756;
+  --home-background: #242426;
+  --home-text: #f6f7f9;
+}
+
+@media (max-width: 900px) {
+  .themeScope {
+    --home-hero-grid-icon: transparent;
+    --home-hero-grid-icon-background: transparent;
+  }
+}
+
+.snapScreen {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.snapScreenInner {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* 第二屏：Hero + Highlights 统一内容壳 */
+.heroScreen {
+  --login-hero-content-max: min(100%, 68rem);
+  --login-hero-pad-x: clamp(1rem, 3vw, 2rem);
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  background:
+    radial-gradient(ellipse 90% 55% at 8% -5%, rgba(189, 52, 254, 0.09), transparent 55%),
+    radial-gradient(ellipse 70% 45% at 95% 5%, rgba(65, 209, 255, 0.1), transparent 50%),
+    var(--home-hero-floor-background-bottom);
+}
+
+:root[data-theme="dark"] .heroScreen {
+  background:
+    radial-gradient(ellipse 90% 55% at 8% -5%, rgba(189, 52, 254, 0.14), transparent 55%),
+    radial-gradient(ellipse 70% 45% at 95% 5%, rgba(65, 209, 255, 0.12), transparent 50%),
+    var(--home-hero-floor-background-bottom);
+}
+
+.heroScreenBody {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: clamp(1rem, 2vh, 1.35rem);
+  box-sizing: border-box;
+  width: 100%;
+  max-width: var(--login-hero-content-max);
+  min-height: min(100%, 100%);
+  margin: 0 auto;
+  padding: 0 var(--login-hero-pad-x) clamp(1.25rem, 3vh, 1.75rem);
+}
+
+.heroScreenHero {
+  flex: 0 0 auto;
+  width: 100%;
+}
+
+.heroScreenHighlights {
+  position: relative;
+  z-index: 4;
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  width: 100%;
+  min-height: 0;
+  padding: clamp(0.85rem, 1.8vh, 1.1rem) 0 0;
+}
+
+.heroScreenHighlights::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in srgb, var(--home-border) 80%, transparent) 20%,
+    color-mix(in srgb, var(--home-border) 80%, transparent) 80%,
+    transparent 100%
+  );
+}
+
+@media (max-height: 780px) {
+  .heroScreenBody {
+    gap: 0.85rem;
+    min-height: auto;
+  }
+}

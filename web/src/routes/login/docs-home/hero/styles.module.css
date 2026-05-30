@@ -1,0 +1,556 @@
+.container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: clamp(680px, 88vh, 860px);
+  overflow: hidden;
+}
+
+.fullViewport {
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+}
+
+/* 与 highlights 同屏 */
+.merged.container.fullViewport {
+  flex: none;
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  overflow: visible;
+}
+
+.merged .scene {
+  display: none;
+}
+
+.merged .mesh {
+  opacity: 1;
+}
+
+.merged .orb1,
+.merged .orb2,
+.merged .orb3 {
+  opacity: 0.32;
+  filter: blur(72px);
+}
+
+.toolbarSpacer {
+  flex-shrink: 0;
+  width: 100%;
+  height: calc(3.25rem + env(safe-area-inset-top, 0px));
+}
+
+.merged .content {
+  flex: none;
+  min-height: auto;
+  margin-bottom: 0;
+  padding: 0;
+  justify-content: flex-start;
+  align-items: stretch;
+  overflow: visible;
+}
+
+.merged .intro {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  animation: contentEnterMerged 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes contentEnterMerged {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mergedStack {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1rem, 2.2vh, 1.35rem);
+  width: 100%;
+}
+
+.mergedHeroHead {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.85rem, 1.8vh, 1.1rem);
+  text-align: center;
+}
+
+.mergedBrandRow {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.75rem, 1.5vw, 1rem);
+  max-width: 40rem;
+}
+
+.mergedBrandText {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+}
+
+.merged .logo {
+  flex-shrink: 0;
+  width: clamp(3rem, 5vw, 3.75rem);
+  height: auto;
+  margin: 0;
+}
+
+.merged .titleRow {
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  row-gap: 0.35rem;
+}
+
+.merged .title {
+  font-size: clamp(1.5rem, 2.8vw, 2.1rem);
+  animation: none;
+}
+
+.merged .subtitle {
+  margin: 0.35rem 0 0;
+  max-width: none;
+  text-align: left;
+  font-size: clamp(0.82rem, 1.4vw, 0.95rem);
+  line-height: 1.5;
+}
+
+.merged .buttonContainer {
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.merged .primaryButton,
+.merged .secondaryButton,
+.merged .ghostButton {
+  padding: 8px 16px;
+  font-size: 0.8125rem;
+}
+
+.merged .cliWrap {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+}
+
+@media (max-width: 720px) {
+  .mergedBrandRow {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .mergedBrandText {
+    text-align: center;
+  }
+
+  .merged .titleRow {
+    justify-content: center;
+  }
+
+  .merged .subtitle {
+    text-align: center;
+  }
+
+  .merged .primaryButton,
+  .merged .secondaryButton,
+  .merged .ghostButton {
+    width: 100%;
+    max-width: 280px;
+  }
+}
+
+@media (max-width: 600px) {
+  .toolbarSpacer {
+    height: calc(3rem + env(safe-area-inset-top, 0px));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .merged .intro {
+    animation: none;
+  }
+}
+
+.mesh {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.orb1,
+.orb2,
+.orb3 {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.45;
+  animation: orbDrift 14s ease-in-out infinite;
+}
+
+.orb1 {
+  width: 380px;
+  height: 380px;
+  top: -60px;
+  left: 8%;
+  background: radial-gradient(circle, #bd34fe 0%, transparent 70%);
+}
+
+.orb2 {
+  width: 320px;
+  height: 320px;
+  top: 12%;
+  right: 6%;
+  background: radial-gradient(circle, #41d1ff 0%, transparent 70%);
+  animation-delay: -5s;
+}
+
+.orb3 {
+  width: 260px;
+  height: 260px;
+  bottom: 28%;
+  left: 38%;
+  background: radial-gradient(circle, #087ea4 0%, transparent 70%);
+  animation-delay: -9s;
+  opacity: 0.35;
+}
+
+@keyframes orbDrift {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(16px, -10px) scale(1.03);
+  }
+}
+
+/* 底部场景层：网格 + 设备 + 地面，固定在容器下方，不被内容遮挡 */
+.scene {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: min(52%, 420px);
+  min-height: 300px;
+  pointer-events: none;
+}
+
+.gridBackground {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  width: 100%;
+  height: 380px;
+  opacity: 0.9;
+  mask-image: linear-gradient(to bottom, transparent 0%, black 18%, black 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 18%, black 100%);
+}
+
+.devices {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  width: 100%;
+  bottom: 48px;
+  left: 0;
+  opacity: 0.82;
+  transform: translateY(0);
+  animation: devicesFade 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both;
+}
+
+@keyframes devicesFade {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 0.82;
+    transform: translateY(0);
+  }
+}
+
+.floorBackground {
+  display: flex;
+  justify-content: center;
+  width: 100vw;
+  height: 220px;
+  flex-shrink: 0;
+  background:
+    linear-gradient(to bottom, transparent 0%, var(--home-hero-floor-background-bottom) 88%),
+    var(--home-hero-floor-background-bottom);
+}
+
+.content {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem 1.25rem 0;
+  /* 为底部场景预留空间，避免文案与终端压住封面 */
+  margin-bottom: min(48%, 400px);
+  text-align: center;
+}
+
+.intro {
+  max-width: 42rem;
+  width: 100%;
+  animation: contentEnter 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes contentEnter {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.logo {
+  display: block;
+  width: 4.5rem;
+  height: auto;
+  margin: 0 auto 0.65rem;
+  overflow: visible;
+  transition:
+    transform 0.25s ease,
+    filter 0.25s ease;
+  filter: drop-shadow(0 0 16px rgba(65, 209, 255, 0.3));
+}
+
+.logo:hover {
+  transform: scale(1.05);
+  filter: drop-shadow(0 0 24px rgba(189, 52, 254, 0.4));
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem 0.75rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  row-gap: 0.5rem;
+}
+
+.githubWrap {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  min-height: 28px;
+  line-height: 1;
+}
+
+.title {
+  font-size: clamp(2rem, 4.8vw, 2.85rem);
+  margin: 0;
+  background: linear-gradient(120deg, #bd34fe 0%, #41d1ff 45%, #087ea4 100%);
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: titleShine 5s linear infinite;
+}
+
+@keyframes titleShine {
+  to {
+    background-position: 200% center;
+  }
+}
+
+.badge {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 0.22rem 0.55rem;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #41d1ff, #bd34fe);
+  color: #0a0c12;
+  -webkit-text-fill-color: #0a0c12;
+  box-shadow: 0 3px 14px rgba(65, 209, 255, 0.35);
+}
+
+.subtitle {
+  font-weight: 400;
+  color: var(--home-secondary-text);
+  font-size: clamp(0.92rem, 2.2vw, 1.08rem);
+  line-height: 1.55;
+  max-width: 36rem;
+  margin: 0.65rem auto 0;
+}
+
+.actions {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.1rem;
+}
+
+.buttonContainer {
+  display: flex;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.primaryButton,
+.secondaryButton,
+.ghostButton {
+  border: none;
+  padding: 10px 22px;
+  border-radius: 99rem;
+  font-weight: 600;
+  font-size: 0.92rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none !important;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.primaryButton {
+  background: linear-gradient(135deg, #087ea4 0%, #41d1ff 100%);
+  color: #fff !important;
+  box-shadow: 0 4px 20px rgba(8, 126, 164, 0.32);
+}
+
+.primaryButton:hover {
+  color: #fff !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(65, 209, 255, 0.4);
+}
+
+.secondaryButton {
+  color: var(--home-button-secondary-text) !important;
+  border: 1px solid var(--home-button-secondary-border);
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(8px);
+}
+
+html[data-theme="light"] .secondaryButton {
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.secondaryButton:hover {
+  transform: translateY(-2px);
+  border-color: var(--home-button-primary);
+  color: var(--home-button-primary) !important;
+}
+
+.ghostButton {
+  color: #bd34fe !important;
+  background: transparent;
+  border: 1px solid rgba(189, 52, 254, 0.4);
+}
+
+.ghostButton:hover {
+  transform: translateY(-2px);
+  background: rgba(189, 52, 254, 0.08);
+  box-shadow: 0 4px 16px rgba(189, 52, 254, 0.18);
+}
+
+.cliWrap {
+  width: 100%;
+  max-width: min(100%, 42rem);
+  animation: cliEnter 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.12s both;
+}
+
+@keyframes cliEnter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orb1,
+  .orb2,
+  .orb3 {
+    animation: none;
+  }
+
+  .title {
+    animation: none;
+  }
+
+  .intro,
+  .merged .intro,
+  .cliWrap,
+  .devices {
+    animation: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .container {
+    min-height: 640px;
+  }
+
+  .content {
+    padding-top: 1.75rem;
+    margin-bottom: min(50%, 340px);
+  }
+
+  .devices {
+    bottom: 32px;
+    opacity: 0.65;
+  }
+
+  @keyframes devicesFade {
+    to {
+      opacity: 0.65;
+    }
+  }
+
+  .primaryButton,
+  .secondaryButton,
+  .ghostButton {
+    width: 100%;
+    max-width: 280px;
+  }
+
+  .actions {
+    margin-top: 1.25rem;
+    gap: 0.9rem;
+  }
+}
+
+@media (max-width: 450px) {
+  .gridBackground {
+    height: 280px;
+  }
+
+  .scene {
+    min-height: 260px;
+  }
+}

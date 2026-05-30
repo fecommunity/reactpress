@@ -98,6 +98,18 @@
     "authFooterSuffix": "for setup and deployment.",
     "heroTitle": "ReactPress",
     "heroTagline": "Modern content management for React-powered publishing.",
+    "docsHome": {
+      "highlightsTitle": "3.0 highlights",
+      "featuresTitle": "Platform capabilities",
+      "featuresSubtitle": "From personal blogs to team content sites — publish, manage, and collaborate out of the box."
+    },
+    "scroll": {
+      "navAria": "Login page sections",
+      "screenAuth": "Sign in",
+      "screenHero": "Product overview",
+      "screenFeatures": "Platform capabilities",
+      "scrollDown": "Scroll down"
+    },
     "showcase": {
       "aria": "ReactPress product overview",
       "mobileAria": "ReactPress quick start and links",
@@ -119,6 +131,18 @@
       "copyAria": "Copy quick start commands",
       "copyFailed": "Could not copy to clipboard. Copy the commands manually.",
       "terminalAria": "ReactPress quick start command demo"
+    },
+    "cyberTerminal": {
+      "aria": "ReactPress CLI welcome banner",
+      "subtitle": "Full-stack publishing CLI",
+      "modeLabel": "MODE",
+      "pathLabel": "PATH",
+      "pulseLabel": "Setup",
+      "modeStandalone": "STANDALONE",
+      "pulseReady": "READY",
+      "systemLabel": "SYSTEM",
+      "systemOnline": "ONLINE",
+      "railAria": "ReactPress CLI commands"
     },
     "heroSlides": {
       "zeroConfig": {
