@@ -5,17 +5,20 @@ import 'viewerjs/dist/viewer.css';
 import { NProgress } from '@components/NProgress';
 import {
   appearancePrimaryColorForMode,
+  applyColorModeClass,
   buildTwentyTwentyFiveAppearanceCss,
   clearThemeSession,
   normalizePreviewDraftData,
   persistThemeSession,
   persistVisitorLocale,
   previewDraftApiPath,
+  resolveClientThemeMode,
   resolveInitialColorModeState,
   resolveStoredUser,
   resolveThemePreviewContext,
   resolveVisitorLocale,
   safeJsonParse,
+  type ThemeColorMode,
   type ThemeMods,
 } from '@fecommunity/reactpress-toolkit/theme';
 import { ConfigProvider, theme } from 'antd';
@@ -51,6 +54,13 @@ interface MyAppInitialProps extends IGlobalContext {
   colorPrimary?: string;
 }
 
+function readInitialAppTheme(): ThemeColorMode {
+  if (typeof window === 'undefined') {
+    return 'light';
+  }
+  return resolveClientThemeMode();
+}
+
 class MyApp extends App<
   MyAppInitialProps,
   { needLayoutFooter?: boolean; hasBg?: boolean; [key: string]: unknown }
@@ -58,7 +68,7 @@ class MyApp extends App<
   state = {
     locale: '',
     user: null,
-    theme: resolveInitialColorModeState(),
+    theme: readInitialAppTheme(),
     collapsed: false,
   };
 
@@ -120,7 +130,8 @@ class MyApp extends App<
     window.location.reload();
   };
 
-  changeTheme = (theme: string) => {
+  changeTheme = (theme: ThemeColorMode) => {
+    applyColorModeClass(theme === 'dark');
     this.setState({ theme });
   };
 
@@ -139,6 +150,18 @@ class MyApp extends App<
     if (user) {
       persistThemeSession(user);
       this.setState({ user });
+    }
+
+    const preferred = resolveInitialColorModeState() ?? 'light';
+    applyColorModeClass(preferred === 'dark');
+    if (this.state.theme !== preferred) {
+      this.setState({ theme: preferred });
+    }
+  }
+
+  componentDidUpdate(_prevProps: MyAppInitialProps, prevState: typeof this.state) {
+    if (prevState.theme !== this.state.theme) {
+      applyColorModeClass(this.state.theme === 'dark');
     }
   }
 
@@ -192,6 +215,7 @@ class MyApp extends App<
           <ViewStatistics />
           <Analytics />
           <ConfigProvider
+            key={isDark ? 'dark' : 'light'}
             locale={{
               locale,
             }}

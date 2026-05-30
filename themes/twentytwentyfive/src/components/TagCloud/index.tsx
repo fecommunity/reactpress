@@ -13,8 +13,12 @@ const TagCloud: FC<IProps> = (props) => {
   const tagInstance = useRef<Tag>(new Tag()).current;
 
   useEffect(() => {
-    tagInstance.init(ref.current);
-  }, []);
+    const el = ref.current;
+    if (!el) return undefined;
+
+    tagInstance.init(el);
+    return () => tagInstance.destroy();
+  }, [props.children, tagInstance]);
 
   return (
     <div className={styles.tagCloud} ref={ref}>

@@ -75,4 +75,57 @@ body.dark {
   img {
     opacity: 0.75;
   }
+
+  // Ant Design 组件走 token；与 ConfigProvider 不同步时用主题变量兜底
+  .ant-card,
+  .ant-card-bordered {
+    background-color: var(--bg-box);
+    color: var(--main-text-color);
+    border-color: var(--border-color);
+  }
+
+  .ant-card-head {
+    color: var(--main-text-color);
+    border-bottom-color: var(--border-color);
+  }
+
+  .ant-menu,
+  .ant-menu-horizontal {
+    background-color: var(--bg-box) !important;
+    color: var(--main-text-color);
+    border-bottom-color: var(--border-color);
+  }
+
+  .ant-menu-horizontal > .ant-menu-item,
+  .ant-menu-horizontal > .ant-menu-submenu {
+    color: var(--main-text-color);
+  }
+
+  .ant-menu-horizontal > .ant-menu-item-selected,
+  .ant-menu-horizontal > .ant-menu-item:hover,
+  .ant-menu-horizontal > .ant-menu-submenu:hover {
+    color: var(--primary-color) !important;
+  }
+
+  .ant-divider {
+    border-color: var(--border-color);
+  }
+
+  .ant-popover .ant-popover-inner {
+    background-color: var(--bg-box);
+    color: var(--main-text-color);
+  }
+
+  .ant-btn-default,
+  .ant-btn-default:not(:disabled):not(.ant-btn-disabled) {
+    background-color: var(--bg-box);
+    color: var(--main-text-color);
+    border-color: var(--border-color);
+  }
+
+  .ant-btn-default:not(:disabled):not(.ant-btn-disabled):hover {
+    background-color: var(--bg-second);
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+  }
 }

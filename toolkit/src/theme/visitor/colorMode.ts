@@ -40,6 +40,22 @@ export function resolveInitialColorModeState(): ThemeColorMode | null {
   return resolvePreferredColorMode() ? 'dark' : 'light';
 }
 
+/**
+ * Theme mode for the first client render (after `_document` color-mode script).
+ * SSR should use `'light'`; call only in browser or via `typeof window` guard.
+ */
+export function resolveClientThemeMode(): ThemeColorMode {
+  if (typeof window === 'undefined') {
+    return 'light';
+  }
+
+  if (document.body.classList.contains('dark')) {
+    return 'dark';
+  }
+
+  return resolveInitialColorModeState() ?? 'light';
+}
+
 /** Runs before paint to avoid light-mode flash on first visit. */
 export function buildColorModeInitScript(
   options: { storageKey?: string; className?: string } = {},

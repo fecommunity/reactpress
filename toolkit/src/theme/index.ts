@@ -66,6 +66,7 @@ export {
   COLOR_MODE_STORAGE_KEY,
   colorModeInitScript,
   persistColorMode,
+  resolveClientThemeMode,
   resolveInitialColorModeState,
   resolvePreferredColorMode,
 } from './visitor/colorMode';

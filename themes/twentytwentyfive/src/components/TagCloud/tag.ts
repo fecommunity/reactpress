@@ -31,6 +31,7 @@ class Tag {
   protected readonly mouseX = 0;
   protected readonly mouseY = 10;
   protected readonly howElliptical = 1; // 椭圆度
+  private rafId: number | null = null;
 
   constructor(params?: TagParams) {
     const { radius, d, dtr, distr, tSpeed, size } = params || {};
@@ -43,14 +44,22 @@ class Tag {
   }
 
   private initContainer(container: HTMLDivElement | string) {
-    if (this.oDiv) {
-      this.oDiv = this.oDiv;
-    } else if (container instanceof HTMLDivElement) {
+    if (container instanceof HTMLDivElement) {
       this.oDiv = container;
-    } else {
-      this.oDiv = document.querySelector(container);
+    } else if (typeof container === 'string') {
+      this.oDiv = document.querySelector(container) as HTMLDivElement;
     }
   }
+
+  /** Stop animation loop (call before re-init or on unmount). */
+  public destroy = () => {
+    if (this.rafId != null) {
+      cancelAnimationFrame(this.rafId);
+      this.rafId = null;
+    }
+    this.mcList = [];
+    this.aA = null;
+  };
 
   /**
    * 初始化方法，为所有<a>标签添加事件监听器，并初始化位置
@@ -58,10 +67,12 @@ class Tag {
   public init = (container?: HTMLDivElement | string) => {
     let i = 0;
     let oTag = null;
-    // 初始化
+    this.destroy();
     this.initContainer(container);
-    // 获取左右的标签
+    if (!this.oDiv) return;
+
     this.aA = this.oDiv.getElementsByTagName('a');
+    if (!this.aA.length) return;
     for (i = 0; i < this.aA.length; i++) {
       oTag = {};
       this.aA[i].onmouseover = (function (obj) {
@@ -91,7 +102,7 @@ class Tag {
     }
     this.sineCosine(0, 0, 0);
     this.positionAll();
-    requestAnimationFrame(this.update);
+    this.rafId = requestAnimationFrame(this.update);
   };
 
   /**
@@ -139,7 +150,7 @@ class Tag {
     }
     this.doPosition();
 
-    requestAnimationFrame(this.update);
+    this.rafId = requestAnimationFrame(this.update);
   };
 
   /**
@@ -148,8 +159,13 @@ class Tag {
   private positionAll = () => {
     let phi = 0;
     let theta = 0;
-    const max = this.mcList.length;
+    const max = Math.min(this.mcList.length, this.aA?.length ?? 0);
+    if (!max || !this.oDiv) return;
+
     for (let i = 0; i < max; i++) {
+      const el = this.aA[i];
+      if (!el) continue;
+
       if (this.distr) {
         phi = Math.acos(-1 + (2 * (i + 1) - 1) / max);
         theta = Math.sqrt(max * Math.PI) * phi;
@@ -162,8 +178,8 @@ class Tag {
       this.mcList[i].cy = this.radius * Math.sin(theta) * Math.sin(phi);
       this.mcList[i].cz = this.radius * Math.cos(phi);
 
-      this.aA[i].style.left = this.mcList[i].cx + this.oDiv.offsetWidth / 2 - this.mcList[i].offsetWidth / 2 + 'px';
-      this.aA[i].style.top = this.mcList[i].cy + this.oDiv.offsetHeight / 2 - this.mcList[i].offsetHeight / 2 + 'px';
+      el.style.left = this.mcList[i].cx + this.oDiv.offsetWidth / 2 - this.mcList[i].offsetWidth / 2 + 'px';
+      el.style.top = this.mcList[i].cy + this.oDiv.offsetHeight / 2 - this.mcList[i].offsetHeight / 2 + 'px';
     }
   };
 
@@ -173,11 +189,14 @@ class Tag {
   private doPosition = () => {
     const l = this.oDiv.offsetWidth / 2;
     const t = this.oDiv.offsetHeight / 2;
-    for (let i = 0; i < this.mcList.length; i++) {
+    const count = Math.min(this.mcList.length, this.aA?.length ?? 0);
+    for (let i = 0; i < count; i++) {
       if (this.mcList[i].on) {
         continue;
       }
-      const aAs = this.aA[i].style;
+      const el = this.aA[i];
+      if (!el) continue;
+      const aAs = el.style;
       if (this.mcList[i].alpha > 0.1) {
         if (aAs.display != '') aAs.display = '';
       } else {

@@ -53,7 +53,7 @@ export interface IGlobalContext {
   user?: IUser | Partial<IUser>;
   setUser?: (arg: IUser) => void;
   removeUser?: () => void;
-  changeTheme?: (theme: string) => void;
+  changeTheme?: (theme: 'light' | 'dark') => void;
   theme?: 'light' | 'dark';
   collapsed?: boolean;
   getSetting: () => void;

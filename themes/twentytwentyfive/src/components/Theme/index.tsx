@@ -1,36 +1,27 @@
 import cls from 'classnames';
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 
 import { GlobalContext } from '@/context/global';
 import {
   applyColorModeClass,
   persistColorMode,
-  resolvePreferredColorMode,
 } from '@fecommunity/reactpress-toolkit/theme';
 
 import styles from './index.module.scss';
 
 interface IProps {}
 
-function readInitialDark(): boolean {
-  if (typeof window === 'undefined') {
-    return false;
-  }
-
-  return document.body.classList.contains('dark') || resolvePreferredColorMode();
-}
-
 export const Theme = (_props: IProps) => {
-  const [dark, setDark] = useState(readInitialDark);
-  const { changeTheme } = useContext(GlobalContext);
+  const { theme = 'light', changeTheme } = useContext(GlobalContext);
+  const dark = theme === 'dark';
 
   const modifyTheme = () => {
     const nextDark = !dark;
+    const nextTheme = nextDark ? 'dark' : 'light';
 
-    setDark(nextDark);
     applyColorModeClass(nextDark);
     persistColorMode(nextDark);
-    changeTheme?.(nextDark ? 'dark' : 'light');
+    changeTheme?.(nextTheme);
   };
 
   return (
