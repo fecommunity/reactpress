@@ -1,2 +1,2 @@
-export { Theme } from "./Theme";
 export { GitHub } from "./GitHub";
+export { Theme } from "./Theme";

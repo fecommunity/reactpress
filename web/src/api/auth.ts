@@ -1,4 +1,4 @@
-import type { AuthTokens, LoginRequest, User, MenuItem, PermissionsList } from "./schemas";
+import type { AuthTokens, LoginRequest, MenuItem, PermissionsList, User } from "./schemas";
 
 /** Paths are relative to {@link API_BASE_URL} (which already includes `/api`). */
 export const AUTH_ENDPOINTS = {
@@ -9,4 +9,4 @@ export const AUTH_ENDPOINTS = {
   permissions: "/auth/permissions",
 } as const;
 
-export type { AuthTokens, LoginRequest, User, MenuItem, PermissionsList };
+export type { AuthTokens, LoginRequest, MenuItem, PermissionsList, User };

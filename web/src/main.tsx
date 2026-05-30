@@ -1,21 +1,24 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
 import "dashicons/dashicons.css";
 import "@/i18n";
+
+import { createRouter, RouterProvider } from "@tanstack/react-router";
+import React from "react";
+import ReactDOM from "react-dom/client";
+
 import i18n from "@/i18n";
-import { RouterProvider, createRouter } from "@tanstack/react-router";
-import { useSettingsStore } from "./stores/settings";
+
 import { routeTree } from "./routeTree.gen";
-import { bootstrapAdmin, getMenuTreeForPermissions } from "./shell/bootstrap";
-import { adminMenuToSidebar } from "./shared/menu";
-import { useAuthStore } from "./stores/auth";
-import { fetchSessionAndApplyToStore } from "./utils/session";
-import { AUTH_MODE } from "./utils/constants";
 import {
   clearInvalidServerSession,
   isMockAccessToken,
   validateServerAuthSession,
 } from "./shared/auth/session";
+import { adminMenuToSidebar } from "./shared/menu";
+import { bootstrapAdmin, getMenuTreeForPermissions } from "./shell/bootstrap";
+import { useAuthStore } from "./stores/auth";
+import { useSettingsStore } from "./stores/settings";
+import { AUTH_MODE } from "./utils/constants";
+import { fetchSessionAndApplyToStore } from "./utils/session";
 
 const routerBase =
   import.meta.env.BASE_URL && import.meta.env.BASE_URL !== "/"

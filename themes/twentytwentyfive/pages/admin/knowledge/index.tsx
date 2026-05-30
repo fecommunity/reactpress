@@ -1,10 +1,10 @@
-import { Icon as LegacyIcon } from '@ant-design/compatible';
 import { DeleteOutlined, EditOutlined, PlusOutlined, SettingOutlined } from '@ant-design/icons';
 import { Button, Card, List, Popconfirm, Select, Tooltip } from 'antd';
 import Link from 'next/link';
 import React, { useCallback, useEffect, useState } from 'react';
 
 import { KnowledgeSettingDrawer } from '@/components/KnowledgeSettingDrawer';
+import { LegacyIcon } from '@/components/LegacyIcon';
 import { PaginationTable } from '@/components/PaginationTable';
 import { useAsyncLoading } from '@/hooks/useAsyncLoading';
 import { usePagination } from '@/hooks/usePagination';

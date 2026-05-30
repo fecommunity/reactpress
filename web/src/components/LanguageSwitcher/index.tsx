@@ -1,9 +1,10 @@
-import { Button, Dropdown, Grid, theme } from "antd";
 import type { MenuProps } from "antd";
+import { Button, Dropdown, Grid, theme } from "antd";
 import { Languages } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import type { AppLocale } from "@/i18n";
+
 import { useAppLocale } from "@/hooks/useAppLocale";
+import type { AppLocale } from "@/i18n";
 
 type LanguageSwitcherProps = {
   size?: "small" | "middle" | "large";

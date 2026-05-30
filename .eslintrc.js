@@ -7,17 +7,56 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     'plugin:prettier/recommended',
   ],
+  parserOptions: {
+    sourceType: 'module',
+    ecmaVersion: 'latest',
+  },
   overrides: [
     {
-      files: ['*.ts', '*.tsx', '.js', '.jsx'],
+      files: ['web/**/*.{ts,tsx}'],
       parserOptions: {
-        project: ['./packages/client/tsconfig.json'],
-        sourceType: 'module',
+        project: ['./web/tsconfig.eslint.json'],
+        tsconfigRootDir: __dirname,
+      },
+    },
+    {
+      files: ['toolkit/**/*.ts'],
+      parserOptions: {
+        project: ['./toolkit/tsconfig.json'],
+        tsconfigRootDir: __dirname,
+      },
+    },
+    {
+      files: ['server/**/*.ts'],
+      parserOptions: {
+        project: ['./server/tsconfig.json'],
+        tsconfigRootDir: __dirname,
+      },
+    },
+    {
+      files: ['docs/**/*.{ts,tsx}'],
+      parserOptions: {
+        project: ['./docs/tsconfig.eslint.json'],
+        tsconfigRootDir: __dirname,
+      },
+    },
+    {
+      files: ['themes/hello-world/**/*.{ts,tsx}'],
+      parserOptions: {
+        project: ['./themes/hello-world/tsconfig.eslint.json'],
+        tsconfigRootDir: __dirname,
+      },
+    },
+    {
+      files: ['themes/twentytwentyfive/**/*.{ts,tsx}'],
+      parserOptions: {
+        project: ['./themes/twentytwentyfive/tsconfig.eslint.json'],
+        tsconfigRootDir: __dirname,
       },
     },
   ],
   settings: {
-    'react': {
+    react: {
       version: 'detect',
     },
     'import/resolver': {
@@ -48,13 +87,24 @@ module.exports = {
     '@typescript-eslint/explicit-module-boundary-types': 0,
     '@typescript-eslint/ban-types': 0,
     'react-hooks/rules-of-hooks': 2,
-    'react-hooks/exhaustive-deps': 2,
+    'react-hooks/exhaustive-deps': 1,
     'react/prop-types': 0,
     'testing-library/no-unnecessary-act': 0,
     'react/react-in-jsx-scope': 0,
-    'prettier/prettier': ['error', {}, { usePrettierrc: true }],
-    'simple-import-sort/imports': 'error',
-    'simple-import-sort/exports': 'error',
+    // Prettier 2.x cannot parse modern TS (`import type`, inline `type` imports).
+    // web uses `vp fmt` (Oxfmt); keep formatting out of ESLint to avoid false IDE errors.
+    'prettier/prettier': 0,
+    'simple-import-sort/imports': 'warn',
+    'simple-import-sort/exports': 'warn',
   },
-  ignorePatterns: ['dist/', 'node_modules', 'scripts', 'examples'],
+  ignorePatterns: [
+    'dist/',
+    'node_modules',
+    'scripts',
+    'examples',
+    '**/.next',
+    'toolkit/dist',
+    'server/dist',
+    'web/src/routeTree.gen.ts',
+  ],
 };

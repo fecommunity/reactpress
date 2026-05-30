@@ -8,6 +8,7 @@ export interface SpringProps {
   containerProps?: Record<string, unknown>;
   from?: Record<string, number>;
   to?: Record<string, number>;
+  children?: React.ReactNode;
 }
 
 export const Spring: React.FC<SpringProps> = ({ containerProps = {}, from = {}, to = {}, children }) => {

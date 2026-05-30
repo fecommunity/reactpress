@@ -1,7 +1,6 @@
 import { GetStaticProps } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
-import { api } from '@fecommunity/reactpress-toolkit/api';
 import type * as types from '@fecommunity/reactpress-toolkit/types';
 import * as utils from '@fecommunity/reactpress-toolkit/utils';
 import Header from '../components/Header';

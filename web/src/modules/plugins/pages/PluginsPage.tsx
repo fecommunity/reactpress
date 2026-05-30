@@ -1,5 +1,6 @@
 import { Alert, Spin, Typography } from "antd";
 import { useTranslation } from "react-i18next";
+
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 
 export function PluginsPage() {

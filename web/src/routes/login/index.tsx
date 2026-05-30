@@ -1,20 +1,23 @@
-import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
-import { Form, Input, Button, App, Space } from "antd";
 import { useMutation } from "@tanstack/react-query";
-import { Trans, useTranslation } from "react-i18next";
-import { httpClient } from "@/utils/http";
-import { useAuthStore } from "@/stores/auth";
-import { useSettingsStore } from "@/stores/settings";
+import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
+import { App, Button, Form, Input, Space } from "antd";
+import { Trans } from "react-i18next";
+
 import { AUTH_ENDPOINTS } from "@/api/auth";
-import { LoginRequestSchema, AuthTokensSchema } from "@/api/schemas";
-import { fetchSessionFromMockApi, loginWithServerCredentials } from "@/shared/auth/session";
-import { getLoginErrorMessage } from "@/shared/auth/loginErrorMessage";
-import { AUTH_MODE, REACTPRESS_GITHUB_URL, reactpressDocsPath } from "@/utils/constants";
 import type { LoginRequest } from "@/api/schemas";
+import { AuthTokensSchema, LoginRequestSchema } from "@/api/schemas";
 import { Theme } from "@/components/Icon";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { useAppLocale } from "@/hooks/useAppLocale";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { useMinWidth } from "@/hooks/useMinWidth";
+import { getLoginErrorMessage } from "@/shared/auth/loginErrorMessage";
+import { fetchSessionFromMockApi, loginWithServerCredentials } from "@/shared/auth/session";
+import { useAuthStore } from "@/stores/auth";
+import { useSettingsStore } from "@/stores/settings";
+import { AUTH_MODE, REACTPRESS_GITHUB_URL, reactpressDocsPath } from "@/utils/constants";
+import { httpClient } from "@/utils/http";
+
 import { LoginBrandMark } from "./-LoginBrandMark";
 import { LoginHeroPanel } from "./-LoginHeroPanel";
 import { LoginMobileShowcase } from "./-LoginMobileShowcase";
@@ -34,7 +37,7 @@ function LoginPage() {
   useDocumentTitle("login.title");
   const navigate = useNavigate();
   const { message } = App.useApp();
-  const { t } = useTranslation();
+  const { t } = useAppLocale();
   const locale = useSettingsStore((s) => s.locale);
   const setTokens = useAuthStore((s) => s.setTokens);
   const toggleDarkMode = useSettingsStore((s) => s.toggleDarkMode);
@@ -96,7 +99,7 @@ function LoginPage() {
                 <Form
                   className={pageStyles.authForm}
                   layout="vertical"
-                  onFinish={(values) => {
+                  onFinish={(values: unknown) => {
                     loginMutation.mutate(LoginRequestSchema.parse(values));
                   }}
                   requiredMark={false}

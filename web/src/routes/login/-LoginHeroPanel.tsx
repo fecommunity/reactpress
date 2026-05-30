@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { useAppLocale } from "@/hooks/useAppLocale";
 import { APP_LOGO_SRC } from "@/utils/constants";
 import { useMinWidth } from "@/hooks/useMinWidth";
 import { LOGIN_HERO_SLIDES, type LoginHeroSlideId } from "./-loginHeroSlides";
@@ -11,7 +11,7 @@ const SLIDE_INTERVAL_MS = 6000;
 const HERO_BREAKPOINT_PX = 900;
 
 export function LoginHeroPanel() {
-  const { t } = useTranslation();
+  const { t } = useAppLocale();
   const isWide = useMinWidth(HERO_BREAKPOINT_PX);
   const [activeIndex, setActiveIndex] = useState(0);
   const [paused, setPaused] = useState(false);

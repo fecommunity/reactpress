@@ -1,11 +1,14 @@
 import { http } from "msw";
+
+import { ERROR_CODES, errorResponse, successResponse, withDelay } from "../createHandler";
 import { MOCK_USERS } from "../data";
 import { filterUsers, paginateList, parsePaginationParams } from "../utils";
-import { withDelay, successResponse, errorResponse, ERROR_CODES } from "../createHandler";
 
-let users = MOCK_USERS.map((user) => ({ ...user, status: "active" as const }));
+type MockUserRow = (typeof MOCK_USERS)[number] & { status: "active" | "locked" };
 
-function mapMockUserForServer(user: (typeof users)[number]) {
+let users: MockUserRow[] = MOCK_USERS.map((user) => ({ ...user, status: "active" as const }));
+
+function mapMockUserForServer(user: MockUserRow) {
   const role = user.roles[0] ?? "visitor";
   const status = user.status === "locked" ? "locked" : "active";
   return {
@@ -26,7 +29,7 @@ export const userHandlers = [
     const keyword = url.searchParams.get("keyword") ?? url.searchParams.get("name") ?? "";
     const role = url.searchParams.get("role") ?? "";
 
-    const filtered = filterUsers(users, { keyword, role });
+    const filtered = filterUsers(users, { keyword, role }) as MockUserRow[];
     const list = paginateList(filtered, limit, offset).map((user) => mapMockUserForServer(user));
     return successResponse([list, filtered.length] as const);
   }),

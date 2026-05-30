@@ -1,7 +1,8 @@
 import { Button, Select } from "antd";
 import { useTranslation } from "react-i18next";
-import { ListPaginationNav } from "@/shared/components/ListPaginationNav";
+
 import styles from "@/modules/comment/components/comment-list.module.css";
+import { ListPaginationNav } from "@/shared/components/ListPaginationNav";
 
 export type UserBulkAction = "disable" | "enable" | "delete";
 
@@ -56,7 +57,9 @@ export function UserListTablenav({
 
   return (
     <div
-      className={`${styles.tablenav} ${position === "top" ? styles.tablenavTop : styles.tablenavBottom} ${compact ? styles.tablenavCompact : ""}`}
+      className={`${styles.tablenav} ${position === "top" ? styles.tablenavTop : styles.tablenavBottom} ${
+        compact ? styles.tablenavCompact : ""
+      }`}
     >
       {!compact ? (
         <div className={styles.tablenavLeft}>

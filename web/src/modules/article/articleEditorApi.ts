@@ -16,26 +16,28 @@ export function slugifyMetaValue(text: string) {
 export async function createEditorCategory(label: string): Promise<EditorCategory> {
   const api = await getToolkitClient();
   const value = slugifyMetaValue(label) || label.trim();
-  const res = (await api.category.create({
+  const res = await api.category.create({
     body: { label: label.trim(), value },
-  } as Parameters<typeof api.category.create>[0])) as EditorCategory;
+  } as Parameters<typeof api.category.create>[0]);
+  const item = (Array.isArray(res) ? res[0] : res) as unknown as Record<string, unknown>;
   return {
-    id: String(res.id),
-    label: res.label,
-    value: res.value,
+    id: String(item.id ?? ""),
+    label: String(item.label ?? label.trim()),
+    value: String(item.value ?? value),
   };
 }
 
 export async function createEditorTag(label: string): Promise<EditorTag> {
   const api = await getToolkitClient();
   const value = slugifyMetaValue(label) || label.trim();
-  const res = (await api.tag.create({
+  const res = await api.tag.create({
     body: { label: label.trim(), value },
-  } as Parameters<typeof api.tag.create>[0])) as EditorTag;
+  } as Parameters<typeof api.tag.create>[0]);
+  const item = (Array.isArray(res) ? res[0] : res) as unknown as Record<string, unknown>;
   return {
-    id: String(res.id),
-    label: res.label,
-    value: res.value,
+    id: String(item.id ?? ""),
+    label: String(item.label ?? label.trim()),
+    value: String(item.value ?? value),
   };
 }
 

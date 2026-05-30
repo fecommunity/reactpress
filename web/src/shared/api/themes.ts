@@ -1,12 +1,9 @@
-import { resolveApiBaseUrl } from "@fecommunity/reactpress-toolkit/react";
 import type { SiteThemeState, ThemeMods } from "@fecommunity/reactpress-toolkit/extension";
-import {
-  clearInvalidServerSession,
-  isMockAccessToken,
-  validateServerAuthSession,
-} from "@/shared/auth/session";
-import { API_BASE_URL } from "@/utils/constants";
+import { resolveApiBaseUrl } from "@fecommunity/reactpress-toolkit/react";
+
+import { clearInvalidServerSession } from "@/shared/auth/session";
 import { useAuthStore } from "@/stores/auth";
+import { API_BASE_URL } from "@/utils/constants";
 
 export interface ThemeListItem {
   id: string;

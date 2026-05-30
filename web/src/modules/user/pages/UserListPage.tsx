@@ -458,7 +458,7 @@ export function UserListPage({ search, routePath }: UserListPageProps) {
           } else {
             createMutation.mutate({
               username: values.username,
-              email: values.email,
+              email: values.email ?? null,
               roles,
               password: values.password,
             });

@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
 import type { ThemeMods } from "@fecommunity/reactpress-toolkit/extension";
+import { useEffect, useState } from "react";
+
 import { buildThemePreviewUrl } from "@/shared/api/themes";
 
 /** Fetch theme preview HTML (works with MSW and same-origin API). */

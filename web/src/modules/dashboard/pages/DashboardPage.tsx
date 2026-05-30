@@ -1,15 +1,23 @@
+import "@/routes/_auth/dashboard/index.css";
+
 import { useQuery } from "@tanstack/react-query";
-import { Card, Col, Row, Typography, theme, Flex, Skeleton, List } from "antd";
-import { FileText, MessageSquare, Files, LayoutTemplate } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { Card, Col, Flex, List, Row, Skeleton, theme, Typography } from "antd";
+import { Files, FileText, LayoutTemplate, MessageSquare } from "lucide-react";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Link } from "@tanstack/react-router";
-import { getToolkitClient } from "@/shared/client";
-import { parsePaginated } from "@/shared/api/pagination";
+
+import { articleListThemeVars } from "@/modules/article/components/articleListThemeVars";
 import { RecentCommentsCard } from "@/modules/dashboard/components/RecentCommentsCard";
 import { dashboardThemeVars } from "@/modules/dashboard/dashboardThemeVars";
-import { articleListThemeVars } from "@/modules/article/components/articleListThemeVars";
-import "@/routes/_auth/dashboard/index.css";
+import {
+  defaultArticleSearch,
+  defaultCommentSearch,
+  defaultMediaSearch,
+  defaultPageSearch,
+} from "@/routes/searchDefaults";
+import { parsePaginated } from "@/shared/api/pagination";
+import { getToolkitClient } from "@/shared/client";
 
 const { Title, Text } = Typography;
 
@@ -98,7 +106,19 @@ export function DashboardPage() {
       <Row gutter={[16, 16]}>
         {statCards.map((stat) => (
           <Col xs={24} sm={12} lg={6} key={stat.title}>
-            <Link to={stat.to} className="dash-stat-link">
+            <Link
+              to={stat.to}
+              search={
+                stat.to === "/article"
+                  ? defaultArticleSearch
+                  : stat.to === "/page"
+                    ? defaultPageSearch
+                    : stat.to === "/article/comment"
+                      ? defaultCommentSearch
+                      : defaultMediaSearch
+              }
+              className="dash-stat-link"
+            >
               <Card
                 className="dash-card-interactive admin-panel"
                 styles={{ body: { padding: token.paddingLG } }}

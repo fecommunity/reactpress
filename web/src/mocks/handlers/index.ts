@@ -1,11 +1,11 @@
-import { authHandlers } from "./auth";
 import { articleHandlers } from "./article";
+import { authHandlers } from "./auth";
 import { categoryHandlers } from "./category";
-import { tagHandlers } from "./tag";
 import { commentHandlers } from "./comment";
-import { userHandlers } from "./user";
-import { pageHandlers, fileHandlers, settingHandlers, viewHandlers, apiKeyHandlers } from "./page";
+import { apiKeyHandlers, fileHandlers, pageHandlers, settingHandlers, viewHandlers } from "./page";
+import { tagHandlers } from "./tag";
 import { themeHandlers } from "./themes";
+import { userHandlers } from "./user";
 
 export const handlers = [
   ...authHandlers,

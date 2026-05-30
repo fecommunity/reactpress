@@ -1,5 +1,6 @@
 import { Spin } from "antd";
 import { useTranslation } from "react-i18next";
+
 import styles from "@/modules/appearance/components/themes-page.module.css";
 
 type Props = {

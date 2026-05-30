@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod/v4";
+
 import { ArticleListPage } from "@/modules/article/pages/ArticleListPage";
 
 const ArticleSearchSchema = z.object({

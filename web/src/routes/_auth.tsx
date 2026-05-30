@@ -1,6 +1,7 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
-import { useAuthStore } from "@/stores/auth";
+
 import { MainLayout } from "@/components/Layout/MainLayout";
+import { useAuthStore } from "@/stores/auth";
 import { canAccessPath, normalizeAppPath } from "@/utils/appMenu";
 
 export const Route = createFileRoute("/_auth")({

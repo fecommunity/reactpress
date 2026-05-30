@@ -1,6 +1,7 @@
+import { useNavigate } from "@tanstack/react-router";
 import { Button, Tag, Typography } from "antd";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "@tanstack/react-router";
+
 import type { ThemeListItem } from "@/hooks/useThemes";
 import styles from "@/modules/appearance/components/themes-page.module.css";
 

@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod/v4";
+
 import { MediaListPage } from "@/modules/media/pages/MediaListPage";
 
 const MediaSearchSchema = z.object({

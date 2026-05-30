@@ -1,4 +1,5 @@
 import type { ComponentType } from "react";
+
 import { EmojiTool } from "./Emoji";
 import { IframeTool } from "./Iframe";
 import { ImageTool } from "./Image";

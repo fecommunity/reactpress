@@ -1,7 +1,8 @@
 import { Button, Input, Typography } from "antd";
 import { useTranslation } from "react-i18next";
-import type { UserRoleCounts } from "@/modules/user/userListApi";
+
 import styles from "@/modules/comment/components/comment-list.module.css";
+import type { UserRoleCounts } from "@/modules/user/userListApi";
 
 type UserListSubHeaderProps = {
   role: string;

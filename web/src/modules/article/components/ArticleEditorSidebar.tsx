@@ -1,6 +1,7 @@
 import { Button, Input, Select, Switch } from "antd";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+
 import type {
   ArticleVisibility,
   EditorCategory,
@@ -11,6 +12,7 @@ import {
   ArticleTagsField,
 } from "@/modules/article/components/ArticleCategoryTagsFields";
 import { MediaSelectDrawer } from "@/shared/components/MediaSelectDrawer";
+
 import styles from "./article-editor-sidebar.module.css";
 
 export type ArticleEditorSidebarProps = {

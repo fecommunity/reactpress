@@ -1,16 +1,17 @@
+import { getThemeStateFromGlobalSetting } from "@fecommunity/reactpress-toolkit/extension";
+import { useNavigate } from "@tanstack/react-router";
 import { App, Button, Spin } from "antd";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "@tanstack/react-router";
-import { getThemeStateFromGlobalSetting } from "@fecommunity/reactpress-toolkit/extension";
+
 import { useSiteSettings } from "@/hooks/useSiteSettings";
-import { useThemes, useThemeMutations } from "@/hooks/useThemes";
+import { useThemePreviewSession } from "@/hooks/useThemePreviewSession";
+import { useThemeMutations, useThemes } from "@/hooks/useThemes";
 import { ThemePreviewFrame } from "@/modules/appearance/components/ThemePreviewFrame";
 import { ThemePreviewPaneLoading } from "@/modules/appearance/components/ThemePreviewPaneLoading";
-import { useThemePreviewSession } from "@/hooks/useThemePreviewSession";
-import { resolveLiveSitePreviewUrl } from "@/shared/theme/previewUrl";
 import styles from "@/modules/appearance/components/themes-page.module.css";
+import { resolveLiveSitePreviewUrl } from "@/shared/theme/previewUrl";
 
 export function ThemePreviewPage({ themeIdFromSearch }: { themeIdFromSearch?: string }) {
   const { t } = useTranslation();

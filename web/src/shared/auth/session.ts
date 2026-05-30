@@ -1,5 +1,6 @@
 import { permissionsForRole } from "@fecommunity/reactpress-toolkit/admin";
 import { resolveApiBaseUrl } from "@fecommunity/reactpress-toolkit/react";
+
 import { AUTH_ENDPOINTS } from "@/api/auth";
 import {
   AuthTokensSchema,
@@ -7,12 +8,12 @@ import {
   PermissionsListSchema,
   UserSchema,
 } from "@/api/schemas";
-import { getMenuTreeForPermissions } from "@/shell/bootstrap";
-import { adminMenuToSidebar } from "@/shared/menu";
 import { getToolkitClient, resetToolkitClient } from "@/shared/client";
-import { httpClient } from "@/utils/http";
-import { API_BASE_URL } from "@/utils/constants";
+import { adminMenuToSidebar } from "@/shared/menu";
+import { getMenuTreeForPermissions } from "@/shell/bootstrap";
 import { useAuthStore } from "@/stores/auth";
+import { API_BASE_URL } from "@/utils/constants";
+import { httpClient } from "@/utils/http";
 
 export function isMockAccessToken(token: string | undefined): boolean {
   return !token || token.startsWith("mock-");

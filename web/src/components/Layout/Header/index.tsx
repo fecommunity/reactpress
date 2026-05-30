@@ -1,11 +1,13 @@
-import { Avatar, Button, Dropdown, Flex, Grid, Layout, theme } from "antd";
-import type { MenuProps } from "antd";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { Home, Plus, PanelLeft } from "lucide-react";
+import type { MenuProps } from "antd";
+import { Avatar, Button, Dropdown, Flex, Grid, Layout, theme } from "antd";
+import { Home, PanelLeft, Plus } from "lucide-react";
 import { useTranslation } from "react-i18next";
+
 import { GitHub, Theme } from "@/components/Icon";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
+import { defaultMediaSearch, defaultUsersSearch } from "@/routes/searchDefaults";
 import { useAuthStore } from "@/stores/auth";
 import { useSettingsStore } from "@/stores/settings";
 import { APP_BRAND_NAME, REACTPRESS_GITHUB_URL } from "@/utils/constants";
@@ -51,7 +53,7 @@ export function Header() {
     {
       key: "media",
       label: (
-        <Link to="/media" className="admin-bar__menuLink">
+        <Link to="/media" search={defaultMediaSearch} className="admin-bar__menuLink">
           {t("menu.media")}
         </Link>
       ),
@@ -59,7 +61,7 @@ export function Header() {
     {
       key: "user",
       label: t("menu.users.all"),
-      onClick: () => void navigate({ to: "/users" }),
+      onClick: () => void navigate({ to: "/users", search: defaultUsersSearch }),
     },
   ];
 

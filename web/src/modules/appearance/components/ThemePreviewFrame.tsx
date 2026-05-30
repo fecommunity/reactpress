@@ -1,11 +1,12 @@
-import type { CSSProperties } from "react";
-import { useMemo } from "react";
-import { Spin, Typography } from "antd";
 import type { ThemeMods } from "@fecommunity/reactpress-toolkit/extension";
 import { appendPreviewModsToUrl } from "@fecommunity/reactpress-toolkit/extension";
+import { Spin, Typography } from "antd";
+import type { CSSProperties } from "react";
+import { useMemo } from "react";
+
 import { useThemePreviewHtml } from "@/hooks/useThemePreviewHtml";
-import { resolveLiveSitePreviewUrl } from "@/shared/theme/previewUrl";
 import styles from "@/modules/appearance/components/themes-page.module.css";
+import { resolveLiveSitePreviewUrl } from "@/shared/theme/previewUrl";
 
 type Props = {
   themeId: string;

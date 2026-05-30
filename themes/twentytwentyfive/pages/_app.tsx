@@ -32,7 +32,10 @@ Router.events.on('routeChangeComplete', () => {
   }, 0);
 });
 
-class MyApp extends App<IGlobalContext, unknown> {
+class MyApp extends App<
+  IGlobalContext,
+  { needLayoutFooter?: boolean; hasBg?: boolean; [key: string]: unknown }
+> {
   state = {
     locale: '',
     user: null,

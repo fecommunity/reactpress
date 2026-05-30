@@ -54,7 +54,6 @@ export const Search: React.FC<IProps> = ({ visible = true, onClose }) => {
       title={<span className={styles.title}>{t('searchArticle')}</span>}
       open={visible}
       footer={null}
-      animation={false}
       onCancel={close}
       className={styles.inner}
       wrapClassName={styles.searchWrapper}

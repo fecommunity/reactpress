@@ -1,6 +1,7 @@
-import { Flex, Typography, theme } from "antd";
-import { GitHub } from "@/components/Icon";
+import { Flex, theme, Typography } from "antd";
 import { useTranslation } from "react-i18next";
+
+import { GitHub } from "@/components/Icon";
 
 const ANTD_ADMIN_REPO = "https://github.com/zuiidea/antd-admin";
 

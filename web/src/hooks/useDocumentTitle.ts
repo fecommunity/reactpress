@@ -1,11 +1,12 @@
+import { useLocation } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useLocation } from "@tanstack/react-router";
+
 import type { MenuItem } from "@/api/schemas";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 import { useAuthStore } from "@/stores/auth";
-import { APP_BRAND_NAME } from "@/utils/constants";
 import { normalizeAppPath } from "@/utils/appMenu";
+import { APP_BRAND_NAME } from "@/utils/constants";
 
 function walkMenus(
   menus: MenuItem[],

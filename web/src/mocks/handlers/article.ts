@@ -1,8 +1,9 @@
 import { http } from "msw";
-import { MOCK_ARTICLES } from "../data";
+
+import { ERROR_CODES, errorResponse, successResponse, withDelay } from "../createHandler";
 import type { MockArticle } from "../data";
+import { MOCK_ARTICLES } from "../data";
 import { paginateList, parsePaginationParams } from "../utils";
-import { withDelay, successResponse, errorResponse, ERROR_CODES } from "../createHandler";
 
 let articles = MOCK_ARTICLES.map((a) => ({
   ...a,

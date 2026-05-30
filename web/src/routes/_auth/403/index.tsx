@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { Home, ShieldAlert } from "lucide-react";
 import { Button, Flex, Result, theme } from "antd";
+import { Home, ShieldAlert } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 export const Route = createFileRoute("/_auth/403/")({

@@ -1,14 +1,15 @@
-import React from 'react';
 import Link from '@docusaurus/Link';
-import Logo from '@site/src/components/Home/Logo';
-import GridBackground from '@site/src/components/Home/Hero/GridBackground';
-import FloorBackground from '@site/src/components/Home/Hero/FloorBackground';
-import Devices from '@site/src/components/Home/Hero/Devices';
-import CliCommandBlock from '@site/src/components/CliCommandBlock';
-import styles from './styles.module.css';
-import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Translate from '@docusaurus/Translate';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
+import CliCommandBlock from '@site/src/components/CliCommandBlock';
+import Devices from '@site/src/components/Home/Hero/Devices';
+import FloorBackground from '@site/src/components/Home/Hero/FloorBackground';
+import GridBackground from '@site/src/components/Home/Hero/GridBackground';
+import Logo from '@site/src/components/Home/Logo';
+import React from 'react';
 import GitHubButton from 'react-github-btn';
+
+import styles from './styles.module.css';
 
 function Hero() {
   const { siteConfig } = useDocusaurusContext();
@@ -44,15 +45,14 @@ function Hero() {
                 href="https://github.com/fecommunity/reactpress"
                 data-size="large"
                 data-show-count="true"
-                aria-label="Star fecommunity/reactpress on GitHub">
+                aria-label="Star fecommunity/reactpress on GitHub"
+              >
                 Star
               </GitHubButton>
             </span>
           </div>
           <p className={styles.subtitle}>
-            <Translate id="home.hero.subTitle">
-              One package, one minute to your own CMS.
-            </Translate>
+            <Translate id="home.hero.subTitle">One package, one minute to your own CMS.</Translate>
           </p>
 
           <div className={styles.actions}>
@@ -60,16 +60,15 @@ function Hero() {
               <Link className={styles.primaryButton} to="/docs/intro">
                 <Translate id="home.hero.intro">Get Started</Translate>
               </Link>
-              <Link
-                className={styles.secondaryButton}
-                to="/docs/tutorial-extras/reactpress-3-0">
+              <Link className={styles.secondaryButton} to="/docs/tutorial-extras/reactpress-3-0">
                 <Translate id="home.hero.whatsNew">What&apos;s New in 3.0</Translate>
               </Link>
               <a
                 href="https://blog.gaoredu.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className={styles.ghostButton}>
+                className={styles.ghostButton}
+              >
                 <Translate id="home.hero.try">Live Demo</Translate>
               </a>
             </div>

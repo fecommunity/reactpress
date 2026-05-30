@@ -42,6 +42,7 @@
     "publish:build": "node ./cli/bin/reactpress.js publish --build",
     "prepare": "husky",
     "precommit": "lint-staged",
+    "typecheck": "pnpm run build:toolkit && pnpm --dir web run typecheck",
     "test": "pnpm --dir cli test",
     "test:cli": "pnpm --dir cli test",
     "test:smoke": "node scripts/smoke-api-health.mjs",
@@ -51,9 +52,29 @@
     "@fecommunity/reactpress": "workspace:*"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "eslint-plugin-react": "^7.37.2",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
     "husky": "^7.0.4",
     "lint-staged": "^12.4.1",
-    "prettier": "^2.3.2",
-    "typescript": "~4.1.6"
+    "prettier": "^3.4.2",
+    "typescript": "~5.9.3"
+  },
+  "pnpm": {
+    "overrides": {
+      "react": "18.3.1",
+      "react-dom": "18.3.1",
+      "@types/react": "18.3.20",
+      "@types/react-dom": "18.3.6",
+      "@typescript-eslint/eslint-plugin": "^7.18.0",
+      "@typescript-eslint/parser": "^7.18.0",
+      "eslint": "^8.57.0",
+      "typescript": "~5.9.3"
+    }
   }
 }

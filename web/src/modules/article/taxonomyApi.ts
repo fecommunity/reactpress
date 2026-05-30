@@ -44,7 +44,7 @@ export async function createTaxonomyItem(
       ? await api.category.create({ body } as Parameters<typeof api.category.create>[0])
       : await api.tag.create({ body } as Parameters<typeof api.tag.create>[0]);
   const item = Array.isArray(res) ? res[0] : res;
-  return normalizeItem((item ?? {}) as Record<string, unknown>);
+  return normalizeItem((item ?? {}) as unknown as Record<string, unknown>);
 }
 
 export async function updateTaxonomyItem(

@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { App, Table, Typography, theme } from "antd";
 import { Link, useNavigate } from "@tanstack/react-router";
+import { defaultCommentSearch } from "@/routes/searchDefaults";
 import { MessageCircle } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -344,7 +345,11 @@ export function ArticleListPage({ search, routePath }: ArticleListPageProps) {
         render: (_: unknown, record: ArticleListRow) => {
           const count = commentCounts[record.id];
           if (!count) return "—";
-          return <Link to="/article/comment">{count}</Link>;
+          return (
+            <Link to="/article/comment" search={defaultCommentSearch}>
+              {count}
+            </Link>
+          );
         },
       },
       {

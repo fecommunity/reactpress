@@ -1,15 +1,16 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { App, Button, Input, Layout, Space, Spin, Typography } from "antd";
 import { Link, useNavigate } from "@tanstack/react-router";
+import { App, Button, Input, Layout, Space, Spin, Typography } from "antd";
 import { ChevronLeft } from "lucide-react";
 import { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { getToolkitClient } from "@/shared/client";
-import { httpClient } from "@/utils/http";
-import { ModulePlaceholder } from "@/shared/components/ModulePlaceholder";
-import { MarkdownEditor } from "@/shared/components/Editor";
-import type { PageListSearch } from "@/modules/page/pages/PageListPage";
+
 import styles from "@/modules/page/components/page-editor.module.css";
+import type { PageListSearch } from "@/modules/page/pages/PageListPage";
+import { getToolkitClient } from "@/shared/client";
+import { MarkdownEditor } from "@/shared/components/Editor";
+import { ModulePlaceholder } from "@/shared/components/ModulePlaceholder";
+import { httpClient } from "@/utils/http";
 
 type PageDraft = {
   name: string;
@@ -23,9 +24,11 @@ type PageDraft = {
 
 const defaultListSearch: PageListSearch = {
   page: 1,
-  pageSize: 12,
+  pageSize: 20,
   status: "",
   keyword: "",
+  month: "",
+  author: "",
 };
 
 const emptyDraft = (): PageDraft => ({

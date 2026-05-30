@@ -1,7 +1,7 @@
 import type { CreateUserRequest } from "@/api/schemas";
 import { USER_ENDPOINTS } from "@/api/user";
-import { getToolkitClient } from "@/shared/client";
 import { parsePaginated } from "@/shared/api/pagination";
+import { getToolkitClient } from "@/shared/client";
 import { AUTH_MODE } from "@/utils/constants";
 import { httpClient } from "@/utils/http";
 

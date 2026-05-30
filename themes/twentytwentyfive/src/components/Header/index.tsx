@@ -61,15 +61,9 @@ const NAV_LINKS = [
 ];
 
 interface HeaderProps {
-  setting: {
-    systemLogo: string;
-  };
-  tags: any[];
-  pages: Array<{
-    path: string;
-    label: string;
-    name: string;
-  }>;
+  setting: ISetting;
+  tags: ITag[];
+  pages: Array<IPage & { label?: string }>;
   hasBg?: boolean;
 }
 
@@ -211,7 +205,7 @@ export const Header: React.FC<HeaderProps> = ({ setting, tags, pages, hasBg = fa
           <div className={style.menuWrapper}>
             <Menu
               rootClassName={style.menu}
-              activeKey={mainPath}
+              selectedKeys={[mainPath]}
               items={menuItems}
               mode="horizontal"
               className={cls(visible ? style.active : false, style.menu)}

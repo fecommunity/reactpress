@@ -1,5 +1,6 @@
 import { http } from "msw";
-import { withDelay, successResponse } from "../createHandler";
+
+import { successResponse, withDelay } from "../createHandler";
 
 const MOCK_PAGES = [
   {
@@ -38,7 +39,7 @@ let mockSettings: Record<string, unknown> = {
   oss: "{}",
 };
 
-export function patchMockGlobalSettingTheme(theme: Record<string, unknown>) {
+export function patchMockGlobalSettingTheme(theme: Record<string, unknown> | object) {
   try {
     const raw = mockSettings.globalSetting;
     const global = typeof raw === "string" ? JSON.parse(raw) : (raw ?? {});

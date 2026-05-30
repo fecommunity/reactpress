@@ -4,6 +4,7 @@ import { animated, useTransition } from 'react-spring';
 type ConditionTransitionProps = {
   visible: boolean;
   options: Record<string, unknown>;
+  children?: React.ReactNode;
 };
 
 export const ConditionTransition: React.FC<ConditionTransitionProps> = ({ visible, options, children }) => {

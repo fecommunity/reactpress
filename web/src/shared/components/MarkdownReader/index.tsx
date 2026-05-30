@@ -1,10 +1,12 @@
-import hljs from "highlight.js";
-import githubDarkCss from "highlight.js/styles/github-dark.min.css?url";
-import githubLightCss from "highlight.js/styles/github.min.css?url";
 import { App } from "antd";
+import hljs from "highlight.js";
+import githubLightCss from "highlight.js/styles/github.min.css?url";
+import githubDarkCss from "highlight.js/styles/github-dark.min.css?url";
 import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
+
 import { useSettingsStore } from "@/stores/settings";
+
 import styles from "./markdown-reader.module.css";
 
 const HLJS_THEME_ID = "hljs-theme-stylesheet";

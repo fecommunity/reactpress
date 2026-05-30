@@ -1,6 +1,8 @@
 import { Button, Select } from "antd";
 import { useTranslation } from "react-i18next";
+
 import { ListPaginationNav } from "@/shared/components/ListPaginationNav";
+
 import styles from "./comment-list.module.css";
 
 export type CommentBulkAction = "approve" | "unapprove" | "delete";
@@ -42,7 +44,9 @@ export function CommentListTablenav({
 
   return (
     <div
-      className={`${styles.tablenav} ${position === "top" ? styles.tablenavTop : styles.tablenavBottom} ${compact ? styles.tablenavCompact : ""}`}
+      className={`${styles.tablenav} ${position === "top" ? styles.tablenavTop : styles.tablenavBottom} ${
+        compact ? styles.tablenavCompact : ""
+      }`}
     >
       {!compact ? (
         <div className={styles.tablenavLeft}>

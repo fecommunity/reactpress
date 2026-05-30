@@ -1,8 +1,9 @@
 import { http } from "msw";
-import { MOCK_COMMENTS } from "../data";
+
+import { ERROR_CODES, errorResponse, successResponse, withDelay } from "../createHandler";
 import type { MockComment } from "../data";
+import { MOCK_COMMENTS } from "../data";
 import { paginateList, parsePaginationParams } from "../utils";
-import { withDelay, successResponse, errorResponse, ERROR_CODES } from "../createHandler";
 
 let comments = [...MOCK_COMMENTS];
 

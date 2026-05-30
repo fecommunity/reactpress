@@ -63,7 +63,7 @@ const Page: NextPage<IProps> = ({ id, knowledge: defaultKnowledge }) => {
     [chapters, currentIndex, forceUpdate]
   );
 
-  const SortableItem = SortableElement(({ value: idx }) => (
+  const SortableItem = SortableElement(({ value: idx }: { value: number }) => (
     <div
       key={idx}
       className={cls({ 'active': idx === currentIndex, 'knowledge-chapter-item': true })}
@@ -75,9 +75,9 @@ const Page: NextPage<IProps> = ({ id, knowledge: defaultKnowledge }) => {
         <DeleteOutlined onClick={(e) => e.stopPropagation()} />
       </Popconfirm>
     </div>
-  ));
+  )) as React.ComponentType<{ index: number; value: number }>;
 
-  const SortableList = SortableContainer(({ items }) => {
+  const SortableList = SortableContainer(({ items }: { items: Array<Partial<IKnowledge>> }) => {
     return (
       <div className={styles.menu}>
         {items.map((item, index) => (
@@ -85,7 +85,12 @@ const Page: NextPage<IProps> = ({ id, knowledge: defaultKnowledge }) => {
         ))}
       </div>
     );
-  });
+  }) as React.ComponentType<{
+    items: Array<Partial<IKnowledge>>;
+    onSortEnd: (args: { oldIndex: number; newIndex: number }) => void;
+    useDragHandle?: boolean;
+    lockAxis?: 'x' | 'y' | 'xy';
+  }>;
 
   const onSortEnd = useCallback(
     ({ oldIndex, newIndex }) => {

@@ -1,10 +1,13 @@
-import { Layout } from "antd";
+import "../admin-layout.css";
+
 import { Outlet, useLocation } from "@tanstack/react-router";
+import { Layout } from "antd";
+
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { normalizeAppPath } from "@/utils/appMenu";
-import { Sidebar } from "../Sidebar";
+
 import { Header } from "../Header";
-import "../admin-layout.css";
+import { Sidebar } from "../Sidebar";
 
 const { Content } = Layout;
 

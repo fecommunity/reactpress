@@ -50,22 +50,6 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "src"),
-      "@fecommunity/reactpress-toolkit/admin": path.resolve(
-        __dirname,
-        "../toolkit/src/admin/index.ts",
-      ),
-      "@fecommunity/reactpress-toolkit/react": path.resolve(
-        __dirname,
-        "../toolkit/src/react/index.ts",
-      ),
-      "@fecommunity/reactpress-toolkit/extension": path.resolve(
-        __dirname,
-        "../toolkit/src/extension/index.ts",
-      ),
-      "@fecommunity/reactpress-toolkit/theme": path.resolve(
-        __dirname,
-        "../toolkit/src/theme/index.ts",
-      ),
     },
   },
   build: {

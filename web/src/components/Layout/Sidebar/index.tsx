@@ -163,7 +163,7 @@ export function Sidebar() {
   const showCommentBadge = menuContainsId(menus, COMMENTS_MENU_ID);
   const { data: pendingCommentCount = 0 } = usePendingCommentCount(showCommentBadge);
 
-  const menuBadges = useMemo(() => {
+  const menuBadges = useMemo((): Record<string, number> => {
     if (!pendingCommentCount) return {};
     return { [COMMENTS_MENU_ID]: pendingCommentCount };
   }, [pendingCommentCount]);
@@ -183,7 +183,7 @@ export function Sidebar() {
 
   const { selectedKey, routeOpenKeys } = useMemo(() => {
     const chain = resolveMenuKeyChain(location.pathname, builtMenu.pathToKeyChain);
-    return { selectedKey: chain.at(-1), routeOpenKeys: chain.slice(0, -1) };
+    return { selectedKey: chain[chain.length - 1], routeOpenKeys: chain.slice(0, -1) };
   }, [builtMenu, location.pathname]);
 
   const routeOpenKeysSig = routeOpenKeys.join("\0");

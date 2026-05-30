@@ -1,5 +1,5 @@
-import { Skeleton, Table, theme } from "antd";
 import type { TableProps } from "antd";
+import { Skeleton, Table, theme } from "antd";
 import type { ColumnGroupType, ColumnsType, ColumnType } from "antd/es/table";
 import type { GlobalToken } from "antd/es/theme/interface";
 import type { CSSProperties } from "react";

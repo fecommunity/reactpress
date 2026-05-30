@@ -1,8 +1,9 @@
-import type { ReactNode } from 'react';
-import clsx from 'clsx';
-import Heading from '@theme/Heading';
-import styles from './styles.module.css';
 import { translate } from '@docusaurus/Translate';
+import Heading from '@theme/Heading';
+import clsx from 'clsx';
+import type { ReactNode } from 'react';
+
+import styles from './styles.module.css';
 
 type FeatureItem = {
   title: string;

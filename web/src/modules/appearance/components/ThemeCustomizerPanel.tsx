@@ -1,13 +1,14 @@
+import type { ThemeCustomizerSetting, ThemeMods } from "@fecommunity/reactpress-toolkit/extension";
+import { useNavigate } from "@tanstack/react-router";
 import { App, Button, Form, Typography } from "antd";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "@tanstack/react-router";
+
 import type { ThemeListItem } from "@/hooks/useThemes";
-import type { ThemeMods } from "@fecommunity/reactpress-toolkit/extension";
-import { normalizeThemeMods } from "@/shared/theme/normalizeMods";
 import { CustomizerSettingField } from "@/modules/appearance/components/CustomizerSettingField";
 import styles from "@/modules/appearance/components/themes-page.module.css";
+import { normalizeThemeMods } from "@/shared/theme/normalizeMods";
 
 type Props = {
   theme: ThemeListItem;
@@ -118,7 +119,10 @@ export function ThemeCustomizerPanel({
               {activeSection.title}
             </Typography.Title>
             {activeSection.settings.map((setting) => (
-              <CustomizerSettingField key={setting.id} setting={setting} />
+              <CustomizerSettingField
+                key={setting.id}
+                setting={setting as ThemeCustomizerSetting}
+              />
             ))}
           </div>
         ) : (

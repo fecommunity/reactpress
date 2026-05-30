@@ -1,4 +1,5 @@
 import type { AdminMenuItem } from "@fecommunity/reactpress-toolkit/admin";
+
 import type { MenuItem } from "@/api/schemas";
 
 /** Flatten legacy group nodes so the sidebar matches WordPress (no section headers). */

@@ -1,7 +1,9 @@
 import { X } from "lucide-react";
 import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
+
 import type { TocItem } from "@/shared/components/Editor/utils/markdown";
+
 import styles from "./toc.module.css";
 
 type TocProps = {

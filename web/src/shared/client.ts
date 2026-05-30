@@ -1,7 +1,8 @@
-import { createClient, resolveApiBaseUrl } from "@fecommunity/reactpress-toolkit/react";
 import type { ReactPressClient } from "@fecommunity/reactpress-toolkit/react";
-import { API_BASE_URL } from "@/utils/constants";
+import { createClient, resolveApiBaseUrl } from "@fecommunity/reactpress-toolkit/react";
+
 import { useAuthStore } from "@/stores/auth";
+import { API_BASE_URL } from "@/utils/constants";
 
 let client: ReactPressClient | null = null;
 

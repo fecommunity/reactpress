@@ -1,7 +1,9 @@
-import { useMemo } from "react";
 import type { ConfigProviderProps } from "antd";
-import { buildLightThemeConfig, buildDarkThemeConfig } from "./tokenBuilders";
+import { useMemo } from "react";
+
 import { useSettingsStore } from "@/stores/settings";
+
+import { buildDarkThemeConfig, buildLightThemeConfig } from "./tokenBuilders";
 
 /**
  * Theme selection for ConfigProvider: light/dark share radius, font, control tweaks.

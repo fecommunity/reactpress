@@ -1,7 +1,7 @@
-import { create } from "zustand";
 import type { StateCreator } from "zustand";
-import { persist } from "zustand/middleware";
+import { create } from "zustand";
 import type { PersistOptions } from "zustand/middleware";
+import { persist } from "zustand/middleware";
 
 export interface PersistConfig<T> {
   name: string;

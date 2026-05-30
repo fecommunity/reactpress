@@ -1,6 +1,7 @@
 import { http } from "msw";
+
+import { ERROR_CODES, errorResponse, successResponse, withDelay } from "../createHandler";
 import { MOCK_USERS } from "../data";
-import { withDelay, successResponse, errorResponse, ERROR_CODES } from "../createHandler";
 
 export const authHandlers = [
   http.post("/api/auth/login", async ({ request }) => {

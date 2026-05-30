@@ -1,30 +1,18 @@
 {
+  "extends": "../tsconfig.base.json",
   "compilerOptions": {
-    "target": "ES2023",
+    "types": ["vite/client"],
     "useDefineForClassFields": true,
     "module": "ESNext",
     "lib": ["ES2023", "DOM", "DOM.Iterable"],
-    "types": ["vite/client"],
-    "skipLibCheck": true,
-    "jsx": "react-jsx",
-
-    /* Bundler mode */
-    "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",
     "noEmit": true,
-
-    /* Paths */
     "paths": {
       "@/*": ["./src/*"],
-      "@fecommunity/reactpress-toolkit": ["../toolkit/src/index.ts"],
-      "@fecommunity/reactpress-toolkit/admin": ["../toolkit/src/admin/index.ts"],
-      "@fecommunity/reactpress-toolkit/react": ["../toolkit/src/react/index.ts"]
+      "react-i18next": ["./node_modules/react-i18next/index.d.ts"]
     },
-
-    /* Linting */
-    "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,

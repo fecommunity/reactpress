@@ -1,5 +1,5 @@
-import { getToolkitClient } from "@/shared/client";
 import { parsePaginated } from "@/shared/api/pagination";
+import { getToolkitClient } from "@/shared/client";
 
 export interface CommentListSearch {
   page: number;

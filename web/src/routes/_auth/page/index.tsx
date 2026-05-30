@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod/v4";
-import { PageListPage } from "@/modules/page/pages/PageListPage";
+
 import type { PageListSearch } from "@/modules/page/pageListApi";
+import { PageListPage } from "@/modules/page/pages/PageListPage";
 
 const PageSearchSchema = z.object({
   page: z.number().int().positive().catch(1),

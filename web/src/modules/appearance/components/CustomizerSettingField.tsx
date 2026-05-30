@@ -1,10 +1,11 @@
+import type { ThemeCustomizerSetting } from "@fecommunity/reactpress-toolkit/extension";
+import { resolvePublicAssetUrl } from "@fecommunity/reactpress-toolkit/extension";
 import { App, Button, ColorPicker, Form, Input, Select, Switch, Typography } from "antd";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import type { ThemeCustomizerSetting } from "@fecommunity/reactpress-toolkit/extension";
-import { resolvePublicAssetUrl } from "@fecommunity/reactpress-toolkit/extension";
-import { MediaSelectDrawer } from "@/shared/components/MediaSelectDrawer";
+
 import styles from "@/modules/appearance/components/themes-page.module.css";
+import { MediaSelectDrawer } from "@/shared/components/MediaSelectDrawer";
 
 type SettingDef = ThemeCustomizerSetting & { type: string };
 

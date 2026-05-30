@@ -1,6 +1,7 @@
 import { Input, Segmented } from "antd";
 import { Search } from "lucide-react";
 import { useTranslation } from "react-i18next";
+
 import styles from "@/modules/appearance/components/themes-page.module.css";
 
 export type ThemeCatalogFilter = "all" | "installed" | "available";

@@ -1,8 +1,9 @@
-import { useTranslation } from "react-i18next";
+import { useAppLocale } from "@/hooks/useAppLocale";
+
 import styles from "./login-brand-mark.module.css";
 
 export function LoginBrandMark() {
-  const { t } = useTranslation();
+  const { t } = useAppLocale();
 
   return (
     <header className={styles.mark}>

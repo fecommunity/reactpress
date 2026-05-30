@@ -1,10 +1,11 @@
-import { useTranslation } from "react-i18next";
+import { useAppLocale } from "@/hooks/useAppLocale";
+
 import { LoginCliSnippet } from "./-LoginCliSnippet";
 import { LoginHeroLinks } from "./-LoginHeroLinks";
 import styles from "./login-mobile-showcase.module.css";
 
 export function LoginMobileShowcase() {
-  const { t } = useTranslation();
+  const { t } = useAppLocale();
 
   return (
     <section className={styles.wrap} aria-label={t("login.showcase.mobileAria")}>

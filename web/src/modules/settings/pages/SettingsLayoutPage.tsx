@@ -1,7 +1,8 @@
 import { Typography } from "antd";
 import { useTranslation } from "react-i18next";
-import { SettingsTabForm } from "@/modules/settings/components/SettingsTabForm";
+
 import styles from "@/modules/settings/components/settings-form.module.css";
+import { SettingsTabForm } from "@/modules/settings/components/SettingsTabForm";
 
 interface SettingsLayoutPageProps {
   tab: string;

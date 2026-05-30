@@ -1,7 +1,8 @@
 import { Form, Input, Select } from "antd";
 import type { FormInstance } from "antd/es/form";
-import type { User } from "@/api/schemas";
 import { useTranslation } from "react-i18next";
+
+import type { User } from "@/api/schemas";
 import { BaseFormModal } from "@/components/FormModal";
 import { AUTH_MODE } from "@/utils/constants";
 

@@ -1,6 +1,7 @@
-import { http } from "msw";
-import { withDelay, successResponse } from "../createHandler";
 import { defaultSiteThemeState } from "@fecommunity/reactpress-toolkit/extension";
+import { http } from "msw";
+
+import { successResponse, withDelay } from "../createHandler";
 import { patchMockGlobalSettingTheme } from "./page";
 
 const MOCK_THEMES = [
@@ -128,7 +129,9 @@ function previewHtml(themeId: string, mods: Record<string, string> = {}) {
   return `<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${title}</title><style>
     body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:${bg};color:#1d2327;line-height:1.6}
     .wrap{max-width:720px;margin:0 auto;padding:2rem 1.5rem}
-    h1{color:${primary};margin:0 0 .5rem} h2{color:${accent}}</style></head><body><div class="wrap"><h1>${title}</h1><p>${theme.description ?? ""}</p><h2>Preview</h2><p>主题 ${theme.name} 实时预览。</p></div></body></html>`;
+    h1{color:${primary};margin:0 0 .5rem} h2{color:${accent}}</style></head><body><div class="wrap"><h1>${title}</h1><p>${
+      theme.description ?? ""
+    }</p><h2>Preview</h2><p>主题 ${theme.name} 实时预览。</p></div></body></html>`;
 }
 
 export const themeHandlers = [

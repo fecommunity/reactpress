@@ -1,5 +1,6 @@
-import { theme } from "antd";
 import type { ConfigProviderProps, ThemeConfig } from "antd";
+import { theme } from "antd";
+
 import { WP_ADMIN } from "./wpAdminTokens";
 
 /**

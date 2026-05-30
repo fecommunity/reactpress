@@ -20,16 +20,19 @@
   "peerDependencies": {
     "@tanstack/react-query": ">=5",
     "next": ">=12",
-    "react": ">=17"
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   },
   "peerDependenciesMeta": {
     "@tanstack/react-query": { "optional": true },
     "next": { "optional": true },
-    "react": { "optional": true }
+    "react": { "optional": true },
+    "react-dom": { "optional": true }
   },
   "scripts": {
     "generate": "node scripts/generate-swagger.js",
-    "build": "tsc && rm -rf dist/config/locales && cp -r src/config/locales dist/config/locales && cp src/theme/createApp.js dist/theme/createApp.js"
+    "build": "tsc && rm -rf dist/config/locales && cp -r src/config/locales dist/config/locales && cp src/theme/createApp.js dist/theme/createApp.js",
+    "typecheck": "tsc --noEmit"
   },
   "files": [
     "dist"

@@ -190,7 +190,7 @@ export async function fetchArticles(
     query,
   } as Parameters<typeof api.article.findAll>[0]);
   const tuple = res as unknown as [ArticleListRow[], number];
-  let list = applyClientFilters(tuple[0] ?? [], search, defaultAuthor);
+  const list = applyClientFilters(tuple[0] ?? [], search, defaultAuthor);
   const total = search.author || search.category ? list.length : (tuple[1] ?? 0);
   return { list, total };
 }

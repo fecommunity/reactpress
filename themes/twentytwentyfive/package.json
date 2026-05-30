@@ -53,8 +53,8 @@
     "open": "^8.4.2",
     "preact": "^10.5.14",
     "qrcode-svg": "^1.1.0",
-    "react": "17.0.2",
-    "react-dom": "17.0.2",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
     "react-infinite-scroller": "^1.2.4",
     "react-lazyload": "^2.6.5",
     "react-sortable-hoc": "^2.0.0",
@@ -69,7 +69,8 @@
   },
   "devDependencies": {
     "@types/node": "17.0.22",
-    "@types/react": "17.0.42",
+    "@types/react": "18.3.20",
+    "@types/react-dom": "18.3.6",
     "@types/react-infinite-scroller": "^1.2.3",
     "@typescript-eslint/eslint-plugin": "^5.21.0",
     "@typescript-eslint/parser": "^5.21.0",
@@ -86,6 +87,6 @@
     "rimraf": "^3.0.2",
     "sass": "^1.49.9",
     "tsconfig-paths-webpack-plugin": "^3.5.2",
-    "typescript": "4.6.2"
+    "typescript": "~5.9.3"
   }
 }

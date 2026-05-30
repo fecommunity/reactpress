@@ -9,12 +9,7 @@ import React from 'react';
 
 function Logo({ className }) {
   return (
-    <svg
-      className={className}
-      width={112}
-      height={102}
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg">
+    <svg className={className} width={112} height={102} fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M56 61.832c5.891 0 10.667-4.776 10.667-10.667S61.89 40.498 56 40.498c-5.89 0-10.666 4.776-10.666 10.667S50.108 61.832 56 61.832Z"
         fill="var(--logo)"

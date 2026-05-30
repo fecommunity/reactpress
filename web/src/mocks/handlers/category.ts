@@ -1,6 +1,7 @@
 import { http } from "msw";
+
+import { successResponse, withDelay } from "../createHandler";
 import { MOCK_CATEGORIES } from "../data";
-import { withDelay, successResponse } from "../createHandler";
 
 export const categoryHandlers = [
   http.get("/api/category", async () => {

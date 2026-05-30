@@ -1,8 +1,10 @@
-import { Avatar, Button, Dropdown, Flex, Typography, theme } from "antd";
-import type { MenuProps } from "antd";
-import type { User } from "@/api/schemas";
-import { MoreVertical } from "lucide-react";
 import "./index.css";
+
+import type { MenuProps } from "antd";
+import { Avatar, Button, Dropdown, Flex, theme, Typography } from "antd";
+import { MoreVertical } from "lucide-react";
+
+import type { User } from "@/api/schemas";
 
 const { Text } = Typography;
 

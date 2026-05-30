@@ -1,5 +1,6 @@
 import { Monitor, RefreshCw, Smartphone, Tablet } from "lucide-react";
 import { useTranslation } from "react-i18next";
+
 import styles from "@/modules/appearance/components/themes-page.module.css";
 
 export type PreviewDevice = "desktop" | "tablet" | "mobile";

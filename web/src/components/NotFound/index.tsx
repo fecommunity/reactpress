@@ -1,6 +1,6 @@
 import { useNavigate } from "@tanstack/react-router";
-import { ArrowLeft, Home, SearchX } from "lucide-react";
 import { Button, Flex, Result, Space, theme } from "antd";
+import { ArrowLeft, Home, SearchX } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 /** Shared 404 UI for `/404` route and root `notFoundComponent`. */

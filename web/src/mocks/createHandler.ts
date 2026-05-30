@@ -1,4 +1,4 @@
-import { HttpResponse, delay as mswDelay } from "msw";
+import { delay as mswDelay, HttpResponse } from "msw";
 
 /**
  * Standard API response format
@@ -18,14 +18,14 @@ export interface ApiResponse<T> {
  * Wrap a handler function with standard response format
  * Automatically handles delay, error responses, and data wrapping
  */
-export async function withDelay(ms: number = 200): Promise<void> {
+export async function withDelay(ms = 200): Promise<void> {
   await mswDelay(ms);
 }
 
 /**
  * Create a success response
  */
-export function successResponse<T>(data: T, message: string = "ok") {
+export function successResponse<T>(data: T, message = "ok") {
   return HttpResponse.json({
     code: 0,
     data,

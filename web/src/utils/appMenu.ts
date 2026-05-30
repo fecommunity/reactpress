@@ -1,1 +1,1 @@
-export { normalizeAppPath, requiredPermissionForPath, canAccessPath } from "@/shell/permissions";
+export { canAccessPath, normalizeAppPath, requiredPermissionForPath } from "@/shell/permissions";

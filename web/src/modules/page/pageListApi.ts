@@ -1,7 +1,7 @@
 import type { AppLocale } from "@/i18n";
 import { formatYearMonth } from "@/i18n/format";
-import { getToolkitClient } from "@/shared/client";
 import { parsePaginated } from "@/shared/api/pagination";
+import { getToolkitClient } from "@/shared/client";
 
 export interface PageListSearch {
   page: number;

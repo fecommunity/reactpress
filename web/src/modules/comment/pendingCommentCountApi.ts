@@ -1,5 +1,5 @@
-import { getToolkitClient } from "@/shared/client";
 import { parsePaginated } from "@/shared/api/pagination";
+import { getToolkitClient } from "@/shared/client";
 
 export const PENDING_COMMENT_COUNT_QUERY_KEY = ["comment-pending-count"] as const;
 

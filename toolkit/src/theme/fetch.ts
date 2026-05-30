@@ -224,23 +224,54 @@ export async function fetchTagArchive(api: ThemeApi, tag: string) {
   };
 }
 
+/** Article shape returned by theme article detail pages. */
+export type ThemeArticlePage = {
+  id: string;
+  title: string;
+  summary?: string;
+  html?: string;
+  cover?: string;
+  publishAt?: string;
+  views?: number;
+  category?: { label: string; value: string };
+  tags?: Array<{ label: string; value: string }>;
+};
+
 /** Single article — `getStaticProps` for `pages/article/[id].tsx`. */
 export async function fetchSingleArticle(api: ThemeApi, id: string) {
   const articleResponse = await api.article.findById(id);
-  return { article: unpackOne(articleResponse) };
+  return { article: unpackOne<ThemeArticlePage>(articleResponse) };
 }
 
 /** Site search — `getServerSideProps` / `getStaticProps` helper. */
-export async function fetchSearchArticles(api: ThemeApi, keyword: string) {
+export async function fetchSearchArticles(
+  api: ThemeApi,
+  keyword: string,
+): Promise<{
+  query: string;
+  articles: Array<{
+    id: string;
+    title: string;
+    summary?: string;
+    publishAt?: string;
+    category?: { label: string; value: string };
+  }>;
+}> {
   if (!keyword.trim()) {
-    return { query: '', articles: [] as unknown[] };
+    return { query: '', articles: [] };
   }
   const searchResponse = await api.search.searchArticle({
     query: { keyword: keyword.trim() },
   } as never);
   return {
     query: keyword.trim(),
-    articles: unpackList(searchResponse),
+    articles: unpackList(searchResponse) as Array<{
+      id: string;
+      title: string;
+      summary?: string;
+      publishAt?: string;
+      category?: { label: string; value: string };
+    }>,
   };
 }
 
@@ -288,7 +319,10 @@ export function createArchiveGetStaticProps<T extends Record<string, unknown>>(
 }
 
 /** Standard on-demand article page props. */
-export async function fetchArticlePageProps(api: ThemeApi, id: string | undefined) {
+export async function fetchArticlePageProps(
+  api: ThemeApi,
+  id: string | undefined,
+): Promise<{ article: ThemeArticlePage | null }> {
   if (!id) return { article: null };
   const data = await fetchSingleArticle(api, id);
   return { article: data.article ?? null };

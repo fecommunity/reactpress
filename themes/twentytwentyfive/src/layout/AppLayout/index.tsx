@@ -14,6 +14,7 @@ interface IProps {
   needFooter?: boolean;
   hasBg?: boolean;
   needHeader?: boolean;
+  children?: React.ReactNode;
 }
 
 export const AppLayout: React.FC<IProps> = ({ children, needFooter = true, needHeader = true, hasBg }) => {

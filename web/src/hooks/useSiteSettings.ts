@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
 import { getToolkitClient } from "@/shared/client";
 
 export type SiteSettings = Record<string, unknown>;

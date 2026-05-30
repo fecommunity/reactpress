@@ -1,6 +1,5 @@
-import { useTranslation } from "react-i18next";
+import { useAppLocale } from "@/hooks/useAppLocale";
 import { REACTPRESS_DEMO_URL, REACTPRESS_GITHUB_URL, reactpressDocsPath } from "@/utils/constants";
-import { useSettingsStore } from "@/stores/settings";
 
 type LoginHeroLinksProps = {
   className?: string;
@@ -8,8 +7,7 @@ type LoginHeroLinksProps = {
 };
 
 export function LoginHeroLinks({ className, mutedLinkClassName }: LoginHeroLinksProps) {
-  const { t } = useTranslation();
-  const locale = useSettingsStore((s) => s.locale);
+  const { t, locale } = useAppLocale();
 
   return (
     <nav className={className} aria-label={t("login.showcase.linksAria")}>

@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "jsx": "react-jsx",
+    "strict": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "paths": {
+      "@/*": ["./src/*"],
+      "react-i18next": ["./node_modules/react-i18next/index.d.ts"],
+      "@fecommunity/reactpress-toolkit": ["../toolkit/dist/index.d.ts"],
+      "@fecommunity/reactpress-toolkit/admin": ["../toolkit/dist/admin/index.d.ts"],
+      "@fecommunity/reactpress-toolkit/react": ["../toolkit/dist/react/index.d.ts"],
+      "@fecommunity/reactpress-toolkit/extension": ["../toolkit/dist/extension/index.d.ts"],
+      "@fecommunity/reactpress-toolkit/api": ["../toolkit/dist/api/index.d.ts"],
+      "@fecommunity/reactpress-toolkit/types": ["../toolkit/dist/types/index.d.ts"],
+      "@fecommunity/reactpress-toolkit/utils": ["../toolkit/dist/utils/index.d.ts"],
+      "@fecommunity/reactpress-toolkit/theme": ["../toolkit/dist/theme/index.d.ts"]
+    }
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx"]
+}

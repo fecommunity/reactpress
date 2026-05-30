@@ -1,6 +1,7 @@
 import { http } from "msw";
+
+import { successResponse, withDelay } from "../createHandler";
 import { MOCK_TAGS } from "../data";
-import { withDelay, successResponse } from "../createHandler";
 
 export const tagHandlers = [
   http.get("/api/tag", async () => {

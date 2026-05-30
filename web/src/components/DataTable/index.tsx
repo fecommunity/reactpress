@@ -1,10 +1,12 @@
-import { Flex, Table, theme } from "antd";
+import "./index.css";
+
 import type { TableProps } from "antd";
-import type { CSSProperties, ReactElement, ReactNode, Ref } from "react";
+import { Flex, Table, theme } from "antd";
+import type { CSSProperties, LegacyRef, ReactElement, ReactNode, Ref } from "react";
 import { useMemo } from "react";
+
 import { DataTableEmpty } from "./DataTableEmpty";
 import { DataTableSkeleton } from "./DataTableSkeleton";
-import "./index.css";
 
 /** Merged onto `Table` `rootClassName` with the flex layout class. */
 export const DATA_TABLE_ROOT_CLASS = "data-table__table";
@@ -78,7 +80,7 @@ export function DataTable<RecordType extends object = object>(
 
   return (
     <Flex
-      ref={layoutRef}
+      ref={layoutRef as LegacyRef<HTMLDivElement>}
       vertical
       gap={token.marginSM}
       style={{
@@ -87,7 +89,7 @@ export function DataTable<RecordType extends object = object>(
         overflow: "hidden",
       }}
     >
-      <div ref={frameRef} style={outerStyle}>
+      <div ref={frameRef as LegacyRef<HTMLDivElement>} style={outerStyle}>
         <div
           className="data-table__inner"
           style={{

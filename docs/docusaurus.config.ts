@@ -23,7 +23,7 @@ function preserveServerBundlePlugin(): Plugin {
           plugin.constructor.name === 'CleanWebpackPlugin' &&
           'cleanStaleWebpackAssets' in plugin
         ) {
-          (plugin as {cleanStaleWebpackAssets: boolean}).cleanStaleWebpackAssets =
+          (plugin as unknown as { cleanStaleWebpackAssets: boolean }).cleanStaleWebpackAssets =
             false;
         }
       }

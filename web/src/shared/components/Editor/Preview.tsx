@@ -1,5 +1,7 @@
 import { useEffect, useRef } from "react";
+
 import { MarkdownReader } from "@/shared/components/MarkdownReader";
+
 import { makeHtml } from "./utils/markdown";
 import {
   registerScollListener,

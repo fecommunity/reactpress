@@ -17,6 +17,8 @@ import {
 } from "lucide-react";
 import type { ReactNode, RefObject } from "react";
 import { useTranslation } from "react-i18next";
+
+import type { MonacoEditorHandle } from "../MonacoEditor";
 import {
   insertCodeBlock,
   insertHeading,
@@ -29,7 +31,6 @@ import {
   undoEditor,
   wrapSelection,
 } from "./markdownActions";
-import type { MonacoEditorHandle } from "../MonacoEditor";
 import type { ToolbarEditorProps } from "./types";
 
 type FormatToolbarProps = {

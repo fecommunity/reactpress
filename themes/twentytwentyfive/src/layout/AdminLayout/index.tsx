@@ -1,4 +1,3 @@
-import { Icon as LegacyIcon } from '@ant-design/compatible';
 import { GithubOutlined, HomeOutlined } from '@ant-design/icons';
 import { Breadcrumb, Col, Layout, Menu, Row } from 'antd';
 import cls from 'classnames';
@@ -7,6 +6,7 @@ import { default as Router, useRouter } from 'next/router';
 import React, { useContext, useEffect } from 'react';
 
 import { UserInfo } from '@/components/UserInfo';
+import { LegacyIcon } from '@/components/LegacyIcon';
 import { GlobalContext } from '@/context/global';
 
 import style from './index.module.scss';
@@ -16,7 +16,9 @@ import { ResourceCreate } from './ResourceCreate';
 const { Sider, Content, Footer } = Layout;
 const { SubMenu } = Menu;
 
-export const AdminLayout: React.FC<{ headerAppender?: React.ReactNode }> = ({ headerAppender, children }) => {
+export const AdminLayout: React.FC<
+  React.PropsWithChildren<{ headerAppender?: React.ReactNode }>
+> = ({ headerAppender, children }) => {
   const { collapsed, toggleCollapse } = useContext(GlobalContext);
   const router = useRouter();
   const { pathname } = router;

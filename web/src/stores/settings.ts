@@ -1,6 +1,7 @@
-import { createPersistentStore } from "./createPersistentStore";
 import type { AppLocale } from "@/i18n";
 import { detectInitialLocale } from "@/i18n";
+
+import { createPersistentStore } from "./createPersistentStore";
 
 function getInitialDarkMode() {
   if (typeof window === "undefined") {

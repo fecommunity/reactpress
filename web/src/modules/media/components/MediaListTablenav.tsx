@@ -1,5 +1,7 @@
 import { useTranslation } from "react-i18next";
+
 import { ListPaginationNav } from "@/shared/components/ListPaginationNav";
+
 import styles from "./media-list.module.css";
 
 export type MediaListTablenavProps = {

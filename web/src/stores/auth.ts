@@ -1,4 +1,5 @@
-import type { AuthTokens, User, MenuItem } from "@/api/schemas";
+import type { AuthTokens, MenuItem, User } from "@/api/schemas";
+
 import { createPersistentStore } from "./createPersistentStore";
 
 interface AuthState {

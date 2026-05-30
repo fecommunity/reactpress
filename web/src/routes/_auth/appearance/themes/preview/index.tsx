@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+
 import { ThemePreviewPage } from "@/modules/appearance/pages/ThemePreviewPage";
 
 export const Route = createFileRoute("/_auth/appearance/themes/preview/")({

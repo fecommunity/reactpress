@@ -9,7 +9,7 @@ import React from 'react';
 
 import styles from './styles.module.css';
 
-function Card({children}) {
+function Card({ children }) {
   return (
     <div className={styles.wrapper}>
       <div className={styles.container}>{children}</div>

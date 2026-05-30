@@ -1,15 +1,17 @@
-import { useEffect, useLayoutEffect } from "react";
-import { createRootRoute, Outlet } from "@tanstack/react-router";
-import { ConfigProvider, App } from "antd";
-import enUS from "antd/locale/en_US";
-import zhCN from "antd/locale/zh_CN";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useSettingsStore } from "@/stores/settings";
-import { useAppTheme } from "@/hooks/useAppTheme";
-import { NotFound } from "@/components/NotFound";
 import "@/index.css";
 import "@/shared/styles/editor-theme.css";
 import "@/shared/styles/markdown.css";
+
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { createRootRoute, Outlet } from "@tanstack/react-router";
+import { App, ConfigProvider } from "antd";
+import enUS from "antd/locale/en_US";
+import zhCN from "antd/locale/zh_CN";
+import { useEffect, useLayoutEffect } from "react";
+
+import { NotFound } from "@/components/NotFound";
+import { useAppTheme } from "@/hooks/useAppTheme";
+import { useSettingsStore } from "@/stores/settings";
 
 const queryClient = new QueryClient({
   defaultOptions: {

@@ -1,7 +1,9 @@
-import { useState } from "react";
 import { App, Button } from "antd";
 import { Check, Copy } from "lucide-react";
-import { useTranslation } from "react-i18next";
+import { useState } from "react";
+
+import { useAppLocale } from "@/hooks/useAppLocale";
+
 import styles from "./login-cli-snippet.module.css";
 
 const QUICK_START_LINES = [
@@ -11,7 +13,7 @@ const QUICK_START_LINES = [
 ] as const;
 
 export function LoginCliSnippet() {
-  const { t } = useTranslation();
+  const { t } = useAppLocale();
   const { message } = App.useApp();
   const [copied, setCopied] = useState(false);
   const command = QUICK_START_LINES.join("\n");

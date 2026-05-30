@@ -1,5 +1,5 @@
-import { getToolkitClient } from "@/shared/client";
 import { uploadFile } from "@/shared/api/uploadFile";
+import { getToolkitClient } from "@/shared/client";
 
 export type ProfileFormValues = {
   name: string;
@@ -39,7 +39,7 @@ export async function updateProfile(
       email: values.email,
       avatar: values.avatar,
     },
-  } as Parameters<typeof api.user.update>[0])) as Record<string, unknown>;
+  } as Parameters<typeof api.user.update>[0])) as unknown as Record<string, unknown>;
 
   return {
     name: String(res.name ?? values.name),

@@ -1,14 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
-import { Avatar, Card, Skeleton, Typography, theme } from "antd";
+import { Link } from "@tanstack/react-router";
+import { Avatar, Card, Skeleton, theme, Typography } from "antd";
 import { Flag } from "lucide-react";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Link } from "@tanstack/react-router";
+
 import {
   fetchArticleTitleMap,
   fetchCommentStatusCounts,
   fetchRecentComments,
 } from "@/modules/dashboard/dashboardCommentApi";
+
 import styles from "./recent-comments.module.css";
 
 const { Title, Text } = Typography;
