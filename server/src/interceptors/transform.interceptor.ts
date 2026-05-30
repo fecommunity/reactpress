@@ -36,7 +36,7 @@ export class TransformInterceptor implements NestInterceptor {
         };
         responseLogger.info(path, res);
         return res;
-      }),
+      })
     );
   }
 }

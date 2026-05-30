@@ -13,10 +13,11 @@
  * - HTML content support for footer info
  */
 
-import { ContactInfo, type AboutUsSetting } from '@/components/AboutUs';
 import cls from 'classnames';
 import { useTranslations } from 'next-intl';
 import React from 'react';
+
+import { type AboutUsSetting,ContactInfo } from '@/components/AboutUs';
 
 import style from './index.module.scss';
 

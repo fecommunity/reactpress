@@ -7,10 +7,10 @@ import { CategoryModule } from '../category/category.module';
 import { TagModule } from '../tag/tag.module';
 import { UserModule } from '../user/user.module';
 import { WebhookModule } from '../webhook/webhook.module';
-import { ArticleRevision } from './article-revision.entity';
 import { ArticleController } from './article.controller';
 import { Article } from './article.entity';
 import { ArticleService } from './article.service';
+import { ArticleRevision } from './article-revision.entity';
 import { ScheduledPublishService } from './scheduled-publish.service';
 
 @Module({

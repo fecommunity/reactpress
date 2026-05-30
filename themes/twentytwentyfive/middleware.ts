@@ -1,9 +1,9 @@
-import type { NextRequest } from 'next/server';
-import { NextResponse } from 'next/server';
 import {
   buildDevPortRedirectUrl,
   shouldRedirectDevPortToNginx,
 } from '@fecommunity/reactpress-toolkit/dev';
+import type { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
 
 const visitorPort = parseInt(process.env.PORT || process.env.CLIENT_PORT || '3001', 10);
 

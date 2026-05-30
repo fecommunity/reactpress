@@ -1,7 +1,3 @@
-export { useNavActive } from './useNavActive';
-export { useReportArticleView } from './useReportArticleView';
-export { useRouteParam } from './useRouteParam';
-
 export {
   readPersistedLocale,
   useActiveThemeId,
@@ -11,3 +7,6 @@ export {
   useThemeMod,
   useThemeRuntime,
 } from '../context';
+export { useNavActive } from './useNavActive';
+export { useReportArticleView } from './useReportArticleView';
+export { useRouteParam } from './useRouteParam';

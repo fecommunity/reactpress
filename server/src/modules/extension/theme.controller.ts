@@ -1,13 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Post,
-  Query,
-  Res,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, Res, UseGuards } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 
@@ -46,7 +37,7 @@ export class ThemeController {
       themeId?: string;
       mods?: Record<string, string>;
       configuration?: Record<string, unknown>;
-    },
+    }
   ) {
     return this.themeService.createPreviewDraft({
       themeId: body?.themeId,
@@ -102,7 +93,7 @@ export class ThemeController {
     @Param('id') id: string,
     @Query('token') previewToken: string | undefined,
     @Query('mods') modsQuery: string | undefined,
-    @Res() res: Response,
+    @Res() res: Response
   ) {
     let overrideMods: Record<string, string> = {};
     if (previewToken?.trim()) {
@@ -151,7 +142,7 @@ export class ThemeController {
   @ApiResponse({ status: 200, description: 'Patch theme configuration (validated against schema)' })
   updateConfiguration(
     @Param('id') id: string,
-    @Body() body: { configuration?: Record<string, unknown>; replace?: boolean },
+    @Body() body: { configuration?: Record<string, unknown>; replace?: boolean }
   ) {
     return this.themeService.updateThemeConfiguration(id, body?.configuration ?? {}, {
       replace: body?.replace === true,

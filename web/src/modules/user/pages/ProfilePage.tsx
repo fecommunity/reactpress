@@ -1,16 +1,17 @@
-import { App, Avatar, Button, Form, Input, Typography, Upload } from "antd";
 import { useMutation } from "@tanstack/react-query";
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { App, Avatar, Button, Form, Input, Typography, Upload } from "antd";
+import { type ReactNode, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import formStyles from "@/shared/styles/admin-form-table.module.css";
+
 import styles from "@/modules/user/components/profile.module.css";
 import {
+  type ProfileFormValues,
   updateProfile,
   updateProfilePassword,
   uploadAvatar,
-  type ProfileFormValues,
 } from "@/modules/user/profileApi";
 import { getApiErrorMessage } from "@/shared/api/getApiErrorMessage";
+import formStyles from "@/shared/styles/admin-form-table.module.css";
 import { useAuthStore } from "@/stores/auth";
 
 type ProfileFormState = ProfileFormValues & {

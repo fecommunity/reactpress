@@ -2,9 +2,9 @@ import { connect } from "@formily/react";
 import cls from "classnames";
 import type { ReactNode } from "react";
 
+import styles from "@/modules/appearance/components/formily/vscode-section.module.css";
 import { SearchHighlight } from "@/modules/appearance/components/SearchHighlight";
 import { useThemeSettingsSearchOptional } from "@/modules/appearance/context/ThemeSettingsSearchContext";
-import styles from "@/modules/appearance/components/formily/vscode-section.module.css";
 
 type Props = {
   title?: string;

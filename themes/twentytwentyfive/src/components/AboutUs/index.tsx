@@ -3,6 +3,7 @@ import { Card, Divider, Popover } from 'antd';
 import cls from 'classnames';
 import { useTranslations } from 'next-intl';
 import { Fragment, type ReactNode } from 'react';
+
 import style from './index.module.scss';
 
 export interface AboutUsSetting {

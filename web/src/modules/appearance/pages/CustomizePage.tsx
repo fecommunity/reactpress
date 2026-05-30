@@ -1,38 +1,39 @@
 import { getThemeConfigurationSeed } from "@fecommunity/reactpress-toolkit/extension";
-import { App, Button, Spin } from "antd";
-import { ChevronLeft } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { useNavigate } from "@tanstack/react-router";
 import {
   getThemeStateFromGlobalSetting,
   type ThemeMods,
 } from "@fecommunity/reactpress-toolkit/extension";
+import { useNavigate } from "@tanstack/react-router";
+import { App, Button, Spin } from "antd";
+import { ChevronLeft } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+
+import { useSiteSettings } from "@/hooks/useSiteSettings";
 import {
   useThemeConfiguration,
   useThemeConfigurationMutation,
   useThemeConfigurationSchema,
 } from "@/hooks/useThemeConfiguration";
-import { useSiteSettings } from "@/hooks/useSiteSettings";
 import { useThemePreviewSession } from "@/hooks/useThemePreviewSession";
-import { useThemes, useThemeMutations } from "@/hooks/useThemes";
+import { useThemeMutations, useThemes } from "@/hooks/useThemes";
+import {
+  type PreviewDevice,
+  PreviewDeviceToolbar,
+} from "@/modules/appearance/components/PreviewDeviceToolbar";
+import { ThemeAppearancePanel } from "@/modules/appearance/components/ThemeAppearancePanel";
 import {
   ThemeConfigurationForm,
   type ThemeConfigurationFormHandle,
 } from "@/modules/appearance/components/ThemeConfigurationForm";
-import { ThemeAdminLocaleProvider } from "@/modules/appearance/context/ThemeAdminLocaleContext";
-import { Route } from "@/routes/_auth/appearance/customize/index";
-import { resolveLiveSitePreviewUrl } from "@/shared/theme/previewUrl";
-import {
-  PreviewDeviceToolbar,
-  type PreviewDevice,
-} from "@/modules/appearance/components/PreviewDeviceToolbar";
-import { ThemeAppearancePanel } from "@/modules/appearance/components/ThemeAppearancePanel";
 import { ThemePreviewFrame } from "@/modules/appearance/components/ThemePreviewFrame";
 import { ThemePreviewPaneLoading } from "@/modules/appearance/components/ThemePreviewPaneLoading";
-import { ModulePlaceholder } from "@/shared/components/ModulePlaceholder";
 import styles from "@/modules/appearance/components/themes-page.module.css";
+import { ThemeAdminLocaleProvider } from "@/modules/appearance/context/ThemeAdminLocaleContext";
+import { Route } from "@/routes/_auth/appearance/customize/index";
+import { ModulePlaceholder } from "@/shared/components/ModulePlaceholder";
 import { buildClearThemeModsPayload } from "@/shared/theme/clearThemeMods";
+import { resolveLiveSitePreviewUrl } from "@/shared/theme/previewUrl";
 
 const deviceFrameClass: Record<PreviewDevice, string> = {
   desktop: styles.previewFrameWrapDesktop,

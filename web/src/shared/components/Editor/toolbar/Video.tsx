@@ -1,6 +1,7 @@
 import { App, Tooltip, Upload } from "antd";
 import { VideoIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
+
 import { uploadEditorAsset } from "../utils/uploadInsert";
 import { insertAtCursor, type ToolbarEditorProps } from "./types";
 

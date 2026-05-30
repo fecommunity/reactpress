@@ -1,13 +1,15 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { App, Button, Checkbox, Input, Spin, Tag } from "antd";
-import { useCallback, useState, type KeyboardEvent, type ReactNode } from "react";
+import { type KeyboardEvent, type ReactNode, useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
+
 import {
   createEditorCategory,
   createEditorTag,
   type EditorCategory,
   type EditorTag,
 } from "@/modules/article/articleEditorApi";
+
 import styles from "./article-editor-sidebar.module.css";
 
 type ArticleMetaFieldsBaseProps = {

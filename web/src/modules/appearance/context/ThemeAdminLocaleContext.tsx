@@ -1,5 +1,5 @@
 import type { ThemeAdminLocaleMessages } from "@fecommunity/reactpress-toolkit/extension";
-import { createContext, useCallback, useContext, useMemo, type ReactNode } from "react";
+import { createContext, type ReactNode, useCallback, useContext, useMemo } from "react";
 
 import { useThemeAdminLocaleQuery } from "@/hooks/useThemeAdminLocale";
 import { resolveThemeAdminLocaleText } from "@/modules/appearance/utils/resolveAppearanceManifestText";

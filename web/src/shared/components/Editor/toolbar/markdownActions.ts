@@ -1,4 +1,5 @@
 import i18n from "@/i18n";
+
 import { insertAtCursor, replaceSelection, type ToolbarEditorProps } from "./types";
 
 function getSelectionText({ editor }: ToolbarEditorProps) {

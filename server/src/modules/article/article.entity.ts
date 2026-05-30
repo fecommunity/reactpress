@@ -44,12 +44,20 @@ export class Article {
   toc: string; // 格式化内容索引，自动生成
 
   @ApiProperty()
-  @ManyToOne(() => Category, (category) => category.articles, { cascade: true })
+  @ManyToOne(
+    () => Category,
+    (category) => category.articles,
+    { cascade: true }
+  )
   @JoinTable()
   category: Category;
 
   @ApiProperty()
-  @ManyToMany(() => Tag, (tag) => tag.articles, { cascade: true })
+  @ManyToMany(
+    () => Tag,
+    (tag) => tag.articles,
+    { cascade: true }
+  )
   @JoinTable()
   tags: Array<Tag>;
 

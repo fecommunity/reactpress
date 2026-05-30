@@ -1,5 +1,5 @@
-import { USER_ENDPOINTS } from "@/api/user";
 import { CreateUserRequestSchema } from "@/api/schemas";
+import { USER_ENDPOINTS } from "@/api/user";
 import { extractApiErrorMessage } from "@/shared/api/getApiErrorMessage";
 import { getToolkitClient } from "@/shared/client";
 import { AUTH_MODE } from "@/utils/constants";

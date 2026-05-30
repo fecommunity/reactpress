@@ -1,4 +1,5 @@
 import type React from 'react';
+
 import type { ThemeMods } from '../../extension/theme';
 import type { LocaleCatalog, LocaleMessages } from '../../theme/locale';
 import type { SiteMeta } from '../../theme/setting';

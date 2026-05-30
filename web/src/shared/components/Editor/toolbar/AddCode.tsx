@@ -2,6 +2,7 @@ import { Tooltip } from "antd";
 import { Code2 } from "lucide-react";
 import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
+
 import { replaceSelection, type ToolbarEditorProps } from "./types";
 
 export function AddCodeTool(props: ToolbarEditorProps) {

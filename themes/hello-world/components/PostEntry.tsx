@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import {
   articlePath,
   categoryPath,
@@ -6,6 +5,7 @@ import {
   resolveArchiveExcerpt,
   useThemeMod,
 } from '@fecommunity/reactpress-toolkit/theme';
+import Link from 'next/link';
 
 export interface PostEntryArticle {
   id: string;

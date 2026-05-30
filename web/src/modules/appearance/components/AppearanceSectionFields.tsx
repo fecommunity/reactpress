@@ -2,11 +2,11 @@ import type {
   ThemeAppearanceSection,
   ThemeAppearanceSetting,
 } from "@fecommunity/reactpress-toolkit/extension";
+import { Typography } from "antd";
 
 import { AppearanceSettingField } from "@/modules/appearance/components/AppearanceSettingField";
 import styles from "@/modules/appearance/components/themes-page.module.css";
 import { useThemeAdminLocaleText } from "@/modules/appearance/context/ThemeAdminLocaleContext";
-import { Typography } from "antd";
 
 type Props = {
   section: ThemeAppearanceSection;

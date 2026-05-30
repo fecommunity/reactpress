@@ -1,9 +1,3 @@
-import { GetStaticPaths, GetStaticProps } from 'next';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import Header from '../../components/Header';
-import Footer from '../../components/Footer';
-import TagsCloud from '../../components/TagsCloud';
 import {
   ArchiveEmptyState,
   categoryPath,
@@ -17,6 +11,13 @@ import {
   useRouteParam,
   withThemeStaticProps,
 } from '@fecommunity/reactpress-toolkit/theme';
+import { GetStaticPaths, GetStaticProps } from 'next';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+
+import Footer from '../../components/Footer';
+import Header from '../../components/Header';
+import TagsCloud from '../../components/TagsCloud';
 
 interface ArticleProps {
   article: {

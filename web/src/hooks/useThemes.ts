@@ -1,4 +1,6 @@
+import type { SiteThemeState, ThemeMods } from "@fecommunity/reactpress-toolkit/extension";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
 import {
   activateTheme,
   fetchTheme,
@@ -7,7 +9,6 @@ import {
   saveThemeMods,
   type ThemeListItem,
 } from "@/shared/api/themes";
-import type { SiteThemeState, ThemeMods } from "@fecommunity/reactpress-toolkit/extension";
 
 export type ActivateThemeResult = SiteThemeState & { siteUrl?: string };
 

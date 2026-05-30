@@ -1,10 +1,3 @@
-import { GetStaticPaths, GetStaticProps } from 'next';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import Header from '../../components/Header';
-import Footer from '../../components/Footer';
-import PostEntry from '../../components/PostEntry';
-import Sidebar from '../../components/Sidebar';
 import {
   ArchiveEmptyState,
   ArticleList,
@@ -16,6 +9,14 @@ import {
   themeOnDemandPaths,
   useRouteParam,
 } from '@fecommunity/reactpress-toolkit/theme';
+import { GetStaticPaths, GetStaticProps } from 'next';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+
+import Footer from '../../components/Footer';
+import Header from '../../components/Header';
+import PostEntry from '../../components/PostEntry';
+import Sidebar from '../../components/Sidebar';
 
 interface TagProps {
   tag: string;

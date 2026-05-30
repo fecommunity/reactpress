@@ -1,8 +1,8 @@
 import { Categories } from '@components/Categories';
 import { KnowledgeList } from '@components/KnowledgeList';
 import { NextPage } from 'next';
-import { useTranslations } from 'next-intl';
 import Head from 'next/head';
+import { useTranslations } from 'next-intl';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 

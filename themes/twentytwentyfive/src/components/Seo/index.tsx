@@ -1,6 +1,5 @@
-import React, { useContext } from 'react';
 import Head from 'next/head';
-
+import React, { useContext } from 'react';
 
 import { GlobalContext } from '@/context/global';
 

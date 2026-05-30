@@ -1,14 +1,15 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { App, Avatar, Form, Table, theme } from "antd";
 import { useNavigate } from "@tanstack/react-router";
+import { App, Avatar, Form, Table, theme } from "antd";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+
 import type { User } from "@/api/schemas";
 import { articleListThemeVars } from "@/modules/article/components/articleListThemeVars";
 import styles from "@/modules/comment/components/comment-list.module.css";
 import userStyles from "@/modules/user/components/user-list.module.css";
 import { UserListSubHeader } from "@/modules/user/components/UserListSubHeader";
-import { UserListTablenav, type UserBulkAction } from "@/modules/user/components/UserListTablenav";
+import { type UserBulkAction, UserListTablenav } from "@/modules/user/components/UserListTablenav";
 import {
   bulkChangeUserRole,
   bulkChangeUserStatus,
@@ -21,8 +22,8 @@ import {
   type UserListSearch,
 } from "@/modules/user/userListApi";
 import { FormModal, type UserFormValues } from "@/routes/_auth/users/-FormModal";
-import { ModulePlaceholder } from "@/shared/components/ModulePlaceholder";
 import { getApiErrorMessage } from "@/shared/api/getApiErrorMessage";
+import { ModulePlaceholder } from "@/shared/components/ModulePlaceholder";
 import { AUTH_MODE } from "@/utils/constants";
 
 export type { UserListSearch };

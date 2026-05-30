@@ -1,13 +1,14 @@
-import { GetStaticProps } from 'next';
-import Link from 'next/link';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
 import {
   fetchSiteMeta,
   SiteDocument,
   themeApi,
   themeStaticProps,
 } from '@fecommunity/reactpress-toolkit/theme';
+import { GetStaticProps } from 'next';
+import Link from 'next/link';
+
+import Footer from '../components/Footer';
+import Header from '../components/Header';
 
 interface AboutProps {
   siteInfo: { siteName: string; siteDescription: string } | null;

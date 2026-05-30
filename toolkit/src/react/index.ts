@@ -1,8 +1,8 @@
-export { createClient, ApiError, getDefaultApiBaseUrl } from './client';
 export type { ClientOptions, ReactPressClient } from './client';
+export { ApiError, createClient, getDefaultApiBaseUrl } from './client';
+export type { AppRuntime, DesktopApi } from './runtime';
 export {
-  getRuntime,
   getDesktopApi,
+  getRuntime,
   resolveApiBaseUrl,
 } from './runtime';
-export type { AppRuntime, DesktopApi } from './runtime';

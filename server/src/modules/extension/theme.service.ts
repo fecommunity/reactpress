@@ -1,9 +1,10 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import * as fs from 'fs';
-import * as path from 'path';
-import { Repository } from 'typeorm';
-import { readThemeAdminLocaleFile } from '@fecommunity/reactpress-toolkit/extension/node';
+import type {
+  SiteThemeState,
+  ThemeAdminLocaleMessages,
+  ThemeConfigurationSchema,
+  ThemeManifest,
+  ThemeMods,
+} from '@fecommunity/reactpress-toolkit/extension';
 import {
   defaultSiteThemeState,
   getConfigurationSchemaFromManifest,
@@ -16,13 +17,12 @@ import {
   validateAndMergeThemeConfiguration,
   validateThemeConfiguration,
 } from '@fecommunity/reactpress-toolkit/extension';
-import type {
-  SiteThemeState,
-  ThemeAdminLocaleMessages,
-  ThemeConfigurationSchema,
-  ThemeManifest,
-  ThemeMods,
-} from '@fecommunity/reactpress-toolkit/extension';
+import { readThemeAdminLocaleFile } from '@fecommunity/reactpress-toolkit/extension/node';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import * as fs from 'fs';
+import * as path from 'path';
+import { Repository } from 'typeorm';
 
 import { Setting } from '../setting/setting.entity';
 import { getPreviewDraft, putPreviewDraft } from './preview-draft.store';

@@ -1,10 +1,10 @@
-import { ApiMsg } from '../../common/api-messages';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, Repository } from 'typeorm';
-import { isValidUsername } from '../../utils/user.util';
 
+import { ApiMsg } from '../../common/api-messages';
+import { isValidUsername } from '../../utils/user.util';
 import { User } from './user.entity';
 
 @Injectable()
@@ -18,14 +18,16 @@ export class UserService {
     const password = this.configService.get('ADMIN_PASSWD', 'admin');
 
     this.createUser({ name, password, role: 'admin' }, true)
-    .then(() => {
-      console.log(`[reactpress] 管理员账户创建成功，用户名：${name}，密码：${password}，请及时登录系统修改默认密码`);
-    })
-    .catch(async (e) => {
-      const existAdminUser = await this.userRepository.findOne({ where: { name } });
+      .then(() => {
+        console.log(`[reactpress] 管理员账户创建成功，用户名：${name}，密码：${password}，请及时登录系统修改默认密码`);
+      })
+      .catch(async (e) => {
+        const existAdminUser = await this.userRepository.findOne({ where: { name } });
         const isDefaultPasswd = User.comparePassword(password, existAdminUser.password);
         if (isDefaultPasswd) {
-          console.log(`[reactpress] 管理员账户已经存在，用户名：${name}，密码：${password}，请及时登录系统修改默认密码`);
+          console.log(
+            `[reactpress] 管理员账户已经存在，用户名：${name}，密码：${password}，请及时登录系统修改默认密码`
+          );
         }
       });
   }
@@ -70,7 +72,7 @@ export class UserService {
       if (!name || !password) {
         throw new HttpException(ApiMsg.USERNAME_PASSWORD_REQUIRED, HttpStatus.BAD_REQUEST);
       }
-  
+
       // 防止用户名称非法
       if (!isValidUsername(name)) {
         throw new HttpException(ApiMsg.USERNAME_INVALID, HttpStatus.BAD_REQUEST);

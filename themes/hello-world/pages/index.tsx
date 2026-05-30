@@ -1,8 +1,3 @@
-import { GetStaticProps } from 'next';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
-import PostEntry from '../components/PostEntry';
-import Sidebar from '../components/Sidebar';
 import {
   ArticleList,
   fetchThemeCatalog,
@@ -10,6 +5,12 @@ import {
   themeApi,
   themeStaticProps,
 } from '@fecommunity/reactpress-toolkit/theme';
+import { GetStaticProps } from 'next';
+
+import Footer from '../components/Footer';
+import Header from '../components/Header';
+import PostEntry from '../components/PostEntry';
+import Sidebar from '../components/Sidebar';
 
 interface HomeProps {
   articles: Array<{

@@ -1,3 +1,4 @@
+import { getFormilyVoidComponents } from "@fecommunity/reactpress-toolkit/extension";
 import {
   ArrayCards,
   Form,
@@ -13,7 +14,6 @@ import {
 } from "@formily/antd-v5";
 import { Schema } from "@formily/json-schema";
 import { createSchemaField } from "@formily/react";
-import { getFormilyVoidComponents } from "@fecommunity/reactpress-toolkit/extension";
 
 import { JsonConfigEditor } from "@/modules/appearance/components/formily/JsonConfigEditor";
 import { NavLinkListField } from "@/modules/appearance/components/formily/NavLinkListField";

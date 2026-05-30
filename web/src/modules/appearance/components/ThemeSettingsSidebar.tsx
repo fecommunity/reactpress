@@ -3,11 +3,11 @@ import cls from "classnames";
 import { useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
+import { SearchHighlight } from "@/modules/appearance/components/SearchHighlight";
+import styles from "@/modules/appearance/components/theme-settings-editor.module.css";
 import { useThemeSettingsSearch } from "@/modules/appearance/context/ThemeSettingsSearchContext";
 import { useThemeSettingsActiveId } from "@/modules/appearance/hooks/useThemeSettingsActiveId";
-import { SearchHighlight } from "@/modules/appearance/components/SearchHighlight";
 import { scrollToThemeAnchor } from "@/modules/appearance/utils/themeSettingsIndex";
-import styles from "@/modules/appearance/components/theme-settings-editor.module.css";
 
 type SidebarGroup = {
   sectionKey: string;

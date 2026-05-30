@@ -1,3 +1,4 @@
+export type { DevPortRedirectOptions, DevPortRole } from './portRedirect';
 export {
   buildDevPortRedirectUrl,
   isDirectDevPortAccess,
@@ -7,4 +8,3 @@ export {
   shouldRedirectDevPortToNginx,
 } from './portRedirect';
 export { devPortRedirectPlugin } from './vitePortRedirectPlugin';
-export type { DevPortRedirectOptions, DevPortRole } from './portRedirect';

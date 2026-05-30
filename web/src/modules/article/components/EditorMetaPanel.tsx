@@ -1,5 +1,6 @@
 import { ChevronDown, ChevronUp } from "lucide-react";
-import { useState, type ReactNode } from "react";
+import { type ReactNode, useState } from "react";
+
 import styles from "./editor-meta-panel.module.css";
 
 type EditorMetaPanelProps = {

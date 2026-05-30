@@ -1,15 +1,15 @@
-import { ApiMsg } from '../../common/api-messages';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
+import { ApiMsg } from '../../common/api-messages';
 import { dateFormat } from '../../utils/date.util';
 import { CategoryService } from '../category/category.service';
 import { TagService } from '../tag/tag.service';
 import { WebhookService } from '../webhook/webhook.service';
-import { ArticleRevision } from './article-revision.entity';
 import { Article } from './article.entity';
 import { extractProtectedArticle } from './article.util';
+import { ArticleRevision } from './article-revision.entity';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Segment = require('segment');
@@ -304,8 +304,7 @@ export class ArticleService {
       category: existCategory,
       needPassword: !!article.password,
       publishAt: becomingPublish ? dateFormat() : oldArticle.publishAt,
-      scheduledPublishAt:
-        status === 'publish' ? null : article.scheduledPublishAt ?? oldArticle.scheduledPublishAt,
+      scheduledPublishAt: status === 'publish' ? null : article.scheduledPublishAt ?? oldArticle.scheduledPublishAt,
     };
 
     if (tags) {

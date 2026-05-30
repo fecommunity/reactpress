@@ -1,14 +1,16 @@
-import { Menu, Layout, Grid, Drawer, Button } from "antd";
-import { useEffect, useMemo, useState, type ReactNode } from "react";
-import { useNavigate, useLocation } from "@tanstack/react-router";
+import "./index.css";
+
+import { useLocation, useNavigate } from "@tanstack/react-router";
+import type { MenuProps } from "antd";
+import { Button, Drawer, Grid, Layout, Menu } from "antd";
+import { type ReactNode, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Dashicon, renderDashicon } from "@/shared/components/Dashicon";
+
+import type { MenuItem as MenuItemType } from "@/api/schemas";
 import { usePendingCommentCount } from "@/hooks/usePendingCommentCount";
+import { Dashicon, renderDashicon } from "@/shared/components/Dashicon";
 import { useAuthStore } from "@/stores/auth";
 import { useSettingsStore } from "@/stores/settings";
-import type { MenuItem as MenuItemType } from "@/api/schemas";
-import type { MenuProps } from "antd";
-import "./index.css";
 
 const { Sider } = Layout;
 

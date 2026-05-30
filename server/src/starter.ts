@@ -1,13 +1,13 @@
 import { INestApplication } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import * as http from 'http';
-import * as net from 'net';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as bodyParser from 'body-parser';
 import * as compression from 'compression';
 import * as express from 'express';
 import * as rateLimit from 'express-rate-limit';
 import * as helmet from 'helmet';
+import * as http from 'http';
+import * as net from 'net';
 import { join } from 'path';
 import { SwaggerTheme, SwaggerThemeNameEnum } from 'swagger-themes';
 
@@ -35,11 +35,7 @@ function normalizeHealthPayload(raw: unknown): Record<string, unknown> | null {
   if (!raw || typeof raw !== 'object') return null;
   const body = raw as Record<string, unknown>;
   const nested = body.data;
-  if (
-    nested &&
-    typeof nested === 'object' &&
-    ('status' in (nested as object) || 'database' in (nested as object))
-  ) {
+  if (nested && typeof nested === 'object' && ('status' in (nested as object) || 'database' in (nested as object))) {
     return nested as Record<string, unknown>;
   }
   return body;
@@ -80,7 +76,7 @@ function probeApiHealth(port: number, prefix = '/api'): Promise<boolean> {
             resolve(false);
           }
         });
-      },
+      }
     );
     req.on('error', () => resolve(false));
     req.on('timeout', () => {
@@ -100,9 +96,7 @@ export async function bootstrap() {
     (await isPortOpen(configuredPort)) &&
     (await probeApiHealth(configuredPort, apiPrefix))
   ) {
-    console.log(
-      `[ReactPress] API already healthy on :${configuredPort} (nest watch reload — skip bootstrap)`,
-    );
+    console.log(`[ReactPress] API already healthy on :${configuredPort} (nest watch reload — skip bootstrap)`);
     return null;
   }
 
@@ -130,16 +124,19 @@ export async function bootstrap() {
         next();
         return;
       }
-      res.redirect(302, buildDevPortRedirectUrl({
-        directPort: listenPort,
-        pathname: req.path,
-        search: req.url.includes('?') ? req.url.slice(req.url.indexOf('?')) : '',
-      }));
+      res.redirect(
+        302,
+        buildDevPortRedirectUrl({
+          directPort: listenPort,
+          pathname: req.path,
+          search: req.url.includes('?') ? req.url.slice(req.url.indexOf('?')) : '',
+        })
+      );
     });
 
     app.enableCors();
     app.setGlobalPrefix(configService.get('SERVER_API_PREFIX', '/api'));
-    
+
     app.use(
       rateLimit({
         windowMs: 60 * 1000,
@@ -156,22 +153,24 @@ export async function bootstrap() {
     app.useGlobalFilters(new HttpExceptionFilter());
     app.use(bodyParser.json({ limit: '10mb' }));
     app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
-    
+
     // 增强版 Swagger 配置
     const swaggerConfig = new DocumentBuilder()
       .setTitle('ReactPress API Documentation')
-      .setDescription('Comprehensive API documentation for ReactPress - A modern content management system built with NestJS')
+      .setDescription(
+        'Comprehensive API documentation for ReactPress - A modern content management system built with NestJS'
+      )
       .setVersion('3.0')
       .setContact('ReactPress Team', 'https://github.com/fecommunity/reactpress', 'admin@gaoredu.com')
       .setLicense('MIT', 'https://github.com/fecommunity/reactpress/blob/main/LICENSE')
       .addServer(configService.get('SERVER_SITE_URL', 'http://localhost:3002'), 'API Server')
       .build();
-      
+
     const document = SwaggerModule.createDocument(app, swaggerConfig);
-    
+
     // 使用 swagger-themes 提供专业主题
     const theme = new SwaggerTheme();
-    
+
     // 自定义 Swagger 设置
     const options = {
       customCss: theme.getBuffer(SwaggerThemeNameEnum.MATERIAL), // 应用主题
@@ -188,7 +187,7 @@ export async function bootstrap() {
       },
       customCssUrl: '/public/swagger/custom.css', // 额外的自定义CSS
     };
-    
+
     // 设置 Swagger UI
     SwaggerModule.setup('api', app, document, options);
 
@@ -199,9 +198,7 @@ export async function bootstrap() {
       (await isPortOpen(listenPort)) &&
       (await probeApiHealth(listenPort, listenPrefix))
     ) {
-      console.log(
-        `[ReactPress] API already healthy on :${listenPort} (nest watch reload — skip duplicate listen)`,
-      );
+      console.log(`[ReactPress] API already healthy on :${listenPort} (nest watch reload — skip duplicate listen)`);
       await app.close();
       return null;
     }
@@ -210,22 +207,16 @@ export async function bootstrap() {
     nestApp = app;
     console.log(`[ReactPress] Application started on http://localhost:${listenPort}`);
     console.log(`[ReactPress] API Documentation available at http://localhost:${listenPort}/api`);
-    
+
     return app;
-    
   } catch (error) {
     console.error('[ReactPress] Failed to start application:', error);
-    
+
     if (error.code === 'EADDRINUSE') {
       const port = Number(process.env.SERVER_PORT || 3002);
       const prefix = process.env.SERVER_API_PREFIX || '/api';
-      if (
-        process.env.REACTPRESS_API_ENTRY === 'starter' &&
-        (await probeApiHealth(port, prefix))
-      ) {
-        console.log(
-          `[ReactPress] Port :${port} in use but API healthy — treating watch reload as success`,
-        );
+      if (process.env.REACTPRESS_API_ENTRY === 'starter' && (await probeApiHealth(port, prefix))) {
+        console.log(`[ReactPress] Port :${port} in use but API healthy — treating watch reload as success`);
         return null;
       }
       console.error('[ReactPress] Port is already in use. Please check for other running instances.');

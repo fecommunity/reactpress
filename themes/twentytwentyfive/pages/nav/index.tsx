@@ -1,15 +1,16 @@
 import { NextPage } from 'next';
+import Head from 'next/head';
+import { useTranslations } from 'next-intl';
+import { useContext } from 'react';
 
 import { AdvanceSearch } from '@/components/AdvanceSearch';
 import NavCard from '@/components/NavCard';
 import SystemNotification from '@/components/Setting/SystemNotification';
+import { GlobalContext } from '@/context/global';
 import { ArticleProvider } from '@/providers/article';
 import { CategoryProvider } from '@/providers/category';
+
 import style from './index.module.scss';
-import Head from 'next/head';
-import { useContext } from 'react';
-import { GlobalContext } from '@/context/global';
-import { useTranslations } from 'next-intl';
 
 interface IHomeProps {
   articles?: IArticle[];

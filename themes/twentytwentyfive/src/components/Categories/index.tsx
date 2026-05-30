@@ -1,8 +1,7 @@
-import { useTranslations } from 'next-intl';
+import { FolderOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-
-import { FolderOutlined } from '@ant-design/icons';
+import { useTranslations } from 'next-intl';
 
 import style from './index.module.scss';
 

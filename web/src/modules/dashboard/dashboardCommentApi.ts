@@ -1,11 +1,11 @@
 import {
-  fetchArticleTitleMap,
-  fetchCommentStatusCounts,
   type CommentRow,
   type CommentStatusCounts,
+  fetchArticleTitleMap,
+  fetchCommentStatusCounts,
 } from "@/modules/comment/commentListApi";
-import { getToolkitClient } from "@/shared/client";
 import { parsePaginated } from "@/shared/api/pagination";
+import { getToolkitClient } from "@/shared/client";
 
 export type { CommentStatusCounts };
 
@@ -17,4 +17,4 @@ export async function fetchRecentComments(limit = 8): Promise<CommentRow[]> {
   return parsePaginated<CommentRow>(res).list;
 }
 
-export { fetchCommentStatusCounts, fetchArticleTitleMap };
+export { fetchArticleTitleMap, fetchCommentStatusCounts };

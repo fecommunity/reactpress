@@ -3,21 +3,6 @@ import 'highlight.js/styles/atom-one-dark.css';
 import 'viewerjs/dist/viewer.css';
 
 import { NProgress } from '@components/NProgress';
-import { ConfigProvider, theme } from 'antd';
-import { IntlMessages, NextIntlProvider } from 'next-intl';
-import App from 'next/app';
-import { default as Router } from 'next/router';
-
-import { Analytics } from '@/components/Analytics';
-import { FixAntdStyleTransition } from '@/components/FixAntdStyleTransition';
-import { ViewStatistics } from '@/components/ViewStatistics';
-import { GlobalContext, IGlobalContext } from '@/context/global';
-import { AppLayout } from '@/layout/AppLayout';
-import { CategoryProvider } from '@/providers/category';
-import { PageProvider } from '@/providers/page';
-import { SettingProvider } from '@/providers/setting';
-import { TagProvider } from '@/providers/tag';
-import { httpProvider } from '@/providers/http';
 import {
   appearancePrimaryColorForMode,
   buildTwentyTwentyFiveAppearanceCss,
@@ -26,6 +11,21 @@ import {
   resolveThemePreviewContext,
   type ThemeMods,
 } from '@fecommunity/reactpress-toolkit/extension';
+import { ConfigProvider, theme } from 'antd';
+import App from 'next/app';
+import { default as Router } from 'next/router';
+import { IntlMessages, NextIntlProvider } from 'next-intl';
+
+import { Analytics } from '@/components/Analytics';
+import { FixAntdStyleTransition } from '@/components/FixAntdStyleTransition';
+import { ViewStatistics } from '@/components/ViewStatistics';
+import { GlobalContext, IGlobalContext } from '@/context/global';
+import { AppLayout } from '@/layout/AppLayout';
+import { CategoryProvider } from '@/providers/category';
+import { httpProvider } from '@/providers/http';
+import { PageProvider } from '@/providers/page';
+import { SettingProvider } from '@/providers/setting';
+import { TagProvider } from '@/providers/tag';
 import { safeJsonParse } from '@/utils/json';
 
 Router.events.on('routeChangeComplete', () => {

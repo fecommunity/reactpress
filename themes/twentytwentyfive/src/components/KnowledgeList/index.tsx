@@ -1,8 +1,8 @@
 import { EyeOutlined } from '@ant-design/icons';
 import { Divider, Spin } from 'antd';
 import cls from 'classnames';
-import { useTranslations } from 'next-intl';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import React from 'react';
 import LazyLoad from 'react-lazyload';
 

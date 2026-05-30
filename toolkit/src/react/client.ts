@@ -1,5 +1,5 @@
-import { createApiInstance } from '../api/instance';
 import type { HttpClient } from '../api/HttpClient';
+import { createApiInstance } from '../api/instance';
 
 export class ApiError extends Error {
   code: number;

@@ -2,6 +2,7 @@ import { Popover, Tooltip } from "antd";
 import { Smile } from "lucide-react";
 import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
+
 import { emojis } from "./emojis";
 import { insertAtCursor, type ToolbarEditorProps } from "./types";
 

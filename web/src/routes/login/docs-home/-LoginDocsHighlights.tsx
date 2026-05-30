@@ -1,6 +1,6 @@
 import classNames from "classnames";
-import { HeartPulse, Package, Zap } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { HeartPulse, Package, Zap } from "lucide-react";
 
 import { useAppLocale } from "@/hooks/useAppLocale";
 

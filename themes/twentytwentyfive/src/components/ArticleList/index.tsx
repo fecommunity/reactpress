@@ -18,15 +18,16 @@
 
 import { EyeOutlined, FolderOutlined, HeartOutlined, HistoryOutlined } from '@ant-design/icons';
 import { Spin, Tag } from 'antd';
-import { useTranslations } from 'next-intl';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import React, { useContext, useMemo } from 'react';
 import LazyLoad from 'react-lazyload';
-import LogoSvg from '../../assets/LogoSvg';
 
 import { LocaleTime } from '@/components/LocaleTime';
 import { GlobalContext } from '@/context/global';
 import { getColorFromNumber } from '@/utils';
+
+import LogoSvg from '../../assets/LogoSvg';
 import style from './index.module.scss';
 
 interface Article {

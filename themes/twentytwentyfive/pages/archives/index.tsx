@@ -1,10 +1,11 @@
 import { Categories } from '@components/Categories';
 import { NextPage } from 'next';
-import { useTranslations } from 'next-intl';
 import Head from 'next/head';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { useContext } from 'react';
 
+import AboutUs from '@/components/AboutUs';
 import { ListTrail } from '@/components/Animation/Trail';
 import { ArticleRecommend } from '@/components/ArticleRecommend';
 import { LocaleTime } from '@/components/LocaleTime';
@@ -12,7 +13,6 @@ import { GlobalContext } from '@/context/global';
 import { DoubleColumnLayout } from '@/layout/DoubleColumnLayout';
 import { ArticleProvider } from '@/providers/article';
 
-import AboutUs from '@/components/AboutUs';
 import indexStyle from '../index.module.scss';
 import style from './index.module.scss';
 

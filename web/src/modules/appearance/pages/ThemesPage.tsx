@@ -1,16 +1,17 @@
 import { App, Badge, Button, Spin, Typography } from "antd";
 import { Plus } from "lucide-react";
-import { useTranslation } from "react-i18next";
 import { useMemo, useState } from "react";
-import { useThemes, useThemeMutations } from "@/hooks/useThemes";
+import { useTranslation } from "react-i18next";
+
+import { useThemeMutations, useThemes } from "@/hooks/useThemes";
 import { ActiveThemePanel } from "@/modules/appearance/components/ActiveThemePanel";
 import { ThemeCard } from "@/modules/appearance/components/ThemeCard";
 import {
-  ThemeCatalogToolbar,
   type ThemeCatalogFilter,
+  ThemeCatalogToolbar,
 } from "@/modules/appearance/components/ThemeCatalogToolbar";
-import { ModulePlaceholder } from "@/shared/components/ModulePlaceholder";
 import styles from "@/modules/appearance/components/themes-page.module.css";
+import { ModulePlaceholder } from "@/shared/components/ModulePlaceholder";
 
 function matchesSearch(theme: { name: string; description?: string; tags?: string[] }, q: string) {
   const needle = q.trim().toLowerCase();

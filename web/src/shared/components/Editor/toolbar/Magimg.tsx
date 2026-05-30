@@ -2,6 +2,7 @@ import { Popover, Tooltip } from "antd";
 import { Scaling } from "lucide-react";
 import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
+
 import { replaceSelection, type ToolbarEditorProps } from "./types";
 
 const sizes = ["30%", "60%", "90%"];

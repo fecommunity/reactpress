@@ -1,14 +1,14 @@
-import Link from 'next/link';
-import { useRouter } from 'next/router';
 import {
+  type NavItem,
   NavMenu,
   SiteBranding,
   SiteLogo,
   SiteTagline,
   useNavActive,
   useThemeModBool,
-  type NavItem,
 } from '@fecommunity/reactpress-toolkit/theme';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 const NAV: NavItem[] = [
   { id: 'home', href: '/', label: 'Home' },

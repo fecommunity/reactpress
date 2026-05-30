@@ -4,9 +4,12 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { ApiKey } from './modules/api-key/api-key.entity';
+import { ApiKeyModule } from './modules/api-key/api-key.module';
 import { Article } from './modules/article/article.entity';
 // 文章模块
 import { ArticleModule } from './modules/article/article.module';
+import { ArticleRevision } from './modules/article/article-revision.entity';
 // 鉴权模块
 import { AuthModule } from './modules/auth/auth.module';
 import { Category } from './modules/category/category.entity';
@@ -15,9 +18,11 @@ import { CategoryModule } from './modules/category/category.module';
 import { Comment } from './modules/comment/comment.entity';
 // 评论模块
 import { CommentModule } from './modules/comment/comment.module';
+import { ExtensionModule } from './modules/extension/extension.module';
 import { File } from './modules/file/file.entity';
 // 文件模块
 import { FileModule } from './modules/file/file.module';
+import { HealthModule } from './modules/health/health.module';
 import { Knowledge } from './modules/knowledge/knowledge.entity';
 // 知识库模块
 import { KnowledgeModule } from './modules/knowledge/knowledge.module';
@@ -42,13 +47,8 @@ import { UserModule } from './modules/user/user.module';
 import { View } from './modules/view/view.entity';
 // 访问统计模块
 import { ViewModule } from './modules/view/view.module';
-import { ApiKey } from './modules/api-key/api-key.entity';
-import { ApiKeyModule } from './modules/api-key/api-key.module';
-import { ArticleRevision } from './modules/article/article-revision.entity';
-import { HealthModule } from './modules/health/health.module';
 import { Webhook } from './modules/webhook/webhook.entity';
 import { WebhookModule } from './modules/webhook/webhook.module';
-import { ExtensionModule } from './modules/extension/extension.module';
 
 @Module({
   imports: [

@@ -3,16 +3,16 @@ import {
   getConfigurationSchemaFromManifest,
   getMergedThemeConfiguration,
   getThemeConfigurationSeed,
-  TWENTYTWENTYFIVE_CONFIGURATION_SCHEMA,
   TWENTYTWENTYFIVE_APPEARANCE,
+  TWENTYTWENTYFIVE_CONFIGURATION_SCHEMA,
   validateAndMergeThemeConfiguration,
 } from "@fecommunity/reactpress-toolkit/extension";
 import { http, HttpResponse, passthrough } from "msw";
 
-import { successResponse, withDelay } from "../createHandler";
-import { getMockGlobalSetting, patchMockGlobalSettingTheme, setMockGlobalSetting } from "./page";
 import helloWorldAdminEn from "../../../../themes/hello-world/locales/en.json";
 import twentytwentyfiveAdminEn from "../../../../themes/twentytwentyfive/locales/en.json";
+import { successResponse, withDelay } from "../createHandler";
+import { getMockGlobalSetting, patchMockGlobalSettingTheme, setMockGlobalSetting } from "./page";
 
 const THEME_ADMIN_LOCALES: Record<string, Record<string, Record<string, unknown>>> = {
   twentytwentyfive: { en: twentytwentyfiveAdminEn },

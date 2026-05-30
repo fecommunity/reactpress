@@ -2,8 +2,8 @@ import { Input } from "antd";
 import { Search } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
-import { useThemeSettingsSearch } from "@/modules/appearance/context/ThemeSettingsSearchContext";
 import styles from "@/modules/appearance/components/theme-settings-editor.module.css";
+import { useThemeSettingsSearch } from "@/modules/appearance/context/ThemeSettingsSearchContext";
 
 export function ThemeSettingsSearchBar() {
   const { t } = useTranslation();

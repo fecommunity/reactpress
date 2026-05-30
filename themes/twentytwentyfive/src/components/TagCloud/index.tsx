@@ -1,4 +1,5 @@
-import { useEffect, useRef, FC, ReactNode } from 'react';
+import { FC, ReactNode,useEffect, useRef } from 'react';
+
 import styles from './index.module.scss';
 import Tag from './tag';
 

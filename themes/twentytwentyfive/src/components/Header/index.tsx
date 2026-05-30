@@ -34,10 +34,9 @@ import { GlobalContext } from '@/context/global';
 import { useToggle } from '@/hooks/useToggle';
 import { getDocumentScrollTop, getFirstLevelRoute, getIconByName } from '@/utils';
 
+import { GitHub } from '../AboutUs';
 import style from './index.module.scss';
 import { renderHeaderLogo } from './renderHeaderLogo';
-
-import { GitHub } from '../AboutUs';
 
 interface HeaderProps {
   setting: ISetting;

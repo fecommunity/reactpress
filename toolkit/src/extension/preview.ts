@@ -9,8 +9,8 @@ import { mergePreviewMods } from '../theme/preview-mods';
 import { resolveSiteConfig } from './configuration/resolve';
 import type { ResolvedSiteConfig, ThemeConfigurationSchema } from './configuration/types';
 import {
-  applyThemeModsToSiteSetting,
   appearancePrimaryColor,
+  applyThemeModsToSiteSetting,
   getThemeStateFromGlobalSetting,
   type ThemeMods,
 } from './theme';

@@ -1,10 +1,10 @@
-import { useEffect, useMemo, useState } from 'react';
 import {
-  QUICK_START_COMMANDS,
   getQuickStartDemoOutputs,
   getQuickStartDevReadyLines,
+  QUICK_START_COMMANDS,
   type QuickStartLocale,
 } from '@site/src/constants/quickStartCommands';
+import { useEffect, useMemo, useState } from 'react';
 
 export type TerminalLine = {
   kind: 'input' | 'output' | 'success';

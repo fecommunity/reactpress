@@ -2,10 +2,10 @@ import { connect, mapProps } from "@formily/react";
 import cls from "classnames";
 import type { ReactNode } from "react";
 
+import styles from "@/modules/appearance/components/formily/vscode-setting-row.module.css";
 import { SearchHighlight } from "@/modules/appearance/components/SearchHighlight";
 import { useThemeSettingsSearchOptional } from "@/modules/appearance/context/ThemeSettingsSearchContext";
 import { themeFieldAnchorId } from "@/modules/appearance/utils/themeSettingsAnchors";
-import styles from "@/modules/appearance/components/formily/vscode-setting-row.module.css";
 
 type Props = {
   title?: ReactNode;

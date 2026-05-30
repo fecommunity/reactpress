@@ -1,9 +1,9 @@
-import SiteHeaderLogo from '@/assets/SiteHeaderLogo';
-import markStyles from '@/assets/logoMark.module.scss';
 import {
   REACT_PRESS_HEADER_LOGO,
   REACT_PRESS_ICON_LOGO,
 } from '@/assets/brand';
+import markStyles from '@/assets/logoMark.module.scss';
+import SiteHeaderLogo from '@/assets/SiteHeaderLogo';
 
 const IMAGE_SRC_RE = /\.(svg|png|jpe?g|gif|webp|avif)(\?.*)?$/i;
 

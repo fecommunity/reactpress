@@ -1,5 +1,5 @@
-import { getThemeStateFromGlobalSetting } from '../extension/theme';
 import type { SiteThemeState, ThemeMods } from '../extension/theme';
+import { getThemeStateFromGlobalSetting } from '../extension/theme';
 
 export interface ThemeRuntime {
   /** Theme package id (from `theme.json` or env). */

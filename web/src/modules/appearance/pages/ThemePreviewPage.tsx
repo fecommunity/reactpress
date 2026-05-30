@@ -5,8 +5,8 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
-import { useThemeListItemMeta } from "@/hooks/useThemeListItemMeta";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
+import { useThemeListItemMeta } from "@/hooks/useThemeListItemMeta";
 import { useThemePreviewSession } from "@/hooks/useThemePreviewSession";
 import { useThemeMutations, useThemes } from "@/hooks/useThemes";
 import { ThemePreviewFrame } from "@/modules/appearance/components/ThemePreviewFrame";

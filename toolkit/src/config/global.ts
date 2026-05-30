@@ -1,5 +1,5 @@
-import { defaultSiteThemeState } from '../extension/theme';
 import type { SiteThemeState } from '../extension/theme';
+import { defaultSiteThemeState } from '../extension/theme';
 
 interface NavItem {
   label: string;
@@ -440,5 +440,5 @@ export const systemGlobalSettingDefaults = {
   theme: defaultSiteThemeState,
 };
 
-export type { GlobalSetting, LanguageConfig, GlobalConfig, NavConfig, NavItem, UrlCategory, SiteThemeState };
+export type { GlobalConfig, GlobalSetting, LanguageConfig, NavConfig, NavItem, SiteThemeState,UrlCategory };
 export { globalSetting };

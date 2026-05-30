@@ -2,6 +2,7 @@ import { Button, Input, Popover, Tooltip } from "antd";
 import { Link2 } from "lucide-react";
 import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
+
 import { insertAtCursor, type ToolbarEditorProps } from "./types";
 
 export function IframeTool(props: ToolbarEditorProps) {

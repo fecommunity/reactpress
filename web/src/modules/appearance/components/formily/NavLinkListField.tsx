@@ -6,12 +6,12 @@ import { Plus, Trash2 } from "lucide-react";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
-import { SearchHighlight } from "@/modules/appearance/components/SearchHighlight";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
+import styles from "@/modules/appearance/components/formily/nav-link-list-field.module.css";
+import { SearchHighlight } from "@/modules/appearance/components/SearchHighlight";
 import { useThemeSettingsSearchOptional } from "@/modules/appearance/context/ThemeSettingsSearchContext";
 import { lookupI18nString, parseSiteI18n } from "@/modules/appearance/utils/parseSiteI18n";
 import { themeFieldAnchorId } from "@/modules/appearance/utils/themeSettingsAnchors";
-import styles from "@/modules/appearance/components/formily/nav-link-list-field.module.css";
 
 export type NavLinkRow = {
   path: string;

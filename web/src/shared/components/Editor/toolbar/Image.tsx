@@ -1,7 +1,8 @@
 import { App, Tooltip, Upload } from "antd";
 import { ImageIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { uploadEditorAsset, uploadedFileName } from "../utils/uploadInsert";
+
+import { uploadedFileName, uploadEditorAsset } from "../utils/uploadInsert";
 import { insertAtCursor, type ToolbarEditorProps } from "./types";
 
 export function ImageTool(props: ToolbarEditorProps) {

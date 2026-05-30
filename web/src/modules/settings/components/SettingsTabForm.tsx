@@ -1,18 +1,19 @@
 import { resolvePublicAssetUrl } from "@fecommunity/reactpress-toolkit/extension";
 import { App, Button, Form, Input, Spin } from "antd";
-import { useEffect, useState, type ReactNode } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+
 import { useSiteSettings } from "@/hooks/useSiteSettings";
-import formStyles from "@/shared/styles/admin-form-table.module.css";
 import styles from "@/modules/settings/components/settings-form.module.css";
 import {
   mergeSiteSettingFormValues,
   siteSettingPlaceholder,
 } from "@/modules/settings/siteSettingDefaults";
+import { getApiErrorMessage } from "@/shared/api/getApiErrorMessage";
+import { MediaSelectDrawer } from "@/shared/components/MediaSelectDrawer";
 import { ModulePlaceholder } from "@/shared/components/ModulePlaceholder";
 import { SiteNoticeListField } from "@/shared/components/SiteNoticeListField";
-import { MediaSelectDrawer } from "@/shared/components/MediaSelectDrawer";
-import { getApiErrorMessage } from "@/shared/api/getApiErrorMessage";
+import formStyles from "@/shared/styles/admin-form-table.module.css";
 
 type FieldDef = {
   name: string;

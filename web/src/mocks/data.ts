@@ -1,5 +1,7 @@
 import { ADMIN_PERMISSIONS } from "@fecommunity/reactpress-toolkit/admin";
+
 import type { User } from "@/api/schemas";
+
 import { vercelAvatarUrl } from "./utils";
 
 /** Demo logins look like real org accounts (first.last @ northstar.io). Index 0 stays `admin` for mock login. */

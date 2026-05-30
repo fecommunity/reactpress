@@ -1,6 +1,6 @@
 export function isValidUsername(username) {
   // 字符限制，只允许字母、数字、下划线
-  var reg = /^[a-zA-Z0-9_]+$/;
+  const reg = /^[a-zA-Z0-9_]+$/;
   if (!reg.test(username)) {
     return false;
   }

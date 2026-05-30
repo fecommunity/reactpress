@@ -1,13 +1,15 @@
-import { GlobalContext } from '@/context/global';
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined
 } from '@ant-design/icons';
 import { Button, Menu } from 'antd';
 import React, { useContext, useMemo, useState } from 'react';
+
+import { GlobalContext } from '@/context/global';
+import { getIconByName } from '@/utils';
+
 import { CategoryItem } from '.';
 import styles from './index.module.scss';
-import { getIconByName } from '@/utils';
 
 interface CategoryProps {
   dataSource: CategoryItem[];

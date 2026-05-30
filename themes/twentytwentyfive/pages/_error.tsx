@@ -1,7 +1,7 @@
 import { Button, Result } from 'antd';
-import { useTranslations } from 'next-intl';
 import Head from 'next/head';
 import { default as Router } from 'next/router';
+import { useTranslations } from 'next-intl';
 import React, { useContext } from 'react';
 
 import { GlobalContext } from '@/context/global';

@@ -3,14 +3,15 @@ import { App, Button, Input, Select, Space, Table, Typography } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+
 import { slugifyMetaValue } from "@/modules/article/articleEditorApi";
 import styles from "@/modules/article/components/taxonomy-admin.module.css";
 import {
   createTaxonomyItem,
   deleteTaxonomyItem,
   fetchTaxonomyList,
-  updateTaxonomyItem,
   type TaxonomyItem,
+  updateTaxonomyItem,
 } from "@/modules/article/taxonomyApi";
 import { ListPaginationNav } from "@/shared/components/ListPaginationNav";
 

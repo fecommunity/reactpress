@@ -1,25 +1,25 @@
+import type { ThemeConfigurationSchema } from "@fecommunity/reactpress-toolkit/extension";
+import { toFormilyJsonSchema } from "@fecommunity/reactpress-toolkit/extension";
+import { Form as FormilyForm } from "@formily/antd-v5";
+import type { Form as FormilyCoreForm } from "@formily/core";
 import { createForm, onFormValuesChange } from "@formily/core";
 import { FormProvider } from "@formily/react";
-import { toFormilyJsonSchema } from "@fecommunity/reactpress-toolkit/extension";
-import type { ThemeConfigurationSchema } from "@fecommunity/reactpress-toolkit/extension";
-import { Form as FormilyForm } from "@formily/antd-v5";
 import { App, Button, Spin, Typography } from "antd";
-import { useCallback, useEffect, useMemo, useImperativeHandle, useRef, forwardRef } from "react";
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import type { Form as FormilyCoreForm } from "@formily/core";
 
 import {
   ensureFormilyVoidComponentsRegistered,
   SchemaField,
 } from "@/modules/appearance/components/formily/schemaField";
-import { ThemeSettingsEditor } from "@/modules/appearance/components/ThemeSettingsEditor";
-import {
-  patchVsCodeFormilySchema,
-  type FormilySchemaNode,
-} from "@/modules/appearance/utils/patchVsCodeFormilySchema";
-import { useThemeAdminLocaleTextOptional } from "@/modules/appearance/context/ThemeAdminLocaleContext";
-import { localizeThemeConfigurationSchema } from "@/modules/appearance/utils/resolveAppearanceManifestText";
 import styles from "@/modules/appearance/components/theme-configuration-form.module.css";
+import { ThemeSettingsEditor } from "@/modules/appearance/components/ThemeSettingsEditor";
+import { useThemeAdminLocaleTextOptional } from "@/modules/appearance/context/ThemeAdminLocaleContext";
+import {
+  type FormilySchemaNode,
+  patchVsCodeFormilySchema,
+} from "@/modules/appearance/utils/patchVsCodeFormilySchema";
+import { localizeThemeConfigurationSchema } from "@/modules/appearance/utils/resolveAppearanceManifestText";
 
 ensureFormilyVoidComponentsRegistered();
 

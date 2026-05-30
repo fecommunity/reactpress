@@ -1,17 +1,17 @@
 import { RightOutlined, TagOutlined } from '@ant-design/icons';
 import { Alert, Breadcrumb, Button } from 'antd';
 import { NextPage } from 'next';
-import { useTranslations } from 'next-intl';
 import Head from 'next/head';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { useContext, useMemo } from 'react';
 
+import AboutUs from '@/components/AboutUs';
 import { ArticleRecommend } from '@/components/ArticleRecommend';
+import { Tags } from '@/components/Tags';
 import { GlobalContext } from '@/context/global';
 import { DoubleColumnLayout } from '@/layout/DoubleColumnLayout';
 
-import AboutUs from '@/components/AboutUs';
-import { Tags } from '@/components/Tags';
 import style from './index.module.scss';
 const url = require('url');
 

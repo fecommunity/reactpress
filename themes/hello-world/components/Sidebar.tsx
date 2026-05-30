@@ -1,5 +1,6 @@
+import { type TaxonomyItem,TaxonomyList } from '@fecommunity/reactpress-toolkit/theme';
 import Link from 'next/link';
-import { TaxonomyList, type TaxonomyItem } from '@fecommunity/reactpress-toolkit/theme';
+
 import TagsCloud from './TagsCloud';
 
 interface SidebarProps {

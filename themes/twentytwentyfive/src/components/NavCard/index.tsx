@@ -1,8 +1,10 @@
 import React, { useContext } from 'react';
+
+import { GlobalContext } from '@/context/global';
+
 import Category from './Category';
 import styles from './index.module.scss';
 import NavCard from './NavCard';
-import { GlobalContext } from '@/context/global';
 
 export interface CategoryItem {
   label: string;

@@ -9,11 +9,11 @@ import {
   useThemeConfigurationSchema,
 } from "@/hooks/useThemeConfiguration";
 import { useTheme } from "@/hooks/useThemes";
-import { ThemeAdminLocaleProvider } from "@/modules/appearance/context/ThemeAdminLocaleContext";
+import pageStyles from "@/modules/appearance/components/theme-settings-page.module.css";
 import { ThemeConfigurationForm } from "@/modules/appearance/components/ThemeConfigurationForm";
+import { ThemeAdminLocaleProvider } from "@/modules/appearance/context/ThemeAdminLocaleContext";
 import { Route } from "@/routes/_auth/appearance/themes/$themeId/settings/index";
 import { ModulePlaceholder } from "@/shared/components/ModulePlaceholder";
-import pageStyles from "@/modules/appearance/components/theme-settings-page.module.css";
 
 export function ThemeSettingsPage() {
   const { t } = useTranslation();

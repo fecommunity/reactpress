@@ -6,14 +6,14 @@ import {
 import { useNavigate } from "@tanstack/react-router";
 import { App, Button, Form, Popconfirm, Typography } from "antd";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { type ReactNode, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import type { ThemeListItem } from "@/hooks/useThemes";
 import { AppearanceSectionFields } from "@/modules/appearance/components/AppearanceSectionFields";
-import { buildAppearanceNavGroups } from "@/modules/appearance/utils/appearanceNav";
-import { useThemeAdminLocaleText } from "@/modules/appearance/context/ThemeAdminLocaleContext";
 import styles from "@/modules/appearance/components/themes-page.module.css";
+import { useThemeAdminLocaleText } from "@/modules/appearance/context/ThemeAdminLocaleContext";
+import { buildAppearanceNavGroups } from "@/modules/appearance/utils/appearanceNav";
 import { finalizeThemeModsForSave, normalizeThemeMods } from "@/shared/theme/normalizeMods";
 
 type Props = {

@@ -1,8 +1,10 @@
 import { Avatar, Card, List } from 'antd';
 import React from 'react';
+
+import { getIconByName } from '@/utils';
+
 import { CategoryItem } from '.';
 import styles from './index.module.scss';
-import { getIconByName } from '@/utils';
 
 interface NavCardProps {
   dataSource: CategoryItem[];

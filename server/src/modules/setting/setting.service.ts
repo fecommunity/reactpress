@@ -1,8 +1,3 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import * as merge from 'deepmerge';
-import { Repository } from 'typeorm';
-
 import {
   buildPublicSettingView,
   getThemeConfigurationSeed,
@@ -11,6 +6,10 @@ import {
   pickSystemSettingPatch,
   resolveEffectiveSettingRow,
 } from '@fecommunity/reactpress-toolkit/extension';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import * as merge from 'deepmerge';
+import { Repository } from 'typeorm';
 
 import { i18n, settings } from './setting.constant';
 import { Setting } from './setting.entity';
@@ -36,7 +35,7 @@ export class SettingService {
     try {
       const items = await this.settingRepository.find();
       const target = (items && items[0]) || ({} as Setting);
-      
+
       let data = {};
       try {
         if (target.i18n) {
@@ -46,10 +45,10 @@ export class SettingService {
         console.warn('[SettingService] Error parsing i18n from DB:', e);
         data = {};
       }
-      
+
       // Merge default i18n with data from DB
       const mergedI18n = merge({}, i18n, data);
-      
+
       // Only update if there's a change or if it's empty
       const mergedI18nString = JSON.stringify(mergedI18n);
       if (!target.i18n || target.i18n !== mergedI18nString) {
@@ -86,9 +85,7 @@ export class SettingService {
       ...themeState,
       mods: { ...defaultTheme.mods, ...themeState.mods },
       installedThemes:
-        themeState.installedThemes?.length > 0
-          ? themeState.installedThemes
-          : defaultTheme.installedThemes,
+        themeState.installedThemes?.length > 0 ? themeState.installedThemes : defaultTheme.installedThemes,
     };
     const mergedSettings = { ...data, theme: mergedTheme };
     const mergedSettingsString = JSON.stringify(mergedSettings);
@@ -114,7 +111,7 @@ export class SettingService {
       gs = {};
     }
 
-    const { global, changed } = migrateLegacyAppearanceToThemeMods(gs, target as unknown as Record<string, unknown>);
+    const { global, changed } = migrateLegacyAppearanceToThemeMods(gs, (target as unknown) as Record<string, unknown>);
     if (changed) {
       target.globalSetting = JSON.stringify(global);
       await this.settingRepository.save(target);
@@ -139,12 +136,9 @@ export class SettingService {
 
     const themeState = getThemeStateFromGlobalSetting(gs);
     const activeTheme = themeState.activeTheme || 'twentytwentyfive';
-    let config =
+    const config =
       gs.config && typeof gs.config === 'object'
-        ? ({ ...(gs.config as Record<string, Record<string, unknown>>) } as Record<
-            string,
-            Record<string, unknown>
-          >)
+        ? ({ ...(gs.config as Record<string, Record<string, unknown>>) } as Record<string, Record<string, unknown>>)
         : {};
 
     let changed = false;
@@ -190,16 +184,12 @@ export class SettingService {
       return res;
     }
 
-    const effective = resolveEffectiveSettingRow(
-      res as unknown as Record<string, unknown>,
-    ) as unknown as Setting;
+    const effective = (resolveEffectiveSettingRow((res as unknown) as Record<string, unknown>) as unknown) as Setting;
 
     if (innerInvoke) {
       return effective;
     }
-    return buildPublicSettingView(
-      effective as unknown as Record<string, unknown>,
-    ) as unknown as Setting;
+    return (buildPublicSettingView((effective as unknown) as Record<string, unknown>) as unknown) as Setting;
   }
 
   /** 更新系统设置（站点/SEO 为全站默认，主题 customizer 可覆盖） */

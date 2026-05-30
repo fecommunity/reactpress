@@ -5,8 +5,8 @@ import type { CSSProperties } from "react";
 import { useEffect, useState } from "react";
 
 import { useThemePreviewHtml } from "@/hooks/useThemePreviewHtml";
-import { createPreviewDraft } from "@/shared/api/themes";
 import styles from "@/modules/appearance/components/themes-page.module.css";
+import { createPreviewDraft } from "@/shared/api/themes";
 import { resolveLiveSitePreviewUrl } from "@/shared/theme/previewUrl";
 
 type Props = {

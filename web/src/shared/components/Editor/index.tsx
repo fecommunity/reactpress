@@ -1,10 +1,12 @@
-import cls from "classnames";
 import { Divider, Tooltip } from "antd";
+import cls from "classnames";
 import { Columns2, Eye, FileText, ListTree, Maximize2, Minimize2, PanelLeft } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+
 import { Toc } from "@/shared/components/Toc";
 import { useToggle } from "@/shared/hooks/useToggle";
+
 import { getDefaultMarkdown } from "./DefaultMarkdown";
 import styles from "./editor.module.css";
 import { MonacoEditor, type MonacoEditorHandle } from "./MonacoEditor";

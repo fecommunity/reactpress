@@ -1,12 +1,12 @@
-export * from './types';
-export * from './paths';
 export * from './defaults';
-export * from './validate';
-export * from './resolve';
 export * from './formily';
+export * from './paths';
 export {
-  TWENTYTWENTYFIVE_CONFIGURATION_SCHEMA,
-  twentytwentyfiveConfigSeed,
   getThemeConfigurationSchema,
   getThemeConfigurationSeed,
+  TWENTYTWENTYFIVE_CONFIGURATION_SCHEMA,
+  twentytwentyfiveConfigSeed,
 } from './presets/twentytwentyfive';
+export * from './resolve';
+export * from './types';
+export * from './validate';

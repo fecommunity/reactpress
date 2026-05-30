@@ -1,13 +1,14 @@
 import {
-  createAdminRegistry,
-  filterMenuByPermissions,
   type AdminContext,
   type AdminMenuItem,
+  createAdminRegistry,
+  filterMenuByPermissions,
 } from "@fecommunity/reactpress-toolkit/admin";
+
+import { appearanceModule } from "@/modules/appearance";
 import { articleModule } from "@/modules/article";
 import { commentModule } from "@/modules/comment";
 import { dashboardModule } from "@/modules/dashboard";
-import { appearanceModule } from "@/modules/appearance";
 import { mediaModule } from "@/modules/media";
 import { pageModule } from "@/modules/page";
 import { pluginsModule } from "@/modules/plugins";

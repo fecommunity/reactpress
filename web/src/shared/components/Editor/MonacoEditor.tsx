@@ -1,23 +1,25 @@
 import Editor, { loader, type OnMount } from "@monaco-editor/react";
-import * as monaco from "monaco-editor";
 import { App, Spin } from "antd";
+import * as monaco from "monaco-editor";
 import {
   forwardRef,
+  type Ref,
   useCallback,
   useEffect,
   useImperativeHandle,
   useRef,
   useState,
-  type Ref,
 } from "react";
 import { useTranslation } from "react-i18next";
+
 import { useSettingsStore } from "@/stores/settings";
-import { uploadEditorAsset } from "./utils/uploadInsert";
+
 import {
   registerScollListener,
   removeScrollListener,
   subjectScrollListener,
 } from "./utils/syncScroll";
+import { uploadEditorAsset } from "./utils/uploadInsert";
 
 const IMG_REGEXP = /^image\/(png|jpg|jpeg|gif|webp)$/i;
 

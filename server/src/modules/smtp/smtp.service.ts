@@ -1,8 +1,8 @@
-import { ApiMsg } from '../../common/api-messages';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
+import { ApiMsg } from '../../common/api-messages';
 import { SettingService } from '../setting/setting.service';
 import { sendEmail } from './mail.util';
 import { SMTP } from './smtp.entity';

@@ -8,9 +8,9 @@ import { GitHub, Theme } from "@/components/Icon";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 import { defaultMediaSearch, defaultUsersSearch } from "@/routes/searchDefaults";
+import { ReactPressLogoMark } from "@/shared/brand";
 import { useAuthStore } from "@/stores/auth";
 import { useSettingsStore } from "@/stores/settings";
-import { ReactPressLogoMark } from "@/shared/brand";
 import { APP_BRAND_NAME, REACTPRESS_GITHUB_URL } from "@/utils/constants";
 
 const { Header: AntHeader } = Layout;

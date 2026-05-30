@@ -1,15 +1,15 @@
 import type { ThemeApi } from './api';
 import { themeApi } from './api';
 import { unpackList, unpackOne, unpackPaginated } from './api-data';
-import { pickSiteSettings } from './format';
 import type { SettingRow } from './format';
-import { parseSiteLocale } from './locale';
-import type { ParseSiteLocaleOptions } from './locale';
+import { pickSiteSettings } from './format';
 import { safeJsonParse } from './json';
-import { resolveThemeRuntime } from './runtime';
+import type { ParseSiteLocaleOptions } from './locale';
+import { parseSiteLocale } from './locale';
 import type { ThemeRuntime } from './runtime';
-import { DEFAULT_SITE_META, parseSiteMeta, unwrapSetting } from './setting';
+import { resolveThemeRuntime } from './runtime';
 import type { SiteMeta } from './setting';
+import { DEFAULT_SITE_META, parseSiteMeta, unwrapSetting } from './setting';
 import { themeNotFound } from './static';
 
 /** Default ISR interval for theme list/home pages. */

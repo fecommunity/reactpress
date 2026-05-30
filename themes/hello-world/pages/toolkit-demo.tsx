@@ -1,15 +1,16 @@
-import { GetStaticProps } from 'next';
-import Head from 'next/head';
-import Link from 'next/link';
-import type * as types from '@fecommunity/reactpress-toolkit/types';
-import * as utils from '@fecommunity/reactpress-toolkit/utils';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
 import {
   fetchThemeCatalog,
   themeApi,
   themeStaticProps,
 } from '@fecommunity/reactpress-toolkit/theme';
+import type * as types from '@fecommunity/reactpress-toolkit/types';
+import * as utils from '@fecommunity/reactpress-toolkit/utils';
+import { GetStaticProps } from 'next';
+import Head from 'next/head';
+import Link from 'next/link';
+
+import Footer from '../components/Footer';
+import Header from '../components/Header';
 
 // Type definitions from the toolkit
 type IArticle = types.IArticle;

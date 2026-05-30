@@ -51,6 +51,7 @@ export interface ThemeAppearanceManifest {
   sections: ThemeAppearanceSection[];
 }
 
+export type { ThemeMods } from './branding-mods';
 export {
   applyThemeModsToSiteSetting,
   seedThemeModsFromLegacySetting,
@@ -58,10 +59,8 @@ export {
   THEME_BRANDING_MOD_TO_SETTING,
 } from './branding-mods';
 
-export type { ThemeMods } from './branding-mods';
-
-import { appearancePrimaryColorForMode } from './twentytwentyfive-vars';
 import type { ThemeMods } from './branding-mods';
+import { appearancePrimaryColorForMode } from './twentytwentyfive-vars';
 
 export { appearancePrimaryColorForMode } from './twentytwentyfive-vars';
 
@@ -155,31 +154,28 @@ export function getThemeStateFromGlobalSetting(raw: unknown): SiteThemeState {
 }
 
 export { resolvePublicAssetUrl } from '../theme/assets';
-
 export {
-  PREVIEW_MODS_QUERY_KEY,
+  appendPreviewConfigToUrl,
+  parsePreviewConfigFromNextCtx,
+  parsePreviewConfigFromRequestUrl,
+  parsePreviewConfigParam,
+  PREVIEW_CONFIG_QUERY_KEY,
+} from '../theme/preview-config';
+export {
+  appendPreviewTokenToUrl,
+  parsePreviewTokenFromNextCtx,
+  parsePreviewTokenFromRequestUrl,
+  PREVIEW_TOKEN_QUERY_KEY,
+  type PreviewDraftPayload,
+} from '../theme/preview-draft';
+export {
   appendPreviewModsToUrl,
   mergePreviewMods,
   parsePreviewModsFromNextCtx,
   parsePreviewModsFromRequestUrl,
   parsePreviewModsParam,
+  PREVIEW_MODS_QUERY_KEY,
 } from '../theme/preview-mods';
-
-export {
-  PREVIEW_CONFIG_QUERY_KEY,
-  appendPreviewConfigToUrl,
-  parsePreviewConfigFromNextCtx,
-  parsePreviewConfigFromRequestUrl,
-  parsePreviewConfigParam,
-} from '../theme/preview-config';
-
-export {
-  PREVIEW_TOKEN_QUERY_KEY,
-  appendPreviewTokenToUrl,
-  parsePreviewTokenFromNextCtx,
-  parsePreviewTokenFromRequestUrl,
-  type PreviewDraftPayload,
-} from '../theme/preview-draft';
 
 export function mergeThemeStateIntoGlobalSetting(
   raw: unknown,

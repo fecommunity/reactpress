@@ -1,15 +1,17 @@
-import { GlobalContext } from '@/context/global';
-import { siteNoticeDisplayLines } from '@fecommunity/reactpress-toolkit/extension';
 import { BellFilled } from '@ant-design/icons';
+import { siteNoticeDisplayLines } from '@fecommunity/reactpress-toolkit/extension';
 import { Alert } from 'antd';
 import React, { useContext } from 'react';
 import TextLoop from 'react-text-loop';
+
+import { GlobalContext } from '@/context/global';
+
 import style from './index.module.scss';
 
 const SystemNotification: React.FC = () => {
   const { setting } = useContext(GlobalContext);
   const notices = siteNoticeDisplayLines(setting?.systemNoticeInfo);
-  return !!notices?.length ? (
+  return notices?.length ? (
     <Alert
       className={style.alert}
       closeIcon

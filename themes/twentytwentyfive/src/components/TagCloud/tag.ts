@@ -111,17 +111,17 @@ class Tag {
       if (this.mcList[i].on) {
         continue;
       }
-      let rx1 = this.mcList[i].cx;
-      let ry1 = this.mcList[i].cy * this.ca + this.mcList[i].cz * -this.sa;
-      let rz1 = this.mcList[i].cy * this.sa + this.mcList[i].cz * this.ca;
+      const rx1 = this.mcList[i].cx;
+      const ry1 = this.mcList[i].cy * this.ca + this.mcList[i].cz * -this.sa;
+      const rz1 = this.mcList[i].cy * this.sa + this.mcList[i].cz * this.ca;
 
-      let rx2 = rx1 * this.cb + rz1 * this.sb;
-      let ry2 = ry1;
-      let rz2 = rx1 * -this.sb + rz1 * this.cb;
+      const rx2 = rx1 * this.cb + rz1 * this.sb;
+      const ry2 = ry1;
+      const rz2 = rx1 * -this.sb + rz1 * this.cb;
 
-      let rx3 = rx2 * this.cc + ry2 * -this.sc;
-      let ry3 = rx2 * this.sc + ry2 * this.cc;
-      let rz3 = rz2;
+      const rx3 = rx2 * this.cc + ry2 * -this.sc;
+      const ry3 = rx2 * this.sc + ry2 * this.cc;
+      const rz3 = rz2;
 
       this.mcList[i].cx = rx3;
       this.mcList[i].cy = ry3;
@@ -148,7 +148,7 @@ class Tag {
   private positionAll = () => {
     let phi = 0;
     let theta = 0;
-    let max = this.mcList.length;
+    const max = this.mcList.length;
     for (let i = 0; i < max; i++) {
       if (this.distr) {
         phi = Math.acos(-1 + (2 * (i + 1) - 1) / max);
@@ -171,13 +171,13 @@ class Tag {
    * 根据最新的位置数据更新标签的实际显示位置
    */
   private doPosition = () => {
-    let l = this.oDiv.offsetWidth / 2;
-    let t = this.oDiv.offsetHeight / 2;
+    const l = this.oDiv.offsetWidth / 2;
+    const t = this.oDiv.offsetHeight / 2;
     for (let i = 0; i < this.mcList.length; i++) {
       if (this.mcList[i].on) {
         continue;
       }
-      let aAs = this.aA[i].style;
+      const aAs = this.aA[i].style;
       if (this.mcList[i].alpha > 0.1) {
         if (aAs.display != '') aAs.display = '';
       } else {

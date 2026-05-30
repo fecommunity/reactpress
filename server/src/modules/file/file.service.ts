@@ -46,7 +46,8 @@ export class FileService {
       url = await this.localUpload.putFile(filename, buffer);
       // 上传的路径
       const uploadUrl =
-        this.configService.get('SERVER_PUBLIC_UPLOAD_URL') || `${this.configService.get('SERVER_SITE_URL')}/public/uploads`;
+        this.configService.get('SERVER_PUBLIC_UPLOAD_URL') ||
+        `${this.configService.get('SERVER_SITE_URL')}/public/uploads`;
       // 最终的地址
       url = `${uploadUrl}/${filename}`;
     }

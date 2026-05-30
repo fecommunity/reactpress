@@ -1,5 +1,5 @@
-import React from 'react';
 import useBaseUrl from '@docusaurus/useBaseUrl';
+import React from 'react';
 
 function Logo({ className }) {
   const src = useBaseUrl('/img/logo.svg');

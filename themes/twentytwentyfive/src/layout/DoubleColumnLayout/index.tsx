@@ -3,11 +3,11 @@ import React, { useEffect, useRef } from 'react';
 
 import { CommentIcon } from '@/components/Comment/CommentIcon';
 import { Likes, LikesProps } from '@/components/Likes';
+import SystemNotification from '@/components/Setting/SystemNotification';
 import { useToggle } from '@/hooks/useToggle';
 import { getDocumentScrollTop } from '@/utils';
 
 import style from './index.module.scss';
-import SystemNotification from '@/components/Setting/SystemNotification';
 
 interface IProps {
   leftNode: React.ReactNode;

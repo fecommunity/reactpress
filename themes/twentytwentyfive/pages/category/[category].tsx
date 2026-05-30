@@ -1,20 +1,20 @@
 import { ArticleList } from '@components/ArticleList';
 import { Tags } from '@components/Tags';
+import cls from 'classnames';
 import { NextPage } from 'next';
-import { useTranslations } from 'next-intl';
 import Head from 'next/head';
+import { useTranslations } from 'next-intl';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 
+import AboutUs from '@/components/AboutUs';
 import { ArticleRecommend } from '@/components/ArticleRecommend';
 import { GlobalContext } from '@/context/global';
 import { DoubleColumnLayout } from '@/layout/DoubleColumnLayout';
 import { ArticleProvider } from '@/providers/article';
 import { CategoryProvider } from '@/providers/category';
-
-import AboutUs from '@/components/AboutUs';
 import { getArchiveBannerImage } from '@/utils/archiveBanner';
-import cls from 'classnames';
+
 import { CategoryMenu } from '../index';
 import style from '../index.module.scss';
 

@@ -1,5 +1,7 @@
 export { ReactPressLogoMark } from "./ReactPressLogoMark";
 export {
+  buildReactPressLogoSvg,
+  buildReactPressWordmarkSvg,
   REACT_PRESS_BRAND_COLOR,
   REACT_PRESS_LOGO_VIEWBOX,
   REACT_PRESS_ORBIT_PATHS,
@@ -9,6 +11,4 @@ export {
   REACT_PRESS_P_FONT_WEIGHT,
   REACT_PRESS_WORDMARK_FONT_FAMILY,
   REACT_PRESS_WORDMARK_LAYOUT,
-  buildReactPressLogoSvg,
-  buildReactPressWordmarkSvg,
 } from "./reactPressLogoPaths";

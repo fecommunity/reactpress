@@ -1,10 +1,10 @@
-import { ApiMsg } from '../../common/api-messages';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcryptjs';
 import * as crypto from 'crypto';
 import { Repository } from 'typeorm';
 
+import { ApiMsg } from '../../common/api-messages';
 import { ApiKey } from './api-key.entity';
 
 @Injectable()

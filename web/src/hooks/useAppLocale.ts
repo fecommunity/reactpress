@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
+
 import i18n, { type AppLocale } from "@/i18n";
 import { useSettingsStore } from "@/stores/settings";
 

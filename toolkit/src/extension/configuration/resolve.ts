@@ -5,8 +5,8 @@ import type {
   GlobalSettingWithConfig,
   HeaderNavLinkConfig,
   ResolvedSiteConfig,
-  ThemeConfigurationSchema,
   ThemeConfigStore,
+  ThemeConfigurationSchema,
 } from './types';
 import { validateThemeConfiguration } from './validate';
 

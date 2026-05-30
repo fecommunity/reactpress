@@ -1,15 +1,15 @@
 import type { ThemeConfigurationSchema } from "@fecommunity/reactpress-toolkit/extension";
 import { Button, Empty } from "antd";
-import { useRef, type ReactNode } from "react";
+import { type ReactNode, useRef } from "react";
 import { useTranslation } from "react-i18next";
 
+import styles from "@/modules/appearance/components/theme-settings-editor.module.css";
+import { ThemeSettingsSearchBar } from "@/modules/appearance/components/ThemeSettingsSearchBar";
+import { ThemeSettingsSidebar } from "@/modules/appearance/components/ThemeSettingsSidebar";
 import {
   ThemeSettingsSearchProvider,
   useThemeSettingsSearch,
 } from "@/modules/appearance/context/ThemeSettingsSearchContext";
-import { ThemeSettingsSearchBar } from "@/modules/appearance/components/ThemeSettingsSearchBar";
-import { ThemeSettingsSidebar } from "@/modules/appearance/components/ThemeSettingsSidebar";
-import styles from "@/modules/appearance/components/theme-settings-editor.module.css";
 
 type Props = {
   schema: ThemeConfigurationSchema | null;

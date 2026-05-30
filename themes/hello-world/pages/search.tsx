@@ -1,15 +1,16 @@
-import { GetServerSideProps } from 'next';
-import Link from 'next/link';
-import { useState } from 'react';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
-import PostEntry from '../components/PostEntry';
 import {
   ArticleList,
   fetchSearchArticles,
   SiteDocument,
   themeApi,
 } from '@fecommunity/reactpress-toolkit/theme';
+import { GetServerSideProps } from 'next';
+import Link from 'next/link';
+import { useState } from 'react';
+
+import Footer from '../components/Footer';
+import Header from '../components/Header';
+import PostEntry from '../components/PostEntry';
 
 interface SearchProps {
   query: string;

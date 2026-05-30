@@ -22,10 +22,10 @@ import {
 } from './theme';
 
 export {
-  THEME_BRANDING_DIRECT_MODS,
-  THEME_BRANDING_MOD_TO_SETTING,
   applyThemeModsToSiteSetting,
   seedThemeModsFromLegacySetting,
+  THEME_BRANDING_DIRECT_MODS,
+  THEME_BRANDING_MOD_TO_SETTING,
 } from './branding-mods';
 
 /** Site identity defaults (admin → 设置 → 常规). Themes may override via customizer mods. */
