@@ -13,13 +13,16 @@ interface IProps {
 
 export const ArticleCarousel: React.FC<IProps> = ({ articles = [] }) => {
   const t = useTranslations();
-  return articles && articles.length ? (
+  const slides = (articles || []).filter((article) => article.cover).slice(0, 6);
+
+  if (!slides.length) {
+    return null;
+  }
+
+  return (
     <div className={style.wrapper}>
       <Carousel arrows autoplay effect="fade">
-        {(articles || [])
-          .filter((article) => article.cover)
-          .slice(0, 6)
-          .map((article) => {
+        {slides.map((article) => {
             return (
               <div key={article.id}>
                 <div className={style.articleItem} style={{ backgroundImage: `url(${article.cover})` }}>
@@ -42,8 +45,8 @@ export const ArticleCarousel: React.FC<IProps> = ({ articles = [] }) => {
                 </div>
               </div>
             );
-          })}
+        })}
       </Carousel>
     </div>
-  ) : null;
+  );
 };

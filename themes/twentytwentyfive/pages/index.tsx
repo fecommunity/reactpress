@@ -85,7 +85,7 @@ const Home: NextPage<IHomeProps> = ({ articles: defaultArticles = [], recommende
       <DoubleColumnLayout
         leftNode={
           <>
-            {recommendedArticles && recommendedArticles.length ? (
+            {recommendedArticles?.some((article) => article.cover) ? (
               <div className={style.crouselWrap}>
                 <ArticleCarousel articles={recommendedArticles} />
               </div>
