@@ -15,7 +15,8 @@
     "./extension": "./dist/extension/index.js",
     "./theme": "./dist/theme/index.js",
     "./theme/next-config": "./dist/theme/next-config.js",
-    "./ui": "./dist/ui/index.js"
+    "./ui": "./dist/ui/index.js",
+    "./dev": "./dist/dev/index.js"
   },
   "peerDependencies": {
     "@tanstack/react-query": ">=5",

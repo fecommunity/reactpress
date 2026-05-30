@@ -5,6 +5,18 @@ import { defineConfig, loadEnv } from "vite-plus";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 import react from "@vitejs/plugin-react-swc";
 import { tanstackRouter } from "@tanstack/router-plugin/vite";
+import { devPortRedirectPlugin } from "@fecommunity/reactpress-toolkit/dev";
+
+const toolkitSrc = path.resolve(__dirname, "../toolkit/src");
+const toolkitAliases = [
+  "@fecommunity/reactpress-toolkit/react",
+  "@fecommunity/reactpress-toolkit/admin",
+  "@fecommunity/reactpress-toolkit/extension",
+  "@fecommunity/reactpress-toolkit/dev",
+].map((pkg) => ({
+  find: pkg,
+  replacement: path.join(toolkitSrc, pkg.split("/").pop()!, "index.ts"),
+}));
 
 const mode = process.env.NODE_ENV === "production" ? "production" : "development";
 const env = loadEnv(mode, process.cwd(), "");
@@ -34,11 +46,15 @@ export default defineConfig({
       routeFileIgnorePattern: "Login.*|loginHeroSlides",
     }),
     react(),
+    ...(process.env.REACTPRESS_NGINX_ENTRY_URL?.trim() ? [devPortRedirectPlugin(adminPort)] : []),
   ],
   server: {
     host: true,
     port: adminPort,
     strictPort: true,
+    fs: {
+      allow: [path.resolve(__dirname, "..")],
+    },
     proxy: {
       "/api": {
         target: apiProxyTarget,
@@ -48,9 +64,7 @@ export default defineConfig({
     },
   },
   resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "src"),
-    },
+    alias: [{ find: "@", replacement: path.resolve(__dirname, "src") }, ...toolkitAliases],
   },
   build: {
     rollupOptions: {

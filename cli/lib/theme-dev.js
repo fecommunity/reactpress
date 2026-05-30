@@ -323,6 +323,9 @@ function buildThemeChildEnv(projectRoot, { port, serverApiUrl, publicApiUrl, the
     REACTPRESS_SKIP_BROWSER_OPEN: '1',
     NEXT_IGNORE_INCORRECT_LOCKFILE: '1',
     NEXT_TELEMETRY_DISABLED: '1',
+    ...(process.env.REACTPRESS_NGINX_ENTRY_URL
+      ? { REACTPRESS_NGINX_ENTRY_URL: process.env.REACTPRESS_NGINX_ENTRY_URL }
+      : { REACTPRESS_SKIP_DEV_PORT_REDIRECT: '1' }),
   };
 }
 

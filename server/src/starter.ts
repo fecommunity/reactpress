@@ -114,6 +114,28 @@ export async function bootstrap() {
 
     const app = await NestFactory.create(AppModule);
     const configService = app.get('ConfigService');
+    const listenPort = Number(configService.get('SERVER_PORT', configuredPort));
+
+    app.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
+      const { shouldRedirectDevPortToNginx, buildDevPortRedirectUrl } = require('@fecommunity/reactpress-toolkit/dev');
+      if (
+        !shouldRedirectDevPortToNginx({
+          host: req.headers.host,
+          method: req.method,
+          accept: req.headers.accept,
+          directPort: listenPort,
+          pathname: req.path,
+        })
+      ) {
+        next();
+        return;
+      }
+      res.redirect(302, buildDevPortRedirectUrl({
+        directPort: listenPort,
+        pathname: req.path,
+        search: req.url.includes('?') ? req.url.slice(req.url.indexOf('?')) : '',
+      }));
+    });
 
     app.enableCors();
     app.setGlobalPrefix(configService.get('SERVER_API_PREFIX', '/api'));
@@ -170,7 +192,6 @@ export async function bootstrap() {
     // 设置 Swagger UI
     SwaggerModule.setup('api', app, document, options);
 
-    const listenPort = Number(configService.get('SERVER_PORT', configuredPort));
     const listenPrefix = String(configService.get('SERVER_API_PREFIX', apiPrefix));
 
     if (

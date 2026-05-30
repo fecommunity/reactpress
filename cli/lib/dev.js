@@ -207,6 +207,11 @@ async function spawnAdminWeb(
     REACTPRESS_ORIGINAL_CWD: projectRoot,
     WEB_ADMIN_PORT: String(adminPort),
   };
+  if (nginxEnabled && process.env.REACTPRESS_NGINX_ENTRY_URL) {
+    adminEnv.REACTPRESS_NGINX_ENTRY_URL = process.env.REACTPRESS_NGINX_ENTRY_URL;
+  } else {
+    adminEnv.REACTPRESS_SKIP_DEV_PORT_REDIRECT = '1';
+  }
   if (behindNginx) {
     adminEnv.VITE_ADMIN_BASE = '/admin/';
     process.env.REACTPRESS_BEHIND_NGINX = '1';
@@ -274,7 +279,12 @@ async function prepareDevInfrastructure(projectRoot) {
 
   nginxEnabled = nginxResult;
   if (nginxEnabled) {
+    process.env.REACTPRESS_NGINX_ENTRY_URL = nginxEntryUrl(projectRoot);
+    delete process.env.REACTPRESS_SKIP_DEV_PORT_REDIRECT;
     logDevStatus('dev.nginxReady', { url: nginxEntryUrl(projectRoot) });
+  } else {
+    delete process.env.REACTPRESS_NGINX_ENTRY_URL;
+    process.env.REACTPRESS_SKIP_DEV_PORT_REDIRECT = '1';
   }
 }
 
