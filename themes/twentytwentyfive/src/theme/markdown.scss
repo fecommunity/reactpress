@@ -328,10 +328,6 @@ $languages: ts js typescript javascript html css php go sql json bash less scss 
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-
-  &:last-child {
-    display: none;
-  }
 }
 
 .hljsln .ln-num::before {

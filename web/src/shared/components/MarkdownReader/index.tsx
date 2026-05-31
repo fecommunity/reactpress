@@ -31,9 +31,10 @@ type MarkdownReaderProps = {
 };
 
 function addLineNumbersForCode(html: string) {
+  const text = html.replace(/\r\n/g, "\n").replace(/\r/g, "\n").replace(/\n$/, "");
   let num = 1;
-  let result = `<span class="ln-num" data-num="${num}"></span>${html}`;
-  result = result.replace(/\r\n|\r|\n/g, () => {
+  let result = `<span class="ln-num" data-num="${num}"></span>${text}`;
+  result = result.replace(/\n/g, () => {
     num += 1;
     return `\n<span class="ln-num" data-num="${num}"></span>`;
   });

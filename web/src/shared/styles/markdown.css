@@ -104,10 +104,6 @@
   user-select: none;
 }
 
-.markdown .hljsln .ln-num:last-child {
-  display: none;
-}
-
 .markdown .hljsln .ln-num::before {
   position: absolute;
   z-index: 2;
