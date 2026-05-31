@@ -95,5 +95,13 @@
   "rssSubscribe": "RSS 订阅",
   "aboutUs": "关于我们",
   "nav": "导航",
-  "suggestions": "建议"
+  "suggestions": "建议",
+  "theme": {
+    "toggle": "切换主题"
+  },
+  "locale": {
+    "switch": "切换语言",
+    "switchToEn": "切换到 English",
+    "switchToZh": "切换到中文"
+  }
 }

@@ -1,17 +1,15 @@
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, Link, redirect, useNavigate } from "@tanstack/react-router";
-import { App, Button, Form, Input, Space } from "antd";
+import { App, Button, Form, Input } from "antd";
 import { useRef } from "react";
 import { Trans } from "react-i18next";
 
-import { Theme } from "@/components/Icon";
-import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { LanguageSwitcher, ThemeSwitcher } from "@/components/LanguageSwitcher";
 import { useAppLocale } from "@/hooks/useAppLocale";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { showApiErrorToast } from "@/shared/api/getApiErrorMessage";
 import { registerAccount } from "@/shared/auth/registerAccount";
 import { useAuthStore } from "@/stores/auth";
-import { useSettingsStore } from "@/stores/settings";
 import { REACTPRESS_GITHUB_URL } from "@/utils/constants";
 
 import { LoginBrandMark } from "../login/-LoginBrandMark";
@@ -42,7 +40,6 @@ function RegisterPage() {
   const navigate = useNavigate();
   const { message } = App.useApp();
   const { t } = useAppLocale();
-  const toggleDarkMode = useSettingsStore((s) => s.toggleDarkMode);
   const scrollerRef = useRef<HTMLDivElement>(null);
 
   const registerMutation = useMutation({
@@ -70,16 +67,10 @@ function RegisterPage() {
   return (
     <div className={pageStyles.page}>
       <header className={pageStyles.fixedToolbar}>
-        <Space size={4} className={pageStyles.utilities}>
-          <LanguageSwitcher size="small" compact />
-          <Button
-            type="text"
-            size="small"
-            onClick={toggleDarkMode}
-            icon={<Theme size={16} />}
-            aria-label={t("common.toggleTheme")}
-          />
-        </Space>
+        <div className={pageStyles.utilities}>
+          <LanguageSwitcher size={16} />
+          <ThemeSwitcher size={16} />
+        </div>
       </header>
 
       <LoginSnapNav scrollerRef={scrollerRef} authScreenLabelKey="register.scroll.screenAuth" />

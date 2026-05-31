@@ -26,6 +26,10 @@ const toolkitAliases = [
     find: "@fecommunity/reactpress-toolkit/theme",
     replacement: toolkitEntry("theme"),
   },
+  {
+    find: "@fecommunity/reactpress-toolkit/ui",
+    replacement: toolkitEntry("ui"),
+  },
 ];
 
 const mode = process.env.NODE_ENV === "production" ? "production" : "development";

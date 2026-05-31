@@ -1,53 +1,55 @@
-import type { MenuProps } from "antd";
-import { Button, Dropdown, Grid, theme } from "antd";
-import { Languages } from "lucide-react";
+import {
+  LocaleToggleButton,
+  ThemeToggleButton,
+  TOOLBAR_ICON_SIZE,
+} from "@fecommunity/reactpress-toolkit/ui";
 import { useTranslation } from "react-i18next";
 
 import { useAppLocale } from "@/hooks/useAppLocale";
 import type { AppLocale } from "@/i18n";
+import { useSettingsStore } from "@/stores/settings";
 
 type LanguageSwitcherProps = {
-  size?: "small" | "middle" | "large";
-  /** When true, always show icon-only button (e.g. login page corner). */
+  /** Icon size in px; defaults to shared toolbar size. */
+  size?: number;
+  /** @deprecated Kept for API compatibility; always icon-only now. */
   compact?: boolean;
+  className?: string;
 };
 
-export function LanguageSwitcher({ size = "middle", compact = false }: LanguageSwitcherProps) {
-  const { token } = theme.useToken();
+export function LanguageSwitcher({ size = TOOLBAR_ICON_SIZE, className }: LanguageSwitcherProps) {
   const { t } = useTranslation();
   const { locale, changeLocale } = useAppLocale();
-  const screens = Grid.useBreakpoint();
-  const iconOnly = compact || !screens.md;
-
-  const items: MenuProps["items"] = [
-    {
-      key: "zh",
-      label: t("common.languageZh"),
-    },
-    {
-      key: "en",
-      label: t("common.languageEn"),
-    },
-  ];
 
   return (
-    <Dropdown
-      menu={{
-        items,
-        selectedKeys: [locale],
-        onClick: ({ key }) => changeLocale(key as AppLocale),
-      }}
-      trigger={["click"]}
-      placement="bottomRight"
-    >
-      <Button
-        type="text"
-        size={size}
-        icon={<Languages size={token.size} />}
-        aria-label={t("common.switchLanguage")}
-      >
-        {iconOnly ? null : locale === "zh" ? t("common.languageZh") : t("common.languageEn")}
-      </Button>
-    </Dropdown>
+    <LocaleToggleButton
+      locale={locale}
+      locales={["zh", "en"] satisfies AppLocale[]}
+      onLocaleChange={(next) => changeLocale(next as AppLocale)}
+      size={size}
+      className={className}
+      aria-label={locale === "zh" ? t("common.switchToEnglish") : t("common.switchToChinese")}
+    />
+  );
+}
+
+type ThemeSwitcherProps = {
+  size?: number;
+  className?: string;
+};
+
+export function ThemeSwitcher({ size = TOOLBAR_ICON_SIZE, className }: ThemeSwitcherProps) {
+  const { t } = useTranslation();
+  const darkMode = useSettingsStore((s) => s.darkMode);
+  const toggleDarkMode = useSettingsStore((s) => s.toggleDarkMode);
+
+  return (
+    <ThemeToggleButton
+      isDark={darkMode}
+      onToggle={toggleDarkMode}
+      size={size}
+      className={className}
+      aria-label={t("common.toggleTheme")}
+    />
   );
 }

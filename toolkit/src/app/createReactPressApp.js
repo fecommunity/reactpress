@@ -7,7 +7,6 @@ const { createThemeAxiosClient } = require('../theme/api/httpClient');
 const { createThemeProviders } = require('../theme/providers');
 const {
   applyColorModeClass,
-  resolveClientThemeMode,
   resolveInitialColorModeState,
   persistColorMode,
 } = require('../theme/visitor/colorMode');
@@ -31,9 +30,18 @@ function resolveGlobalSettingForLocale(setting, locale, fallback) {
   return parsed[locale] ?? fallback;
 }
 
-function readInitialColorMode() {
-  if (typeof window === 'undefined') return 'light';
-  return resolveClientThemeMode();
+function readStoredVisitorLocale(locales) {
+  if (typeof window === 'undefined') return null;
+  try {
+    const supported = Array.isArray(locales) ? locales : [];
+    const stored =
+      window.localStorage.getItem('reactpress-locale') ||
+      window.localStorage.getItem('locale');
+    if (stored && supported.includes(stored)) return stored;
+  } catch {
+    // ignore
+  }
+  return null;
 }
 
 function ViewStatisticsBridge() {
@@ -78,7 +86,8 @@ function createReactPressApp(manifest, options = {}) {
     state = {
       locale: '',
       user: null,
-      theme: readInitialColorMode(),
+      /** Keep SSR and the first client render identical; sync from storage in componentDidMount. */
+      theme: 'light',
       collapsed: false,
       setting: null,
     };
@@ -148,8 +157,26 @@ function createReactPressApp(manifest, options = {}) {
 
       const preferred = resolveInitialColorModeState() ?? 'light';
       applyColorModeClass(preferred === 'dark');
+
+      const patches = {};
       if (this.state.theme !== preferred) {
-        this.setState({ theme: preferred });
+        patches.theme = preferred;
+      }
+
+      const activeLocale =
+        this.state.locale ||
+        this.props.initialLocale ||
+        (Array.isArray(this.props.locales) && this.props.locales.length > 0
+          ? this.props.locales[0]
+          : 'zh');
+      const storedLocale = readStoredVisitorLocale(this.props.locales);
+      if (storedLocale && storedLocale !== activeLocale) {
+        patches.locale = storedLocale;
+        persistVisitorLocale(storedLocale);
+      }
+
+      if (Object.keys(patches).length > 0) {
+        this.setState(patches);
       }
     }
 

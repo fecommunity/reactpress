@@ -1,41 +1,32 @@
-import React from 'react';
+import { LocaleToggleButton } from './toolbar/LocaleToggleButton';
 import { useLocale } from '../context/LocaleContext';
 
 export interface LocaleSwitcherProps {
   className?: string;
   buttonClassName?: string;
+  /** @deprecated No longer used; kept for backward compatibility. */
   activeClassName?: string;
+  size?: number;
+  ariaLabel?: string;
 }
 
-/** Minimal locale toggle — style with theme CSS. */
+/** Click to cycle locales — same control as admin and theme headers. */
 export function LocaleSwitcher({
   className,
   buttonClassName,
-  activeClassName,
+  size = 20,
+  ariaLabel,
 }: LocaleSwitcherProps) {
   const { locale, locales, setLocale } = useLocale();
 
-  if (locales.length < 2) {
-    return null;
-  }
-
   return (
-    <div className={className} data-rp-component="locale-switcher" role="group" aria-label="Language">
-      {locales.map((code) => (
-        <button
-          key={code}
-          type="button"
-          className={
-            locale === code && activeClassName
-              ? `${buttonClassName ?? ''} ${activeClassName}`.trim()
-              : buttonClassName
-          }
-          aria-pressed={locale === code}
-          onClick={() => setLocale(code)}
-        >
-          {code.toUpperCase()}
-        </button>
-      ))}
-    </div>
+    <LocaleToggleButton
+      locale={locale}
+      locales={locales}
+      onLocaleChange={setLocale}
+      size={size}
+      className={buttonClassName ?? className}
+      aria-label={ariaLabel}
+    />
   );
 }

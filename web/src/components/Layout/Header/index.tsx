@@ -1,11 +1,11 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import type { MenuProps } from "antd";
-import { Avatar, Button, Dropdown, Flex, Grid, Layout, theme } from "antd";
+import { Avatar, Button, Dropdown, Flex, Grid, Layout } from "antd";
 import { PanelLeft, Plus } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
-import { GitHub, Theme } from "@/components/Icon";
-import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { GitHub } from "@/components/Icon";
+import { LanguageSwitcher, ThemeSwitcher } from "@/components/LanguageSwitcher";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 import { defaultMediaSearch, defaultUsersSearch } from "@/routes/searchDefaults";
 import { ReactPressLogoMark } from "@/shared/brand";
@@ -15,6 +15,9 @@ import { APP_BRAND_NAME, REACTPRESS_GITHUB_URL } from "@/utils/constants";
 
 const { Header: AntHeader } = Layout;
 
+/** Top bar utility icons — keep GitHub / locale / theme visually aligned. */
+const ADMIN_BAR_ICON_SIZE = 16;
+
 export function Header() {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -22,8 +25,6 @@ export function Header() {
   const logout = useAuthStore((s) => s.logout);
   const toggleMobileSidebar = useSettingsStore((s) => s.toggleMobileSidebar);
   const mobileSidebarOpen = useSettingsStore((s) => s.mobileSidebarOpen);
-  const toggleDarkMode = useSettingsStore((s) => s.toggleDarkMode);
-  const { token } = theme.useToken();
   const screens = Grid.useBreakpoint();
   const isMobile = !screens.lg;
   const { data: siteSettings } = useSiteSettings();
@@ -130,23 +131,17 @@ export function Header() {
         </Dropdown>
       </div>
       <div className="admin-bar__right">
-        <Button
-          type="text"
-          className="admin-bar__action"
+        <a
+          className="admin-bar__action rp-toolbar-btn"
           href={REACTPRESS_GITHUB_URL}
           target="_blank"
           rel="noopener noreferrer"
-          icon={<GitHub size={16} />}
           aria-label={t("common.openGitHub")}
-        />
-        <LanguageSwitcher compact />
-        <Button
-          type="text"
-          className="admin-bar__action"
-          onClick={toggleDarkMode}
-          icon={<Theme size={token.size} />}
-          aria-label={t("common.toggleTheme")}
-        />
+        >
+          <GitHub size={ADMIN_BAR_ICON_SIZE} />
+        </a>
+        <LanguageSwitcher size={ADMIN_BAR_ICON_SIZE} className="admin-bar__action" />
+        <ThemeSwitcher size={ADMIN_BAR_ICON_SIZE} className="admin-bar__action" />
         <Dropdown menu={{ items: userMenuItems }} trigger={["click"]}>
           <Flex align="center" className="admin-bar__user" gap={6} aria-label={t("admin.userMenu")}>
             <span>{t("admin.howdy", { name: user?.username ?? "—" })}</span>

@@ -1,5 +1,6 @@
 :root {
   --admin-bar-height: 32px;
+  --admin-bar-icon-size: 16px;
   --admin-sidebar-width: 200px;
   --admin-sidebar-collapsed-width: 36px;
   --admin-content-bg: #f0f0f1;
@@ -59,12 +60,16 @@
 .admin-bar__right {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 8px;
   min-width: 0;
 }
 
 .admin-bar__left {
   flex: 1;
+}
+
+.admin-bar__right {
+  flex-shrink: 0;
 }
 
 .admin-bar__brandMark {
@@ -80,10 +85,6 @@
   display: block;
   width: 100%;
   height: 100%;
-}
-
-.admin-bar__right {
-  flex-shrink: 0;
 }
 
 .admin-bar__site {
@@ -136,6 +137,55 @@
   border-color: transparent !important;
   box-shadow: none !important;
   outline: none;
+}
+
+/* Icon-only actions: same hit area, glyph size, and vertical alignment */
+.admin-bar .admin-bar__action.rp-toolbar-btn,
+a.admin-bar__action.rp-toolbar-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: var(--admin-bar-height) !important;
+  height: var(--admin-bar-height) !important;
+  min-width: var(--admin-bar-height);
+  padding: 0 !important;
+  border: none;
+  border-radius: 0 !important;
+  background: transparent;
+  color: var(--admin-bar-text);
+  text-decoration: none;
+  line-height: 0;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition:
+    color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.admin-bar .admin-bar__action.rp-toolbar-btn svg,
+a.admin-bar__action.rp-toolbar-btn svg,
+.admin-bar .admin-bar__action.rp-toolbar-btn .rp-toolbar-glyph,
+a.admin-bar__action.rp-toolbar-btn .rp-toolbar-glyph {
+  display: block;
+  width: var(--admin-bar-icon-size);
+  height: var(--admin-bar-icon-size);
+  flex-shrink: 0;
+}
+
+.admin-bar .admin-bar__action.rp-toolbar-btn:hover,
+.admin-bar .admin-bar__action.rp-toolbar-btn:focus-visible,
+a.admin-bar__action.rp-toolbar-btn:hover,
+a.admin-bar__action.rp-toolbar-btn:focus-visible {
+  color: #72aee6;
+  background: rgba(255, 255, 255, 0.04);
+  opacity: 1;
+}
+
+.admin-bar .admin-bar__action.rp-toolbar-btn:focus-visible,
+a.admin-bar__action.rp-toolbar-btn:focus-visible {
+  outline: 2px solid #72aee6;
+  outline-offset: -2px;
 }
 
 .admin-bar__divider {

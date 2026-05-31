@@ -95,5 +95,13 @@
   "rssSubscribe": "RSS Subscription",
   "aboutUs": "About Us",
   "nav": "Navigation",
-  "suggestions": "Suggestions"
+  "suggestions": "Suggestions",
+  "theme": {
+    "toggle": "Toggle theme"
+  },
+  "locale": {
+    "switch": "Switch language",
+    "switchToEn": "Switch to English",
+    "switchToZh": "Switch to Chinese"
+  }
 }

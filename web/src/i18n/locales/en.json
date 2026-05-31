@@ -40,6 +40,8 @@
     "languageZh": "中文",
     "languageEn": "English",
     "switchLanguage": "Switch language",
+    "switchToChinese": "Switch to Chinese",
+    "switchToEnglish": "Switch to English",
     "openGitHub": "ReactPress on GitHub"
   },
   "admin": {

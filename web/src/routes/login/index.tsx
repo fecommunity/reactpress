@@ -1,14 +1,13 @@
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, Link, redirect, useNavigate } from "@tanstack/react-router";
-import { App, Button, Form, Input, Space } from "antd";
+import { App, Button, Form, Input } from "antd";
 import { useEffect, useRef } from "react";
 import { Trans } from "react-i18next";
 
 import { AUTH_ENDPOINTS } from "@/api/auth";
 import type { LoginRequest } from "@/api/schemas";
 import { AuthTokensSchema, LoginRequestSchema } from "@/api/schemas";
-import { Theme } from "@/components/Icon";
-import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { LanguageSwitcher, ThemeSwitcher } from "@/components/LanguageSwitcher";
 import { useAppLocale } from "@/hooks/useAppLocale";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { AdminAccessDeniedError } from "@/shared/auth/adminAccess";
@@ -50,7 +49,6 @@ function LoginPage() {
   const { t } = useAppLocale();
   const locale = useSettingsStore((s) => s.locale);
   const setTokens = useAuthStore((s) => s.setTokens);
-  const toggleDarkMode = useSettingsStore((s) => s.toggleDarkMode);
   const scrollerRef = useRef<HTMLDivElement>(null);
 
   const docsUrl = reactpressDocsPath(locale, "/docs/tutorial-basics/start");
@@ -94,16 +92,10 @@ function LoginPage() {
   return (
     <div className={pageStyles.page}>
       <header className={pageStyles.fixedToolbar}>
-        <Space size={4} className={pageStyles.utilities}>
-          <LanguageSwitcher size="small" compact />
-          <Button
-            type="text"
-            size="small"
-            onClick={toggleDarkMode}
-            icon={<Theme size={16} />}
-            aria-label={t("common.toggleTheme")}
-          />
-        </Space>
+        <div className={pageStyles.utilities}>
+          <LanguageSwitcher size={16} />
+          <ThemeSwitcher size={16} />
+        </div>
       </header>
 
       <LoginSnapNav scrollerRef={scrollerRef} />

@@ -18,7 +18,6 @@
  * - Search functionality
  */
 
-import { SearchOutlined } from '@ant-design/icons';
 import { Menu } from 'antd';
 import cls from 'classnames';
 import Link from 'next/link';
@@ -35,6 +34,7 @@ import { useToggle } from '@fecommunity/reactpress-toolkit/theme';
 import { getDocumentScrollTop, getFirstLevelRoute, getIconByName } from '@/utils';
 
 import { GitHub } from '../AboutUs';
+import { HeaderSearch } from './HeaderSearch';
 import style from './index.module.scss';
 import { renderHeaderLogo } from './renderHeaderLogo';
 
@@ -183,11 +183,7 @@ export const Header: React.FC<HeaderProps> = ({ setting, tags, pages, hasBg = fa
           <nav className={cls(visible ? style.active : false)}>
             <ul>
               <li className={style.toolWrapper}>
-                <SearchOutlined
-                  style={{ cursor: 'pointer' }}
-                  onClick={toggleSearch}
-                  aria-label="Search"
-                />
+                <HeaderSearch onClick={toggleSearch} />
               </li>
               <li className={style.toolWrapper}>
                 <Theme />

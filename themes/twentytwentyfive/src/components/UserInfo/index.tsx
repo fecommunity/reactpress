@@ -106,9 +106,9 @@ export const UserInfo: React.FC<{
 
   const trigger = hidden ? (
     user && user.avatar ? (
-      <Avatar size={28} src={user.avatar}></Avatar>
+      <Avatar size={24} src={user.avatar}></Avatar>
     ) : (
-      <Avatar size={28} icon={<UserOutlined />}></Avatar>
+      <Avatar size={24} icon={<UserOutlined />}></Avatar>
     )
   ) : user ? (
     <Dropdown
@@ -138,7 +138,7 @@ export const UserInfo: React.FC<{
         ],
       }}
     >
-      {user.avatar ? <Avatar alt={user.name} size={28} src={user.avatar}></Avatar> : <Avatar size={28}>{user.name?.charAt(0)}</Avatar>}
+      {user.avatar ? <Avatar alt={user.name} size={24} src={user.avatar}></Avatar> : <Avatar size={24}>{user.name?.charAt(0)}</Avatar>}
     </Dropdown>
   ) : (
     <Space.Compact>

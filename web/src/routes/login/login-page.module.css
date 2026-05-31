@@ -76,7 +76,10 @@
 }
 
 .utilities {
-  padding: 0.2rem 0.4rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.2rem 0.5rem;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.88);
   border: 1px solid rgba(208, 215, 222, 0.75);
@@ -84,13 +87,15 @@
   box-shadow: 0 2px 12px rgba(15, 23, 32, 0.06);
 }
 
-.utilities :global(.ant-btn) {
-  color: var(--rp-text-secondary) !important;
+.utilities .rp-toolbar-btn {
+  color: var(--rp-text-secondary);
 }
 
-.utilities :global(.ant-btn:hover) {
-  color: var(--rp-text) !important;
-  background: rgba(0, 0, 0, 0.04) !important;
+.utilities .rp-toolbar-btn:hover,
+.utilities .rp-toolbar-btn:focus-visible {
+  color: var(--rp-text);
+  background: rgba(0, 0, 0, 0.04);
+  opacity: 1;
 }
 
 .screenAuth {
@@ -365,8 +370,9 @@
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
 }
 
-:root[data-theme="dark"] .utilities :global(.ant-btn:hover) {
-  background: rgba(255, 255, 255, 0.06) !important;
+:root[data-theme="dark"] .utilities .rp-toolbar-btn:hover,
+:root[data-theme="dark"] .utilities .rp-toolbar-btn:focus-visible {
+  background: rgba(255, 255, 255, 0.06);
 }
 
 :root[data-theme="dark"] .screenAuth {

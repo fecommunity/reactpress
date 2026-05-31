@@ -1,4 +1,6 @@
 $height: 64px;
+$header-tool-icon-size: 20px;
+$header-tool-hit-size: 32px;
 /** Match `REACT_PRESS_HEADER_*` / `REACT_PRESS_HEADER_SPACING` in `src/assets/brand.ts`. */
 $header-logo-padding-y: 8px;
 $header-logo-content-height: $height - 2 * $header-logo-padding-y;
@@ -246,16 +248,50 @@ $header-nav-first-padding-start: 4px;
       display: flex;
       align-items: center;
       justify-content: flex-end;
+      gap: 12px;
 
       > li {
         display: inline-flex;
+        align-items: center;
+        justify-content: center;
         padding: 0;
-        padding: 0 12px;
-        line-height: 64px;
+        line-height: 1;
         vertical-align: middle;
 
         &.toolWrapper {
-          font-size: 24px;
+          width: $header-tool-hit-size;
+          height: $header-tool-hit-size;
+          padding: 0;
+          margin: 0;
+
+          :global(.rp-toolbar-btn) {
+            color: inherit;
+            width: 100%;
+            height: 100%;
+            min-width: 0;
+            border-radius: 50%;
+
+            &:hover,
+            &:focus-visible {
+              opacity: 1;
+              color: var(--primary-color);
+            }
+          }
+
+          :global(.rp-toolbar-glyph) {
+            display: block;
+            width: $header-tool-icon-size;
+            height: $header-tool-icon-size;
+            flex-shrink: 0;
+          }
+
+          :global(.ant-avatar) {
+            width: 24px !important;
+            height: 24px !important;
+            line-height: 24px !important;
+            font-size: 12px !important;
+            flex-shrink: 0;
+          }
         }
 
         &:first-of-type {
@@ -339,3 +375,4 @@ $header-nav-first-padding-start: 4px;
     }
   }
 }
+

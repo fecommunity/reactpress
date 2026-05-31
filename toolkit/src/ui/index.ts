@@ -58,6 +58,27 @@ export type {
 } from './hooks';
 export type { LocaleSwitcherProps } from './components/LocaleSwitcher';
 export { LocaleSwitcher } from './components/LocaleSwitcher';
+export type {
+  LocaleToggleButtonProps,
+  ThemeToggleButtonProps,
+  ToolbarIconButtonProps,
+} from './components/toolbar';
+export {
+  LanguagesIcon,
+  LocaleActiveIcon,
+  LocaleEnToggleIcon,
+  LocaleToggleButton,
+  LocaleZhToggleIcon,
+  localeToggleLabel,
+  MoonIcon,
+  nextLocale,
+  SearchIcon,
+  RP_TOOLBAR_BTN_CLASS,
+  SunIcon,
+  ThemeToggleButton,
+  TOOLBAR_ICON_SIZE,
+  ToolbarIconButton,
+} from './components/toolbar';
 export type { NavMenuProps, NavMenuRenderLinkProps } from './components/NavMenu';
 export { NavMenu } from './components/NavMenu';
 export type { NotFoundPanelProps } from './components/NotFoundPanel';
