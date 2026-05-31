@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 import styles from "@/modules/settings/components/settings-form.module.css";
+import { sendSmtpTestEmail } from "@/modules/settings/smtpTestApi";
 import {
   mergeSiteSettingFormValues,
   siteSettingPlaceholder,
@@ -205,6 +206,8 @@ export function SettingsTabForm({ tab }: SettingsTabFormProps) {
   const { data, isLoading, isError, saveMutation } = useSiteSettings();
   const fields = TAB_FIELDS[tab] ?? [];
   const fieldNames = fields.map((f) => f.name);
+  const [testTo, setTestTo] = useState("");
+  const [testing, setTesting] = useState(false);
 
   const siteTitle = Form.useWatch("systemTitle", form) ?? data?.systemTitle ?? "";
 
@@ -231,7 +234,11 @@ export function SettingsTabForm({ tab }: SettingsTabFormProps) {
       onFinish={(values) => {
         const patch: Record<string, unknown> = {};
         for (const field of fields) {
-          patch[field.name] = values[field.name] ?? "";
+          const raw = values[field.name] ?? "";
+          if (field.name === "smtpPass" && !String(raw).trim()) {
+            continue;
+          }
+          patch[field.name] = raw;
         }
         saveMutation.mutate(patch, {
           onSuccess: () => message.success(t("settings.savedSuccess")),
@@ -242,6 +249,7 @@ export function SettingsTabForm({ tab }: SettingsTabFormProps) {
       {tab === "general" || tab === "seo" ? (
         <p className={formStyles.formIntro}>{t("settings.hints.themeInheritDefaults")}</p>
       ) : null}
+      {tab === "email" ? <p className={formStyles.formIntro}>{t("settings.emailDesc")}</p> : null}
       {fields.length === 0 ? (
         <p className={formStyles.formIntro}>
           {t(`settings.${tab}Desc`, { defaultValue: t("settings.tabEmptyHint") })}
@@ -289,11 +297,77 @@ export function SettingsTabForm({ tab }: SettingsTabFormProps) {
         </tbody>
       </table>
 
+      {tab === "email" ? (
+        <>
+          <h3 className={styles.emailTestTitle}>{t("settings.emailTest.title")}</h3>
+          <p className={formStyles.formIntro}>{t("settings.emailTest.desc")}</p>
+          <table className={formStyles.formTable}>
+            <tbody>
+              <SettingsField
+                label={t("settings.fields.testEmailTo")}
+                description={t("settings.hints.testEmailTo")}
+              >
+                <Input
+                  className={inputClass}
+                  type="email"
+                  value={testTo}
+                  placeholder={t("settings.emailTest.toPlaceholder")}
+                  onChange={(event) => setTestTo(event.target.value)}
+                />
+              </SettingsField>
+            </tbody>
+          </table>
+        </>
+      ) : null}
+
       {fields.length > 0 ? (
         <p className={formStyles.submitRow}>
           <Button type="primary" loading={saveMutation.isPending} onClick={() => form.submit()}>
             {t("settings.saveChanges")}
           </Button>
+          {tab === "email" ? (
+            <Button
+              loading={testing}
+              onClick={async () => {
+                const values = form.getFieldsValue();
+                const to = testTo.trim();
+                if (!to) {
+                  message.warning(t("settings.emailTest.toRequired"));
+                  return;
+                }
+                const required = ["smtpHost", "smtpPort", "smtpUser", "smtpFromUser"] as const;
+                for (const key of required) {
+                  if (!String(values[key] ?? "").trim()) {
+                    message.warning(t("settings.emailTest.configIncomplete"));
+                    return;
+                  }
+                }
+                const pass = String(values.smtpPass ?? "").trim();
+                if (!pass && !String(data?.smtpPass ?? "").trim()) {
+                  message.warning(t("settings.emailTest.passwordRequired"));
+                  return;
+                }
+                setTesting(true);
+                try {
+                  await sendSmtpTestEmail({
+                    to,
+                    smtpHost: String(values.smtpHost ?? "").trim(),
+                    smtpPort: String(values.smtpPort ?? "").trim(),
+                    smtpUser: String(values.smtpUser ?? "").trim(),
+                    smtpFromUser: String(values.smtpFromUser ?? "").trim(),
+                    ...(pass ? { smtpPass: pass } : {}),
+                  });
+                  message.success(t("settings.emailTest.sentSuccess"));
+                } catch (err) {
+                  message.error(getApiErrorMessage(err, t, "settings.emailTest.sendFailed"));
+                } finally {
+                  setTesting(false);
+                }
+              }}
+            >
+              {t("settings.emailTest.send")}
+            </Button>
+          ) : null}
         </p>
       ) : null}
     </Form>

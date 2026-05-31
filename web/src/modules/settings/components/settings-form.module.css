@@ -127,6 +127,13 @@
   margin-top: 12px;
 }
 
+.emailTestTitle {
+  margin: 28px 0 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--settings-text, #1d2327);
+}
+
 .apiKeyList {
   margin: 0;
   padding-left: 20px;

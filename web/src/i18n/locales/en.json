@@ -554,6 +554,7 @@
       "smtpUser": "SMTP user",
       "smtpPass": "SMTP password",
       "smtpFromUser": "From address",
+      "testEmailTo": "Test recipient",
       "oss": "OSS config (JSON)",
       "seoKeyword": "SEO keywords",
       "seoDesc": "SEO description",
@@ -574,13 +575,25 @@
       "aboutUsWechatQr": "Image URL for the WeChat QR popover. Leave empty to hide.",
       "globalSetting": "Advanced global options as JSON. Confirm field meanings before editing.",
       "smtpPort": "Common ports: 25 (plain), 465 (SSL), 587 (TLS).",
-      "smtpPass": "Leave blank to keep the saved password unchanged.",
+      "smtpPass": "Saved passwords appear as dots. Leave blank and save to keep the current password.",
+      "testEmailTo": "Email address that should receive the test message.",
       "oss": "Object storage settings as JSON (bucket, region, keys, etc.).",
       "seoDesc": "Used for search snippets; aim for about 120–160 characters.",
       "reading": "Homepage display, RSS, and reading preferences.",
       "discussion": "Comment moderation, notifications, and discussion rules.",
       "webhooks": "Event callback URLs; creation and management will be added in a later release.",
       "themeInheritDefaults": "These are site-wide defaults. Leave a field empty in Appearance → Customize to inherit; filled values apply only to that theme."
+    },
+    "emailTest": {
+      "title": "Send test email",
+      "desc": "Send a test message with the SMTP settings above. You can verify unsaved values before saving.",
+      "toPlaceholder": "e.g. admin@example.com",
+      "toRequired": "Please enter a test recipient email",
+      "configIncomplete": "Please complete all SMTP fields first",
+      "passwordRequired": "Enter the SMTP password, or save it before testing",
+      "send": "Send test email",
+      "sentSuccess": "Test email sent — check the inbox",
+      "sendFailed": "Failed to send test email — check your SMTP settings"
     }
   },
   "profile": {

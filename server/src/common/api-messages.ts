@@ -7,6 +7,8 @@ export const ApiMsg = {
   API_KEY_MISSING_READ: 'API Key missing read permission',
   MISSING_PARAMS: 'Missing required parameters',
   EMAIL_SEND_FAILED: 'Failed to send email',
+  EMAIL_CONFIG_INCOMPLETE: 'SMTP configuration is incomplete',
+  EMAIL_TEST_SENT: 'Test email sent successfully',
   OSS_CONFIG_INCOMPLETE: 'OSS configuration is incomplete',
   WEBHOOK_NOT_FOUND: 'Webhook not found',
 
@@ -39,4 +41,7 @@ export const ApiMsg = {
   EMAIL_NEW_COMMENT: 'New comment notification',
   EMAIL_COMMENT_REPLY: 'Comment reply notification',
   EMAIL_GITHUB_LOGIN: 'GitHub sign-in notification',
+  EMAIL_TEST_SUBJECT: 'ReactPress SMTP test email',
+  EMAIL_TEST_HTML:
+    'This is a test email from your ReactPress site. If you received this message, SMTP is configured correctly.',
 } as const;

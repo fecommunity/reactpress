@@ -4,8 +4,20 @@ import { Repository } from 'typeorm';
 
 import { ApiMsg } from '../../common/api-messages';
 import { SettingService } from '../setting/setting.service';
-import { sendEmail } from './mail.util';
+import { sendEmail, SmtpTransportConfig } from './mail.util';
 import { SMTP } from './smtp.entity';
+
+export type SmtpConfigOverride = {
+  smtpHost?: string;
+  smtpPort?: string;
+  smtpUser?: string;
+  smtpPass?: string;
+  smtpFromUser?: string;
+};
+
+export type TestSmtpPayload = SmtpConfigOverride & {
+  to: string;
+};
 
 @Injectable()
 export class SMTPService {
@@ -15,22 +27,62 @@ export class SMTPService {
     private readonly settingService: SettingService
   ) {}
 
+  private async resolveSmtpConfig(override: SmtpConfigOverride = {}): Promise<{
+    transport: SmtpTransportConfig;
+    from: string;
+  }> {
+    const setting = await this.settingService.findAll(true);
+    const host = (override.smtpHost ?? setting.smtpHost ?? '').trim();
+    const port = (override.smtpPort ?? setting.smtpPort ?? '').trim();
+    const user = (override.smtpUser ?? setting.smtpUser ?? '').trim();
+    const pass = (override.smtpPass ?? setting.smtpPass ?? '').trim();
+    const from = (override.smtpFromUser ?? setting.smtpFromUser ?? user).trim();
+
+    if (!host || !port || !user || !pass || !from) {
+      throw new HttpException(ApiMsg.EMAIL_CONFIG_INCOMPLETE, HttpStatus.BAD_REQUEST);
+    }
+
+    return {
+      transport: { host, port, user, pass },
+      from,
+    };
+  }
+
+  /**
+   * 发送测试邮件（不写入发信记录）
+   */
+  async testSend(payload: TestSmtpPayload): Promise<{ ok: true }> {
+    const to = (payload.to ?? '').trim();
+    if (!to) {
+      throw new HttpException(ApiMsg.EMAIL_REQUIRED, HttpStatus.BAD_REQUEST);
+    }
+
+    const { transport, from } = await this.resolveSmtpConfig(payload);
+    await sendEmail(
+      {
+        from,
+        to,
+        subject: ApiMsg.EMAIL_TEST_SUBJECT,
+        html: ApiMsg.EMAIL_TEST_HTML,
+      },
+      transport,
+    ).catch(() => {
+      throw new HttpException(ApiMsg.EMAIL_SEND_FAILED, HttpStatus.BAD_REQUEST);
+    });
+
+    return { ok: true };
+  }
+
   /**
    * 添加邮件，发送邮件并保存
    * @param SMTP
    */
   async create(data: Partial<SMTP>): Promise<SMTP> {
-    const setting = await this.settingService.findAll(true);
-    const { smtpHost, smtpPort, smtpUser, smtpPass, smtpFromUser } = setting;
+    const { transport, from } = await this.resolveSmtpConfig();
     Object.assign(data, {
-      from: smtpFromUser,
+      from,
     });
-    await sendEmail(data, {
-      host: smtpHost,
-      port: smtpPort,
-      user: smtpUser,
-      pass: smtpPass,
-    }).catch(() => {
+    await sendEmail(data, transport).catch(() => {
       throw new HttpException(ApiMsg.EMAIL_SEND_FAILED, HttpStatus.BAD_REQUEST);
     });
     const newSMTP = await this.smtpRepository.create(data);

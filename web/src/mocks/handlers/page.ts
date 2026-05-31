@@ -233,6 +233,13 @@ export const settingHandlers = [
   }),
 ];
 
+export const smtpHandlers = [
+  http.post("/api/smtp/test", async () => {
+    await withDelay(400);
+    return successResponse({ ok: true });
+  }),
+];
+
 export const viewHandlers = [
   http.get("/api/view", async () => {
     await withDelay(200);

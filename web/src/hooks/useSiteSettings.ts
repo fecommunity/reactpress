@@ -26,8 +26,13 @@ export function useSiteSettings() {
       await api.setting.update({
         body: { ...current, ...patch },
       } as Parameters<typeof api.setting.update>[0]);
+      return patch;
     },
-    onSuccess: () => {
+    onSuccess: (patch) => {
+      queryClient.setQueryData<SiteSettings>(SETTINGS_QUERY_KEY, (prev) => ({
+        ...prev,
+        ...patch,
+      }));
       void queryClient.invalidateQueries({ queryKey: SETTINGS_QUERY_KEY });
     },
   });

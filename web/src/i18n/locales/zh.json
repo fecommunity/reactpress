@@ -554,6 +554,7 @@
       "smtpUser": "SMTP 用户名",
       "smtpPass": "SMTP 密码",
       "smtpFromUser": "发件人地址",
+      "testEmailTo": "测试收件人",
       "oss": "OSS 配置 (JSON)",
       "seoKeyword": "SEO 关键词",
       "seoDesc": "SEO 描述",
@@ -574,13 +575,25 @@
       "aboutUsWechatQr": "鼠标悬停时展示的微信二维码图片地址。留空则不显示。",
       "globalSetting": "高级全局配置，JSON 格式。修改前请确认字段含义。",
       "smtpPort": "常用端口：25（非加密）、465（SSL）、587（TLS）。",
-      "smtpPass": "留空表示不修改已保存的密码。",
+      "smtpPass": "保存后以圆点显示；留空并保存表示不修改已保存的密码。",
+      "testEmailTo": "填写接收测试邮件的邮箱地址。",
       "oss": "对象存储配置，JSON 格式，包含 bucket、region、密钥等字段。",
       "seoDesc": "用于搜索引擎摘要，建议 120–160 字。",
       "reading": "首页展示、RSS 与阅读相关偏好。",
       "discussion": "评论审核、通知与讨论相关规则。",
       "webhooks": "配置事件回调 URL，在后续版本中支持创建与管理。",
       "themeInheritDefaults": "以下为全站默认值。各主题在「外观 → 自定义」中留空则自动继承；填写后仅对该主题生效。"
+    },
+    "emailTest": {
+      "title": "发送测试邮件",
+      "desc": "使用上方 SMTP 配置发送一封测试邮件，无需先保存即可验证当前填写的内容。",
+      "toPlaceholder": "例如 admin@example.com",
+      "toRequired": "请填写测试收件人邮箱",
+      "configIncomplete": "请先填写完整的 SMTP 配置",
+      "passwordRequired": "请填写 SMTP 密码，或先保存密码后再测试",
+      "send": "发送测试邮件",
+      "sentSuccess": "测试邮件已发送，请查收收件箱",
+      "sendFailed": "测试邮件发送失败，请检查 SMTP 配置"
     }
   },
   "profile": {

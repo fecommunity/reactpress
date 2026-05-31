@@ -280,6 +280,9 @@ export class SettingService implements OnModuleInit {
   async update(setting: Partial<Setting>): Promise<Setting> {
     const old = await this.ensureSettingRow();
     const sanitized = pickSystemSettingPatch(setting as Record<string, unknown>);
+    if ('smtpPass' in sanitized && !String(sanitized.smtpPass ?? '').trim()) {
+      delete sanitized.smtpPass;
+    }
     if (Object.keys(sanitized).length === 0) {
       return old ?? ({} as Setting);
     }
