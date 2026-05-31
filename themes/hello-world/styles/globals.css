@@ -1,4 +1,129 @@
 /* Hello-inspired layout + shared blog patterns */
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+    Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  background: #fff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+:focus-visible {
+  outline: 2px solid var(--rp-primary, #c02b5a);
+  outline-offset: 2px;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  padding: 0.75rem 1rem;
+  background: var(--rp-primary, #c02b5a);
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.875rem;
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+  left: 1rem;
+  top: 1rem;
+}
+
+.header {
+  position: relative;
+  padding: 2.5rem 0 1.5rem;
+}
+
+.site-brand,
+.site-brand:hover,
+.site-brand:focus,
+.site-brand:visited {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0 0 0.5rem;
+  text-decoration: none !important;
+}
+
+.site-brand .site-title-text,
+.site-brand span {
+  text-decoration: none !important;
+  border-bottom: none;
+}
+
+.site-logo {
+  display: block;
+  max-height: 48px;
+  width: auto;
+  height: auto;
+}
+
+.site-brand .site-title-text {
+  font-size: clamp(1.75rem, 5vw, 2.25rem);
+  font-weight: 700;
+  line-height: 1.15;
+  color: color-mix(in srgb, var(--rp-primary, #c02b5a) 65%, #000);
+}
+
+.site-brand:hover .site-title-text {
+  color: #9a2349;
+}
+
+.site-nav {
+  margin-top: 1.25rem;
+}
+
+.site-nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.site-nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  min-width: 2.75rem;
+  padding: 0.375rem 0.25rem;
+  font-size: 0.875rem;
+  text-decoration: none;
+}
+
+.site-nav a:hover,
+.site-nav a.active,
+.site-nav a[aria-current='page'] {
+  text-decoration: underline;
+}
+
+.footer {
+  margin-top: auto;
+  padding: 2rem 0 2.5rem;
+  font-size: 0.8125rem;
+  color: #595959;
+}
+
+.footer p {
+  margin: 0;
+}
+
+.footer a {
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.footer a:hover {
+  color: #9a2349;
+}
+
 .container {
   max-width: 48rem;
   margin: 0 auto;
@@ -23,6 +148,15 @@
   font-weight: 700;
   color: #333;
   line-height: 1.2;
+}
+
+.archive-header {
+  margin: 0 0 0.75rem;
+}
+
+.archive-header .section-title {
+  font-size: 1.25rem;
+  font-weight: 600;
 }
 
 .page-desc {
@@ -51,8 +185,16 @@
   line-height: 1.7;
 }
 
+.content-wrapper a,
+.site-nav a,
+.entry-title a,
+.taxonomy-list a,
+.tags-cloud a,
+.footer a {
+  color: color-mix(in srgb, var(--rp-primary, #c02b5a) 65%, #000);
+}
+
 .content-wrapper a {
-  color: var(--rp-primary, #c02b5a);
   text-decoration: underline;
   text-underline-offset: 0.15em;
 }
@@ -108,13 +250,11 @@
 }
 
 .entry-title a {
-  color: var(--rp-primary, #c02b5a);
   text-decoration: none;
 }
 
 .entry-title a:hover {
   text-decoration: underline;
-  color: #9a2349;
 }
 
 .entry-excerpt {
@@ -127,7 +267,7 @@
 .entry-meta {
   margin: 0;
   font-size: 0.8125rem;
-  color: #999;
+  color: #595959;
 }
 
 .entry-meta a {
@@ -167,7 +307,6 @@
 .taxonomy-list a {
   font-size: 0.875rem;
   text-decoration: none;
-  color: var(--rp-primary, #c02b5a);
 }
 
 .taxonomy-list a:hover,
@@ -176,7 +315,7 @@
 }
 
 .taxonomy-list .count {
-  color: #999;
+  color: #595959;
   font-size: 0.8125rem;
   margin-left: 0.25rem;
 }
@@ -191,7 +330,6 @@
 .tags-cloud a {
   font-size: 0.875rem;
   text-decoration: none;
-  color: var(--rp-primary, #c02b5a);
 }
 
 .tags-cloud a.active,
@@ -235,6 +373,18 @@
   color: var(--rp-primary, #c02b5a);
 }
 
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .results-heading {
   margin: 0 0 1.5rem;
   font-size: 1rem;
@@ -258,7 +408,7 @@
 .article-meta-bar {
   margin: 0;
   font-size: 0.875rem;
-  color: #999;
+  color: #595959;
 }
 
 .article-meta-bar span + span::before {
@@ -271,8 +421,11 @@
 
 .article-cover img {
   max-width: 100%;
+  width: 100%;
   height: auto;
   display: block;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
 }
 
 .article-prose {

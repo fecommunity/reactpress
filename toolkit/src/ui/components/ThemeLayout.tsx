@@ -38,7 +38,12 @@ export function ThemeLayout({
       {...(darkMode ? { 'data-rp-dark': 'true' } : {})}
     >
       {header}
-      <main className={mainClassName} data-rp-component="main">
+      <main
+        id="main-content"
+        tabIndex={-1}
+        className={mainClassName}
+        data-rp-component="main"
+      >
         {mainContent}
       </main>
       {footer}

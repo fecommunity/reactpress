@@ -1,16 +1,17 @@
 import {
   ArticleList,
   fetchThemeCatalog,
+  resolveStaticVisitorContext,
   SiteDocument,
   themeApi,
   themeStaticProps,
 } from '@fecommunity/reactpress-toolkit/theme';
 import { GetStaticProps } from 'next';
 
-import Footer from '../components/Footer';
-import Header from '../components/Header';
+import PageHead from '../components/PageHead';
 import PostEntry from '../components/PostEntry';
 import Sidebar from '../components/Sidebar';
+import { THEME_SHELL } from '../components/ThemeShell';
 
 interface HomeProps {
   articles: Array<{
@@ -27,14 +28,8 @@ interface HomeProps {
 export default function Home({ articles = [], categories = [], tags = [] }: HomeProps) {
   return (
     <SiteDocument
-      head={
-        <>
-          <title>Archives</title>
-          <meta name="description" content="ReactPress hello-world theme" />
-        </>
-      }
-      header={<Header />}
-      footer={<Footer />}
+      {...THEME_SHELL}
+      head={<PageHead title="Archives" description="Browse all published articles." />}
     >
       <h1 className="section-title">Archives</h1>
       <div className="content-layout">
@@ -54,10 +49,11 @@ export default function Home({ articles = [], categories = [], tags = [] }: Home
 }
 
 export const getStaticProps: GetStaticProps<HomeProps> = async () => {
+  const reactPress = await resolveStaticVisitorContext();
   try {
     const { articles, categories, tags } = await fetchThemeCatalog(themeApi);
-    return themeStaticProps({ articles, categories, tags });
+    return themeStaticProps({ articles, categories, tags, reactPress });
   } catch {
-    return themeStaticProps({ articles: [], categories: [], tags: [] });
+    return themeStaticProps({ articles: [], categories: [], tags: [], reactPress });
   }
 };

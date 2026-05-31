@@ -1,5 +1,6 @@
 import {
   fetchSiteMeta,
+  resolveStaticVisitorContext,
   SiteDocument,
   themeApi,
   themeStaticProps,
@@ -7,8 +8,8 @@ import {
 import { GetStaticProps } from 'next';
 import Link from 'next/link';
 
-import Footer from '../components/Footer';
-import Header from '../components/Header';
+import PageHead from '../components/PageHead';
+import { THEME_SHELL } from '../components/ThemeShell';
 
 interface AboutProps {
   siteInfo: { siteName: string; siteDescription: string } | null;
@@ -17,15 +18,8 @@ interface AboutProps {
 export default function About({ siteInfo }: AboutProps) {
   return (
     <SiteDocument
-      head={
-        <>
-          <title>About</title>
-          <meta name="description" content="About this site" />
-        </>
-      }
-      header={<Header />}
-      footer={<Footer />}
-      globalCss="html, body { background: #fff; }"
+      {...THEME_SHELL}
+      head={<PageHead title="About" description="About this site." />}
     >
       <h1 className="section-title">About</h1>
       {siteInfo ? (
@@ -56,10 +50,11 @@ export default function About({ siteInfo }: AboutProps) {
 }
 
 export const getStaticProps: GetStaticProps<AboutProps> = async () => {
+  const reactPress = await resolveStaticVisitorContext();
   try {
     const siteInfo = await fetchSiteMeta(themeApi);
-    return themeStaticProps({ siteInfo });
+    return themeStaticProps({ siteInfo, reactPress });
   } catch {
-    return themeStaticProps({ siteInfo: null });
+    return themeStaticProps({ siteInfo: null, reactPress });
   }
 };

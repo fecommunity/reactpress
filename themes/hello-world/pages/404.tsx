@@ -1,16 +1,15 @@
-import { SiteDocument } from '@fecommunity/reactpress-toolkit/theme';
+import { SiteDocument, resolveStaticVisitorContext, themeStaticProps } from '@fecommunity/reactpress-toolkit/theme';
+import { GetStaticProps } from 'next';
 import Link from 'next/link';
 
-import Footer from '../components/Footer';
-import Header from '../components/Header';
+import PageHead from '../components/PageHead';
+import { THEME_SHELL } from '../components/ThemeShell';
 
 export default function NotFound() {
   return (
     <SiteDocument
-      head={<title>404</title>}
-      header={<Header />}
-      footer={<Footer />}
-      globalCss="html, body { background: #fff; }"
+      {...THEME_SHELL}
+      head={<PageHead title="404" description="The requested page could not be found." />}
     >
       <h1 className="section-title">404</h1>
       <p>Page not found.</p>
@@ -22,3 +21,8 @@ export default function NotFound() {
     </SiteDocument>
   );
 }
+
+export const getStaticProps: GetStaticProps = async () => {
+  const reactPress = await resolveStaticVisitorContext();
+  return themeStaticProps({ reactPress });
+};

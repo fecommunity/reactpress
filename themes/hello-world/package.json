@@ -26,5 +26,11 @@
     "@types/node": "17.0.22",
     "@types/react": "18.3.20",
     "@types/react-dom": "18.3.6"
-  }
+  },
+  "browserslist": [
+    "Chrome >= 90",
+    "Firefox >= 90",
+    "Safari >= 14",
+    "Edge >= 90"
+  ]
 }

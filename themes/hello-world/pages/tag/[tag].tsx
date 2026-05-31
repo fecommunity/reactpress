@@ -13,10 +13,10 @@ import { GetStaticPaths, GetStaticProps } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-import Footer from '../../components/Footer';
-import Header from '../../components/Header';
+import PageHead from '../../components/PageHead';
 import PostEntry from '../../components/PostEntry';
 import Sidebar from '../../components/Sidebar';
+import { THEME_SHELL } from '../../components/ThemeShell';
 
 interface TagProps {
   tag: string;
@@ -30,11 +30,7 @@ interface TagProps {
   tags: Array<{ value: string; label: string; articleCount?: number }>;
 }
 
-const shellProps = {
-  header: <Header />,
-  footer: <Footer />,
-  globalCss: 'html, body { background: #fff; }',
-} as const;
+const shellProps = THEME_SHELL;
 
 export default function TagPage({ tag: tagProp, articles = [], tags = [] }: TagProps) {
   const router = useRouter();
@@ -44,7 +40,7 @@ export default function TagPage({ tag: tagProp, articles = [], tags = [] }: TagP
     return (
       <SiteDocumentFallback
         {...shellProps}
-        head={<title>Loading…</title>}
+        head={<PageHead title="Loading…" />}
       />
     );
   }
@@ -56,14 +52,15 @@ export default function TagPage({ tag: tagProp, articles = [], tags = [] }: TagP
     <SiteDocument
       {...shellProps}
       head={
-        <>
-          <title>{`Tag: ${tagName}`}</title>
-          <meta name="description" content={`Articles tagged ${tagName}`} />
-        </>
+        <PageHead
+          title={`Tag: ${tagName}`}
+          description={`Articles tagged ${tagName}.`}
+        />
       }
     >
       <PageHeader
-        className="section-title"
+        className="archive-header"
+        titleClassName="section-title"
         title={`Tag: ${tagName}`}
         description={`${articles.length} article${articles.length === 1 ? '' : 's'}`}
         descriptionClassName="page-desc"

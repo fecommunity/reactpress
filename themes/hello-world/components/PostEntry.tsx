@@ -12,6 +12,7 @@ export interface PostEntryArticle {
   title: string;
   summary?: string;
   content?: string;
+  html?: string;
   publishAt?: string;
   category?: { label: string; value: string };
 }
@@ -25,6 +26,7 @@ export default function PostEntry({ article }: PostEntryProps) {
   const body = resolveArchiveExcerpt({
     mode: excerptMode as 'excerpt' | 'full' | 'none',
     content: article.content,
+    html: article.html,
     summary: article.summary,
   });
 

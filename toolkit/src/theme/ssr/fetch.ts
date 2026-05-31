@@ -1,6 +1,7 @@
 import type { ThemeApi } from '../api/api';
 import { themeApi } from '../api/api';
 import { unpackList, unpackOne, unpackPaginated } from '../api/api-data';
+import { resolvePublicAssetUrl, rewriteArticleHtmlAssets } from '../content/assets';
 import type { SettingRow } from './format';
 import { pickSiteSettings } from './format';
 import { safeJsonParse } from '../api/json';
@@ -344,5 +345,13 @@ export async function fetchArticlePageProps(
 ): Promise<{ article: ThemeArticlePage | null }> {
   if (!id) return { article: null };
   const data = await fetchSingleArticle(api, id);
-  return { article: data.article ?? null };
+  const article = data.article ?? null;
+  if (!article) return { article: null };
+  return {
+    article: {
+      ...article,
+      html: article.html ? rewriteArticleHtmlAssets(article.html) : article.html,
+      cover: article.cover ? resolvePublicAssetUrl(article.cover) : article.cover,
+    },
+  };
 }

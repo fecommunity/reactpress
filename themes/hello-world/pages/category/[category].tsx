@@ -13,10 +13,10 @@ import { GetStaticPaths, GetStaticProps } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-import Footer from '../../components/Footer';
-import Header from '../../components/Header';
+import PageHead from '../../components/PageHead';
 import PostEntry from '../../components/PostEntry';
 import Sidebar from '../../components/Sidebar';
+import { THEME_SHELL } from '../../components/ThemeShell';
 
 interface CategoryProps {
   category: string;
@@ -30,11 +30,7 @@ interface CategoryProps {
   categories: Array<{ value: string; label: string; articleCount?: number }>;
 }
 
-const shellProps = {
-  header: <Header />,
-  footer: <Footer />,
-  globalCss: 'html, body { background: #fff; }',
-} as const;
+const shellProps = THEME_SHELL;
 
 export default function CategoryPage({
   category: categoryProp,
@@ -48,7 +44,7 @@ export default function CategoryPage({
     return (
       <SiteDocumentFallback
         {...shellProps}
-        head={<title>Loading…</title>}
+        head={<PageHead title="Loading…" />}
       />
     );
   }
@@ -60,14 +56,15 @@ export default function CategoryPage({
     <SiteDocument
       {...shellProps}
       head={
-        <>
-          <title>{`Category: ${categoryName}`}</title>
-          <meta name="description" content={`Articles in ${categoryName}`} />
-        </>
+        <PageHead
+          title={`Category: ${categoryName}`}
+          description={`Articles in ${categoryName}.`}
+        />
       }
     >
       <PageHeader
-        className="section-title"
+        className="archive-header"
+        titleClassName="section-title"
         title={`Category: ${categoryName}`}
         description={`${articles.length} article${articles.length === 1 ? '' : 's'}`}
         descriptionClassName="page-desc"

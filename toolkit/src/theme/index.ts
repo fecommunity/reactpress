@@ -11,7 +11,7 @@ export {
   unpackOne,
   unpackPaginated,
 } from '../utils/api-envelope';
-export { resolvePublicAssetUrl } from './content/assets';
+export { isLikelyValidAssetPath, isLikelyValidHeaderLogoPath, resolvePublicAssetUrl, rewriteArticleHtmlAssets } from './content/assets';
 export type { ArchiveExcerptMode, ResolveArchiveExcerptOptions } from './content/excerpt';
 export {
   resolveArchiveExcerpt,

@@ -15,9 +15,9 @@ import { GetStaticPaths, GetStaticProps } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-import Footer from '../../components/Footer';
-import Header from '../../components/Header';
+import PageHead from '../../components/PageHead';
 import TagsCloud from '../../components/TagsCloud';
+import { THEME_SHELL } from '../../components/ThemeShell';
 
 interface ArticleProps {
   article: {
@@ -33,10 +33,7 @@ interface ArticleProps {
   } | null;
 }
 
-const shellProps = {
-  footer: <Footer />,
-  globalCss: 'html, body { background: #fff; }',
-} as const;
+const shellProps = THEME_SHELL;
 
 export default function ArticlePage({ article }: ArticleProps) {
   const router = useRouter();
@@ -50,8 +47,7 @@ export default function ArticlePage({ article }: ArticleProps) {
     return (
       <SiteDocumentFallback
         {...shellProps}
-        header={<Header />}
-        head={<title>Loading…</title>}
+        head={<PageHead title="Loading…" />}
       />
     );
   }
@@ -60,8 +56,7 @@ export default function ArticlePage({ article }: ArticleProps) {
     return (
       <SiteDocument
         {...shellProps}
-        header={<Header />}
-        head={<title>Article not found</title>}
+        head={<PageHead title="Article not found" description="The requested article could not be found." />}
       >
         <h1 className="section-title">Not found</h1>
         <ArchiveEmptyState
@@ -79,12 +74,11 @@ export default function ArticlePage({ article }: ArticleProps) {
   return (
     <SiteDocument
       {...shellProps}
-      header={<Header />}
       head={
-        <>
-          <title>{article.title}</title>
-          <meta name="description" content={article.summary || article.title} />
-        </>
+        <PageHead
+          title={article.title}
+          description={article.summary || article.title}
+        />
       }
     >
       <article>
@@ -107,7 +101,14 @@ export default function ArticlePage({ article }: ArticleProps) {
 
         {article.cover ? (
           <div className="article-cover">
-            <img src={article.cover} alt={article.title} />
+            <img
+              src={article.cover}
+              alt={article.title}
+              width={768}
+              height={432}
+              loading="lazy"
+              decoding="async"
+            />
           </div>
         ) : null}
 

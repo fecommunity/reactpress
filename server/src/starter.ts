@@ -8,6 +8,7 @@ import * as rateLimit from 'express-rate-limit';
 import * as helmet from 'helmet';
 import * as http from 'http';
 import * as net from 'net';
+import { existsSync } from 'fs';
 import { join } from 'path';
 import { SwaggerTheme, SwaggerThemeNameEnum } from 'swagger-themes';
 
@@ -170,6 +171,15 @@ export async function bootstrap() {
 
     const rootDir = join(__dirname, '../public');
     app.use('/public', express.static(rootDir));
+
+    for (const name of ['logo.png', 'favicon.png', 'favicon.ico'] as const) {
+      const filePath = join(rootDir, name);
+      if (existsSync(filePath)) {
+        app.use(`/${name}`, (_req: express.Request, res: express.Response) => {
+          res.sendFile(filePath);
+        });
+      }
+    }
 
     app.use(compression());
     app.use(helmet());

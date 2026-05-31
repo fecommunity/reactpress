@@ -1,6 +1,7 @@
 import {
   ArticleList,
   fetchSearchArticles,
+  resolveStaticVisitorContext,
   SiteDocument,
   themeApi,
 } from '@fecommunity/reactpress-toolkit/theme';
@@ -8,9 +9,9 @@ import { GetServerSideProps } from 'next';
 import Link from 'next/link';
 import { useState } from 'react';
 
-import Footer from '../components/Footer';
-import Header from '../components/Header';
+import PageHead from '../components/PageHead';
 import PostEntry from '../components/PostEntry';
+import { THEME_SHELL } from '../components/ThemeShell';
 
 interface SearchProps {
   query: string;
@@ -36,26 +37,22 @@ export default function SearchPage({ query = '', articles = [] }: SearchProps) {
 
   return (
     <SiteDocument
-      head={
-        <>
-          <title>Search</title>
-          <meta name="description" content="Search articles" />
-        </>
-      }
-      header={<Header />}
-      footer={<Footer />}
-      globalCss="html, body { background: #fff; }"
+      {...THEME_SHELL}
+      head={<PageHead title="Search" description="Search articles on this site." />}
     >
       <h1 className="section-title">Search</h1>
 
-      <form className="search-form" onSubmit={handleSubmit}>
+      <form className="search-form" onSubmit={handleSubmit} role="search">
+        <label htmlFor="search-input" className="visually-hidden">
+          Search articles
+        </label>
         <input
+          id="search-input"
           type="search"
           className="search-input"
           value={keyword}
           onChange={(e) => setKeyword(e.target.value)}
           placeholder="Search articles…"
-          aria-label="Search"
         />
         <button type="submit" className="search-button">
           Search
@@ -92,21 +89,23 @@ export default function SearchPage({ query = '', articles = [] }: SearchProps) {
 }
 
 export const getServerSideProps: GetServerSideProps<SearchProps> = async ({ query }) => {
+  const reactPress = await resolveStaticVisitorContext();
   const keyword = typeof query.keyword === 'string' ? query.keyword : '';
 
   if (!keyword.trim()) {
-    return { props: { query: '', articles: [] } };
+    return { props: { query: '', articles: [], reactPress } };
   }
 
   try {
     const { query: q, articles } = await fetchSearchArticles(themeApi, keyword);
-    return { props: { query: q, articles } };
+    return { props: { query: q, articles, reactPress } };
   } catch (error) {
     console.error('[hello-world] search failed', error);
     return {
       props: {
         query: keyword.trim(),
         articles: [],
+        reactPress,
       },
     };
   }
