@@ -30,6 +30,11 @@ export type IUser = {
 
 export const isValidUser = (user: IUser): user is IUser => user && user.name && emailRegexp.test(user.email);
 
+/** Logged-in session for comment UI (token + name; email validated on submit). */
+export function isLoggedInUser(user: Partial<IUser> | null | undefined): user is IUser {
+  return Boolean(user?.name?.trim() && user?.token?.trim());
+}
+
 export const UserInfo: React.FC<{
   defaultVisible?: boolean;
   hidden?: boolean;

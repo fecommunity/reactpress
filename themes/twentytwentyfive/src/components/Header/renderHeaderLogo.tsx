@@ -1,6 +1,7 @@
 import {
   REACT_PRESS_HEADER_LOGO,
   REACT_PRESS_ICON_LOGO,
+  wordmarkWidthAtHeight,
 } from '@/assets/brand';
 import markStyles from '@/assets/logoMark.module.scss';
 import SiteHeaderLogo from '@/assets/SiteHeaderLogo';
@@ -21,11 +22,16 @@ type RenderHeaderLogoOptions = {
 };
 
 function headerImage(src: string, height: number, useWordmarkSizing: boolean) {
+  const width = useWordmarkSizing ? wordmarkWidthAtHeight(height) : height;
   return (
     <img
       src={src}
       alt="logo"
+      width={width}
+      height={height}
       className={useWordmarkSizing ? markStyles.headerBar : undefined}
+      decoding="sync"
+      fetchpriority="high"
       style={{
         width: 'auto',
         height: useWordmarkSizing ? '100%' : height,

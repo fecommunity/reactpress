@@ -195,45 +195,39 @@ $header-nav-first-padding-start: 4px;
       background-color: var(--bg-box);
       height: 100%;
       border: none;
+    }
 
-      &:global(.ant-menu) {
-        flex: 1 1 auto;
-        width: 100%;
-        max-width: 100%;
-        height: $height;
-        padding-inline: 0;
-        margin-inline: 0;
-        column-gap: 0;
-        line-height: $height;
-        border-bottom: none;
+    .menuList {
+      display: flex;
+      align-items: center;
+      height: $height;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      overflow-x: auto;
+
+      li {
+        flex: 0 0 auto;
       }
 
-      &:global(.ant-menu-overflow) {
-        flex-wrap: nowrap;
-      }
-
-      &:global(.ant-menu-horizontal > .ant-menu-item),
-      &:global(.ant-menu-horizontal > .ant-menu-submenu) {
-        top: 0 !important;
+      a {
         display: inline-flex;
         align-items: center;
+        gap: 6px;
         height: $height;
-        margin-top: 0 !important;
-        margin-bottom: 0 !important;
-        padding-block: 0;
         padding-inline: $header-nav-item-padding-x;
-        vertical-align: top;
-        border-bottom: none;
+        color: var(--main-text-color);
+        white-space: nowrap;
+        border-bottom: 2px solid transparent;
+
+        &:hover,
+        &.active {
+          color: var(--primary-color);
+          border-bottom-color: var(--primary-color);
+        }
       }
 
-      &:global(.ant-menu-horizontal > .ant-menu-item::after),
-      &:global(.ant-menu-horizontal > .ant-menu-submenu::after) {
-        inset-block-end: 0 !important;
-        bottom: 0 !important;
-      }
-
-      &:global(.ant-menu-horizontal > .ant-menu-item:first-child),
-      &:global(.ant-menu-horizontal > .ant-menu-submenu:first-child) {
+      li:first-child a {
         padding-inline-start: $header-nav-first-padding-start;
       }
     }
@@ -387,6 +381,16 @@ $header-nav-first-padding-start: 4px;
     .menu {
       width: max-content;
       min-width: 100%;
+    }
+  }
+}
+
+:global(body.dark) .menuWrapper {
+  .menuList a {
+    &:hover,
+    &.active {
+      color: #ff6659;
+      border-bottom-color: #ff6659;
     }
   }
 }

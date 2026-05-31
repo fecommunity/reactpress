@@ -18,7 +18,6 @@
  * - Search functionality
  */
 
-import { Menu } from 'antd';
 import cls from 'classnames';
 import Link from 'next/link';
 import { default as Router, useRouter } from 'next/router';
@@ -91,20 +90,15 @@ export const Header: React.FC<HeaderProps> = ({ setting, tags, pages, hasBg = fa
     };
   }, [setAffix, setAffixVisible]);
 
-  // Generate menu items for navigation
-  const menuItems = useMemo(() => {
+  // Generate navigation links
+  const navItems = useMemo(() => {
     const navMenu = navLinks.map((nav) => {
       const Icon = getIconByName(nav.icon);
       const labelText = nav.label || (nav.locale ? t(nav.locale) : nav.path);
       return {
-        label: (
-          <Link href={nav.path} key={nav.path}>
-            <a aria-label={nav.locale || nav.path}>
-              <span>{labelText}</span>
-            </a>
-          </Link>
-        ),
         key: nav.path,
+        href: nav.path,
+        label: labelText,
         icon: Icon ? <Icon /> : null,
       };
     });
@@ -113,13 +107,11 @@ export const Header: React.FC<HeaderProps> = ({ setting, tags, pages, hasBg = fa
       const Icon = getIconByName(menu.path);
       return {
         key: `${index}-${menu.label}`,
-        label: (
-          <Link href={'/page/[id]'} as={`/page/${menu.path}`} scroll={false} key={`${index}-${menu.label}`}>
-            <a aria-label={menu.name}>{t(menu.path) || menu.name}</a>
-          </Link>
-        ),
-        icon: Icon ? <Icon /> : null
-      }
+        href: '/page/[id]',
+        as: `/page/${menu.path}`,
+        label: t(menu.path) || menu.name,
+        icon: Icon ? <Icon /> : null,
+      };
     });
     return navMenu.concat(pageMenu);
   }, [navLinks, pages, t]);
@@ -151,7 +143,9 @@ export const Header: React.FC<HeaderProps> = ({ setting, tags, pages, hasBg = fa
           {/* Logo Section */}
           <div className={style.logo}>
             <Link href="/" scroll={false}>
-              <a aria-label="home">{renderHeaderLogo({ systemLogo: setting.systemLogo })}</a>
+              <a aria-label={setting.systemTitle || 'Home'}>
+                {renderHeaderLogo({ systemLogo: setting.systemLogo })}
+              </a>
             </Link>
           </div>
 
@@ -159,9 +153,16 @@ export const Header: React.FC<HeaderProps> = ({ setting, tags, pages, hasBg = fa
           <div
             className={cls(style.mobileTrigger, visible ? style.active : false)}
             onClick={() => setVisible(!visible)}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                setVisible(!visible);
+              }
+            }}
             role="button"
             tabIndex={0}
             aria-label="Toggle mobile menu"
+            aria-expanded={visible}
           >
             <div className={style.stick}></div>
             <div className={style.stick}></div>
@@ -170,14 +171,23 @@ export const Header: React.FC<HeaderProps> = ({ setting, tags, pages, hasBg = fa
 
           {/* Navigation Menu */}
           <div className={style.menuWrapper}>
-            <Menu
-              rootClassName={style.menu}
-              selectedKeys={[mainPath]}
-              items={menuItems}
-              mode="horizontal"
-              disabledOverflow
-              className={cls(visible ? style.active : false, style.menu)}
-            />
+            <nav className={cls(style.menu, visible ? style.active : false)} aria-label={setting.systemTitle}>
+              <ul className={style.menuList}>
+                {navItems.map((item) => {
+                  const isActive = item.as ? asPath === item.as : mainPath === item.key || asPath === item.href;
+                  return (
+                  <li key={item.key}>
+                    <Link href={item.href} as={item.as} scroll={false}>
+                      <a className={isActive ? style.active : undefined}>
+                        {item.icon}
+                        <span>{item.label}</span>
+                      </a>
+                    </Link>
+                  </li>
+                  );
+                })}
+              </ul>
+            </nav>
           </div>
 
           {/* Right Side Tools */}

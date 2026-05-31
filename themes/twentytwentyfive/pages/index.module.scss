@@ -6,6 +6,38 @@
 .menu {
   background-color: var(--bg-box);
 }
+
+.menuList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  padding: 0.5rem;
+  margin: 0;
+  list-style: none;
+  border-bottom: 1px solid var(--border-color);
+
+  a {
+    display: inline-block;
+    padding: 0 16px;
+    line-height: 40px;
+    color: var(--main-text-color);
+    border-bottom: 2px solid transparent;
+  }
+
+  a.active,
+  a:hover {
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
+  }
+}
+
+:global(body.dark) .menuList {
+  a.active,
+  a:hover {
+    color: #ff6659;
+    border-bottom-color: #ff6659;
+  }
+}
 .tagOrCategoryDetail {
   padding: 16px 0;
   margin-bottom: 1rem;

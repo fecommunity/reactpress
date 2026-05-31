@@ -59,7 +59,7 @@ body.dark {
   --bg-code: #0b1c2c;
   --blockquote-color: #dddbdb;
   --main-text-color: #dddbdb;
-  --second-text-color: #808695;
+  --second-text-color: #959baa;
   --disable-text-color: #1e2a36;
   --border-color: #2f373e;
   --box-shadow: rgba(23,31,40,0.57);
@@ -104,7 +104,7 @@ body.dark {
   .ant-menu-horizontal > .ant-menu-item-selected,
   .ant-menu-horizontal > .ant-menu-item:hover,
   .ant-menu-horizontal > .ant-menu-submenu:hover {
-    color: var(--primary-color) !important;
+    color: #ff6659 !important;
   }
 
   .ant-divider {

@@ -17,11 +17,10 @@
  */
 
 import { EyeOutlined, FolderOutlined, HeartOutlined, HistoryOutlined } from '@ant-design/icons';
-import { Spin, Tag } from 'antd';
+import { Tag } from 'antd';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import React, { useContext, useMemo } from 'react';
-import LazyLoad from 'react-lazyload';
 
 import { Image, LocaleTime } from '@fecommunity/reactpress-toolkit/ui/content';
 import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
@@ -50,23 +49,37 @@ interface ArticleListProps {
   asRecommend?: boolean;
 }
 
+const COVER_WIDTH = 200;
+const COVER_HEIGHT = 114;
+
 /**
  * ArticleCard Component
  * Renders a single article card with all its details
  */
-const ArticleCard: React.FC<{ article: Article; categoryIndex: number }> = ({ article, categoryIndex }) => {
+const ArticleCard: React.FC<{ article: Article; categoryIndex: number; index: number }> = ({
+  article,
+  categoryIndex,
+  index,
+}) => {
+  const eager = index < 3;
+
   return (
     <div className={style.articleItem}>
       {/* Cover Image Section */}
       <div className={style.coverWrapper}>
         {article.cover ? (
-          <LazyLoad height={120} placeholder={<Spin />}>
-            <div className={style.coverWrapper}>
-              <Link href={`/article/[id]`} as={`/article/${article.id}`} scroll={false}>
-                <Image url={article.cover} size="thumb" alt={`${article.title} cover`} loading="lazy" />
-              </Link>
-            </div>
-          </LazyLoad>
+          <Link href={`/article/[id]`} as={`/article/${article.id}`} scroll={false} prefetch={false}>
+            <Image
+              url={article.cover}
+              size="thumb"
+              alt={`${article.title} cover`}
+              width={COVER_WIDTH}
+              height={COVER_HEIGHT}
+              loading={eager ? 'eager' : 'lazy'}
+              fetchpriority={index === 0 ? 'high' : undefined}
+              decoding={index === 0 ? 'sync' : 'async'}
+            />
+          </Link>
         ) : (
           <LogoSvg className={style.coverLogo} />
         )}
@@ -74,8 +87,8 @@ const ArticleCard: React.FC<{ article: Article; categoryIndex: number }> = ({ ar
 
       {/* Article Content Section */}
       <div className={style.articleWrapper}>
-        <Link href={`/article/[id]`} as={`/article/${article.id}`} scroll={false}>
-          <a aria-label={article.title} className={style.link}>
+        <Link href={`/article/[id]`} as={`/article/${article.id}`} scroll={false} prefetch={false}>
+          <a className={style.link}>
             <header>
               <div className={style.title} title={article.title}>
                 {article.title}
@@ -150,7 +163,8 @@ export const ArticleList: React.FC<ArticleListProps> = ({ articles = [] }) => {
           <ArticleCard 
             key={article.id} 
             article={article} 
-            categoryIndex={categoryIndices[index]} 
+            categoryIndex={categoryIndices[index]}
+            index={index}
           />
         ))
       ) : (

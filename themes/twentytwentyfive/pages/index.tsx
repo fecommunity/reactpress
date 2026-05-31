@@ -1,8 +1,6 @@
-import AboutUs from '@components/AboutUs';
 import { ArticleCarousel } from '@components/ArticleCarousel';
 import { ArticleList } from '@components/ArticleList';
-import { Tags } from '@components/Tags';
-import { Menu } from 'antd';
+import dynamic from 'next/dynamic';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
@@ -15,9 +13,12 @@ import { ArticleRecommend } from '@/components/ArticleRecommend';
 import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
 import { DoubleColumnLayout } from '@/layout/DoubleColumnLayout';
 import { ArticleProvider } from '@/providers';
-import { getSiteTitle } from '@fecommunity/reactpress-toolkit/theme';
+import { getSiteTitle, resolveImageUrl } from '@fecommunity/reactpress-toolkit/theme';
 
 import style from './index.module.scss';
+
+const AboutUs = dynamic(() => import('@components/AboutUs'));
+const Tags = dynamic(() => import('@/components/Tags').then((mod) => mod.Tags));
 
 interface IHomeProps {
   articles: IArticle[];
@@ -37,34 +38,23 @@ export const CategoryMenu = ({ categories }) => {
     return active?.value ?? '';
   }, [asPath, categories, isHome]);
 
-  const menuItems = useMemo(
-    () => [
-      {
-        key: 'all',
-        label: (
-          <Link href="/" shallow={false}>
-            <a aria-label={t('all')}>
-              <span>{t('all')}</span>
-            </a>
-          </Link>
-        ),
-      },
-      ...categories.map((category) => ({
-        key: category.value,
-        label: (
-          <Link href="/category/[category]" as={`/category/${category.value}`} shallow={false}>
-            <a aria-label={category.label}>
-              <span>{category.label}</span>
-            </a>
-          </Link>
-        ),
-      })),
-    ],
-    [categories, t],
-  );
-
   return (
-    <Menu mode="horizontal" className={style.menu} selectedKeys={selectedKey ? [selectedKey] : []} items={menuItems} />
+    <nav className={style.menu} aria-label={t('categoryTitle')}>
+      <ul className={style.menuList}>
+        <li>
+          <Link href="/" shallow={false}>
+            <a className={selectedKey === 'all' ? style.active : undefined}>{t('all')}</a>
+          </Link>
+        </li>
+        {categories.map((category) => (
+          <li key={category.value}>
+            <Link href="/category/[category]" as={`/category/${category.value}`} shallow={false}>
+              <a className={selectedKey === category.value ? style.active : undefined}>{category.label}</a>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </nav>
   );
 };
 const Home: NextPage<IHomeProps> = ({ articles: defaultArticles = [], recommendedArticles = [], total = 0 }) => {
@@ -85,10 +75,15 @@ const Home: NextPage<IHomeProps> = ({ articles: defaultArticles = [], recommende
       setArticles((articles) => [...articles, ...res[0]]);
     });
   }, []);
+  const lcpCover = recommendedArticles.find((article) => article.cover)?.cover;
+  const lcpCoverUrl = lcpCover ? resolveImageUrl(lcpCover, 'large') : null;
   return (
     <div className={style.wrapper}>
       <Head>
         <title>{getSiteTitle(setting)}</title>
+        {lcpCoverUrl ? (
+          <link rel="preload" as="image" href={lcpCoverUrl} fetchpriority="high" />
+        ) : null}
       </Head>
       <DoubleColumnLayout
         leftNode={

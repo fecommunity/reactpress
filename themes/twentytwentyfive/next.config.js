@@ -12,6 +12,8 @@ const themeApiEnv = resolveThemeNextEnv();
 /** @type {import('next').NextConfig} */
 const nextConfig = createReactPressNextConfig({
   assetPrefix: config.CLIENT_ASSET_PREFIX || '/',
+  productionBrowserSourceMaps: true,
+  poweredByHeader: false,
   env: {
     ...themeApiEnv,
     GITHUB_CLIENT_ID: config.GITHUB_CLIENT_ID,

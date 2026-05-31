@@ -152,7 +152,7 @@ const Article: NextPage<IProps> = ({ article }) => {
                   <div className={style.tagWrapper} key={tag.id}>
                     <div className={style.tag}>
                       <Link href={'/tag/[tag]'} as={'/tag/' + tag.value} scroll={false}>
-                        <a aria-label={tag.label}>
+                        <a>
                           <TagOutlined />
                           <span>{tag.label}</span>
                         </a>

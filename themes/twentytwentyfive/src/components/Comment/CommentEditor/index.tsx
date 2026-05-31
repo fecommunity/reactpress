@@ -3,7 +3,7 @@ import cls from 'classnames';
 import { useTranslations } from 'next-intl';
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
-import { isValidUser } from '@/components/UserInfo';
+import { isLoggedInUser } from '@/components/UserInfo';
 import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
 import { useAsyncLoading } from '@fecommunity/reactpress-toolkit/theme';
 import { CommentProvider } from '@/providers';
@@ -30,8 +30,8 @@ interface Props {
 }
 
 function resolveInitialAuthor(user: IUser | Partial<IUser> | null | undefined): CommentAuthor {
-  if (isValidUser(user)) {
-    return { name: user.name, email: user.email };
+  if (isLoggedInUser(user)) {
+    return { name: user.name, email: user.email ?? '' };
   }
   const saved = readCommentAuthor();
   if (saved) return saved;
@@ -48,17 +48,29 @@ export const CommentEditor: React.FC<Props> = ({ hostId, parentComment, replyCom
   const [author, setAuthor] = useState<CommentAuthor>(() => resolveInitialAuthor(user));
   const [content, setContent] = useState('');
   const [emailTouched, setEmailTouched] = useState(false);
-  const loggedInAuthor = useMemo(() => (isValidUser(user) ? user : null), [user]);
+  const loggedInAuthor = useMemo(() => (isLoggedInUser(user) ? user : null), [user]);
+  const accountEmail = loggedInAuthor?.email?.trim() ?? '';
+  const nameReadOnly = Boolean(loggedInAuthor);
+  const emailReadOnly = Boolean(loggedInAuthor && accountEmail);
 
   const effectiveAuthor = useMemo((): CommentAuthor => {
     if (loggedInAuthor) {
-      return { name: loggedInAuthor.name, email: loggedInAuthor.email };
+      return {
+        name: loggedInAuthor.name,
+        email: accountEmail || author.email,
+      };
     }
     return author;
-  }, [loggedInAuthor, author]);
+  }, [accountEmail, author, loggedInAuthor]);
 
   useEffect(() => {
-    if (loggedInAuthor) return;
+    if (loggedInAuthor) {
+      setAuthor((prev) => ({
+        name: loggedInAuthor.name,
+        email: accountEmail || prev.email,
+      }));
+      return;
+    }
     const saved = readCommentAuthor();
     if (saved) {
       setAuthor(saved);
@@ -70,7 +82,7 @@ export const CommentEditor: React.FC<Props> = ({ hostId, parentComment, replyCom
         email: user.email || prev.email,
       }));
     }
-  }, [loggedInAuthor, user?.name, user?.email]);
+  }, [accountEmail, loggedInAuthor, user?.name, user?.email]);
 
   const textareaPlaceholder = useMemo(
     () => (replyComment ? `${t('reply')} ${replyComment.name}` : t('replyPlaceholder')),
@@ -78,22 +90,22 @@ export const CommentEditor: React.FC<Props> = ({ hostId, parentComment, replyCom
   );
   const textareaSize = useMemo(() => (small ? { minRows: 3, maxRows: 6 } : { minRows: 4, maxRows: 8 }), [small]);
   const btnSize = useMemo(() => (small ? 'small' : 'middle'), [small]);
-  const showAuthorFields = !loggedInAuthor;
   const emailError = useMemo(
     () =>
-      showAuthorFields
-        ? getCommentEmailError(author.email, {
+      emailReadOnly
+        ? ''
+        : getCommentEmailError(author.email, {
             required: t('userInfoEmailValidMsg') as string,
             invalid: t('userInfoIllegalEmailValidMsg') as string,
-          }, { touched: emailTouched })
-        : '',
-    [author.email, emailTouched, showAuthorFields, t],
+          }, { touched: emailTouched }),
+    [author.email, emailReadOnly, emailTouched, t],
   );
   const canSubmit = useMemo(() => {
     if (!content.trim()) return false;
-    if (!showAuthorFields) return true;
-    return Boolean(author.name.trim() && isValidCommentEmail(author.email));
-  }, [author.email, author.name, content, showAuthorFields]);
+    return Boolean(
+      effectiveAuthor.name.trim() && isValidCommentEmail(effectiveAuthor.email),
+    );
+  }, [content, effectiveAuthor.email, effectiveAuthor.name]);
 
   const emojiTrigger = (
     <span className={styles.emojiTrigger}>
@@ -116,7 +128,7 @@ export const CommentEditor: React.FC<Props> = ({ hostId, parentComment, replyCom
     const trimmedEmail = effectiveAuthor.email.trim();
     const trimmedContent = content.trim();
 
-    if (!loggedInAuthor) {
+    if (!emailReadOnly) {
       setEmailTouched(true);
     }
 
@@ -164,30 +176,31 @@ export const CommentEditor: React.FC<Props> = ({ hostId, parentComment, replyCom
 
   return (
     <div className={cls(styles.wrapper, small && styles.small)}>
-      {!small && !loggedInAuthor ? <p className={styles.lead}>{t('guestCommentLead')}</p> : null}
       {loggedInAuthor ? (
         <p className={styles.lead}>{t('commentingAs', { name: loggedInAuthor.name })}</p>
+      ) : !small ? (
+        <p className={styles.lead}>{t('guestCommentLead')}</p>
       ) : null}
-      {showAuthorFields ? (
-        <div className={styles.authorFields}>
+      <div className={styles.authorFields}>
+        <Input
+          value={effectiveAuthor.name}
+          placeholder={t('userInfoName') as string}
+          disabled={nameReadOnly}
+          onChange={(e) => setAuthor((prev) => ({ ...prev, name: e.target.value }))}
+        />
+        <div className={styles.emailField}>
           <Input
-            value={author.name}
-            placeholder={t('userInfoName') as string}
-            onChange={(e) => setAuthor((prev) => ({ ...prev, name: e.target.value }))}
+            type="email"
+            value={effectiveAuthor.email}
+            placeholder={t('userInfoEmail') as string}
+            disabled={emailReadOnly}
+            status={emailError ? 'error' : undefined}
+            onBlur={() => setEmailTouched(true)}
+            onChange={(e) => setAuthor((prev) => ({ ...prev, email: e.target.value }))}
           />
-          <div className={styles.emailField}>
-            <Input
-              type="email"
-              value={author.email}
-              placeholder={t('userInfoEmail') as string}
-              status={emailError ? 'error' : undefined}
-              onBlur={() => setEmailTouched(true)}
-              onChange={(e) => setAuthor((prev) => ({ ...prev, email: e.target.value }))}
-            />
-            {emailError ? <span className={styles.fieldError}>{emailError}</span> : null}
-          </div>
+          {emailError ? <span className={styles.fieldError}>{emailError}</span> : null}
         </div>
-      ) : null}
+      </div>
       <div className={styles.textareaWrapper}>
         <TextArea
           placeholder={textareaPlaceholder as string}

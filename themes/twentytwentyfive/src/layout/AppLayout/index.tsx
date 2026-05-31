@@ -1,11 +1,17 @@
 import { SiteSeo, SiteCatalogContext as GlobalContext, useToggle } from '@fecommunity/reactpress-toolkit/theme';
+import dynamic from 'next/dynamic';
 import React, { useContext, useEffect, useMemo } from 'react';
+
+import { REACT_PRESS_HEADER_LOGO } from '@/assets/brand';
 
 import { Footer } from '@components/Footer';
 import { Header } from '@components/Header';
-import { FloatButton } from 'antd';
-
 import style from './index.module.scss';
+
+const FloatBackTop = dynamic(
+  () => import('antd').then((mod) => mod.FloatButton.BackTop),
+  { ssr: false },
+);
 
 interface IProps {
   backgroundColor?: string;
@@ -40,17 +46,14 @@ export const AppLayout: React.FC<IProps> = ({ children, needFooter = true, needH
   return (
     <div className={style.wrapper}>
       <SiteSeo>
-        <link
-          href="//fonts.googleapis.com/css?family=Nunito:400,400i,700,700i&amp;display=swap"
-          rel="stylesheet"
-        />
+        <link rel="preload" as="image" href={REACT_PRESS_HEADER_LOGO.src} fetchpriority="high" />
       </SiteSeo>
       {needHeader && <Header setting={setting} tags={tags} pages={pages} hasBg={customBg} />}
       <main className={style.main} style={{ backgroundColor: customBg ? 'transparent' : 'var(--bg-body)' }}>
         {children}
       </main>
       {systemBg && !hasBg && <div className={style.bg} style={{ backgroundImage: bg }}></div>}
-      <FloatButton.BackTop />
+      <FloatBackTop />
       {needFooter && <Footer setting={setting} hasBg={customBg} />}
     </div>
   );

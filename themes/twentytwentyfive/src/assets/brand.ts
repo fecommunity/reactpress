@@ -33,7 +33,7 @@ const headerLogoContentHeight =
 
 /** Header: horizontal wordmark PNG — fits bar height minus vertical padding. */
 export const REACT_PRESS_HEADER_LOGO = {
-  src: '/logo.png',
+  src: '/logo-200.png',
   displayHeight: headerLogoContentHeight,
   maxDisplayWidth: Math.round(headerLogoContentHeight * REACT_PRESS_WORDMARK_ASPECT),
 } as const;
