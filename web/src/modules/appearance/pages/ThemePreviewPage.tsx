@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 import { useThemeListItemMeta } from "@/hooks/useThemeListItemMeta";
 import { useThemePreviewSession } from "@/hooks/useThemePreviewSession";
+import { useThemeActivation } from "@/hooks/useThemeActivation";
 import { useThemeMutations, useThemes } from "@/hooks/useThemes";
 import { ThemePreviewFrame } from "@/modules/appearance/components/ThemePreviewFrame";
 import { ThemePreviewPaneLoading } from "@/modules/appearance/components/ThemePreviewPaneLoading";
@@ -20,7 +21,8 @@ export function ThemePreviewPage({ themeIdFromSearch }: { themeIdFromSearch?: st
   const navigate = useNavigate();
   const { data: themes, isLoading } = useThemes();
   const { data: settings } = useSiteSettings();
-  const { installMutation, activateMutation } = useThemeMutations();
+  const { installMutation } = useThemeMutations();
+  const { activateAndWait, activatingId } = useThemeActivation();
 
   const themeState = useMemo(() => {
     try {
@@ -85,22 +87,9 @@ export function ThemePreviewPage({ themeIdFromSearch }: { themeIdFromSearch?: st
     }
   };
 
-  const handleActivate = async () => {
+  const handleActivate = () => {
     if (!current) return;
-    try {
-      const state = await activateMutation.mutateAsync(current.id);
-      const activatedSiteUrl =
-        typeof state === "object" && state && "siteUrl" in state
-          ? String((state as { siteUrl?: string }).siteUrl ?? "")
-          : "";
-      message.success(
-        activatedSiteUrl
-          ? t("appearance.activateSuccessWithSite", { url: activatedSiteUrl })
-          : t("appearance.activateSuccess"),
-      );
-    } catch {
-      message.error(t("appearance.actionFailed"));
-    }
+    void activateAndWait(current.id);
   };
 
   if (isLoading || !current) {
@@ -213,8 +202,8 @@ export function ThemePreviewPage({ themeIdFromSearch }: { themeIdFromSearch?: st
             <Button
               type="primary"
               block
-              loading={activateMutation.isPending}
-              onClick={() => void handleActivate()}
+              loading={activatingId === current.id}
+              onClick={handleActivate}
             >
               {t("appearance.activate")}
             </Button>

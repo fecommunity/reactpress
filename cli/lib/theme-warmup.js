@@ -147,6 +147,13 @@ function warmupThemeDevRoutesInBackground(projectRoot) {
   });
 }
 
+/** SSR-hit homepage so first visitor load after theme switch is fast. */
+async function warmupThemeHomepage(projectRoot, baseUrl) {
+  const url = (baseUrl || loadClientSiteUrl(projectRoot)).replace(/\/$/, '');
+  await fetchRoute(url, '/');
+  return { ok: true };
+}
+
 module.exports = {
   WARMUP_PARAM,
   pageFileToRoute,
@@ -156,4 +163,5 @@ module.exports = {
   shouldBlockOnThemeWarmup,
   warmupThemeDevRoutes,
   warmupThemeDevRoutesInBackground,
+  warmupThemeHomepage,
 };

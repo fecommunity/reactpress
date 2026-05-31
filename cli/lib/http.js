@@ -220,6 +220,17 @@ async function waitForHttp(url, timeoutMs = 120_000, intervalMs = 500) {
   return false;
 }
 
+/** Poll until HTTP 200 — used for theme dev homepage compile readiness. */
+async function waitForHttpOk(url, timeoutMs = 120_000, intervalMs = 500) {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    const result = await probeHttp(normalizeProbeUrl(url), Math.min(intervalMs + 500, 3000));
+    if (result.ok) return true;
+    await new Promise((r) => setTimeout(r, intervalMs));
+  }
+  return false;
+}
+
 module.exports = {
   isHealthPayloadReady,
   loadServerSiteUrl,
@@ -231,4 +242,7 @@ module.exports = {
   checkHealth,
   isHttpResponding,
   waitForHttp,
+  waitForHttpOk,
+  probeHttp,
+  normalizeProbeUrl,
 };

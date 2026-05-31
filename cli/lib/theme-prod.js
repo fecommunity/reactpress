@@ -75,7 +75,29 @@ function syncThemeLaunchFilesFromTemplate(projectRoot, themeId, themeDir) {
   }
 }
 
-function buildActiveTheme(projectRoot) {
+const BUILD_STAMP_REL = path.join('.next', '.reactpress-theme-id');
+
+function writeThemeBuildStamp(themeDir, themeId) {
+  const stampPath = path.join(themeDir, BUILD_STAMP_REL);
+  fs.mkdirSync(path.dirname(stampPath), { recursive: true });
+  fs.writeFileSync(stampPath, themeId, 'utf8');
+}
+
+function hasUsableProductionBuild(themeDir, themeId) {
+  if (process.env.REACTPRESS_FORCE_THEME_BUILD === '1') return false;
+  const nextDir = path.join(themeDir, '.next');
+  if (!fs.existsSync(path.join(nextDir, 'BUILD_ID'))) return false;
+  if (!fs.existsSync(path.join(nextDir, 'server'))) return false;
+  const stampPath = path.join(themeDir, BUILD_STAMP_REL);
+  if (!fs.existsSync(stampPath)) return false;
+  try {
+    return fs.readFileSync(stampPath, 'utf8').trim() === themeId;
+  } catch {
+    return false;
+  }
+}
+
+function buildActiveTheme(projectRoot, { force = false } = {}) {
   const { activeTheme } = readActiveThemeManifest(projectRoot);
   const themeDir = resolveThemeDirectory(projectRoot, activeTheme);
   if (!themeDir || !fs.existsSync(path.join(themeDir, 'package.json'))) {
@@ -86,6 +108,11 @@ function buildActiveTheme(projectRoot) {
 
   syncThemeLaunchFilesFromTemplate(projectRoot, activeTheme, themeDir);
 
+  if (!force && hasUsableProductionBuild(themeDir, activeTheme)) {
+    console.log(`[reactpress] ${t('themeProd.reusingBuild', { id: activeTheme })}`);
+    return { activeTheme, themeDir, skippedBuild: true };
+  }
+
   console.log(`[reactpress] ${t('themeProd.building', { id: activeTheme })}`);
   runSync('pnpm', ['run', 'build'], {
     cwd: themeDir,
@@ -94,7 +121,8 @@ function buildActiveTheme(projectRoot) {
       REACTPRESS_BUILD_ACTIVE: '1',
     },
   });
-  return { activeTheme, themeDir };
+  writeThemeBuildStamp(themeDir, activeTheme);
+  return { activeTheme, themeDir, skippedBuild: false };
 }
 
 /**

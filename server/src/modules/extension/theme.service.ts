@@ -48,6 +48,8 @@ function projectRoot(): string {
 }
 
 const THEME_ID_RE = /^[a-z0-9][a-z0-9-]*$/i;
+const PREVIEW_POOL_PORTS = [3003, 3004, 3005, 3006, 3007, 3008];
+const PREVIEW_POOL_MANIFEST = path.join('.reactpress', 'preview-pool.json');
 /** Ephemeral installed copies — under .reactpress/ with active-theme.json */
 const THEME_RUNTIME_REL = path.join('.reactpress', 'runtime');
 const LEGACY_THEMES_RUNTIME_REL = path.join('themes', 'runtime');
@@ -415,8 +417,7 @@ export class ThemeService {
     if (fs.existsSync(targetDir)) {
       this.removeDir(targetDir);
     }
-    this.copyDir(templatePath, targetDir);
-    this.linkTemplateNodeModules(templatePath, targetDir);
+    this.materializeRuntimeTheme(templatePath, targetDir);
     this.ensureRuntimeThemeTsconfigBase();
 
     const state = await this.getThemeState();
@@ -504,14 +505,92 @@ export class ThemeService {
     }
   }
 
-  private resolvePreviewSiteUrl(siteUrl: string): string {
+  private readPreviewPoolManifest(): Record<
+    string,
+    { port?: string; url?: string; updatedAt?: string }
+  > {
+    const poolPath = path.join(projectRoot(), PREVIEW_POOL_MANIFEST);
+    if (!fs.existsSync(poolPath)) return {};
+    try {
+      const raw = JSON.parse(fs.readFileSync(poolPath, 'utf8'));
+      return raw && typeof raw === 'object' ? raw : {};
+    } catch {
+      return {};
+    }
+  }
+
+  private writePreviewPoolEntry(themeId: string, port: string, siteUrl: string): void {
+    const poolPath = path.join(projectRoot(), PREVIEW_POOL_MANIFEST);
+    const pool = this.readPreviewPoolManifest();
+    let previewUrl: string;
+    try {
+      const url = new URL(siteUrl);
+      url.port = port;
+      previewUrl = `${url.origin}/`;
+    } catch {
+      previewUrl = `http://127.0.0.1:${port}/`;
+    }
+    pool[themeId] = { port, url: previewUrl, updatedAt: new Date().toISOString() };
+    fs.mkdirSync(path.dirname(poolPath), { recursive: true });
+    fs.writeFileSync(poolPath, `${JSON.stringify(pool, null, 2)}\n`, 'utf8');
+  }
+
+  /** Reserve a stable preview port per theme so admin iframe polls the correct URL immediately. */
+  private reservePreviewPortForTheme(themeId: string, siteUrl: string): string {
+    const pool = this.readPreviewPoolManifest();
+    const existing = pool[themeId]?.port;
+    if (existing && PREVIEW_POOL_PORTS.includes(parseInt(existing, 10))) {
+      return existing;
+    }
+    const used = new Set(
+      Object.values(pool)
+        .map((entry) => parseInt(String(entry?.port ?? ''), 10))
+        .filter((n) => Number.isInteger(n)),
+    );
+    let port = PREVIEW_POOL_PORTS.find((p) => !used.has(p)) ?? PREVIEW_POOL_PORTS[0];
+    if (used.size >= PREVIEW_POOL_PORTS.length) {
+      let oldestId: string | null = null;
+      let oldestAt = Infinity;
+      for (const [id, entry] of Object.entries(pool)) {
+        const ts = Date.parse(String(entry?.updatedAt ?? ''));
+        if (Number.isFinite(ts) && ts < oldestAt) {
+          oldestAt = ts;
+          oldestId = id;
+        }
+      }
+      if (oldestId && pool[oldestId]?.port) {
+        port = parseInt(String(pool[oldestId].port), 10);
+        delete pool[oldestId];
+      }
+    }
+    const portStr = String(port);
+    this.writePreviewPoolEntry(themeId, portStr, siteUrl);
+    return portStr;
+  }
+
+  private resolvePreviewSiteUrl(siteUrl: string, themeId?: string): string {
+    if (themeId) {
+      const entry = this.readPreviewPoolManifest()[themeId];
+      if (typeof entry?.url === 'string' && entry.url.startsWith('http')) {
+        return entry.url.endsWith('/') ? entry.url : `${entry.url}/`;
+      }
+      if (entry?.port) {
+        try {
+          const url = new URL(siteUrl);
+          url.port = String(entry.port);
+          return `${url.origin}/`;
+        } catch {
+          return `http://127.0.0.1:${entry.port}/`;
+        }
+      }
+    }
     const previewPort = process.env.REACTPRESS_PREVIEW_PORT || '3003';
     try {
       const url = new URL(siteUrl);
       url.port = previewPort;
       return `${url.origin}/`;
     } catch {
-      return `http://localhost:${previewPort}/`;
+      return `http://127.0.0.1:${previewPort}/`;
     }
   }
 
@@ -585,20 +664,22 @@ export class ThemeService {
     const state = await this.getThemeState();
     const saved = await this.saveThemeState({ previewThemeId: themeId });
 
+    const row = await this.getSettingRow();
+    const siteUrl = this.resolveSiteUrlFromRow(row);
+
     if (themeId !== state.activeTheme) {
+      this.reservePreviewPortForTheme(themeId, siteUrl);
       this.syncPreviewThemeManifest(themeId);
     } else {
       this.clearPreviewThemeManifest();
     }
 
-    const row = await this.getSettingRow();
-    const siteUrl = this.resolveSiteUrlFromRow(row);
     return {
       ...saved,
       activeTheme: state.activeTheme,
       siteUrl,
       previewSiteUrl:
-        themeId !== state.activeTheme ? this.resolvePreviewSiteUrl(siteUrl) : undefined,
+        themeId !== state.activeTheme ? this.resolvePreviewSiteUrl(siteUrl, themeId) : undefined,
     };
   }
 
@@ -797,6 +878,19 @@ export class ThemeService {
       return;
     }
     this.syncActiveThemeManifest(state.activeTheme);
+  }
+
+  /** Dev: symlink template for instant install; prod: full copy. Set REACTPRESS_THEME_RUNTIME_COPY=1 to force copy. */
+  private materializeRuntimeTheme(templatePath: string, targetDir: string): void {
+    const forceCopy =
+      process.env.REACTPRESS_THEME_RUNTIME_COPY === '1' || process.env.NODE_ENV === 'production';
+    if (!forceCopy) {
+      const linkTarget = path.relative(path.dirname(targetDir), templatePath);
+      fs.symlinkSync(linkTarget, targetDir, 'dir');
+      return;
+    }
+    this.copyDir(templatePath, targetDir);
+    this.linkTemplateNodeModules(templatePath, targetDir);
   }
 
   private copyDir(src: string, dest: string): void {

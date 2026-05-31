@@ -7,7 +7,12 @@ import { waitForVisitorSite } from "@/shared/theme/waitForVisitorSite";
 export type ThemePreviewSessionStatus = "idle" | "switching" | "ready";
 
 /** Debounce ending preview so React Strict Mode remount does not delete preview-theme.json twice. */
-const PREVIEW_SESSION_END_MS = 450;
+const PREVIEW_SESSION_END_MS = 300;
+
+/** Target ~3s for warmed themes; hard cap 10s. */
+const PREVIEW_READY_MAX_MS = 10_000;
+const PREVIEW_READY_POLL_MS = 200;
+const PREVIEW_READY_MIN_MS = 100;
 
 let previewSessionRefCount = 0;
 let previewSessionEndTimer: ReturnType<typeof setTimeout> | null = null;
@@ -35,7 +40,7 @@ function releasePreviewSession(): void {
 }
 
 /**
- * Sync local preview dev (`preview-theme.json` on :3003) while admin preview is open.
+ * Sync local preview dev (`preview-theme.json` on :3003+) while admin preview is open.
  * Does not change the public visitor site (`active-theme.json` / :3001).
  */
 export function useThemePreviewSession(
@@ -60,6 +65,8 @@ export function useThemePreviewSession(
     setPreviewSiteUrl(undefined);
 
     void (async () => {
+      const isActiveTheme = themeId === (activeThemeId ?? themeId);
+
       let sessionPreviewUrl: string | undefined;
       try {
         const result = await beginThemePreviewSession(themeId);
@@ -83,7 +90,16 @@ export function useThemePreviewSession(
         return;
       }
 
-      await waitForVisitorSite(liveUrl);
+      if (isActiveTheme) {
+        if (!cancelled) setStatus("ready");
+        return;
+      }
+
+      await waitForVisitorSite(liveUrl, {
+        minWaitMs: PREVIEW_READY_MIN_MS,
+        maxWaitMs: PREVIEW_READY_MAX_MS,
+        intervalMs: PREVIEW_READY_POLL_MS,
+      });
       if (!cancelled) setStatus("ready");
     })();
 

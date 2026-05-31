@@ -3,6 +3,7 @@ import { Plus } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { useThemeActivation } from "@/hooks/useThemeActivation";
 import { useThemeMutations, useThemes } from "@/hooks/useThemes";
 import { ActiveThemePanel } from "@/modules/appearance/components/ActiveThemePanel";
 import { ThemeCard } from "@/modules/appearance/components/ThemeCard";
@@ -25,7 +26,8 @@ export function ThemesPage() {
   const { t } = useTranslation();
   const { message } = App.useApp();
   const { data: themes, isLoading, isError, error, refetch } = useThemes();
-  const { installMutation, activateMutation } = useThemeMutations();
+  const { installMutation } = useThemeMutations();
+  const { activateAndWait, activatingId } = useThemeActivation();
   const [filter, setFilter] = useState<ThemeCatalogFilter>("all");
   const [search, setSearch] = useState("");
 
@@ -49,22 +51,8 @@ export function ThemesPage() {
     }
   };
 
-  const handleActivate = async (id: string) => {
-    try {
-      const state = await activateMutation.mutateAsync(id);
-      const siteUrl =
-        typeof state === "object" && state && "siteUrl" in state
-          ? String((state as { siteUrl?: string }).siteUrl ?? "")
-          : "";
-      message.success(
-        siteUrl
-          ? t("appearance.activateSuccessWithSite", { url: siteUrl })
-          : t("appearance.activateSuccess"),
-        6,
-      );
-    } catch {
-      message.error(t("appearance.actionFailed"));
-    }
+  const handleActivate = (id: string) => {
+    void activateAndWait(id);
   };
 
   if (isError) {
@@ -132,9 +120,9 @@ export function ThemesPage() {
                 key={theme.id}
                 theme={theme}
                 onInstall={(id) => void handleInstall(id)}
-                onActivate={(id) => void handleActivate(id)}
+                onActivate={(id) => handleActivate(id)}
                 installing={installMutation.isPending && installMutation.variables === theme.id}
-                activating={activateMutation.isPending && activateMutation.variables === theme.id}
+                activating={activatingId === theme.id}
               />
             ))}
           </div>

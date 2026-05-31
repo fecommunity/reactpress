@@ -7,9 +7,9 @@ export async function waitForVisitorSite(
   siteUrl: string,
   options?: { minWaitMs?: number; maxWaitMs?: number; intervalMs?: number },
 ): Promise<boolean> {
-  const minWaitMs = options?.minWaitMs ?? 1200;
+  const minWaitMs = options?.minWaitMs ?? 300;
   const maxWaitMs = options?.maxWaitMs ?? 120_000;
-  const intervalMs = options?.intervalMs ?? 1200;
+  const intervalMs = options?.intervalMs ?? 350;
   const started = Date.now();
 
   await sleep(minWaitMs);
