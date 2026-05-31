@@ -3,7 +3,11 @@ const path = require('path');
 const { spawnSync } = require('child_process');
 const { runSync, runNodeScript, resolveCliScript } = require('./spawn');
 const { getThemeBin, resolveProjectRoot } = require('./paths');
-const { readActiveThemeManifest, resolveThemeDirectory } = require('./theme-runtime');
+const {
+  readActiveThemeManifest,
+  resolveThemeDirectory,
+  listAvailableThemeIds,
+} = require('./theme-runtime');
 const { t } = require('./i18n');
 const { resolveBuildNodeEnv } = require('./prod-memory');
 
@@ -99,16 +103,35 @@ function newestSourceMtime(rootDir, depth = 0) {
   return max;
 }
 
+/** Post-build artifacts — not source changes; ignored when comparing freshness. */
+const GENERATED_PUBLIC_FILES = new Set([
+  'robots.txt',
+  'sitemap.xml',
+  'sitemap-0.xml',
+  'sitemap-1.xml',
+]);
+
 function themeSourcesNewerThanBuild(themeDir) {
-  const buildMarker = path.join(themeDir, '.next', 'BUILD_ID');
-  if (!fs.existsSync(buildMarker)) return true;
-  const buildMtime = fs.statSync(buildMarker).mtimeMs;
+  const stampPath = path.join(themeDir, BUILD_STAMP_REL);
+  if (!fs.existsSync(stampPath)) return true;
+  const buildMtime = fs.statSync(stampPath).mtimeMs;
+
   for (const rel of ['pages', 'src', 'public', 'theme.json', 'package.json', 'next.config.js']) {
     const target = path.join(themeDir, rel);
     if (!fs.existsSync(target)) continue;
     const stat = fs.statSync(target);
-    const mtime = stat.isDirectory() ? newestSourceMtime(target) : stat.mtimeMs;
-    if (mtime > buildMtime) return true;
+    if (stat.isDirectory()) {
+      if (rel === 'public') {
+        for (const entry of fs.readdirSync(target, { withFileTypes: true })) {
+          if (!entry.isFile() || GENERATED_PUBLIC_FILES.has(entry.name)) continue;
+          if (fs.statSync(path.join(target, entry.name)).mtimeMs > buildMtime) return true;
+        }
+        continue;
+      }
+      if (newestSourceMtime(target) > buildMtime) return true;
+      continue;
+    }
+    if (stat.mtimeMs > buildMtime) return true;
   }
   return false;
 }
@@ -129,42 +152,120 @@ function hasUsableProductionBuild(themeDir, themeId) {
   return true;
 }
 
-function readActiveThemeBuildState(projectRoot) {
-  const { activeTheme } = readActiveThemeManifest(projectRoot);
-  const themeDir = resolveThemeDirectory(projectRoot, activeTheme);
+function resolvePreviewThemeEnv(projectRoot, themeDir, port) {
+  return {
+    ...resolveProductionThemeEnv(projectRoot, themeDir),
+    NODE_ENV: 'production',
+    PORT: String(port),
+    CLIENT_PORT: String(port),
+  };
+}
+
+function resolveThemeBuildState(projectRoot, themeId) {
+  const themeDir = resolveThemeDirectory(projectRoot, themeId);
   if (!themeDir || !fs.existsSync(path.join(themeDir, 'package.json'))) {
     return null;
   }
-  return { activeTheme, themeDir };
+  return { themeId, themeDir };
 }
 
-function buildActiveTheme(projectRoot, { force = false } = {}) {
-  const state = readActiveThemeBuildState(projectRoot);
+function readActiveThemeBuildState(projectRoot) {
+  const { activeTheme } = readActiveThemeManifest(projectRoot);
+  const state = resolveThemeBuildState(projectRoot, activeTheme);
+  if (!state) return null;
+  return { activeTheme, themeDir: state.themeDir };
+}
+
+/** @type {Promise<unknown>} */
+let themeBuildChain = Promise.resolve();
+
+function doBuildThemeSync(projectRoot, themeId, { force = false, logPrefix = 'themeProd' } = {}) {
+  const state = resolveThemeBuildState(projectRoot, themeId);
   if (!state) {
-    const { activeTheme } = readActiveThemeManifest(projectRoot);
-    const err = new Error(`Active theme not found: ${activeTheme}`);
+    const err = new Error(`Theme not found: ${themeId}`);
     err.code = 'REACTPRESS_THEME_NOT_FOUND';
     throw err;
   }
-  const { activeTheme, themeDir } = state;
+  const { themeDir } = state;
 
-  syncThemeLaunchFilesFromTemplate(projectRoot, activeTheme, themeDir);
-
-  if (!force && hasUsableProductionBuild(themeDir, activeTheme)) {
-    console.log(`[reactpress] ${t('themeProd.reusingBuild', { id: activeTheme })}`);
-    return { activeTheme, themeDir, skippedBuild: true };
+  if (!force && hasUsableProductionBuild(themeDir, themeId)) {
+    if (logPrefix === 'themePreview') {
+      console.log(`[reactpress] ${t('themePreview.reusingBuild', { id: themeId })}`);
+    } else {
+      console.log(`[reactpress] ${t('themeProd.reusingBuild', { id: themeId })}`);
+    }
+    return { themeId, themeDir, skippedBuild: true };
   }
 
-  console.log(`[reactpress] ${t('themeProd.building', { id: activeTheme })}`);
+  syncThemeLaunchFilesFromTemplate(projectRoot, themeId, themeDir);
+
+  const buildingKey =
+    logPrefix === 'themePreview' ? 'themePreview.building' : 'themeProd.building';
+  console.log(`[reactpress] ${t(buildingKey, { id: themeId })}`);
   runSync('pnpm', ['run', 'build'], {
     cwd: themeDir,
     env: resolveBuildNodeEnv({
       ...resolveProductionThemeEnv(projectRoot, themeDir),
-      REACTPRESS_BUILD_ACTIVE: '1',
+      ...(logPrefix === 'themeProd' ? { REACTPRESS_BUILD_ACTIVE: '1' } : {}),
     }),
   });
-  writeThemeBuildStamp(themeDir, activeTheme);
-  return { activeTheme, themeDir, skippedBuild: false };
+  writeThemeBuildStamp(themeDir, themeId);
+  return { themeId, themeDir, skippedBuild: false };
+}
+
+function enqueueThemeBuild(projectRoot, themeId, options = {}) {
+  const task = themeBuildChain.then(() => doBuildThemeSync(projectRoot, themeId, options));
+  themeBuildChain = task.catch(() => {});
+  return task;
+}
+
+function buildTheme(projectRoot, themeId, options = {}) {
+  return doBuildThemeSync(projectRoot, themeId, options);
+}
+
+function buildActiveTheme(projectRoot, { force = false } = {}) {
+  const { activeTheme } = readActiveThemeManifest(projectRoot);
+  const result = doBuildThemeSync(projectRoot, activeTheme, { force, logPrefix: 'themeProd' });
+  return { activeTheme, themeDir: result.themeDir, skippedBuild: result.skippedBuild };
+}
+
+function scheduleBackgroundThemeBuilds(projectRoot, { excludeThemeId } = {}) {
+  if (process.env.REACTPRESS_SKIP_PREVIEW_BUILD === '1') return;
+
+  const activeTheme =
+    excludeThemeId || readActiveThemeManifest(projectRoot).activeTheme;
+  const themeIds = listAvailableThemeIds(projectRoot).filter((id) => id !== activeTheme);
+  if (themeIds.length === 0) return;
+
+  console.log(
+    `[reactpress] ${t('themePreview.backgroundBuildScheduled', { count: themeIds.length })}`,
+  );
+
+  setImmediate(() => {
+    void (async () => {
+      for (const themeId of themeIds) {
+        const state = resolveThemeBuildState(projectRoot, themeId);
+        if (state && hasUsableProductionBuild(state.themeDir, themeId)) {
+          continue;
+        }
+        try {
+          const result = await enqueueThemeBuild(projectRoot, themeId, {
+            logPrefix: 'themePreview',
+          });
+          if (!result.skippedBuild) {
+            console.log(`[reactpress] ${t('themePreview.buildDone', { id: themeId })}`);
+          }
+        } catch (err) {
+          console.warn(
+            `[reactpress] ${t('themePreview.buildFailed', {
+              id: themeId,
+              message: err.message || err,
+            })}`,
+          );
+        }
+      }
+    })();
+  });
 }
 
 /**
@@ -190,9 +291,14 @@ async function restartProductionVisitorClient(projectRoot = resolveProjectRoot()
 
 module.exports = {
   buildActiveTheme,
+  buildTheme,
+  enqueueThemeBuild,
+  scheduleBackgroundThemeBuilds,
   restartProductionVisitorClient,
   resolveProductionThemeEnv,
+  resolvePreviewThemeEnv,
   hasUsableProductionBuild,
   readActiveThemeBuildState,
+  resolveThemeBuildState,
   writeThemeBuildStamp,
 };

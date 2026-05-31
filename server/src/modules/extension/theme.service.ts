@@ -48,7 +48,7 @@ function projectRoot(): string {
 }
 
 const THEME_ID_RE = /^[a-z0-9][a-z0-9-]*$/i;
-const PREVIEW_POOL_PORTS = [3003, 3004, 3005, 3006, 3007, 3008];
+const PREVIEW_POOL_PORTS = [3003];
 const PREVIEW_POOL_MANIFEST = path.join('.reactpress', 'preview-pool.json');
 /** Ephemeral installed copies — under .reactpress/ with active-theme.json */
 const THEME_RUNTIME_REL = path.join('.reactpress', 'runtime');

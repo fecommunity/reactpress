@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { beginThemePreviewSession, endThemePreviewSession } from "@/shared/api/themes";
 import { resolveLiveSitePreviewUrl } from "@/shared/theme/previewUrl";
@@ -53,6 +53,10 @@ export function useThemePreviewSession(
   const [status, setStatus] = useState<ThemePreviewSessionStatus>("idle");
   const [previewSiteUrl, setPreviewSiteUrl] = useState<string | undefined>();
   const [resolvedActiveThemeId, setResolvedActiveThemeId] = useState<string | undefined>();
+  const siteUrlRef = useRef(siteUrl);
+  const activeThemeIdRef = useRef(activeThemeId);
+  siteUrlRef.current = siteUrl;
+  activeThemeIdRef.current = activeThemeId;
 
   useEffect(() => {
     if (!enabled || !themeId) {
@@ -71,7 +75,7 @@ export function useThemePreviewSession(
 
     void (async () => {
       let sessionPreviewUrl: string | undefined;
-      let sessionActiveTheme = activeThemeId ?? themeId;
+      let sessionActiveTheme = activeThemeIdRef.current ?? themeId;
 
       try {
         const result = await beginThemePreviewSession(themeId);
@@ -91,7 +95,7 @@ export function useThemePreviewSession(
 
       const effectiveActiveThemeId = sessionActiveTheme;
 
-      const liveUrl = resolveLiveSitePreviewUrl(siteUrl, {
+      const liveUrl = resolveLiveSitePreviewUrl(siteUrlRef.current, {
         themeId,
         activeThemeId: effectiveActiveThemeId,
         previewSiteUrl: sessionPreviewUrl,
@@ -124,7 +128,7 @@ export function useThemePreviewSession(
       setResolvedActiveThemeId(undefined);
       releasePreviewSession();
     };
-  }, [enabled, themeId, siteUrl, activeThemeId]);
+  }, [enabled, themeId]);
 
   return {
     ready: status === "ready",

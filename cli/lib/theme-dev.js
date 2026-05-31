@@ -497,33 +497,28 @@ async function restartPreviewThemeSite(projectRoot, { onClose } = {}) {
 
   if (!signature) {
     previewRunningSignature = null;
+    stopAllPreviewPool(projectRoot);
     if (onClose) onClose(0);
     return;
   }
 
+  const previewManifest = readPreviewThemeManifest(projectRoot);
+  const themeId = previewManifest?.activeTheme;
+  if (!themeId) return;
+
   if (signature === previewRunningSignature) {
-    const previewManifest = readPreviewThemeManifest(projectRoot);
-    const themeId = previewManifest?.activeTheme;
-    if (themeId) {
-      const { previewPool } = require('./theme-preview-pool');
-      const entry = previewPool.get(themeId);
-      if (entry?.child && !entry.child.killed) {
-        const ready = await isPreviewHomepageReady(projectRoot, entry.port);
-        if (ready) return;
-      }
+    const { previewPool } = require('./theme-preview-pool');
+    const entry = previewPool.get(themeId);
+    if (entry?.child && !entry.child.killed) {
+      const ready = await isPreviewHomepageReady(projectRoot, entry.port);
+      if (ready) return;
     }
   }
 
-  const previewManifest = readPreviewThemeManifest(projectRoot);
-  if (!previewManifest?.activeTheme) return;
-
-  const themeId = previewManifest.activeTheme;
   const serverApiUrl = buildThemeServerApiUrl(projectRoot);
   const publicApiUrl = buildThemePublicApiUrl(projectRoot);
 
   const result = await ensurePreviewThemeRunning(projectRoot, themeId, {
-    buildThemeChildEnv,
-    cleanStaleThemeDevCache,
     serverApiUrl,
     publicApiUrl,
   });
@@ -586,6 +581,7 @@ function watchPreviewThemeManifest(projectRoot, onChange) {
   const PREVIEW_CLEAR_GRACE_MS = 500;
 
   const enqueueRestart = (nextSignature) => {
+    if (nextSignature === lastSignature) return;
     lastSignature = nextSignature;
     if (nextSignature) {
       console.log('\n[reactpress] preview-theme.json changed — restarting preview theme…');
@@ -627,7 +623,10 @@ function watchPreviewThemeManifest(projectRoot, onChange) {
     }, 200);
   };
 
-  const watcher = fs.watch(dir, scheduleCheck);
+  const watcher = fs.watch(dir, (event, filename) => {
+    if (filename && filename !== 'preview-theme.json') return;
+    scheduleCheck();
+  });
   const poller = setInterval(scheduleCheck, 1000);
 
   return () => {

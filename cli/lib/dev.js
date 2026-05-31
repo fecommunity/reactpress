@@ -25,6 +25,7 @@ const {
 } = require('./theme-runtime');
 const { shouldBuildToolkit } = require('./toolkit-build');
 const { startThemeSiteWithWatch, stopThemeSite } = require('./theme-dev');
+const { scheduleBackgroundThemeBuilds } = require('./theme-prod');
 const {
   shouldBlockOnThemeWarmup,
   warmupThemeDevRoutes,
@@ -506,6 +507,11 @@ async function startDevStack(
   const dbOk = needsLocalApi ? await probeMysqlHost(projectRoot) : true;
   if (needsLocalApi && !dbOk) {
     console.warn(t('dev.mysqlUnreachable'));
+  }
+
+  if (includeThemeSite && process.env.REACTPRESS_SKIP_PREVIEW_BUILD !== '1') {
+    const { activeTheme } = readActiveThemeManifest(projectRoot);
+    scheduleBackgroundThemeBuilds(projectRoot, { excludeThemeId: activeTheme });
   }
 
   printDevReadyBanner(projectRoot, {

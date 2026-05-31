@@ -3,12 +3,17 @@ const path = require('path');
 const { spawnDevChild } = require('./dev-child-io');
 const { loadClientSiteUrl, normalizeProbeUrl, probeHttp, waitForHttpOk } = require('./http');
 const { isPortListening, killPortListeners } = require('./ports');
-const { resolveThemeDirectory, isThemePackageDir } = require('./theme-runtime');
+const {
+  resolveThemeDirectory,
+  isThemePackageDir,
+  getPreviewThemePort,
+} = require('./theme-runtime');
+const { enqueueThemeBuild, resolvePreviewThemeEnv } = require('./theme-prod');
 const { warmupThemeHomepage } = require('./theme-warmup');
 const { t } = require('./i18n');
 
-/** Preview dev servers — one port per warmed theme (3003–3008). */
-const PREVIEW_POOL_PORTS = [3003, 3004, 3005, 3006, 3007, 3008];
+/** Single preview slot — production `next start` on demand (low memory). */
+const PREVIEW_POOL_PORTS = [parseInt(getPreviewThemePort(), 10)];
 const PREVIEW_POOL_MANIFEST = path.join('.reactpress', 'preview-pool.json');
 const PREVIEW_READY_POLL_MS = 150;
 
@@ -105,33 +110,16 @@ function stopAllPreviewPool(projectRoot) {
   }
 }
 
-function allocatePreviewPort(themeId) {
-  const existing = previewPool.get(themeId);
-  if (existing?.port) return existing.port;
-
-  const used = new Set([...previewPool.values()].map((entry) => entry.port));
-  for (const port of PREVIEW_POOL_PORTS) {
-    if (used.has(port)) continue;
-    if (!isPortListening(port)) return port;
-  }
-
-  let oldestThemeId = null;
-  let oldestUsed = Infinity;
-  for (const [id, entry] of previewPool) {
-    if (id === themeId) continue;
-    if ((entry.lastUsed ?? 0) < oldestUsed) {
-      oldestUsed = entry.lastUsed ?? 0;
-      oldestThemeId = id;
-    }
-  }
-  if (oldestThemeId) {
-    const evicted = previewPool.get(oldestThemeId);
-    stopPreviewPoolChild(evicted);
-    previewPool.delete(oldestThemeId);
-    return evicted.port;
-  }
-
+function getPreviewPort() {
   return PREVIEW_POOL_PORTS[0];
+}
+
+function stopOtherPreviewThemes(themeId) {
+  for (const [otherId, entry] of [...previewPool.entries()]) {
+    if (otherId === themeId) continue;
+    stopPreviewPoolChild(entry);
+    previewPool.delete(otherId);
+  }
 }
 
 async function releasePreviewPort(port) {
@@ -144,63 +132,94 @@ async function releasePreviewPort(port) {
   return !isPortListening(port);
 }
 
+/** @type {Map<string, Promise<{ themeId: string, port: number, url: string, reused: boolean } | null>>} */
+const previewEnsureInflight = new Map();
+
 /**
- * Reuse a warmed preview dev server or spawn a new one on a dedicated port.
+ * Ensure a production build exists, then start `next start` on the preview port.
  * @returns {Promise<{ themeId: string, port: number, url: string, reused: boolean } | null>}
  */
-function resolvePreviewPortForTheme(projectRoot, themeId) {
-  const pool = readPreviewPoolManifest(projectRoot);
-  const fromManifest = parseInt(String(pool[themeId]?.port ?? ''), 10);
-  if (Number.isInteger(fromManifest) && PREVIEW_POOL_PORTS.includes(fromManifest)) {
-    return fromManifest;
-  }
-  return allocatePreviewPort(themeId);
-}
-
 async function ensurePreviewThemeRunning(
   projectRoot,
   themeId,
-  { buildThemeChildEnv, cleanStaleThemeDevCache, serverApiUrl, publicApiUrl },
+  { serverApiUrl, publicApiUrl },
+) {
+  const inflight = previewEnsureInflight.get(themeId);
+  if (inflight) return inflight;
+
+  const job = startPreviewThemeRunning(projectRoot, themeId, {
+    serverApiUrl,
+    publicApiUrl,
+  }).finally(() => {
+    if (previewEnsureInflight.get(themeId) === job) {
+      previewEnsureInflight.delete(themeId);
+    }
+  });
+  previewEnsureInflight.set(themeId, job);
+  return job;
+}
+
+async function startPreviewThemeRunning(
+  projectRoot,
+  themeId,
+  { serverApiUrl, publicApiUrl },
 ) {
   const themeDir = resolveThemeDirectory(projectRoot, themeId);
   if (!themeDir || !isThemePackageDir(projectRoot, themeDir)) {
     return null;
   }
 
+  const port = getPreviewPort();
   const pooled = previewPool.get(themeId);
-  if (pooled?.child && !pooled.child.killed) {
-    const ready = await isPreviewHomepageReady(projectRoot, pooled.port);
+  if (pooled?.child && !pooled.child.killed && pooled.port === port) {
+    const ready = await isPreviewHomepageReady(projectRoot, port);
     if (ready) {
       pooled.lastUsed = Date.now();
       writePreviewPoolManifest(projectRoot);
       return {
         themeId,
-        port: pooled.port,
-        url: getPreviewSiteUrlForPort(projectRoot, pooled.port),
+        port,
+        url: getPreviewSiteUrlForPort(projectRoot, port),
         reused: true,
       };
     }
     stopPreviewPoolChild(pooled);
   }
 
-  const port = resolvePreviewPortForTheme(projectRoot, themeId);
+  stopOtherPreviewThemes(themeId);
   await releasePreviewPort(port);
 
-  cleanStaleThemeDevCache(themeDir);
+  try {
+    await enqueueThemeBuild(projectRoot, themeId, { logPrefix: 'themePreview' });
+  } catch (err) {
+    console.warn(
+      `[reactpress] ${t('themePreview.buildFailed', {
+        id: themeId,
+        message: err.message || err,
+      })}`,
+    );
+    return null;
+  }
 
   const relDir = path.relative(projectRoot, themeDir) || themeDir;
   const previewUrl = getPreviewSiteUrlForPort(projectRoot, port);
-  console.log(`[reactpress] Preview theme "${themeId}" → ${previewUrl} (port ${port}, ${relDir})`);
+  console.log(
+    `[reactpress] ${t('themePreview.starting', { id: themeId, url: previewUrl, port, dir: relDir })}`,
+  );
 
-  const child = spawnDevChild('pnpm', ['run', 'dev'], {
+  const child = spawnDevChild('node', ['server.js'], {
     cwd: themeDir,
     detached: process.platform !== 'win32',
     shell: process.platform === 'win32',
     env: {
-      ...buildThemeChildEnv(projectRoot, { port, serverApiUrl, publicApiUrl, themeId }),
+      ...resolvePreviewThemeEnv(projectRoot, themeDir, port),
+      SERVER_API_URL: serverApiUrl,
+      REACTPRESS_API_URL: serverApiUrl,
+      NEXT_PUBLIC_REACTPRESS_API_URL: publicApiUrl,
+      REACTPRESS_THEME_ID: themeId,
       REACTPRESS_HONOR_PREVIEW: '1',
-      // Preview dev must stay on :3003+ — nginx redirect would show the active theme instead.
       REACTPRESS_SKIP_DEV_PORT_REDIRECT: '1',
+      REACTPRESS_SKIP_BROWSER_OPEN: '1',
     },
   });
 
@@ -210,7 +229,7 @@ async function ensurePreviewThemeRunning(
   const homepageUrl = `${previewUrl.replace(/\/$/, '')}/`;
   const ready = await waitForHttpOk(homepageUrl, 120_000, PREVIEW_READY_POLL_MS);
   if (ready) {
-    console.log(`[reactpress] Preview ready: ${homepageUrl} (theme: ${themeId})`);
+    console.log(`[reactpress] ${t('themePreview.ready', { url: homepageUrl, id: themeId })}`);
     warmupThemeHomepage(projectRoot, homepageUrl).catch(() => {});
   } else {
     console.warn(t('themeDev.slow', { url: homepageUrl }));

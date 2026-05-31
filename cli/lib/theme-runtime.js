@@ -212,6 +212,39 @@ function hasResolvableActiveTheme(projectRoot) {
   return Boolean(themeDir && isThemePackageDir(projectRoot, themeDir));
 }
 
+/** Installed / bundled theme ids (active-theme.json entries may point into runtime/). */
+function listAvailableThemeIds(projectRoot) {
+  const ids = new Set();
+  const { themes, runtime, legacyThemesRuntime, legacyStarter, legacyBundled } =
+    themeRoots(projectRoot);
+
+  for (const dir of [runtime, legacyThemesRuntime]) {
+    if (!fs.existsSync(dir)) continue;
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      if (!entry.isDirectory() || !isValidThemeId(entry.name)) continue;
+      if (isThemePackageAt(path.join(dir, entry.name))) ids.add(entry.name);
+    }
+  }
+
+  if (fs.existsSync(themes)) {
+    for (const entry of fs.readdirSync(themes, { withFileTypes: true })) {
+      if (!entry.isDirectory() || THEMES_RESERVED_SUBDIRS.includes(entry.name)) continue;
+      if (!isValidThemeId(entry.name)) continue;
+      if (isThemePackageAt(path.join(themes, entry.name))) ids.add(entry.name);
+    }
+  }
+
+  for (const base of [...legacyStarter, legacyBundled]) {
+    if (!fs.existsSync(base)) continue;
+    for (const entry of fs.readdirSync(base, { withFileTypes: true })) {
+      if (!entry.isDirectory() || !isValidThemeId(entry.name)) continue;
+      if (isThemePackageAt(path.join(base, entry.name))) ids.add(entry.name);
+    }
+  }
+
+  return [...ids].sort();
+}
+
 function hasThemePackages(projectRoot) {
   const { themes, runtime, legacyThemesRuntime, legacyStarter, legacyBundled } =
     themeRoots(projectRoot);
@@ -265,5 +298,6 @@ module.exports = {
   getPreviewThemePort,
   hasThemePackages,
   hasResolvableActiveTheme,
+  listAvailableThemeIds,
   themeRoots,
 };
