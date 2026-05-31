@@ -71,7 +71,7 @@ export function ArticleToc({
             key={item.id}
             type="button"
             className={`${itemClassName}${index === active ? ` ${activeClassName}` : ''}`}
-            style={{ paddingLeft: 12 * (item.level - 1) }}
+            style={{ paddingLeft: 12 * (Math.max(1, Number(item.level) || 1) - 1) }}
             onClick={() => goto(item)}
             dangerouslySetInnerHTML={{ __html: item.text }}
           />
@@ -81,12 +81,35 @@ export function ArticleToc({
   );
 }
 
-/** Parse TOC JSON stored on article records. */
+/** Parse TOC JSON stored on article records. Supports legacy `[level, id, text]` tuples. */
 export function parseArticleToc(raw?: string | null): TocItem[] {
   if (!raw?.trim()) return [];
   try {
-    const parsed = JSON.parse(raw) as TocItem[];
-    return Array.isArray(parsed) ? parsed : [];
+    const parsed = JSON.parse(raw) as unknown;
+    if (!Array.isArray(parsed)) return [];
+    return parsed
+      .map((entry): TocItem | null => {
+        if (Array.isArray(entry) && entry.length >= 3) {
+          const level = Number(entry[0]);
+          return {
+            level: Number.isFinite(level) ? level : 1,
+            id: String(entry[1]),
+            text: String(entry[2]),
+          };
+        }
+        if (entry && typeof entry === 'object') {
+          const row = entry as Record<string, unknown>;
+          const level = Number(row.level);
+          if (!row.id) return null;
+          return {
+            level: Number.isFinite(level) ? level : 1,
+            id: String(row.id),
+            text: String(row.text ?? ''),
+          };
+        }
+        return null;
+      })
+      .filter((item): item is TocItem => item != null);
   } catch {
     return [];
   }

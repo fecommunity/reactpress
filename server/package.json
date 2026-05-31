@@ -35,10 +35,11 @@
     "node": ">=16.5.0"
   },
   "scripts": {
-    "prebuild": "rimraf dist",
+    "clean": "rimraf dist",
     "build": "nest build && npm run copy-assets",
     "copy-assets": "cp -r public dist/ 2>/dev/null || true",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "predev": "node scripts/ensure-dev-dist.js",
     "dev": "cross-env REACTPRESS_API_ENTRY=starter nest start --watch",
     "debug": "nest start --debug --watch",
     "start": "cross-env NODE_ENV=production node dist/main",

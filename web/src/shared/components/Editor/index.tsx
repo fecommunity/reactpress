@@ -47,7 +47,8 @@ export function MarkdownEditor({
     () => getDefaultMarkdown(i18nInstance.language),
     [i18nInstance.language],
   );
-  const resolvedDefaultValue = defaultValue ?? localeDefaultMarkdown;
+  const resolvedDefaultValue =
+    defaultValue != null && defaultValue.trim() !== "" ? defaultValue : localeDefaultMarkdown;
   const editorRef = useRef<MonacoEditorHandle>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const editorContainerRef = useRef<HTMLDivElement>(null);

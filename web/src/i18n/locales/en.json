@@ -419,7 +419,7 @@
     "toolInlineCode": "Inline code",
     "toolTable": "Table",
     "toolCode": "Code block",
-    "defaultMarkdown": "\n\n# Enjoy Markdown\n\nWrite your content here. Markdown supports **bold**, *italic*, lists, code blocks, and tables.\n\n## Quick tips\n\n- Use the toolbar to insert images, videos, emoji, and code blocks\n- Press `Ctrl/Cmd + S` to save a local draft\n- Use the sidebar for categories, tags, and publish options\n\n```js\nconsole.log('Hello ReactPress');\n```\n\n",
+    "defaultMarkdown": "\n# Heading 1\n\nThis is a normal paragraph. Separate paragraphs with a **blank line**. Inline styles: **bold**, *italic*, ~~strikethrough~~, and `inline code`.\n\n## Heading 2\n\n> A blockquote works well for callouts, quotes, or short notes.\n\n### Heading 3\n\nBullet list:\n\n- Item one\n- Item two\n  - Nested item\n\nNumbered list:\n\n1. Step one\n2. Step two\n\n#### Heading 4\n\nImage (replace `/logo.png` with a URL from the media library):\n\n![ReactPress sample image](/logo.png)\n\nLink: [ReactPress on GitHub](https://github.com/fecommunity/reactpress)\n\n---\n\nCode block:\n\n```js\nconsole.log('Hello ReactPress');\n```\n\nTable:\n\n| Column A | Column B |\n| :------- | :------- |\n| Cell 1   | Cell 2   |\n\n> Tip: Use the toolbar for headings, images, tables, and code blocks. Set category, tags, and publish options in the sidebar.\n",
     "tableCol1": "Column 1",
     "tableCol2": "Column 2",
     "tableCol3": "Column 3",

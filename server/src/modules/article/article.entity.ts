@@ -43,7 +43,7 @@ export class Article {
   @Column({ type: 'mediumtext', default: null })
   toc: string; // 格式化内容索引，自动生成
 
-  @ApiProperty()
+  @ApiProperty({ type: () => Category })
   @ManyToOne(
     () => Category,
     (category) => category.articles,
@@ -52,7 +52,7 @@ export class Article {
   @JoinTable()
   category: Category;
 
-  @ApiProperty()
+  @ApiProperty({ type: () => Tag, isArray: true })
   @ManyToMany(
     () => Tag,
     (tag) => tag.articles,

@@ -6,26 +6,84 @@ import {
   pickSystemSettingPatch,
   resolveEffectiveSettingRow,
 } from '@fecommunity/reactpress-toolkit/theme';
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as merge from 'deepmerge';
 import { Repository } from 'typeorm';
 
 import { i18n, settings } from './setting.constant';
 import { Setting } from './setting.entity';
+import { getSystemSettingSeedDefaults } from '../bootstrap/bootstrap.constants';
+import { resolveInstallLocale } from '../bootstrap/install-locale';
 
 const THEMES_WITH_CONFIGURATION = ['twentytwentyfive'] as const;
 
+function trimUrl(url: string): string {
+  return url.replace(/\/+$/, '');
+}
+
 @Injectable()
-export class SettingService {
+export class SettingService implements OnModuleInit {
   constructor(
     @InjectRepository(Setting)
-    private readonly settingRepository: Repository<Setting>
-  ) {
-    this.initI18n();
-    this.initGlobalConfig();
-    this.migrateLegacyAppearance();
-    this.initThemeConfigurations();
+    private readonly settingRepository: Repository<Setting>,
+    private readonly configService: ConfigService,
+  ) {}
+
+  onModuleInit() {
+    void this.runInitializers();
+  }
+
+  private async runInitializers() {
+    try {
+      await this.initI18n();
+      await this.initGlobalConfig();
+      await this.initSystemSettings();
+      await this.migrateLegacyAppearance();
+      await this.initThemeConfigurations();
+    } catch (error) {
+      console.error('[SettingService] initialization failed:', error);
+    }
+  }
+
+  /** 保证 Setting 表仅有一行有效配置，避免并发初始化产生空行。 */
+  async getSettingRow(): Promise<Setting> {
+    return this.ensureSettingRow();
+  }
+
+  private settingRowScore(row: Setting): number {
+    return (
+      (row.globalSetting?.trim() ? 4 : 0) +
+      (row.i18n?.trim() ? 2 : 0) +
+      (row.systemTitle?.trim() ? 1 : 0)
+    );
+  }
+
+  private async ensureSettingRow(): Promise<Setting> {
+    const items = await this.settingRepository.find({ order: { createAt: 'ASC' } });
+    if (items.length === 0) {
+      return this.settingRepository.save(this.settingRepository.create({}));
+    }
+    if (items.length === 1) return items[0];
+
+    const sorted = [...items].sort((a, b) => this.settingRowScore(b) - this.settingRowScore(a));
+    const primary = { ...sorted[0] } as Setting;
+
+    for (const row of sorted.slice(1)) {
+      for (const key of Object.keys(row) as (keyof Setting)[]) {
+        if (key === 'id' || key === 'createAt' || key === 'updateAt') continue;
+        const val = row[key];
+        const current = primary[key];
+        if (val != null && String(val).trim() !== '' && (current == null || String(current).trim() === '')) {
+          (primary as unknown as Record<string, unknown>)[key as string] = val;
+        }
+      }
+    }
+
+    const saved = await this.settingRepository.save(primary);
+    await this.settingRepository.remove(sorted.slice(1));
+    return saved;
   }
 
   /**
@@ -33,8 +91,7 @@ export class SettingService {
    */
   async initI18n() {
     try {
-      const items = await this.settingRepository.find();
-      const target = (items && items[0]) || ({} as Setting);
+      const target = await this.ensureSettingRow();
 
       let data = {};
       try {
@@ -68,8 +125,7 @@ export class SettingService {
    * 初始化时加载 nav 配置
    */
   async initGlobalConfig() {
-    const items = await this.settingRepository.find();
-    const target = (items && items[0]) || ({} as Setting);
+    const target = await this.ensureSettingRow();
     let data: Record<string, unknown> = {};
     try {
       if (target.globalSetting) {
@@ -96,10 +152,40 @@ export class SettingService {
     }
   }
 
+  /**
+   * 初始化系统内置配置（站点标题、SEO、URL 等），仅填充空字段。
+   */
+  async initSystemSettings() {
+    const locale = resolveInstallLocale(
+      this.configService.get('REACTPRESS_LANG') || this.configService.get('LANG'),
+    );
+    const clientSiteUrl = this.configService.get('CLIENT_SITE_URL', 'http://localhost:3001');
+    const urlDefaults = {
+      systemUrl: clientSiteUrl,
+      adminSystemUrl: `${trimUrl(clientSiteUrl)}/admin/`,
+    };
+
+    const target = await this.ensureSettingRow();
+
+    let changed = false;
+    const merged = { ...getSystemSettingSeedDefaults(locale), ...urlDefaults };
+
+    for (const [key, defaultValue] of Object.entries(merged)) {
+      const current = target[key];
+      if (current != null && String(current).trim() !== '') continue;
+      target[key] = defaultValue;
+      changed = true;
+    }
+
+    if (!changed) return;
+
+    await this.settingRepository.save(target);
+    console.log(`[SettingService] system settings seeded with built-in defaults (${locale})`);
+  }
+
   /** 将旧版 Setting 表中的外观字段迁入 `globalSetting.theme.mods`。 */
   async migrateLegacyAppearance() {
-    const items = await this.settingRepository.find();
-    const target = (items && items[0]) || ({} as Setting);
+    const target = await this.ensureSettingRow();
     if (!target.id && !target.globalSetting) return;
 
     let gs: Record<string, unknown> = {};
@@ -123,8 +209,7 @@ export class SettingService {
    * 初始化各主题的 schema 默认配置到 globalSetting.config[themeId]
    */
   async initThemeConfigurations() {
-    const items = await this.settingRepository.find();
-    const target = (items && items[0]) || ({} as Setting);
+    const target = await this.ensureSettingRow();
     let gs: Record<string, unknown> = {};
     try {
       if (target.globalSetting) {
@@ -175,8 +260,7 @@ export class SettingService {
    * @param isAdmin
    */
   async findAll(innerInvoke = false, isAdmin = false): Promise<Setting> {
-    const data = await this.settingRepository.find();
-    const res = data[0];
+    const res = await this.ensureSettingRow().catch(() => null);
     if (!res) {
       return {} as Setting;
     }
@@ -194,16 +278,13 @@ export class SettingService {
 
   /** 更新系统设置（站点/SEO 为全站默认，主题 customizer 可覆盖） */
   async update(setting: Partial<Setting>): Promise<Setting> {
-    const old = await this.settingRepository.find();
+    const old = await this.ensureSettingRow();
     const sanitized = pickSystemSettingPatch(setting as Record<string, unknown>);
     if (Object.keys(sanitized).length === 0) {
-      return old[0] ?? ({} as Setting);
+      return old ?? ({} as Setting);
     }
 
-    const updatedTag =
-      old && old[0]
-        ? await this.settingRepository.merge(old[0], sanitized as Partial<Setting>)
-        : await this.settingRepository.create(sanitized as Partial<Setting>);
+    const updatedTag = await this.settingRepository.merge(old, sanitized as Partial<Setting>);
     return this.settingRepository.save(updatedTag);
   }
 }

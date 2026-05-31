@@ -25,6 +25,8 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { Repository } from 'typeorm';
 
+import { resolveProjectRoot } from '../../utils/project-root.util';
+import { SettingService } from '../setting/setting.service';
 import { Setting } from '../setting/setting.entity';
 import { getPreviewDraft, putPreviewDraft } from './preview-draft.store';
 
@@ -42,7 +44,7 @@ export type ThemePreviewSessionResult = SiteThemeState & {
 };
 
 function projectRoot(): string {
-  return process.env.REACTPRESS_ORIGINAL_CWD || process.cwd();
+  return resolveProjectRoot();
 }
 
 const THEME_ID_RE = /^[a-z0-9][a-z0-9-]*$/i;
@@ -69,6 +71,7 @@ export class ThemeService {
   constructor(
     @InjectRepository(Setting)
     private readonly settingRepository: Repository<Setting>,
+    private readonly settingService: SettingService,
   ) {}
 
   private themesRoot(): string {
@@ -138,10 +141,7 @@ export class ThemeService {
   }
 
   private async getSettingRow(): Promise<Setting> {
-    const rows = await this.settingRepository.find();
-    if (rows[0]) return rows[0];
-    const created = this.settingRepository.create({});
-    return this.settingRepository.save(created);
+    return this.settingService.getSettingRow();
   }
 
   private parseGlobalSetting(row: Setting): Record<string, unknown> {

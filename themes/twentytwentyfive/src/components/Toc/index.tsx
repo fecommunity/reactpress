@@ -76,7 +76,7 @@ export const Toc: React.FC<{ tocs: Array<IToc>; maxHeight?: string | number; has
               element={'div'}
               renderItem={(idx) => {
                 const toc = tocs[idx];
-                const v = toc.level;
+                const v = Math.max(1, Number(toc.level) || 1);
                 const f = isOdd(v - 1);
                 return (
                   <div

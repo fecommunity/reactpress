@@ -15,6 +15,7 @@ import { AppModule } from './app.module';
 import { ApiMsg } from './common/api-messages';
 import { HttpExceptionFilter } from './filters/http-exception.filter';
 import { TransformInterceptor } from './interceptors/transform.interceptor';
+import { resolveProjectRoot } from './utils/project-root.util';
 
 let nestApp: INestApplication | null = null;
 
@@ -89,6 +90,7 @@ function probeApiHealth(port: number, prefix = '/api'): Promise<boolean> {
 }
 
 export async function bootstrap() {
+  resolveProjectRoot();
   const configuredPort = Number(process.env.SERVER_PORT || 3002);
   const apiPrefix = String(process.env.SERVER_API_PREFIX || '/api');
 
