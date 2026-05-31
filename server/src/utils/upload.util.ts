@@ -14,7 +14,7 @@ export class LocalUpload {
     }
   }
 
-  public putFile(filename, buffer: ReadableStream) {
+  public putFile(filename, buffer: Buffer) {
     const saveFile = path.join(__dirname, `../../public/uploads/${filename}`);
     const dirName = path.dirname(saveFile);
     // 递归创建目录

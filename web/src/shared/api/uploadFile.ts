@@ -1,5 +1,7 @@
 import { API_BASE_URL } from "@/utils/constants";
 
+export type UploadScene = "default" | "content" | "cover" | "avatar";
+
 function getAuthHeaders(): Record<string, string> {
   try {
     const raw = localStorage.getItem("auth-storage");
@@ -13,10 +15,14 @@ function getAuthHeaders(): Record<string, string> {
   return {};
 }
 
-export async function uploadFile(file: File, unique = 0) {
+export async function uploadFile(file: File, unique = 0, scene: UploadScene = "default") {
   const formData = new FormData();
   formData.append("file", file);
-  const res = await fetch(`${API_BASE_URL}/file/upload?unique=${unique}`, {
+  const params = new URLSearchParams({
+    unique: String(unique),
+    scene,
+  });
+  const res = await fetch(`${API_BASE_URL}/file/upload?${params.toString()}`, {
     method: "POST",
     headers: getAuthHeaders(),
     body: formData,

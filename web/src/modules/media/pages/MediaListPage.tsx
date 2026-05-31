@@ -23,6 +23,7 @@ import { uploadFile } from "@/shared/api/uploadFile";
 import { getToolkitClient } from "@/shared/client";
 import { ModulePlaceholder } from "@/shared/components/ModulePlaceholder";
 import { useSettingsStore } from "@/stores/settings";
+import { resolveImageUrl } from "@fecommunity/reactpress-toolkit/utils";
 
 const GRID_PAGE_SIZE = 60;
 const LIST_PAGE_SIZE = 20;
@@ -159,7 +160,13 @@ export function MediaListPage({ search, routePath }: MediaListPageProps) {
             <div className={styles.fileCell}>
               <div className={styles.fileThumb}>
                 {isImage ? (
-                  <Image src={file.url} alt={file.originalname} width={60} height={60} preview />
+                  <Image
+                    src={resolveImageUrl(file.url, "thumb")}
+                    alt={file.originalname}
+                    width={60}
+                    height={60}
+                    preview
+                  />
                 ) : (
                   <span className={styles.gridPlaceholder}>
                     {file.type.split("/")[1] ?? "file"}
@@ -286,7 +293,11 @@ export function MediaListPage({ search, routePath }: MediaListPageProps) {
                   tabIndex={0}
                 >
                   {isImage ? (
-                    <img className={styles.gridThumb} src={file.url} alt={file.originalname} />
+                    <img
+                      className={styles.gridThumb}
+                      src={resolveImageUrl(file.url, "thumb")}
+                      alt={file.originalname}
+                    />
                   ) : (
                     <span className={styles.gridPlaceholder}>{file.originalname}</span>
                   )}

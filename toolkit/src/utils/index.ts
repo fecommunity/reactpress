@@ -22,3 +22,5 @@ export type { SettingRow } from './setting';
 export { pickSiteSettings } from './setting';
 export { stripHtml, truncateWords } from './string';
 export { copyToClipboard } from './clipboard';
+export type { ImageVariant } from './image';
+export { resolveImageUrl } from './image';

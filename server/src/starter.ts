@@ -116,12 +116,13 @@ export async function bootstrap() {
     app.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
       const { shouldRedirectDevPortToNginx, buildDevPortRedirectUrl } = require('@fecommunity/reactpress-toolkit/plugin/dev');
       if (
-        !shouldRedirectDevPortToNginx({
+        !        shouldRedirectDevPortToNginx({
           host: req.headers.host,
           method: req.method,
           accept: req.headers.accept,
           directPort: listenPort,
           pathname: req.path,
+          skipPathPrefixes: ['/public'],
         })
       ) {
         next();

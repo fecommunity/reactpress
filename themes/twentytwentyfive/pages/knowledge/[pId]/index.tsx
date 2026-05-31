@@ -10,7 +10,7 @@ import { useCallback, useContext, useMemo } from 'react';
 import { ListTrail } from '@/components/Animation/Trail';
 import { KnowledgeList } from '@/components/KnowledgeList';
 import { LocaleTime } from '@fecommunity/reactpress-toolkit/ui/content';
-import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
+import { SiteCatalogContext as GlobalContext, resolveImageUrl } from '@fecommunity/reactpress-toolkit/theme';
 import { DoubleColumnLayout } from '@/layout/DoubleColumnLayout';
 import { KnowledgeProvider } from '@/providers';
 
@@ -65,7 +65,7 @@ const Page: NextPage<IProps> = ({ pId, book, otherBooks = [] }) => {
                 <section className={style.desc}>
                   {book.cover && (
                     <div className={style.coverWrapper}>
-                      <img src={book.cover} alt="cover" />
+                      <img src={resolveImageUrl(book.cover, 'medium')} alt="cover" />
                     </div>
                   )}
                   <div className={style.infoWrapper}>

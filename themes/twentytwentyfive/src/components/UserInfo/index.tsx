@@ -4,8 +4,7 @@ import Router, { useRouter } from 'next/router';
 import { useTranslations } from 'next-intl';
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 
-import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
-import { useToggle } from '@fecommunity/reactpress-toolkit/theme';
+import { SiteCatalogContext as GlobalContext, resolveImageUrl, useToggle } from '@fecommunity/reactpress-toolkit/theme';
 import { UserProvider } from '@/providers';
 
 import styles from './index.module.scss';
@@ -106,7 +105,7 @@ export const UserInfo: React.FC<{
 
   const trigger = hidden ? (
     user && user.avatar ? (
-      <Avatar size={24} src={user.avatar}></Avatar>
+      <Avatar size={24} src={resolveImageUrl(user.avatar, 'avatar')}></Avatar>
     ) : (
       <Avatar size={24} icon={<UserOutlined />}></Avatar>
     )
@@ -138,7 +137,7 @@ export const UserInfo: React.FC<{
         ],
       }}
     >
-      {user.avatar ? <Avatar alt={user.name} size={24} src={user.avatar}></Avatar> : <Avatar size={24}>{user.name?.charAt(0)}</Avatar>}
+      {user.avatar ? <Avatar alt={user.name} size={24} src={resolveImageUrl(user.avatar, 'avatar')}></Avatar> : <Avatar size={24}>{user.name?.charAt(0)}</Avatar>}
     </Dropdown>
   ) : (
     <Space.Compact>

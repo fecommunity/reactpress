@@ -110,8 +110,30 @@ function renderApiProxyBlock(remoteApiOrigin, apiPort) {
     }`;
 }
 
+function renderPublicUploadsProxyBlock(remoteApiOrigin, apiPort) {
+  const proxyTarget = remoteApiOrigin
+    ? remoteApiOrigin.replace(/\/api\/?$/, '')
+    : `http://host.docker.internal:${apiPort}`;
+
+  return `    # Uploaded media (API static /public)
+    location /public/ {
+        proxy_pass ${proxyTarget};
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 300;
+        proxy_connect_timeout 300;
+        expires 30d;
+        add_header Cache-Control "public, max-age=2592000";
+        access_log off;
+    }`;
+}
+
 function renderDevNginxConfig({ adminPort, visitorPort, apiPort, clientApiOrigin = null }) {
   const apiBlock = renderApiProxyBlock(clientApiOrigin, apiPort);
+  const publicBlock = renderPublicUploadsProxyBlock(clientApiOrigin, apiPort);
   return `server {
     listen 80;
     server_name localhost;
@@ -152,6 +174,8 @@ function renderDevNginxConfig({ adminPort, visitorPort, apiPort, clientApiOrigin
     location = /admin {
         return 301 /admin/;
     }
+
+${publicBlock}
 
 ${apiBlock}
 
@@ -206,6 +230,7 @@ function isDevNginxConfigStale(projectRoot, configPath) {
   }
   // Dev must not long-cache Next chunks (breaks client-side nav after on-demand compile).
   if (content.includes('expires 1y') && content.includes('/_next/')) return true;
+  if (!content.includes('location /public/')) return true;
   return false;
 }
 
@@ -222,6 +247,7 @@ function isProdNginxConfigStale(projectRoot, configPath) {
   }
   if (!content.includes(`host.docker.internal:${visitorPort}`)) return true;
   if (!content.includes(`host.docker.internal:${apiPort}`)) return true;
+  if (!content.includes('location /public/')) return true;
   return false;
 }
 

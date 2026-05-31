@@ -57,6 +57,8 @@ export {
 } from '../utils/date';
 export { pickSiteSettings } from '../utils/setting';
 export { safeJsonParse } from '../utils/json';
+export type { ImageVariant } from '../utils/image';
+export { resolveImageUrl } from '../utils/image';
 export type {
   ThemeSessionUser,
 } from './visitor/authSession';

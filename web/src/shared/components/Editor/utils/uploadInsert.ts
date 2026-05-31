@@ -7,7 +7,7 @@ export type UploadedFile = {
 };
 
 export async function uploadEditorAsset(file: File, unique = 0): Promise<UploadedFile> {
-  const data = await uploadFile(file, unique);
+  const data = await uploadFile(file, unique, "content");
   return data as UploadedFile;
 }
 

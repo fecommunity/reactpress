@@ -14,7 +14,7 @@ export class AliyunOssClient extends OssClient {
     });
   }
 
-  async putFile(filepath: string, buffer: ReadableStream) {
+  async putFile(filepath: string, buffer: Buffer) {
     const client = await this.buildClient();
     const { url } = await client.put(filepath, buffer);
     return url;

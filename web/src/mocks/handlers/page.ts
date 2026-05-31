@@ -203,12 +203,30 @@ export const fileHandlers = [
 
   http.post("/api/file/upload", async () => {
     await withDelay(300);
+    const baseUrl = "https://api.gaoredu.com/public/uploads/upload.webp";
     return successResponse({
       id: `f${Date.now()}`,
-      originalname: "upload.png",
-      url: "https://api.gaoredu.com/public/uploads/upload.png",
-      type: "image/png",
+      originalname: "upload.webp",
+      filename: "2026-05-31/upload.webp",
+      url: baseUrl,
+      type: "image/webp",
       size: 2048,
+      variants: {
+        medium: {
+          url: "https://api.gaoredu.com/public/uploads/upload_medium.webp",
+          filename: "2026-05-31/upload_medium.webp",
+          width: 1200,
+          height: 675,
+          size: 1536,
+        },
+        thumb: {
+          url: "https://api.gaoredu.com/public/uploads/upload_thumb.webp",
+          filename: "2026-05-31/upload_thumb.webp",
+          width: 400,
+          height: 225,
+          size: 512,
+        },
+      },
       createAt: new Date().toISOString(),
     });
   }),

@@ -27,6 +27,10 @@ const toolkitAliases = [
     replacement: toolkitEntry("theme"),
   },
   {
+    find: "@fecommunity/reactpress-toolkit/utils",
+    replacement: toolkitEntry("utils"),
+  },
+  {
     find: "@fecommunity/reactpress-toolkit/ui",
     replacement: toolkitEntry("ui"),
   },

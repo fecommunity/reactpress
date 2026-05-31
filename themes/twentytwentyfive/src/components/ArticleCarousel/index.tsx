@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl';
 import React from 'react';
 
 import { LocaleTime } from '@fecommunity/reactpress-toolkit/ui/content';
+import { resolveImageUrl } from '@fecommunity/reactpress-toolkit/theme';
 
 import style from './index.module.scss';
 
@@ -25,7 +26,7 @@ export const ArticleCarousel: React.FC<IProps> = ({ articles = [] }) => {
         {slides.map((article) => {
             return (
               <div key={article.id}>
-                <div className={style.articleItem} style={{ backgroundImage: `url(${article.cover})` }}>
+                <div className={style.articleItem} style={{ backgroundImage: `url(${resolveImageUrl(article.cover, 'large')})` }}>
                   <Link href={`/article/[id]`} as={`/article/${article.id}`} scroll={false}>
                     <a aria-label={article.title}>
                       <div className={style.info}>

@@ -5,6 +5,6 @@ export abstract class OssClient {
     this.config = config;
   }
 
-  abstract putFile(filepath: string, buffer: ReadableStream): Promise<string>;
+  abstract putFile(filepath: string, buffer: Buffer): Promise<string>;
   abstract deleteFile(url: string): Promise<void>;
 }

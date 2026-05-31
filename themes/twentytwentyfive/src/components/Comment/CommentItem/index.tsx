@@ -8,7 +8,7 @@ import React, { useMemo } from 'react';
 import { Opacity } from '@/components/Animation/Opacity';
 import { ConditionTransition } from '@/components/Animation/Transition';
 import { LocaleTime } from '@fecommunity/reactpress-toolkit/ui/content';
-import { useToggle } from '@fecommunity/reactpress-toolkit/theme';
+import { resolveImageUrl, useToggle } from '@fecommunity/reactpress-toolkit/theme';
 import { getRandomColor } from '@/utils';
 
 import { CommentEditor } from '../CommentEditor';
@@ -40,7 +40,7 @@ export function CommentItem({ comment, parentComment, isChild = false, isLast = 
       <div>
         <header>
           {comment.avatar ? (
-            <Avatar size={avatarSize} src={comment.avatar}></Avatar>
+            <Avatar size={avatarSize} src={resolveImageUrl(comment.avatar, 'avatar')}></Avatar>
           ) : (
             <Avatar size={avatarSize} style={{ backgroundColor: getRandomColor(comment.name) }}>
               {('' + comment.name).charAt(0).toUpperCase()}

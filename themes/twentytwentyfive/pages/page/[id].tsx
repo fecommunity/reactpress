@@ -6,7 +6,7 @@ import { useContext, useEffect } from 'react';
 import { ArticleRecommend } from '@/components/ArticleRecommend';
 import { Comment } from '@/components/Comment';
 import { ImageViewer, HtmlContent } from '@fecommunity/reactpress-toolkit/ui/content';
-import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
+import { SiteCatalogContext as GlobalContext, resolveImageUrl } from '@fecommunity/reactpress-toolkit/theme';
 import { PageProvider } from '@/providers';
 
 import style from './index.module.scss';
@@ -42,7 +42,7 @@ const Page: NextPage<IProps> = ({ page }) => {
           <div className="container">
             {page.cover && (
               <div className={style.coverWrapper}>
-                <img src={page.cover} alt={t('articleCover') as string} />
+                <img src={resolveImageUrl(page.cover, 'large')} alt={t('articleCover') as string} />
               </div>
             )}
             <div className={style.content}>

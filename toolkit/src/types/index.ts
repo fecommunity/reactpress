@@ -66,6 +66,14 @@ export interface I_SMTP {
   createAt: string;
 }
 
+export interface IFileVariant {
+  url: string;
+  filename: string;
+  width: number;
+  height: number;
+  size: number;
+}
+
 export interface IFile {
   id: string;
   originalname: string;
@@ -73,6 +81,7 @@ export interface IFile {
   type: string;
   size: number;
   url: string;
+  variants?: Record<string, IFileVariant>;
   /** @format date-time */
   createAt: string;
 }

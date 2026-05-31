@@ -47,7 +47,7 @@ export class Oss {
     }
   }
 
-  async putFile(filepath: string, buffer: ReadableStream) {
+  async putFile(filepath: string, buffer: Buffer) {
     const client = await this.getOssClient();
     const url = await client.putFile(filepath, buffer);
     return url;

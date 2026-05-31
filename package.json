@@ -85,7 +85,8 @@
     },
     "onlyBuiltDependencies": [
       "esbuild",
-      "msw"
+      "msw",
+      "sharp"
     ],
     "packageExtensions": {
       "next@12.3.4": {

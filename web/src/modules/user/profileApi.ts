@@ -23,7 +23,7 @@ function resolveUploadUrl(payload: unknown): string {
 }
 
 export async function uploadAvatar(file: File): Promise<string> {
-  const data = await uploadFile(file, 1);
+  const data = await uploadFile(file, 1, "avatar");
   return resolveUploadUrl(data);
 }
 

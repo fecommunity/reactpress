@@ -5,7 +5,7 @@ import {
   LocaleTime,
   parseArticleToc,
 } from '@fecommunity/reactpress-toolkit/ui/content';
-import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
+import { SiteCatalogContext as GlobalContext, resolveImageUrl } from '@fecommunity/reactpress-toolkit/theme';
 import { Form, Input, message, Modal } from 'antd';
 import { NextPage } from 'next';
 import Head from 'next/head';
@@ -101,13 +101,13 @@ const Article: NextPage<IProps> = ({ article }) => {
                 <meta itemProp="keywords" content={article.tags.map((tag) => tag.label).join(' ')} />
               ) : null}
               <meta itemProp="dataPublished" content={article.publishAt} />
-              {article.cover ? <meta itemProp="image" content={article.cover} /> : null}
+              {article.cover ? <meta itemProp="image" content={resolveImageUrl(article.cover, 'large')} /> : null}
             </>
           ) : null}
 
           {article.cover ? (
             <div className={style.coverWrapper}>
-              <img src={article.cover} alt={t('articleCover') as string} />
+              <img src={resolveImageUrl(article.cover, 'large')} alt={t('articleCover') as string} />
             </div>
           ) : null}
 
