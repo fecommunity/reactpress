@@ -15,17 +15,26 @@ function isCrossOriginSiteUrl(siteUrl: string): boolean {
 /** Poll visitor / preview dev until reachable (theme restart / compile). */
 export async function waitForVisitorSite(
   siteUrl: string,
-  options?: { minWaitMs?: number; maxWaitMs?: number; intervalMs?: number },
+  options?: {
+    minWaitMs?: number;
+    maxWaitMs?: number;
+    intervalMs?: number;
+    onPoll?: (attempt: number, elapsedMs: number) => void;
+  },
 ): Promise<boolean> {
   const minWaitMs = options?.minWaitMs ?? 300;
   const maxWaitMs = options?.maxWaitMs ?? 120_000;
   const intervalMs = options?.intervalMs ?? 350;
   const started = Date.now();
   const crossOrigin = isCrossOriginSiteUrl(siteUrl);
+  let attempt = 0;
 
   await sleep(minWaitMs);
 
   while (Date.now() - started < maxWaitMs) {
+    attempt += 1;
+    options?.onPoll?.(attempt, Date.now() - started);
+
     try {
       if (crossOrigin) {
         // Preview dev on :3003+ has no CORS headers — opaque probe avoids console noise.

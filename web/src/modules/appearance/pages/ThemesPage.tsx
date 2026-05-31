@@ -27,7 +27,7 @@ export function ThemesPage() {
   const { message } = App.useApp();
   const { data: themes, isLoading, isError, error, refetch } = useThemes();
   const { installMutation } = useThemeMutations();
-  const { activateAndWait, activatingId } = useThemeActivation();
+  const { activateAndWait, activatingId, activationStatusText } = useThemeActivation();
   const [filter, setFilter] = useState<ThemeCatalogFilter>("all");
   const [search, setSearch] = useState("");
 
@@ -123,6 +123,7 @@ export function ThemesPage() {
                 onActivate={(id) => handleActivate(id)}
                 installing={installMutation.isPending && installMutation.variables === theme.id}
                 activating={activatingId === theme.id}
+                activatingLabel={activatingId === theme.id ? activationStatusText : undefined}
               />
             ))}
           </div>

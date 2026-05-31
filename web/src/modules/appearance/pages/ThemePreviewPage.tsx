@@ -22,7 +22,7 @@ export function ThemePreviewPage({ themeIdFromSearch }: { themeIdFromSearch?: st
   const { isLoading: settingsLoading } = useSiteSettings();
   const { themeState, activeThemeId, siteUrl } = useSiteThemeState();
   const { installMutation } = useThemeMutations();
-  const { activateAndWait, activatingId } = useThemeActivation();
+  const { activateAndWait, activatingId, activationStatusText } = useThemeActivation();
 
   const list = themes ?? [];
   const resolvedThemeId = themeIdFromSearch ?? activeThemeId;
@@ -197,7 +197,9 @@ export function ThemePreviewPage({ themeIdFromSearch }: { themeIdFromSearch?: st
               loading={activatingId === current.id}
               onClick={handleActivate}
             >
-              {t("appearance.activate")}
+              {activatingId === current.id && activationStatusText
+                ? activationStatusText
+                : t("appearance.activate")}
             </Button>
           ) : null}
           {current.installed && !current.active ? (

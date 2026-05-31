@@ -11,9 +11,17 @@ type Props = {
   onActivate: (id: string) => void;
   installing?: boolean;
   activating?: boolean;
+  activatingLabel?: string;
 };
 
-export function ThemeCard({ theme, onInstall, onActivate, installing, activating }: Props) {
+export function ThemeCard({
+  theme,
+  onInstall,
+  onActivate,
+  installing,
+  activating,
+  activatingLabel,
+}: Props) {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -53,7 +61,7 @@ export function ThemeCard({ theme, onInstall, onActivate, installing, activating
             </Button>
           ) : !theme.active ? (
             <Button type="primary" loading={activating} onClick={() => onActivate(theme.id)}>
-              {t("appearance.activate")}
+              {activating && activatingLabel ? activatingLabel : t("appearance.activate")}
             </Button>
           ) : null}
         </div>
