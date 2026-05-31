@@ -22,7 +22,7 @@ interface IProps {
 }
 
 export const AppLayout: React.FC<IProps> = ({ children, needFooter = true, needHeader = true, hasBg }) => {
-  const { setting, pages, tags } = useContext(GlobalContext);
+  const { setting, pages } = useContext(GlobalContext);
   const { systemBg } = setting;
   const [loaded, toggleLoaded] = useToggle(false);
   const bg = useMemo(
@@ -48,7 +48,7 @@ export const AppLayout: React.FC<IProps> = ({ children, needFooter = true, needH
       <SiteSeo>
         <link rel="preload" as="image" href={REACT_PRESS_HEADER_LOGO.src} fetchpriority="high" />
       </SiteSeo>
-      {needHeader && <Header setting={setting} tags={tags} pages={pages} hasBg={customBg} />}
+      {needHeader && <Header setting={setting} pages={pages} hasBg={customBg} />}
       <main className={style.main} style={{ backgroundColor: customBg ? 'transparent' : 'var(--bg-body)' }}>
         {children}
       </main>

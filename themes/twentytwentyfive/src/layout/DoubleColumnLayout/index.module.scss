@@ -69,6 +69,7 @@
 
   > .left {
     flex: 1;
+    min-width: 0;
     width: calc(100% - 20rem - 1rem);
     padding-top: 1rem;
     padding-bottom: 2rem;

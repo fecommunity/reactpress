@@ -1,13 +1,23 @@
-import { SearchIcon, TOOLBAR_ICON_SIZE, ToolbarIconButton } from '@fecommunity/reactpress-toolkit/ui';
+import cls from 'classnames';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useTranslations } from 'next-intl';
 
-type Props = {
-  onClick: () => void;
-};
+import { SearchIcon, TOOLBAR_ICON_SIZE } from '@fecommunity/reactpress-toolkit/ui';
 
-export function HeaderSearch({ onClick }: Props) {
+import style from './HeaderSearch.module.scss';
+
+export function HeaderSearch() {
+  const t = useTranslations();
+  const { pathname } = useRouter();
+  const isActive = pathname === '/search';
+
   return (
-    <ToolbarIconButton onClick={onClick} aria-label="Search">
-      <SearchIcon size={TOOLBAR_ICON_SIZE} />
-    </ToolbarIconButton>
+    <Link href="/search" scroll={false}>
+      <a className={cls(style.searchLink, isActive && style.active)} aria-label={t('search')}>
+        <SearchIcon size={TOOLBAR_ICON_SIZE} />
+        <span>{t('search')}</span>
+      </a>
+    </Link>
   );
 }

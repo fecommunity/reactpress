@@ -25,7 +25,6 @@ import { useTranslations } from 'next-intl';
 import React, { useContext, useEffect, useMemo } from 'react';
 
 import { Locales } from '@/components/Locales';
-import { Search } from '@/components/Search';
 import { Theme } from '@/components/Theme';
 import { UserInfo } from '@/components/UserInfo';
 import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
@@ -39,12 +38,11 @@ import { renderHeaderLogo } from './renderHeaderLogo';
 
 interface HeaderProps {
   setting: ISetting;
-  tags: ITag[];
   pages: Array<IPage & { label?: string }>;
   hasBg?: boolean;
 }
 
-export const Header: React.FC<HeaderProps> = ({ setting, tags, pages, hasBg = false }) => {
+export const Header: React.FC<HeaderProps> = ({ setting, pages, hasBg = false }) => {
   const t = useTranslations();
   const router = useRouter();
   const { asPath } = router;
@@ -53,7 +51,6 @@ export const Header: React.FC<HeaderProps> = ({ setting, tags, pages, hasBg = fa
   const [affix, setAffix] = useToggle(false);
   const [affixVisible, setAffixVisible] = useToggle(false);
   const [visible, setVisible] = useToggle(false);
-  const [showSearch, toggleSearch] = useToggle(false);
   const mainPath = getFirstLevelRoute(asPath, locales);
 
   // Handle route change to close mobile menu
@@ -98,6 +95,7 @@ export const Header: React.FC<HeaderProps> = ({ setting, tags, pages, hasBg = fa
       return {
         key: nav.path,
         href: nav.path,
+        as: undefined as string | undefined,
         label: labelText,
         icon: Icon ? <Icon /> : null,
       };
@@ -108,7 +106,7 @@ export const Header: React.FC<HeaderProps> = ({ setting, tags, pages, hasBg = fa
       return {
         key: `${index}-${menu.label}`,
         href: '/page/[id]',
-        as: `/page/${menu.path}`,
+        as: `/page/${menu.path}` as string | undefined,
         label: t(menu.path) || menu.name,
         icon: Icon ? <Icon /> : null,
       };
@@ -169,14 +167,16 @@ export const Header: React.FC<HeaderProps> = ({ setting, tags, pages, hasBg = fa
             <div className={style.stick}></div>
           </div>
 
-          {/* Navigation Menu */}
-          <div className={style.menuWrapper}>
-            <nav className={cls(style.menu, visible ? style.active : false)} aria-label={setting.systemTitle}>
-              <ul className={style.menuList}>
-                {navItems.map((item) => {
-                  const isActive = item.as ? asPath === item.as : mainPath === item.key || asPath === item.href;
-                  return (
-                  <li key={item.key}>
+          {/* Navigation + Tools */}
+          <nav
+            className={cls(style.toolbar, visible ? style.active : false)}
+            aria-label={setting.systemTitle || 'Navigation'}
+          >
+            <ul className={style.toolbarList}>
+              {navItems.map((item) => {
+                const isActive = item.as ? asPath === item.as : mainPath === item.key || asPath === item.href;
+                return (
+                  <li key={item.key} className={style.navItem}>
                     <Link href={item.href} as={item.as} scroll={false}>
                       <a className={isActive ? style.active : undefined}>
                         {item.icon}
@@ -184,17 +184,10 @@ export const Header: React.FC<HeaderProps> = ({ setting, tags, pages, hasBg = fa
                       </a>
                     </Link>
                   </li>
-                  );
-                })}
-              </ul>
-            </nav>
-          </div>
-
-          {/* Right Side Tools */}
-          <nav className={cls(visible ? style.active : false)}>
-            <ul>
-              <li className={style.toolWrapper}>
-                <HeaderSearch onClick={toggleSearch} />
+                );
+              })}
+              <li className={style.toolWrapperSearch}>
+                <HeaderSearch />
               </li>
               <li className={style.toolWrapper}>
                 <Theme />
@@ -211,7 +204,6 @@ export const Header: React.FC<HeaderProps> = ({ setting, tags, pages, hasBg = fa
                 <UserInfo />
               </li>
             </ul>
-            <Search tags={tags} visible={showSearch} onClose={toggleSearch} />
           </nav>
         </div>
       </div>
