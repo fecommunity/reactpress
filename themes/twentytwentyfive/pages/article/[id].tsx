@@ -5,6 +5,7 @@ import {
   LocaleTime,
   parseArticleToc,
 } from '@fecommunity/reactpress-toolkit/ui/content';
+import { Image } from '@fecommunity/reactpress-toolkit/ui/content';
 import { SiteCatalogContext as GlobalContext, resolveImageUrl } from '@fecommunity/reactpress-toolkit/theme';
 import { Form, Input, message, Modal } from 'antd';
 import { NextPage } from 'next';
@@ -107,7 +108,7 @@ const Article: NextPage<IProps> = ({ article }) => {
 
           {article.cover ? (
             <div className={style.coverWrapper}>
-              <img src={resolveImageUrl(article.cover, 'large')} alt={t('articleCover') as string} />
+              <Image url={article.cover} size="large" alt={t('articleCover') as string} />
             </div>
           ) : null}
 

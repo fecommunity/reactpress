@@ -23,7 +23,7 @@ import { uploadFile } from "@/shared/api/uploadFile";
 import { getToolkitClient } from "@/shared/client";
 import { ModulePlaceholder } from "@/shared/components/ModulePlaceholder";
 import { useSettingsStore } from "@/stores/settings";
-import { resolveImageUrl } from "@fecommunity/reactpress-toolkit/utils";
+import { Image as RpImage, resolveImageUrl } from "@fecommunity/reactpress-toolkit/ui/content";
 
 const GRID_PAGE_SIZE = 60;
 const LIST_PAGE_SIZE = 20;
@@ -293,9 +293,10 @@ export function MediaListPage({ search, routePath }: MediaListPageProps) {
                   tabIndex={0}
                 >
                   {isImage ? (
-                    <img
+                    <RpImage
+                      url={file.url}
+                      size="thumb"
                       className={styles.gridThumb}
-                      src={resolveImageUrl(file.url, "thumb")}
                       alt={file.originalname}
                     />
                   ) : (

@@ -23,8 +23,7 @@ import { useTranslations } from 'next-intl';
 import React, { useContext, useMemo } from 'react';
 import LazyLoad from 'react-lazyload';
 
-import { LocaleTime } from '@fecommunity/reactpress-toolkit/ui/content';
-import { resolveImageUrl } from '@fecommunity/reactpress-toolkit/theme';
+import { Image, LocaleTime } from '@fecommunity/reactpress-toolkit/ui/content';
 import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
 import { getColorFromNumber } from '@/utils';
 
@@ -64,7 +63,7 @@ const ArticleCard: React.FC<{ article: Article; categoryIndex: number }> = ({ ar
           <LazyLoad height={120} placeholder={<Spin />}>
             <div className={style.coverWrapper}>
               <Link href={`/article/[id]`} as={`/article/${article.id}`} scroll={false}>
-                <img src={resolveImageUrl(article.cover, 'thumb')} alt={`${article.title} cover`} loading="lazy" />
+                <Image url={article.cover} size="thumb" alt={`${article.title} cover`} loading="lazy" />
               </Link>
             </div>
           </LazyLoad>

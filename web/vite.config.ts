@@ -31,12 +31,12 @@ const toolkitAliases = [
     replacement: toolkitEntry("utils"),
   },
   {
-    find: "@fecommunity/reactpress-toolkit/ui",
-    replacement: toolkitEntry("ui"),
-  },
-  {
     find: "@fecommunity/reactpress-toolkit/ui/content",
     replacement: path.join(toolkitSrc, "ui/components/content/index.ts"),
+  },
+  {
+    find: "@fecommunity/reactpress-toolkit/ui",
+    replacement: toolkitEntry("ui"),
   },
 ];
 

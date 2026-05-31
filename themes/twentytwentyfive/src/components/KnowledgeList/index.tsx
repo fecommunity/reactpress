@@ -6,8 +6,7 @@ import { useTranslations } from 'next-intl';
 import React from 'react';
 import LazyLoad from 'react-lazyload';
 
-import { LocaleTime } from '@fecommunity/reactpress-toolkit/ui/content';
-import { resolveImageUrl } from '@fecommunity/reactpress-toolkit/theme';
+import { Image, LocaleTime } from '@fecommunity/reactpress-toolkit/ui/content';
 
 import style from './index.module.scss';
 
@@ -49,7 +48,7 @@ export const KnowledgeList: React.FC<IProps> = ({ knowledges = [], small = false
                     {knowledge.cover && (
                       <LazyLoad height={120} placeholder={<Spin />}>
                         <div className={style.coverWrapper}>
-                          <img src={resolveImageUrl(knowledge.cover, 'thumb')} alt="cover" />
+                          <Image url={knowledge.cover} size="thumb" alt="cover" />
                         </div>
                       </LazyLoad>
                     )}

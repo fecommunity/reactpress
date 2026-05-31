@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 
 import { fetchMediaFiles, isImageType, type MediaFileRow } from "@/modules/media/mediaListApi";
 import { uploadFile } from "@/shared/api/uploadFile";
-import { resolveImageUrl } from "@fecommunity/reactpress-toolkit/utils";
+import { Image as RpImage } from "@fecommunity/reactpress-toolkit/ui/content";
 
 import styles from "./media-select-drawer.module.css";
 
@@ -125,8 +125,9 @@ export function MediaSelectDrawer({
                 onClick={() => handleSelect(file)}
               >
                 {isImageType(file.type) ? (
-                  <img
-                    src={resolveImageUrl(file.url, "thumb")}
+                  <RpImage
+                    url={file.url}
+                    size="thumb"
                     alt={file.originalname}
                     className={styles.thumb}
                   />
