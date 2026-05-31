@@ -3,6 +3,7 @@ import { App, Button, Spin } from "antd";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
+import { useSiteSettings } from "@/hooks/useSiteSettings";
 import { useSiteThemeState } from "@/hooks/useSiteThemeState";
 import { useThemeListItemMeta } from "@/hooks/useThemeListItemMeta";
 import { useThemePreviewSession } from "@/hooks/useThemePreviewSession";
@@ -17,28 +18,29 @@ export function ThemePreviewPage({ themeIdFromSearch }: { themeIdFromSearch?: st
   const { t } = useTranslation();
   const { message } = App.useApp();
   const navigate = useNavigate();
-  const { data: themes, isLoading } = useThemes();
+  const { data: themes, isLoading: themesLoading } = useThemes();
+  const { isLoading: settingsLoading } = useSiteSettings();
   const { themeState, activeThemeId, siteUrl } = useSiteThemeState();
   const { installMutation } = useThemeMutations();
   const { activateAndWait, activatingId } = useThemeActivation();
 
   const list = themes ?? [];
-  const currentIndex = Math.max(
-    0,
-    list.findIndex((th) => th.id === (themeIdFromSearch ?? activeThemeId)),
-  );
-  const current = list[currentIndex];
+  const resolvedThemeId = themeIdFromSearch ?? activeThemeId;
+  const currentIndex = list.findIndex((th) => th.id === resolvedThemeId);
+  const current = currentIndex >= 0 ? list[currentIndex] : undefined;
   const { description, tags } = useThemeListItemMeta(current);
   const canSwitchTheme = list.length > 1;
 
   const previewMods = current?.id ? (themeState.mods[current.id] ?? {}) : {};
+  const previewReady = !themesLoading && !settingsLoading && Boolean(current?.id);
   const {
     ready: previewSessionReady,
     switching: previewSwitching,
     previewSiteUrl,
     activeThemeId: previewActiveThemeId,
-  } = useThemePreviewSession(current?.id, siteUrl, activeThemeId);
+  } = useThemePreviewSession(current?.id, siteUrl, activeThemeId, { enabled: previewReady });
   const effectiveActiveThemeId = previewActiveThemeId ?? activeThemeId;
+  const usesDedicatedPreview = Boolean(previewSiteUrl);
   const isLivePreview = current?.id
     ? Boolean(
         resolveLiveSitePreviewUrl(siteUrl, {
@@ -49,8 +51,9 @@ export function ThemePreviewPage({ themeIdFromSearch }: { themeIdFromSearch?: st
         }),
       )
     : false;
-  const mayUseLiveSite =
-    current?.id === effectiveActiveThemeId
+  const mayUseLiveSite = usesDedicatedPreview
+    ? true
+    : current?.id === effectiveActiveThemeId
       ? Boolean(
           resolveLiveSitePreviewUrl(siteUrl, {
             themeId: current.id,
@@ -81,7 +84,7 @@ export function ThemePreviewPage({ themeIdFromSearch }: { themeIdFromSearch?: st
     void activateAndWait(current.id);
   };
 
-  if (isLoading || !current) {
+  if (themesLoading || settingsLoading || !current) {
     return <Spin fullscreen />;
   }
 

@@ -4,8 +4,10 @@ export {
   buildDevPortRedirectUrl,
   isDirectDevPortAccess,
   isNginxDevRedirectEnabled,
+  isThemePreviewDevPort,
   resolveDevPortRole,
   resolveNginxEntryUrl,
   shouldRedirectDevPortToNginx,
+  THEME_PREVIEW_DEV_PORTS,
 } from './portRedirect';
 export { devPortRedirectPlugin } from './vitePortRedirectPlugin';

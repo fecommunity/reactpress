@@ -1,6 +1,13 @@
 const DEFAULT_NGINX_PORT = 80;
 
-export type DevPortRole = 'visitor' | 'admin' | 'api';
+/** Admin theme preview pool — must not redirect to nginx visitor (active theme). */
+export const THEME_PREVIEW_DEV_PORTS = [3003, 3004, 3005, 3006, 3007, 3008];
+
+export type DevPortRole = 'visitor' | 'admin' | 'api' | 'preview';
+
+export function isThemePreviewDevPort(port: number): boolean {
+  return Number.isInteger(port) && THEME_PREVIEW_DEV_PORTS.includes(port);
+}
 
 function readPortEnv(key: string, fallback: number): number {
   const raw = process.env[key]?.trim();
@@ -10,6 +17,7 @@ function readPortEnv(key: string, fallback: number): number {
 }
 
 export function resolveDevPortRole(directPort: number): DevPortRole {
+  if (isThemePreviewDevPort(directPort)) return 'preview';
   const apiPort = readPortEnv('SERVER_PORT', 3002);
   const adminPort = readPortEnv('WEB_ADMIN_PORT', 3000);
   if (directPort === apiPort) return 'api';
@@ -69,6 +77,7 @@ export interface DevPortRedirectOptions {
 
 export function shouldRedirectDevPortToNginx(options: DevPortRedirectOptions): boolean {
   if (process.env.REACTPRESS_SKIP_DEV_PORT_REDIRECT === '1') return false;
+  if (isThemePreviewDevPort(options.directPort)) return false;
   if (!isUnifiedNginxEntryEnabled()) return false;
 
   const method = (options.method || 'GET').toUpperCase();
@@ -108,6 +117,10 @@ export function buildDevPortRedirectUrl(options: {
       adminPath = adminPath === '/' ? '/admin/' : `/admin${adminPath.startsWith('/') ? adminPath : `/${adminPath}`}`;
     }
     return `${entry}${adminPath}${search}`;
+  }
+
+  if (role === 'preview') {
+    return `${entry}${pathname}${search}`;
   }
 
   return `${entry}${pathname}${search}`;

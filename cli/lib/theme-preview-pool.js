@@ -199,6 +199,8 @@ async function ensurePreviewThemeRunning(
     env: {
       ...buildThemeChildEnv(projectRoot, { port, serverApiUrl, publicApiUrl, themeId }),
       REACTPRESS_HONOR_PREVIEW: '1',
+      // Preview dev must stay on :3003+ — nginx redirect would show the active theme instead.
+      REACTPRESS_SKIP_DEV_PORT_REDIRECT: '1',
     },
   });
 

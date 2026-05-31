@@ -37,10 +37,17 @@ export function resolveLiveSitePreviewUrl(
 
   const themeId = options?.themeId;
   const activeThemeId = options?.activeThemeId;
+  const previewSiteUrl = options?.previewSiteUrl?.trim();
+
+  // Server allocated a dedicated preview dev URL — always prefer it over public origin.
+  // Client `activeThemeId` can briefly default to the wrong theme before settings load.
+  if (previewSiteUrl && options?.previewSessionReady === true) {
+    return previewSiteUrl.endsWith("/") ? previewSiteUrl : `${previewSiteUrl}/`;
+  }
 
   if (themeId && activeThemeId && themeId !== activeThemeId) {
     if (options?.previewSessionReady !== true) return null;
-    return options.previewSiteUrl ?? null;
+    return null;
   }
 
   return publicOrigin;

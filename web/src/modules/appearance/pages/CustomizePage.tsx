@@ -95,10 +95,14 @@ export function CustomizePage() {
     switching: previewSwitching,
     previewSiteUrl,
     activeThemeId: previewActiveThemeId,
-  } = useThemePreviewSession(themeId, siteUrl, activeThemeId);
+  } = useThemePreviewSession(themeId, siteUrl, activeThemeId, {
+    enabled: !settingsLoading && !themesLoading && Boolean(themeId),
+  });
   const effectiveActiveThemeId = previewActiveThemeId ?? activeThemeId;
-  const mayUseLiveSite =
-    themeId === effectiveActiveThemeId
+  const usesDedicatedPreview = Boolean(previewSiteUrl);
+  const mayUseLiveSite = usesDedicatedPreview
+    ? true
+    : themeId === effectiveActiveThemeId
       ? Boolean(
           resolveLiveSitePreviewUrl(siteUrl, {
             themeId,

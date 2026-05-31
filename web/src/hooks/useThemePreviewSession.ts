@@ -47,13 +47,15 @@ export function useThemePreviewSession(
   themeId: string | undefined,
   siteUrl?: string,
   activeThemeId?: string,
+  options?: { enabled?: boolean },
 ) {
+  const enabled = options?.enabled !== false;
   const [status, setStatus] = useState<ThemePreviewSessionStatus>("idle");
   const [previewSiteUrl, setPreviewSiteUrl] = useState<string | undefined>();
   const [resolvedActiveThemeId, setResolvedActiveThemeId] = useState<string | undefined>();
 
   useEffect(() => {
-    if (!themeId) {
+    if (!enabled || !themeId) {
       setStatus("idle");
       setPreviewSiteUrl(undefined);
       setResolvedActiveThemeId(undefined);
@@ -88,7 +90,6 @@ export function useThemePreviewSession(
       if (cancelled) return;
 
       const effectiveActiveThemeId = sessionActiveTheme;
-      const isActiveTheme = themeId === effectiveActiveThemeId;
 
       const liveUrl = resolveLiveSitePreviewUrl(siteUrl, {
         themeId,
@@ -102,7 +103,8 @@ export function useThemePreviewSession(
         return;
       }
 
-      if (isActiveTheme) {
+      // Active theme uses public origin; non-active themes boot on previewSiteUrl.
+      if (!sessionPreviewUrl) {
         if (!cancelled) setStatus("ready");
         return;
       }
@@ -122,7 +124,7 @@ export function useThemePreviewSession(
       setResolvedActiveThemeId(undefined);
       releasePreviewSession();
     };
-  }, [themeId, siteUrl, activeThemeId]);
+  }, [enabled, themeId, siteUrl, activeThemeId]);
 
   return {
     ready: status === "ready",
