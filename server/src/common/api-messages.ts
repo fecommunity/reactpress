@@ -18,6 +18,7 @@ export const ApiMsg = {
   USER_EXISTS: 'User already exists',
   INVALID_CREDENTIALS: 'Invalid username or password',
   USER_LOCKED: 'User is locked and cannot sign in',
+  TOO_MANY_LOGIN_ATTEMPTS: 'Too many login attempts, please try again later',
   FORBIDDEN: 'You do not have permission for this action',
   UNAUTHORIZED: 'Unauthorized',
   FORBIDDEN_ACTION: 'Forbidden',

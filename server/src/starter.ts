@@ -12,6 +12,7 @@ import { join } from 'path';
 import { SwaggerTheme, SwaggerThemeNameEnum } from 'swagger-themes';
 
 import { AppModule } from './app.module';
+import { ApiMsg } from './common/api-messages';
 import { HttpExceptionFilter } from './filters/http-exception.filter';
 import { TransformInterceptor } from './interceptors/transform.interceptor';
 
@@ -135,12 +136,32 @@ export async function bootstrap() {
     });
 
     app.enableCors();
-    app.setGlobalPrefix(configService.get('SERVER_API_PREFIX', '/api'));
+    const apiPrefix = String(configService.get('SERVER_API_PREFIX', '/api')).replace(/\/$/, '');
+    app.setGlobalPrefix(apiPrefix);
 
     app.use(
       rateLimit({
         windowMs: 60 * 1000,
         max: 10000,
+      })
+    );
+
+    app.use(
+      `${apiPrefix}/auth/login`,
+      rateLimit({
+        windowMs: 15 * 60 * 1000,
+        max: 5,
+        skipSuccessfulRequests: true,
+        standardHeaders: true,
+        legacyHeaders: false,
+        handler(_req, res) {
+          res.status(429).json({
+            statusCode: 429,
+            msg: ApiMsg.TOO_MANY_LOGIN_ATTEMPTS,
+            success: false,
+            data: null,
+          });
+        },
       })
     );
 

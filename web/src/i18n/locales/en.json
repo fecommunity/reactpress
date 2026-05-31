@@ -180,6 +180,7 @@
     "usernamePlaceholder": "Enter username",
     "passwordPlaceholder": "Enter password",
     "invalidCredentials": "Incorrect username or password. Please try again.",
+    "tooManyAttempts": "Too many login attempts. Please try again in 15 minutes.",
     "adminAccessRequired": "You do not have access to the admin console. Please contact an administrator for authorization.",
     "usernameRequired": "Please enter username",
     "passwordRequired": "Please enter password",

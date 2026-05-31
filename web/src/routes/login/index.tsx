@@ -79,7 +79,11 @@ function LoginPage() {
     },
     onError: (err) => {
       const text = getLoginErrorMessage(err, t);
-      if (err instanceof AdminAccessDeniedError || text === t("login.adminAccessRequired")) {
+      if (
+        err instanceof AdminAccessDeniedError ||
+        text === t("login.adminAccessRequired") ||
+        text === t("login.tooManyAttempts")
+      ) {
         message.warning(text);
         return;
       }

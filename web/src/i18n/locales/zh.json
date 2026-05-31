@@ -180,6 +180,7 @@
     "usernamePlaceholder": "请输入用户名",
     "passwordPlaceholder": "请输入密码",
     "invalidCredentials": "用户名或密码错误，请重新输入",
+    "tooManyAttempts": "登录尝试次数过多，请 15 分钟后再试",
     "adminAccessRequired": "您暂无管理后台访问权限，请联系管理员授权后再登录",
     "usernameRequired": "请输入用户名",
     "passwordRequired": "请输入密码",
