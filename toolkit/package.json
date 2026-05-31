@@ -52,6 +52,10 @@
       "types": "./dist/ui/index.d.ts",
       "default": "./dist/ui/index.js"
     },
+    "./ui/content": {
+      "types": "./dist/ui/components/content/index.d.ts",
+      "default": "./dist/ui/components/content/index.js"
+    },
     "./plugin": {
       "types": "./dist/plugin/index.d.ts",
       "default": "./dist/plugin/index.js"
@@ -76,16 +80,22 @@
   "peerDependencies": {
     "@ant-design/cssinjs": ">=1",
     "@tanstack/react-query": ">=5",
+    "highlight.js": ">=9",
     "next": ">=12",
+    "nprogress": ">=0.2",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "viewerjs": ">=1"
   },
   "peerDependenciesMeta": {
     "@tanstack/react-query": { "optional": true },
     "@ant-design/cssinjs": { "optional": true },
+    "highlight.js": { "optional": true },
     "next": { "optional": true },
+    "nprogress": { "optional": true },
     "react": { "optional": true },
-    "react-dom": { "optional": true }
+    "react-dom": { "optional": true },
+    "viewerjs": { "optional": true }
   },
   "scripts": {
     "generate": "node scripts/generate-swagger.js",

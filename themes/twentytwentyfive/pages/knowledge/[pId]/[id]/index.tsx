@@ -13,8 +13,8 @@ import {
   HtmlContent,
   ImageViewer,
   LocaleTime,
-  SiteCatalogContext as GlobalContext,
-} from '@fecommunity/reactpress-toolkit/theme';
+} from '@fecommunity/reactpress-toolkit/ui/content';
+import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
 import { DoubleColumnLayout } from '@/layout/DoubleColumnLayout';
 import { KnowledgeProvider } from '@/providers';
 

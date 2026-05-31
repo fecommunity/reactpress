@@ -24,8 +24,20 @@ node ./cli/bin/reactpress.js build
 
 log "Ensuring active theme build stamp..."
 node -e "
-  const { buildActiveTheme } = require('./cli/lib/theme-prod');
-  buildActiveTheme(process.cwd());
+  const {
+    buildActiveTheme,
+    writeThemeBuildStamp,
+    readActiveThemeBuildState,
+    hasUsableProductionBuild,
+  } = require('./cli/lib/theme-prod');
+  const state = readActiveThemeBuildState(process.cwd());
+  if (!state) process.exit(1);
+  if (hasUsableProductionBuild(state.themeDir, state.activeTheme)) {
+    writeThemeBuildStamp(state.themeDir, state.activeTheme);
+    console.log('[reactpress] Theme build stamp ensured for \"' + state.activeTheme + '\"');
+  } else {
+    buildActiveTheme(process.cwd());
+  }
 "
 
 log "Verifying artifacts..."
@@ -62,4 +74,5 @@ tar -czf "$OUT" -C "$ROOT" \
   "$THEME_REL/.next"
 
 log "Build complete: $OUT ($(du -h "$OUT" | cut -f1))"
-log "Deploy on server: pnpm run deploy -- $OUT"
+log "Deploy locally:  pnpm run deploy -- $OUT"
+log "Note: use 'pnpm run deploy' (not 'pnpm deploy' — that is pnpm's built-in command)"

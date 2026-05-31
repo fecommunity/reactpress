@@ -14,9 +14,9 @@ function resolveProductionThemeEnv(projectRoot, themeDir) {
     'http://localhost'
   ).replace(/\/$/, '');
   const visitorPort =
-    process.env.CLIENT_PORT || process.env.PORT || process.env.REACTPRESS_VISITOR_INTERNAL_PORT || '13001';
+    process.env.CLIENT_PORT || process.env.PORT || '3001';
   const apiPort =
-    process.env.SERVER_PORT || process.env.REACTPRESS_API_INTERNAL_PORT || '13002';
+    process.env.SERVER_PORT || '3002';
 
   return {
     ...process.env,

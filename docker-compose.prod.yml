@@ -19,10 +19,10 @@ services:
     networks:
       - reactpress-network
 
-  # API / 访客站由宿主机 PM2 提供（内部端口 13001 / 13002，见 scripts/deploy.sh）
+  # API / 访客站由宿主机 PM2 提供（默认 :3001 / :3002，见 .env 与 scripts/deploy.sh）
   # 对外仅暴露 nginx :80；:3000/:3001/:3002 在 nginx 容器内 301 → http://localhost
 
-  # Proxies to host PM2 via host.docker.internal:13001 / :13002
+  # Proxies to host PM2 via host.docker.internal:3001 / :3002
   nginx:
     image: nginx:alpine
     container_name: reactpress_nginx

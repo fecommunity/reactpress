@@ -13,7 +13,7 @@ module.exports = {
         NODE_ENV: 'production',
         NGINX_ENTRY_URL: process.env.NGINX_ENTRY_URL || 'http://localhost',
         REACTPRESS_NGINX_ENTRY_URL: process.env.REACTPRESS_NGINX_ENTRY_URL || process.env.NGINX_ENTRY_URL || 'http://localhost',
-        SERVER_PORT: process.env.SERVER_PORT || '13002',
+        SERVER_PORT: process.env.SERVER_PORT || '3002',
       },
       env_development: {
         NODE_ENV: 'development',

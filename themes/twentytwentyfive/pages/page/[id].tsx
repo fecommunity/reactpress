@@ -5,8 +5,7 @@ import { useContext, useEffect } from 'react';
 
 import { ArticleRecommend } from '@/components/ArticleRecommend';
 import { Comment } from '@/components/Comment';
-import { ImageViewer } from '@fecommunity/reactpress-toolkit/theme';
-import { HtmlContent } from '@fecommunity/reactpress-toolkit/theme';
+import { ImageViewer, HtmlContent } from '@fecommunity/reactpress-toolkit/ui/content';
 import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
 import { PageProvider } from '@/providers';
 

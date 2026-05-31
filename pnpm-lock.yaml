@@ -17,6 +17,8 @@ overrides:
   '@fecommunity/reactpress-template-twentytwentyfive>typescript': ~4.9.5
   '@fecommunity/reactpress-template-hello-world>typescript': ~4.9.5
   next@12.3.4>typescript: ~4.9.5
+  vite: npm:@voidzero-dev/vite-plus-core@latest
+  vitest: npm:@voidzero-dev/vite-plus-test@latest
 
 packageExtensionsChecksum: 6cbfd18c9fc95fa4b3af2e4f501f805f
 
@@ -517,15 +519,24 @@ importers:
       fs-extra:
         specifier: ^10.0.0
         version: 10.1.0
+      highlight.js:
+        specifier: '>=9'
+        version: 9.18.5
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
       next:
         specifier: '>=12'
         version: 12.3.4(@babel/core@7.29.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.79.3)
+      nprogress:
+        specifier: '>=0.2'
+        version: 0.2.0
       swagger-typescript-api:
         specifier: ^12.0.4
         version: 12.0.4(encoding@0.1.13)
+      viewerjs:
+        specifier: '>=1'
+        version: 1.11.7
     devDependencies:
       '@ant-design/cssinjs':
         specifier: ^1.22.0
@@ -4086,7 +4097,7 @@ packages:
     peerDependencies:
       '@rsbuild/core': '>=1.0.2 || ^2.0.0'
       '@tanstack/react-router': ^1.170.7
-      vite: '>=5.0.0 || >=6.0.0 || >=7.0.0 || >=8.0.0'
+      vite: npm:@voidzero-dev/vite-plus-core@latest
       vite-plugin-solid: ^2.11.10 || ^3.0.0-0
       webpack: '>=5.92.0'
     peerDependenciesMeta:
@@ -4459,7 +4470,7 @@ packages:
     resolution: {integrity: sha512-PaeokKjAGraNN+s5SIApgsktnJprIyt3zgEIu7awnEdfn29QiB2crTcCzyi2XGpX9rUnTc0cKU07Wm0N0g7H2w==}
     engines: {node: ^20.19.0 || >=22.12.0}
     peerDependencies:
-      vite: ^4 || ^5 || ^6 || ^7 || ^8
+      vite: npm:@voidzero-dev/vite-plus-core@latest
 
   '@voidzero-dev/vite-plus-core@0.1.22':
     resolution: {integrity: sha512-OC7tChagbJCoY7YKzD5MuyxJO1km5IF42B3ltZoQ9Twc8UuPrMuWZrVoP984tJKYd/gFJuQFM/lrbNtBm9kyDg==}
@@ -4635,7 +4646,7 @@ packages:
       '@vitest/ui': 4.1.7
       happy-dom: '*'
       jsdom: '*'
-      vite: ^6.0.0 || ^7.0.0 || ^8.0.0
+      vite: npm:@voidzero-dev/vite-plus-core@latest
     peerDependenciesMeta:
       '@edge-runtime/vm':
         optional: true
@@ -17796,7 +17807,9 @@ snapshots:
       source-map: 0.6.1
       string-length: 2.0.0
     transitivePeerDependencies:
+      - bufferutil
       - supports-color
+      - utf-8-validate
 
   '@jest/schemas@29.6.3':
     dependencies:
@@ -17821,7 +17834,9 @@ snapshots:
       jest-runner: 24.9.0
       jest-runtime: 24.9.0
     transitivePeerDependencies:
+      - bufferutil
       - supports-color
+      - utf-8-validate
 
   '@jest/transform@24.9.0':
     dependencies:

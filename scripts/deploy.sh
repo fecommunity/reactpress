@@ -2,7 +2,7 @@
 # Production deploy: apply release (optional) → install → verify → nginx → PM2.
 # Does not run build — use `pnpm run build` on CI/local first.
 #
-# Usage:
+# Usage (must use `pnpm run deploy`, not `pnpm deploy`):
 #   pnpm run deploy
 #   pnpm run deploy -- dist/reactpress-release-*.tar.gz
 #
@@ -25,25 +25,6 @@ for arg in "$@"; do
   esac
 done
 
-set_env_kv() {
-  local key="$1"
-  local value="$2"
-  local file=".env"
-  if [ ! -f "$file" ]; then
-    echo "$key=$value" >>"$file"
-    return
-  fi
-  if grep -q "^${key}=" "$file" 2>/dev/null; then
-    if sed --version 2>/dev/null | grep -q GNU; then
-      sed -i "s|^${key}=.*|${key}=${value}|" "$file"
-    else
-      sed -i '' "s|^${key}=.*|${key}=${value}|" "$file"
-    fi
-  else
-    echo "$key=$value" >>"$file"
-  fi
-}
-
 log "Starting production deploy..."
 
 if [ ! -f "package.json" ]; then
@@ -58,24 +39,26 @@ fi
 log "Installing dependencies..."
 pnpm install || error_exit "pnpm install failed"
 
+if [ -f .env ]; then
+  set -a
+  # shellcheck disable=SC1091
+  . ./.env
+  set +a
+fi
+
 NGINX_ENTRY_URL="${NGINX_ENTRY_URL:-http://localhost}"
-REACTPRESS_VISITOR_INTERNAL_PORT="${REACTPRESS_VISITOR_INTERNAL_PORT:-13001}"
-REACTPRESS_API_INTERNAL_PORT="${REACTPRESS_API_INTERNAL_PORT:-13002}"
+CLIENT_PORT="${CLIENT_PORT:-3001}"
+SERVER_PORT="${SERVER_PORT:-3002}"
 export NGINX_ENTRY_URL
 export REACTPRESS_NGINX_ENTRY_URL="${REACTPRESS_NGINX_ENTRY_URL:-$NGINX_ENTRY_URL}"
 export NEXT_PUBLIC_REACTPRESS_ADMIN_URL="${NEXT_PUBLIC_REACTPRESS_ADMIN_URL:-${NGINX_ENTRY_URL%/}/admin}"
-export CLIENT_PORT="$REACTPRESS_VISITOR_INTERNAL_PORT"
-export SERVER_PORT="$REACTPRESS_API_INTERNAL_PORT"
+export CLIENT_PORT
+export SERVER_PORT
 export PORT="$CLIENT_PORT"
-export CLIENT_SITE_URL="${CLIENT_SITE_URL:-$NGINX_ENTRY_URL}"
-export SERVER_SITE_URL="${SERVER_SITE_URL:-$NGINX_ENTRY_URL}"
-export REACTPRESS_API_URL="${REACTPRESS_API_URL:-http://127.0.0.1:${REACTPRESS_API_INTERNAL_PORT}/api}"
+export CLIENT_SITE_URL="${CLIENT_SITE_URL:-http://localhost:${CLIENT_PORT}}"
+export SERVER_SITE_URL="${SERVER_SITE_URL:-http://localhost:${SERVER_PORT}}"
+export REACTPRESS_API_URL="${REACTPRESS_API_URL:-http://127.0.0.1:${SERVER_PORT}/api}"
 export NEXT_PUBLIC_REACTPRESS_API_URL="${NEXT_PUBLIC_REACTPRESS_API_URL:-${NGINX_ENTRY_URL%/}/api}"
-
-set_env_kv "CLIENT_PORT" "$REACTPRESS_VISITOR_INTERNAL_PORT"
-set_env_kv "SERVER_PORT" "$REACTPRESS_API_INTERNAL_PORT"
-set_env_kv "CLIENT_SITE_URL" "$CLIENT_SITE_URL"
-set_env_kv "SERVER_SITE_URL" "$SERVER_SITE_URL"
 
 log "Verifying production artifacts..."
 node scripts/verify-build-artifacts.mjs || error_exit "Artifacts missing — run pnpm run build on CI/local first"
@@ -116,6 +99,30 @@ if docker info >/dev/null 2>&1; then
   log "  API:    ${NGINX_ENTRY_URL%/}/api"
 else
   log "  WARN: start Docker and re-run deploy so nginx can expose the unified entry"
+fi
+
+wait_for_http() {
+  local url="$1"
+  local i=0
+  while [ "$i" -lt 15 ]; do
+    if curl -sf -o /dev/null --max-time 3 "$url"; then
+      return 0
+    fi
+    i=$((i + 1))
+    sleep 1
+  done
+  return 1
+}
+
+if wait_for_http "http://127.0.0.1:${CLIENT_PORT}/"; then
+  log "  Health: visitor site OK (http://127.0.0.1:${CLIENT_PORT}/)"
+else
+  log "  WARN: visitor site not responding on :${CLIENT_PORT} — check: pm2 logs reactpress-client"
+fi
+if wait_for_http "http://127.0.0.1:${SERVER_PORT}/api/health"; then
+  log "  Health: API OK (http://127.0.0.1:${SERVER_PORT}/api/health)"
+else
+  log "  WARN: API not responding on :${SERVER_PORT} — check DB and: pm2 logs reactpress-server"
 fi
 log "  Status: pnpm run status"
 

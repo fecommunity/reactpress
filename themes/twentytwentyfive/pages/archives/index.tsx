@@ -8,7 +8,7 @@ import { useContext } from 'react';
 import AboutUs from '@/components/AboutUs';
 import { ListTrail } from '@/components/Animation/Trail';
 import { ArticleRecommend } from '@/components/ArticleRecommend';
-import { LocaleTime } from '@fecommunity/reactpress-toolkit/theme';
+import { LocaleTime } from '@fecommunity/reactpress-toolkit/ui/content';
 import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
 import { DoubleColumnLayout } from '@/layout/DoubleColumnLayout';
 import { ArticleProvider } from '@/providers';

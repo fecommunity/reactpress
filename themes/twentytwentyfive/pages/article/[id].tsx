@@ -4,8 +4,8 @@ import {
   ImageViewer,
   LocaleTime,
   parseArticleToc,
-  SiteCatalogContext as GlobalContext,
-} from '@fecommunity/reactpress-toolkit/theme';
+} from '@fecommunity/reactpress-toolkit/ui/content';
+import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
 import { Form, Input, message, Modal } from 'antd';
 import { NextPage } from 'next';
 import Head from 'next/head';

@@ -209,6 +209,46 @@ function isDevNginxConfigStale(projectRoot, configPath) {
   return false;
 }
 
+function isProdNginxConfigStale(projectRoot, configPath) {
+  const { visitorPort, apiPort } = readDevNginxPorts(projectRoot);
+  let content = '';
+  try {
+    content = fs.readFileSync(configPath, 'utf8');
+  } catch {
+    return true;
+  }
+  if (content.includes('host.docker.internal:13001') || content.includes('host.docker.internal:13002')) {
+    return true;
+  }
+  if (!content.includes(`host.docker.internal:${visitorPort}`)) return true;
+  if (!content.includes(`host.docker.internal:${apiPort}`)) return true;
+  return false;
+}
+
+function renderProdNginxConfig(projectRoot) {
+  const templatePath = bundledTemplatePath('prod');
+  const { visitorPort, apiPort } = readDevNginxPorts(projectRoot);
+  let content = fs.readFileSync(templatePath, 'utf8');
+  content = content.replace(/host\.docker\.internal:3001/g, `host.docker.internal:${visitorPort}`);
+  content = content.replace(/host\.docker\.internal:3002/g, `host.docker.internal:${apiPort}`);
+  return content;
+}
+
+function writeProdNginxConfig(projectRoot) {
+  const configPath = resolveNginxConfigPath(projectRoot, 'prod');
+  const content = renderProdNginxConfig(projectRoot);
+  fs.mkdirSync(path.dirname(configPath), { recursive: true });
+  const existed = fs.existsSync(configPath);
+  const previous = existed ? fs.readFileSync(configPath, 'utf8') : '';
+  fs.writeFileSync(configPath, content, 'utf8');
+  return {
+    configPath,
+    changed: content !== previous,
+    created: !existed,
+    mode: 'prod',
+  };
+}
+
 function writeDevNginxConfig(projectRoot) {
   const configPath = resolveNginxConfigPath(projectRoot, 'dev');
   const ports = readDevNginxPorts(projectRoot);
@@ -239,6 +279,19 @@ function ensureNginxConfig(projectRoot, options = {}) {
     if (options.force || !fs.existsSync(configPath) || isDevNginxConfigStale(projectRoot, configPath)) {
       const result = writeDevNginxConfig(projectRoot);
       return { configPath: result.configPath, created: result.created || result.changed, changed: result.changed, mode };
+    }
+    return { configPath, created: false, changed: false, mode };
+  }
+
+  if (mode === 'prod') {
+    if (options.force || !fs.existsSync(configPath) || isProdNginxConfigStale(projectRoot, configPath)) {
+      const result = writeProdNginxConfig(projectRoot);
+      return {
+        configPath: result.configPath,
+        created: result.created || result.changed,
+        changed: result.changed,
+        mode,
+      };
     }
     return { configPath, created: false, changed: false, mode };
   }
@@ -567,6 +620,7 @@ module.exports = {
   resolveNginxComposeContext,
   ensureNginxConfig,
   renderDevNginxConfig,
+  renderProdNginxConfig,
   nginxEntryUrl,
   resolveNginxPort,
   isNginxContainerRunning,

@@ -6,7 +6,7 @@ import { useTranslations } from 'next-intl';
 import React from 'react';
 import LazyLoad from 'react-lazyload';
 
-import { LocaleTime } from '@fecommunity/reactpress-toolkit/theme';
+import { LocaleTime } from '@fecommunity/reactpress-toolkit/ui/content';
 
 import style from './index.module.scss';
 

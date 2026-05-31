@@ -30,6 +30,10 @@ const toolkitAliases = [
     find: "@fecommunity/reactpress-toolkit/ui",
     replacement: toolkitEntry("ui"),
   },
+  {
+    find: "@fecommunity/reactpress-toolkit/ui/content",
+    replacement: path.join(toolkitSrc, "ui/components/content/index.ts"),
+  },
 ];
 
 const mode = process.env.NODE_ENV === "production" ? "production" : "development";

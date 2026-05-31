@@ -59,6 +59,30 @@ describe('lib/nginx', () => {
     assert.ok(content.includes('host.docker.internal:3002'));
   });
 
+  it('ensureNginxConfig refreshes stale prod nginx (13001 → env ports)', () => {
+    const root = createMonorepoFixture();
+    try {
+      const configPath = path.join(root, 'nginx.conf');
+      fs.writeFileSync(
+        configPath,
+        'location / { proxy_pass http://host.docker.internal:13001; }\nlocation /api { proxy_pass http://host.docker.internal:13002; }\n',
+      );
+      fs.writeFileSync(
+        path.join(root, '.env'),
+        'CLIENT_SITE_URL=http://localhost:3001\nSERVER_SITE_URL=http://localhost:3002\n',
+      );
+      const { changed } = ensureNginxConfig(root, { prod: true });
+      assert.equal(changed, true);
+      const content = fs.readFileSync(configPath, 'utf8');
+      assert.ok(content.includes('host.docker.internal:3001'));
+      assert.ok(content.includes('host.docker.internal:3002'));
+      assert.ok(!content.includes('13001'));
+      assert.ok(!content.includes('13002'));
+    } finally {
+      rmDir(root);
+    }
+  });
+
   it('uses docker-compose.dev.yml for monorepo dev nginx', () => {
     const root = createMonorepoFixture();
     try {
