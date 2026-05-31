@@ -175,6 +175,7 @@ export const Header: React.FC<HeaderProps> = ({ setting, tags, pages, hasBg = fa
               selectedKeys={[mainPath]}
               items={menuItems}
               mode="horizontal"
+              disabledOverflow
               className={cls(visible ? style.active : false, style.menu)}
             />
           </div>

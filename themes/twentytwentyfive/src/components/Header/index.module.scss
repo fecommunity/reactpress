@@ -182,26 +182,34 @@ $header-nav-first-padding-start: 4px;
     border: none;
     display: flex;
     align-items: stretch;
-    flex: 0 1 auto;
+    flex: 1 1 auto;
     min-width: 0;
     height: 100%;
     background-color: var(--bg-box);
+    overflow: hidden;
 
     .menu {
-      width: auto;
+      width: 100%;
+      max-width: 100%;
       min-width: 0;
       background-color: var(--bg-box);
       height: 100%;
       border: none;
 
       &:global(.ant-menu) {
-        flex: 0 1 auto;
+        flex: 1 1 auto;
+        width: 100%;
+        max-width: 100%;
         height: $height;
         padding-inline: 0;
         margin-inline: 0;
         column-gap: 0;
         line-height: $height;
         border-bottom: none;
+      }
+
+      &:global(.ant-menu-overflow) {
+        flex-wrap: nowrap;
       }
 
       &:global(.ant-menu-horizontal > .ant-menu-item),
@@ -235,12 +243,11 @@ $header-nav-first-padding-start: 4px;
     display: flex;
     font-size: 16px;
     color: var(--main-text-color);
-    flex: 1 1 auto;
+    flex: 0 0 auto;
     margin-left: auto;
     justify-content: flex-end;
     align-items: center;
     height: 100%;
-    min-width: 0;
 
     > ul {
       position: relative;
@@ -370,8 +377,16 @@ $header-nav-first-padding-start: 4px;
       display: block;
     }
 
+    .menuWrapper {
+      flex: 1 1 auto;
+      min-width: 0;
+      overflow-x: auto;
+      overflow-y: hidden;
+    }
+
     .menu {
-      width: calc(100% - 130px);
+      width: max-content;
+      min-width: 100%;
     }
   }
 }
