@@ -6,6 +6,9 @@ const { runSync } = require('./spawn');
 const { ensureOriginalCwd } = require('./root');
 const { hasWeb } = require('./project-type');
 const { t } = require('./i18n');
+const { shouldBuildToolkit } = require('./toolkit-build');
+const { hasUsableProductionBuild, readActiveThemeBuildState } = require('./theme-prod');
+const { resolveBuildNodeEnv } = require('./prod-memory');
 
 const FORBIDDEN_SCRIPTS = new Set(['build']);
 
@@ -36,7 +39,7 @@ function getBuildSteps(target, projectRoot) {
   return steps;
 }
 
-const buildChildEnv = { REACTPRESS_BUILD_ACTIVE: '1' };
+const buildChildEnv = resolveBuildNodeEnv({ REACTPRESS_BUILD_ACTIVE: '1' });
 
 function readPackageScripts(packageJsonPath) {
   try {
@@ -144,6 +147,24 @@ async function runBuild(target = 'all', projectRoot = ensureOriginalCwd()) {
     const stepLabel = t(labelKey);
     const stepStarted = Date.now();
     const badge = stepBadge(current, total);
+
+    if (script === 'build:toolkit' && !shouldBuildToolkit(projectRoot)) {
+      console.log(`  ${badge}  ${ok(t('build.stepSkippedFresh', { label: stepLabel }))}`);
+      continue;
+    }
+
+    if (script === 'build:theme') {
+      const themeState = readActiveThemeBuildState(projectRoot);
+      if (
+        themeState &&
+        hasUsableProductionBuild(themeState.themeDir, themeState.activeTheme)
+      ) {
+        console.log(
+          `  ${badge}  ${ok(t('build.stepSkippedReuse', { label: stepLabel, id: themeState.activeTheme }))}`,
+        );
+        continue;
+      }
+    }
 
     const invocation = resolveBuildInvocation(script, projectRoot);
     if (!invocation) {

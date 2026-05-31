@@ -1,8 +1,4 @@
-import { getThemeConfigurationSeed } from "@fecommunity/reactpress-toolkit/theme";
-import {
-  getThemeStateFromGlobalSetting,
-  type ThemeMods,
-} from "@fecommunity/reactpress-toolkit/theme";
+import { getThemeConfigurationSeed, type ThemeMods } from "@fecommunity/reactpress-toolkit/theme";
 import { useNavigate } from "@tanstack/react-router";
 import { App, Button, Spin } from "antd";
 import { ChevronLeft } from "lucide-react";
@@ -10,6 +6,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { useSiteSettings } from "@/hooks/useSiteSettings";
+import { useSiteThemeState } from "@/hooks/useSiteThemeState";
 import {
   useThemeConfiguration,
   useThemeConfigurationMutation,
@@ -47,21 +44,12 @@ export function CustomizePage() {
   const navigate = useNavigate();
   const { section: initialSection } = Route.useSearch();
   const { data: settings, isLoading: settingsLoading } = useSiteSettings();
+  const { themeState, activeThemeId, siteUrl: resolvedSiteUrl } = useSiteThemeState();
   const { data: themes, isLoading: themesLoading, isError, refetch: refetchThemes } = useThemes();
   const { modsMutation } = useThemeMutations();
   const configFormRef = useRef<ThemeConfigurationFormHandle>(null);
 
-  const themeState = useMemo(() => {
-    try {
-      const raw = settings?.globalSetting;
-      const parsed = typeof raw === "string" ? JSON.parse(raw) : raw;
-      return getThemeStateFromGlobalSetting(parsed);
-    } catch {
-      return getThemeStateFromGlobalSetting(null);
-    }
-  }, [settings?.globalSetting]);
-
-  const themeId = themeState.previewThemeId ?? themeState.activeTheme;
+  const themeId = themeState.previewThemeId ?? activeThemeId;
   const { data: schemaData, isLoading: schemaLoading } = useThemeConfigurationSchema(themeId);
   const { data: configData, isLoading: configLoading } = useThemeConfiguration(themeId);
   const saveConfigMutation = useThemeConfigurationMutation(themeId);
@@ -101,18 +89,20 @@ export function CustomizePage() {
 
   const [previewRefreshKey, setPreviewRefreshKey] = useState(0);
   const [device, setDevice] = useState<PreviewDevice>("desktop");
-  const siteUrl = typeof settings?.systemUrl === "string" ? settings.systemUrl.trim() : undefined;
+  const siteUrl = resolvedSiteUrl;
   const {
     ready: previewSessionReady,
     switching: previewSwitching,
     previewSiteUrl,
-  } = useThemePreviewSession(themeId, siteUrl, themeState.activeTheme);
+    activeThemeId: previewActiveThemeId,
+  } = useThemePreviewSession(themeId, siteUrl, activeThemeId);
+  const effectiveActiveThemeId = previewActiveThemeId ?? activeThemeId;
   const mayUseLiveSite =
-    themeId === themeState.activeTheme
+    themeId === effectiveActiveThemeId
       ? Boolean(
           resolveLiveSitePreviewUrl(siteUrl, {
             themeId,
-            activeThemeId: themeState.activeTheme,
+            activeThemeId: effectiveActiveThemeId,
             previewSessionReady: true,
           }),
         )
@@ -286,7 +276,7 @@ export function CustomizePage() {
               ) : (
                 <ThemePreviewFrame
                   themeId={themeId}
-                  activeThemeId={themeState.activeTheme}
+                  activeThemeId={effectiveActiveThemeId}
                   mods={previewMods}
                   previewConfiguration={previewConfiguration}
                   siteUrl={siteUrl}
@@ -295,7 +285,7 @@ export function CustomizePage() {
                   previewSessionReady={previewSessionReady}
                   refreshKey={
                     previewSessionReady
-                      ? `${themeId}-${previewRefreshKey}`
+                      ? `${themeId}-${effectiveActiveThemeId}-${previewRefreshKey}`
                       : String(previewRefreshKey)
                   }
                   style={{ minHeight: "100%" }}

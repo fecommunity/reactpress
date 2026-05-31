@@ -1,11 +1,9 @@
-import { getThemeStateFromGlobalSetting } from "@fecommunity/reactpress-toolkit/theme";
 import { useNavigate } from "@tanstack/react-router";
 import { App, Button, Spin } from "antd";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
-import { useSiteSettings } from "@/hooks/useSiteSettings";
+import { useSiteThemeState } from "@/hooks/useSiteThemeState";
 import { useThemeListItemMeta } from "@/hooks/useThemeListItemMeta";
 import { useThemePreviewSession } from "@/hooks/useThemePreviewSession";
 import { useThemeActivation } from "@/hooks/useThemeActivation";
@@ -20,52 +18,43 @@ export function ThemePreviewPage({ themeIdFromSearch }: { themeIdFromSearch?: st
   const { message } = App.useApp();
   const navigate = useNavigate();
   const { data: themes, isLoading } = useThemes();
-  const { data: settings } = useSiteSettings();
+  const { themeState, activeThemeId, siteUrl } = useSiteThemeState();
   const { installMutation } = useThemeMutations();
   const { activateAndWait, activatingId } = useThemeActivation();
-
-  const themeState = useMemo(() => {
-    try {
-      const raw = settings?.globalSetting;
-      const parsed = typeof raw === "string" ? JSON.parse(raw) : raw;
-      return getThemeStateFromGlobalSetting(parsed);
-    } catch {
-      return getThemeStateFromGlobalSetting(null);
-    }
-  }, [settings?.globalSetting]);
 
   const list = themes ?? [];
   const currentIndex = Math.max(
     0,
-    list.findIndex((th) => th.id === (themeIdFromSearch ?? themeState.activeTheme)),
+    list.findIndex((th) => th.id === (themeIdFromSearch ?? activeThemeId)),
   );
   const current = list[currentIndex];
   const { description, tags } = useThemeListItemMeta(current);
   const canSwitchTheme = list.length > 1;
 
   const previewMods = current?.id ? (themeState.mods[current.id] ?? {}) : {};
-  const siteUrl = typeof settings?.systemUrl === "string" ? settings.systemUrl.trim() : undefined;
   const {
     ready: previewSessionReady,
     switching: previewSwitching,
     previewSiteUrl,
-  } = useThemePreviewSession(current?.id, siteUrl, themeState.activeTheme);
+    activeThemeId: previewActiveThemeId,
+  } = useThemePreviewSession(current?.id, siteUrl, activeThemeId);
+  const effectiveActiveThemeId = previewActiveThemeId ?? activeThemeId;
   const isLivePreview = current?.id
     ? Boolean(
         resolveLiveSitePreviewUrl(siteUrl, {
           themeId: current.id,
-          activeThemeId: themeState.activeTheme,
+          activeThemeId: effectiveActiveThemeId,
           previewSiteUrl,
           previewSessionReady,
         }),
       )
     : false;
   const mayUseLiveSite =
-    current?.id === themeState.activeTheme
+    current?.id === effectiveActiveThemeId
       ? Boolean(
           resolveLiveSitePreviewUrl(siteUrl, {
             themeId: current.id,
-            activeThemeId: themeState.activeTheme,
+            activeThemeId: effectiveActiveThemeId,
             previewSessionReady: true,
           }),
         )
@@ -231,13 +220,13 @@ export function ThemePreviewPage({ themeIdFromSearch }: { themeIdFromSearch?: st
         ) : (
           <ThemePreviewFrame
             themeId={current.id}
-            activeThemeId={themeState.activeTheme}
+            activeThemeId={effectiveActiveThemeId}
             mods={previewMods}
             siteUrl={siteUrl}
             title={current.name}
             previewSiteUrl={previewSiteUrl}
             previewSessionReady={previewSessionReady}
-            refreshKey={previewSessionReady ? current.id : undefined}
+            refreshKey={previewSessionReady ? `${current.id}:${effectiveActiveThemeId}` : undefined}
             style={{ flex: 1, minHeight: 0, height: "100%" }}
           />
         )}

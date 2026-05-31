@@ -6,7 +6,9 @@ module.exports = {
       instances: 1,
       autorestart: true,
       watch: false,
-      max_memory_restart: '1G',
+      max_memory_restart:
+        process.env.REACTPRESS_PM2_SERVER_MEMORY ||
+        (process.env.REACTPRESS_LOW_MEM === '1' ? '384M' : '1G'),
       env: {
         NODE_ENV: 'production',
         NGINX_ENTRY_URL: process.env.NGINX_ENTRY_URL || 'http://localhost',

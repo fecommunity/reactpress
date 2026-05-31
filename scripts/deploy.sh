@@ -1,6 +1,11 @@
 #!/bin/bash
-
-# ReactPress production deploy (monorepo: server + client on host with PM2)
+# Production deploy: apply release (optional) → install → verify → nginx → PM2.
+# Does not run build — use `pnpm run build` on CI/local first.
+#
+# Usage:
+#   pnpm run deploy
+#   pnpm run deploy -- dist/reactpress-release-*.tar.gz
+#
 set -e
 
 log() {
@@ -12,7 +17,14 @@ error_exit() {
   exit 1
 }
 
-# Persist deploy ports/URLs into .env so PM2 + dotenv pick them up on restart
+RELEASE=""
+for arg in "$@"; do
+  case "$arg" in
+    --release=*) RELEASE="${arg#*=}" ;;
+    *.tar.gz) RELEASE="$arg" ;;
+  esac
+done
+
 set_env_kv() {
   local key="$1"
   local value="$2"
@@ -32,17 +44,21 @@ set_env_kv() {
   fi
 }
 
-log "Starting deployment..."
+log "Starting production deploy..."
 
 if [ ! -f "package.json" ]; then
   error_exit "Run this script from the repository root"
+fi
+
+if [ -n "$RELEASE" ]; then
+  log "Applying release package: $RELEASE"
+  sh scripts/apply-release.sh "$RELEASE"
 fi
 
 log "Installing dependencies..."
 pnpm install || error_exit "pnpm install failed"
 
 NGINX_ENTRY_URL="${NGINX_ENTRY_URL:-http://localhost}"
-# PM2 binds internal ports; nginx owns public :3000/:3001/:3002 and redirects to :80
 REACTPRESS_VISITOR_INTERNAL_PORT="${REACTPRESS_VISITOR_INTERNAL_PORT:-13001}"
 REACTPRESS_API_INTERNAL_PORT="${REACTPRESS_API_INTERNAL_PORT:-13002}"
 export NGINX_ENTRY_URL
@@ -61,15 +77,10 @@ set_env_kv "SERVER_PORT" "$REACTPRESS_API_INTERNAL_PORT"
 set_env_kv "CLIENT_SITE_URL" "$CLIENT_SITE_URL"
 set_env_kv "SERVER_SITE_URL" "$SERVER_SITE_URL"
 
-log "Building toolkit, server, web (admin static /admin/), and client..."
-log "  Entry: $NGINX_ENTRY_URL (PM2 :$CLIENT_PORT visitor, :$SERVER_PORT API)"
-pnpm run build || error_exit "pnpm build failed"
+log "Verifying production artifacts..."
+node scripts/verify-build-artifacts.mjs || error_exit "Artifacts missing — run pnpm run build on CI/local first"
 
-if [ ! -f "web/dist/index.html" ]; then
-  error_exit "web/dist/index.html missing — run pnpm build:web (needs web/.env.production with VITE_ADMIN_BASE=/admin/)"
-fi
-
-log "Syncing PM2 daemon (clears in-memory vs local version mismatch)..."
+log "Syncing PM2 daemon..."
 pm2 update 2>/dev/null || true
 
 log "Stopping existing ReactPress PM2 apps (if any)..."
@@ -82,7 +93,6 @@ pm2 delete @fecommunity/reactpress-template-hello-world 2>/dev/null || true
 
 log "Starting nginx reverse proxy (production)..."
 if docker info >/dev/null 2>&1; then
-  # Start nginx before PM2 so :13001/:13002 stay free on the host (compose maps :3001/:3002 → redirect only)
   node ./cli/bin/reactpress.js nginx restart --prod || error_exit "Failed to start nginx"
 else
   log "WARN: Docker not running — nginx redirect ports unavailable"
@@ -99,12 +109,11 @@ REACTPRESS_API_URL="$REACTPRESS_API_URL" \
 log "Saving PM2 process list..."
 pm2 save || log "WARN: pm2 save failed (run pm2 startup manually if needed)"
 
-log "Deployment completed."
+log "Deploy completed."
 if docker info >/dev/null 2>&1; then
   log "  Site:   $NGINX_ENTRY_URL/"
   log "  Admin:  ${NGINX_ENTRY_URL%/}/admin/"
   log "  API:    ${NGINX_ENTRY_URL%/}/api"
-  log "  (legacy :3000 / :3001 / :3002 redirect to the URLs above)"
 else
   log "  WARN: start Docker and re-run deploy so nginx can expose the unified entry"
 fi

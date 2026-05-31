@@ -5,6 +5,7 @@ const { runSync, runNodeScript, resolveCliScript } = require('./spawn');
 const { getThemeBin, resolveProjectRoot } = require('./paths');
 const { readActiveThemeManifest, resolveThemeDirectory } = require('./theme-runtime');
 const { t } = require('./i18n');
+const { resolveBuildNodeEnv } = require('./prod-memory');
 
 function resolveProductionThemeEnv(projectRoot, themeDir) {
   const nginxEntry = (
@@ -83,6 +84,35 @@ function writeThemeBuildStamp(themeDir, themeId) {
   fs.writeFileSync(stampPath, themeId, 'utf8');
 }
 
+function newestSourceMtime(rootDir, depth = 0) {
+  if (!fs.existsSync(rootDir)) return 0;
+  let max = 0;
+  for (const entry of fs.readdirSync(rootDir, { withFileTypes: true })) {
+    if (entry.name === 'node_modules' || entry.name === '.next') continue;
+    const full = path.join(rootDir, entry.name);
+    if (entry.isDirectory()) {
+      if (depth < 10) max = Math.max(max, newestSourceMtime(full, depth + 1));
+      continue;
+    }
+    if (entry.isFile()) max = Math.max(max, fs.statSync(full).mtimeMs);
+  }
+  return max;
+}
+
+function themeSourcesNewerThanBuild(themeDir) {
+  const buildMarker = path.join(themeDir, '.next', 'BUILD_ID');
+  if (!fs.existsSync(buildMarker)) return true;
+  const buildMtime = fs.statSync(buildMarker).mtimeMs;
+  for (const rel of ['pages', 'src', 'public', 'theme.json', 'package.json', 'next.config.js']) {
+    const target = path.join(themeDir, rel);
+    if (!fs.existsSync(target)) continue;
+    const stat = fs.statSync(target);
+    const mtime = stat.isDirectory() ? newestSourceMtime(target) : stat.mtimeMs;
+    if (mtime > buildMtime) return true;
+  }
+  return false;
+}
+
 function hasUsableProductionBuild(themeDir, themeId) {
   if (process.env.REACTPRESS_FORCE_THEME_BUILD === '1') return false;
   const nextDir = path.join(themeDir, '.next');
@@ -91,20 +121,32 @@ function hasUsableProductionBuild(themeDir, themeId) {
   const stampPath = path.join(themeDir, BUILD_STAMP_REL);
   if (!fs.existsSync(stampPath)) return false;
   try {
-    return fs.readFileSync(stampPath, 'utf8').trim() === themeId;
+    if (fs.readFileSync(stampPath, 'utf8').trim() !== themeId) return false;
   } catch {
     return false;
   }
+  if (themeSourcesNewerThanBuild(themeDir)) return false;
+  return true;
 }
 
-function buildActiveTheme(projectRoot, { force = false } = {}) {
+function readActiveThemeBuildState(projectRoot) {
   const { activeTheme } = readActiveThemeManifest(projectRoot);
   const themeDir = resolveThemeDirectory(projectRoot, activeTheme);
   if (!themeDir || !fs.existsSync(path.join(themeDir, 'package.json'))) {
+    return null;
+  }
+  return { activeTheme, themeDir };
+}
+
+function buildActiveTheme(projectRoot, { force = false } = {}) {
+  const state = readActiveThemeBuildState(projectRoot);
+  if (!state) {
+    const { activeTheme } = readActiveThemeManifest(projectRoot);
     const err = new Error(`Active theme not found: ${activeTheme}`);
     err.code = 'REACTPRESS_THEME_NOT_FOUND';
     throw err;
   }
+  const { activeTheme, themeDir } = state;
 
   syncThemeLaunchFilesFromTemplate(projectRoot, activeTheme, themeDir);
 
@@ -116,10 +158,10 @@ function buildActiveTheme(projectRoot, { force = false } = {}) {
   console.log(`[reactpress] ${t('themeProd.building', { id: activeTheme })}`);
   runSync('pnpm', ['run', 'build'], {
     cwd: themeDir,
-    env: {
+    env: resolveBuildNodeEnv({
       ...resolveProductionThemeEnv(projectRoot, themeDir),
       REACTPRESS_BUILD_ACTIVE: '1',
-    },
+    }),
   });
   writeThemeBuildStamp(themeDir, activeTheme);
   return { activeTheme, themeDir, skippedBuild: false };
@@ -150,4 +192,7 @@ module.exports = {
   buildActiveTheme,
   restartProductionVisitorClient,
   resolveProductionThemeEnv,
+  hasUsableProductionBuild,
+  readActiveThemeBuildState,
+  writeThemeBuildStamp,
 };

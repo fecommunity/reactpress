@@ -8,6 +8,9 @@
 const path = require('path');
 const fs = require('fs');
 const { spawn, spawnSync } = require('child_process');
+const { hasUsableProductionBuild } = require('../lib/theme-prod');
+const { getPm2ClientMemoryRestart, resolveBuildNodeEnv } = require('../lib/prod-memory');
+const { readActiveThemeManifest } = require('../lib/theme-runtime');
 
 const originalCwd = process.env.REACTPRESS_ORIGINAL_CWD || process.cwd();
 const args = process.argv.slice(2);
@@ -33,9 +36,15 @@ function runStartCommand() {
 }
 
 function ensureBuilt() {
-  if (fs.existsSync(nextDir)) return;
+  const { activeTheme } = readActiveThemeManifest(originalCwd);
+  const themeId = process.env.REACTPRESS_THEME_ID || activeTheme || path.basename(clientDir);
+  if (hasUsableProductionBuild(clientDir, themeId)) return;
   console.log('[ReactPress Client] Client not built yet. Building…');
-  const build = spawnSync('pnpm', ['run', 'build'], { stdio: 'inherit', cwd: clientDir });
+  const build = spawnSync('pnpm', ['run', 'build'], {
+    stdio: 'inherit',
+    cwd: clientDir,
+    env: resolveBuildNodeEnv({ ...process.env, REACTPRESS_BUILD_ACTIVE: '1' }),
+  });
   if (build.status !== 0) process.exit(build.status || 1);
 }
 
@@ -63,10 +72,31 @@ function startWithPm2() {
       : { REACTPRESS_SKIP_DEV_PORT_REDIRECT: '1' }),
   };
 
+  const pm2Mem = getPm2ClientMemoryRestart();
   const pm2Args =
     cmd === 'node'
-      ? ['start', cmd, '--name', 'reactpress-client', '--update-env', '--', ...cmdArgs]
-      : ['start', cmd, '--name', 'reactpress-client', '--update-env', '--', ...cmdArgs];
+      ? [
+          'start',
+          cmd,
+          '--name',
+          'reactpress-client',
+          '--update-env',
+          '--max-memory-restart',
+          pm2Mem,
+          '--',
+          ...cmdArgs,
+        ]
+      : [
+          'start',
+          cmd,
+          '--name',
+          'reactpress-client',
+          '--update-env',
+          '--max-memory-restart',
+          pm2Mem,
+          '--',
+          ...cmdArgs,
+        ];
 
   const child = spawn('pm2', pm2Args, { stdio: 'inherit', cwd: clientDir, env: pm2Env });
   child.on('close', (code) => process.exit(code ?? 0));

@@ -50,11 +50,13 @@ export function useThemePreviewSession(
 ) {
   const [status, setStatus] = useState<ThemePreviewSessionStatus>("idle");
   const [previewSiteUrl, setPreviewSiteUrl] = useState<string | undefined>();
+  const [resolvedActiveThemeId, setResolvedActiveThemeId] = useState<string | undefined>();
 
   useEffect(() => {
     if (!themeId) {
       setStatus("idle");
       setPreviewSiteUrl(undefined);
+      setResolvedActiveThemeId(undefined);
       return;
     }
 
@@ -63,24 +65,34 @@ export function useThemePreviewSession(
     let cancelled = false;
     setStatus("switching");
     setPreviewSiteUrl(undefined);
+    setResolvedActiveThemeId(undefined);
 
     void (async () => {
-      const isActiveTheme = themeId === (activeThemeId ?? themeId);
-
       let sessionPreviewUrl: string | undefined;
+      let sessionActiveTheme = activeThemeId ?? themeId;
+
       try {
         const result = await beginThemePreviewSession(themeId);
         sessionPreviewUrl = result.previewSiteUrl;
-        if (!cancelled) setPreviewSiteUrl(sessionPreviewUrl);
+        if (typeof result.activeTheme === "string" && result.activeTheme) {
+          sessionActiveTheme = result.activeTheme;
+        }
+        if (!cancelled) {
+          setPreviewSiteUrl(sessionPreviewUrl);
+          setResolvedActiveThemeId(sessionActiveTheme);
+        }
       } catch {
         /* still try live preview / stub fallback */
       }
 
       if (cancelled) return;
 
+      const effectiveActiveThemeId = sessionActiveTheme;
+      const isActiveTheme = themeId === effectiveActiveThemeId;
+
       const liveUrl = resolveLiveSitePreviewUrl(siteUrl, {
         themeId,
-        activeThemeId: activeThemeId ?? themeId,
+        activeThemeId: effectiveActiveThemeId,
         previewSiteUrl: sessionPreviewUrl,
         previewSessionReady: true,
       });
@@ -107,6 +119,7 @@ export function useThemePreviewSession(
       cancelled = true;
       setStatus("idle");
       setPreviewSiteUrl(undefined);
+      setResolvedActiveThemeId(undefined);
       releasePreviewSession();
     };
   }, [themeId, siteUrl, activeThemeId]);
@@ -115,5 +128,6 @@ export function useThemePreviewSession(
     ready: status === "ready",
     switching: status === "switching",
     previewSiteUrl,
+    activeThemeId: resolvedActiveThemeId ?? activeThemeId,
   };
 }

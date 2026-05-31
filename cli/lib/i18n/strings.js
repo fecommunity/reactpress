@@ -72,6 +72,7 @@ const STRINGS = {
     'cli.help.build': '  reactpress build -t client  Build one target (toolkit|server|client|docs|all)',
     'cli.help.publish': '  reactpress publish          Publish npm packages',
     'cli.build.target': 'Build target: toolkit | server | client | docs | all',
+    'cli.build.lowMem': 'Cap Node heap for builds and skip unchanged steps (2GB VPS)',
     'banner.subtitle': '  ·  Full-stack publishing CLI        ',
     /** Left label for the decorative pulse bar (not a URL — the repo link
      * lives directly under the title bar at the top of the card). */
@@ -430,6 +431,8 @@ const STRINGS = {
     'build.step': '[{current}/{total}] {label}',
     'build.stepDone': '[{current}/{total}] {label}  ({seconds}s)',
     'build.stepSkipped': 'skipped  {label} (not part of this project layout)',
+    'build.stepSkippedFresh': 'skipped  {label} (dist up to date)',
+    'build.stepSkippedReuse': 'skipped  {label} — reusing build for "{id}"',
     'build.done': 'Build finished in {seconds}s',
     'build.label.toolkit': 'Toolkit',
     'build.label.server': 'API (server)',
@@ -591,6 +594,7 @@ const STRINGS = {
     'cli.help.build': '  reactpress build -t client  构建指定目标 (toolkit|server|client|docs|all)',
     'cli.help.publish': '  reactpress publish          发布 npm 包',
     'cli.build.target': '构建目标: toolkit | server | client | docs | all',
+    'cli.build.lowMem': '低内存模式：限制构建堆内存并跳过未变化步骤（2G 小机）',
     'banner.subtitle': '  ·  全栈发布平台 CLI        ',
     /** 左侧装饰性进度条标签（不是网址；仓库地址放在卡片顶部 Title 正下方）。 */
     'banner.pulseLabel': '准备',
@@ -948,6 +952,8 @@ const STRINGS = {
     'build.step': '[{current}/{total}] {label}',
     'build.stepDone': '[{current}/{total}] {label}  ({seconds}s)',
     'build.stepSkipped': '已跳过  {label}（当前项目无对应源码包）',
+    'build.stepSkippedFresh': '已跳过  {label}（dist 已是最新）',
+    'build.stepSkippedReuse': '已跳过  {label} — 复用主题「{id}」已有构建',
     'build.done': '构建完成，耗时 {seconds}s',
     'build.label.toolkit': 'Toolkit',
     'build.label.server': 'API (server)',

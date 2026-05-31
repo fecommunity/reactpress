@@ -216,8 +216,12 @@ program
   .command('build')
   .description(t('cli.build.description'))
   .option('-t, --target <target>', t('cli.build.target'), 'all')
+  .option('--low-mem', t('cli.build.lowMem'))
   .action(async (options) => {
     try {
+      if (options.lowMem) {
+        process.env.REACTPRESS_LOW_MEM = '1';
+      }
       await runBuild(options.target, ensureOriginalCwd());
     } catch (err) {
       console.error(chalk.red('[reactpress]'), err.message || err);

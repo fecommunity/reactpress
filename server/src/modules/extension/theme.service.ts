@@ -676,10 +676,10 @@ export class ThemeService {
 
     return {
       ...saved,
-      activeTheme: state.activeTheme,
+      activeTheme: saved.activeTheme,
       siteUrl,
       previewSiteUrl:
-        themeId !== state.activeTheme ? this.resolvePreviewSiteUrl(siteUrl, themeId) : undefined,
+        themeId !== saved.activeTheme ? this.resolvePreviewSiteUrl(siteUrl, themeId) : undefined,
     };
   }
 
