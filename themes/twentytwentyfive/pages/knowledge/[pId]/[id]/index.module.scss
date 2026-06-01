@@ -122,6 +122,29 @@
   }
 }
 
+@media (max-width: 768px) {
+  .content {
+    > article {
+      padding: 0.75rem;
+
+      .meta {
+        .title {
+          font-size: 1.75rem;
+        }
+      }
+
+      .navigation {
+        flex-direction: column;
+        gap: 12px;
+
+        > div {
+          width: 100%;
+        }
+      }
+    }
+  }
+}
+
 .infoWrapper {
   padding: 0.8rem 0;
   border-radius: var(--border-radius);

@@ -69,6 +69,25 @@ ul.icons {
 
 @media (max-width: 991px) {
   .footer {
-    padding-bottom: 60px;
+    padding: 24px 0 60px;
+  }
+
+  .container {
+    flex-direction: column;
+    gap: 24px;
+    align-items: stretch;
+  }
+
+  ul.left {
+    width: 100%;
+  }
+
+  ul.icons {
+    width: 100%;
+    text-align: left;
+
+    ul {
+      text-align: left;
+    }
   }
 }

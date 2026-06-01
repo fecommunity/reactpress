@@ -1,6 +1,6 @@
 /**
  * Header Component
- * 
+ *
  * This component represents the main navigation header of the application.
  * It includes:
  * - Logo
@@ -10,7 +10,7 @@
  * - Language selector
  * - User info
  * - GitHub link
- * 
+ *
  * Features:
  * - Responsive design with mobile menu
  * - Sticky header with scroll behavior
@@ -67,6 +67,20 @@ export const Header: React.FC<HeaderProps> = ({ setting, pages, hasBg = false })
       Router.events.off('routeChangeStart', close);
     };
   }, [setVisible, visible]);
+
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (!visible) {
+      return;
+    }
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [visible]);
 
   // Handle scroll behavior for sticky header
   useEffect(() => {
@@ -137,8 +151,16 @@ export const Header: React.FC<HeaderProps> = ({ setting, pages, hasBg = false })
           hasBg && !visible ? style.transparent : false
         )}
       >
-        <div className={cls('container')}>
-          {/* Logo Section */}
+        {visible ? (
+          <button
+            type="button"
+            className={style.mobileBackdrop}
+            aria-label="Close menu"
+            onClick={() => setVisible(false)}
+          />
+        ) : null}
+
+        <div className={cls('container', style.headerInner)}>
           <div className={style.logo}>
             <Link href="/" scroll={false}>
               <a aria-label={setting.systemTitle || 'Home'}>
@@ -147,32 +169,11 @@ export const Header: React.FC<HeaderProps> = ({ setting, pages, hasBg = false })
             </Link>
           </div>
 
-          {/* Mobile Menu Trigger */}
-          <div
-            className={cls(style.mobileTrigger, visible ? style.active : false)}
-            onClick={() => setVisible(!visible)}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter' || event.key === ' ') {
-                event.preventDefault();
-                setVisible(!visible);
-              }
-            }}
-            role="button"
-            tabIndex={0}
-            aria-label="Toggle mobile menu"
-            aria-expanded={visible}
-          >
-            <div className={style.stick}></div>
-            <div className={style.stick}></div>
-            <div className={style.stick}></div>
-          </div>
-
-          {/* Navigation + Tools */}
           <nav
             className={cls(style.toolbar, visible ? style.active : false)}
             aria-label={setting.systemTitle || 'Navigation'}
           >
-            <ul className={style.toolbarList}>
+            <ul className={style.navList}>
               {navItems.map((item) => {
                 const isActive = item.as ? asPath === item.as : mainPath === item.key || asPath === item.href;
                 return (
@@ -186,25 +187,42 @@ export const Header: React.FC<HeaderProps> = ({ setting, pages, hasBg = false })
                   </li>
                 );
               })}
-              <li className={style.toolWrapperSearch}>
-                <HeaderSearch />
-              </li>
-              <li className={style.toolWrapper}>
-                <Theme />
-              </li>
-              <li className={style.toolWrapper}>
-                <Locales />
-              </li>
-              {setting.aboutUsGithubUrl?.trim() ? (
-                <li className={style.toolWrapper}>
-                  <GitHub url={setting.aboutUsGithubUrl} />
-                </li>
-              ) : null}
-              <li className={style.toolWrapper}>
-                <UserInfo />
-              </li>
             </ul>
+
+            <div className={style.toolArea}>
+              <div className={style.searchItem}>
+                <HeaderSearch />
+              </div>
+              <ul className={style.toolList}>
+                <li className={style.toolItem}>
+                  <Theme />
+                </li>
+                <li className={style.toolItem}>
+                  <Locales />
+                </li>
+                {setting.aboutUsGithubUrl?.trim() ? (
+                  <li className={style.toolItem}>
+                    <GitHub url={setting.aboutUsGithubUrl} />
+                  </li>
+                ) : null}
+                <li className={style.toolItem}>
+                  <UserInfo />
+                </li>
+              </ul>
+            </div>
           </nav>
+
+          <button
+            type="button"
+            className={cls(style.mobileTrigger, visible ? style.active : false)}
+            onClick={() => setVisible(!visible)}
+            aria-label="Toggle mobile menu"
+            aria-expanded={visible}
+          >
+            <span className={style.stick} />
+            <span className={style.stick} />
+            <span className={style.stick} />
+          </button>
         </div>
       </div>
     </header>

@@ -1,0 +1,178 @@
+{
+  "$schema": "../theme.manifest.schema.json",
+  "id": "twentytwentysix",
+  "name": "Twenty Twenty-Six",
+  "version": "1.0.0",
+  "description": "简约现代博客主题 — Tailwind CSS + toolkit，双栏布局，含归档、知识库、网址导航与 RSS。",
+  "author": "ReactPress",
+  "tags": ["博客", "现代", "Tailwind", "toolkit"],
+  "requires": ">=3.0.0",
+  "supports": { "darkMode": true, "menus": ["primary"] },
+  "options": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Twenty Twenty-Six",
+    "description": "顶栏导航与 /nav 网址导航",
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "header": {
+        "type": "object",
+        "title": "顶栏",
+        "properties": {
+          "navLinks": {
+            "type": "array",
+            "title": "固定导航链接",
+            "default": [
+              { "path": "/", "locale": "home", "visible": true },
+              { "path": "/nav", "locale": "nav", "visible": true },
+              { "path": "/knowledge", "locale": "knowledge", "visible": true },
+              { "path": "/archives", "locale": "archives", "visible": true }
+            ],
+            "items": {
+              "type": "object",
+              "required": ["path"],
+              "properties": {
+                "path": { "type": "string", "title": "路径" },
+                "locale": { "type": "string", "title": "i18n 键" },
+                "label": { "type": "string", "title": "固定文案" },
+                "visible": { "type": "boolean", "default": true }
+              }
+            },
+            "x-ui": { "widget": "navLinkList", "section": "header", "order": 10 }
+          }
+        }
+      },
+      "nav": {
+        "type": "object",
+        "title": "网址导航",
+        "properties": {
+          "urlConfig": {
+            "type": "array",
+            "title": "导航卡片分组",
+            "x-ui": { "widget": "urlConfigEditor", "section": "nav", "order": 20 },
+            "items": { "type": "object" }
+          }
+        }
+      }
+    }
+  },
+  "templates": {
+    "home": "pages/index.tsx",
+    "single": "pages/article/[id].tsx",
+    "page": "pages/page/[id].tsx",
+    "archive-category": "pages/category/[category].tsx",
+    "archive-tag": "pages/tag/[tag].tsx",
+    "archives": "pages/archives/index.tsx",
+    "search": "pages/search.tsx",
+    "404": "pages/404.tsx"
+  },
+  "appearance": {
+    "panels": [
+      { "id": "basic", "title": "基础配置", "description": "站点信息与页脚" },
+      { "id": "style", "title": "样式配置", "description": "颜色与背景" },
+      { "id": "layout", "title": "布局配置", "description": "导航与页面结构" }
+    ],
+    "sections": [
+      {
+        "id": "identity",
+        "panel": "basic",
+        "title": "站点身份",
+        "settings": [
+          {
+            "id": "displayTitle",
+            "type": "text",
+            "label": "站点标题",
+            "description": "留空则继承后台「站点标题」"
+          },
+          {
+            "id": "displayTagline",
+            "type": "text",
+            "label": "站点副标题",
+            "description": "留空则继承后台「站点副标题」"
+          },
+          {
+            "id": "siteLogo",
+            "type": "image",
+            "label": "站点 Logo",
+            "description": "留空则继承后台「站点 Logo」"
+          },
+          {
+            "id": "siteFavicon",
+            "type": "image",
+            "label": "站点图标",
+            "description": "留空则继承后台「站点图标」"
+          }
+        ]
+      },
+      {
+        "id": "about",
+        "panel": "basic",
+        "title": "关于与页脚",
+        "settings": [
+          {
+            "id": "systemFooterInfo",
+            "type": "textarea",
+            "label": "页脚说明",
+            "description": "支持 HTML"
+          },
+          {
+            "id": "aboutUsGithubUrl",
+            "type": "text",
+            "label": "GitHub 链接"
+          }
+        ]
+      },
+      {
+        "id": "colors",
+        "panel": "style",
+        "title": "颜色",
+        "description": "与顶栏日/夜切换对应",
+        "groups": [
+          { "id": "light", "title": "浅色模式" },
+          { "id": "dark", "title": "深色模式" }
+        ],
+        "settings": [
+          { "id": "primaryColor", "group": "light", "type": "color", "label": "主色", "default": "#3b82f6" },
+          { "id": "backgroundColor", "group": "light", "type": "color", "label": "背景色", "default": "#ffffff" },
+          {
+            "id": "secondaryBackgroundColor",
+            "group": "light",
+            "type": "color",
+            "label": "次要背景色",
+            "default": "#f3f5f7"
+          },
+          { "id": "linkColor", "group": "light", "type": "color", "label": "链接色", "default": "#2563eb" },
+          { "id": "darkPrimaryColor", "group": "dark", "type": "color", "label": "主色", "default": "#60a5fa" },
+          { "id": "darkBackgroundColor", "group": "dark", "type": "color", "label": "背景色", "default": "#0f172a" },
+          {
+            "id": "darkSecondaryBackgroundColor",
+            "group": "dark",
+            "type": "color",
+            "label": "次要背景色",
+            "default": "#1e293b"
+          },
+          { "id": "darkLinkColor", "group": "dark", "type": "color", "label": "链接色", "default": "#93c5fd" }
+        ]
+      },
+      {
+        "id": "background",
+        "panel": "style",
+        "title": "背景图片",
+        "settings": [
+          {
+            "id": "backgroundImage",
+            "type": "image",
+            "label": "背景图",
+            "description": "设置后将覆盖纯色背景"
+          }
+        ]
+      },
+      {
+        "id": "themeConfiguration",
+        "panel": "layout",
+        "title": "顶栏与网址导航",
+        "embed": "options"
+      }
+    ]
+  }
+}

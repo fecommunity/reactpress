@@ -16,7 +16,7 @@ export function HeaderSearch() {
     <Link href="/search" scroll={false}>
       <a className={cls(style.searchLink, isActive && style.active)} aria-label={t('search')}>
         <SearchIcon size={TOOLBAR_ICON_SIZE} />
-        <span>{t('search')}</span>
+        <span className={style.label}>{t('search')}</span>
       </a>
     </Link>
   );

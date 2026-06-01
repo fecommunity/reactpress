@@ -131,6 +131,18 @@
   }
 }
 
+@media (max-width: 768px) {
+  .articleWrap {
+    padding: 0.75rem;
+
+    .metaInfoWrap {
+      .title {
+        font-size: 1.75rem;
+      }
+    }
+  }
+}
+
 
 .protectedArticleModal {
   * {
