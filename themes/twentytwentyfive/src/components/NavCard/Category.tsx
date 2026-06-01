@@ -1,8 +1,8 @@
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined
-} from '@ant-design/icons';
-import { Button, Menu } from 'antd';
+} from '@/icons';
+import { Button, Menu } from '@/ui';
 import React, { useContext, useMemo, useState } from 'react';
 
 import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';

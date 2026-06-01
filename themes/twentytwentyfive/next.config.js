@@ -1,6 +1,4 @@
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
-const withPlugins = require('next-compose-plugins');
-const withPWA = require('next-pwa');
 const { config } = require('@fecommunity/reactpress-toolkit');
 const {
   createReactPressNextConfig,
@@ -8,67 +6,46 @@ const {
 } = require('@fecommunity/reactpress-toolkit/theme/next-config');
 
 const themeApiEnv = resolveThemeNextEnv();
+const apiOrigin = themeApiEnv.SERVER_API_URL.replace(/\/api\/?$/, '');
 
 /** @type {import('next').NextConfig} */
-const nextConfig = createReactPressNextConfig({
+module.exports = createReactPressNextConfig({
   assetPrefix: config.CLIENT_ASSET_PREFIX || '/',
-  productionBrowserSourceMaps: true,
   poweredByHeader: false,
+  compress: true,
+  productionBrowserSourceMaps: false,
   env: {
     ...themeApiEnv,
-    GITHUB_CLIENT_ID: config.GITHUB_CLIENT_ID,
-  },
-  webpack: (config) => {
-    config.resolve.plugins.push(new TsconfigPathsPlugin());
-    return config;
+    GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
   },
   compiler: {
     removeConsole: {
       exclude: ['error'],
     },
   },
-});
-
-const STRIP_ROOT_KEYS = ['webpackDevMiddleware', 'configOrigin', 'target', 'webpack5'];
-
-function sanitizeExportedConfig(config) {
-  const out = { ...config };
-  for (const key of STRIP_ROOT_KEYS) {
-    delete out[key];
-  }
-  if (out.amp?.canonicalBase === '') delete out.amp;
-  if (out.experimental?.outputFileTracingRoot === '') {
-    const { outputFileTracingRoot, ...experimental } = out.experimental;
-    if (Object.keys(experimental).length > 0) {
-      out.experimental = experimental;
-    } else {
-      delete out.experimental;
-    }
-  }
-  return out;
-}
-
-const withComposedPlugins = withPlugins(
-  [
-    [
-      withPWA,
-      {
-        pwa: {
-          disable: process.env.NODE_ENV !== 'production',
-          dest: '.next',
-          sw: 'service-worker.js',
+  webpack: (config, { isServer }) => {
+    config.resolve.plugins.push(new TsconfigPathsPlugin());
+    if (!isServer) {
+      config.optimization = config.optimization || {};
+      config.optimization.splitChunks = {
+        ...config.optimization.splitChunks,
+        cacheGroups: {
+          ...config.optimization.splitChunks?.cacheGroups,
+          contentVendor: {
+            test: /[\\/]node_modules[\\/](highlight\.js|viewerjs)[\\/]/,
+            name: 'content-vendor',
+            chunks: 'async',
+            priority: 30,
+          },
         },
-      },
-    ],
-  ],
-  nextConfig
-);
-
-/** next-compose-plugins returns a function — must not spread it into a plain object. */
-module.exports = (phase, ctx) => {
-  const resolved =
-    typeof withComposedPlugins === 'function'
-      ? withComposedPlugins(phase, ctx)
-      : withComposedPlugins;
-  return sanitizeExportedConfig(resolved);
-};
+      };
+    }
+    return config;
+  },
+  async rewrites() {
+    return [
+      { source: '/api/:path*', destination: `${apiOrigin}/api/:path*` },
+      { source: '/uploads/:path*', destination: `${apiOrigin}/uploads/:path*` },
+    ];
+  },
+});

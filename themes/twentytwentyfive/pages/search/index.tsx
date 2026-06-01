@@ -1,4 +1,4 @@
-import { Button, Input, Space, type InputRef } from 'antd';
+import { Button, Input, Space } from '@/ui';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -25,7 +25,7 @@ const SearchPage: NextPage<SearchPageProps> = ({ keyword: initialKeyword = '', a
   const t = useTranslations();
   const router = useRouter();
   const { setting, tags, categories } = useContext(GlobalContext);
-  const inputRef = useRef<InputRef>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const [keyword, setKeyword] = useState(initialKeyword);
   const [articles, setArticles] = useState<IArticle[]>(initialArticles);
 

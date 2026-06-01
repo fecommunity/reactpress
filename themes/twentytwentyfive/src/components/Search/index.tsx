@@ -1,4 +1,4 @@
-import { Input, Modal } from 'antd';
+import { Input, Modal } from '@/ui';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
@@ -9,7 +9,7 @@ import { SearchProvider } from '@/providers';
 
 import styles from './index.module.scss';
 
-const { Search: AntdSearch } = Input;
+const SearchInput = Input.Search;
 
 interface IProps {
   visible: boolean;
@@ -61,7 +61,7 @@ export const Search: React.FC<IProps> = ({ visible = true, onClose }) => {
       <div className={styles.wrapper}>
         <div className={styles.bg}></div>
         <section>
-          <AntdSearch
+          <SearchInput
             ref={ref}
             size="large"
             loading={loading}

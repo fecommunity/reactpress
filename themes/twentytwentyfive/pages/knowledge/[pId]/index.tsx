@@ -1,5 +1,5 @@
-import { RightOutlined } from '@ant-design/icons';
-import { Breadcrumb, Button } from 'antd';
+import { RightOutlined } from '@/icons';
+import { Breadcrumb, Button } from '@/ui';
 import cls from 'classnames';
 import { NextPage } from 'next';
 import Head from 'next/head';

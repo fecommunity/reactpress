@@ -16,8 +16,8 @@
  * - Article statistics display
  */
 
-import { EyeOutlined, FolderOutlined, HeartOutlined, HistoryOutlined } from '@ant-design/icons';
-import { Tag } from 'antd';
+import { EyeOutlined, FolderOutlined, HeartOutlined, HistoryOutlined } from '@/icons';
+import { Tag } from '@/ui';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import React, { useContext, useMemo } from 'react';

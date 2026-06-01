@@ -1,14 +1,16 @@
-import { ArticleCarousel } from '@components/ArticleCarousel';
 import { ArticleList } from '@components/ArticleList';
 import dynamic from 'next/dynamic';
+
+const ArticleCarousel = dynamic(() =>
+  import('@components/ArticleCarousel').then((m) => m.ArticleCarousel),
+);
+const InfiniteScroll = dynamic(() => import('react-infinite-scroller'), { ssr: false });
 import { NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useTranslations } from 'next-intl';
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import InfiniteScroll from 'react-infinite-scroller';
-
 import { ArticleRecommend } from '@/components/ArticleRecommend';
 import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
 import { DoubleColumnLayout } from '@/layout/DoubleColumnLayout';
@@ -82,7 +84,7 @@ const Home: NextPage<IHomeProps> = ({ articles: defaultArticles = [], recommende
       <Head>
         <title>{getSiteTitle(setting)}</title>
         {lcpCoverUrl ? (
-          <link rel="preload" as="image" href={lcpCoverUrl} fetchpriority="high" />
+          <link rel="preload" as="image" href={lcpCoverUrl} fetchPriority="high" />
         ) : null}
       </Head>
       <DoubleColumnLayout

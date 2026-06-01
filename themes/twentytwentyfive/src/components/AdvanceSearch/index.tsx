@@ -1,5 +1,5 @@
-import { SearchOutlined } from '@ant-design/icons';
-import { AutoComplete, Button, Input, Spin, Tabs } from 'antd';
+import { SearchOutlined } from '@/icons';
+import { AutoComplete, Button, Input, Spin, Tabs } from '@/ui';
 import React, { useContext, useEffect, useState } from 'react';
 
 import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';

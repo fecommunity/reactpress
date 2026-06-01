@@ -1,5 +1,5 @@
-import { CheckCircleOutlined,GithubOutlined, UserOutlined } from '@ant-design/icons';
-import { Alert, Avatar, Button, Divider,Dropdown, Form, Input, message, Modal, Space, Tooltip } from 'antd';
+import { CheckCircleOutlined,GithubOutlined, UserOutlined } from '@/icons';
+import { Alert, Avatar, Button, Divider, Dropdown, Form, Input, message, Modal, Space } from '@/ui';
 import Router, { useRouter } from 'next/router';
 import { useTranslations } from 'next-intl';
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
@@ -71,7 +71,11 @@ export const UserInfo: React.FC<{
   );
 
   const submitRegister = useCallback(
-    (values) => {
+    (values: Record<string, string>) => {
+      if (values.password !== values.confirm) {
+        message.error(t('confirmPasswordIsNotMatchTips') as string);
+        return;
+      }
       UserProvider.register(values).then((res) => {
         message.success(t('registerSuccessTips'));
         toggleLoginVisible(false);
@@ -208,9 +212,9 @@ export const UserInfo: React.FC<{
             {t('openAuth')}
           </Divider>
           <div className={styles.icon} onClick={loginWithGithub}>
-            <Tooltip title={tRoot('useGithubToLogin')}>
+            <span title={tRoot('useGithubToLogin') as string}>
               <GithubOutlined />
-            </Tooltip>
+            </span>
           </div>
         </div>
       </Modal>
@@ -252,24 +256,7 @@ export const UserInfo: React.FC<{
           <Form.Item name="password" rules={[{ required: true, message: t('userInfoPasswordValidMsg') as string }]}>
             <Input.Password className={styles.password} placeholder={t('userInfoPassword') as string} />
           </Form.Item>
-          <Form.Item
-            dependencies={['password']}
-            name="confirm"
-            rules={[
-              {
-                required: true,
-                message: t('userInfoPleaseEnterConfirmPassword') as string,
-              },
-              ({ getFieldValue }) => ({
-                validator(_, value) {
-                  if (!value || getFieldValue('password') === value) {
-                    return Promise.resolve();
-                  }
-                  return Promise.reject(new Error(t('confirmPasswordIsNotMatchTips') as string));
-                },
-              }),
-            ]}
-          >
+          <Form.Item name="confirm">
             <Input.Password className={styles.password} placeholder={t('userInfoPleaseEnterConfirmPassword') as string} />
           </Form.Item>
           <Form.Item style={{ textAlign: 'right', marginBottom: 0 }}>
@@ -293,9 +280,9 @@ export const UserInfo: React.FC<{
         {visible && (
           <div className={styles.other}>
             <div className={styles.icon} onClick={loginWithGithub}>
-              <Tooltip title={tRoot('useGithubToLogin')}>
-                <GithubOutlined />
-              </Tooltip>
+            <span title={tRoot('useGithubToLogin') as string}>
+              <GithubOutlined />
+            </span>
             </div>
             <Alert style={{ marginTop: 16 }} message={<p>{tRoot('loginTipMessage')}</p>} type="info" showIcon={true} />
           </div>

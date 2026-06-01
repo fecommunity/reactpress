@@ -1,4 +1,4 @@
-import { EyeOutlined, LikeOutlined } from '@ant-design/icons';
+import { EyeOutlined, LikeOutlined } from '@/icons';
 import { ArticleList } from '@components/ArticleList';
 import cls from 'classnames';
 import Link from 'next/link';

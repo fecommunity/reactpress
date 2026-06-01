@@ -1,4 +1,4 @@
-import { Badge } from 'antd';
+import { Badge } from '@/ui';
 import cls from 'classnames';
 import React, { useCallback, useEffect, useState } from 'react';
 

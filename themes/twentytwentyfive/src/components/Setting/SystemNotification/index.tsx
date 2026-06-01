@@ -1,8 +1,8 @@
-import { BellFilled } from '@ant-design/icons';
+import { BellFilled } from '@/icons';
 import { siteNoticeDisplayLines } from '@fecommunity/reactpress-toolkit/theme';
-import { Alert } from 'antd';
+import { Alert } from '@/ui';
 import React, { useContext } from 'react';
-import TextLoop from 'react-text-loop';
+import { TextLoop } from '@/ui';
 
 import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
 

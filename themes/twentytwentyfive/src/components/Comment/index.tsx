@@ -1,4 +1,4 @@
-import { Button, Pagination } from 'antd';
+import { Button, Pagination } from '@/ui';
 import { useTranslations } from 'next-intl';
 import React, { useRef } from 'react';
 

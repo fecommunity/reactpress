@@ -1,4 +1,4 @@
-import { Button, Input, message } from 'antd';
+import { Button, Input, message } from '@/ui';
 import cls from 'classnames';
 import { useTranslations } from 'next-intl';
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';

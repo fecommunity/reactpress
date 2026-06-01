@@ -11,6 +11,15 @@
     margin-right: 8px;
   }
 
+  .navListGrid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
   .cardWrapper {
     flex: 1;
     * {

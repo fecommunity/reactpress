@@ -1,6 +1,6 @@
 {
   "name": "@fecommunity/reactpress-template-twentytwentyfive",
-  "version": "3.0.4",
+  "version": "3.0.5",
   "bin": {
     "reactpress-client": "./bin/reactpress-client.js"
   },
@@ -20,10 +20,7 @@
     "pm2": "pm2 start npm --name @fecommunity/reactpress-template-twentytwentyfive -- start"
   },
   "dependencies": {
-    "@ant-design/cssinjs": "^1.22.0",
-    "@ant-design/icons": "^4.7.0",
     "@fecommunity/reactpress-toolkit": "workspace:*",
-    "antd": "^5.24.4",
     "axios": "^0.23.0",
     "classnames": "^2.3.1",
     "copy-to-clipboard": "^3.3.1",
@@ -32,19 +29,13 @@
     "highlight.js": "^9.18.5",
     "mime-types": "^2.1.26",
     "next": "^12.3.4",
-    "next-compose-plugins": "^2.2.1",
     "next-intl": "^1.5.1",
-    "next-pwa": "^5.5.2",
     "next-sitemap": "^1.6.102",
     "nprogress": "^0.2.0",
     "open": "^8.4.2",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-infinite-scroller": "^1.2.4",
-    "react-lazyload": "^2.6.5",
-    "react-spring": "^9.1.2",
-    "react-text-loop": "2.3.0",
-    "react-visibility-sensor": "^5.1.1",
     "viewerjs": "^1.5.0",
     "xml": "^1.0.1",
     "typescript": "~4.9.5"

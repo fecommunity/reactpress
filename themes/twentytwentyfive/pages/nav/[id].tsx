@@ -1,5 +1,5 @@
-import { RightOutlined, TagOutlined } from '@ant-design/icons';
-import { Alert, Breadcrumb, Button } from 'antd';
+import { RightOutlined, TagOutlined } from '@/icons';
+import { Alert, Breadcrumb, Button } from '@/ui';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';

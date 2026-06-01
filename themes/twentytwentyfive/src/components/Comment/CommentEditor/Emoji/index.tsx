@@ -1,4 +1,4 @@
-import { Popover } from 'antd';
+import { Popover } from '@/ui';
 import React from 'react';
 
 import { emojis } from './emojis';

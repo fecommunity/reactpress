@@ -1,4 +1,4 @@
-import { FolderOutlined } from '@ant-design/icons';
+import { FolderOutlined } from '@/icons';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useTranslations } from 'next-intl';

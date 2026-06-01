@@ -1,4 +1,4 @@
-import { Avatar, Card, List } from 'antd';
+import { Avatar, Card, List } from '@/ui';
 import React from 'react';
 
 import { getIconByName } from '@/utils';
@@ -13,12 +13,10 @@ interface NavCardProps {
 const NavCard: React.FC<NavCardProps> = (props) => {
   const { dataSource = [] } = props;
 
-  const getIconUrl = (item) => {
-    if (item?.icon) {
-      return item.icon;
-    }
+  const getIconUrl = (item: { icon?: string; url?: string }) => {
+    if (item?.icon) return item.icon;
     return `${item.url}/favicon.ico`;
-  }
+  };
 
   return (
     <div className={styles.cardWrapper}>
@@ -30,33 +28,33 @@ const NavCard: React.FC<NavCardProps> = (props) => {
             className={styles.card}
             title={
               <span id={`nav-card-title-${item.key}`}>
-                <span className={styles.icon}><Icon /></span>
+                <span className={styles.icon}>
+                  <Icon />
+                </span>
                 <span className={styles.title}> {item.label}</span>
               </span>
             }
           >
-            <List
-              grid={{
-                gutter: 16,
-                xs: 1,
-                sm: 2,
-                md: 4,
-                lg: 4,
-                xl: 6,
-                xxl: 3,
-              }}
-              dataSource={item.children}
-              renderItem={(item, index) => (
-                <List.Item>
+            <ul className={styles.navListGrid}>
+              {(item.children ?? []).map((child, index) => (
+                <List.Item key={child.key ?? index}>
                   <List.Item.Meta
-                    avatar={<Avatar src={getIconUrl(item)} />}
-                    title={<a href={`/nav/${item.key}.html`} rel='nofollow'>{item.label}</a>}
-                    description={<p title={item.description} className={styles.description}>{item.description}</p>}
+                    avatar={<Avatar src={getIconUrl(child)} />}
+                    title={
+                      <a href={`/nav/${child.key}.html`} rel="nofollow">
+                        {child.label}
+                      </a>
+                    }
+                    description={
+                      <p title={child.description} className={styles.description}>
+                        {child.description}
+                      </p>
+                    }
                     className={styles.listItem}
                   />
                 </List.Item>
-              )}
-            />
+              ))}
+            </ul>
           </Card>
         );
       })}

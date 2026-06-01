@@ -1,5 +1,5 @@
-import Icon, { CommentOutlined, GithubOutlined, ProfileOutlined, WechatOutlined } from '@ant-design/icons';
-import { Card, Divider, Popover } from 'antd';
+import { CommentOutlined, GithubOutlined, ProfileOutlined, WechatOutlined } from '@/icons';
+import { Card, Divider, Popover } from '@/ui';
 import cls from 'classnames';
 import { useTranslations } from 'next-intl';
 import { Fragment, type ReactNode } from 'react';
@@ -28,25 +28,12 @@ export const RSS = () => {
   return (
     <Popover content={t('rssSubscribe')}>
       <a aria-label="rss" className={style.github} href="/rss" target="_blank" rel="noopener noreferrer">
-        <Icon
-          component={() => (
-            <svg
-              viewBox="0 0 1024 1024"
-              version="1.1"
-              xmlnsXlink="http://www.w3.org/1999/xlink"
-              width="24"
-              height="24"
-            >
-              <defs>
-                <style type="text/css"></style>
-              </defs>
-              <path
-                d="M512 0C230.4 0 0 230.4 0 512s230.4 512 512 512 512-230.4 512-512S793.6 0 512 0z m-182.4 768C288 768 256 736 256 694.4s32-73.6 73.6-73.6 73.6 32 73.6 73.6-32 73.6-73.6 73.6z m185.6 0c0-144-115.2-259.2-259.2-259.2v-80c185.6 0 339.2 150.4 339.2 339.2h-80z m172.8 0c0-240-195.2-432-432-432V256c281.6 0 512 230.4 512 512h-80z"
-                fill="currentColor"
-              ></path>
-            </svg>
-          )}
-        />
+        <svg viewBox="0 0 1024 1024" width="24" height="24" aria-hidden>
+          <path
+            d="M512 0C230.4 0 0 230.4 0 512s230.4 512 512 512 512-230.4 512-512S793.6 0 512 0z m-182.4 768C288 768 256 736 256 694.4s32-73.6 73.6-73.6 73.6 32 73.6 73.6-32 73.6-73.6 73.6z m185.6 0c0-144-115.2-259.2-259.2-259.2v-80c185.6 0 339.2 150.4 339.2 339.2h-80z m172.8 0c0-240-195.2-432-432-432V256c281.6 0 512 230.4 512 512h-80z"
+            fill="currentColor"
+          />
+        </svg>
       </a>
     </Popover>
   );

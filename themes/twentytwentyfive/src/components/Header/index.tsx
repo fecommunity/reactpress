@@ -26,13 +26,16 @@ import React, { useContext, useEffect, useMemo } from 'react';
 
 import { Locales } from '@/components/Locales';
 import { Theme } from '@/components/Theme';
-import { UserInfo } from '@/components/UserInfo';
+import dynamic from 'next/dynamic';
+
+import { HeaderSearch } from './HeaderSearch';
+
+const UserInfo = dynamic(() => import('@/components/UserInfo').then((m) => m.UserInfo), { ssr: false });
 import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
 import { useToggle } from '@fecommunity/reactpress-toolkit/theme';
 import { getDocumentScrollTop, getFirstLevelRoute, getIconByName } from '@/utils';
 
 import { GitHub } from '../AboutUs';
-import { HeaderSearch } from './HeaderSearch';
 import style from './index.module.scss';
 import { renderHeaderLogo } from './renderHeaderLogo';
 

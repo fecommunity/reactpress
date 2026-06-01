@@ -1,11 +1,7 @@
 import React from 'react';
 
-import { Spring, SpringProps } from './Spring';
+import s from '@/ui/ui.module.scss';
 
-export const Opacity: React.FC<SpringProps> = (props) => {
-  const { from = {}, to = {}, ...rest } = props;
-  from.opacity = 0;
-  to.opacity = 1;
-
-  return <Spring from={from} to={to} {...rest} />;
-};
+export const Opacity: React.FC<{ children?: React.ReactNode }> = ({ children }) => (
+  <div className={s.fadeIn}>{children}</div>
+);

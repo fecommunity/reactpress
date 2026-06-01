@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import { DownOutlined, MessageOutlined, UpOutlined } from '@ant-design/icons';
-import { Avatar } from 'antd';
+import { DownOutlined, MessageOutlined, UpOutlined } from '@/icons';
+import { Avatar } from '@/ui';
 import cls from 'classnames';
 import { useTranslations } from 'next-intl';
 import React, { useMemo } from 'react';

@@ -1,5 +1,5 @@
-import { TagOutlined } from '@ant-design/icons';
-import { Flex,Tag } from 'antd';
+import { TagOutlined } from '@/icons';
+import { Flex,Tag } from '@/ui';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import React, { FC } from 'react';

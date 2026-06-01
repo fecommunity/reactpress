@@ -1,4 +1,5 @@
-import { TagOutlined } from '@ant-design/icons';
+import { ContentStylesLoader } from '@/components/ContentStylesLoader';
+import { TagOutlined } from '@/icons';
 import {
   HtmlContent,
   ImageViewer,
@@ -7,7 +8,7 @@ import {
 } from '@fecommunity/reactpress-toolkit/ui/content';
 import { Image } from '@fecommunity/reactpress-toolkit/ui/content';
 import { SiteCatalogContext as GlobalContext, resolveImageUrl } from '@fecommunity/reactpress-toolkit/theme';
-import { Form, Input, message, Modal } from 'antd';
+import { Form, Input, message, Modal } from '@/ui';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
@@ -16,7 +17,9 @@ import { useTranslations } from 'next-intl';
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 
 import { ArticleRecommend } from '@/components/ArticleRecommend';
-import { Comment } from '@/components/Comment';
+import dynamic from 'next/dynamic';
+
+const Comment = dynamic(() => import('@/components/Comment').then((m) => m.Comment), { ssr: false });
 import { Toc } from '@/components/Toc';
 import { DoubleColumnLayout } from '@/layout/DoubleColumnLayout';
 import { ArticleProvider } from '@/providers';
@@ -68,6 +71,7 @@ const Article: NextPage<IProps> = ({ article }) => {
 
   const Content = (
     <>
+      <ContentStylesLoader />
       <Modal
         title={t('protectedArticleMsg')}
         cancelText={t('backHome')}

@@ -1,4 +1,4 @@
-import { Spin } from 'antd';
+import { Spin } from '@/ui';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import Router from 'next/router';
