@@ -1,13 +1,15 @@
 import cls from 'classnames';
+import dynamic from 'next/dynamic';
 import React, { useEffect, useRef } from 'react';
 
 import { CommentIcon } from '@/components/Comment/CommentIcon';
 import { Likes, LikesProps } from '@/components/Likes';
-import SystemNotification from '@/components/Setting/SystemNotification';
 import { useToggle } from '@fecommunity/reactpress-toolkit/theme';
 import { getDocumentScrollTop } from '@/utils';
 
 import style from './index.module.scss';
+
+const SystemNotification = dynamic(() => import('@/components/Setting/SystemNotification'), { ssr: false });
 
 interface IProps {
   leftNode: React.ReactNode;
@@ -37,19 +39,19 @@ export const DoubleColumnLayout: React.FC<IProps> = ({
 
   useEffect(() => {
     let beforeY = 0;
-    let y = 0;
+    let ticking = false;
     const handler = () => {
-      y = getDocumentScrollTop();
-      toggleWidge(beforeY <= y);
-      setTimeout(() => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(() => {
+        const y = getDocumentScrollTop();
+        toggleWidge(beforeY <= y);
         beforeY = y;
-      }, 0);
+        ticking = false;
+      });
     };
-    document.addEventListener('scroll', handler);
-
-    return () => {
-      document.removeEventListener('scroll', handler);
-    };
+    document.addEventListener('scroll', handler, { passive: true });
+    return () => document.removeEventListener('scroll', handler);
   }, [toggleWidge]);
 
   useEffect(() => {

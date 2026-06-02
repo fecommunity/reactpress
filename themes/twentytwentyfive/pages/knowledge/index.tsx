@@ -4,8 +4,8 @@ import { NextPage } from 'next';
 import Head from 'next/head';
 import { useTranslations } from 'next-intl';
 import { useCallback, useContext, useEffect, useState } from 'react';
-import InfiniteScroll from 'react-infinite-scroller';
 
+import { LoadMore } from '@/components/LoadMore';
 import { ArticleRecommend } from '@/components/ArticleRecommend';
 import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
 import { DoubleColumnLayout } from '@/layout/DoubleColumnLayout';
@@ -46,7 +46,7 @@ const Page: NextPage<IHomeProps> = ({ books: defaultBooks = [], total = 0 }) => 
           <Head>
             <title>{`${t('knowledge')} - ${setting.systemTitle}`}</title>
           </Head>
-          <InfiniteScroll
+          <LoadMore
             pageStart={1}
             loadMore={getArticles}
             hasMore={page * pageSize < total}
@@ -57,7 +57,7 @@ const Page: NextPage<IHomeProps> = ({ books: defaultBooks = [], total = 0 }) => 
             }
           >
             <KnowledgeList knowledges={books} />
-          </InfiniteScroll>
+          </LoadMore>
         </>
       }
       rightNode={

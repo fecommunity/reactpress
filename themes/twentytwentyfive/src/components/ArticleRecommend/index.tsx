@@ -13,6 +13,8 @@ interface IProps {
   articleId?: string;
   mode?: 'inline' | 'vertical';
   needTitle?: boolean;
+  /** Defer API call until browser idle (better TBT on list/archive pages). */
+  deferFetch?: boolean;
 }
 
 const SKELETON_INLINE_ROWS = 5;
@@ -45,7 +47,12 @@ function RecommendSkeleton({ mode }: { mode: 'inline' | 'vertical' }) {
   );
 }
 
-export const ArticleRecommend: React.FC<IProps> = ({ mode = 'vertical', articleId = null, needTitle = true }) => {
+export const ArticleRecommend: React.FC<IProps> = ({
+  mode = 'vertical',
+  articleId = null,
+  needTitle = true,
+  deferFetch = false,
+}) => {
   const t = useTranslations();
   const requestKey = articleId ?? '';
   const [fetchedKey, setFetchedKey] = useState<string | undefined>(undefined);
@@ -55,18 +62,29 @@ export const ArticleRecommend: React.FC<IProps> = ({ mode = 'vertical', articleI
     if (fetchedKey === requestKey) return;
     let cancelled = false;
 
-    ArticleProvider.getRecommend(articleId).then((res) => {
-      if (cancelled) return;
-      const next = res.slice(0, 6);
-      next.sort((a, b) => b.views - a.views);
-      setArticles(next);
-      setFetchedKey(requestKey);
-    });
+    const run = () => {
+      ArticleProvider.getRecommend(articleId).then((res) => {
+        if (cancelled) return;
+        const next = res.slice(0, 6);
+        next.sort((a, b) => b.views - a.views);
+        setArticles(next);
+        setFetchedKey(requestKey);
+      });
+    };
 
+    if (deferFetch && typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+      const id = window.requestIdleCallback(() => run(), { timeout: 2500 });
+      return () => {
+        cancelled = true;
+        window.cancelIdleCallback(id);
+      };
+    }
+
+    run();
     return () => {
       cancelled = true;
     };
-  }, [articleId, fetchedKey, requestKey]);
+  }, [articleId, deferFetch, fetchedKey, requestKey]);
 
   const ready = fetchedKey === requestKey;
   const showSkeleton = !ready && articles.length === 0;

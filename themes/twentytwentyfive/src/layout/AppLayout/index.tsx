@@ -39,10 +39,10 @@ export const AppLayout: React.FC<IProps> = ({ children, needFooter = true, needH
   return (
     <div className={style.wrapper}>
       <SiteSeo>
-        <link rel="preload" as="image" href={REACT_PRESS_HEADER_LOGO.src} fetchPriority="high" />
+        <link rel="preload" as="image" href={REACT_PRESS_HEADER_LOGO.src} fetchpriority="high" />
       </SiteSeo>
       {needHeader && <Header setting={setting} pages={pages} hasBg={customBg} />}
-      <main className={style.main} style={{ backgroundColor: customBg ? 'transparent' : 'var(--bg-body)' }}>
+      <main id="main-content" className={style.main} style={{ backgroundColor: customBg ? 'transparent' : 'var(--bg-body)' }}>
         {children}
       </main>
       {systemBg && !hasBg && <div className={style.bg} style={{ backgroundImage: bg }} />}

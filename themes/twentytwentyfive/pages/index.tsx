@@ -1,17 +1,14 @@
+import { ArticleCarousel } from '@components/ArticleCarousel';
 import { ArticleList } from '@components/ArticleList';
 import dynamic from 'next/dynamic';
-
-const ArticleCarousel = dynamic(() =>
-  import('@components/ArticleCarousel').then((m) => m.ArticleCarousel),
-);
-const InfiniteScroll = dynamic(() => import('react-infinite-scroller'), { ssr: false });
 import { NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useTranslations } from 'next-intl';
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { ArticleRecommend } from '@/components/ArticleRecommend';
+
+import { LoadMore } from '@/components/LoadMore';
 import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
 import { DoubleColumnLayout } from '@/layout/DoubleColumnLayout';
 import { ArticleProvider } from '@/providers';
@@ -19,8 +16,7 @@ import { getSiteTitle, resolveImageUrl } from '@fecommunity/reactpress-toolkit/t
 
 import style from './index.module.scss';
 
-const AboutUs = dynamic(() => import('@components/AboutUs'));
-const Tags = dynamic(() => import('@/components/Tags').then((mod) => mod.Tags));
+const HomeSidebar = dynamic(() => import('@/components/HomeSidebar').then((m) => m.HomeSidebar));
 
 interface IHomeProps {
   articles: IArticle[];
@@ -28,6 +24,7 @@ interface IHomeProps {
   recommendedArticles: IArticle[];
 }
 const pageSize = 12;
+
 export const CategoryMenu = ({ categories }) => {
   const t = useTranslations();
   const router = useRouter();
@@ -59,32 +56,38 @@ export const CategoryMenu = ({ categories }) => {
     </nav>
   );
 };
+
 const Home: NextPage<IHomeProps> = ({ articles: defaultArticles = [], recommendedArticles = [], total = 0 }) => {
   const t = useTranslations();
   const { setting, tags, categories } = useContext(GlobalContext);
   const [page, setPage] = useState(1);
   const [articles, setArticles] = useState<IArticle[]>(defaultArticles);
+
   useEffect(() => {
     setArticles(defaultArticles);
+    setPage(1);
   }, [defaultArticles]);
-  const getArticles = useCallback((page) => {
-    ArticleProvider.getArticles({
-      page,
+
+  const getArticles = useCallback((nextPage: number) => {
+    return ArticleProvider.getArticles({
+      page: nextPage,
       pageSize,
       status: 'publish',
     }).then((res) => {
-      setPage(page);
-      setArticles((articles) => [...articles, ...res[0]]);
+      setPage(nextPage);
+      setArticles((prev) => [...prev, ...res[0]]);
     });
   }, []);
+
   const lcpCover = recommendedArticles.find((article) => article.cover)?.cover;
   const lcpCoverUrl = lcpCover ? resolveImageUrl(lcpCover, 'large') : null;
+
   return (
     <div className={style.wrapper}>
       <Head>
         <title>{getSiteTitle(setting)}</title>
         {lcpCoverUrl ? (
-          <link rel="preload" as="image" href={lcpCoverUrl} fetchPriority="high" />
+          <link rel="preload" as="image" href={lcpCoverUrl} fetchpriority="high" />
         ) : null}
       </Head>
       <DoubleColumnLayout
@@ -100,7 +103,7 @@ const Home: NextPage<IHomeProps> = ({ articles: defaultArticles = [], recommende
                 <CategoryMenu categories={categories} />
               </header>
               <main>
-                <InfiniteScroll
+                <LoadMore
                   pageStart={1}
                   loadMore={getArticles}
                   hasMore={page * pageSize < total}
@@ -111,23 +114,17 @@ const Home: NextPage<IHomeProps> = ({ articles: defaultArticles = [], recommende
                   }
                 >
                   <ArticleList articles={articles} />
-                </InfiniteScroll>
+                </LoadMore>
               </main>
             </div>
           </>
         }
-        rightNode={
-          <div className="sticky">
-            <ArticleRecommend mode="inline" />
-            <Tags tags={tags} animationMode />
-            <AboutUs className={style.footer} setting={setting} />
-          </div>
-        }
+        rightNode={<HomeSidebar tags={tags} setting={setting} className={style.footer} />}
       />
     </div>
   );
 };
-// 服务端预取数据
+
 Home.getInitialProps = async () => {
   const [articles, recommendedArticles] = await Promise.all([
     ArticleProvider.getArticles({ page: 1, pageSize, status: 'publish' }),
@@ -140,4 +137,5 @@ Home.getInitialProps = async () => {
     needLayoutFooter: false,
   };
 };
+
 export default Home;

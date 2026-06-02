@@ -7,7 +7,8 @@ import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { useContext, useEffect, useMemo } from 'react';
 
-import { Comment } from '@/components/Comment';
+import { ContentStylesLoader } from '@/components/ContentStylesLoader';
+import dynamic from 'next/dynamic';
 import {
   ArticleToc,
   HtmlContent,
@@ -19,6 +20,8 @@ import { DoubleColumnLayout } from '@/layout/DoubleColumnLayout';
 import { KnowledgeProvider } from '@/providers';
 
 import style from './index.module.scss';
+
+const Comment = dynamic(() => import('@/components/Comment').then((m) => m.Comment), { ssr: false });
 
 interface IProps {
   pId: string;
@@ -74,6 +77,7 @@ const Page: NextPage<IProps> = ({ pId, id, book, chapter }) => {
 
   return (
     <>
+      <ContentStylesLoader />
       <DoubleColumnLayout
         leftNode={
           <>

@@ -37,14 +37,11 @@
 
 .list {
   padding: 1rem 1.3rem;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 120px;
 
   + .list {
     margin-top: 1.5rem;
-  }
-
-  h2 {
-    font-size: 1.5rem;
-    color: var(--main-text-color);
   }
 
   .item {
@@ -118,5 +115,50 @@
       font-size: 0.8rem;
       color: var(--second-text-color);
     }
+  }
+}
+
+.yearToggle {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+  color: inherit;
+
+  h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: var(--main-text-color);
+  }
+}
+
+.yearHint {
+  font-size: 1.25rem;
+  line-height: 1;
+  color: var(--second-text-color);
+}
+
+.expandAll {
+  padding: 0 1.3rem 1.5rem;
+  text-align: center;
+}
+
+.expandAllBtn {
+  border: 1px solid var(--border-color);
+  background: var(--bg);
+  color: var(--main-text-color);
+  border-radius: var(--border-radius, 8px);
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+
+  &:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
   }
 }

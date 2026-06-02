@@ -1,16 +1,19 @@
+import dynamic from 'next/dynamic';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import { useTranslations } from 'next-intl';
 import { useContext, useEffect } from 'react';
 
+import { ContentStylesLoader } from '@/components/ContentStylesLoader';
 import { ArticleRecommend } from '@/components/ArticleRecommend';
-import { Comment } from '@/components/Comment';
 import { ImageViewer, HtmlContent } from '@fecommunity/reactpress-toolkit/ui/content';
 import { Image } from '@fecommunity/reactpress-toolkit/ui/content';
-import { SiteCatalogContext as GlobalContext, resolveImageUrl } from '@fecommunity/reactpress-toolkit/theme';
+import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
 import { PageProvider } from '@/providers';
 
 import style from './index.module.scss';
+
+const Comment = dynamic(() => import('@/components/Comment').then((m) => m.Comment), { ssr: false });
 
 interface IProps {
   page: IPage;
@@ -29,6 +32,7 @@ const Page: NextPage<IProps> = ({ page }) => {
 
   return (
     <ImageViewer containerSelector="#js-page-wrapper">
+      <ContentStylesLoader />
       <div id="js-page-wrapper" className={style.container}>
         <Head>
           <title>{page.name + ' - ' + setting.systemTitle}</title>

@@ -51,16 +51,15 @@ export const Footer: React.FC<FooterProps> = ({
       <div className={cls('container', style.container)}>
         {/* Left Section - About Us and Copyright */}
         <ul className={style.left}>
-          <span className={style.title}>{t('aboutUs')}</span>
-          {setting?.systemFooterInfo && (
-            <div
-              className={style.copyright}
-              dangerouslySetInnerHTML={{
-                __html: setting.systemFooterInfo,
-              }}
-              aria-label="Footer information"
-            />
-          )}
+          <li>
+            <span className={style.title}>{t('aboutUs')}</span>
+            {setting?.systemFooterInfo ? (
+              <div
+                className={style.copyright}
+                dangerouslySetInnerHTML={{ __html: setting.systemFooterInfo }}
+              />
+            ) : null}
+          </li>
         </ul>
 
         {/* Right Section - Contact Information */}

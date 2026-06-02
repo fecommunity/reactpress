@@ -21,6 +21,23 @@ $header-logo-nav-gap: 12px;
   }
 }
 
+.skipLink {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 200;
+  padding: 0.5rem 1rem;
+  background: var(--primary-color);
+  color: var(--font-color-base, #fff);
+  text-decoration: none;
+  border-radius: var(--border-radius, 8px);
+
+  &:focus {
+    left: 1rem;
+    top: 0.5rem;
+  }
+}
+
 .wrapper {
   position: relative;
   z-index: 100;

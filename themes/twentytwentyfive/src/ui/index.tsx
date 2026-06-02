@@ -15,7 +15,7 @@ import { createPortal } from 'react-dom';
 import s from './ui.module.scss';
 
 /* ---------- message ---------- */
-type ToastType = 'success' | 'error' | 'info';
+type ToastType = 'success' | 'error' | 'info' | 'warning';
 
 interface ToastItem {
   id: number;
@@ -49,7 +49,12 @@ function ToastHost() {
       {items.map((item) => (
         <div
           key={item.id}
-          className={cls(s.toast, item.type === 'error' && s.toastError, item.type === 'success' && s.toastSuccess)}
+          className={cls(
+            s.toast,
+            item.type === 'error' && s.toastError,
+            item.type === 'success' && s.toastSuccess,
+            item.type === 'warning' && s.toastWarning,
+          )}
         >
           {item.text}
         </div>
@@ -63,6 +68,7 @@ export const message = {
   success: (text: string) => pushToast?.(text, 'success'),
   error: (text: string) => pushToast?.(text, 'error'),
   info: (text: string) => pushToast?.(text, 'info'),
+  warning: (text: string) => pushToast?.(text, 'warning'),
 };
 
 export function MessageHost() {
@@ -101,6 +107,7 @@ export function Button({
         type === 'text' && s.btnText,
         size === 'large' && s.btnLarge,
         size === 'middle' && s.btnMiddle,
+        size === 'small' && s.btnSmall,
         loading && s.btnLoading,
         block && 'w-full',
         className,
@@ -118,10 +125,11 @@ type InputProps = InputHTMLAttributes<HTMLInputElement> & {
   size?: 'middle' | 'large';
   allowClear?: boolean;
   onPressEnter?: () => void;
+  status?: 'error' | 'warning';
 };
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Input(
-  { size, className, allowClear, value, onChange, onPressEnter, ...rest },
+  { size, className, allowClear, value, onChange, onPressEnter, status, ...rest },
   ref,
 ) {
   const handleKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -132,10 +140,38 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Inp
   return (
     <input
       ref={ref}
-      className={cls(s.input, size === 'large' && s.inputLarge, className)}
+      className={cls(
+        s.input,
+        size === 'large' && s.inputLarge,
+        status === 'error' && s.inputError,
+        className,
+      )}
       value={value}
       onChange={onChange}
       onKeyDown={handleKey}
+      {...rest}
+    />
+  );
+});
+
+type TextAreaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
+  autoSize?: { minRows?: number; maxRows?: number };
+};
+
+Input.TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(function TextArea(
+  { className, autoSize, rows, style, ...rest },
+  ref,
+) {
+  const minRows = autoSize?.minRows ?? rows ?? 3;
+  const lineHeight = 1.5;
+  const minHeight = `${minRows * lineHeight}em`;
+
+  return (
+    <textarea
+      ref={ref}
+      rows={rows ?? minRows}
+      className={cls(s.textarea, className)}
+      style={{ minHeight, ...style }}
       {...rest}
     />
   );

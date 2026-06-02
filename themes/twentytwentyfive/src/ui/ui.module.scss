@@ -72,6 +72,39 @@
   font-size: 1rem;
 }
 
+.toastWarning {
+  border-color: var(---brand-warning, #fc651f);
+}
+
+.inputError {
+  border-color: var(---brand-danger, #dc3545);
+}
+
+.textarea {
+  width: 100%;
+  min-height: 4.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius, 8px);
+  background: var(--bg);
+  color: var(--main-text-color);
+  padding: 0.5rem 0.65rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  resize: vertical;
+  font-family: inherit;
+
+  &:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary-color) 20%, transparent);
+  }
+}
+
+.btnSmall {
+  padding: 0.15rem 0.55rem;
+  font-size: 0.8125rem;
+}
+
 .btnLoading::after {
   content: '';
   width: 0.875em;

@@ -5,8 +5,8 @@ import { NextPage } from 'next';
 import Head from 'next/head';
 import { useTranslations } from 'next-intl';
 import { useCallback, useContext, useEffect, useState } from 'react';
-import InfiniteScroll from 'react-infinite-scroller';
 
+import { LoadMore } from '@/components/LoadMore';
 import AboutUs from '@/components/AboutUs';
 import { ArticleRecommend } from '@/components/ArticleRecommend';
 import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
@@ -78,7 +78,7 @@ const Home: NextPage<IProps> = ({ articles: defaultArticles = [], total, categor
                 <CategoryMenu categories={categories} />
               </header>
               <main>
-                <InfiniteScroll
+                <LoadMore
                   pageStart={1}
                   loadMore={getArticles}
                   hasMore={page * pageSize < total}
@@ -89,7 +89,7 @@ const Home: NextPage<IProps> = ({ articles: defaultArticles = [], total, categor
                   }
                 >
                   <ArticleList articles={articles} />
-                </InfiniteScroll>
+                </LoadMore>
               </main>
             </div>
           </>
@@ -97,7 +97,7 @@ const Home: NextPage<IProps> = ({ articles: defaultArticles = [], total, categor
         rightNode={
           <div className="sticky">
             <ArticleRecommend mode="inline" />
-            <Tags tags={tags} animationMode />
+            <Tags tags={tags} />
             <AboutUs className={style.footer} setting={setting} />
           </div>
         }

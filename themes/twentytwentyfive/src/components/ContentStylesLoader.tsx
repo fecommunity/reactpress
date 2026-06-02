@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-/** Loads code-highlight and image-viewer CSS only on content-heavy routes. */
+/** Loads third-party content CSS only on article/knowledge/page routes. */
 export function ContentStylesLoader() {
   useEffect(() => {
     void import('highlight.js/styles/atom-one-dark.css');

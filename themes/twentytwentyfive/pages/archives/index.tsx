@@ -1,116 +1,134 @@
-import { Categories } from '@components/Categories';
+import dynamic from 'next/dynamic';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import { useContext } from 'react';
+import { useContext, useMemo, useState } from 'react';
 
-import AboutUs from '@/components/AboutUs';
-import { ListTrail } from '@/components/Animation/Trail';
-import { ArticleRecommend } from '@/components/ArticleRecommend';
-import { LocaleTime } from '@fecommunity/reactpress-toolkit/ui/content';
 import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
 import { DoubleColumnLayout } from '@/layout/DoubleColumnLayout';
 import { ArticleProvider } from '@/providers';
+import {
+  countArchiveArticles,
+  formatArchiveDay,
+  slimArchiveTree,
+  sortedArchiveYears,
+  type ArchiveArticle,
+  type ArchiveTree,
+} from '@/utils/archives';
 
 import indexStyle from '../index.module.scss';
 import style from './index.module.scss';
 
-interface IProps {
-  articles: { [key: string]: { [key: string]: IArticle[] } };
-}
+const ArchiveSidebar = dynamic(() =>
+  import('@/components/ArchiveSidebar').then((m) => m.ArchiveSidebar),
+);
 
-const ArchiveItem = ({ month, articles = [] }) => {
+const INITIAL_OPEN_YEARS = 2;
+
+function ArchiveMonthList({ month, articles }: { month: string; articles: ArchiveArticle[] }) {
   return (
     <div className={style.item}>
       <h3>{month}</h3>
       <ul>
-        <ListTrail
-          length={articles.length}
-          options={{
-            opacity: 1,
-            height: 48,
-            x: 0,
-            from: { opacity: 0, height: 0, x: -20 },
-          }}
-          renderItem={(index) => {
-            const article = articles[index];
-            return (
-              <Link href={`/article/[id]`} as={`/article/${article.id}`} scroll={false}>
-                <a aria-label={article.title}>
-                  <span className={style.meta}>
-                    <LocaleTime date={article.publishAt} format={'MM-dd'} />
-                  </span>
-                  <span className={style.title}>{article.title}</span>
-                </a>
-              </Link>
-            );
-          }}
-        />
+        {articles.map((article) => (
+          <li key={article.id}>
+            <Link href={`/article/[id]`} as={`/article/${article.id}`} scroll={false} prefetch={false}>
+              <a aria-label={article.title}>
+                <span className={style.meta}>{formatArchiveDay(article.publishAt)}</span>
+                <span className={style.title}>{article.title}</span>
+              </a>
+            </Link>
+          </li>
+        ))}
       </ul>
     </div>
   );
-};
+}
 
-const resolveArticlesCount = (articles) => {
-  const years = Object.keys(articles);
-  return years.reduce((a, year) => {
-    const months = Object.keys(articles[year]);
-    a += months.reduce((b, month) => (b += articles[year][month].length), 0);
-    return a;
-  }, 0);
-};
+interface IProps {
+  articles: ArchiveTree;
+}
 
 const Archives: NextPage<IProps> = ({ articles }) => {
   const { categories, setting } = useContext(GlobalContext);
   const t = useTranslations();
+  const years = useMemo(() => sortedArchiveYears(articles), [articles]);
+  const total = useMemo(() => countArchiveArticles(articles), [articles]);
+  const [openYears, setOpenYears] = useState<Set<string>>(
+    () => new Set(years.slice(0, INITIAL_OPEN_YEARS)),
+  );
+
+  const toggleYear = (year: string) => {
+    setOpenYears((prev) => {
+      const next = new Set(prev);
+      if (next.has(year)) next.delete(year);
+      else next.add(year);
+      return next;
+    });
+  };
+
+  const expandAllYears = () => setOpenYears(new Set(years));
 
   return (
-    <>
-      <DoubleColumnLayout
-        leftNode={
-          <div className={style.content}>
-            <Head>
-              <title>{`${t('archives')} - ${setting.systemTitle}`}</title>
-            </Head>
-            <div className={style.summary}>
-              <p>
-                <span>{t('archives')}</span>
-              </p>
-              <p>
-                {t('total')} <span>{resolveArticlesCount(articles)}</span> {t('piece')}
-              </p>
+    <DoubleColumnLayout
+      leftNode={
+        <div className={style.content}>
+          <Head>
+            <title>{`${t('archives')} - ${setting.systemTitle}`}</title>
+          </Head>
+          <div className={style.summary}>
+            <p>
+              <span>{t('archives')}</span>
+            </p>
+            <p>
+              {t('total')} <span>{total}</span> {t('piece')}
+            </p>
+          </div>
+          {years.map((year) => {
+            const isOpen = openYears.has(year);
+            const monthKeys = Object.keys(articles[year]);
+            return (
+              <section className={style.list} key={year}>
+                <button
+                  type="button"
+                  className={style.yearToggle}
+                  aria-expanded={isOpen}
+                  onClick={() => toggleYear(year)}
+                >
+                  <h2>{year}</h2>
+                  <span className={style.yearHint}>{isOpen ? '−' : '+'}</span>
+                </button>
+                {isOpen
+                  ? monthKeys.map((month) => (
+                      <ArchiveMonthList key={`${year}-${month}`} month={month} articles={articles[year][month]} />
+                    ))
+                  : null}
+              </section>
+            );
+          })}
+          {openYears.size < years.length ? (
+            <div className={style.expandAll}>
+              <button type="button" className={style.expandAllBtn} onClick={expandAllYears}>
+                {t('all')} {t('archives')}
+              </button>
             </div>
-            {Object.keys(articles)
-              .sort((a, b) => +b - +a)
-              .map((year) => {
-                return (
-                  <div className={style.list} key={year}>
-                    <h2>{year}</h2>
-                    {Object.keys(articles[year]).map((month) => {
-                      return <ArchiveItem key={year + '-' + month} month={month} articles={articles[year][month]} />;
-                    })}
-                  </div>
-                );
-              })}
-          </div>
-        }
-        rightNode={
-          <div className="sticky">
-            <ArticleRecommend mode="inline" />
-            <Categories categories={categories} />
-            <AboutUs className={indexStyle.footer} setting={setting} />
-          </div>
-        }
-      />
-    </>
+          ) : null}
+        </div>
+      }
+      rightNode={
+        <ArchiveSidebar categories={categories} setting={setting} className={indexStyle.footer} />
+      }
+    />
   );
 };
 
 Archives.getInitialProps = async () => {
-  const articles = await ArticleProvider.getArchives();
-  return { articles, needLayoutFooter: false };
+  const raw = await ArticleProvider.getArchives();
+  return {
+    articles: slimArchiveTree(raw),
+    needLayoutFooter: false,
+  };
 };
-
 
 export default Archives;

@@ -88,20 +88,20 @@ export const Header: React.FC<HeaderProps> = ({ setting, pages, hasBg = false })
   // Handle scroll behavior for sticky header
   useEffect(() => {
     let beforeY = 0;
-    let y = 0;
+    let ticking = false;
     const handler = () => {
-      y = getDocumentScrollTop();
-      setAffix(y > 0);
-      setAffixVisible(beforeY >= y);
-      setTimeout(() => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(() => {
+        const y = getDocumentScrollTop();
+        setAffix(y > 0);
+        setAffixVisible(beforeY >= y);
         beforeY = y;
-      }, 0);
+        ticking = false;
+      });
     };
-    document.addEventListener('scroll', handler);
-
-    return () => {
-      document.removeEventListener('scroll', handler);
-    };
+    document.addEventListener('scroll', handler, { passive: true });
+    return () => document.removeEventListener('scroll', handler);
   }, [setAffix, setAffixVisible]);
 
   // Generate navigation links
@@ -146,6 +146,9 @@ export const Header: React.FC<HeaderProps> = ({ setting, pages, hasBg = false })
 
   return (
     <header className={cls(style.header, hasBg && !visible ? style.transparent : false)}>
+      <a className={style.skipLink} href="#main-content">
+        {t('skipToContent')}
+      </a>
       <div
         className={cls(
           style.wrapper,
