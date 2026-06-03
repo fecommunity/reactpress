@@ -8,7 +8,7 @@ import { Footer } from '@components/Footer';
 import { Header } from '@components/Header';
 import style from './index.module.scss';
 
-const BackTop = dynamic(() => import('@/ui').then((mod) => mod.BackTop), { ssr: false });
+const BackTop = dynamic(() => import('@/ui/backtop').then((mod) => mod.BackTop), { ssr: false });
 
 interface IProps {
   backgroundColor?: string;

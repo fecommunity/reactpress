@@ -10,7 +10,12 @@ const {
   resolveInitialColorModeState,
   persistColorMode,
 } = require('../theme/visitor/colorMode');
-const { persistVisitorLocale } = require('../theme/visitor/visitorLocale');
+const {
+  persistVisitorLocale,
+  readBrowserCookie,
+  VISITOR_LOCALE_COOKIE,
+  LEGACY_LOCALE_STORAGE_KEY,
+} = require('../theme/visitor/visitorLocale');
 const {
   clearThemeSession,
   persistThemeSession,
@@ -21,6 +26,7 @@ const { SiteAnalytics } = require('../ui/components/SiteAnalytics');
 const { SiteCatalogProvider } = require('../ui/context/SiteCatalogContext');
 const { useReportPageView } = require('../ui/hooks/useReportPageView');
 const { safeJsonParse } = require('../theme/api/json');
+const { mergeVisitorI18n } = require('../theme/visitor/i18n');
 
 function resolveGlobalSettingForLocale(setting, locale, fallback) {
   if (!setting?.globalSetting) return fallback;
@@ -61,6 +67,7 @@ function createReactPressApp(manifest, options = {}) {
     scrollToTopOnRouteChange = true,
     IntlProvider,
     wrapContent,
+    transformBootstrap,
   } = options;
 
   if (!Layout) {
@@ -90,14 +97,41 @@ function createReactPressApp(manifest, options = {}) {
       theme: 'light',
       collapsed: false,
       setting: null,
+      /** Full locale catalog — SSR may ship only the active locale to shrink `__NEXT_DATA__`. */
+      i18n: null,
+    };
+
+    prefetchRemainingI18nLocales = () => {
+      const locales = this.props.locales;
+      if (!Array.isArray(locales) || locales.length <= 1) return;
+
+      const current = this.state.i18n ?? this.props.i18n ?? {};
+      if (locales.every((key) => current[key])) return;
+
+      const http = createThemeAxiosClient(httpClientOptions);
+      const { SettingProvider } = createThemeProviders(http);
+      SettingProvider.getSetting()
+        .then((res) => {
+          const full = mergeVisitorI18n(safeJsonParse(res.i18n, {}));
+          this.setState((prev) => ({
+            i18n: { ...(prev.i18n ?? this.props.i18n ?? {}), ...full },
+          }));
+        })
+        .catch(() => {
+          // ignore — active locale messages already available from SSR
+        });
     };
 
     static getInitialProps = async (appContext) => {
       const appProps = await App.getInitialProps(appContext);
-      const bootstrap = await fetchAppBootstrap({
+      let bootstrap = await fetchAppBootstrap({
         manifest,
         ctx: appContext.ctx,
       });
+
+      if (typeof transformBootstrap === 'function') {
+        bootstrap = transformBootstrap(bootstrap, appContext.ctx);
+      }
 
       return {
         ...appProps,
@@ -115,6 +149,12 @@ function createReactPressApp(manifest, options = {}) {
         'zh';
       if (key === active) return;
       persistVisitorLocale(key);
+
+      const catalog = this.state.i18n ?? this.props.i18n ?? {};
+      if (!catalog[key]) {
+        this.prefetchRemainingI18nLocales();
+      }
+
       this.setState({ locale: key });
     };
 
@@ -163,21 +203,38 @@ function createReactPressApp(manifest, options = {}) {
         patches.theme = preferred;
       }
 
-      const activeLocale =
-        this.state.locale ||
+      const ssrLocale =
         this.props.initialLocale ||
         (Array.isArray(this.props.locales) && this.props.locales.length > 0
           ? this.props.locales[0]
           : 'zh');
+      const cookieLocale =
+        readBrowserCookie(VISITOR_LOCALE_COOKIE) ||
+        readBrowserCookie(LEGACY_LOCALE_STORAGE_KEY);
       const storedLocale = readStoredVisitorLocale(this.props.locales);
-      if (storedLocale && storedLocale !== activeLocale) {
-        patches.locale = storedLocale;
-        persistVisitorLocale(storedLocale);
+
+      if (this.state.locale === '') {
+        if (
+          cookieLocale &&
+          Array.isArray(this.props.locales) &&
+          this.props.locales.includes(cookieLocale) &&
+          cookieLocale !== ssrLocale
+        ) {
+          // Cookie is the source of truth for an explicit prior choice.
+          patches.locale = cookieLocale;
+        } else if (!cookieLocale) {
+          // First visit or stale storage — align cookie/storage with SSR locale.
+          persistVisitorLocale(ssrLocale);
+        } else if (storedLocale && storedLocale !== ssrLocale) {
+          persistVisitorLocale(ssrLocale);
+        }
       }
 
       if (Object.keys(patches).length > 0) {
         this.setState(patches);
       }
+
+      this.prefetchRemainingI18nLocales();
     }
 
     componentDidUpdate(_prevProps, prevState) {
@@ -190,7 +247,7 @@ function createReactPressApp(manifest, options = {}) {
       const {
         Component,
         pageProps,
-        i18n,
+        i18n: i18nFromProps,
         globalSetting,
         siteConfig,
         locales,
@@ -202,6 +259,8 @@ function createReactPressApp(manifest, options = {}) {
         themeMods = {},
         ...rest
       } = this.props;
+
+      const i18n = this.state.i18n ?? i18nFromProps;
 
       const locale =
         this.state.locale ||

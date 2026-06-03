@@ -2,14 +2,17 @@ import cls from 'classnames';
 import dynamic from 'next/dynamic';
 import React, { useEffect, useRef } from 'react';
 
-import { CommentIcon } from '@/components/Comment/CommentIcon';
-import { Likes, LikesProps } from '@/components/Likes';
+import type { LikesProps } from '@/components/Likes';
 import { useToggle } from '@fecommunity/reactpress-toolkit/theme';
 import { getDocumentScrollTop } from '@/utils';
 
 import style from './index.module.scss';
 
 const SystemNotification = dynamic(() => import('@/components/Setting/SystemNotification'), { ssr: false });
+const Likes = dynamic(() => import('@/components/Likes').then((m) => m.Likes), { ssr: false });
+const CommentIcon = dynamic(() => import('@/components/Comment/CommentIcon').then((m) => m.CommentIcon), {
+  ssr: false,
+});
 
 interface IProps {
   leftNode: React.ReactNode;

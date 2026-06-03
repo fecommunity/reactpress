@@ -13,7 +13,7 @@ module.exports = createReactPressNextConfig({
   assetPrefix: config.CLIENT_ASSET_PREFIX || '/',
   poweredByHeader: false,
   compress: true,
-  productionBrowserSourceMaps: false,
+  productionBrowserSourceMaps: true,
   env: {
     ...themeApiEnv,
     GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,

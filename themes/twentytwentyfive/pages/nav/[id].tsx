@@ -9,22 +9,29 @@ import { useContext, useMemo } from 'react';
 import AboutUs from '@/components/AboutUs';
 import { ArticleRecommend } from '@/components/ArticleRecommend';
 import { Tags } from '@/components/Tags';
-import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
+import { resolveVisitorLocale, SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
 import { DoubleColumnLayout } from '@/layout/DoubleColumnLayout';
+import type { SiteNavConfig } from '@/utils/siteNav';
+import { fetchSiteNavConfig } from '@/utils/siteNav';
 
 import style from './index.module.scss';
 const url = require('url');
 
 interface IProps {
   siteKey: string;
+  navConfig?: SiteNavConfig;
 }
 
-const Article: NextPage<IProps> = ({ siteKey }) => {
+const Article: NextPage<IProps> = ({ siteKey, navConfig }) => {
   const t = useTranslations();
   const { setting, tags, siteConfig, globalSetting } = useContext(GlobalContext);
 
   const article = useMemo(() => {
-    const urlConfig = siteConfig?.nav?.urlConfig ?? globalSetting?.globalConfig?.urlConfig ?? [];
+    const urlConfig =
+      navConfig?.urlConfig ??
+      siteConfig?.nav?.urlConfig ??
+      globalSetting?.globalConfig?.urlConfig ??
+      [];
     const urlItem = urlConfig
       .map((item) => item.children)
       .flat()
@@ -47,7 +54,7 @@ const Article: NextPage<IProps> = ({ siteKey }) => {
         },
       ],
     };
-  }, [siteKey]);
+  }, [navConfig?.urlConfig, siteConfig?.nav?.urlConfig, globalSetting?.globalConfig?.urlConfig, siteKey]);
 
   const Content = (
     <>
@@ -162,7 +169,9 @@ const Article: NextPage<IProps> = ({ siteKey }) => {
 Article.getInitialProps = async (ctx) => {
   const { id } = ctx.query;
   const [siteKey] = typeof id === 'string' ? id.split('.') : id;
-  return { siteKey };
+  const locale = resolveVisitorLocale(['en', 'zh'], ctx.req);
+  const navConfig = await fetchSiteNavConfig(locale);
+  return { siteKey, navConfig };
 };
 
 export default Article;

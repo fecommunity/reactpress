@@ -14,12 +14,13 @@ import { DoubleColumnLayout } from '@/layout/DoubleColumnLayout';
 import { ArticleProvider } from '@/providers';
 import { CategoryProvider } from '@/providers';
 import { getArchiveBannerImage } from '@/utils/archiveBanner';
+import { slimArticlesForList, type ListArticle } from '@/utils/articleList';
 
-import { CategoryMenu } from '../index';
+import { CategoryMenu } from '@/components/CategoryMenu';
 import style from '../index.module.scss';
 
 interface IProps {
-  articles: IArticle[];
+  articles: ListArticle[];
   total: number;
   category: ICategory;
 }
@@ -30,7 +31,7 @@ const Home: NextPage<IProps> = ({ articles: defaultArticles = [], total, categor
   const t = useTranslations();
   const { setting, tags, categories } = useContext(GlobalContext);
   const [page, setPage] = useState(1);
-  const [articles, setArticles] = useState<IArticle[]>(defaultArticles);
+  const [articles, setArticles] = useState<ListArticle[]>(defaultArticles);
   const banner = getArchiveBannerImage(articles);
 
   useEffect(() => {
@@ -45,7 +46,7 @@ const Home: NextPage<IProps> = ({ articles: defaultArticles = [], total, categor
         status: 'publish',
       }).then((res) => {
         setPage(page);
-        setArticles((articles) => [...articles, ...res[0]]);
+        setArticles((articles) => [...articles, ...slimArticlesForList(res[0])]);
       });
     },
     [category]
@@ -119,7 +120,7 @@ Home.getInitialProps = async (ctx) => {
     CategoryProvider.getCategoryById(categoryValue),
   ]);
   return {
-    articles: articles[0],
+    articles: slimArticlesForList(articles[0]),
     total: articles[1],
     category: category,
     needLayoutFooter: false,

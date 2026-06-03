@@ -1,4 +1,4 @@
-import { message } from '@/ui';
+import { message } from '@/ui/message';
 
 import {
   clearThemeSession,

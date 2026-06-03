@@ -4,11 +4,12 @@ import React, { useEffect, useMemo, useState } from 'react';
 
 import { LocaleTime } from '@fecommunity/reactpress-toolkit/ui/content';
 import { resolveImageUrl } from '@fecommunity/reactpress-toolkit/theme';
+import type { CarouselArticle } from '@/utils/articleList';
 
 import style from './index.module.scss';
 
 interface IProps {
-  articles?: IArticle[];
+  articles?: CarouselArticle[];
 }
 
 export const ArticleCarousel: React.FC<IProps> = ({ articles = [] }) => {

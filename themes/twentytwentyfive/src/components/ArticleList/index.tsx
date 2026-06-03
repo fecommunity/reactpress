@@ -17,7 +17,7 @@
  */
 
 import { EyeOutlined, FolderOutlined, HeartOutlined, HistoryOutlined } from '@/icons';
-import { Tag } from '@/ui';
+import { Tag } from '@/ui/tag';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import React, { useContext, useMemo } from 'react';

@@ -23,11 +23,14 @@
   }
 
   .item {
-    flex: 1;
-    margin: 3px 3px;
-    padding: .2rem .6rem;
+    display: inline-block;
+    margin: 3px;
+    padding: 0;
+    border: none;
+    list-style: none;
+
     &:hover {
-      opacity: .7;
+      opacity: 0.85;
     }
   }
 

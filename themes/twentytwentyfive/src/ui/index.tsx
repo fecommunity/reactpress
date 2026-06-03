@@ -14,66 +14,9 @@ import { createPortal } from 'react-dom';
 
 import s from './ui.module.scss';
 
-/* ---------- message ---------- */
-type ToastType = 'success' | 'error' | 'info' | 'warning';
-
-interface ToastItem {
-  id: number;
-  text: string;
-  type: ToastType;
-}
-
-let toastId = 0;
-let pushToast: ((text: string, type: ToastType) => void) | null = null;
-
-function ToastHost() {
-  const [items, setItems] = useState<ToastItem[]>([]);
-
-  useEffect(() => {
-    pushToast = (text, type) => {
-      const id = ++toastId;
-      setItems((prev) => [...prev, { id, text, type }]);
-      window.setTimeout(() => {
-        setItems((prev) => prev.filter((t) => t.id !== id));
-      }, 2800);
-    };
-    return () => {
-      pushToast = null;
-    };
-  }, []);
-
-  if (typeof document === 'undefined' || !items.length) return null;
-
-  return createPortal(
-    <div className={s.toastHost} role="status" aria-live="polite">
-      {items.map((item) => (
-        <div
-          key={item.id}
-          className={cls(
-            s.toast,
-            item.type === 'error' && s.toastError,
-            item.type === 'success' && s.toastSuccess,
-            item.type === 'warning' && s.toastWarning,
-          )}
-        >
-          {item.text}
-        </div>
-      ))}
-    </div>,
-    document.body,
-  );
-}
-
-export const message = {
-  success: (text: string) => pushToast?.(text, 'success'),
-  error: (text: string) => pushToast?.(text, 'error'),
-  info: (text: string) => pushToast?.(text, 'info'),
-  warning: (text: string) => pushToast?.(text, 'warning'),
-};
-
-export function MessageHost() {
-  return <ToastHost />;
-}
+export { message, MessageHost } from './message';
+export { Tag } from './tag';
+export { BackTop, FloatButton } from './backtop';
 
 /* ---------- Button ---------- */
 type BtnProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
@@ -274,25 +217,6 @@ export function Modal({
 /* ---------- Spin, Tag, Alert, Avatar ---------- */
 export function Spin({ size }: { size?: 'small' | 'default' }) {
   return <span className={cls(s.spin, size === 'small' && s.spinSmall)} role="status" aria-label="Loading" />;
-}
-
-export function Tag({
-  children,
-  color,
-  className,
-  icon,
-}: {
-  children?: ReactNode;
-  color?: string;
-  className?: string;
-  icon?: ReactNode;
-}) {
-  return (
-    <span className={cls(s.tag, className)} style={color ? { backgroundColor: color } : undefined}>
-      {icon}
-      {children}
-    </span>
-  );
 }
 
 export function Alert({
@@ -795,31 +719,6 @@ export function Menu({
     </nav>
   );
 }
-
-export function BackTop() {
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setVisible(window.scrollY > 400);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
-
-  return (
-    <button
-      type="button"
-      className={s.backTop}
-      data-visible={visible}
-      aria-label="Back to top"
-      onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-    >
-      ↑
-    </button>
-  );
-}
-
-export const FloatButton = { BackTop };
 
 export function TextLoop({ children, interval = 5000 }: { children: ReactNode; interval?: number }) {
   const items = React.Children.toArray(children);

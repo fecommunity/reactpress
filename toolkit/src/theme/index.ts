@@ -85,6 +85,7 @@ export {
 export {
   LEGACY_LOCALE_STORAGE_KEY,
   persistVisitorLocale,
+  readBrowserCookie,
   readRequestCookie,
   resolveVisitorLocale,
   VISITOR_LOCALE_COOKIE,
@@ -122,6 +123,7 @@ export {
   parseSiteLocale,
   resolveRequestLocale,
 } from './visitor/locale';
+export { mergeVisitorI18n, slimVisitorI18nForSsr } from './visitor/i18n';
 export type { NavItem } from './content/nav';
 export {
   articlePath,

@@ -6,18 +6,21 @@ import { useContext } from 'react';
 import { AdvanceSearch } from '@/components/AdvanceSearch';
 import NavCard from '@/components/NavCard';
 import SystemNotification from '@/components/Setting/SystemNotification';
-import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
+import { resolveVisitorLocale, SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
 import { ArticleProvider } from '@/providers';
 import { CategoryProvider } from '@/providers';
+import type { SiteNavConfig } from '@/utils/siteNav';
+import { fetchSiteNavConfig } from '@/utils/siteNav';
 
 import style from './index.module.scss';
 
 interface IHomeProps {
   articles?: IArticle[];
   total?: number;
+  navConfig?: SiteNavConfig;
 }
 
-const Page: NextPage<IHomeProps> = ({}) => {
+const Page: NextPage<IHomeProps> = ({ navConfig }) => {
   const { setting } = useContext(GlobalContext);
   const t = useTranslations();
   return (
@@ -28,10 +31,10 @@ const Page: NextPage<IHomeProps> = ({}) => {
       <div className="container">
         <SystemNotification />
         <div className={style.search}>
-          <AdvanceSearch />
+          <AdvanceSearch searchCategories={navConfig?.searchCategories} />
         </div>
         <div className={style.content}>
-          <NavCard />
+          <NavCard dataSource={navConfig?.urlConfig} />
         </div>
       </div>
     </div>
@@ -41,18 +44,21 @@ const Page: NextPage<IHomeProps> = ({}) => {
 // 服务端预取数据
 Page.getInitialProps = async (ctx) => {
   const { category: categoryValue = 'nav' } = ctx.query;
-  const [articles, category] = await Promise.all([
+  const locale = resolveVisitorLocale(['en', 'zh'], ctx.req);
+  const [articles, category, navConfig] = await Promise.all([
     ArticleProvider.getArticlesByCategory(categoryValue, {
       page: 1,
       pageSize: 1000,
       status: 'publish',
     }),
     CategoryProvider.getCategoryById(categoryValue),
+    fetchSiteNavConfig(locale),
   ]);
   return {
     articles: articles[0],
     total: articles[1],
     category: category,
+    navConfig,
     needLayoutFooter: true,
   };
 };

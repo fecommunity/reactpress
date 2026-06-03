@@ -3,6 +3,7 @@ import { AutoComplete, Button, Input, Spin, Tabs } from '@/ui';
 import React, { useContext, useEffect, useState } from 'react';
 
 import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
+import type { ResolvedSiteConfig } from '@fecommunity/reactpress-toolkit/theme';
 import { useAsyncLoading } from '@fecommunity/reactpress-toolkit/theme';
 import { ArticleProvider } from '@/providers';
 import { SearchProvider } from '@/providers';
@@ -12,11 +13,13 @@ import styles from './index.module.scss';
 
 interface IProps {
   globalSetting?: any;
+  searchCategories?: NonNullable<NonNullable<ResolvedSiteConfig['nav']>['searchCategories']>;
 }
 
 export const AdvanceSearch: React.FC<IProps> = (props) => {
   const { siteConfig, globalSetting } = useContext(GlobalContext);
   const navSearch =
+    props.searchCategories ||
     siteConfig?.nav?.searchCategories ||
     globalSetting?.globalConfig?.navConfig ||
     props.globalSetting ||

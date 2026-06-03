@@ -1,5 +1,5 @@
 import { TagOutlined } from '@/icons';
-import { Flex,Tag } from '@/ui';
+import { Tag } from '@/ui/tag';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import React, { FC } from 'react';
@@ -56,17 +56,17 @@ export const Tags: FC<ITagsProps> = ({ tags = [], needTitle = true, style: cssSt
         </TagCloud>
       ) : (
         <ul className={style.tagWrapper}>
-          <Flex wrap gap="small">
-            {tags.map((tag, index) => (
-              <Tag key={tag.id} color={getColorFromNumber(index)} className={style.item}>
+          {tags.map((tag, index) => (
+            <li key={tag.id} className={style.item}>
+              <Tag color={getColorFromNumber(index)}>
                 <Link href={`/tag/[tag]`} as={`/tag/` + tag.value} scroll={false}>
                   <a aria-label={tag.label} className={style.link}>
                     {tag.label} [{tag.articleCount}]
                   </a>
                 </Link>
               </Tag>
-            ))}
-          </Flex>
+            </li>
+          ))}
         </ul>
       )}
     </div>

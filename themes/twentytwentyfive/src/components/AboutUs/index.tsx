@@ -2,7 +2,7 @@ import { CommentOutlined, GithubOutlined, ProfileOutlined, WechatOutlined } from
 import { Card, Divider, Popover } from '@/ui';
 import cls from 'classnames';
 import { useTranslations } from 'next-intl';
-import { Fragment, type ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
 import style from './index.module.scss';
 
@@ -96,10 +96,9 @@ export const ContactInfo = ({ setting }: { setting?: AboutUsSetting }) => {
     <div className={style.icons}>
       <ul>
         {contactItems.map((item, index) => (
-          <Fragment key={index}>
-            {index > 0 ? <Divider type="vertical" /> : null}
-            <li>{item}</li>
-          </Fragment>
+          <li key={index} className={index > 0 ? style.contactItemSeparated : undefined}>
+            {item}
+          </li>
         ))}
       </ul>
     </div>

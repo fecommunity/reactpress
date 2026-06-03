@@ -26,6 +26,10 @@ export type CreateReactPressAppOptions = {
     },
   ) => unknown;
   scrollToTopOnRouteChange?: boolean;
+  transformBootstrap?: (
+    bootstrap: Record<string, unknown>,
+    ctx: { pathname?: string; asPath?: string },
+  ) => Record<string, unknown>;
 };
 
 export type CreateReactPressApp = (

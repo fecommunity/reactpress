@@ -15,11 +15,12 @@ import { DoubleColumnLayout } from '@/layout/DoubleColumnLayout';
 import { ArticleProvider } from '@/providers';
 import { TagProvider } from '@/providers';
 import { getArchiveBannerImage } from '@/utils/archiveBanner';
+import { slimArticlesForList, type ListArticle } from '@/utils/articleList';
 
 import style from '../index.module.scss';
 
 interface IProps {
-  articles: IArticle[];
+  articles: ListArticle[];
   total: number;
   tag: ITag;
 }
@@ -30,7 +31,7 @@ const Home: NextPage<IProps> = ({ articles: defaultArticles = [], total, tag }) 
   const t = useTranslations();
   const { setting, tags, categories } = useContext(GlobalContext);
   const [page, setPage] = useState(1);
-  const [articles, setArticles] = useState<IArticle[]>(defaultArticles);
+  const [articles, setArticles] = useState<ListArticle[]>(defaultArticles);
   const banner = getArchiveBannerImage(articles);
 
   useEffect(() => {
@@ -45,7 +46,7 @@ const Home: NextPage<IProps> = ({ articles: defaultArticles = [], total, tag }) 
         status: 'publish',
       }).then((res) => {
         setPage(page);
-        setArticles((articles) => [...articles, ...res[0]]);
+        setArticles((articles) => [...articles, ...slimArticlesForList(res[0])]);
       });
     },
     [tag.value]
@@ -117,7 +118,7 @@ Home.getInitialProps = async (ctx) => {
     TagProvider.getTagById(tagValue),
   ]);
   return {
-    articles: articles[0],
+    articles: slimArticlesForList(articles[0]),
     total: articles[1],
     tag: tag,
     needLayoutFooter: false,
