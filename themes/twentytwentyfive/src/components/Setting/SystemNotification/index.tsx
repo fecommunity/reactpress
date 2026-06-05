@@ -1,15 +1,15 @@
 import { BellFilled } from '@/icons';
 import { siteNoticeDisplayLines } from '@fecommunity/reactpress-toolkit/theme';
 import { Alert } from '@/ui';
-import React, { useContext } from 'react';
+import React from 'react';
 import { TextLoop } from '@/ui';
 
-import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
+import { useSiteSetting } from '@fecommunity/reactpress-toolkit/theme';
 
 import style from './index.module.scss';
 
 const SystemNotification: React.FC = () => {
-  const { setting } = useContext(GlobalContext);
+  const setting = useSiteSetting();
   const notices = siteNoticeDisplayLines(setting?.systemNoticeInfo);
   return notices?.length ? (
     <Alert

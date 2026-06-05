@@ -1,6 +1,6 @@
-import React, { useContext } from 'react';
+import React from 'react';
 
-import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
+import { useSiteCatalog } from '@fecommunity/reactpress-toolkit/theme';
 
 import Category from './Category';
 import styles from './index.module.scss';
@@ -21,7 +21,7 @@ interface NavCardProps {
 }
 
 const NavCardPage: React.FC<NavCardProps> = (props) => {
-  const { siteConfig, globalSetting } = useContext(GlobalContext);
+  const { siteConfig, globalSetting } = useSiteCatalog();
   const dataSource =
     props?.dataSource ||
     siteConfig?.nav?.urlConfig ||

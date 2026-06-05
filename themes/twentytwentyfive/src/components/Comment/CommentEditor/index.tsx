@@ -1,10 +1,10 @@
 import { Button, Input, message } from '@/ui';
 import cls from 'classnames';
 import { useTranslations } from 'next-intl';
-import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { isLoggedInUser } from '@/components/UserInfo';
-import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
+import { useSiteUser } from '@fecommunity/reactpress-toolkit/theme';
 import { useAsyncLoading } from '@fecommunity/reactpress-toolkit/theme';
 import { CommentProvider } from '@/providers';
 import {
@@ -43,7 +43,7 @@ function resolveInitialAuthor(user: IUser | Partial<IUser> | null | undefined): 
 
 export const CommentEditor: React.FC<Props> = ({ hostId, parentComment, replyComment, onOk, onClose, small }) => {
   const t = useTranslations('commentNamespace');
-  const { user } = useContext(GlobalContext);
+  const { user } = useSiteUser();
   const [addComment, loading] = useAsyncLoading(CommentProvider.addComment);
   const [author, setAuthor] = useState<CommentAuthor>(() => resolveInitialAuthor(user));
   const [content, setContent] = useState('');

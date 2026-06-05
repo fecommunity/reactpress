@@ -1,6 +1,6 @@
-import { SiteSeo, SiteCatalogContext as GlobalContext, useToggle } from '@fecommunity/reactpress-toolkit/theme';
+import { SiteSeo, useSiteCatalog, useSiteSetting, useToggle } from '@fecommunity/reactpress-toolkit/theme';
 import dynamic from 'next/dynamic';
-import React, { useContext, useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 
 import { REACT_PRESS_HEADER_LOGO } from '@/assets/brand';
 
@@ -19,7 +19,8 @@ interface IProps {
 }
 
 export const AppLayout: React.FC<IProps> = ({ children, needFooter = true, needHeader = true, hasBg }) => {
-  const { setting, pages } = useContext(GlobalContext);
+  const setting = useSiteSetting();
+  const { pages } = useSiteCatalog();
   const { systemBg } = setting;
   const [loaded, toggleLoaded] = useToggle(false);
   const bg = useMemo(

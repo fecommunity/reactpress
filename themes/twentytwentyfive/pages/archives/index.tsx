@@ -1,21 +1,25 @@
 import dynamic from 'next/dynamic';
+import type { GetStaticProps } from 'next';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import { useContext, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 
-import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
 import { DoubleColumnLayout } from '@/layout/DoubleColumnLayout';
-import { ArticleProvider } from '@/providers';
 import {
   countArchiveArticles,
+  fetchArchivesPageProps,
   formatArchiveDay,
-  slimArchiveTree,
   sortedArchiveYears,
+  themeApi,
+  themeStaticProps,
+  useSiteCatalog,
+  useSiteSetting,
+  withApiRetry,
   type ArchiveArticle,
   type ArchiveTree,
-} from '@/utils/archives';
+} from '@fecommunity/reactpress-toolkit/theme';
 
 import indexStyle from '../index.module.scss';
 import style from './index.module.scss';
@@ -33,7 +37,7 @@ function ArchiveMonthList({ month, articles }: { month: string; articles: Archiv
       <ul>
         {articles.map((article) => (
           <li key={article.id}>
-            <Link href={`/article/[id]`} as={`/article/${article.id}`} scroll={false} prefetch={false}>
+            <Link href={`/article/${article.id}`} scroll={false} prefetch={false}>
               <a aria-label={article.title}>
                 <span className={style.meta}>{formatArchiveDay(article.publishAt)}</span>
                 <span className={style.title}>{article.title}</span>
@@ -50,8 +54,19 @@ interface IProps {
   articles: ArchiveTree;
 }
 
+export const getStaticProps: GetStaticProps = async () => {
+  try {
+    const data = await withApiRetry(() => fetchArchivesPageProps(themeApi));
+    return themeStaticProps({ ...data, needLayoutFooter: false });
+  } catch (error) {
+    console.error('[reactpress] fetch archives page', error);
+    return themeStaticProps({ articles: {}, needLayoutFooter: false });
+  }
+};
+
 const Archives: NextPage<IProps> = ({ articles }) => {
-  const { categories, setting } = useContext(GlobalContext);
+  const setting = useSiteSetting();
+  const { categories } = useSiteCatalog();
   const t = useTranslations();
   const years = useMemo(() => sortedArchiveYears(articles), [articles]);
   const total = useMemo(() => countArchiveArticles(articles), [articles]);
@@ -121,14 +136,6 @@ const Archives: NextPage<IProps> = ({ articles }) => {
       }
     />
   );
-};
-
-Archives.getInitialProps = async () => {
-  const raw = await ArticleProvider.getArchives();
-  return {
-    articles: slimArchiveTree(raw),
-    needLayoutFooter: false,
-  };
 };
 
 export default Archives;

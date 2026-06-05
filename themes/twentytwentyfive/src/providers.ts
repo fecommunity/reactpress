@@ -1,20 +1,9 @@
 import { message } from '@/ui/message';
 
-import {
-  clearThemeSession,
-  createThemeAxiosClient,
-  createThemeProviders,
-} from '@fecommunity/reactpress-toolkit/theme';
-
-export const httpProvider = createThemeAxiosClient({
-  onError: (msg) => message.error(msg),
-  onUnauthorized: () => {
-    clearThemeSession();
-    window.location.reload();
-  },
-});
+import { createThemeHttpStack } from '@fecommunity/reactpress-toolkit/theme';
 
 export const {
+  httpProvider,
   SettingProvider,
   ArticleProvider,
   CategoryProvider,
@@ -29,4 +18,6 @@ export const {
   MailProvider,
   SmtpProvider,
   PosterProvider,
-} = createThemeProviders(httpProvider);
+} = createThemeHttpStack({
+  onError: (msg) => message.error(msg),
+});

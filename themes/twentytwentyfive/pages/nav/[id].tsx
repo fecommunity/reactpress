@@ -1,18 +1,28 @@
 import { RightOutlined, TagOutlined } from '@/icons';
 import { Alert, Breadcrumb, Button } from '@/ui';
+import type { GetServerSideProps } from 'next';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import { useContext, useMemo } from 'react';
+import { useMemo } from 'react';
 
 import AboutUs from '@/components/AboutUs';
 import { ArticleRecommend } from '@/components/ArticleRecommend';
 import { Tags } from '@/components/Tags';
-import { resolveVisitorLocale, SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
+import {
+  DEFAULT_VISITOR_LOCALES,
+  fetchSiteNavConfig,
+  resolveVisitorLocale,
+  sanitizeNextProps,
+  useSiteCatalog,
+  useSiteSetting,
+  type SiteNavConfig,
+} from '@fecommunity/reactpress-toolkit/theme';
 import { DoubleColumnLayout } from '@/layout/DoubleColumnLayout';
-import type { SiteNavConfig } from '@/utils/siteNav';
-import { fetchSiteNavConfig } from '@/utils/siteNav';
+import { SettingProvider } from '@/providers';
+
+import themeManifest from '../../theme.json';
 
 import style from './index.module.scss';
 const url = require('url');
@@ -24,7 +34,8 @@ interface IProps {
 
 const Article: NextPage<IProps> = ({ siteKey, navConfig }) => {
   const t = useTranslations();
-  const { setting, tags, siteConfig, globalSetting } = useContext(GlobalContext);
+  const setting = useSiteSetting();
+  const { tags, siteConfig, globalSetting } = useSiteCatalog();
 
   const article = useMemo(() => {
     const urlConfig =
@@ -166,12 +177,23 @@ const Article: NextPage<IProps> = ({ siteKey, navConfig }) => {
   );
 };
 
-Article.getInitialProps = async (ctx) => {
-  const { id } = ctx.query;
-  const [siteKey] = typeof id === 'string' ? id.split('.') : id;
-  const locale = resolveVisitorLocale(['en', 'zh'], ctx.req);
-  const navConfig = await fetchSiteNavConfig(locale);
-  return { siteKey, navConfig };
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const rawId = ctx.params?.id;
+  const id = Array.isArray(rawId) ? rawId[0] : rawId;
+  const [siteKey] = typeof id === 'string' ? id.split('.') : [''];
+  const locale = resolveVisitorLocale([...DEFAULT_VISITOR_LOCALES], ctx.req);
+  const navConfig = await fetchSiteNavConfig({
+    locale,
+    manifest: themeManifest,
+    getSetting: () => SettingProvider.getSetting(),
+  });
+
+  return {
+    props: sanitizeNextProps({
+      siteKey,
+      navConfig,
+    }),
+  };
 };
 
 export default Article;

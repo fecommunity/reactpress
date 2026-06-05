@@ -2,7 +2,7 @@
   "$schema": "../theme.manifest.schema.json",
   "id": "twentytwentyfive",
   "name": "Twenty Twenty-Five",
-  "version": "3.0.4",
+  "version": "3.0.6",
   "description": "功能完整的博客主题（文章、分类、标签、归档、知识库与自定义页面）。",
   "author": "ReactPress",
   "tags": ["博客", "完整功能"],
@@ -82,7 +82,10 @@
     "archive-category": "pages/category/[category].tsx",
     "archive-tag": "pages/tag/[tag].tsx",
     "archives": "pages/archives/index.tsx",
-    "search": "pages/nav/index.tsx",
+    "knowledge": "pages/knowledge/index.tsx",
+    "nav": "pages/nav/index.tsx",
+    "search": "pages/search/index.tsx",
+    "login": "pages/login/index.tsx",
     "404": "pages/404.tsx"
   },
   "appearance": {

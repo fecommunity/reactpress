@@ -1,3 +1,5 @@
+import type { IArticle } from '../../types';
+
 export type ArchiveArticle = Pick<IArticle, 'id' | 'title' | 'publishAt'>;
 
 export type ArchiveTree = Record<string, Record<string, ArchiveArticle[]>>;

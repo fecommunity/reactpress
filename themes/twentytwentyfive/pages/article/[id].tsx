@@ -7,14 +7,24 @@ import {
   parseArticleToc,
 } from '@fecommunity/reactpress-toolkit/ui/content';
 import { Image } from '@fecommunity/reactpress-toolkit/ui/content';
-import { SiteCatalogContext as GlobalContext, resolveImageUrl } from '@fecommunity/reactpress-toolkit/theme';
+import {
+  fetchArticleDetailProps,
+  resolveImageUrl,
+  themeApi,
+  themeNotFound,
+  themeOnDemandPaths,
+  themeStaticProps,
+  useSiteCatalog,
+  useSiteSetting,
+  withApiRetry,
+} from '@fecommunity/reactpress-toolkit/theme';
 import { Form, Input, message, Modal } from '@/ui';
+import type { GetStaticProps } from 'next';
 import { NextPage } from 'next';
-import Head from 'next/head';
 import Link from 'next/link';
 import { default as Router } from 'next/router';
 import { useTranslations } from 'next-intl';
-import { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { ArticleRecommend } from '@/components/ArticleRecommend';
 import dynamic from 'next/dynamic';
@@ -33,7 +43,8 @@ interface IProps {
 
 const Article: NextPage<IProps> = ({ article }) => {
   const t = useTranslations();
-  const { setting, locale } = useContext(GlobalContext);
+  const setting = useSiteSetting();
+  const { locale } = useSiteCatalog();
   const passwdRef = useRef<string | null>(null);
   const [shouldCheckPassWord, setShouldCheckPassword] = useState(article && article.needPassword);
   const tocs = parseArticleToc(article?.toc);
@@ -207,10 +218,20 @@ const Article: NextPage<IProps> = ({ article }) => {
   );
 };
 
-Article.getInitialProps = async (ctx) => {
-  const { id } = ctx.query;
-  const article = await ArticleProvider.getArticle(id);
-  return { article };
+export const getStaticPaths = () => themeOnDemandPaths;
+
+export const getStaticProps: GetStaticProps = async (ctx) => {
+  const id = ctx.params?.id;
+  if (typeof id !== 'string' || !id) return themeNotFound();
+
+  try {
+    const data = await withApiRetry(() => fetchArticleDetailProps(themeApi, id));
+    if (!data.article) return themeNotFound();
+    return themeStaticProps({ article: data.article });
+  } catch (error) {
+    console.error('[reactpress] fetch article page', error);
+    return themeNotFound();
+  }
 };
 
 export default Article;

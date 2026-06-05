@@ -1,15 +1,23 @@
 import { Categories } from '@components/Categories';
 import { KnowledgeList } from '@components/KnowledgeList';
+import type { GetStaticProps } from 'next';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import { useTranslations } from 'next-intl';
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { LoadMore } from '@/components/LoadMore';
 import { ArticleRecommend } from '@/components/ArticleRecommend';
-import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
 import { DoubleColumnLayout } from '@/layout/DoubleColumnLayout';
 import { KnowledgeProvider } from '@/providers';
+import {
+  fetchKnowledgeIndexPageProps,
+  themeApi,
+  themeStaticProps,
+  useSiteCatalog,
+  useSiteSetting,
+  withApiRetry,
+} from '@fecommunity/reactpress-toolkit/theme';
 
 interface IHomeProps {
   books: IKnowledge[];
@@ -18,8 +26,19 @@ interface IHomeProps {
 
 const pageSize = 12;
 
-const Page: NextPage<IHomeProps> = ({ books: defaultBooks = [], total = 0 }) => {
-  const { categories, setting } = useContext(GlobalContext);
+export const getStaticProps: GetStaticProps = async () => {
+  try {
+    const data = await withApiRetry(() => fetchKnowledgeIndexPageProps(themeApi, pageSize));
+    return themeStaticProps({ ...data, needLayoutFooter: true });
+  } catch (error) {
+    console.error('[reactpress] fetch knowledge index', error);
+    return themeStaticProps({ books: [], total: 0, needLayoutFooter: true });
+  }
+};
+
+const KnowledgeIndex: NextPage<IHomeProps> = ({ books: defaultBooks = [], total = 0 }) => {
+  const { categories } = useSiteCatalog();
+  const setting = useSiteSetting();
   const t = useTranslations();
   const [page, setPage] = useState(1);
   const [books, setBooks] = useState<IKnowledge[]>(defaultBooks);
@@ -28,14 +47,14 @@ const Page: NextPage<IHomeProps> = ({ books: defaultBooks = [], total = 0 }) => 
     setBooks(defaultBooks);
   }, [defaultBooks]);
 
-  const getArticles = useCallback((page) => {
+  const getArticles = useCallback((nextPage: number) => {
     KnowledgeProvider.getKnowledges({
-      page,
+      page: nextPage,
       pageSize,
       status: 'publish',
     }).then((res) => {
-      setPage(page);
-      setBooks((articles) => [...articles, ...res[0]]);
+      setPage(nextPage);
+      setBooks((prev) => [...prev, ...res[0]]);
     });
   }, []);
 
@@ -70,17 +89,4 @@ const Page: NextPage<IHomeProps> = ({ books: defaultBooks = [], total = 0 }) => 
   );
 };
 
-Page.getInitialProps = async () => {
-  const [books, total] = await KnowledgeProvider.getKnowledges({
-    page: 1,
-    pageSize,
-    status: 'publish',
-  });
-  return {
-    books,
-    total,
-    needLayoutFooter: true,
-  };
-};
-
-export default Page;
+export default KnowledgeIndex;

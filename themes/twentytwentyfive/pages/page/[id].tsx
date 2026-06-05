@@ -1,14 +1,23 @@
+import {
+  fetchCmsPageProps,
+  themeApi,
+  themeNotFound,
+  themeOnDemandPaths,
+  themeStaticProps,
+  useSiteSetting,
+  withApiRetry,
+} from '@fecommunity/reactpress-toolkit/theme';
 import dynamic from 'next/dynamic';
+import type { GetStaticProps } from 'next';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import { useTranslations } from 'next-intl';
-import { useContext, useEffect } from 'react';
+import { useEffect } from 'react';
 
 import { ContentStylesLoader } from '@/components/ContentStylesLoader';
 import { ArticleRecommend } from '@/components/ArticleRecommend';
 import { ImageViewer, HtmlContent } from '@fecommunity/reactpress-toolkit/ui/content';
 import { Image } from '@fecommunity/reactpress-toolkit/ui/content';
-import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
 import { PageProvider } from '@/providers';
 
 import style from './index.module.scss';
@@ -19,9 +28,25 @@ interface IProps {
   page: IPage;
 }
 
+export const getStaticPaths = () => themeOnDemandPaths;
+
+export const getStaticProps: GetStaticProps = async (ctx) => {
+  const id = ctx.params?.id;
+  if (typeof id !== 'string' || !id) return themeNotFound();
+
+  try {
+    const data = await withApiRetry(() => fetchCmsPageProps(themeApi, id));
+    if (!data.page) return themeNotFound();
+    return themeStaticProps({ page: data.page });
+  } catch (error) {
+    console.error('[reactpress] fetch cms page', error);
+    return themeNotFound();
+  }
+};
+
 const Page: NextPage<IProps> = ({ page }) => {
   const t = useTranslations();
-  const { setting } = useContext(GlobalContext);
+  const setting = useSiteSetting();
 
   useEffect(() => {
     if (!page) {
@@ -72,12 +97,6 @@ const Page: NextPage<IProps> = ({ page }) => {
       </div>
     </ImageViewer>
   );
-};
-
-Page.getInitialProps = async (ctx) => {
-  const { id } = ctx.query;
-  const page = await PageProvider.getPage(id);
-  return { page };
 };
 
 export default Page;

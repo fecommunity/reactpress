@@ -15,5 +15,8 @@ export {
   appearanceLinkColor,
   appearancePrimaryColorForMode,
   appearanceSecondaryBackgroundColor,
+  buildBrandingAppearanceCss,
   buildTwentyTwentyFiveAppearanceCss,
 } from './twentytwentyfive-vars';
+export type { FetchSiteNavConfigOptions, SiteNavConfig } from './siteNav';
+export { fetchSiteNavConfig } from './siteNav';

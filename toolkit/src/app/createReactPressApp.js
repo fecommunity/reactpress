@@ -3,6 +3,7 @@ const App = require('next/app').default;
 const Router = require('next/router').default;
 
 const { fetchAppBootstrap } = require('../theme/ssr/bootstrap');
+const { slimAppBootstrapForRoute } = require('../theme/ssr/slimBootstrap');
 const { createThemeAxiosClient } = require('../theme/api/httpClient');
 const { createThemeProviders } = require('../theme/providers');
 const {
@@ -68,6 +69,8 @@ function createReactPressApp(manifest, options = {}) {
     IntlProvider,
     wrapContent,
     transformBootstrap,
+    /** When true, apply default catalog-theme SSR payload slimming (nav routes keep full siteConfig). */
+    slimBootstrap = false,
   } = options;
 
   if (!Layout) {
@@ -131,6 +134,12 @@ function createReactPressApp(manifest, options = {}) {
 
       if (typeof transformBootstrap === 'function') {
         bootstrap = transformBootstrap(bootstrap, appContext.ctx);
+      } else if (slimBootstrap) {
+        bootstrap = slimAppBootstrapForRoute(
+          bootstrap,
+          appContext.ctx.pathname ?? '/',
+          typeof slimBootstrap === 'object' ? slimBootstrap : undefined,
+        );
       }
 
       return {

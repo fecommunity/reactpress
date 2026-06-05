@@ -96,8 +96,8 @@ export function appearancePrimaryColorForMode(
   );
 }
 
-/** Maps Twenty Twenty-Five appearance color mods to theme CSS variables. */
-export function buildTwentyTwentyFiveAppearanceCss(mods: ThemeMods): string {
+/** Maps theme appearance color mods to standard CSS variables (`--primary-color`, `--bg`, …). */
+export function buildBrandingAppearanceCss(mods: ThemeMods): string {
   const lightDecl = buildModeColorDeclarations(mods, LIGHT_COLOR_KEYS);
   const darkDecl = buildModeColorDeclarations(mods, DARK_COLOR_KEYS);
   const blocks: string[] = [];
@@ -109,3 +109,6 @@ export function buildTwentyTwentyFiveAppearanceCss(mods: ThemeMods): string {
   }
   return blocks.join('\n');
 }
+
+/** @deprecated Use `buildBrandingAppearanceCss`. */
+export const buildTwentyTwentyFiveAppearanceCss = buildBrandingAppearanceCss;

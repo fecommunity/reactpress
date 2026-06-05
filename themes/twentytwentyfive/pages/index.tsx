@@ -1,22 +1,28 @@
 import { ArticleList } from '@components/ArticleList';
 import { CategoryMenu } from '@/components/CategoryMenu';
 import dynamic from 'next/dynamic';
+import type { GetStaticProps } from 'next';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import { useTranslations } from 'next-intl';
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { LoadMore } from '@/components/LoadMore';
-import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
 import { DoubleColumnLayout } from '@/layout/DoubleColumnLayout';
 import { ArticleProvider } from '@/providers';
-import { getSiteTitle, resolveImageUrl } from '@fecommunity/reactpress-toolkit/theme';
 import {
+  fetchHomePageProps,
+  getSiteTitle,
+  resolveImageUrl,
   slimArticlesForList,
+  themeApi,
+  themeStaticProps,
+  useSiteCatalog,
+  useSiteSetting,
+  withApiRetry,
   type CarouselArticle,
   type ListArticle,
-} from '@/utils/articleList';
-import { resolveHomeCarouselArticles } from '@/utils/carouselArticles';
+} from '@fecommunity/reactpress-toolkit/theme';
 
 import style from './index.module.scss';
 
@@ -34,7 +40,8 @@ const pageSize = 12;
 
 const Home: NextPage<IHomeProps> = ({ articles: defaultArticles = [], recommendedArticles = [], total = 0 }) => {
   const t = useTranslations();
-  const { setting, tags, categories } = useContext(GlobalContext);
+  const setting = useSiteSetting();
+  const { tags, categories } = useSiteCatalog();
   const [page, setPage] = useState(1);
   const [articles, setArticles] = useState<ListArticle[]>(defaultArticles);
 
@@ -62,7 +69,7 @@ const Home: NextPage<IHomeProps> = ({ articles: defaultArticles = [], recommende
       <Head>
         <title>{getSiteTitle(setting)}</title>
         {lcpCoverUrl ? (
-          <link rel="preload" as="image" href={lcpCoverUrl} fetchpriority="high" />
+          <link rel="preload" as="image" href={lcpCoverUrl} fetchPriority="high" />
         ) : null}
       </Head>
       <DoubleColumnLayout
@@ -100,17 +107,19 @@ const Home: NextPage<IHomeProps> = ({ articles: defaultArticles = [], recommende
   );
 };
 
-Home.getInitialProps = async () => {
-  const articles = await ArticleProvider.getArticles({ page: 1, pageSize, status: 'publish' });
-  const rawArticles = articles[0];
-  const recommendedArticles = await resolveHomeCarouselArticles(rawArticles);
-
-  return {
-    articles: slimArticlesForList(rawArticles),
-    total: articles[1],
-    recommendedArticles,
-    needLayoutFooter: false,
-  };
+export const getStaticProps: GetStaticProps = async () => {
+  try {
+    const data = await withApiRetry(() => fetchHomePageProps(themeApi));
+    return themeStaticProps({ ...data, needLayoutFooter: false });
+  } catch (error) {
+    console.error('[reactpress] fetch home page', error);
+    return themeStaticProps({
+      articles: [],
+      total: 0,
+      recommendedArticles: [],
+      needLayoutFooter: false,
+    });
+  }
 };
 
 export default Home;

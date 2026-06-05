@@ -2,20 +2,30 @@ import { ArticleList } from '@components/ArticleList';
 import { Categories } from '@components/Categories';
 import { Tags } from '@components/Tags';
 import cls from 'classnames';
+import type { GetStaticProps } from 'next';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import { useTranslations } from 'next-intl';
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { LoadMore } from '@/components/LoadMore';
 import AboutUs from '@/components/AboutUs';
 import { ArticleRecommend } from '@/components/ArticleRecommend';
-import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
 import { DoubleColumnLayout } from '@/layout/DoubleColumnLayout';
 import { ArticleProvider } from '@/providers';
-import { TagProvider } from '@/providers';
+import {
+  fetchTagArchivePageProps,
+  slimArticlesForList,
+  themeApi,
+  themeNotFound,
+  themeOnDemandPaths,
+  themeStaticProps,
+  useSiteCatalog,
+  useSiteSetting,
+  withApiRetry,
+  type ListArticle,
+} from '@fecommunity/reactpress-toolkit/theme';
 import { getArchiveBannerImage } from '@/utils/archiveBanner';
-import { slimArticlesForList, type ListArticle } from '@/utils/articleList';
 
 import style from '../index.module.scss';
 
@@ -27,9 +37,29 @@ interface IProps {
 
 const pageSize = 12;
 
-const Home: NextPage<IProps> = ({ articles: defaultArticles = [], total, tag }) => {
+export const getStaticPaths = () => themeOnDemandPaths;
+
+export const getStaticProps: GetStaticProps = async (ctx) => {
+  const tagValue = ctx.params?.tag;
+  if (typeof tagValue !== 'string' || !tagValue) return themeNotFound();
+
+  return withApiRetry(() => fetchTagArchivePageProps(themeApi, tagValue, pageSize))
+    .then((data) => themeStaticProps({ ...data, needLayoutFooter: false }))
+    .catch((error) => {
+      console.error('[reactpress] fetch tag archive page', error);
+      return themeStaticProps({
+        articles: [],
+        total: 0,
+        tag: { value: tagValue, label: tagValue },
+        needLayoutFooter: false,
+      });
+    });
+};
+
+const TagPage: NextPage<IProps> = ({ articles: defaultArticles = [], total, tag }) => {
   const t = useTranslations();
-  const { setting, tags, categories } = useContext(GlobalContext);
+  const setting = useSiteSetting();
+  const { tags, categories } = useSiteCatalog();
   const [page, setPage] = useState(1);
   const [articles, setArticles] = useState<ListArticle[]>(defaultArticles);
   const banner = getArchiveBannerImage(articles);
@@ -39,17 +69,17 @@ const Home: NextPage<IProps> = ({ articles: defaultArticles = [], total, tag }) 
   }, [defaultArticles]);
 
   const getArticles = useCallback(
-    (page) => {
+    (nextPage: number) => {
       ArticleProvider.getArticlesByTag(tag.value, {
-        page,
+        page: nextPage,
         pageSize,
         status: 'publish',
       }).then((res) => {
-        setPage(page);
-        setArticles((articles) => [...articles, ...slimArticlesForList(res[0])]);
+        setPage(nextPage);
+        setArticles((prev) => [...prev, ...slimArticlesForList(res[0])]);
       });
     },
-    [tag.value]
+    [tag.value],
   );
 
   return (
@@ -105,24 +135,4 @@ const Home: NextPage<IProps> = ({ articles: defaultArticles = [], total, tag }) 
   );
 };
 
-// 服务端预取数据
-Home.getInitialProps = async (ctx) => {
-  const rawTag = ctx.query.tag;
-  const tagValue = Array.isArray(rawTag) ? rawTag[0] : rawTag;
-  const [articles, tag] = await Promise.all([
-    ArticleProvider.getArticlesByTag(tagValue, {
-      page: 1,
-      pageSize,
-      status: 'publish',
-    }),
-    TagProvider.getTagById(tagValue),
-  ]);
-  return {
-    articles: slimArticlesForList(articles[0]),
-    total: articles[1],
-    tag: tag,
-    needLayoutFooter: false,
-  };
-};
-
-export default Home;
+export default TagPage;

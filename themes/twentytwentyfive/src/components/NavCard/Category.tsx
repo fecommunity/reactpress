@@ -3,9 +3,9 @@ import {
   MenuUnfoldOutlined
 } from '@/icons';
 import { Button, Menu } from '@/ui';
-import React, { useContext, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 
-import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
+import { useColorMode } from '@fecommunity/reactpress-toolkit/theme';
 import { getIconByName } from '@/utils';
 
 import { CategoryItem } from '.';
@@ -17,7 +17,7 @@ interface CategoryProps {
 
 const Category: React.FC<CategoryProps> = (props) => {
   const [collapsed, setCollapsed] = useState(true);
-  const { theme } = useContext(GlobalContext);
+  const { colorMode: theme } = useColorMode();
   const { dataSource = [] } = props;
 
   const items = useMemo(() => {

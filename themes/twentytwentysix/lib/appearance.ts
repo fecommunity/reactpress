@@ -1,7 +1,7 @@
 import type { ThemeMods } from '@fecommunity/reactpress-toolkit/theme';
 import {
   appearancePrimaryColorForMode,
-  buildTwentyTwentyFiveAppearanceCss,
+  buildBrandingAppearanceCss,
 } from '@fecommunity/reactpress-toolkit/theme';
 
 /**
@@ -9,7 +9,7 @@ import {
  * Reuses Twenty Twenty-Five hex vars (--primary-color, --bg-body) as bridge.
  */
 export function buildTwentyTwentySixAppearanceCss(mods: ThemeMods): string {
-  const base = buildTwentyTwentyFiveAppearanceCss(mods);
+  const base = buildBrandingAppearanceCss(mods);
   const lightPrimary = appearancePrimaryColorForMode(mods, false, '#3b82f6');
   const darkPrimary = appearancePrimaryColorForMode(mods, true, '#60a5fa');
 

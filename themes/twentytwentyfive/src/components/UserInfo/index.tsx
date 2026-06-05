@@ -2,9 +2,9 @@ import { CheckCircleOutlined,GithubOutlined, UserOutlined } from '@/icons';
 import { Alert, Avatar, Button, Divider, Dropdown, Form, Input, message, Modal, Space } from '@/ui';
 import Router, { useRouter } from 'next/router';
 import { useTranslations } from 'next-intl';
-import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
-import { SiteCatalogContext as GlobalContext, resolveImageUrl, useToggle } from '@fecommunity/reactpress-toolkit/theme';
+import { resolveImageUrl, useSiteUser, useToggle } from '@fecommunity/reactpress-toolkit/theme';
 import { UserProvider } from '@/providers';
 
 import styles from './index.module.scss';
@@ -43,10 +43,9 @@ export const UserInfo: React.FC<{
 }> = ({ defaultVisible = false, hidden = false, onOk = () => {}, onCancel = () => {} }) => {
   const tRoot = useTranslations();
   const t = useTranslations('commentNamespace');
-  const { user, setUser, removeUser } = useContext(GlobalContext);
+  const { user, setUser, removeUser } = useSiteUser();
   const [visible, toggleVisible] = useToggle(defaultVisible);
   const [loginVisible, toggleLoginVisible] = useToggle(false);
-  const globalContext = useContext(GlobalContext);
 
   const submit = useCallback(
     (values) => {
@@ -58,7 +57,6 @@ export const UserInfo: React.FC<{
 
         // 存储token
         localStorage.setItem('token', res.token);
-        globalContext.setUser(res);
 
         // 这里区分地址栏是否有redirect
         const redirectUrl = getSearchParams().get('redirect');

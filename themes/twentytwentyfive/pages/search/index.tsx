@@ -1,18 +1,24 @@
 import { Button, Input, Space } from '@/ui';
+import type { GetServerSideProps } from 'next';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useTranslations } from 'next-intl';
-import { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import AboutUs from '@/components/AboutUs';
 import { ArticleList } from '@/components/ArticleList';
 import { ArticleRecommend } from '@/components/ArticleRecommend';
 import { Categories } from '@/components/Categories';
 import { Tags } from '@/components/Tags';
-import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
 import { DoubleColumnLayout } from '@/layout/DoubleColumnLayout';
-import { SearchProvider } from '@/providers';
+import {
+  fetchSearchPageProps,
+  sanitizeNextProps,
+  themeApi,
+  useSiteCatalog,
+  useSiteSetting,
+} from '@fecommunity/reactpress-toolkit/theme';
 
 import style from './index.module.scss';
 
@@ -24,7 +30,8 @@ interface SearchPageProps {
 const SearchPage: NextPage<SearchPageProps> = ({ keyword: initialKeyword = '', articles: initialArticles = [] }) => {
   const t = useTranslations();
   const router = useRouter();
-  const { setting, tags, categories } = useContext(GlobalContext);
+  const setting = useSiteSetting();
+  const { tags, categories } = useSiteCatalog();
   const inputRef = useRef<HTMLInputElement>(null);
   const [keyword, setKeyword] = useState(initialKeyword);
   const [articles, setArticles] = useState<IArticle[]>(initialArticles);
@@ -116,7 +123,7 @@ const SearchPage: NextPage<SearchPageProps> = ({ keyword: initialKeyword = '', a
   );
 };
 
-SearchPage.getInitialProps = async (ctx) => {
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const rawKeyword = ctx.query.keyword;
   const keyword =
     typeof rawKeyword === 'string'
@@ -125,26 +132,21 @@ SearchPage.getInitialProps = async (ctx) => {
         ? (rawKeyword[0] ?? '').trim()
         : '';
 
-  if (!keyword) {
-    return {
-      keyword: '',
-      articles: [],
-      needLayoutFooter: false,
-    };
-  }
-
   try {
-    const articles = await SearchProvider.searchArticles(keyword);
+    const data = await fetchSearchPageProps(themeApi, keyword);
     return {
-      keyword,
-      articles: articles.filter((article) => article.status === 'publish'),
-      needLayoutFooter: false,
+      props: sanitizeNextProps({
+        ...data,
+        needLayoutFooter: false,
+      }),
     };
   } catch {
     return {
-      keyword,
-      articles: [],
-      needLayoutFooter: false,
+      props: sanitizeNextProps({
+        keyword,
+        articles: [],
+        needLayoutFooter: false,
+      }),
     };
   }
 };

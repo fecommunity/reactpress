@@ -5,6 +5,8 @@ import { resolveRequestLocale } from './locale';
 
 export const VISITOR_LOCALE_COOKIE = 'reactpress-locale';
 export const LEGACY_LOCALE_STORAGE_KEY = 'locale';
+/** Fallback when CMS locales are unavailable (e.g. `_document` before bootstrap). */
+export const DEFAULT_VISITOR_LOCALES = ['zh', 'en'] as const;
 
 export { readRequestCookie };
 

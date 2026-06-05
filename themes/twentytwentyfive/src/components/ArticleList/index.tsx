@@ -20,10 +20,10 @@ import { EyeOutlined, FolderOutlined, HeartOutlined, HistoryOutlined } from '@/i
 import { Tag } from '@/ui/tag';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import React, { useContext, useMemo } from 'react';
+import React, { useMemo } from 'react';
 
 import { Image, LocaleTime } from '@fecommunity/reactpress-toolkit/ui/content';
-import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
+import { useSiteCatalog } from '@fecommunity/reactpress-toolkit/theme';
 import { getColorFromNumber } from '@/utils';
 
 import LogoSvg from '../../assets/LogoSvg';
@@ -147,7 +147,7 @@ const ArticleCard: React.FC<{ article: Article; categoryIndex: number; index: nu
  */
 export const ArticleList: React.FC<ArticleListProps> = ({ articles = [] }) => {
   const t = useTranslations();
-  const { categories } = useContext(GlobalContext);
+  const { categories } = useSiteCatalog();
 
   // Memoize the category indices to avoid recalculating on every render
   const categoryIndices = useMemo(() => {

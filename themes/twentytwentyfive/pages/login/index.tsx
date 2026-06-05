@@ -3,11 +3,9 @@ import { NextPage } from 'next';
 import Head from 'next/head';
 import Router from 'next/router';
 import { useTranslations } from 'next-intl';
-import { useContext, useEffect } from 'react';
-
-import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
+import { getPageTitle, useSiteSetting, useSiteUser } from '@fecommunity/reactpress-toolkit/theme';
 import { UserProvider } from '@/providers';
-import { getPageTitle } from '@fecommunity/reactpress-toolkit/theme';
+import { useEffect } from 'react';
 
 import style from './index.module.scss';
 
@@ -18,7 +16,8 @@ interface IProps {
 
 const Page: NextPage<IProps> = ({ code, from }: IProps) => {
   const t = useTranslations();
-  const { setUser, setting } = useContext(GlobalContext);
+  const { setUser } = useSiteUser();
+  const setting = useSiteSetting();
 
   useEffect(() => {
     if (!code) return;

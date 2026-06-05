@@ -1,27 +1,31 @@
+import type { GetServerSideProps } from 'next';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import { useTranslations } from 'next-intl';
-import { useContext } from 'react';
 
 import { AdvanceSearch } from '@/components/AdvanceSearch';
 import NavCard from '@/components/NavCard';
 import SystemNotification from '@/components/Setting/SystemNotification';
-import { resolveVisitorLocale, SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
-import { ArticleProvider } from '@/providers';
-import { CategoryProvider } from '@/providers';
-import type { SiteNavConfig } from '@/utils/siteNav';
-import { fetchSiteNavConfig } from '@/utils/siteNav';
+import {
+  DEFAULT_VISITOR_LOCALES,
+  fetchSiteNavConfig,
+  resolveVisitorLocale,
+  sanitizeNextProps,
+  useSiteSetting,
+  type SiteNavConfig,
+} from '@fecommunity/reactpress-toolkit/theme';
+import { SettingProvider } from '@/providers';
+
+import themeManifest from '../../theme.json';
 
 import style from './index.module.scss';
 
 interface IHomeProps {
-  articles?: IArticle[];
-  total?: number;
   navConfig?: SiteNavConfig;
 }
 
 const Page: NextPage<IHomeProps> = ({ navConfig }) => {
-  const { setting } = useContext(GlobalContext);
+  const setting = useSiteSetting();
   const t = useTranslations();
   return (
     <div className={style.wrapper}>
@@ -41,25 +45,19 @@ const Page: NextPage<IHomeProps> = ({ navConfig }) => {
   );
 };
 
-// 服务端预取数据
-Page.getInitialProps = async (ctx) => {
-  const { category: categoryValue = 'nav' } = ctx.query;
-  const locale = resolveVisitorLocale(['en', 'zh'], ctx.req);
-  const [articles, category, navConfig] = await Promise.all([
-    ArticleProvider.getArticlesByCategory(categoryValue, {
-      page: 1,
-      pageSize: 1000,
-      status: 'publish',
-    }),
-    CategoryProvider.getCategoryById(categoryValue),
-    fetchSiteNavConfig(locale),
-  ]);
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const locale = resolveVisitorLocale([...DEFAULT_VISITOR_LOCALES], ctx.req);
+  const navConfig = await fetchSiteNavConfig({
+    locale,
+    manifest: themeManifest,
+    getSetting: () => SettingProvider.getSetting(),
+  });
+
   return {
-    articles: articles[0],
-    total: articles[1],
-    category: category,
-    navConfig,
-    needLayoutFooter: true,
+    props: sanitizeNextProps({
+      navConfig,
+      needLayoutFooter: true,
+    }),
   };
 };
 

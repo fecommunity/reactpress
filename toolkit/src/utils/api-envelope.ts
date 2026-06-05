@@ -17,6 +17,17 @@ export function unpackPaginated<T>(
   return [];
 }
 
+/** Paginated endpoints — returns `[items, total]`. */
+export function unpackPaginatedPair<T>(
+  res: ApiEnvelope<[T[], number]> | null | undefined,
+): [T[], number] {
+  const payload = res?.data;
+  if (Array.isArray(payload) && Array.isArray(payload[0])) {
+    return [payload[0], typeof payload[1] === 'number' ? payload[1] : payload[0].length];
+  }
+  return [[], 0];
+}
+
 /** List or single entity wrapped in `data`. */
 export function unpackList<T>(res: ApiEnvelope<T[]> | null | undefined): T[] {
   const data = res?.data;

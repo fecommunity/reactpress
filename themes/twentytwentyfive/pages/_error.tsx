@@ -2,10 +2,8 @@ import { Button, Result } from '@/ui';
 import Head from 'next/head';
 import { default as Router } from 'next/router';
 import { useTranslations } from 'next-intl';
-import React, { useContext } from 'react';
-
-import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
-import { getPageTitle, getSiteTitle } from '@fecommunity/reactpress-toolkit/theme';
+import { getPageTitle, getSiteTitle, useSiteSetting } from '@fecommunity/reactpress-toolkit/theme';
+import React from 'react';
 
 const style = {
   display: 'flex',
@@ -17,7 +15,7 @@ const style = {
 
 export const Error404 = () => {
   const t = useTranslations();
-  const { setting } = useContext(GlobalContext);
+  const setting = useSiteSetting();
 
   return (
     <div style={style}>
@@ -40,7 +38,7 @@ export const Error404 = () => {
 
 const ServerError = ({ statusCode }) => {
   const t = useTranslations();
-  const { setting } = useContext(GlobalContext);
+  const setting = useSiteSetting();
 
   return (
     <div style={style}>
@@ -62,7 +60,7 @@ const ServerError = ({ statusCode }) => {
 };
 
 function Error({ statusCode }) {
-  const { setting } = useContext(GlobalContext);
+  const setting = useSiteSetting();
 
   if (!statusCode) {
     return (

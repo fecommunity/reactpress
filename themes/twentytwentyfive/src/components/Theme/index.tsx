@@ -1,12 +1,11 @@
-import { useContext } from 'react';
 import { useTranslations } from 'next-intl';
 
 import { ThemeToggleButton, TOOLBAR_ICON_SIZE } from '@fecommunity/reactpress-toolkit/ui';
-import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
+import { useColorMode } from '@fecommunity/reactpress-toolkit/theme';
 
 export function Theme() {
   const t = useTranslations();
-  const { theme = 'light', changeTheme } = useContext(GlobalContext);
+  const { colorMode: theme = 'light', changeColorMode: changeTheme } = useColorMode();
   const dark = theme === 'dark';
 
   return (

@@ -1,8 +1,8 @@
 import { SearchOutlined } from '@/icons';
 import { AutoComplete, Button, Input, Spin, Tabs } from '@/ui';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
+import { useSiteCatalog } from '@fecommunity/reactpress-toolkit/theme';
 import type { ResolvedSiteConfig } from '@fecommunity/reactpress-toolkit/theme';
 import { useAsyncLoading } from '@fecommunity/reactpress-toolkit/theme';
 import { ArticleProvider } from '@/providers';
@@ -17,7 +17,7 @@ interface IProps {
 }
 
 export const AdvanceSearch: React.FC<IProps> = (props) => {
-  const { siteConfig, globalSetting } = useContext(GlobalContext);
+  const { siteConfig, globalSetting } = useSiteCatalog();
   const navSearch =
     props.searchCategories ||
     siteConfig?.nav?.searchCategories ||

@@ -1,22 +1,32 @@
 import { ArticleList } from '@components/ArticleList';
 import { Tags } from '@components/Tags';
 import cls from 'classnames';
+import type { GetStaticProps } from 'next';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import { useTranslations } from 'next-intl';
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { LoadMore } from '@/components/LoadMore';
 import AboutUs from '@/components/AboutUs';
 import { ArticleRecommend } from '@/components/ArticleRecommend';
-import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
+import { CategoryMenu } from '@/components/CategoryMenu';
 import { DoubleColumnLayout } from '@/layout/DoubleColumnLayout';
 import { ArticleProvider } from '@/providers';
-import { CategoryProvider } from '@/providers';
+import {
+  fetchCategoryArchivePageProps,
+  slimArticlesForList,
+  themeApi,
+  themeNotFound,
+  themeOnDemandPaths,
+  themeStaticProps,
+  useSiteCatalog,
+  useSiteSetting,
+  withApiRetry,
+  type ListArticle,
+} from '@fecommunity/reactpress-toolkit/theme';
 import { getArchiveBannerImage } from '@/utils/archiveBanner';
-import { slimArticlesForList, type ListArticle } from '@/utils/articleList';
 
-import { CategoryMenu } from '@/components/CategoryMenu';
 import style from '../index.module.scss';
 
 interface IProps {
@@ -27,9 +37,29 @@ interface IProps {
 
 const pageSize = 12;
 
-const Home: NextPage<IProps> = ({ articles: defaultArticles = [], total, category }) => {
+export const getStaticPaths = () => themeOnDemandPaths;
+
+export const getStaticProps: GetStaticProps = async (ctx) => {
+  const categoryValue = ctx.params?.category;
+  if (typeof categoryValue !== 'string' || !categoryValue) return themeNotFound();
+
+  return withApiRetry(() => fetchCategoryArchivePageProps(themeApi, categoryValue, pageSize))
+    .then((data) => themeStaticProps({ ...data, needLayoutFooter: false }))
+    .catch((error) => {
+      console.error('[reactpress] fetch category archive page', error);
+      return themeStaticProps({
+        articles: [],
+        total: 0,
+        category: { value: categoryValue, label: categoryValue },
+        needLayoutFooter: false,
+      });
+    });
+};
+
+const CategoryPage: NextPage<IProps> = ({ articles: defaultArticles = [], total, category }) => {
   const t = useTranslations();
-  const { setting, tags, categories } = useContext(GlobalContext);
+  const setting = useSiteSetting();
+  const { tags, categories } = useSiteCatalog();
   const [page, setPage] = useState(1);
   const [articles, setArticles] = useState<ListArticle[]>(defaultArticles);
   const banner = getArchiveBannerImage(articles);
@@ -39,17 +69,17 @@ const Home: NextPage<IProps> = ({ articles: defaultArticles = [], total, categor
   }, [defaultArticles]);
 
   const getArticles = useCallback(
-    (page) => {
+    (nextPage: number) => {
       ArticleProvider.getArticlesByCategory(category.value, {
-        page,
+        page: nextPage,
         pageSize,
         status: 'publish',
       }).then((res) => {
-        setPage(page);
-        setArticles((articles) => [...articles, ...slimArticlesForList(res[0])]);
+        setPage(nextPage);
+        setArticles((prev) => [...prev, ...slimArticlesForList(res[0])]);
       });
     },
-    [category]
+    [category],
   );
 
   return (
@@ -107,24 +137,4 @@ const Home: NextPage<IProps> = ({ articles: defaultArticles = [], total, categor
   );
 };
 
-// 服务端预取数据
-Home.getInitialProps = async (ctx) => {
-  const rawCategory = ctx.query.category;
-  const categoryValue = Array.isArray(rawCategory) ? rawCategory[0] : rawCategory;
-  const [articles, category] = await Promise.all([
-    ArticleProvider.getArticlesByCategory(categoryValue, {
-      page: 1,
-      pageSize,
-      status: 'publish',
-    }),
-    CategoryProvider.getCategoryById(categoryValue),
-  ]);
-  return {
-    articles: slimArticlesForList(articles[0]),
-    total: articles[1],
-    category: category,
-    needLayoutFooter: false,
-  };
-};
-
-export default Home;
+export default CategoryPage;

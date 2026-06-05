@@ -1,4 +1,6 @@
-/** Fields required by ArticleList cards — omit content/html/toc from SSR payload. */
+import type { IArticle } from '../../types';
+
+/** Fields required by article list cards — omit content/html/toc from SSR payload. */
 export type ListArticle = Pick<
   IArticle,
   'id' | 'title' | 'cover' | 'summary' | 'likes' | 'views' | 'publishAt'

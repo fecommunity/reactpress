@@ -10,6 +10,7 @@ export {
   unpackList,
   unpackOne,
   unpackPaginated,
+  unpackPaginatedPair,
 } from '../utils/api-envelope';
 export { isLikelyValidAssetPath, isLikelyValidHeaderLogoPath, resolvePublicAssetUrl, rewriteArticleHtmlAssets } from './content/assets';
 export type { ArchiveExcerptMode, ResolveArchiveExcerptOptions } from './content/excerpt';
@@ -28,6 +29,49 @@ export {
   fetchPublishedPages,
   fetchRecommendArticles,
 } from './ssr/bootstrap';
+export type { SlimBootstrapOptions } from './ssr/slimBootstrap';
+export {
+  createBootstrapSlimmer,
+  slimAppBootstrapForRoute,
+} from './ssr/slimBootstrap';
+export type {
+  CarouselArticle,
+  ListArticle,
+} from './content/articleSlim';
+export {
+  slimArticleForCarousel,
+  slimArticleForList,
+  slimArticlesForCarousel,
+  slimArticlesForList,
+} from './content/articleSlim';
+export type { ArchiveArticle, ArchiveTree } from './content/archiveSlim';
+export {
+  countArchiveArticles,
+  formatArchiveDay,
+  slimArchiveTree,
+  sortedArchiveYears,
+} from './content/archiveSlim';
+export type { ResolveCarouselArticlesOptions } from './content/carouselArticles';
+export { resolveCarouselArticles } from './content/carouselArticles';
+export type {
+  CategoryArchivePageProps,
+  HomePageProps,
+  KnowledgeIndexPageProps,
+  SearchPageProps,
+  TagArchivePageProps,
+} from './ssr/pageProps';
+export {
+  fetchArchivesPageProps,
+  fetchArticleDetailProps,
+  fetchCategoryArchivePageProps,
+  fetchCmsPageProps,
+  fetchHomePageProps,
+  fetchKnowledgeBookPageProps,
+  fetchKnowledgeChapterPageProps,
+  fetchKnowledgeIndexPageProps,
+  fetchSearchPageProps,
+  fetchTagArchivePageProps,
+} from './ssr/pageProps';
 export type { FetchVisitorContextOptions, ThemeArchiveKind, VisitorContextProps } from './ssr/fetch';
 export {
   createArchiveGetStaticProps,
@@ -83,6 +127,7 @@ export {
   resolvePreferredColorMode,
 } from './visitor/colorMode';
 export {
+  DEFAULT_VISITOR_LOCALES,
   LEGACY_LOCALE_STORAGE_KEY,
   persistVisitorLocale,
   readBrowserCookie,
@@ -138,6 +183,8 @@ export { DEFAULT_SITE_META, parseSiteMeta, unwrapSetting } from './ssr/setting';
 
 export { createThemeProviders } from './providers';
 export type { ThemeProviders } from './providers';
+export type { CreateThemeHttpStackOptions } from './providers/setup';
+export { createThemeHttpStack } from './providers/setup';
 export { defaultModsFromManifest } from './visitor/appearance';
 export type ThemeManifestRef = { id: string };
 

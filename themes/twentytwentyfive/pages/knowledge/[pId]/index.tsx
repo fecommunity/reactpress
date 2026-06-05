@@ -1,18 +1,27 @@
 import { RightOutlined } from '@/icons';
 import { Breadcrumb, Button } from '@/ui';
 import cls from 'classnames';
+import type { GetStaticProps } from 'next';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import { useCallback, useContext, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 
 import { ListTrail } from '@/components/Animation/Trail';
 import { KnowledgeList } from '@/components/KnowledgeList';
 import { Image, LocaleTime } from '@fecommunity/reactpress-toolkit/ui/content';
-import { SiteCatalogContext as GlobalContext } from '@fecommunity/reactpress-toolkit/theme';
+import {
+  fetchKnowledgeBookPageProps,
+  themeApi,
+  themeNotFound,
+  themeOnDemandPaths,
+  themeStaticProps,
+  useSiteSetting,
+  withApiRetry,
+} from '@fecommunity/reactpress-toolkit/theme';
+
 import { DoubleColumnLayout } from '@/layout/DoubleColumnLayout';
-import { KnowledgeProvider } from '@/providers';
 
 import style from './index.module.scss';
 
@@ -22,8 +31,24 @@ interface IProps {
   otherBooks: Array<IKnowledge>;
 }
 
+export const getStaticPaths = () => themeOnDemandPaths;
+
+export const getStaticProps: GetStaticProps = async (ctx) => {
+  const pId = ctx.params?.pId;
+  if (typeof pId !== 'string' || !pId) return themeNotFound();
+
+  try {
+    const data = await withApiRetry(() => fetchKnowledgeBookPageProps(themeApi, pId));
+    if (!data.book) return themeNotFound();
+    return themeStaticProps({ ...data, needLayoutFooter: true });
+  } catch (error) {
+    console.error('[reactpress] fetch knowledge book page', error);
+    return themeNotFound();
+  }
+};
+
 const Page: NextPage<IProps> = ({ pId, book, otherBooks = [] }) => {
-  const { setting } = useContext(GlobalContext);
+  const setting = useSiteSetting();
   const t = useTranslations();
   const chapters = useMemo(() => (book && book.children) || [], [book]);
 
@@ -134,24 +159,6 @@ const Page: NextPage<IProps> = ({ pId, book, otherBooks = [] }) => {
       />
     </div>
   );
-};
-
-Page.getInitialProps = async (ctx) => {
-  const pId = ctx.query.pId as string;
-  const [book, [allBooks]] = await Promise.all([
-    KnowledgeProvider.getKnowledge(pId),
-    KnowledgeProvider.getKnowledges({
-      page: 1,
-      pageSize: 6,
-      status: 'publish',
-    }),
-  ]);
-  return {
-    pId,
-    book,
-    otherBooks: allBooks.filter((b) => b.id !== book.id),
-    needLayoutFooter: true,
-  };
 };
 
 export default Page;
