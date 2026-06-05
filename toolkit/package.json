@@ -32,6 +32,10 @@
       "types": "./dist/theme/index.d.ts",
       "default": "./dist/theme/index.js"
     },
+    "./theme/server": {
+      "types": "./dist/theme/server.d.ts",
+      "default": "./dist/theme/server.js"
+    },
     "./theme/next-config": {
       "types": "./dist/theme/next-config.d.ts",
       "default": "./dist/theme/next-config.js"

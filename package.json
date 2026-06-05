@@ -72,6 +72,8 @@
       "react-dom": "18.3.1",
       "@types/react": "18.3.20",
       "@types/react-dom": "18.3.6",
+      "@fecommunity/reactpress-template-my-blog>react": "19.2.4",
+      "@fecommunity/reactpress-template-my-blog>react-dom": "19.2.4",
       "@typescript-eslint/eslint-plugin": "^7.18.0",
       "@typescript-eslint/parser": "^7.18.0",
       "eslint": "^8.57.0",

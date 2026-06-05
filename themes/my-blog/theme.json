@@ -1,0 +1,105 @@
+{
+  "$schema": "../theme.manifest.schema.json",
+  "id": "my-blog",
+  "name": "My Blog",
+  "version": "1.0.0",
+  "description": "Tailwind 风格博客主题，App Router + ReactPress 动态内容。",
+  "author": "ReactPress",
+  "tags": ["博客", "Tailwind", "App Router"],
+  "requires": ">=3.0.0",
+  "supports": { "darkMode": true, "menus": ["primary"] },
+  "templates": {
+    "home": "app/page.tsx",
+    "single": "app/article/[id]/page.tsx",
+    "page": "app/page/[id]/page.tsx",
+    "archive-category": "app/category/[category]/page.tsx",
+    "archive-tag": "app/tag/[tag]/page.tsx",
+    "archives": "app/archives/page.tsx",
+    "search": "app/search/page.tsx",
+    "404": "app/not-found.tsx"
+  },
+  "appearance": {
+    "panels": [
+      { "id": "basic", "title": "基础配置" },
+      { "id": "style", "title": "样式配置" }
+    ],
+    "sections": [
+      {
+        "id": "identity",
+        "panel": "basic",
+        "title": "站点身份",
+        "settings": [
+          {
+            "id": "displayTitle",
+            "type": "text",
+            "label": "站点标题",
+            "description": "留空则继承后台「站点标题」"
+          },
+          {
+            "id": "displayTagline",
+            "type": "text",
+            "label": "站点副标题",
+            "description": "留空则继承后台「站点副标题」"
+          },
+          {
+            "id": "siteLogo",
+            "type": "image",
+            "label": "站点 Logo"
+          }
+        ]
+      },
+      {
+        "id": "colors",
+        "panel": "style",
+        "title": "颜色",
+        "groups": [
+          { "id": "light", "title": "浅色模式" },
+          { "id": "dark", "title": "深色模式" }
+        ],
+        "settings": [
+          {
+            "id": "primaryColor",
+            "group": "light",
+            "type": "color",
+            "label": "主色",
+            "default": "#e11d48"
+          },
+          {
+            "id": "backgroundColor",
+            "group": "light",
+            "type": "color",
+            "label": "背景色",
+            "default": "#ffffff"
+          },
+          {
+            "id": "darkPrimaryColor",
+            "group": "dark",
+            "type": "color",
+            "label": "主色",
+            "default": "#fb7185"
+          },
+          {
+            "id": "darkBackgroundColor",
+            "group": "dark",
+            "type": "color",
+            "label": "背景色",
+            "default": "#030712"
+          }
+        ]
+      },
+      {
+        "id": "layout",
+        "panel": "basic",
+        "title": "布局",
+        "settings": [
+          {
+            "id": "stickyNav",
+            "type": "checkbox",
+            "label": "固定顶栏",
+            "default": "0"
+          }
+        ]
+      }
+    ]
+  }
+}

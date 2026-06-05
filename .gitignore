@@ -3,6 +3,7 @@ themes/*
 !themes/hello-world/
 !themes/twentytwentyfive/
 !themes/twentytwentysix/
+!themes/my-blog/
 !themes/.gitkeep
 !themes/README.md
 
@@ -27,6 +28,7 @@ lib
 !themes/hello-world/**/lib/
 !themes/twentytwentyfive/**/lib/
 !themes/twentytwentysix/**/lib/
+!themes/my-blog/**/lib/
 dist
 dist-ssr
 coverage

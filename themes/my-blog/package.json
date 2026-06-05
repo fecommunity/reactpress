@@ -1,0 +1,42 @@
+{
+  "name": "@fecommunity/reactpress-template-my-blog",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Tailwind blog theme with App Router and ReactPress toolkit integration",
+  "scripts": {
+    "dev": "cross-env INIT_CWD=$PWD next dev -p 3001",
+    "build": "cross-env INIT_CWD=$PWD next build",
+    "start": "cross-env INIT_CWD=$PWD next start -p 3001",
+    "lint": "next lint --fix --dir app --dir components --dir layouts --dir src"
+  },
+  "dependencies": {
+    "@fecommunity/reactpress-toolkit": "workspace:*",
+    "@tailwindcss/forms": "^0.5.11",
+    "@tailwindcss/postcss": "^4.1.18",
+    "@tailwindcss/typography": "^0.5.19",
+    "cross-env": "^10.1.0",
+    "next": "15.5.12",
+    "postcss": "^8.5.6",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "tailwindcss": "^4.1.18"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.3.3",
+    "@eslint/js": "^9.18.0",
+    "@svgr/webpack": "^8.1.0",
+    "@types/node": "^20.17.0",
+    "@types/react": "^19.2.13",
+    "@types/react-dom": "^19.2.3",
+    "@typescript-eslint/eslint-plugin": "^8.54.0",
+    "@typescript-eslint/parser": "^8.54.0",
+    "eslint": "^9.18.0",
+    "eslint-config-next": "15.5.12",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.5",
+    "globals": "^17.3.0",
+    "prettier": "^3.8.1",
+    "prettier-plugin-tailwindcss": "^0.7.2",
+    "typescript": "^5.9.3"
+  }
+}
