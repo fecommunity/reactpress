@@ -2,7 +2,7 @@ const React = require('react');
 const App = require('next/app').default;
 const Router = require('next/router').default;
 
-const { fetchAppBootstrap } = require('../theme/ssr/bootstrap');
+const { fetchAppBootstrap, createDefaultAppBootstrap } = require('../theme/ssr/bootstrap');
 const { slimAppBootstrapForRoute } = require('../theme/ssr/slimBootstrap');
 const { createThemeAxiosClient } = require('../theme/api/httpClient');
 const { createThemeProviders } = require('../theme/providers');
@@ -127,10 +127,16 @@ function createReactPressApp(manifest, options = {}) {
 
     static getInitialProps = async (appContext) => {
       const appProps = await App.getInitialProps(appContext);
-      let bootstrap = await fetchAppBootstrap({
-        manifest,
-        ctx: appContext.ctx,
-      });
+      let bootstrap;
+      try {
+        bootstrap = await fetchAppBootstrap({
+          manifest,
+          ctx: appContext.ctx,
+        });
+      } catch (error) {
+        console.error('[reactpress] fetchAppBootstrap failed, using defaults', error);
+        bootstrap = createDefaultAppBootstrap();
+      }
 
       if (typeof transformBootstrap === 'function') {
         bootstrap = transformBootstrap(bootstrap, appContext.ctx);

@@ -21,35 +21,48 @@ import {
 import { Form, Input, message, Modal } from '@/ui';
 import type { GetStaticProps } from 'next';
 import { NextPage } from 'next';
+import Head from 'next/head';
 import Link from 'next/link';
-import { default as Router } from 'next/router';
+import { default as Router, useRouter } from 'next/router';
 import { useTranslations } from 'next-intl';
+import dynamic from 'next/dynamic';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { ArticleRecommend } from '@/components/ArticleRecommend';
-import dynamic from 'next/dynamic';
-
-const Comment = dynamic(() => import('@/components/Comment').then((m) => m.Comment), { ssr: false });
 import { Toc } from '@/components/Toc';
 import { DoubleColumnLayout } from '@/layout/DoubleColumnLayout';
 import { ArticleProvider } from '@/providers';
 
 import style from './index.module.scss';
+
+const Comment = dynamic(() => import('@/components/Comment').then((m) => m.Comment), { ssr: false });
 const url = require('url');
 
-interface IProps {
-  article: IArticle;
+interface ArticlePageProps {
+  article?: IArticle;
 }
 
-const Article: NextPage<IProps> = ({ article }) => {
+function ArticleLoading() {
+  const t = useTranslations();
+  return (
+    <>
+      <Head>
+        <title>{t('loading')}</title>
+      </Head>
+      <div className="loading">{t('loading')}</div>
+    </>
+  );
+}
+
+function ArticleView({ article }: { article: IArticle }) {
   const t = useTranslations();
   const setting = useSiteSetting();
   const { locale } = useSiteCatalog();
   const passwdRef = useRef<string | null>(null);
-  const [shouldCheckPassWord, setShouldCheckPassword] = useState(article && article.needPassword);
-  const tocs = parseArticleToc(article?.toc);
+  const [shouldCheckPassWord, setShouldCheckPassword] = useState(Boolean(article.needPassword));
+  const tocs = parseArticleToc(article.toc ?? '');
   const keywords = [article.title]
-    .concat((article?.tags ?? []).map((tag) => (typeof tag === 'string' ? tag : tag?.label)))
+    .concat((article.tags ?? []).map((tag) => (typeof tag === 'string' ? tag : tag?.label)))
     .concat(setting.seoKeyword?.split(','))
     .filter(Boolean)
     .join(',');
@@ -71,14 +84,23 @@ const Article: NextPage<IProps> = ({ article }) => {
   }, []);
 
   useEffect(() => {
-    setShouldCheckPassword(article && article.needPassword);
+    setShouldCheckPassword(Boolean(article.needPassword));
   }, [article]);
 
   useEffect(() => {
     if (!shouldCheckPassWord) {
       ArticleProvider.updateArticleViews(article.id);
     }
-  }, [shouldCheckPassWord, article]);
+  }, [shouldCheckPassWord, article.id]);
+
+  const tagLabel = (tag: string | { id?: string; label?: string; value?: string }) =>
+    typeof tag === 'string' ? tag : tag?.label ?? '';
+
+  const tagValue = (tag: string | { id?: string; label?: string; value?: string }) =>
+    typeof tag === 'string' ? tag : tag?.value ?? tag?.label ?? '';
+
+  const tagKey = (tag: string | { id?: string; label?: string; value?: string }, index: number) =>
+    typeof tag === 'string' ? tag : tag?.id ?? tag?.value ?? String(index);
 
   const Content = (
     <>
@@ -102,8 +124,8 @@ const Article: NextPage<IProps> = ({ article }) => {
       </Modal>
 
       <Head>
-        <title>{(article?.title || t('unknownTitle')) + ' - ' + setting.systemTitle}</title>
-        <meta name="description" content={article?.summary || setting?.seoDesc} />
+        <title>{(article.title || t('unknownTitle')) + ' - ' + setting.systemTitle}</title>
+        <meta name="description" content={article.summary || setting?.seoDesc} />
         <meta name="keywords" content={keywords} />
       </Head>
 
@@ -113,8 +135,8 @@ const Article: NextPage<IProps> = ({ article }) => {
             <>
               <meta itemProp="url" content={url.resolve(setting.systemUrl, `/article/${article.id}`)} />
               <meta itemProp="headline" content={article.title} />
-              {article.tags ? (
-                <meta itemProp="keywords" content={article.tags.map((tag) => tag.label).join(' ')} />
+              {article.tags?.length ? (
+                <meta itemProp="keywords" content={article.tags.map(tagLabel).join(' ')} />
               ) : null}
               <meta itemProp="dataPublished" content={article.publishAt} />
               {article.cover ? <meta itemProp="image" content={resolveImageUrl(article.cover, 'large')} /> : null}
@@ -163,13 +185,13 @@ const Article: NextPage<IProps> = ({ article }) => {
 
             {article.tags && article.tags.length ? (
               <div className={style.tagsWrap}>
-                {article.tags.map((tag) => (
-                  <div className={style.tagWrapper} key={tag.id}>
+                {article.tags.map((tag, index) => (
+                  <div className={style.tagWrapper} key={tagKey(tag, index)}>
                     <div className={style.tag}>
-                      <Link href={'/tag/[tag]'} as={'/tag/' + tag.value} scroll={false}>
+                      <Link href={`/tag/${tagValue(tag)}`} scroll={false}>
                         <a>
                           <TagOutlined />
-                          <span>{tag.label}</span>
+                          <span>{tagLabel(tag)}</span>
                         </a>
                       </Link>
                     </div>
@@ -216,6 +238,16 @@ const Article: NextPage<IProps> = ({ article }) => {
       showComment={article.isCommentable}
     />
   );
+}
+
+const ArticlePage: NextPage<ArticlePageProps> = ({ article }) => {
+  const router = useRouter();
+
+  if (router.isFallback || !article?.id) {
+    return <ArticleLoading />;
+  }
+
+  return <ArticleView article={article} />;
 };
 
 export const getStaticPaths = () => themeOnDemandPaths;
@@ -234,4 +266,4 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
   }
 };
 
-export default Article;
+export default ArticlePage;

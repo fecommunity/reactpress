@@ -89,8 +89,8 @@ export function createThemeAxiosClient(options: CreateThemeAxiosClientOptions = 
       const payload = response.data;
       if (!payload?.success) {
         onError?.(payload?.msg || 'Request failed');
-      const message = payload?.msg || `Request failed (${payload?.statusCode ?? 'unknown'})`;
-      return Promise.reject(new Error(message));
+        const message = payload?.msg || `Request failed (${payload?.statusCode ?? 'unknown'})`;
+        return Promise.reject(new Error(message));
       }
       return payload.data as never;
     },

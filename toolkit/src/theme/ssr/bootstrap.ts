@@ -16,6 +16,7 @@ import { createThemeAxiosClient } from '../api/httpClient';
 import { createThemeProviders } from '../providers';
 import { resolveVisitorLocale } from '../visitor/visitorLocale';
 import { mergeVisitorI18n } from '../visitor/i18n';
+import { DEFAULT_VISITOR_LOCALES } from '../visitor/visitorLocale';
 import { withApiRetry } from './fetch';
 import { unwrapSetting } from './setting';
 
@@ -37,6 +38,28 @@ export interface FetchAppBootstrapOptions {
   api?: ThemeApi;
   manifest?: { id: string; options?: ThemeConfigurationSchema };
   ctx?: NextPreviewCtx;
+}
+
+/** Safe defaults when the API is unreachable during dev startup or SSR. */
+export function createDefaultAppBootstrap(
+  partial: Partial<AppBootstrapResult> = {},
+): AppBootstrapResult {
+  const i18n = mergeVisitorI18n({});
+  const locales = partial.locales ?? [...DEFAULT_VISITOR_LOCALES];
+  return {
+    setting: {},
+    tags: [],
+    categories: [],
+    pages: [],
+    i18n,
+    globalSetting: undefined,
+    siteConfig: {},
+    locales,
+    initialLocale: partial.initialLocale ?? locales[0] ?? 'zh',
+    colorPrimary: '#f44336',
+    themeMods: {},
+    ...partial,
+  };
 }
 
 /**

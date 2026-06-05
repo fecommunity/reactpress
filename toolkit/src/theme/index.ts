@@ -21,6 +21,7 @@ export {
 } from './content/excerpt';
 export type { AppBootstrapResult, FetchAppBootstrapOptions } from './ssr/bootstrap';
 export {
+  createDefaultAppBootstrap,
   fetchAppBootstrap,
   fetchArchives,
   fetchCmsPage,
