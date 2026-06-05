@@ -25,6 +25,7 @@ type BtnProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   loading?: boolean;
   htmlType?: 'button' | 'submit' | 'reset';
   icon?: ReactNode;
+  iconPosition?: 'start' | 'end';
   block?: boolean;
 };
 
@@ -36,6 +37,7 @@ export function Button({
   className,
   children,
   icon,
+  iconPosition = 'start',
   block,
   disabled,
   ...rest
@@ -57,8 +59,9 @@ export function Button({
       )}
       {...rest}
     >
-      {icon}
+      {iconPosition !== 'end' ? icon : null}
       {children}
+      {iconPosition === 'end' ? icon : null}
     </button>
   );
 }
@@ -224,6 +227,7 @@ export function Alert({
   type = 'info',
   icon,
   className,
+  style,
   banner,
   closeIcon,
 }: {
@@ -231,13 +235,18 @@ export function Alert({
   type?: 'info' | 'success' | 'warning' | 'error';
   icon?: ReactNode;
   className?: string;
+  style?: React.CSSProperties;
   banner?: boolean;
   closeIcon?: boolean;
 }) {
   const [closed, setClosed] = useState(false);
   if (closed) return null;
   return (
-    <div className={cls(s.alert, type === 'info' && s.alertInfo, banner && 'w-full', className)} role="alert">
+    <div
+      className={cls(s.alert, type === 'info' && s.alertInfo, banner && 'w-full', className)}
+      style={style}
+      role="alert"
+    >
       {icon}
       <div className="flex-1">{message}</div>
       {closeIcon ? (
