@@ -278,7 +278,7 @@ export default function ArticleRecommend({
       body = (
         <ArticleList
           articles={articles as Parameters<typeof ArticleList>[0]['articles']}
-          density="compact"
+          density="feed"
         />
       );
     }

@@ -2506,10 +2506,9 @@ html[data-rp-loading]::before {
 }
 
 .rp-article-recommend-panel {
-  overflow: hidden;
-  border-radius: 0.5rem;
-  background: var(--bg-box);
-  border: 1px solid color-mix(in srgb, var(--border-color) 55%, transparent);
+  overflow: visible;
+  background: transparent;
+  border: 0;
 }
 
 .rp-article-recommend-panel .rp-article-list {
@@ -3992,19 +3991,16 @@ select:focus-visible {
 }
 
 .rp-nav-detail__recommend {
-  overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--border-color) 50%, transparent);
-  border-radius: 0.625rem;
-  background: var(--bg-box);
-  box-shadow: 0 1px 3px color-mix(in srgb, var(--main-text-color) 4%, transparent);
-  padding: 1rem 1.25rem;
+  margin-top: 0.5rem;
+  overflow: visible;
 }
 
-.rp-nav-detail__recommend-title {
-  margin: 0 0 0.75rem;
-  font-size: 0.9375rem;
-  font-weight: 600;
-  color: var(--main-text-color);
+.rp-nav-detail__recommend .rp-section-heading {
+  margin-bottom: 1rem;
+}
+
+.rp-nav-detail__recommend .rp-article-list {
+  box-shadow: none;
 }
 
 .rp-comment-editor .rp-comment-lead {

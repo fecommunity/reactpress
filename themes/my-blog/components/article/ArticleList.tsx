@@ -147,7 +147,7 @@ export default function ArticleList({ articles = [], density = 'feed' }: Article
   const animateFromIndex = animatedCountRef.current;
 
   return (
-    <div className={`rp-article-list rp-home-stagger flex w-full flex-col ${compact ? 'gap-2' : 'gap-4'}`}>
+    <div className="rp-article-list rp-home-stagger flex w-full flex-col gap-4">
       {articles.length ? (
         articles.map((article, index) => (
           <ArticleCard

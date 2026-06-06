@@ -3,6 +3,7 @@
 import ArticleRecommend from '@/components/article/ArticleRecommend';
 import DoubleColumnLayout from '@/components/layout/DoubleColumnLayout';
 import Link from '@/components/shared/Link';
+import SectionHeading from '@/components/shared/SectionHeading';
 import { ChevronLeftIcon, ChevronRightIcon } from '@/lib/utils/icons';
 import { useLocale } from '@fecommunity/reactpress-toolkit/ui';
 import { useSiteCatalog } from '@fecommunity/reactpress-toolkit/theme';
@@ -164,7 +165,7 @@ export default function NavDetailClient({ siteKey, navConfig }: NavDetailClientP
           </article>
 
           <section className="rp-nav-detail__recommend">
-            <h2 className="rp-nav-detail__recommend-title">{t('recommendToReading')}</h2>
+            <SectionHeading>{t('recommendToReading')}</SectionHeading>
             <ArticleRecommend articleId={article.id} needTitle={false} />
           </section>
         </div>
