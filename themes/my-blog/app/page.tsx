@@ -1,5 +1,5 @@
 import HomeClient from '@/components/views/HomeClient';
-import { buildLocalizedListPageMetadata } from '@/lib/reactpress/siteMetadata';
+import { buildHomePageMetadata } from '@/lib/reactpress/siteMetadata';
 import {
   fetchHomePageProps,
   resolveImageUrl,
@@ -17,7 +17,7 @@ export async function generateMetadata(): Promise<Metadata> {
     const data = await withApiRetry(() => fetchHomePageProps(themeApi));
     const lcpCover = data.recommendedArticles.find((article) => article.cover)?.cover;
     const imageUrl = lcpCover ? resolveImageUrl(lcpCover, 'medium') : undefined;
-    const base = await buildLocalizedListPageMetadata('home');
+    const base = await buildHomePageMetadata();
     if (!imageUrl) return base;
     return {
       ...base,
@@ -25,9 +25,14 @@ export async function generateMetadata(): Promise<Metadata> {
         ...base.openGraph,
         images: [{ url: imageUrl }],
       },
+      twitter: {
+        ...base.twitter,
+        card: 'summary_large_image',
+        images: [imageUrl],
+      },
     };
   } catch {
-    return buildLocalizedListPageMetadata('home');
+    return buildHomePageMetadata();
   }
 }
 

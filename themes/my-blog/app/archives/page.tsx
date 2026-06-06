@@ -11,7 +11,7 @@ import type { Metadata } from 'next';
 export const revalidate = 60;
 
 export async function generateMetadata(): Promise<Metadata> {
-  return buildLocalizedListPageMetadata('archives');
+  return buildLocalizedListPageMetadata('archives', undefined, { path: '/archives' });
 }
 
 export default async function ArchivesPage() {

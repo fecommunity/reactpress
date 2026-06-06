@@ -26,9 +26,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   try {
     const data = await withApiRetry(() => fetchTagArchivePageProps(themeApi, tagValue));
     const label = data.tag?.label || tagValue;
-    return buildLocalizedListPageMetadata('pageTitleTag', { label });
+    return buildLocalizedListPageMetadata('pageTitleTag', { label }, {
+      path: `/tag/${encodeURIComponent(tagValue)}`,
+    });
   } catch {
-    return buildLocalizedListPageMetadata('pageTitleTag', { label: tagValue });
+    return buildLocalizedListPageMetadata('pageTitleTag', { label: tagValue }, {
+      path: `/tag/${encodeURIComponent(tagValue)}`,
+    });
   }
 }
 

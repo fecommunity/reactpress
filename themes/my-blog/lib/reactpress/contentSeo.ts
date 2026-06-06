@@ -1,6 +1,7 @@
-import { getPageTitle } from '@fecommunity/reactpress-toolkit/theme/server';
 import type { IArticle, IKnowledge, IPage } from '@fecommunity/reactpress-toolkit/types';
 import type { Metadata } from 'next';
+
+import { buildPageMetadata, DEFAULT_OG_IMAGE } from './seoMetadata';
 
 export type SiteSeoContext = {
   siteName?: string;
@@ -39,27 +40,37 @@ function buildKeywords(
     .join(',');
 }
 
+function resolveCmsPagePath(page: IPage): string {
+  const customPath = page.path?.trim();
+  if (customPath) {
+    return customPath.startsWith('/') ? customPath : `/${customPath}`;
+  }
+  return `/page/${page.id}`;
+}
+
 export function buildArticleMetadata(
   article: IArticle,
   site: SiteSeoContext,
+  imageUrl?: string,
 ): Metadata {
-  const siteTitle = site.siteName ?? 'Blog';
+  const siteName = site.siteName ?? 'Blog';
   const description = article.summary || site.seoDesc || site.siteDescription;
   const keywords = buildKeywords(article.title, article.tags, site.seoKeyword);
+  const images = imageUrl ? [imageUrl] : [DEFAULT_OG_IMAGE];
 
-  return {
-    title: getPageTitle(article.title, { systemTitle: siteTitle }),
+  return buildPageMetadata({
+    title: article.title,
     description,
     keywords,
-    openGraph: {
-      title: article.title,
-      description,
-      type: 'article',
-      publishedTime: article.publishAt,
-      modifiedTime: article.updateAt,
-      tags: (article.tags ?? []).map(tagLabel).filter(Boolean),
-    },
-  };
+    path: `/article/${article.id}`,
+    siteUrl: site.siteUrl,
+    siteName,
+    ogType: 'article',
+    images,
+    publishedTime: article.publishAt,
+    modifiedTime: article.updateAt,
+    tags: (article.tags ?? []).map(tagLabel).filter(Boolean),
+  });
 }
 
 export function buildKnowledgeChapterMetadata(
@@ -67,35 +78,32 @@ export function buildKnowledgeChapterMetadata(
   book: IKnowledge,
   site: SiteSeoContext,
 ): Metadata {
-  const siteTitle = site.siteName ?? 'Blog';
   const description = chapter.summary || book.summary || site.seoDesc || site.siteDescription;
 
-  return {
-    title: getPageTitle(`${chapter.title} - ${book.title}`, { systemTitle: siteTitle }),
+  return buildPageMetadata({
+    title: `${chapter.title} - ${book.title}`,
     description,
-    openGraph: {
-      title: chapter.title,
-      description,
-      type: 'article',
-      publishedTime: chapter.publishAt,
-      modifiedTime: chapter.updateAt,
-    },
-  };
+    path: `/knowledge/${book.id}/${chapter.id}`,
+    siteUrl: site.siteUrl,
+    siteName: site.siteName ?? 'Blog',
+    ogType: 'article',
+    images: [DEFAULT_OG_IMAGE],
+    publishedTime: chapter.publishAt,
+    modifiedTime: chapter.updateAt,
+  });
 }
 
 export function buildCmsPageMetadata(page: IPage, site: SiteSeoContext): Metadata {
-  const siteTitle = site.siteName ?? 'Blog';
   const description = site.seoDesc || site.siteDescription;
 
-  return {
-    title: getPageTitle(page.name, { systemTitle: siteTitle }),
+  return buildPageMetadata({
+    title: page.name,
     description,
-    openGraph: {
-      title: page.name,
-      description,
-      type: 'website',
-    },
-  };
+    path: resolveCmsPagePath(page),
+    siteUrl: site.siteUrl,
+    siteName: site.siteName ?? 'Blog',
+    images: [DEFAULT_OG_IMAGE],
+  });
 }
 
 export function buildArticleJsonLd(

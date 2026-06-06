@@ -20,12 +20,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   try {
     const data = await withApiRetry(() => fetchKnowledgeBookPageProps(themeApi, pId));
     if (data.book?.title) {
-      return buildListPageMetadata(data.book.title, data.book.summary);
+      return buildListPageMetadata(data.book.title, data.book.summary, `/knowledge/${pId}`);
     }
   } catch {
     // fall through
   }
-  return buildLocalizedListPageMetadata('knowledge');
+  return buildLocalizedListPageMetadata('knowledge', undefined, { path: '/knowledge' });
 }
 
 export default async function KnowledgeBookPage({ params }: PageProps) {

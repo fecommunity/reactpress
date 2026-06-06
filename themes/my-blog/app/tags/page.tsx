@@ -7,7 +7,7 @@ import type { Metadata } from 'next';
 export const revalidate = 60;
 
 export async function generateMetadata(): Promise<Metadata> {
-  return buildLocalizedListPageMetadata('tagTitle');
+  return buildLocalizedListPageMetadata('tagTitle', undefined, { path: '/tags' });
 }
 
 export default async function TagsPage() {

@@ -1,9 +1,10 @@
 import LoginClient from '@/components/views/LoginClient';
-import { buildLocalizedListPageMetadata } from '@/lib/reactpress/siteMetadata';
+import { buildNoIndexMetadata } from '@/lib/reactpress/siteMetadata';
+import { tServer } from '@/lib/reactpress/serverLocale';
 import type { Metadata } from 'next';
 
 export async function generateMetadata(): Promise<Metadata> {
-  return buildLocalizedListPageMetadata('pageTitleLogin');
+  return buildNoIndexMetadata(await tServer('pageTitleLogin'), '/login');
 }
 
 interface PageProps {

@@ -52,17 +52,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     }
 
     const site = parseSiteSeoContext(settingRow, siteMeta);
-    const metadata = buildArticleMetadata(article, site);
     const imageUrl = resolveAbsoluteImageUrl(article.cover, site.siteUrl);
-
-    if (imageUrl) {
-      metadata.openGraph = {
-        ...metadata.openGraph,
-        images: [{ url: imageUrl }],
-      };
-    }
-
-    return metadata;
+    return buildArticleMetadata(article, site, imageUrl);
   } catch (error) {
     console.error('[my-blog] article metadata fetch failed', error);
     return {};

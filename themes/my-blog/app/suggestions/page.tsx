@@ -1,5 +1,6 @@
 import CmsPageClient from '@/components/article/CmsPageClient';
 import { buildCmsPageMetadata, parseSiteSeoContext } from '@/lib/reactpress/contentSeo';
+import { buildListPageMetadata } from '@/lib/reactpress/siteMetadata';
 import { tServer } from '@/lib/reactpress/serverLocale';
 import {
   fetchCmsPageProps,
@@ -26,7 +27,7 @@ export async function generateMetadata(): Promise<Metadata> {
   } catch {
     // fall through
   }
-  return { title: await tServer('suggestions') };
+  return buildListPageMetadata(await tServer('suggestions'), undefined, '/suggestions');
 }
 
 export default async function SuggestionsPage() {

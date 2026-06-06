@@ -28,9 +28,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       fetchCategoryArchivePageProps(themeApi, categoryValue),
     );
     const label = data.category?.label || categoryValue;
-    return buildLocalizedListPageMetadata('pageTitleCategory', { label });
+    return buildLocalizedListPageMetadata('pageTitleCategory', { label }, {
+      path: `/category/${encodeURIComponent(categoryValue)}`,
+    });
   } catch {
-    return buildLocalizedListPageMetadata('pageTitleCategory', { label: categoryValue });
+    return buildLocalizedListPageMetadata('pageTitleCategory', { label: categoryValue }, {
+      path: `/category/${encodeURIComponent(categoryValue)}`,
+    });
   }
 }
 

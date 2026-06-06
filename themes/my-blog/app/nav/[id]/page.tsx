@@ -15,7 +15,9 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id } = await params;
   const siteKey = id.split('.')[0];
-  return buildLocalizedListPageMetadata('pageTitleNavDetail', { label: siteKey });
+  return buildLocalizedListPageMetadata('pageTitleNavDetail', { label: siteKey }, {
+    path: `/nav/${encodeURIComponent(id)}`,
+  });
 }
 
 export default async function NavDetailPage({ params }: PageProps) {
