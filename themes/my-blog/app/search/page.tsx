@@ -1,5 +1,11 @@
 import SearchClient from './SearchClient';
+import { buildListPageMetadata } from '@/src/reactpress/siteMetadata';
 import { fetchSearchPageProps, themeApi } from '@fecommunity/reactpress-toolkit/theme/server';
+import type { Metadata } from 'next';
+
+export async function generateMetadata(): Promise<Metadata> {
+  return buildListPageMetadata('搜索');
+}
 
 interface PageProps {
   searchParams: Promise<{ keyword?: string }>;

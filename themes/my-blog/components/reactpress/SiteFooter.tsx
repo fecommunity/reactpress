@@ -23,7 +23,7 @@ export default function SiteFooter() {
           ) : null}
           {setting?.systemFooterInfo ? (
             <div
-              className="text-sm leading-relaxed text-[var(--second-text-color)] [&_a]:text-[var(--primary-color)]"
+              className="rp-rich-text text-sm leading-relaxed text-[var(--second-text-color)]"
               dangerouslySetInnerHTML={{ __html: setting.systemFooterInfo }}
             />
           ) : (
@@ -54,7 +54,7 @@ export default function SiteFooter() {
         </div>
       </div>
       <div className="mt-6 text-center text-xs text-[var(--second-text-color)]">
-        <Link href="/" className="text-[var(--second-text-color)] no-underline hover:text-[var(--primary-color)]">
+        <Link href="/" className="rp-inline-link rp-inline-link--muted">
           {siteTitle}
         </Link>
         {' · '}

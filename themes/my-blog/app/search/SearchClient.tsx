@@ -48,10 +48,7 @@ export default function SearchClient({
     <DoubleColumnLayout
       leftNode={
         <>
-          <header
-            className="mb-4 min-w-0 rounded-lg bg-[var(--bg-box)] p-5 shadow-[var(--box-shadow)] md:p-6"
-            role="search"
-          >
+          <search className="mb-4 block min-w-0 rounded-lg bg-[var(--bg-box)] p-5 shadow-[var(--box-shadow)] md:p-6">
             <h1 className="m-0 text-xl font-semibold text-[var(--main-text-color)]">{t('searchArticle')}</h1>
             <div className="mt-3 flex min-w-0 gap-0">
               <input
@@ -67,12 +64,12 @@ export default function SearchClient({
               <button
                 type="button"
                 onClick={() => runSearch(keyword)}
-                className="rounded-r-lg bg-[var(--primary-color)] px-5 py-3 text-[15px] font-medium text-white"
+                className="rp-primary-button rounded-r-lg px-5 py-3 text-[15px] font-medium"
               >
                 {t('search')}
               </button>
             </div>
-          </header>
+          </search>
           {initialKeyword ? (
             <p className="mb-4 text-sm text-[var(--second-text-color)]">
               {t('totalSearch')}{' '}
@@ -94,7 +91,7 @@ export default function SearchClient({
           </main>
         </>
       }
-      rightNode={<HomeSidebar showTags showCategories deferRecommend={false} />}
+      rightNode={<HomeSidebar showTags showCategories deferRecommend />}
     />
   );
 }

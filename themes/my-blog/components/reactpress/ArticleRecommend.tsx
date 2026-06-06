@@ -58,13 +58,19 @@ export default function ArticleRecommend({
     let cancelled = false;
 
     const run = () => {
-      ArticleProvider.getRecommend(articleId).then((res) => {
-        if (cancelled) return;
-        const next = slimArticlesForList(res.slice(0, 6));
-        next.sort((a, b) => b.views - a.views);
-        setArticles(next);
-        setFetchedKey(requestKey);
-      });
+      ArticleProvider.getRecommend(articleId)
+        .then((res) => {
+          if (cancelled) return;
+          const next = slimArticlesForList(res.slice(0, 6));
+          next.sort((a, b) => b.views - a.views);
+          setArticles(next);
+          setFetchedKey(requestKey);
+        })
+        .catch(() => {
+          if (cancelled) return;
+          setArticles([]);
+          setFetchedKey(requestKey);
+        });
     };
 
     if (deferFetch && typeof window !== 'undefined' && 'requestIdleCallback' in window) {

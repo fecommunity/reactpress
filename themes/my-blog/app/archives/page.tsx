@@ -1,12 +1,18 @@
 import ArchivesClient from './ArchivesClient';
+import { buildListPageMetadata } from '@/src/reactpress/siteMetadata';
 import {
   fetchArchivesPageProps,
   themeApi,
   withApiRetry,
   type ArchiveTree,
 } from '@fecommunity/reactpress-toolkit/theme/server';
+import type { Metadata } from 'next';
 
 export const revalidate = 60;
+
+export async function generateMetadata(): Promise<Metadata> {
+  return buildListPageMetadata('归档');
+}
 
 export default async function ArchivesPage() {
   let articles: ArchiveTree = {};

@@ -4,6 +4,7 @@ import {
   buildArticleMetadata,
   parseSiteSeoContext,
 } from '@/src/reactpress/contentSeo';
+import { generateArticleStaticParams } from '@/src/reactpress/staticParams';
 import {
   fetchArticleDetailProps,
   fetchSiteMeta,
@@ -16,6 +17,10 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 export const revalidate = 60;
+
+export async function generateStaticParams() {
+  return generateArticleStaticParams();
+}
 
 interface PageProps {
   params: Promise<{ id: string }>;

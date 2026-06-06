@@ -150,7 +150,7 @@ export default function NavAdvanceSearch({ searchCategories }: NavAdvanceSearchP
             }}
             className={`rounded-full px-4 py-1.5 text-sm transition-colors ${
               category === item.key
-                ? 'bg-[var(--primary-color)] text-white'
+                ? 'rp-primary-button'
                 : 'bg-[var(--bg-second)] text-[var(--main-text-color)] hover:text-[var(--primary-color)]'
             }`}
           >
@@ -220,7 +220,7 @@ export default function NavAdvanceSearch({ searchCategories }: NavAdvanceSearchP
                       </div>
                       {item.description ? (
                         <p
-                          className="m-0 mt-1 line-clamp-1 text-xs text-[var(--second-text-color)]"
+                          className="rp-rich-text m-0 mt-1 line-clamp-1 text-xs text-[var(--second-text-color)]"
                           dangerouslySetInnerHTML={{ __html: item.description }}
                         />
                       ) : null}

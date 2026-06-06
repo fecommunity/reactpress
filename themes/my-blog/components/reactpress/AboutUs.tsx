@@ -130,7 +130,7 @@ export default function AboutUs({ variant = 'default' }: AboutUsProps) {
         ) : null}
         {setting?.systemFooterInfo ? (
           <div
-            className="leading-relaxed [&_a]:text-[var(--primary-color)]"
+            className="rp-rich-text leading-relaxed"
             dangerouslySetInnerHTML={{ __html: setting.systemFooterInfo }}
           />
         ) : (

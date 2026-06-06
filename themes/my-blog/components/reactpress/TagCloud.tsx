@@ -6,9 +6,10 @@ import { type ReactNode, useEffect, useRef } from 'react';
 interface TagCloudProps {
   children: ReactNode;
   className?: string;
+  'aria-hidden'?: boolean;
 }
 
-export default function TagCloud({ children, className = '' }: TagCloudProps) {
+export default function TagCloud({ children, className = '', ...rest }: TagCloudProps) {
   const ref = useRef<HTMLDivElement>(null);
   const engineRef = useRef<TagCloudEngine | null>(null);
 
@@ -36,7 +37,7 @@ export default function TagCloud({ children, className = '' }: TagCloudProps) {
   }, []);
 
   return (
-    <div ref={ref} className={`rp-tag-cloud ${className}`.trim()}>
+    <div ref={ref} className={`rp-tag-cloud ${className}`.trim()} {...rest}>
       {children}
     </div>
   );

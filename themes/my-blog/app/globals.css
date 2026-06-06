@@ -12,6 +12,8 @@
 /* ReactPress theme variables (aligned with twentytwentyfive) */
 body {
   --primary-color: #f44336;
+  --primary-button-bg: #c62828;
+  --primary-button-fg: #ffffff;
   --link-color: #4299e1;
   --blink-bg-color: rgba(255, 255, 255, 0.5);
   --border-radius: 8px;
@@ -33,6 +35,10 @@ body {
 }
 
 body.dark {
+  --primary-color: #ff6b61;
+  --primary-button-bg: #c62828;
+  --primary-button-fg: #ffffff;
+  --link-color: #69b1ff;
   --blink-bg-color: rgba(0, 0, 0, 0);
   --bg: #1e2a36;
   --bg-second: #1a242f;
@@ -303,15 +309,87 @@ input:-webkit-autofill:focus {
   margin-bottom: 32px;
 }
 
-.markdown a {
-  text-decoration: none;
+.markdown a,
+.rp-rich-text a {
   color: var(--link-color);
-  border-bottom: 1px solid var(--border-color);
+  text-decoration: none;
+  border-bottom: 1px solid color-mix(in srgb, var(--link-color) 35%, transparent);
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+/* CMS / 后台富文本常带内联 color，统一覆盖为主题链接色 */
+.rp-rich-text a[href] {
+  color: var(--link-color) !important;
+  text-decoration: none !important;
 }
 
 .markdown a:active,
-.markdown a:hover {
+.markdown a:hover,
+.rp-rich-text a:active,
+.rp-rich-text a:hover {
   color: var(--primary-color);
+  border-bottom-color: color-mix(in srgb, var(--primary-color) 45%, transparent);
+}
+
+.rp-rich-text a[href]:hover {
+  color: var(--primary-color) !important;
+}
+
+.rp-inline-link {
+  color: var(--link-color);
+  text-decoration: none;
+  border-bottom: 1px solid color-mix(in srgb, var(--link-color) 35%, transparent);
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.rp-inline-link:hover {
+  color: var(--primary-color);
+  border-bottom-color: color-mix(in srgb, var(--primary-color) 45%, transparent);
+}
+
+.rp-inline-link--muted {
+  color: var(--second-text-color);
+  border-bottom-color: color-mix(in srgb, var(--second-text-color) 30%, transparent);
+}
+
+.rp-inline-link--muted:hover {
+  color: var(--primary-color);
+  border-bottom-color: color-mix(in srgb, var(--primary-color) 45%, transparent);
+}
+
+.rp-article-meta-footer {
+  margin-top: 2rem;
+  padding-top: 1.25rem;
+  border-top: 1px dashed var(--border-color);
+  text-align: center;
+  font-size: 0.75rem;
+  line-height: 1.75;
+  color: var(--second-text-color);
+}
+
+.rp-article-meta-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem 0.5rem;
+  margin: 0 0 1.25rem;
+}
+
+.rp-article-meta-item {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.rp-article-meta-sep {
+  color: var(--disable-text-color);
+  user-select: none;
 }
 
 .markdown blockquote {
@@ -867,6 +945,32 @@ body.dark {
   animation: recommend-shimmer 1.4s ease-in-out infinite;
 }
 
+.rp-primary-button {
+  background-color: var(--primary-button-bg);
+  color: var(--primary-button-fg);
+}
+
+.rp-notification-close {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.5rem;
+  min-height: 1.5rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-size: inherit;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.rp-notification-close::before {
+  content: '';
+  position: absolute;
+  inset: -10px;
+}
+
 /* 3D tag cloud — ported from twentytwentyfive TagCloud */
 .rp-tag-cloud {
   position: relative;
@@ -950,6 +1054,27 @@ body.dark {
   display: inline-block;
   width: 100%;
   height: auto;
+}
+
+.rp-article-tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.rp-article-tag {
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.rp-article-tag:hover {
+  color: var(--primary-button-fg);
+  background-color: var(--primary-button-bg);
+  border-color: var(--primary-button-bg);
 }
 
 .rp-article-tag:hover svg {

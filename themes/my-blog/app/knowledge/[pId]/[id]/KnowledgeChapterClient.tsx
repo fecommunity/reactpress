@@ -2,6 +2,7 @@
 
 import CommentSection from '@/components/reactpress/CommentSection';
 import DoubleColumnLayout from '@/components/reactpress/DoubleColumnLayout';
+import ArticleCopyrightBar from '@/components/reactpress/ArticleCopyrightBar';
 import ReadingContent from '@/components/reactpress/ReadingContent';
 import Link from '@/components/Link';
 import { KnowledgeProvider } from '@/src/providers';
@@ -81,18 +82,7 @@ export default function KnowledgeChapterClient({ pId, id, book, chapter }: Knowl
                   </p>
                 </div>
                 <ReadingContent content={chapter.html || chapter.content} />
-                <div className="mt-8 border-t border-[var(--border-color)] pt-4 text-xs text-[var(--second-text-color)]">
-                  {t('publishAt')}
-                  <LocaleTime date={chapter.publishAt} /> | {t('copyrightInfo')}：
-                  <a
-                    href="https://creativecommons.org/licenses/by-nc/3.0/cn/deed.zh"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-[var(--primary-color)]"
-                  >
-                    {t('copyrightContent')}
-                  </a>
-                </div>
+                <ArticleCopyrightBar publishAt={chapter.publishAt} />
                 <div className="mt-6 flex flex-wrap gap-4">
                   {prev ? (
                     <Link

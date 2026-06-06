@@ -21,7 +21,11 @@ module.exports = {
   poweredByHeader: false,
   reactStrictMode: true,
   trailingSlash: true,
+  skipTrailingSlashRedirect: true,
   transpilePackages: ['@fecommunity/reactpress-toolkit'],
+  experimental: {
+    optimizePackageImports: ['@fecommunity/reactpress-toolkit', '@fecommunity/reactpress-toolkit/ui'],
+  },
   eslint: { ignoreDuringBuilds: true },
   typescript: { ignoreBuildErrors: true },
   env: {
@@ -57,6 +61,12 @@ module.exports = {
   },
   async headers() {
     return [
+      {
+        source: '/static/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+        ],
+      },
       {
         source: '/:path*',
         headers: [

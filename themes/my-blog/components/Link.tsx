@@ -1,4 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-has-content */
+import NextLink from 'next/link';
 import type { AnchorHTMLAttributes } from 'react';
 
 type LinkProps = AnchorHTMLAttributes<HTMLAnchorElement> & {
@@ -6,10 +7,18 @@ type LinkProps = AnchorHTMLAttributes<HTMLAnchorElement> & {
 };
 
 const CustomLink = ({ href, ...rest }: LinkProps) => {
-  const isInternalLink = href && href.startsWith('/');
-  const isAnchorLink = href && href.startsWith('#');
+  if (!href) {
+    return <a className="break-words" {...rest} />;
+  }
 
-  if (isInternalLink || isAnchorLink) {
+  const isInternalLink = href.startsWith('/');
+  const isAnchorLink = href.startsWith('#');
+
+  if (isInternalLink) {
+    return <NextLink href={href} className="break-words" {...rest} />;
+  }
+
+  if (isAnchorLink) {
     return <a className="break-words" href={href} {...rest} />;
   }
 

@@ -2,7 +2,7 @@
 
 import Link from '@/components/Link';
 import TagCloud from '@/components/reactpress/TagCloud';
-import { getColorFromNumber } from '@/src/utils/colors';
+import { getColorFromNumber, getTagStyle } from '@/src/utils/colors';
 import { TagIcon } from '@/src/utils/icons';
 import { useLocale } from '@fecommunity/reactpress-toolkit/ui';
 
@@ -36,18 +36,30 @@ export default function TagsWidget({
       ) : null}
 
       {animationMode ? (
-        <TagCloud className="mx-auto my-2">
-          {tags.map((tag, index) => (
-            <a
-              key={tag.id}
-              href={`/tag/${tag.value}`}
-              aria-label={tag.label}
-              style={{ backgroundColor: getColorFromNumber(index) }}
-            >
-              {tag.label}
-            </a>
-          ))}
-        </TagCloud>
+        <>
+          <TagCloud className="mx-auto my-2" aria-hidden>
+            {tags.map((tag, index) => (
+              <a
+                key={tag.id}
+                href={`/tag/${tag.value}`}
+                tabIndex={-1}
+                aria-hidden
+                style={getTagStyle(getColorFromNumber(index))}
+              >
+                {tag.label}
+              </a>
+            ))}
+          </TagCloud>
+          <nav aria-label={t('tagTitle')} className="sr-only">
+            <ul>
+              {tags.map((tag) => (
+                <li key={tag.id}>
+                  <Link href={`/tag/${tag.value}`}>{tag.label}</Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </>
       ) : (
         <ul className="m-0 flex list-none flex-wrap gap-2 p-4">
           {tags.map((tag, index) => (
@@ -55,8 +67,8 @@ export default function TagsWidget({
               <Link
                 href={`/tag/${tag.value}`}
                 aria-label={tag.label}
-                className="inline-block rounded px-2 py-1 text-sm text-white no-underline transition-all duration-200 hover:scale-105 hover:opacity-90 hover:shadow-sm"
-                style={{ backgroundColor: getColorFromNumber(index) }}
+                className="inline-block rounded px-2 py-1 text-sm no-underline transition-all duration-200 hover:scale-105 hover:opacity-90 hover:shadow-sm"
+                style={getTagStyle(getColorFromNumber(index))}
               >
                 {tag.label}
                 {typeof tag.articleCount === 'number' ? ` [${tag.articleCount}]` : ''}

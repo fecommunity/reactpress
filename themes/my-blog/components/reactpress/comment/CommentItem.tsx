@@ -46,7 +46,10 @@ export default function CommentItem({
         </header>
 
         <main style={{ padding: `8px 0 8px ${paddingHorizontal}px` }}>
-          <div dangerouslySetInnerHTML={{ __html: comment.html || comment.content }} />
+          <div
+            className="rp-rich-text"
+            dangerouslySetInnerHTML={{ __html: comment.html || comment.content }}
+          />
         </main>
 
         <footer style={{ paddingLeft: `${paddingHorizontal}px` }}>

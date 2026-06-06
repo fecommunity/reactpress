@@ -1,5 +1,6 @@
 'use client';
 
+import ArticleCopyrightBar from '@/components/reactpress/ArticleCopyrightBar';
 import ArticleRecommend from '@/components/reactpress/ArticleRecommend';
 import ArticleTocPanel from '@/components/reactpress/ArticleTocPanel';
 import CommentSection from '@/components/reactpress/CommentSection';
@@ -134,27 +135,16 @@ export default function ArticleViewClient({ article: initialArticle }: ArticleVi
 
         <ReadingContent content={article.html} />
 
-        <div className="rp-article-footer mt-8 border-t border-dashed border-[var(--border-color)] pt-5 text-[var(--second-text-color)]">
-          <div className="rp-article-copyright mb-5 text-center text-xs leading-relaxed">
-            {t('publishAt')}
-            <LocaleTime date={article.publishAt} locale={locale} /> | {t('copyrightInfo')}：
-            <a
-              href="https://creativecommons.org/licenses/by-nc/3.0/cn/deed.zh"
-              target="_blank"
-              rel="noreferrer"
-              className="text-[var(--primary-color)]"
-            >
-              {t('copyrightContent')}
-            </a>
-          </div>
+        <div className="rp-article-footer text-[var(--second-text-color)]">
+          <ArticleCopyrightBar publishAt={article.publishAt} />
 
           {article.tags?.length ? (
-            <div className="rp-article-tags -mx-2 text-center text-xs">
+            <div className="rp-article-tags text-xs">
               {article.tags.map((tag, index) => (
-                <span key={tagValue(tag) || index} className="inline-block px-2">
+                <span key={tagValue(tag) || index}>
                   <Link
                     href={`/tag/${tagValue(tag)}`}
-                    className="rp-article-tag inline-flex items-center border border-[var(--border-color)] bg-[var(--bg-second)] px-2 py-1 text-sm text-[var(--second-text-color)] no-underline hover:border-[var(--primary-color)] hover:bg-[var(--primary-color)] hover:text-white"
+                    className="rp-article-tag inline-flex items-center rounded border border-[var(--border-color)] bg-[var(--bg-second)] px-2.5 py-1 text-sm text-[var(--second-text-color)] no-underline"
                   >
                     <TagIcon size={14} />
                     <span className="ml-2">{tagLabel(tag)}</span>

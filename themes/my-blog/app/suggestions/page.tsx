@@ -1,8 +1,32 @@
 import CmsPageClient from '@/components/reactpress/CmsPageClient';
-import { fetchCmsPageProps, themeApi, withApiRetry } from '@fecommunity/reactpress-toolkit/theme/server';
+import { buildCmsPageMetadata, parseSiteSeoContext } from '@/src/reactpress/contentSeo';
+import {
+  fetchCmsPageProps,
+  fetchSiteMeta,
+  themeApi,
+  unwrapSetting,
+  withApiRetry,
+} from '@fecommunity/reactpress-toolkit/theme/server';
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 export const revalidate = 60;
+
+export async function generateMetadata(): Promise<Metadata> {
+  try {
+    const [{ page }, siteMeta, settingRow] = await Promise.all([
+      withApiRetry(() => fetchCmsPageProps(themeApi, 'suggestions')),
+      withApiRetry(() => fetchSiteMeta(themeApi)),
+      withApiRetry(() => themeApi.setting.findAll()).then(unwrapSetting),
+    ]);
+    if (page?.id && page.status === 'publish') {
+      return buildCmsPageMetadata(page, parseSiteSeoContext(settingRow, siteMeta));
+    }
+  } catch {
+    // fall through
+  }
+  return { title: '建议' };
+}
 
 export default async function SuggestionsPage() {
   try {

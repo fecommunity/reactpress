@@ -6,8 +6,21 @@ import PageContainer from '@/components/reactpress/PageContainer';
 import { loadAppBootstrap } from '@/src/reactpress/bootstrap';
 import { buildMyBlogAppearanceCss } from '@/src/reactpress/appearance';
 import { ReactPressAppProviders } from '@/src/reactpress/providers';
+import { buildRootMetadata } from '@/src/reactpress/siteMetadata';
+import { colorModeInitScript } from '@fecommunity/reactpress-toolkit/theme/server';
+import type { Metadata, Viewport } from 'next';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
+
+export async function generateMetadata(): Promise<Metadata> {
+  return buildRootMetadata();
+}
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
+};
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const bootstrap = await loadAppBootstrap('/');
@@ -17,6 +30,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang={bootstrap.initialLocale} suppressHydrationWarning>
       <head>
+        <link rel="preconnect" href="https://api.gaoredu.com" crossOrigin="anonymous" />
         <link
           rel="icon"
           type="image/png"
@@ -24,7 +38,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           href={`${basePath}/static/favicons/favicon-32x32.png`}
         />
       </head>
-      <body className="bg-[var(--bg-body)] text-[var(--main-text-color)] antialiased">
+      <body className="bg-[var(--bg-body)] text-[var(--main-text-color)] antialiased" suppressHydrationWarning>
+        <script dangerouslySetInnerHTML={{ __html: colorModeInitScript }} />
         {appearanceCss ? (
           <style dangerouslySetInnerHTML={{ __html: appearanceCss }} />
         ) : null}

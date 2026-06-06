@@ -8,5 +8,9 @@ export const {
   UserProvider,
   KnowledgeProvider,
 } = createThemeHttpStack({
-  onError: (msg) => console.error('[my-blog]', msg),
+  onError: (msg) => {
+    if (process.env.NODE_ENV === 'development') {
+      console.error('[my-blog]', msg);
+    }
+  },
 });

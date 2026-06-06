@@ -2,7 +2,7 @@
 
 import Link from '@/components/Link';
 import Logo from '@/data/logo.svg';
-import { getColorFromNumber } from '@/src/utils/colors';
+import { getColorFromNumber, getTagStyle } from '@/src/utils/colors';
 import { ClockIcon, EyeIcon, FolderIcon, HeartIcon } from '@/src/utils/icons';
 import { useLocale } from '@fecommunity/reactpress-toolkit/ui';
 import { Image, LocaleTime } from '@fecommunity/reactpress-toolkit/ui/content';
@@ -76,8 +76,8 @@ function ArticleCard({
           {article.category && categoryIndex >= 0 ? (
             <Link
               href={`/category/${article.category.value}`}
-              className="rp-category-tag ml-1 inline-flex shrink-0 items-center gap-1 rounded px-2 py-0.5 text-xs text-white no-underline transition-all duration-200 hover:opacity-80 hover:shadow-sm"
-              style={{ backgroundColor: getColorFromNumber(categoryIndex) }}
+              className="rp-category-tag ml-1 inline-flex shrink-0 items-center gap-1 rounded px-2 py-0.5 text-xs no-underline transition-all duration-200 hover:opacity-80 hover:shadow-sm"
+              style={getTagStyle(getColorFromNumber(categoryIndex))}
             >
               <FolderIcon size={12} className="opacity-90" />
               <span>{article.category.label}</span>
@@ -87,7 +87,7 @@ function ArticleCard({
         <Link href={`/article/${article.id}`} className="mt-2 block no-underline">
           <main className="flex flex-col justify-between">
             <div
-              className="line-clamp-2 text-sm text-[var(--second-text-color)] max-md:line-clamp-1"
+              className="rp-rich-text line-clamp-2 text-sm text-[var(--second-text-color)] max-md:line-clamp-1"
               dangerouslySetInnerHTML={{ __html: article.summary }}
             />
             <div className="mt-3 flex items-center justify-between whitespace-nowrap text-sm text-[#8590a6]">

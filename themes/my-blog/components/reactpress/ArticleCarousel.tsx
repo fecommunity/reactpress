@@ -54,7 +54,7 @@ export default function ArticleCarousel({ articles = [] }: ArticleCarouselProps)
         aria-live="polite"
       >
         {slides.map((article, index) => {
-          const coverSrc = resolveImageUrl(article.cover, 'large');
+          const coverSrc = resolveImageUrl(article.cover, index === 0 ? 'medium' : 'thumb');
           const isActive = index === active;
           const shouldLoadImage = loadedSlides.has(index);
 

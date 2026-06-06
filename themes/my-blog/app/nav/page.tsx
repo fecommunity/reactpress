@@ -1,9 +1,15 @@
 import NavClient from './NavClient';
+import { buildListPageMetadata } from '@/src/reactpress/siteMetadata';
 import { fetchSiteNavConfig } from '@fecommunity/reactpress-toolkit/theme/server';
 import { SettingProvider } from '@/src/server-providers';
 import themeManifest from '../../theme.json';
+import type { Metadata } from 'next';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
+
+export async function generateMetadata(): Promise<Metadata> {
+  return buildListPageMetadata('网址导航');
+}
 
 export default async function NavPage() {
   let navConfig;

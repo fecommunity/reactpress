@@ -11,6 +11,7 @@ import {
   persistColorMode,
   persistThemeSession,
   persistVisitorLocale,
+  resolveClientThemeMode,
   resolveInitialColorModeState,
   resolveStoredUser,
   type ThemeColorMode,
@@ -39,7 +40,9 @@ export function ReactPressAppProviders({ bootstrap, children }: Props) {
     themeMods,
   } = bootstrap;
 
-  const [theme, setTheme] = useState<ThemeColorMode>('light');
+  const [theme, setTheme] = useState<ThemeColorMode>(() =>
+    typeof window === 'undefined' ? 'light' : resolveClientThemeMode(),
+  );
   const [locale, setLocale] = useState(initialLocale);
   const [collapsed, setCollapsed] = useState(false);
   const [user, setUserState] = useState<SiteCatalogContextValue['user']>(null);

@@ -27,13 +27,13 @@ export default function SystemNotification() {
         <BellIcon size={16} />
       </span>
       <div
-        className="min-w-0 flex-1 overflow-hidden text-ellipsis whitespace-nowrap [&_a:hover]:text-[var(--primary-color)]"
+        className="min-w-0 flex-1 overflow-hidden text-ellipsis whitespace-nowrap [&_a]:text-inherit [&_a]:no-underline [&_a:hover]:text-[var(--primary-color)]"
         dangerouslySetInnerHTML={{ __html: notices[index] ?? notices[0] }}
       />
       <button
         type="button"
         aria-label="Close notification"
-        className="shrink-0 text-[var(--second-text-color)] hover:text-[var(--primary-color)]"
+        className="rp-notification-close shrink-0 text-[var(--second-text-color)] hover:text-[var(--primary-color)]"
         onClick={() => setDismissed(true)}
       >
         ×

@@ -1,7 +1,13 @@
 import KnowledgeClient from './KnowledgeClient';
+import { buildListPageMetadata } from '@/src/reactpress/siteMetadata';
 import { fetchKnowledgeIndexPageProps, themeApi, withApiRetry } from '@fecommunity/reactpress-toolkit/theme/server';
+import type { Metadata } from 'next';
 
 export const revalidate = 60;
+
+export async function generateMetadata(): Promise<Metadata> {
+  return buildListPageMetadata('知识库');
+}
 
 export default async function KnowledgePage() {
   let books = [];

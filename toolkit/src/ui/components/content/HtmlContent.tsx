@@ -264,6 +264,10 @@ export function HtmlContent({
         root.setAttribute('data-rp-content', content);
       }
 
+      root.querySelectorAll('img:not([alt])').forEach((img) => {
+        img.setAttribute('alt', '');
+      });
+
       useInitialHtmlRef.current = false;
       enhanceCodeBlocks(
         root,

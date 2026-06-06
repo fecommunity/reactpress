@@ -24,7 +24,7 @@ interface NavCardGridProps {
 }
 
 function getIconUrl(item: { icon?: string; url?: string }) {
-  if (item?.icon) return item.icon;
+  if (item?.icon?.trim()) return item.icon.trim();
   if (item?.url) return `${item.url.replace(/\/$/, '')}/favicon.ico`;
   return '';
 }
@@ -50,9 +50,11 @@ function NavAvatar({ child }: { child: NavChild }) {
   return (
     <img
       src={src}
-      alt=""
+      alt={child.label}
       width={32}
       height={32}
+      loading="lazy"
+      decoding="async"
       className="h-8 w-8 shrink-0 rounded-full object-cover"
       onError={() => setFailed(true)}
     />
