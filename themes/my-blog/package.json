@@ -7,7 +7,7 @@
     "dev": "cross-env INIT_CWD=$PWD next dev -p 3001",
     "build": "cross-env INIT_CWD=$PWD next build",
     "start": "cross-env INIT_CWD=$PWD next start -p 3001",
-    "lint": "next lint --fix --dir app --dir components --dir layouts --dir src"
+    "lint": "next lint --fix --dir app --dir components --dir lib"
   },
   "dependencies": {
     "@fecommunity/reactpress-toolkit": "workspace:*",

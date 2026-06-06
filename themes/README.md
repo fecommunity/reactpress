@@ -117,7 +117,7 @@ pnpm export:brand
 | Favicon | `public/favicon/favicon.ico` | 根目录按类型分目录 |
 | PWA 图标 | `public/icons/icon-192.png` 等 | Apple Touch / manifest |
 
-在 **twentytwentyfive** / **my-blog** 中，顶栏与占位图使用 `public/logo.png`、`logo-200.png` 等（`pnpm export:brand` 生成）。后台「站点 Logo」留空时使用主题默认 Logo（`data/logo.svg` 或 `logo.png`）。
+在 **twentytwentyfive** / **my-blog** 中，顶栏与占位图使用 `public/logo.png`、`logo-200.png` 等（`pnpm export:brand` 生成）。后台「站点 Logo」留空时使用主题默认 Logo（my-blog 为 `components/shared/logo.svg`，twentytwentyfive 为 `logo.png`）。
 
 ## 工作流程
 

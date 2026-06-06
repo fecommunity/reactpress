@@ -1,6 +1,6 @@
 'use client';
 
-import Link from '@/components/Link';
+import Link from '@/components/shared/Link';
 import { useLocale } from '@fecommunity/reactpress-toolkit/ui';
 
 export default function NotFound() {

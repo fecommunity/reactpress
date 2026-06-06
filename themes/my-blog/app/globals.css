@@ -3,10 +3,9 @@
 @plugin '@tailwindcss/typography';
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* Tailwind v4: explicit scan paths (CSS lives in app/, components/layouts are siblings). */
+/* Tailwind v4: explicit scan paths (CSS lives in app/, components/lib are siblings). */
 @source "../components/**/*.{js,ts,jsx,tsx}";
-@source "../layouts/**/*.{js,ts,jsx,tsx}";
-@source "../src/**/*.{js,ts,jsx,tsx}";
+@source "../lib/**/*.{js,ts,jsx,tsx}";
 @source "./**/*.{js,ts,jsx,tsx}";
 
 /* ReactPress theme variables (aligned with twentytwentyfive) */

@@ -1,5 +1,5 @@
-import HomeClient from './HomeClient';
-import { buildListPageMetadata } from '@/src/reactpress/siteMetadata';
+import HomeClient from '@/components/views/HomeClient';
+import { buildListPageMetadata } from '@/lib/reactpress/siteMetadata';
 import {
   fetchHomePageProps,
   resolveImageUrl,

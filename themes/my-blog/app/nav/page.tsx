@@ -1,7 +1,7 @@
-import NavClient from './NavClient';
-import { buildListPageMetadata } from '@/src/reactpress/siteMetadata';
+import NavClient from '@/components/views/NavClient';
+import { buildListPageMetadata } from '@/lib/reactpress/siteMetadata';
 import { fetchSiteNavConfig } from '@fecommunity/reactpress-toolkit/theme/server';
-import { SettingProvider } from '@/src/server-providers';
+import { SettingProvider } from '@/lib/providers/server';
 import themeManifest from '../../theme.json';
 import type { Metadata } from 'next';
 

@@ -65,11 +65,21 @@ pnpm dev
 
 ```
 themes/my-blog/
-├── app/                    # App Router 页面
-├── components/reactpress/  # 主题 UI（Header、文章列表、评论等）
-├── src/reactpress/         # bootstrap、metadata、appearance 适配
-├── public/                 # ReactPress 品牌资源（logo、favicon）
-├── data/logo.svg           # 顶栏默认 Logo（无后台站点 Logo 时）
+├── app/                    # App Router 路由（page / layout / route handler，仅服务端）
+├── components/
+│   ├── layout/             # 站点壳层（Header、Footer、双栏布局等）
+│   ├── article/            # 文章列表、详情、轮播、CMS 页
+│   ├── comment/            # 评论模块
+│   ├── widgets/            # 侧边栏小组件（分类、标签云、About 等）
+│   ├── nav/                # 网址导航
+│   ├── knowledge/          # 知识库列表
+│   ├── views/              # 页面级 Client 组件（与 app/ 路由一一对应）
+│   └── shared/             # 通用组件（Link、DevChunkRecovery、默认 Logo SVG）
+├── lib/
+│   ├── reactpress/         # bootstrap、metadata、appearance、SEO
+│   ├── providers/          # 客户端 / 服务端数据 Provider
+│   └── utils/              # 工具函数（icons、colors、comment 等）
+├── public/                 # 品牌资源（logo、favicon）
 └── theme.json              # 主题 manifest
 ```
 
@@ -82,11 +92,11 @@ pnpm export:brand
 # 或: node scripts/export-brand-assets.mjs
 ```
 
-生成文件包括 `public/logo.png`、`logo-400.png`、`favicon.ico` 等。组件内默认 Logo 使用 `data/logo.svg`（SVGR 打包）。
+生成文件包括 `public/logo.png`、`logo-400.png`、`favicon.ico` 等。组件内默认 Logo 使用 `components/shared/logo.svg`（SVGR 打包）。
 
 ## 开发说明
 
-- 数据与 Provider：`src/reactpress/bootstrap.ts`、`src/reactpress/providers.ts`
+- 数据与 Provider：`lib/reactpress/bootstrap.ts`、`lib/reactpress/providers.tsx`、`lib/providers/`
 - 全局样式与主题变量：`app/globals.css`
 - 修改 `next.config.js` 后需重启 dev；若出现 chunk 加载异常，可 `rm -rf .next` 后重试
 

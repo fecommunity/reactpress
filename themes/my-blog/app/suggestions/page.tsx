@@ -1,5 +1,5 @@
-import CmsPageClient from '@/components/reactpress/CmsPageClient';
-import { buildCmsPageMetadata, parseSiteSeoContext } from '@/src/reactpress/contentSeo';
+import CmsPageClient from '@/components/article/CmsPageClient';
+import { buildCmsPageMetadata, parseSiteSeoContext } from '@/lib/reactpress/contentSeo';
 import {
   fetchCmsPageProps,
   fetchSiteMeta,

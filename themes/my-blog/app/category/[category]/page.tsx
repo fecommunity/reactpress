@@ -1,6 +1,6 @@
-import CategoryClient from './CategoryClient';
-import { buildListPageMetadata } from '@/src/reactpress/siteMetadata';
-import { generateCategoryStaticParams } from '@/src/reactpress/staticParams';
+import CategoryClient from '@/components/views/CategoryClient';
+import { buildListPageMetadata } from '@/lib/reactpress/siteMetadata';
+import { generateCategoryStaticParams } from '@/lib/reactpress/staticParams';
 import {
   fetchCategoryArchivePageProps,
   themeApi,

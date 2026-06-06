@@ -1,5 +1,5 @@
-import SearchClient from './SearchClient';
-import { buildListPageMetadata } from '@/src/reactpress/siteMetadata';
+import SearchClient from '@/components/views/SearchClient';
+import { buildListPageMetadata } from '@/lib/reactpress/siteMetadata';
 import { fetchSearchPageProps, themeApi } from '@fecommunity/reactpress-toolkit/theme/server';
 import type { Metadata } from 'next';
 

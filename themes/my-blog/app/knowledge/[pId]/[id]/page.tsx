@@ -1,8 +1,8 @@
-import KnowledgeChapterClient from './KnowledgeChapterClient';
+import KnowledgeChapterClient from '@/components/views/KnowledgeChapterClient';
 import {
   buildKnowledgeChapterMetadata,
   parseSiteSeoContext,
-} from '@/src/reactpress/contentSeo';
+} from '@/lib/reactpress/contentSeo';
 import {
   fetchKnowledgeChapterPageProps,
   fetchSiteMeta,

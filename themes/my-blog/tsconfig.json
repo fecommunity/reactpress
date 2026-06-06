@@ -17,9 +17,7 @@
     "baseUrl": ".",
     "paths": {
       "@/components/*": ["components/*"],
-      "@/data/*": ["data/*"],
-      "@/layouts/*": ["layouts/*"],
-      "@/src/*": ["src/*"]
+      "@/lib/*": ["lib/*"]
     },
     "plugins": [{ "name": "next" }],
     "strictNullChecks": true

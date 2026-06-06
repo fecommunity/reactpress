@@ -1,5 +1,5 @@
-import KnowledgeClient from './KnowledgeClient';
-import { buildListPageMetadata } from '@/src/reactpress/siteMetadata';
+import KnowledgeClient from '@/components/views/KnowledgeClient';
+import { buildListPageMetadata } from '@/lib/reactpress/siteMetadata';
 import { fetchKnowledgeIndexPageProps, themeApi, withApiRetry } from '@fecommunity/reactpress-toolkit/theme/server';
 import type { Metadata } from 'next';
 

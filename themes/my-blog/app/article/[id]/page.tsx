@@ -1,10 +1,10 @@
-import ArticleViewClient from '@/components/reactpress/ArticleViewClient';
+import ArticleViewClient from '@/components/article/ArticleViewClient';
 import {
   buildArticleJsonLd,
   buildArticleMetadata,
   parseSiteSeoContext,
-} from '@/src/reactpress/contentSeo';
-import { generateArticleStaticParams } from '@/src/reactpress/staticParams';
+} from '@/lib/reactpress/contentSeo';
+import { generateArticleStaticParams } from '@/lib/reactpress/staticParams';
 import {
   fetchArticleDetailProps,
   fetchSiteMeta,

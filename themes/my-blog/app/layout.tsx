@@ -1,13 +1,13 @@
 import './globals.css';
 
-import DevChunkRecovery from '@/components/DevChunkRecovery';
-import SiteHeader from '@/components/reactpress/SiteHeader';
-import ConditionalSiteFooter from '@/components/reactpress/ConditionalSiteFooter';
-import PageContainer from '@/components/reactpress/PageContainer';
-import { loadAppBootstrap } from '@/src/reactpress/bootstrap';
-import { buildMyBlogAppearanceCss } from '@/src/reactpress/appearance';
-import { ReactPressAppProviders } from '@/src/reactpress/providers';
-import { buildRootMetadata } from '@/src/reactpress/siteMetadata';
+import DevChunkRecovery from '@/components/shared/DevChunkRecovery';
+import SiteHeader from '@/components/layout/SiteHeader';
+import ConditionalSiteFooter from '@/components/layout/ConditionalSiteFooter';
+import PageContainer from '@/components/layout/PageContainer';
+import { loadAppBootstrap } from '@/lib/reactpress/bootstrap';
+import { buildMyBlogAppearanceCss } from '@/lib/reactpress/appearance';
+import { ReactPressAppProviders } from '@/lib/reactpress/providers';
+import { buildRootMetadata } from '@/lib/reactpress/siteMetadata';
 import { colorModeInitScript } from '@fecommunity/reactpress-toolkit/theme/server';
 import type { Metadata, Viewport } from 'next';
 

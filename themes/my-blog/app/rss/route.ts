@@ -1,4 +1,4 @@
-import { ArticleProvider, CategoryProvider, SettingProvider } from '@/src/server-providers';
+import { ArticleProvider, CategoryProvider, SettingProvider } from '@/lib/providers/server';
 
 function escapeXml(value: string) {
   return value

@@ -1,5 +1,5 @@
-import ArchivesClient from './ArchivesClient';
-import { buildListPageMetadata } from '@/src/reactpress/siteMetadata';
+import ArchivesClient from '@/components/views/ArchivesClient';
+import { buildListPageMetadata } from '@/lib/reactpress/siteMetadata';
 import {
   fetchArchivesPageProps,
   themeApi,

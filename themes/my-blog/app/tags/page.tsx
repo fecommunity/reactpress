@@ -1,6 +1,6 @@
-import TagsClient from './TagsClient';
-import { loadAppBootstrap } from '@/src/reactpress/bootstrap';
-import { buildListPageMetadata } from '@/src/reactpress/siteMetadata';
+import TagsClient from '@/components/views/TagsClient';
+import { loadAppBootstrap } from '@/lib/reactpress/bootstrap';
+import { buildListPageMetadata } from '@/lib/reactpress/siteMetadata';
 import type { ITag } from '@fecommunity/reactpress-toolkit/types';
 import type { Metadata } from 'next';
 

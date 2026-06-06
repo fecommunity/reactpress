@@ -1,5 +1,5 @@
-import LoginClient from './LoginClient';
-import { buildListPageMetadata } from '@/src/reactpress/siteMetadata';
+import LoginClient from '@/components/views/LoginClient';
+import { buildListPageMetadata } from '@/lib/reactpress/siteMetadata';
 import type { Metadata } from 'next';
 
 export async function generateMetadata(): Promise<Metadata> {

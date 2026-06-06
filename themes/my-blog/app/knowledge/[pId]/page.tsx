@@ -1,5 +1,5 @@
-import KnowledgeBookClient from './KnowledgeBookClient';
-import { buildListPageMetadata } from '@/src/reactpress/siteMetadata';
+import KnowledgeBookClient from '@/components/views/KnowledgeBookClient';
+import { buildListPageMetadata } from '@/lib/reactpress/siteMetadata';
 import {
   fetchKnowledgeBookPageProps,
   themeApi,

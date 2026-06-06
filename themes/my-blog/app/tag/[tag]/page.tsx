@@ -1,6 +1,6 @@
-import TagArchiveClient from './TagArchiveClient';
-import { buildListPageMetadata } from '@/src/reactpress/siteMetadata';
-import { generateTagStaticParams } from '@/src/reactpress/staticParams';
+import TagArchiveClient from '@/components/views/TagArchiveClient';
+import { buildListPageMetadata } from '@/lib/reactpress/siteMetadata';
+import { generateTagStaticParams } from '@/lib/reactpress/staticParams';
 import {
   fetchTagArchivePageProps,
   themeApi,
