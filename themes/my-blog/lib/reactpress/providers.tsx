@@ -23,6 +23,7 @@ import {
 import type { AppBootstrapResult } from '@fecommunity/reactpress-toolkit/theme/server';
 import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
 
+import { HomeFooterProvider } from './homeFooter';
 import { LayoutShell } from './layout-shell';
 
 type Props = {
@@ -196,10 +197,12 @@ export function ReactPressAppProviders({ bootstrap, children }: Props) {
       onLocaleChange={changeLocale}
     >
       <SiteCatalogProvider value={catalogValue}>
-        <LayoutShell>
-          <VisitorLocaleBootstrap locales={locales} ssrLocale={initialLocale} />
-          {children}
-        </LayoutShell>
+        <HomeFooterProvider>
+          <LayoutShell>
+            <VisitorLocaleBootstrap locales={locales} ssrLocale={initialLocale} />
+            {children}
+          </LayoutShell>
+        </HomeFooterProvider>
       </SiteCatalogProvider>
     </ReactPressProvider>
   );

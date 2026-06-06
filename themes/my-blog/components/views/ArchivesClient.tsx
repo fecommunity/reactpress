@@ -3,6 +3,8 @@
 import DoubleColumnLayout from '@/components/layout/DoubleColumnLayout';
 import HomeSidebar from '@/components/widgets/HomeSidebar';
 import Link from '@/components/shared/Link';
+import { FEED_PAGE_SIZE } from '@/lib/reactpress/feedFooterPlacement';
+import { useFeedFooterPlacement } from '@/lib/reactpress/useFeedFooterPlacement';
 import { useLocale } from '@fecommunity/reactpress-toolkit/ui';
 import {
   countArchiveArticles,
@@ -51,6 +53,10 @@ export default function ArchivesClient({ articles }: ArchivesClientProps) {
   const { t } = useLocale();
   const years = useMemo(() => sortedArchiveYears(articles), [articles]);
   const total = useMemo(() => countArchiveArticles(articles), [articles]);
+  const { footerInSidebar, footerAtBottom } = useFeedFooterPlacement({
+    itemCount: total,
+    pageSize: FEED_PAGE_SIZE,
+  });
   const [openYears, setOpenYears] = useState<Set<string>>(
     () => new Set(years.slice(0, INITIAL_OPEN_YEARS)),
   );
@@ -66,6 +72,7 @@ export default function ArchivesClient({ articles }: ArchivesClientProps) {
 
   return (
     <DoubleColumnLayout
+      fillMinHeight={footerAtBottom}
       leftNode={
         <div className="overflow-hidden rounded-lg bg-[var(--bg-box)] shadow-[var(--box-shadow)]">
           <div className="border-b border-[var(--border-color)] px-4 py-6 text-center">
@@ -113,7 +120,9 @@ export default function ArchivesClient({ articles }: ArchivesClientProps) {
           ) : null}
         </div>
       }
-      rightNode={<HomeSidebar showTags={false} showCategories deferRecommend={false} />}
+      rightNode={
+        <HomeSidebar showTags={false} showCategories showAboutUs={footerInSidebar} deferRecommend={false} />
+      }
     />
   );
 }

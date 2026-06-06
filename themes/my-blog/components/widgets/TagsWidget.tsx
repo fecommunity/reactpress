@@ -69,7 +69,29 @@ export default function TagsWidget({
     setCloudReady(ready);
   }, []);
 
-  const showCloudSkeleton = animationMode && tags.length > 0 && (!hydrated || !cloudReady);
+  const useTagCloud = animationMode && tags.length > 4;
+  const showCloudSkeleton = useTagCloud && tags.length > 0 && (!hydrated || !cloudReady);
+
+  const compactTagList =
+    tags.length > 0 ? (
+      <ul className="m-0 flex list-none flex-wrap gap-2 p-4">
+        {tags.map((tag, index) => (
+          <li key={tag.id} className="m-0 p-0">
+            <Link
+              href={`/tag/${tag.value}`}
+              aria-label={tag.label}
+              className="inline-block rounded px-2 py-1 text-sm no-underline transition-all duration-200 hover:scale-105 hover:opacity-90 hover:shadow-sm"
+              style={getTagStyle(getColorFromNumber(index))}
+            >
+              {tag.label}
+              {typeof tag.articleCount === 'number' ? ` [${tag.articleCount}]` : ''}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <div className="px-4 py-6 text-center text-sm text-[var(--second-text-color)]">{t('empty')}</div>
+    );
 
   return (
     <div className="rp-widget-panel mb-5 overflow-hidden rounded-xl bg-[var(--bg-box)] leading-snug shadow-[var(--box-shadow)] ring-1 ring-black/5 dark:ring-white/5">
@@ -80,7 +102,7 @@ export default function TagsWidget({
         </div>
       ) : null}
 
-      {animationMode ? (
+      {useTagCloud ? (
         <>
           <div className="relative mx-auto my-2 h-[260px] w-[250px] max-w-full">
             {showCloudSkeleton ? <TagCloudSkeleton /> : null}
@@ -118,24 +140,8 @@ export default function TagsWidget({
             </ul>
           </nav>
         </>
-      ) : tags.length ? (
-        <ul className="m-0 flex list-none flex-wrap gap-2 p-4">
-          {tags.map((tag, index) => (
-            <li key={tag.id} className="m-0 p-0">
-              <Link
-                href={`/tag/${tag.value}`}
-                aria-label={tag.label}
-                className="inline-block rounded px-2 py-1 text-sm no-underline transition-all duration-200 hover:scale-105 hover:opacity-90 hover:shadow-sm"
-                style={getTagStyle(getColorFromNumber(index))}
-              >
-                {tag.label}
-                {typeof tag.articleCount === 'number' ? ` [${tag.articleCount}]` : ''}
-              </Link>
-            </li>
-          ))}
-        </ul>
       ) : (
-        <div className="px-4 py-6 text-center text-sm text-[var(--second-text-color)]">{t('empty')}</div>
+        compactTagList
       )}
     </div>
   );

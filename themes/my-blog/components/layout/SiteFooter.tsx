@@ -11,7 +11,7 @@ export default function SiteFooter() {
   const siteTitle = getSiteTitle(setting);
 
   return (
-    <footer className="mt-10 w-full border-t border-[var(--border-color)] bg-[var(--bg-box)] py-8" role="contentinfo">
+    <footer className="mt-auto w-full shrink-0 border-t border-[var(--border-color)] bg-[var(--bg-box)] py-8" role="contentinfo">
       <PageContainer>
       <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
         <div className="min-w-0 flex-1">

@@ -5,6 +5,8 @@ import ArticleFeedSection from '@/components/article/ArticleFeedSection';
 import ArticleList from '@/components/article/ArticleList';
 import DoubleColumnLayout from '@/components/layout/DoubleColumnLayout';
 import HomeSidebar from '@/components/widgets/HomeSidebar';
+import { FEED_PAGE_SIZE } from '@/lib/reactpress/feedFooterPlacement';
+import { useFeedFooterPlacement } from '@/lib/reactpress/useFeedFooterPlacement';
 import { ArticleProvider } from '@/lib/providers/client';
 import {
   slimArticlesForList,
@@ -19,7 +21,7 @@ interface HomeClientProps {
   recommendedArticles: CarouselArticle[];
 }
 
-const pageSize = 12;
+const pageSize = FEED_PAGE_SIZE;
 
 export default function HomeClient({
   initialArticles = [],
@@ -28,6 +30,12 @@ export default function HomeClient({
 }: HomeClientProps) {
   const [page, setPage] = useState(1);
   const [articles, setArticles] = useState<ListArticle[]>(initialArticles);
+  const hasMore = page * pageSize < total;
+  const { footerInSidebar, footerAtBottom } = useFeedFooterPlacement({
+    hasMore,
+    itemCount: articles.length,
+    pageSize,
+  });
 
   useEffect(() => {
     setArticles(initialArticles);
@@ -45,25 +53,31 @@ export default function HomeClient({
     });
   }, []);
 
+  const hasCarousel = recommendedArticles?.some((article) => article.cover);
+
   return (
-    <DoubleColumnLayout
-      leftNode={
-        <>
-          {recommendedArticles?.some((article) => article.cover) ? (
-            <div className="mb-5">
-              <ArticleCarousel articles={recommendedArticles} />
-            </div>
-          ) : null}
-          <ArticleFeedSection
-            pageStart={1}
-            loadMore={getArticles}
-            hasMore={page * pageSize < total}
-          >
-            <ArticleList articles={articles} />
-          </ArticleFeedSection>
-        </>
-      }
-      rightNode={<HomeSidebar />}
-    />
+    <div className="flex flex-1 flex-col">
+      <DoubleColumnLayout
+        className="flex-1"
+        fillMinHeight={footerAtBottom}
+        leftNode={
+          <>
+            {hasCarousel ? (
+              <div className="mb-5">
+                <ArticleCarousel articles={recommendedArticles} />
+              </div>
+            ) : null}
+            <ArticleFeedSection
+              pageStart={1}
+              loadMore={getArticles}
+              hasMore={hasMore}
+            >
+              <ArticleList articles={articles} />
+            </ArticleFeedSection>
+          </>
+        }
+        rightNode={<HomeSidebar showAboutUs={footerInSidebar} />}
+      />
+    </div>
   );
 }

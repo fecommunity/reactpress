@@ -4,6 +4,7 @@ import ArticleList from '@/components/article/ArticleList';
 import ArticleRecommend from '@/components/article/ArticleRecommend';
 import DoubleColumnLayout from '@/components/layout/DoubleColumnLayout';
 import HomeSidebar from '@/components/widgets/HomeSidebar';
+import { useFeedFooterPlacement } from '@/lib/reactpress/useFeedFooterPlacement';
 import { useLocale } from '@fecommunity/reactpress-toolkit/ui';
 import type { ListArticle } from '@fecommunity/reactpress-toolkit/theme';
 import { useRouter } from 'next/navigation';
@@ -23,6 +24,10 @@ export default function SearchClient({
   const inputRef = useRef<HTMLInputElement>(null);
   const [keyword, setKeyword] = useState(initialKeyword);
   const [articles, setArticles] = useState(initialArticles);
+  const hasSearchResults = Boolean(initialKeyword.trim());
+  const { footerInSidebar, footerAtBottom } = useFeedFooterPlacement({
+    itemCount: hasSearchResults ? articles.length : 0,
+  });
 
   useEffect(() => {
     setKeyword(initialKeyword);
@@ -47,6 +52,7 @@ export default function SearchClient({
 
   return (
     <DoubleColumnLayout
+      fillMinHeight={footerAtBottom}
       leftNode={
         <>
           <search className="mb-4 block min-w-0 rounded-lg bg-[var(--bg-box)] p-5 shadow-[var(--box-shadow)] md:p-6">
@@ -99,7 +105,15 @@ export default function SearchClient({
           </main>
         </>
       }
-      rightNode={<HomeSidebar showTags showCategories showRecommend={false} deferRecommend />}
+      rightNode={
+        <HomeSidebar
+          showTags
+          showCategories
+          showRecommend={false}
+          showAboutUs={footerInSidebar}
+          deferRecommend
+        />
+      }
     />
   );
 }

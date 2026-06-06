@@ -103,13 +103,50 @@ function ContactInfo() {
 }
 
 interface AboutUsProps {
-  variant?: 'sidebar' | 'default';
+  variant?: 'sidebar' | 'default' | 'bottom';
+}
+
+function AboutUsBody() {
+  const { t } = useLocale();
+  const setting = useSiteSetting();
+
+  return (
+    <>
+      {setting?.systemSubTitle ? (
+        <p className="mt-0 mb-3 leading-relaxed">{setting.systemSubTitle}</p>
+      ) : null}
+      {setting?.systemFooterInfo ? (
+        <div
+          className="rp-rich-text leading-relaxed"
+          dangerouslySetInnerHTML={{ __html: setting.systemFooterInfo }}
+        />
+      ) : (
+        <p className="m-0 leading-relaxed">{t('aboutUsFallback')}</p>
+      )}
+      <ContactInfo />
+    </>
+  );
 }
 
 export default function AboutUs({ variant = 'default' }: AboutUsProps) {
   const { t } = useLocale();
-  const setting = useSiteSetting();
   const isSidebar = variant === 'sidebar';
+  const isBottom = variant === 'bottom';
+
+  if (isBottom) {
+    return (
+      <div className="rp-widget-panel overflow-hidden rounded-xl bg-[var(--bg-box)] text-[var(--second-text-color)] shadow-[var(--box-shadow)] ring-1 ring-black/5 dark:ring-white/5">
+        <div className="flex flex-col gap-4 p-4 md:flex-row md:items-start md:gap-8 md:p-6">
+          <h3 className="m-0 shrink-0 text-base font-bold text-[var(--main-text-color)] md:w-40">
+            {t('aboutUs')}
+          </h3>
+          <div className="min-w-0 flex-1 text-sm">
+            <AboutUsBody />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -117,26 +154,11 @@ export default function AboutUs({ variant = 'default' }: AboutUsProps) {
         isSidebar ? 'border-t-0 text-[var(--second-text-color)]' : ''
       }`}
     >
-      <div
-        className={`border-b border-[var(--border-color)] p-4 font-bold ${
-          isSidebar ? 'text-[var(--main-text-color)]' : 'text-[var(--main-text-color)]'
-        }`}
-      >
+      <div className="border-b border-[var(--border-color)] p-4 font-bold text-[var(--main-text-color)]">
         {t('aboutUs')}
       </div>
-      <div className={`p-4 text-sm ${isSidebar ? 'text-[var(--second-text-color)]' : 'text-[var(--second-text-color)]'}`}>
-        {setting?.systemSubTitle ? (
-          <p className="mt-0 mb-3 leading-relaxed">{setting.systemSubTitle}</p>
-        ) : null}
-        {setting?.systemFooterInfo ? (
-          <div
-            className="rp-rich-text leading-relaxed"
-            dangerouslySetInnerHTML={{ __html: setting.systemFooterInfo }}
-          />
-        ) : (
-          <p className="m-0 leading-relaxed">{t('aboutUsFallback')}</p>
-        )}
-        <ContactInfo />
+      <div className="p-4 text-sm text-[var(--second-text-color)]">
+        <AboutUsBody />
       </div>
     </div>
   );

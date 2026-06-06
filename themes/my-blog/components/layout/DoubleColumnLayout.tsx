@@ -20,6 +20,8 @@ interface DoubleColumnLayoutProps {
   likesProps?: LikesProps;
   showComment?: boolean;
   coverPreloadUrl?: string;
+  className?: string;
+  fillMinHeight?: boolean;
 }
 
 export default function DoubleColumnLayout({
@@ -29,6 +31,8 @@ export default function DoubleColumnLayout({
   likesProps,
   showComment = false,
   coverPreloadUrl,
+  className = '',
+  fillMinHeight = true,
 }: DoubleColumnLayoutProps) {
   const [showWidget, toggleWidget] = useToggle(true);
 
@@ -64,7 +68,9 @@ export default function DoubleColumnLayout({
   const hasFloating = Boolean(likesProps || showComment);
 
   return (
-    <div className="min-h-screen">
+    <div
+      className={`${fillMinHeight ? 'flex min-h-0 flex-1 flex-col' : ''} ${className}`.trim()}
+    >
       <SystemNotification />
       {topNode}
       <div className="rp-double-column relative flex flex-wrap pt-4 pb-8">

@@ -57,6 +57,25 @@ function needsContentRefresh(content: string | null | undefined, locale: Install
   );
 }
 
+const HELLO_WORLD_COVER = '/logo.png';
+
+/** 示例文章写入首页推荐，并补齐封面以便轮播展示。 */
+function ensureHelloWorldHomeRecommend(article: Article): boolean {
+  let changed = false;
+
+  if (!article.isRecommended) {
+    article.isRecommended = true;
+    changed = true;
+  }
+
+  if (!article.cover?.trim()) {
+    article.cover = HELLO_WORLD_COVER;
+    changed = true;
+  }
+
+  return changed;
+}
+
 @Injectable()
 export class BootstrapService implements OnModuleInit {
   private readonly logger = new Logger(BootstrapService.name);
@@ -104,7 +123,8 @@ export class BootstrapService implements OnModuleInit {
     if (existing) {
       const refreshContent = needsContentRefresh(existing.content, locale);
       const refreshToc = needsTocRepair(existing.toc);
-      if (!refreshContent && !refreshToc) return;
+      const refreshRecommend = ensureHelloWorldHomeRecommend(existing);
+      if (!refreshContent && !refreshToc && !refreshRecommend) return;
 
       if (refreshContent) {
         existing.title = seed.articleTitle;
@@ -132,6 +152,7 @@ export class BootstrapService implements OnModuleInit {
       toc,
       summary,
       status: 'publish',
+      cover: HELLO_WORLD_COVER,
       category: category.id,
       tags: tags.map((tag) => tag.id).join(','),
       isRecommended: true,

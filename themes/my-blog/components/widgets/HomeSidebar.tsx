@@ -10,6 +10,7 @@ interface HomeSidebarProps {
   showTags?: boolean;
   showCategories?: boolean;
   showRecommend?: boolean;
+  showAboutUs?: boolean;
   deferRecommend?: boolean;
 }
 
@@ -17,6 +18,7 @@ export default function HomeSidebar({
   showTags = true,
   showCategories = false,
   showRecommend = true,
+  showAboutUs = true,
   deferRecommend = true,
 }: HomeSidebarProps) {
   const { tags, categories } = useSiteCatalog();
@@ -35,7 +37,7 @@ export default function HomeSidebar({
       {showCategories ? (
         <CategoriesWidget categories={categories as Parameters<typeof CategoriesWidget>[0]['categories']} />
       ) : null}
-      <AboutUs variant="sidebar" />
+      {showAboutUs ? <AboutUs variant="sidebar" /> : null}
     </div>
   );
 }

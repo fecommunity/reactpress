@@ -132,9 +132,7 @@ export default function ArticleCarousel({ articles = [] }: ArticleCarouselProps)
                 <img
                   src={coverSrc}
                   alt=""
-                  className={`absolute inset-0 h-full w-full object-cover transition-transform duration-[9000ms] ease-out will-change-transform ${
-                    isActive ? 'scale-[1.05]' : 'scale-100'
-                  }`}
+                  className="absolute inset-0 h-full w-full bg-[var(--bg-second)] object-contain object-center"
                   width={1200}
                   height={460}
                   decoding={index === 0 ? 'sync' : 'async'}

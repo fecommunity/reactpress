@@ -15,7 +15,9 @@ function resolveAdminAuthHref(path: 'login' | 'register'): string {
   return `${resolveAdminHref()}${path}`;
 }
 
-export default function UserAuth() {
+type UserAuthLayout = 'header' | 'drawer';
+
+export default function UserAuth({ layout = 'header' }: { layout?: UserAuthLayout }) {
   const { t } = useLocale();
   const { user, removeUser } = useSiteUser();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -78,19 +80,41 @@ export default function UserAuth() {
     );
   }
 
+  const loginLabel = t('commentNamespace.userInfoConfirm');
+  const registerLabel = t('commentNamespace.register');
+
+  if (layout === 'drawer') {
+    return (
+      <div className="flex w-full flex-col gap-2">
+        <a
+          href={resolveAdminAuthHref('login')}
+          className="inline-flex h-11 w-full items-center justify-center rounded-lg border border-[var(--border-color)] bg-[var(--bg-box)] text-sm font-medium text-[var(--main-text-color)] no-underline transition-colors hover:border-[var(--primary-color)] hover:text-[var(--primary-color)]"
+        >
+          {loginLabel}
+        </a>
+        <a
+          href={resolveAdminAuthHref('register')}
+          className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-[var(--primary-color)] text-sm font-medium text-white no-underline transition-opacity hover:opacity-90"
+        >
+          {registerLabel}
+        </a>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex overflow-hidden rounded-md border border-[var(--border-color)]">
+    <div className="flex shrink-0 items-center gap-2">
       <a
         href={resolveAdminAuthHref('login')}
-        className="px-3 py-1.5 text-sm text-[var(--main-text-color)] no-underline hover:bg-[var(--bg-second)]"
+        className="inline-flex h-8 items-center justify-center rounded-lg border border-[var(--border-color)] bg-transparent px-3 text-sm text-[var(--main-text-color)] no-underline transition-colors hover:border-[var(--primary-color)] hover:text-[var(--primary-color)]"
       >
-        {t('commentNamespace.userInfoConfirm')}
+        {loginLabel}
       </a>
       <a
         href={resolveAdminAuthHref('register')}
-        className="border-l border-[var(--border-color)] px-3 py-1.5 text-sm text-[var(--main-text-color)] no-underline hover:bg-[var(--bg-second)]"
+        className="inline-flex h-8 items-center justify-center rounded-lg bg-[var(--primary-color)] px-3 text-sm font-medium text-white no-underline transition-opacity hover:opacity-90"
       >
-        {t('commentNamespace.register')}
+        {registerLabel}
       </a>
     </div>
   );

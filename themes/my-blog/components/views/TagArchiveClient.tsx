@@ -6,6 +6,8 @@ import ArticleList from '@/components/article/ArticleList';
 import DoubleColumnLayout from '@/components/layout/DoubleColumnLayout';
 import HomeSidebar from '@/components/widgets/HomeSidebar';
 import TagsWidget from '@/components/widgets/TagsWidget';
+import { FEED_PAGE_SIZE } from '@/lib/reactpress/feedFooterPlacement';
+import { useFeedFooterPlacement } from '@/lib/reactpress/useFeedFooterPlacement';
 import { ArticleProvider } from '@/lib/providers/client';
 import { getArchiveBannerImage } from '@/lib/utils/archiveBanner';
 import { useLocale } from '@fecommunity/reactpress-toolkit/ui';
@@ -22,7 +24,7 @@ interface TagArchiveClientProps {
   tag: { value: string; label: string };
 }
 
-const pageSize = 12;
+const pageSize = FEED_PAGE_SIZE;
 
 export default function TagArchiveClient({
   initialArticles = [],
@@ -34,6 +36,12 @@ export default function TagArchiveClient({
   const [page, setPage] = useState(1);
   const [articles, setArticles] = useState(initialArticles);
   const banner = useMemo(() => getArchiveBannerImage(articles), [articles]);
+  const hasMore = page * pageSize < total;
+  const { footerInSidebar, footerAtBottom } = useFeedFooterPlacement({
+    hasMore,
+    itemCount: articles.length,
+    pageSize,
+  });
 
   useEffect(() => {
     setArticles(initialArticles);
@@ -56,6 +64,7 @@ export default function TagArchiveClient({
 
   return (
     <DoubleColumnLayout
+      fillMinHeight={footerAtBottom}
       leftNode={
         <>
           <ArchiveBanner
@@ -77,13 +86,20 @@ export default function TagArchiveClient({
             showCategoryMenu={false}
             pageStart={1}
             loadMore={getArticles}
-            hasMore={page * pageSize < total}
+            hasMore={hasMore}
           >
             <ArticleList articles={articles} />
           </ArticleFeedSection>
         </>
       }
-      rightNode={<HomeSidebar showTags={false} showCategories deferRecommend={false} />}
+      rightNode={
+        <HomeSidebar
+          showTags={false}
+          showCategories
+          showAboutUs={footerInSidebar}
+          deferRecommend={false}
+        />
+      }
     />
   );
 }

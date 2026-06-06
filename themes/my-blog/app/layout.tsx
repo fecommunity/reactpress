@@ -47,7 +47,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         />
         <link rel="manifest" href={`${basePath}/site.webmanifest`} />
       </head>
-      <body className="bg-[var(--bg-body)] text-[var(--main-text-color)] antialiased" suppressHydrationWarning>
+      <body
+        className="flex min-h-dvh flex-col bg-[var(--bg-body)] text-[var(--main-text-color)] antialiased"
+        suppressHydrationWarning
+      >
         <script dangerouslySetInnerHTML={{ __html: colorModeInitScript }} />
         {appearanceCss ? (
           <style dangerouslySetInnerHTML={{ __html: appearanceCss }} />
@@ -55,8 +58,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <ReactPressAppProviders bootstrap={bootstrap}>
           <DevChunkRecovery />
           <SiteHeader />
-          <main id="main-content" className="mb-auto">
-            <PageContainer>{children}</PageContainer>
+          <main id="main-content" className="flex flex-1 flex-col">
+            <PageContainer className="flex flex-1 flex-col">{children}</PageContainer>
           </main>
           <ConditionalSiteFooter />
           <BackToTop />

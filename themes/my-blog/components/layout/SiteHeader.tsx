@@ -121,18 +121,25 @@ export default function SiteHeader() {
     setVisible(false);
   }, [pathname, setVisible]);
 
-  const navLinkClass = (isActive: boolean) =>
-    `rp-nav-link inline-flex items-center gap-1.5 whitespace-nowrap no-underline ${
+  const desktopNavLinkClass = (isActive: boolean) =>
+    `rp-nav-link inline-flex h-9 items-center gap-1.5 whitespace-nowrap rounded-lg px-3 text-sm no-underline ${
       isActive
-        ? 'border-[var(--primary-color)] text-[var(--primary-color)] dark:border-[#ff6659] dark:text-[#ff6659]'
-        : 'border-transparent text-inherit hover:border-[var(--primary-color)] hover:text-[var(--primary-color)] dark:hover:border-[#ff6659] dark:hover:text-[#ff6659]'
+        ? 'bg-[var(--bg-second)] font-medium text-[var(--primary-color)] dark:text-[#ff6659]'
+        : 'text-[var(--second-text-color)] hover:bg-[var(--bg-second)] hover:text-[var(--main-text-color)]'
+    }`;
+
+  const mobileNavLinkClass = (isActive: boolean) =>
+    `rp-nav-link inline-flex items-center gap-2 whitespace-nowrap no-underline ${
+      isActive
+        ? 'font-medium text-[var(--primary-color)] dark:text-[#ff6659]'
+        : 'text-[var(--main-text-color)] hover:text-[var(--primary-color)] dark:hover:text-[#ff6659]'
     }`;
 
   const renderNavLinks = (mode: 'desktop' | 'mobile', onNavigate?: () => void) => (
     <ul
       className={
         mode === 'desktop'
-          ? 'm-0 flex min-w-0 list-none items-center justify-end gap-1 overflow-x-auto p-0 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden'
+          ? 'm-0 flex min-w-0 list-none items-center justify-start gap-0.5 overflow-x-auto p-0 [-ms-overflow-style:none] [scrollbar-width:none] lg:gap-1 [&::-webkit-scrollbar]:hidden'
           : 'm-0 flex w-full list-none flex-col items-stretch gap-0 p-0'
       }
     >
@@ -140,14 +147,14 @@ export default function SiteHeader() {
         const isActive = mainPath === item.key || pathname === item.href;
         const isLast = index === navItems.length - 1;
         return (
-          <li key={item.key} className={mode === 'mobile' ? 'w-full' : undefined}>
+          <li key={item.key} className={mode === 'mobile' ? 'w-full' : 'shrink-0'}>
             <Link
               href={item.href}
               onClick={onNavigate}
               className={
                 mode === 'desktop'
-                  ? `h-16 border-b-2 px-2.5 ${navLinkClass(isActive)}`
-                  : `h-[52px] w-full border-b px-1 ${isLast ? 'border-transparent' : 'border-[var(--border-color)]'} ${navLinkClass(isActive)}`
+                  ? desktopNavLinkClass(isActive)
+                  : `h-[52px] w-full border-b px-1 ${isLast ? 'border-transparent' : 'border-[var(--border-color)]'} ${mobileNavLinkClass(isActive)}`
               }
             >
               {item.icon}
@@ -159,49 +166,45 @@ export default function SiteHeader() {
     </ul>
   );
 
-  const renderToolArea = (mode: 'desktop' | 'mobile') => (
-    <div
+  const renderIconTools = (mode: 'desktop' | 'mobile') => (
+    <ul
       className={
         mode === 'desktop'
-          ? 'flex shrink-0 items-center gap-3 border-l border-[var(--border-color)] pl-4'
-          : 'mt-2 flex w-full flex-col items-stretch gap-0 border-t border-[var(--border-color)] pt-2'
+          ? 'm-0 flex list-none items-center gap-0.5 p-0 xl:gap-1'
+          : 'm-0 flex list-none items-center justify-center gap-3 p-0'
       }
     >
-      <div className={mode === 'mobile' ? 'flex w-full justify-center py-2' : undefined}>
+      <li className="flex h-10 w-10 items-center justify-center">
         <HeaderSearch />
-      </div>
-      <ul
-        className={
-          mode === 'desktop'
-            ? 'm-0 flex list-none items-center gap-4 p-0'
-            : 'm-0 flex w-full list-none flex-wrap items-center justify-center gap-4 p-0 py-4'
-        }
-      >
+      </li>
+      <li className="flex h-10 w-10 items-center justify-center">
+        <ThemeSwitch />
+      </li>
+      <li className="flex h-10 w-10 items-center justify-center">
+        <LocaleSwitcher />
+      </li>
+      {setting.aboutUsGithubUrl?.trim() ? (
         <li className="flex h-10 w-10 items-center justify-center">
-          <ThemeSwitch />
+          <a
+            href={setting.aboutUsGithubUrl.trim()}
+            target="_blank"
+            rel="noopener noreferrer nofollow"
+            aria-label="Github"
+            className="rp-icon-btn inline-flex h-10 w-10 items-center justify-center rounded-full text-[var(--main-text-color)] no-underline hover:bg-[var(--bg-second)] hover:text-[var(--primary-color)]"
+          >
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden>
+              <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+            </svg>
+          </a>
         </li>
-        <li className="flex h-10 w-10 items-center justify-center">
-          <LocaleSwitcher />
-        </li>
-        {setting.aboutUsGithubUrl?.trim() ? (
-          <li className="flex h-10 w-10 items-center justify-center">
-            <a
-              href={setting.aboutUsGithubUrl.trim()}
-              target="_blank"
-              rel="noopener noreferrer nofollow"
-              aria-label="Github"
-              className="rp-icon-btn inline-flex h-10 w-10 items-center justify-center rounded-full text-[var(--main-text-color)] no-underline hover:bg-[var(--bg-second)] hover:text-[var(--primary-color)]"
-            >
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden>
-                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
-              </svg>
-            </a>
-          </li>
-        ) : null}
-        <li className="flex items-center justify-center">
-          <UserAuth />
-        </li>
-      </ul>
+      ) : null}
+    </ul>
+  );
+
+  const renderMobileToolArea = () => (
+    <div className="mt-3 flex w-full flex-col gap-4 border-t border-[var(--border-color)] pt-4">
+      {renderIconTools('mobile')}
+      <UserAuth layout="drawer" />
     </div>
   );
 
@@ -216,12 +219,12 @@ export default function SiteHeader() {
       <div
         className={`rp-header-bar z-[100] h-16 w-full border-b border-[var(--border-color)] bg-[var(--bg-box)] ${
           affix
-            ? 'is-affix md:fixed md:top-0 md:right-0 md:left-0 md:-translate-y-16'
+            ? 'is-affix lg:fixed lg:top-0 lg:right-0 lg:left-0 lg:-translate-y-16'
             : 'relative'
-        } ${affix && affixVisible ? 'is-visible md:!translate-y-0' : ''}`}
+        } ${affix && affixVisible ? 'is-visible lg:!translate-y-0' : ''}`}
       >
-        <PageContainer className="relative flex h-16 items-center gap-3 md:gap-4">
-          <div className="rp-header-logo min-w-0 flex-1 shrink text-[var(--main-text-color)] md:flex-none">
+        <PageContainer className="relative flex h-16 items-center gap-3 lg:gap-6">
+          <div className="rp-header-logo min-w-0 flex-1 shrink-0 text-[var(--main-text-color)] lg:flex-none">
             <Link
               href="/"
               aria-label={setting.systemTitle || 'Home'}
@@ -232,16 +235,20 @@ export default function SiteHeader() {
           </div>
 
           <nav
-            className="hidden h-full min-w-0 flex-1 items-center justify-end gap-4 text-base text-[var(--main-text-color)] md:flex"
+            className="hidden min-w-0 items-center overflow-hidden text-[var(--main-text-color)] lg:flex"
             aria-label={setting.systemTitle || 'Navigation'}
           >
             {renderNavLinks('desktop')}
-            {renderToolArea('desktop')}
           </nav>
+
+          <div className="hidden shrink-0 items-center gap-3 lg:ml-auto lg:flex xl:gap-4">
+            {renderIconTools('desktop')}
+            <UserAuth layout="header" />
+          </div>
 
           <button
             type="button"
-            className="relative z-[101] flex h-11 w-11 shrink-0 flex-col items-center justify-center border-0 bg-transparent p-0 md:hidden"
+            className="relative z-[101] flex h-11 w-11 shrink-0 flex-col items-center justify-center border-0 bg-transparent p-0 lg:hidden"
             onClick={() => setVisible(!visible)}
             aria-label="Toggle mobile menu"
             aria-expanded={visible}
@@ -269,16 +276,16 @@ export default function SiteHeader() {
         <>
           <button
             type="button"
-            className="rp-mobile-backdrop fixed top-16 right-0 bottom-0 left-0 z-[98] border-0 bg-black/45 md:hidden"
+            className="rp-mobile-backdrop fixed top-16 right-0 bottom-0 left-0 z-[98] border-0 bg-black/45 lg:hidden"
             aria-label="Close menu"
             onClick={() => setVisible(false)}
           />
           <nav
-            className="rp-mobile-drawer fixed top-16 right-0 left-0 z-[99] flex max-h-[calc(100dvh-4rem)] flex-col overflow-y-auto border-b border-[var(--border-color)] bg-[var(--bg-box)] px-4 py-2 text-base text-[var(--main-text-color)] shadow-[var(--box-shadow)] md:hidden"
+            className="rp-mobile-drawer fixed top-16 right-0 left-0 z-[99] flex max-h-[calc(100dvh-4rem)] flex-col overflow-y-auto border-b border-[var(--border-color)] bg-[var(--bg-box)] px-4 py-3 text-base text-[var(--main-text-color)] shadow-[var(--box-shadow)] lg:hidden"
             aria-label={setting.systemTitle || 'Navigation'}
           >
             {renderNavLinks('mobile', () => setVisible(false))}
-            {renderToolArea('mobile')}
+            {renderMobileToolArea()}
           </nav>
         </>
       ) : null}

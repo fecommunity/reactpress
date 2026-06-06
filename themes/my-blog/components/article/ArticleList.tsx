@@ -42,7 +42,7 @@ function ArticleCard({
 
   return (
     <div
-      className={`rp-article-card group/card rp-surface relative flex w-full justify-between overflow-hidden rounded-xl border border-transparent p-4 ring-1 ring-black/5 transition-[transform,box-shadow,border-color] duration-300 ease-out hover:-translate-y-0.5 hover:border-[color-mix(in_srgb,var(--border-color)_70%,transparent)] hover:shadow-[0_8px_24px_color-mix(in_srgb,var(--main-text-color)_10%,transparent),var(--box-shadow)] hover:[&_header_.title]:text-[var(--primary-color)] dark:ring-white/5 [&_img]:transition-transform [&_img]:duration-500 [&_img]:ease-out [&:hover_img]:scale-105 ${
+      className={`rp-article-card group/card rp-surface relative flex w-full justify-between overflow-hidden rounded-xl border border-transparent p-4 ring-1 ring-black/5 transition-[transform,box-shadow,border-color] duration-300 ease-out hover:-translate-y-0.5 hover:border-[color-mix(in_srgb,var(--border-color)_70%,transparent)] hover:shadow-[0_8px_24px_color-mix(in_srgb,var(--main-text-color)_10%,transparent),var(--box-shadow)] hover:[&_header_.title]:text-[var(--primary-color)] dark:ring-white/5 ${
         animate ? 'rp-home-card-enter' : ''
       }`}
     >
@@ -50,7 +50,7 @@ function ArticleCard({
         className="absolute top-5 left-0 h-6 w-1 rounded-r bg-[var(--primary-color)] shadow-sm transition-transform duration-300 group-hover/card:scale-y-110"
         aria-hidden
       />
-      <div className="mr-2.5 flex h-[114px] w-[200px] shrink-0 items-center justify-center overflow-hidden rounded-lg max-md:h-20 max-md:w-[140px]">
+      <div className="mr-2.5 flex h-[114px] w-[200px] shrink-0 items-center justify-center overflow-hidden rounded-lg bg-[var(--bg-second)] max-md:h-20 max-md:w-[140px]">
         {article.cover ? (
           <Link href={`/article/${article.id}`} className="block h-full w-full">
             <Image
@@ -62,7 +62,7 @@ function ArticleCard({
               loading={eager ? 'eager' : 'lazy'}
               fetchPriority={index === 0 ? 'high' : undefined}
               decoding={index === 0 ? 'sync' : 'async'}
-              className="h-full w-full object-cover"
+              className="h-full w-full object-contain object-center"
             />
           </Link>
         ) : (

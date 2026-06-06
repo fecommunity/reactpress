@@ -5,6 +5,8 @@ import ArticleFeedSection from '@/components/article/ArticleFeedSection';
 import ArticleList from '@/components/article/ArticleList';
 import DoubleColumnLayout from '@/components/layout/DoubleColumnLayout';
 import HomeSidebar from '@/components/widgets/HomeSidebar';
+import { FEED_PAGE_SIZE } from '@/lib/reactpress/feedFooterPlacement';
+import { useFeedFooterPlacement } from '@/lib/reactpress/useFeedFooterPlacement';
 import { ArticleProvider } from '@/lib/providers/client';
 import { getArchiveBannerImage } from '@/lib/utils/archiveBanner';
 import { useLocale } from '@fecommunity/reactpress-toolkit/ui';
@@ -17,7 +19,7 @@ interface CategoryClientProps {
   category: { value: string; label: string };
 }
 
-const pageSize = 12;
+const pageSize = FEED_PAGE_SIZE;
 
 export default function CategoryClient({
   initialArticles = [],
@@ -28,6 +30,12 @@ export default function CategoryClient({
   const [page, setPage] = useState(1);
   const [articles, setArticles] = useState<ListArticle[]>(initialArticles);
   const banner = useMemo(() => getArchiveBannerImage(articles), [articles]);
+  const hasMore = page * pageSize < total;
+  const { footerInSidebar, footerAtBottom } = useFeedFooterPlacement({
+    hasMore,
+    itemCount: articles.length,
+    pageSize,
+  });
 
   useEffect(() => {
     setArticles(initialArticles);
@@ -50,6 +58,7 @@ export default function CategoryClient({
 
   return (
     <DoubleColumnLayout
+      fillMinHeight={footerAtBottom}
       leftNode={
         <>
           <ArchiveBanner
@@ -70,13 +79,13 @@ export default function CategoryClient({
           <ArticleFeedSection
             pageStart={1}
             loadMore={getArticles}
-            hasMore={page * pageSize < total}
+            hasMore={hasMore}
           >
             <ArticleList articles={articles} />
           </ArticleFeedSection>
         </>
       }
-      rightNode={<HomeSidebar />}
+      rightNode={<HomeSidebar showAboutUs={footerInSidebar} />}
     />
   );
 }

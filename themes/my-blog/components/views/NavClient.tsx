@@ -25,7 +25,7 @@ export default function NavClient({ navConfig }: NavClientProps) {
     >[0]['dataSource'];
 
   return (
-    <div className="rp-nav-page pb-8">
+    <div className="rp-nav-page flex flex-1 flex-col pb-8">
       <SystemNotification />
       <NavAdvanceSearch searchCategories={searchCategories} />
       <NavCardGrid dataSource={urlConfig} />

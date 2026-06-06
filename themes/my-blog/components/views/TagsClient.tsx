@@ -1,9 +1,11 @@
 'use client';
 
-import AboutUs from '@/components/widgets/AboutUs';
 import ArticleRecommend from '@/components/article/ArticleRecommend';
 import DoubleColumnLayout from '@/components/layout/DoubleColumnLayout';
+import HomeSidebar from '@/components/widgets/HomeSidebar';
 import TagsWidget from '@/components/widgets/TagsWidget';
+import { FEED_PAGE_SIZE } from '@/lib/reactpress/feedFooterPlacement';
+import { useFeedFooterPlacement } from '@/lib/reactpress/useFeedFooterPlacement';
 import { useLocale } from '@fecommunity/reactpress-toolkit/ui';
 import type { ITag } from '@fecommunity/reactpress-toolkit/types';
 
@@ -13,9 +15,14 @@ interface TagsClientProps {
 
 export default function TagsClient({ tags }: TagsClientProps) {
   const { t } = useLocale();
+  const { footerInSidebar, footerAtBottom } = useFeedFooterPlacement({
+    itemCount: tags.length,
+    pageSize: FEED_PAGE_SIZE,
+  });
 
   return (
     <DoubleColumnLayout
+      fillMinHeight={footerAtBottom}
       leftNode={
         <div className="overflow-hidden rounded-lg bg-[var(--bg-box)] p-6 shadow-[var(--box-shadow)]">
           <h1 className="m-0 text-2xl font-semibold text-[var(--main-text-color)]">{t('tagTitle')}</h1>
@@ -26,10 +33,12 @@ export default function TagsClient({ tags }: TagsClientProps) {
         </div>
       }
       rightNode={
-        <div className="rp-sidebar-sticky sticky mb-4 w-72">
-          <ArticleRecommend mode="inline" deferFetch />
-          <AboutUs />
-        </div>
+        <HomeSidebar
+          showTags={false}
+          showCategories
+          showAboutUs={footerInSidebar}
+          deferRecommend={false}
+        />
       }
     />
   );
