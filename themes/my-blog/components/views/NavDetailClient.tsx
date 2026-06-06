@@ -1,14 +1,13 @@
 'use client';
 
-import AboutUs from '@/components/widgets/AboutUs';
 import ArticleRecommend from '@/components/article/ArticleRecommend';
 import DoubleColumnLayout from '@/components/layout/DoubleColumnLayout';
 import Link from '@/components/shared/Link';
-import TagsWidget from '@/components/widgets/TagsWidget';
-import { TagIcon } from '@/lib/utils/icons';
+import { ChevronLeftIcon, ChevronRightIcon } from '@/lib/utils/icons';
 import { useLocale } from '@fecommunity/reactpress-toolkit/ui';
-import { useSiteCatalog, useSiteSetting } from '@fecommunity/reactpress-toolkit/theme';
-import { useMemo } from 'react';
+import { useSiteCatalog } from '@fecommunity/reactpress-toolkit/theme';
+import { useRouter } from 'next/navigation';
+import { useCallback, useMemo, useState } from 'react';
 
 interface NavChild {
   key: string;
@@ -25,10 +24,56 @@ interface NavDetailClientProps {
   };
 }
 
+function getIconUrl(item: { icon?: string; url?: string }) {
+  if (item?.icon?.trim()) return item.icon.trim();
+  if (item?.url) return `${item.url.replace(/\/$/, '')}/favicon.ico`;
+  return '';
+}
+
+function plainDescription(value?: string) {
+  if (!value?.trim()) return '';
+  return value
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function SiteIcon({ src, label }: { src: string; label: string }) {
+  const [failed, setFailed] = useState(false);
+
+  if (!src || failed) {
+    return (
+      <span className="rp-nav-detail__icon-fallback" aria-hidden>
+        {label.slice(0, 1)}
+      </span>
+    );
+  }
+
+  return (
+    <img
+      src={src}
+      alt=""
+      width={56}
+      height={56}
+      className="rp-nav-detail__icon-img"
+      onError={() => setFailed(true)}
+    />
+  );
+}
+
 export default function NavDetailClient({ siteKey, navConfig }: NavDetailClientProps) {
-  const { t } = useLocale();
-  const setting = useSiteSetting();
-  const { tags, siteConfig, globalSetting } = useSiteCatalog();
+  const { t, locale } = useLocale();
+  const router = useRouter();
+  const { siteConfig, globalSetting } = useSiteCatalog();
+  const backLabel = locale === 'zh' ? '返回' : 'Back';
+
+  const handleBack = useCallback(() => {
+    if (typeof window !== 'undefined' && window.history.length > 1) {
+      router.back();
+      return;
+    }
+    router.push('/search');
+  }, [router]);
 
   const article = useMemo(() => {
     const urlConfig =
@@ -42,83 +87,86 @@ export default function NavDetailClient({ siteKey, navConfig }: NavDetailClientP
     return {
       id: siteKey,
       title: urlItem?.label ?? t('unknownTitle'),
-      cover: urlItem?.icon || (urlItem?.url ? `${urlItem.url}/favicon.ico` : ''),
-      summary: urlItem?.description ?? '',
+      cover: getIconUrl(urlItem ?? {}),
+      summary: plainDescription(urlItem?.description),
       url: urlItem?.url ?? '',
-      tags: [
-        { label: t('pageTitleNavSite'), value: '' },
-        { label: urlItem?.label ?? siteKey, value: siteKey },
-      ],
     };
   }, [navConfig?.urlConfig, siteConfig?.nav?.urlConfig, globalSetting, siteKey, t]);
 
+  const displayUrl = article.url.replace(/^https?:\/\//, '').replace(/\/$/, '');
+
   return (
     <DoubleColumnLayout
+      className="rp-nav-detail-page"
       topNode={
-        <nav className="mb-4 text-sm text-[var(--second-text-color)]">
-          <Link href="/nav" className="text-[var(--primary-color)] no-underline hover:underline">
-            {t('nav')}
+        <nav className="rp-nav-detail__crumb" aria-label="breadcrumb">
+          <Link href="/search" className="rp-nav-detail__crumb-link">
+            {t('searchArticle')}
           </Link>
-          <span className="mx-2">/</span>
-          <span className="text-[var(--main-text-color)]">{article.title}</span>
+          <ChevronRightIcon size={14} className="rp-nav-detail__crumb-sep" aria-hidden />
+          <span className="rp-nav-detail__crumb-current">{article.title}</span>
         </nav>
       }
       leftNode={
-        <div>
-          <article className="overflow-hidden rounded-lg bg-[var(--bg-box)] p-4 shadow-[var(--box-shadow)] md:p-6">
-            <h1 className="m-0 text-2xl font-semibold text-[var(--main-text-color)]">{article.title}</h1>
-            <div className="mt-4 text-sm leading-relaxed text-[var(--second-text-color)]">
-              {article.cover ? (
-                <img src={article.cover} alt={t('articleCover')} className="mb-4 max-h-16 rounded" />
-              ) : null}
-              <p>{article.summary}</p>
-              {article.url ? (
+        <div className="rp-nav-detail">
+          <article className="rp-nav-detail__card">
+            <header className="rp-nav-detail__header">
+              <div className="rp-nav-detail__header-main">
+                <div className="rp-nav-detail__icon">
+                  <SiteIcon src={article.cover} label={article.title} />
+                </div>
+                <div className="rp-nav-detail__meta">
+                  <h1 className="rp-nav-detail__title">{article.title}</h1>
+                  {displayUrl ? (
+                    <p className="rp-nav-detail__url" title={article.url}>
+                      {displayUrl}
+                    </p>
+                  ) : null}
+                </div>
+              </div>
+              <div className="rp-nav-detail__actions">
+                {article.url ? (
+                  <button
+                    type="button"
+                    onClick={() => window.open(article.url, '_blank', 'noopener,noreferrer')}
+                    className="rp-nav-detail__btn rp-nav-detail__btn--primary"
+                  >
+                    {t('navOpenSite')}
+                  </button>
+                ) : null}
+                <button
+                  type="button"
+                  onClick={handleBack}
+                  className="rp-nav-detail__btn rp-nav-detail__btn--ghost"
+                >
+                  <ChevronLeftIcon size={14} aria-hidden />
+                  {backLabel}
+                </button>
+              </div>
+            </header>
+
+            {article.summary ? <p className="rp-nav-detail__summary">{article.summary}</p> : null}
+
+            <div className="rp-nav-detail__disclaimer" role="note">
+              {t('navPreviewDisclaimer')}
+            </div>
+
+            {article.url ? (
+              <div className="rp-nav-detail__preview">
                 <iframe
                   title={article.title}
                   src={article.url}
-                  className="mt-4 min-h-[480px] w-full rounded border border-[var(--border-color)]"
+                  className="rp-nav-detail__iframe"
                   allowFullScreen
                 />
-              ) : null}
-            </div>
-            <div className="mt-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-800 dark:bg-amber-950/30 dark:text-amber-200">
-              {t('navPreviewDisclaimer')}
-            </div>
-            {article.url ? (
-              <button
-                type="button"
-                onClick={() => window.open(article.url, '_blank')}
-                className="mt-4 rounded-lg bg-[var(--primary-color)] px-5 py-2 text-sm text-white"
-              >
-                {t('navOpenSite')}
-              </button>
+              </div>
             ) : null}
-            <div className="mt-6 flex flex-wrap gap-2">
-              {article.tags.map((tag) => (
-                <Link
-                  key={tag.value}
-                  href={tag.value ? `/nav/${tag.value}` : '/nav'}
-                  className="inline-flex items-center gap-1 rounded-full border border-[var(--border-color)] px-3 py-1 text-xs text-[var(--main-text-color)] no-underline hover:border-[var(--primary-color)]"
-                >
-                  <TagIcon className="h-3 w-3" />
-                  {tag.label}
-                </Link>
-              ))}
-            </div>
           </article>
-          <div className="mt-6 overflow-hidden rounded-lg bg-[var(--bg-box)] p-4 shadow-[var(--box-shadow)]">
-            <p className="mb-3 font-semibold text-[var(--main-text-color)]">{t('recommendToReading')}</p>
+
+          <section className="rp-nav-detail__recommend">
+            <h2 className="rp-nav-detail__recommend-title">{t('recommendToReading')}</h2>
             <ArticleRecommend articleId={article.id} needTitle={false} />
-          </div>
-        </div>
-      }
-      rightNode={
-        <div className="rp-sidebar-sticky sticky mb-4 w-72">
-          <TagsWidget
-            tags={tags as Parameters<typeof TagsWidget>[0]['tags']}
-            animationMode
-          />
-          <AboutUs />
+          </section>
         </div>
       }
     />

@@ -14,6 +14,11 @@ import { useLocale } from '@fecommunity/reactpress-toolkit/ui';
 import { usePathname } from 'next/navigation';
 import { useEffect, useMemo } from 'react';
 
+function isRemovedNavLink(item: { path?: string; locale?: string }) {
+  const path = (item.path || '').replace(/\/$/, '') || '/';
+  return path === '/nav' || item.locale === 'nav';
+}
+
 function HeaderLogo({ systemLogo }: { systemLogo?: string }) {
   const raw = systemLogo?.trim() ?? '';
   if (!raw) {
@@ -92,27 +97,31 @@ export default function SiteHeader() {
   }, [affix, affixVisible]);
 
   const navItems = useMemo(() => {
-    const navMenu = navLinks.map((nav) => {
-      const Icon = getIconByName(nav.icon);
-      const labelText = nav.label || (nav.locale ? t(nav.locale) : nav.path);
-      return {
-        key: nav.path,
-        href: nav.path,
-        label: labelText,
-        icon: Icon ? <Icon size={20} /> : null,
-      };
-    });
+    const navMenu = navLinks
+      .filter((nav) => !isRemovedNavLink(nav))
+      .map((nav) => {
+        const Icon = getIconByName(nav.icon);
+        const labelText = nav.label || (nav.locale ? t(nav.locale) : nav.path);
+        return {
+          key: nav.path,
+          href: nav.path,
+          label: labelText,
+          icon: Icon ? <Icon size={20} /> : null,
+        };
+      });
 
-    const pageMenu = pages.map((menu, index) => {
-      const Icon = getIconByName(menu.path);
-      const href = menu.path?.startsWith('/') ? menu.path : `/${menu.path}/`;
-      return {
-        key: `${index}-${menu.label}`,
-        href,
-        label: t(menu.path) || menu.name,
-        icon: Icon ? <Icon size={20} /> : null,
-      };
-    });
+    const pageMenu = pages
+      .filter((menu) => !isRemovedNavLink({ path: menu.path, locale: menu.path }))
+      .map((menu, index) => {
+        const Icon = getIconByName(menu.path);
+        const href = menu.path?.startsWith('/') ? menu.path : `/${menu.path}/`;
+        return {
+          key: `${index}-${menu.label}`,
+          href,
+          label: t(menu.path) || menu.name,
+          icon: Icon ? <Icon size={20} /> : null,
+        };
+      });
 
     return navMenu.concat(pageMenu);
   }, [navLinks, pages, t]);

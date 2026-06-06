@@ -1,42 +1,52 @@
 'use client';
 
 import ArticleList from '@/components/article/ArticleList';
-import ArticleRecommend from '@/components/article/ArticleRecommend';
 import DoubleColumnLayout from '@/components/layout/DoubleColumnLayout';
-import HomeSidebar from '@/components/widgets/HomeSidebar';
+import SearchHero from '@/components/search/SearchHero';
+import SearchQuickLinks from '@/components/search/SearchQuickLinks';
 import { useFeedFooterPlacement } from '@/lib/reactpress/useFeedFooterPlacement';
 import { useLocale } from '@fecommunity/reactpress-toolkit/ui';
 import type { ListArticle } from '@fecommunity/reactpress-toolkit/theme';
+import { useSiteCatalog } from '@fecommunity/reactpress-toolkit/theme';
 import { useRouter } from 'next/navigation';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 interface SearchClientProps {
   keyword: string;
   articles: ListArticle[];
+  navConfig?: {
+    urlConfig?: unknown[];
+    searchCategories?: {
+      categories?: Array<{ key: string; label: string }>;
+      subCategories?: Record<string, Array<{ key: string; label: string; url?: string }>>;
+    };
+  };
 }
 
 export default function SearchClient({
   keyword: initialKeyword = '',
   articles: initialArticles = [],
+  navConfig,
 }: SearchClientProps) {
   const { t } = useLocale();
   const router = useRouter();
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [keyword, setKeyword] = useState(initialKeyword);
+  const { siteConfig } = useSiteCatalog();
   const [articles, setArticles] = useState(initialArticles);
   const hasSearchResults = Boolean(initialKeyword.trim());
-  const { footerInSidebar, footerAtBottom } = useFeedFooterPlacement({
+  const { footerAtBottom } = useFeedFooterPlacement({
     itemCount: hasSearchResults ? articles.length : 0,
   });
 
-  useEffect(() => {
-    setKeyword(initialKeyword);
-    setArticles(initialArticles);
-  }, [initialArticles, initialKeyword]);
+  const searchCategories =
+    navConfig?.searchCategories || siteConfig?.nav?.searchCategories;
+  const urlConfig =
+    (navConfig?.urlConfig || siteConfig?.nav?.urlConfig || []) as Parameters<
+      typeof SearchQuickLinks
+    >[0]['dataSource'];
 
   useEffect(() => {
-    inputRef.current?.focus();
-  }, []);
+    setArticles(initialArticles);
+  }, [initialArticles]);
 
   const runSearch = useCallback(
     (value: string) => {
@@ -52,67 +62,41 @@ export default function SearchClient({
 
   return (
     <DoubleColumnLayout
+      className="rp-search-page"
       fillMinHeight={footerAtBottom}
+      topNode={
+        <SearchHero
+          searchCategories={searchCategories}
+          initialKeyword={initialKeyword}
+          onLocalSearch={runSearch}
+          compact={hasSearchResults}
+        />
+      }
       leftNode={
-        <>
-          <search className="mb-4 block min-w-0 rounded-lg bg-[var(--bg-box)] p-5 shadow-[var(--box-shadow)] md:p-6">
-            <h1 className="m-0 text-xl font-semibold text-[var(--main-text-color)]">{t('searchArticle')}</h1>
-            <div className="rp-search-bar mt-3 flex min-w-0 gap-0">
-              <input
-                ref={inputRef}
-                value={keyword}
-                onChange={(e) => setKeyword(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') runSearch(keyword);
-                }}
-                placeholder={t('searchArticlePlaceholder')}
-                className="rp-theme-input min-w-0 flex-1 rounded-l-lg border border-[var(--border-color)] bg-[var(--bg-body)] px-4 py-3 text-[15px] text-[var(--main-text-color)]"
-              />
-              <button
-                type="button"
-                onClick={() => runSearch(keyword)}
-                className="rp-primary-button rounded-r-lg px-5 py-3 text-[15px] font-medium"
-              >
-                {t('search')}
-              </button>
+        hasSearchResults ? (
+          <div className="rp-search-results">
+            <div className="rp-search-results__summary">
+              <p className="m-0 text-sm text-[var(--second-text-color)]">
+                {t('totalSearch')}{' '}
+                <span className="font-semibold text-[var(--primary-color)]">{articles.length}</span> {t('piece')}
+              </p>
+              <p className="m-0 mt-1 text-base font-medium text-[var(--main-text-color)]">
+                &ldquo;{initialKeyword}&rdquo;
+              </p>
             </div>
-          </search>
-          {initialKeyword ? (
-            <p className="mb-4 text-sm text-[var(--second-text-color)]">
-              {t('totalSearch')}{' '}
-              <span className="font-semibold text-[var(--primary-color)]">{articles.length}</span> {t('piece')}
-              {' · '}
-              <span className="font-medium text-[var(--main-text-color)]">&ldquo;{initialKeyword}&rdquo;</span>
-            </p>
-          ) : null}
-          <main className="mb-16">
-            {initialKeyword ? (
-              articles.length ? (
+            <main className="rp-search-results__list">
+              {articles.length ? (
                 <ArticleList articles={articles} />
               ) : (
-                <div className="rounded-lg bg-[var(--bg-box)] p-8 text-center text-[var(--second-text-color)]">
+                <div className="rounded-xl bg-[var(--bg-box)] p-10 text-center text-[var(--second-text-color)] ring-1 ring-black/5 dark:ring-white/5">
                   {t('empty')}
                 </div>
-              )
-            ) : (
-              <section className="rp-article-recommend">
-                <p className="rp-cms-section-title">{t('recommendToReading')}</p>
-                <div className="overflow-hidden rounded-xl shadow-[var(--box-shadow)] ring-1 ring-black/5 dark:ring-white/5 [&_.rp-article-list]:shadow-none">
-                  <ArticleRecommend needTitle={false} mode="vertical" />
-                </div>
-              </section>
-            )}
-          </main>
-        </>
-      }
-      rightNode={
-        <HomeSidebar
-          showTags
-          showCategories
-          showRecommend={false}
-          showAboutUs={footerInSidebar}
-          deferRecommend
-        />
+              )}
+            </main>
+          </div>
+        ) : (
+          <SearchQuickLinks dataSource={urlConfig} />
+        )
       }
     />
   );

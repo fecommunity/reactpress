@@ -127,6 +127,22 @@ export function SearchIcon(props: IconProps) {
   );
 }
 
+export function ChevronRightIcon(props: IconProps) {
+  return (
+    <SvgIcon {...props}>
+      <path d="m9 6 6 6-6 6" />
+    </SvgIcon>
+  );
+}
+
+export function ChevronLeftIcon(props: IconProps) {
+  return (
+    <SvgIcon {...props}>
+      <path d="m15 18-6-6 6-6" />
+    </SvgIcon>
+  );
+}
+
 export function MessageIcon(props: IconProps) {
   return (
     <SvgIcon {...props}>

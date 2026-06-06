@@ -22,6 +22,8 @@ interface Article {
 
 interface ArticleListProps {
   articles: Article[];
+  /** Tighter spacing for recommend blocks. */
+  density?: 'feed' | 'compact';
 }
 
 const COVER_WIDTH = 200;
@@ -32,19 +34,21 @@ function ArticleCard({
   categoryIndex,
   index,
   animate = false,
+  compact = false,
 }: {
   article: Article;
   categoryIndex: number;
   index: number;
   animate?: boolean;
+  compact?: boolean;
 }) {
   const eager = index < 3;
 
   return (
     <div
-      className={`rp-article-card group/card rp-surface relative flex w-full justify-between overflow-hidden rounded-xl border border-transparent p-4 ring-1 ring-black/5 transition-[box-shadow,border-color] duration-300 ease-out hover:border-[color-mix(in_srgb,var(--border-color)_70%,transparent)] hover:shadow-[0_8px_24px_color-mix(in_srgb,var(--main-text-color)_10%,transparent),var(--box-shadow)] hover:[&_header_.title]:text-[var(--primary-color)] dark:ring-white/5 ${
-        animate ? 'rp-home-card-enter' : ''
-      }`}
+      className={`rp-article-card group/card rp-surface relative flex w-full justify-between overflow-hidden rounded-xl border border-transparent ring-1 ring-black/5 transition-[box-shadow,border-color] duration-300 ease-out hover:border-[color-mix(in_srgb,var(--border-color)_70%,transparent)] hover:shadow-[0_8px_24px_color-mix(in_srgb,var(--main-text-color)_10%,transparent),var(--box-shadow)] hover:[&_header_.title]:text-[var(--primary-color)] dark:ring-white/5 ${
+        compact ? 'p-3' : 'p-4'
+      } ${animate ? 'rp-home-card-enter' : ''}`}
     >
       <span
         className="absolute top-5 left-0 h-6 w-1 rounded-r bg-[var(--primary-color)] opacity-90 shadow-sm transition-opacity duration-300 group-hover/card:opacity-100"
@@ -122,9 +126,10 @@ function ArticleCard({
   );
 }
 
-export default function ArticleList({ articles = [] }: ArticleListProps) {
+export default function ArticleList({ articles = [], density = 'feed' }: ArticleListProps) {
   const { t } = useLocale();
   const { categories } = useSiteCatalog();
+  const compact = density === 'compact';
   const animatedCountRef = useRef(0);
 
   useEffect(() => {
@@ -142,7 +147,7 @@ export default function ArticleList({ articles = [] }: ArticleListProps) {
   const animateFromIndex = animatedCountRef.current;
 
   return (
-    <div className="rp-article-list rp-home-stagger flex w-full flex-col gap-4">
+    <div className={`rp-article-list rp-home-stagger flex w-full flex-col ${compact ? 'gap-2' : 'gap-4'}`}>
       {articles.length ? (
         articles.map((article, index) => (
           <ArticleCard
@@ -151,6 +156,7 @@ export default function ArticleList({ articles = [] }: ArticleListProps) {
             categoryIndex={categoryIndices[index]}
             index={index}
             animate={index >= animateFromIndex}
+            compact={compact}
           />
         ))
       ) : (

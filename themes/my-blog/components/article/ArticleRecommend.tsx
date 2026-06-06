@@ -95,7 +95,7 @@ function RecommendScrollRow({
   compact?: boolean;
 }) {
   return (
-    <li className={compact ? 'rp-recommend-scroll-row flex items-center' : 'pt-4'}>
+    <li className={compact ? 'rp-recommend-scroll-row flex items-center' : undefined}>
       <Link
         href={`/article/${article.id}`}
         title={article.title}
@@ -175,7 +175,7 @@ function RecommendInlineScroller({ articles }: { articles: RecommendArticle[] })
 
   if (!canScroll) {
     return (
-      <ul className="rp-recommend-inline rp-recommend-fade-in m-0 list-none px-4 pb-4">
+      <ul className="rp-recommend-inline rp-recommend-fade-in m-0 flex list-none flex-col gap-2 px-4 py-3">
         {articles.map((article, index) => (
           <RecommendScrollRow key={article.id} article={article} rank={index + 1} />
         ))}
@@ -185,7 +185,7 @@ function RecommendInlineScroller({ articles }: { articles: RecommendArticle[] })
 
   return (
     <div
-      className="rp-recommend-scroll rp-recommend-fade-in px-4 pb-4"
+      className="rp-recommend-scroll rp-recommend-fade-in px-4 py-3"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onFocusCapture={() => setPaused(true)}
@@ -275,7 +275,12 @@ export default function ArticleRecommend({
     } else if (showEmpty) {
       body = <EmptyState />;
     } else {
-      body = <ArticleList articles={articles as Parameters<typeof ArticleList>[0]['articles']} />;
+      body = (
+        <ArticleList
+          articles={articles as Parameters<typeof ArticleList>[0]['articles']}
+          density="compact"
+        />
+      );
     }
 
     if (asPageSection) {

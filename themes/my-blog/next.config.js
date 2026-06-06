@@ -61,6 +61,8 @@ module.exports = {
       { source: '/tags/:tag/page/:page', destination: '/tag/:tag', permanent: true },
       { source: '/page/suggestions', destination: '/suggestions', permanent: true },
       { source: '/page/suggestions/', destination: '/suggestions/', permanent: true },
+      { source: '/nav', destination: '/search', permanent: true },
+      { source: '/nav/', destination: '/search/', permanent: true },
     ];
   },
   async headers() {
