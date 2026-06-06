@@ -138,6 +138,17 @@ html:has(body.dark) {
     border-radius: var(--radius-sm);
     outline-color: var(--color-primary-500);
   }
+
+  /* @tailwindcss/forms defaults to blue.600 — align focus ring with ReactPress theme. */
+  input:focus,
+  input:focus-visible,
+  textarea:focus,
+  textarea:focus-visible,
+  select:focus,
+  select:focus-visible {
+    --tw-ring-color: var(--primary-color);
+    border-color: var(--primary-color);
+  }
 }
 
 @layer utilities {
@@ -528,7 +539,7 @@ input:-webkit-autofill:focus {
   color: var(--main-text-color);
   background-color: var(--bg-code);
   overflow: auto;
-  overscroll-behavior: contain;
+  overscroll-behavior: auto;
   font-size: inherit;
   margin: 0;
   white-space: pre-wrap;
@@ -1155,8 +1166,17 @@ body.dark {
 }
 
 .rp-comment-editor .rp-comment-input:focus,
-.rp-comment-editor .rp-comment-textarea:focus {
+.rp-comment-editor .rp-comment-textarea:focus,
+.rp-comment-editor .rp-comment-input:focus-visible,
+.rp-comment-editor .rp-comment-textarea:focus-visible {
   border-color: var(--primary-color);
+  outline: none;
+  --tw-ring-color: var(--primary-color);
+  --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(1px + var(--tw-ring-offset-width, 0px))
+    var(--primary-color);
+  box-shadow:
+    var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 0 1px var(--primary-color)),
+    var(--tw-shadow, 0 0 #0000);
 }
 
 .rp-comment-editor .rp-comment-input.is-error {

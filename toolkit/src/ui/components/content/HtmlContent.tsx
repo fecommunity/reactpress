@@ -27,23 +27,6 @@ function addLineNumbers(html: string): string {
   return `<span class="ln-bg"></span>${result}`;
 }
 
-function attachWheelHandler(scrollEl: HTMLElement) {
-  if (scrollEl.getAttribute('data-rp-wheel') === '1') return;
-
-  const onWheel = (event: WheelEvent) => {
-    const { scrollTop, scrollHeight, clientHeight } = scrollEl;
-    const delta = event.deltaY;
-    const canScrollUp = scrollTop > 0 && delta < 0;
-    const canScrollDown = scrollTop + clientHeight < scrollHeight - 1 && delta > 0;
-    if (canScrollUp || canScrollDown) {
-      event.stopPropagation();
-    }
-  };
-
-  scrollEl.addEventListener('wheel', onWheel, { passive: true, capture: true });
-  scrollEl.setAttribute('data-rp-wheel', '1');
-}
-
 function highlightCodeElement(
   hljs: { highlightBlock?: (el: HTMLElement) => void; highlightElement?: (el: HTMLElement) => void },
   el: HTMLElement,
@@ -220,8 +203,6 @@ function enhanceCodeBlocks(
     }
 
     updateLanguageLabel(toolbar, resolveCodeLanguage(el.className, plainText, hljs));
-
-    attachWheelHandler(el);
   });
 }
 

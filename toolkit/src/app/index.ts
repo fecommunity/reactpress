@@ -40,6 +40,8 @@ export type CreateReactPressApp = (
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 export const createThemeApp = require('./createThemeApp').createThemeApp as CreateThemeApp;
 // eslint-disable-next-line @typescript-eslint/no-var-requires
+export const DevChunkRecovery = require('./devChunkRecovery').DevChunkRecovery as ComponentType;
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 export const createReactPressApp = require('./createReactPressApp').createReactPressApp as CreateReactPressApp;
 /** @deprecated Use `createReactPressApp`. */
 export const createCatalogThemeApp = createReactPressApp;

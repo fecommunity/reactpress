@@ -1,5 +1,6 @@
 import './globals.css';
 
+import DevChunkRecovery from '@/components/DevChunkRecovery';
 import SiteHeader from '@/components/reactpress/SiteHeader';
 import ConditionalSiteFooter from '@/components/reactpress/ConditionalSiteFooter';
 import PageContainer from '@/components/reactpress/PageContainer';
@@ -44,6 +45,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <style dangerouslySetInnerHTML={{ __html: appearanceCss }} />
         ) : null}
         <ReactPressAppProviders bootstrap={bootstrap}>
+          <DevChunkRecovery />
           <SiteHeader />
           <main id="main-content" className="mb-auto">
             <PageContainer>{children}</PageContainer>

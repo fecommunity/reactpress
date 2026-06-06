@@ -25,6 +25,8 @@ module.exports = {
   transpilePackages: ['@fecommunity/reactpress-toolkit'],
   experimental: {
     optimizePackageImports: ['@fecommunity/reactpress-toolkit', '@fecommunity/reactpress-toolkit/ui'],
+    // Avoid SegmentViewNode manifest corruption in dev (Next 15.5+).
+    devtoolSegmentExplorer: false,
   },
   eslint: { ignoreDuringBuilds: true },
   typescript: { ignoreBuildErrors: true },

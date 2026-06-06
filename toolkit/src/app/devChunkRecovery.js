@@ -14,7 +14,9 @@ function DevChunkRecovery() {
         msg.includes("reading 'call'") ||
         msg.includes('ChunkLoadError') ||
         msg.includes('Loading chunk') ||
-        msg.includes('__webpack_modules__')
+        msg.includes('__webpack_modules__') ||
+        msg.includes('is not a function') ||
+        msg.includes('/_next/undefined')
       );
     };
 
@@ -35,20 +37,33 @@ function DevChunkRecovery() {
     window.addEventListener('error', onError);
     window.addEventListener('unhandledrejection', onError);
 
-    const Router = require('next/router').default;
     const clearRecoveries = () => window.sessionStorage.removeItem(storageKey);
-    const onRouteError = (err) => {
-      if (err?.cancelled) return;
-      if (isChunkMismatch(err?.message)) recover();
-    };
-    Router.events.on('routeChangeComplete', clearRecoveries);
-    Router.events.on('routeChangeError', onRouteError);
+    window.addEventListener('load', clearRecoveries);
+
+    let routerCleanup = () => {};
+    try {
+      const Router = require('next/router').default;
+      if (Router?.events?.on) {
+        const onRouteError = (err) => {
+          if (err?.cancelled) return;
+          if (isChunkMismatch(err?.message)) recover();
+        };
+        Router.events.on('routeChangeComplete', clearRecoveries);
+        Router.events.on('routeChangeError', onRouteError);
+        routerCleanup = () => {
+          Router.events.off('routeChangeComplete', clearRecoveries);
+          Router.events.off('routeChangeError', onRouteError);
+        };
+      }
+    } catch {
+      // App Router themes rely on window error listeners only.
+    }
 
     return () => {
       window.removeEventListener('error', onError);
       window.removeEventListener('unhandledrejection', onError);
-      Router.events.off('routeChangeComplete', clearRecoveries);
-      Router.events.off('routeChangeError', onRouteError);
+      window.removeEventListener('load', clearRecoveries);
+      routerCleanup();
     };
   }, []);
 

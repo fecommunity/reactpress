@@ -30,12 +30,15 @@ function resolveInitialAuthor(user: ReturnType<typeof useSiteUser>['user']): Com
   if (isLoggedInUser(user)) {
     return { name: user.name, email: user.email ?? '' };
   }
-  const saved = readCommentAuthor();
-  if (saved) return saved;
   return {
     name: typeof user?.name === 'string' ? user.name : '',
     email: typeof user?.email === 'string' ? user.email : '',
   };
+}
+
+function resolveAccountEmail(user: ReturnType<typeof useSiteUser>['user']): string {
+  const email = user?.email?.trim() ?? '';
+  return email && isValidCommentEmail(email) ? email : '';
 }
 
 export default function CommentEditor({
@@ -53,42 +56,55 @@ export default function CommentEditor({
   const [author, setAuthor] = useState<CommentAuthor>(() => resolveInitialAuthor(user));
   const [content, setContent] = useState('');
   const [emailTouched, setEmailTouched] = useState(false);
+  const [persistedEmail, setPersistedEmail] = useState('');
 
   const loggedInAuthor = useMemo(() => (isLoggedInUser(user) ? user : null), [user]);
-  const accountEmail = loggedInAuthor?.email?.trim() ?? '';
+  const accountEmail = useMemo(() => resolveAccountEmail(loggedInAuthor ?? user), [loggedInAuthor, user]);
+  const knownEmail = accountEmail || persistedEmail;
   const nameReadOnly = Boolean(loggedInAuthor);
-  const emailReadOnly = Boolean(loggedInAuthor && accountEmail);
+  const emailReadOnly = Boolean(knownEmail);
 
   const effectiveAuthor = useMemo((): CommentAuthor => {
     if (loggedInAuthor) {
       return {
         name: loggedInAuthor.name,
-        email: accountEmail || author.email,
+        email: knownEmail || author.email,
       };
     }
-    return author;
-  }, [accountEmail, author, loggedInAuthor]);
+    return {
+      name: author.name,
+      email: emailReadOnly ? knownEmail : author.email,
+    };
+  }, [author, emailReadOnly, knownEmail, loggedInAuthor]);
 
   useEffect(() => {
     if (loggedInAuthor) {
-      setAuthor((prev) => ({
+      setAuthor({
         name: loggedInAuthor.name,
-        email: accountEmail || prev.email,
-      }));
+        email: accountEmail,
+      });
+      setPersistedEmail('');
       return;
     }
+
     const saved = readCommentAuthor();
     if (saved) {
       setAuthor(saved);
+      const savedEmail = saved.email?.trim() ?? '';
+      setPersistedEmail(
+        savedEmail && isValidCommentEmail(savedEmail) ? savedEmail : '',
+      );
       return;
     }
+
+    setPersistedEmail('');
     if (user?.name || user?.email) {
       setAuthor((prev) => ({
         name: user.name || prev.name,
         email: user.email || prev.email,
       }));
     }
-  }, [accountEmail, loggedInAuthor, user?.name, user?.email]);
+  }, [accountEmail, loggedInAuthor, user?.email, user?.name]);
 
   const emailError = useMemo(
     () =>

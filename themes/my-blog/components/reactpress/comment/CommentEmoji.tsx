@@ -78,9 +78,9 @@ export default function CommentEmoji({ onPick, children }: CommentEmojiProps) {
   const panel =
     open && mounted ? (
       <div className="rp-comment-emoji-panel is-portal" style={panelStyle} role="listbox">
-        {Object.values(emojis).map((emoji) => (
+        {Object.entries(emojis).map(([name, emoji]) => (
           <button
-            key={emoji}
+            key={name}
             type="button"
             aria-label={emoji}
             onClick={() => {

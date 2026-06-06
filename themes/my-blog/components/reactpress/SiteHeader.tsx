@@ -117,6 +117,94 @@ export default function SiteHeader() {
     return navMenu.concat(pageMenu);
   }, [navLinks, pages, t]);
 
+  useEffect(() => {
+    setVisible(false);
+  }, [pathname, setVisible]);
+
+  const navLinkClass = (isActive: boolean) =>
+    `inline-flex items-center gap-1.5 whitespace-nowrap no-underline transition-colors ${
+      isActive
+        ? 'border-[var(--primary-color)] text-[var(--primary-color)] dark:border-[#ff6659] dark:text-[#ff6659]'
+        : 'border-transparent text-inherit hover:border-[var(--primary-color)] hover:text-[var(--primary-color)] dark:hover:border-[#ff6659] dark:hover:text-[#ff6659]'
+    }`;
+
+  const renderNavLinks = (mode: 'desktop' | 'mobile', onNavigate?: () => void) => (
+    <ul
+      className={
+        mode === 'desktop'
+          ? 'm-0 flex min-w-0 list-none items-center justify-end gap-1 overflow-x-auto p-0 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden'
+          : 'm-0 flex w-full list-none flex-col items-stretch gap-0 p-0'
+      }
+    >
+      {navItems.map((item, index) => {
+        const isActive = mainPath === item.key || pathname === item.href;
+        const isLast = index === navItems.length - 1;
+        return (
+          <li key={item.key} className={mode === 'mobile' ? 'w-full' : undefined}>
+            <Link
+              href={item.href}
+              onClick={onNavigate}
+              className={
+                mode === 'desktop'
+                  ? `h-16 border-b-2 px-2.5 ${navLinkClass(isActive)}`
+                  : `h-[52px] w-full border-b px-1 ${isLast ? 'border-transparent' : 'border-[var(--border-color)]'} ${navLinkClass(isActive)}`
+              }
+            >
+              {item.icon}
+              <span>{item.label}</span>
+            </Link>
+          </li>
+        );
+      })}
+    </ul>
+  );
+
+  const renderToolArea = (mode: 'desktop' | 'mobile') => (
+    <div
+      className={
+        mode === 'desktop'
+          ? 'flex shrink-0 items-center gap-3 border-l border-[var(--border-color)] pl-4'
+          : 'mt-2 flex w-full flex-col items-stretch gap-0 border-t border-[var(--border-color)] pt-2'
+      }
+    >
+      <div className={mode === 'mobile' ? 'flex w-full justify-center py-2' : undefined}>
+        <HeaderSearch />
+      </div>
+      <ul
+        className={
+          mode === 'desktop'
+            ? 'm-0 flex list-none items-center gap-4 p-0'
+            : 'm-0 flex w-full list-none flex-wrap items-center justify-center gap-4 p-0 py-4'
+        }
+      >
+        <li className="flex h-10 w-10 items-center justify-center">
+          <ThemeSwitch />
+        </li>
+        <li className="flex h-10 w-10 items-center justify-center">
+          <LocaleSwitcher />
+        </li>
+        {setting.aboutUsGithubUrl?.trim() ? (
+          <li className="flex h-10 w-10 items-center justify-center">
+            <a
+              href={setting.aboutUsGithubUrl.trim()}
+              target="_blank"
+              rel="noopener noreferrer nofollow"
+              aria-label="Github"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full text-[var(--main-text-color)] no-underline transition-colors hover:bg-[var(--bg-second)] hover:text-[var(--primary-color)]"
+            >
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden>
+                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+              </svg>
+            </a>
+          </li>
+        ) : null}
+        <li className="flex items-center justify-center">
+          <UserAuth />
+        </li>
+      </ul>
+    </div>
+  );
+
   return (
     <header className="relative z-[100] h-16 w-full bg-[var(--bg-box)]">
       <a
@@ -127,20 +215,13 @@ export default function SiteHeader() {
       </a>
       <div
         className={`z-[100] h-16 w-full border-b border-[var(--border-color)] bg-[var(--bg-box)] backdrop-blur-md ${
-          affix ? 'fixed top-0 right-0 left-0 -translate-y-16 transition-transform duration-200' : 'relative'
-        } ${affix && affixVisible ? '!translate-y-0' : ''}`}
+          affix
+            ? 'md:fixed md:top-0 md:right-0 md:left-0 md:-translate-y-16 md:transition-transform md:duration-200'
+            : 'relative'
+        } ${affix && affixVisible ? 'md:!translate-y-0' : ''}`}
       >
-        {visible ? (
-          <button
-            type="button"
-            className="fixed inset-0 z-[90] bg-black/30 md:hidden"
-            aria-label="Close menu"
-            onClick={() => setVisible(false)}
-          />
-        ) : null}
-
-        <PageContainer className="relative flex h-16 items-center gap-4">
-          <div className="rp-header-logo shrink-0 text-[var(--main-text-color)]">
+        <PageContainer className="relative flex h-16 items-center gap-3 md:gap-4">
+          <div className="rp-header-logo min-w-0 flex-1 shrink text-[var(--main-text-color)] md:flex-none">
             <Link
               href="/"
               aria-label={setting.systemTitle || 'Home'}
@@ -151,66 +232,16 @@ export default function SiteHeader() {
           </div>
 
           <nav
-            className={`flex h-full min-w-0 flex-1 items-center justify-end gap-4 text-base text-[var(--main-text-color)] max-md:fixed max-md:top-16 max-md:right-0 max-md:bottom-0 max-md:left-0 max-md:z-[95] max-md:flex-col max-md:items-stretch max-md:justify-start max-md:bg-[var(--bg-box)] max-md:p-4 ${
-              visible ? 'max-md:flex' : 'max-md:hidden'
-            }`}
+            className="hidden h-full min-w-0 flex-1 items-center justify-end gap-4 text-base text-[var(--main-text-color)] md:flex"
             aria-label={setting.systemTitle || 'Navigation'}
           >
-            <ul className="m-0 flex min-w-0 list-none items-center justify-end gap-1 overflow-x-auto p-0 [-ms-overflow-style:none] [scrollbar-width:none] max-md:w-full max-md:flex-col max-md:items-stretch max-md:overflow-visible [&::-webkit-scrollbar]:hidden">
-              {navItems.map((item) => {
-                const isActive = mainPath === item.key || pathname === item.href;
-                return (
-                  <li key={item.key}>
-                    <Link
-                      href={item.href}
-                      className={`inline-flex h-16 items-center gap-1.5 border-b-2 px-2.5 whitespace-nowrap no-underline transition-colors max-md:h-12 max-md:w-full max-md:border-b-0 max-md:px-3 ${
-                        isActive
-                          ? 'border-[var(--primary-color)] text-[var(--primary-color)] dark:border-[#ff6659] dark:text-[#ff6659]'
-                          : 'border-transparent text-inherit hover:border-[var(--primary-color)] hover:text-[var(--primary-color)] dark:hover:border-[#ff6659] dark:hover:text-[#ff6659]'
-                      }`}
-                    >
-                      {item.icon}
-                      <span>{item.label}</span>
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-
-            <div className="flex shrink-0 items-center gap-3 border-[var(--border-color)] pl-4 max-md:w-full max-md:border-l-0 max-md:border-t max-md:pt-4">
-              <HeaderSearch />
-              <ul className="m-0 flex list-none items-center gap-4 p-0">
-                <li className="flex h-10 w-10 items-center justify-center">
-                  <ThemeSwitch />
-                </li>
-                <li className="flex h-10 w-10 items-center justify-center">
-                  <LocaleSwitcher />
-                </li>
-                {setting.aboutUsGithubUrl?.trim() ? (
-                  <li className="flex h-10 w-10 items-center justify-center">
-                    <a
-                      href={setting.aboutUsGithubUrl.trim()}
-                      target="_blank"
-                      rel="noopener noreferrer nofollow"
-                      aria-label="Github"
-                      className="inline-flex h-10 w-10 items-center justify-center rounded-full text-[var(--main-text-color)] no-underline transition-colors hover:bg-[var(--bg-second)] hover:text-[var(--primary-color)]"
-                    >
-                      <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden>
-                        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
-                      </svg>
-                    </a>
-                  </li>
-                ) : null}
-                <li className="flex items-center justify-center">
-                  <UserAuth />
-                </li>
-              </ul>
-            </div>
+            {renderNavLinks('desktop')}
+            {renderToolArea('desktop')}
           </nav>
 
           <button
             type="button"
-            className="flex h-11 w-11 shrink-0 flex-col items-center justify-center border-0 bg-transparent p-0 md:hidden"
+            className="relative z-[101] flex h-11 w-11 shrink-0 flex-col items-center justify-center border-0 bg-transparent p-0 md:hidden"
             onClick={() => setVisible(!visible)}
             aria-label="Toggle mobile menu"
             aria-expanded={visible}
@@ -233,6 +264,24 @@ export default function SiteHeader() {
           </button>
         </PageContainer>
       </div>
+
+      {visible ? (
+        <>
+          <button
+            type="button"
+            className="fixed top-16 right-0 bottom-0 left-0 z-[98] border-0 bg-black/45 md:hidden"
+            aria-label="Close menu"
+            onClick={() => setVisible(false)}
+          />
+          <nav
+            className="fixed top-16 right-0 left-0 z-[99] flex max-h-[calc(100dvh-4rem)] flex-col overflow-y-auto border-b border-[var(--border-color)] bg-[var(--bg-box)] px-4 py-2 text-base text-[var(--main-text-color)] shadow-[var(--box-shadow)] md:hidden"
+            aria-label={setting.systemTitle || 'Navigation'}
+          >
+            {renderNavLinks('mobile', () => setVisible(false))}
+            {renderToolArea('mobile')}
+          </nav>
+        </>
+      ) : null}
     </header>
   );
 }
