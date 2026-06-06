@@ -68,6 +68,7 @@ export function buildWordmarkSvg(fill = BRAND_FILL) {
 const RUNTIME_PUBLIC_DIRS = [
   "web/public",
   "themes/twentytwentyfive/public",
+  "themes/my-blog/public",
   "cli/server/public",
   "server/public",
 ];
@@ -94,6 +95,7 @@ export const BRAND_EXPORT_MANIFEST = {
     `${ROOT_PUBLIC_DIRS.brand}/logo.svg`,
     "docs/static/img/logo.svg",
     "themes/twentytwentyfive/public/logo.svg",
+    "themes/my-blog/public/logo.svg",
     "cli/server/public/logo.svg",
     "server/public/logo.svg",
   ],
@@ -133,6 +135,7 @@ export const BRAND_EXPORT_MANIFEST = {
     `${ROOT_PUBLIC_DIRS.favicon}/favicon.ico`,
     "docs/static/img/favicon.ico",
     "themes/twentytwentyfive/public/favicon.ico",
+    "themes/my-blog/public/favicon.ico",
     "cli/server/public/favicon.ico",
     "server/public/favicon.ico",
   ],

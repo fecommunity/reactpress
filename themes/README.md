@@ -17,6 +17,7 @@
 | :--- | :--- |
 | `themes/hello-world` | **最低成本**入门主题（推荐新主题复制） |
 | `themes/twentytwentyfive` | 完整博客（分类/标签/搜索/文章） |
+| `themes/my-blog` | **App Router** 博客（Tailwind + 深浅色 + 评论/知识库/导航） |
 | `themes/twentytwentysix` | **client 迁移主题**（双栏 + 知识库/归档/导航/RSS） |
 | `.reactpress/runtime/{theme-id}/` | 安装后的临时运行时副本（随 `.reactpress/` gitignore） |
 
@@ -116,7 +117,7 @@ pnpm export:brand
 | Favicon | `public/favicon/favicon.ico` | 根目录按类型分目录 |
 | PWA 图标 | `public/icons/icon-192.png` 等 | Apple Touch / manifest |
 
-在 **twentytwentyfive** 中，顶栏尺寸与间距见 `themes/twentytwentyfive/src/assets/brand.ts`。后台「站点 Logo」留空时使用主题 `logo.png`。
+在 **twentytwentyfive** / **my-blog** 中，顶栏与占位图使用 `public/logo.png`、`logo-200.png` 等（`pnpm export:brand` 生成）。后台「站点 Logo」留空时使用主题默认 Logo（`data/logo.svg` 或 `logo.png`）。
 
 ## 工作流程
 

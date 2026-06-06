@@ -2,7 +2,7 @@
   "name": "@fecommunity/reactpress-template-my-blog",
   "version": "1.0.0",
   "private": true,
-  "description": "Tailwind blog theme with App Router and ReactPress toolkit integration",
+  "description": "ReactPress 博客主题：Tailwind CSS + Next.js App Router，对接 toolkit 动态内容",
   "scripts": {
     "dev": "cross-env INIT_CWD=$PWD next dev -p 3001",
     "build": "cross-env INIT_CWD=$PWD next build",

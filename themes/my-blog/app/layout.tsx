@@ -32,12 +32,19 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang={bootstrap.initialLocale} suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://api.gaoredu.com" crossOrigin="anonymous" />
+        <link rel="icon" href={`${basePath}/favicon.ico`} sizes="any" />
         <link
           rel="icon"
           type="image/png"
           sizes="32x32"
-          href={`${basePath}/static/favicons/favicon-32x32.png`}
+          href={`${basePath}/favicon-32.png`}
         />
+        <link
+          rel="apple-touch-icon"
+          sizes="180x180"
+          href={`${basePath}/apple-touch-icon.png`}
+        />
+        <link rel="manifest" href={`${basePath}/site.webmanifest`} />
       </head>
       <body className="bg-[var(--bg-body)] text-[var(--main-text-color)] antialiased" suppressHydrationWarning>
         <script dangerouslySetInnerHTML={{ __html: colorModeInitScript }} />
