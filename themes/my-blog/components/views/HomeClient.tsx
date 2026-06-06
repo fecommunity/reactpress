@@ -50,7 +50,7 @@ export default function HomeClient({
       leftNode={
         <>
           {recommendedArticles?.some((article) => article.cover) ? (
-            <div className="mb-4 overflow-hidden rounded-lg bg-[var(--bg-second)] shadow-[var(--box-shadow)]">
+            <div className="mb-4">
               <ArticleCarousel articles={recommendedArticles} />
             </div>
           ) : null}
