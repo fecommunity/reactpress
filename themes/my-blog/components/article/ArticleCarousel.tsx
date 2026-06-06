@@ -4,7 +4,7 @@ import { resolveImageUrl, type CarouselArticle } from '@fecommunity/reactpress-t
 import { useLocale } from '@fecommunity/reactpress-toolkit/ui';
 import { LocaleTime } from '@fecommunity/reactpress-toolkit/ui/content';
 import Link from '@/components/shared/Link';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 
 const AUTOPLAY_MS = 5000;
 
@@ -41,6 +41,7 @@ export default function ArticleCarousel({ articles = [] }: ArticleCarouselProps)
   const [active, setActive] = useState(0);
   const [loadedSlides, setLoadedSlides] = useState<Set<number>>(() => new Set([0]));
   const [paused, setPaused] = useState(false);
+  const [progressKey, setProgressKey] = useState(0);
   const timerRef = useRef<number | null>(null);
 
   const clearAutoplay = useCallback(() => {
@@ -55,6 +56,7 @@ export default function ArticleCarousel({ articles = [] }: ArticleCarouselProps)
       if (slides.length <= 1) return;
       const normalized = ((index % slides.length) + slides.length) % slides.length;
       setActive(normalized);
+      setProgressKey((k) => k + 1);
     },
     [slides.length],
   );
@@ -74,6 +76,7 @@ export default function ArticleCarousel({ articles = [] }: ArticleCarouselProps)
   useEffect(() => {
     setActive(0);
     setLoadedSlides(new Set([0]));
+    setProgressKey((k) => k + 1);
   }, [slideIdsKey]);
 
   useEffect(() => {
@@ -82,6 +85,7 @@ export default function ArticleCarousel({ articles = [] }: ArticleCarouselProps)
 
     timerRef.current = window.setInterval(() => {
       setActive((current) => (current + 1) % slides.length);
+      setProgressKey((k) => k + 1);
     }, AUTOPLAY_MS);
 
     return clearAutoplay;
@@ -91,13 +95,14 @@ export default function ArticleCarousel({ articles = [] }: ArticleCarouselProps)
 
   const showControls = slides.length > 1;
   const navBtnClass =
-    'absolute top-1/2 z-20 flex h-8 w-8 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border-0 bg-white/15 p-0 text-white backdrop-blur-sm transition-all duration-300 hover:bg-white/25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/80 md:h-9 md:w-9 md:opacity-0 md:group-hover/carousel:opacity-100 md:group-focus-within/carousel:opacity-100';
+    'rp-carousel-nav absolute top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full p-0 text-white transition-all duration-300 hover:scale-105 hover:bg-white/22 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/80 md:opacity-0 md:group-hover/carousel:opacity-100 md:group-focus-within/carousel:opacity-100';
 
   return (
     <section
-      className="group/carousel relative isolate overflow-hidden rounded-lg bg-[var(--bg-second)] shadow-[var(--box-shadow)]"
+      className="group/carousel relative isolate overflow-hidden rounded-xl bg-[var(--bg-second)] shadow-[var(--box-shadow)] ring-1 ring-black/5 dark:ring-white/5"
       aria-roledescription="carousel"
       aria-label={t('recommendToReading')}
+      style={{ '--rp-autoplay-ms': `${AUTOPLAY_MS}ms` } as CSSProperties}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onFocusCapture={() => setPaused(true)}
@@ -119,16 +124,16 @@ export default function ArticleCarousel({ articles = [] }: ArticleCarouselProps)
           return (
             <article
               key={article.id}
-              className="absolute inset-0 transition-opacity duration-500 ease-out"
-              style={{ opacity: isActive ? 1 : 0, pointerEvents: isActive ? 'auto' : 'none' }}
+              className={`rp-carousel-slide absolute inset-0 ${isActive ? 'is-active' : ''}`}
+              style={{ pointerEvents: isActive ? 'auto' : 'none' }}
               aria-hidden={!isActive}
             >
               {shouldLoadImage ? (
                 <img
                   src={coverSrc}
                   alt=""
-                  className={`absolute inset-0 h-full w-full object-cover transition-transform duration-[8000ms] ease-out will-change-transform ${
-                    isActive ? 'scale-[1.04]' : 'scale-100'
+                  className={`absolute inset-0 h-full w-full object-cover transition-transform duration-[9000ms] ease-out will-change-transform ${
+                    isActive ? 'scale-[1.05]' : 'scale-100'
                   }`}
                   width={1200}
                   height={460}
@@ -140,29 +145,33 @@ export default function ArticleCarousel({ articles = [] }: ArticleCarouselProps)
                 <div className="absolute inset-0 bg-[var(--bg-second)]" aria-hidden />
               )}
 
-              <div
-                className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent"
-                aria-hidden
-              />
+              <div className="rp-carousel-overlay pointer-events-none absolute inset-0" aria-hidden />
 
               <Link
                 href={`/article/${article.id}`}
                 tabIndex={isActive ? 0 : -1}
                 className="absolute inset-0 z-10 flex flex-col justify-end no-underline"
               >
-                <div className="px-5 pb-10 pt-16 text-left md:px-7 md:pb-11 lg:px-8">
-                  <h2 className="m-0 mb-2 max-w-xl line-clamp-2 text-[1.05rem] font-semibold leading-snug tracking-tight text-white md:max-w-2xl md:text-xl lg:text-[1.35rem]">
-                    {article.title}
-                  </h2>
-                  <p className="m-0 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-white/65 md:text-[0.8125rem]">
-                    <LocaleTime date={article.publishAt} timeago />
-                    <span className="text-white/35" aria-hidden>
-                      /
-                    </span>
-                    <span>
-                      {article.views} {t('readingCountTemplate')}
-                    </span>
-                  </p>
+                <div
+                  key={isActive ? `${article.id}-content` : `${article.id}-hidden`}
+                  className={`rp-carousel-caption px-5 pb-8 pt-16 md:px-7 md:pb-9 lg:px-8 ${
+                    isActive ? 'rp-carousel-text-enter' : 'opacity-0'
+                  }`}
+                >
+                  <div className="min-w-0">
+                    <h2 className="m-0 mb-2 line-clamp-2 max-w-xl text-[1.05rem] font-semibold leading-snug tracking-tight text-white md:max-w-2xl md:text-xl lg:text-[1.3rem]">
+                      {article.title}
+                    </h2>
+                    <p className="m-0 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-white/75 md:text-[0.8125rem]">
+                      <LocaleTime date={article.publishAt} timeago />
+                      <span className="text-white/40" aria-hidden>
+                        ·
+                      </span>
+                      <span>
+                        {article.views} {t('readingCountTemplate')}
+                      </span>
+                    </p>
+                  </div>
                 </div>
               </Link>
             </article>
@@ -174,7 +183,7 @@ export default function ArticleCarousel({ articles = [] }: ArticleCarouselProps)
         <>
           <button
             type="button"
-            className={`${navBtnClass} left-3 opacity-80 max-md:left-2.5`}
+            className={`${navBtnClass} left-3 opacity-90 max-md:left-2.5`}
             aria-label={`上一张，第 ${active + 1} 张，共 ${slides.length} 张`}
             onClick={goPrev}
           >
@@ -182,7 +191,7 @@ export default function ArticleCarousel({ articles = [] }: ArticleCarouselProps)
           </button>
           <button
             type="button"
-            className={`${navBtnClass} right-3 opacity-80 max-md:right-2.5`}
+            className={`${navBtnClass} right-3 opacity-90 max-md:right-2.5`}
             aria-label={`下一张，第 ${active + 1} 张，共 ${slides.length} 张`}
             onClick={goNext}
           >
@@ -190,7 +199,7 @@ export default function ArticleCarousel({ articles = [] }: ArticleCarouselProps)
           </button>
 
           <div
-            className="absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2"
+            className="absolute right-5 bottom-3.5 z-20 hidden items-center gap-1.5 md:bottom-9 md:flex lg:right-8"
             role="tablist"
             aria-label={t('recommendToReading')}
           >
@@ -203,17 +212,21 @@ export default function ArticleCarousel({ articles = [] }: ArticleCarouselProps)
                   role="tab"
                   aria-selected={isDotActive}
                   aria-label={`${index + 1} / ${slides.length}`}
-                  className="flex h-4 w-4 cursor-pointer items-center justify-center rounded-full border-0 bg-transparent p-0"
+                  className="flex h-4 cursor-pointer items-center justify-center border-0 bg-transparent p-0"
                   onClick={() => goTo(index)}
                 >
-                  <span
-                    className={`block rounded-full transition-all duration-300 ease-out ${
-                      isDotActive ? 'h-1.5 w-4 bg-white' : 'h-1.5 w-1.5 bg-white/35 hover:bg-white/55'
-                    }`}
-                  />
+                  <span className={`rp-carousel-dot ${isDotActive ? 'is-active h-1.5' : ''}`} />
                 </button>
               );
             })}
+          </div>
+
+          <div className="rp-carousel-progress-track absolute right-0 bottom-0 left-0 z-20">
+            {paused ? (
+              <div className="h-full w-full bg-white/45" aria-hidden />
+            ) : (
+              <div key={progressKey} className="rp-carousel-progress-bar w-full" aria-hidden />
+            )}
           </div>
         </>
       ) : null}

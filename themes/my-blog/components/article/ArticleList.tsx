@@ -7,7 +7,7 @@ import { ClockIcon, EyeIcon, FolderIcon, HeartIcon } from '@/lib/utils/icons';
 import { useLocale } from '@fecommunity/reactpress-toolkit/ui';
 import { Image, LocaleTime } from '@fecommunity/reactpress-toolkit/ui/content';
 import { useSiteCatalog } from '@fecommunity/reactpress-toolkit/theme';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 
 interface Article {
   id: string;
@@ -31,20 +31,26 @@ function ArticleCard({
   article,
   categoryIndex,
   index,
+  animate = false,
 }: {
   article: Article;
   categoryIndex: number;
   index: number;
+  animate?: boolean;
 }) {
   const eager = index < 3;
 
   return (
-    <div className="rp-article-card relative flex w-full justify-between overflow-hidden rounded-lg bg-[var(--bg-box)] p-4 shadow-[var(--box-shadow)] transition-colors hover:[&_header_.title]:text-[var(--primary-color)] [&_img]:transition-transform [&:hover_img]:scale-110">
+    <div
+      className={`rp-article-card group/card rp-surface relative flex w-full justify-between overflow-hidden rounded-xl border border-transparent p-4 ring-1 ring-black/5 transition-[transform,box-shadow,border-color] duration-300 ease-out hover:-translate-y-0.5 hover:border-[color-mix(in_srgb,var(--border-color)_70%,transparent)] hover:shadow-[0_8px_24px_color-mix(in_srgb,var(--main-text-color)_10%,transparent),var(--box-shadow)] hover:[&_header_.title]:text-[var(--primary-color)] dark:ring-white/5 [&_img]:transition-transform [&_img]:duration-500 [&_img]:ease-out [&:hover_img]:scale-105 ${
+        animate ? 'rp-home-card-enter' : ''
+      }`}
+    >
       <span
-        className="absolute top-5 left-0 h-6 w-1 rounded-r bg-[var(--primary-color)] shadow-sm"
+        className="absolute top-5 left-0 h-6 w-1 rounded-r bg-[var(--primary-color)] shadow-sm transition-transform duration-300 group-hover/card:scale-y-110"
         aria-hidden
       />
-      <div className="mr-2.5 flex h-[114px] w-[200px] shrink-0 items-center justify-center overflow-hidden rounded-[5px] max-md:h-20 max-md:w-[140px]">
+      <div className="mr-2.5 flex h-[114px] w-[200px] shrink-0 items-center justify-center overflow-hidden rounded-lg max-md:h-20 max-md:w-[140px]">
         {article.cover ? (
           <Link href={`/article/${article.id}`} className="block h-full w-full">
             <Image
@@ -119,6 +125,11 @@ function ArticleCard({
 export default function ArticleList({ articles = [] }: ArticleListProps) {
   const { t } = useLocale();
   const { categories } = useSiteCatalog();
+  const animatedCountRef = useRef(0);
+
+  useEffect(() => {
+    animatedCountRef.current = articles.length;
+  }, [articles]);
 
   const categoryIndices = useMemo(
     () =>
@@ -128,8 +139,10 @@ export default function ArticleList({ articles = [] }: ArticleListProps) {
     [articles, categories],
   );
 
+  const animateFromIndex = animatedCountRef.current;
+
   return (
-    <div className="rp-article-list flex w-full flex-col gap-4">
+    <div className="rp-article-list rp-home-stagger flex w-full flex-col gap-4">
       {articles.length ? (
         articles.map((article, index) => (
           <ArticleCard
@@ -137,10 +150,11 @@ export default function ArticleList({ articles = [] }: ArticleListProps) {
             article={article}
             categoryIndex={categoryIndices[index]}
             index={index}
+            animate={index >= animateFromIndex}
           />
         ))
       ) : (
-        <div className="rounded-lg bg-[var(--bg-box)] p-8 text-center text-[var(--second-text-color)]">
+        <div className="rounded-xl bg-[var(--bg-box)] p-8 text-center text-[var(--second-text-color)]">
           {t('empty')}
         </div>
       )}

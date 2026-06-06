@@ -34,10 +34,14 @@ export function buildMyBlogAppearanceCss(mods: ThemeMods): string {
   const blocks: string[] = [base];
 
   if (lightPrimary) {
-    blocks.push(`body:not(.dark) { --color-primary-500: ${lightPrimary}; --color-primary-600: ${lightPrimary}; }`);
+    blocks.push(
+      `body:not(.dark) { --primary-color: ${lightPrimary}; --primary-button-bg: ${lightPrimary}; --color-primary-500: ${lightPrimary}; --color-primary-600: ${lightPrimary}; }`,
+    );
   }
   if (darkPrimary) {
-    blocks.push(`body.dark { --color-primary-500: ${darkPrimary}; --color-primary-400: ${darkPrimary}; }`);
+    blocks.push(
+      `body.dark { --primary-color: ${darkPrimary}; --primary-button-bg: ${darkPrimary}; --color-primary-500: ${darkPrimary}; --color-primary-400: ${darkPrimary}; }`,
+    );
   }
   if (lightBg) {
     blocks.push(`body:not(.dark) { background-color: ${lightBg}; }`);

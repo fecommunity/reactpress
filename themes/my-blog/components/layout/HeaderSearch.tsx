@@ -13,7 +13,7 @@ export default function HeaderSearch() {
     <Link
       href="/search"
       aria-label={t('search')}
-      className={`inline-flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-[var(--bg-second)] hover:text-[var(--primary-color)] ${
+      className={`rp-icon-btn inline-flex h-10 w-10 items-center justify-center rounded-full hover:bg-[var(--bg-second)] hover:text-[var(--primary-color)] ${
         isActive ? 'text-[var(--primary-color)]' : 'text-[var(--main-text-color)]'
       }`}
     >

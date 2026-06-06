@@ -14,7 +14,7 @@ function QrPopover({ imageUrl, label, children }: { imageUrl: string; label: str
       {children}
       <span
         role="tooltip"
-        className="pointer-events-none absolute bottom-full left-1/2 z-20 mb-2 hidden -translate-x-1/2 rounded-lg border border-[var(--border-color)] bg-[var(--bg-box)] p-2 shadow-lg group-hover:block"
+        className="rp-glass pointer-events-none absolute bottom-full left-1/2 z-20 mb-2 hidden -translate-x-1/2 rounded-xl p-2 shadow-lg group-hover:block"
       >
         <img src={imageUrl} alt={label} className="max-h-[200px] max-w-[300px]" />
       </span>
@@ -113,7 +113,7 @@ export default function AboutUs({ variant = 'default' }: AboutUsProps) {
 
   return (
     <div
-      className={`overflow-hidden rounded-lg bg-[var(--bg-box)] shadow-[var(--box-shadow)] ${
+      className={`rp-widget-panel overflow-hidden rounded-xl bg-[var(--bg-box)] shadow-[var(--box-shadow)] ring-1 ring-black/5 dark:ring-white/5 ${
         isSidebar ? 'border-t-0 text-[var(--second-text-color)]' : ''
       }`}
     >

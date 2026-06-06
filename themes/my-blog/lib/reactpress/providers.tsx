@@ -12,12 +12,11 @@ import {
   persistThemeSession,
   persistVisitorLocale,
   resolveClientThemeMode,
-  resolveInitialColorModeState,
   resolveStoredUser,
   type ThemeColorMode,
 } from '@fecommunity/reactpress-toolkit/theme';
 import type { AppBootstrapResult } from '@fecommunity/reactpress-toolkit/theme/server';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
 
 import { LayoutShell } from './layout-shell';
 
@@ -40,22 +39,20 @@ export function ReactPressAppProviders({ bootstrap, children }: Props) {
     themeMods,
   } = bootstrap;
 
-  const [theme, setTheme] = useState<ThemeColorMode>(() =>
-    typeof window === 'undefined' ? 'light' : resolveClientThemeMode(),
-  );
+  const [theme, setTheme] = useState<ThemeColorMode>('light');
   const [locale, setLocale] = useState(initialLocale);
   const [collapsed, setCollapsed] = useState(false);
   const [user, setUserState] = useState<SiteCatalogContextValue['user']>(null);
   const [setting] = useState(initialSetting);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const storedUser = resolveStoredUser();
     if (storedUser) {
       persistThemeSession(storedUser);
       setUserState(storedUser);
     }
 
-    const preferred = resolveInitialColorModeState() ?? 'light';
+    const preferred = resolveClientThemeMode();
     applyColorModeClass(preferred === 'dark');
     setTheme(preferred);
   }, []);

@@ -45,8 +45,8 @@ export default function LikesWidget({ defaultCount = 0, id, api }: LikesWidgetPr
       type="button"
       aria-label="Like"
       onClick={toggle}
-      className={`relative flex h-11 w-11 items-center justify-center rounded-full border border-[var(--border-color)] bg-[var(--bg-box)] text-[var(--primary-color)] shadow-[var(--box-shadow)] transition-colors hover:bg-[var(--bg-second)] ${
-        liked ? 'text-[var(--primary-color)]' : 'text-[var(--second-text-color)]'
+      className={`rp-like-btn relative flex h-11 w-11 items-center justify-center rounded-full border border-[var(--border-color)] bg-[var(--bg-box)] text-[var(--primary-color)] shadow-[var(--box-shadow)] ${
+        liked ? 'is-liked text-[var(--primary-color)]' : 'text-[var(--second-text-color)]'
       }`}
     >
       <svg viewBox="0 0 1024 1024" width="20" height="20" fill="currentColor" aria-hidden>

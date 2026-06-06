@@ -9,19 +9,23 @@ import { useSiteCatalog } from '@fecommunity/reactpress-toolkit/theme';
 interface HomeSidebarProps {
   showTags?: boolean;
   showCategories?: boolean;
+  showRecommend?: boolean;
   deferRecommend?: boolean;
 }
 
 export default function HomeSidebar({
   showTags = true,
   showCategories = false,
+  showRecommend = true,
   deferRecommend = true,
 }: HomeSidebarProps) {
   const { tags, categories } = useSiteCatalog();
 
   return (
-    <div className="rp-sidebar-sticky sticky mb-4 w-72">
-      <ArticleRecommend mode="inline" deferFetch={deferRecommend} />
+    <div className="rp-sidebar-enter rp-sidebar-sticky sticky mb-4 w-72">
+      {showRecommend ? (
+        <ArticleRecommend mode="inline" deferFetch={deferRecommend} />
+      ) : null}
       {showTags ? (
         <TagsWidget
           tags={tags as Parameters<typeof TagsWidget>[0]['tags']}

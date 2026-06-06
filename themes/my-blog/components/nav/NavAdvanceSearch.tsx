@@ -160,7 +160,7 @@ export default function NavAdvanceSearch({ searchCategories }: NavAdvanceSearchP
       </div>
 
       <div ref={wrapRef} className="relative mx-auto mt-4 max-w-3xl">
-        <div className="flex h-12 items-center rounded-full border border-[var(--border-color)] bg-[var(--bg-box)] pl-4 pr-2">
+        <div className="rp-search-field flex h-12 items-center rounded-full border border-[var(--border-color)] bg-[var(--bg-box)] pl-4 pr-2 transition-[border-color,box-shadow] duration-200">
           <input
             value={keyword}
             onChange={(e) => {
@@ -176,7 +176,7 @@ export default function NavAdvanceSearch({ searchCategories }: NavAdvanceSearchP
               if (e.key === 'Enter') handleSearch();
             }}
             placeholder={t('searchArticlePlaceholder')}
-            className="min-w-0 flex-1 border-0 bg-transparent text-[15px] text-[var(--main-text-color)] outline-none"
+            className="rp-theme-input rp-theme-input-plain min-w-0 flex-1 border-0 bg-transparent text-[15px] text-[var(--main-text-color)]"
           />
           <button
             type="button"

@@ -126,8 +126,9 @@ export class ArticleController {
    */
   @Get('/recommend')
   @HttpCode(HttpStatus.OK)
-  recommend(@Query('articleId') articleId) {
-    return this.articleService.recommend(articleId);
+  recommend(@Query('articleId') articleId, @Query('pageSize') pageSize?: string) {
+    const size = Math.min(Math.max(parseInt(pageSize ?? '6', 10) || 6, 1), 30);
+    return this.articleService.recommend(articleId, size);
   }
 
   /**

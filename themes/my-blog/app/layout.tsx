@@ -2,6 +2,7 @@ import './globals.css';
 
 import DevChunkRecovery from '@/components/shared/DevChunkRecovery';
 import SiteHeader from '@/components/layout/SiteHeader';
+import BackToTop from '@/components/layout/BackToTop';
 import ConditionalSiteFooter from '@/components/layout/ConditionalSiteFooter';
 import PageContainer from '@/components/layout/PageContainer';
 import { loadAppBootstrap } from '@/lib/reactpress/bootstrap';
@@ -51,13 +52,14 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         {appearanceCss ? (
           <style dangerouslySetInnerHTML={{ __html: appearanceCss }} />
         ) : null}
-        <ReactPressAppProviders bootstrap={bootstrap}>
+          <ReactPressAppProviders bootstrap={bootstrap}>
           <DevChunkRecovery />
           <SiteHeader />
           <main id="main-content" className="mb-auto">
             <PageContainer>{children}</PageContainer>
           </main>
           <ConditionalSiteFooter />
+          <BackToTop />
         </ReactPressAppProviders>
       </body>
     </html>

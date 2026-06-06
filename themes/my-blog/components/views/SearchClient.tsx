@@ -1,6 +1,7 @@
 'use client';
 
 import ArticleList from '@/components/article/ArticleList';
+import ArticleRecommend from '@/components/article/ArticleRecommend';
 import DoubleColumnLayout from '@/components/layout/DoubleColumnLayout';
 import HomeSidebar from '@/components/widgets/HomeSidebar';
 import { useLocale } from '@fecommunity/reactpress-toolkit/ui';
@@ -50,7 +51,7 @@ export default function SearchClient({
         <>
           <search className="mb-4 block min-w-0 rounded-lg bg-[var(--bg-box)] p-5 shadow-[var(--box-shadow)] md:p-6">
             <h1 className="m-0 text-xl font-semibold text-[var(--main-text-color)]">{t('searchArticle')}</h1>
-            <div className="mt-3 flex min-w-0 gap-0">
+            <div className="rp-search-bar mt-3 flex min-w-0 gap-0">
               <input
                 ref={inputRef}
                 value={keyword}
@@ -59,7 +60,7 @@ export default function SearchClient({
                   if (e.key === 'Enter') runSearch(keyword);
                 }}
                 placeholder={t('searchArticlePlaceholder')}
-                className="min-w-0 flex-1 rounded-l-lg border border-[var(--border-color)] bg-[var(--bg-body)] px-4 py-3 text-[15px] text-[var(--main-text-color)] outline-none focus:border-[var(--primary-color)]"
+                className="rp-theme-input min-w-0 flex-1 rounded-l-lg border border-[var(--border-color)] bg-[var(--bg-body)] px-4 py-3 text-[15px] text-[var(--main-text-color)]"
               />
               <button
                 type="button"
@@ -87,11 +88,18 @@ export default function SearchClient({
                   {t('empty')}
                 </div>
               )
-            ) : null}
+            ) : (
+              <section className="rp-article-recommend">
+                <p className="rp-cms-section-title">{t('recommendToReading')}</p>
+                <div className="overflow-hidden rounded-xl shadow-[var(--box-shadow)] ring-1 ring-black/5 dark:ring-white/5 [&_.rp-article-list]:shadow-none">
+                  <ArticleRecommend needTitle={false} mode="vertical" />
+                </div>
+              </section>
+            )}
           </main>
         </>
       }
-      rightNode={<HomeSidebar showTags showCategories deferRecommend />}
+      rightNode={<HomeSidebar showTags showCategories showRecommend={false} deferRecommend />}
     />
   );
 }

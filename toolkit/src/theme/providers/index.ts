@@ -48,8 +48,8 @@ export function createThemeProviders(http: AxiosInstance) {
       return http.get(`/article/tag/${tag}`, { params });
     }
 
-    static async getRecommend(articleId: string | null = null): Promise<IArticle[]> {
-      return http.get('/article/recommend', { params: { articleId } });
+    static async getRecommend(articleId: string | null = null, pageSize = 6): Promise<IArticle[]> {
+      return http.get('/article/recommend', { params: { articleId, pageSize } });
     }
 
     static async getArchives(): Promise<Record<string, Record<string, IArticle[]>>> {

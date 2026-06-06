@@ -18,7 +18,7 @@ export default function CategoriesWidget({ categories = [] }: CategoriesWidgetPr
   const { t } = useLocale();
 
   return (
-    <div className="mb-5 overflow-hidden rounded-lg bg-[var(--bg-box)] leading-snug shadow-[var(--box-shadow)]">
+    <div className="rp-widget-panel mb-5 overflow-hidden rounded-xl bg-[var(--bg-box)] leading-snug shadow-[var(--box-shadow)] ring-1 ring-black/5 dark:ring-white/5">
       <div className="border-b border-[var(--border-color)] p-4 font-bold text-[var(--main-text-color)]">
         <FolderIcon size={16} className="mr-2 inline-block text-[var(--primary-color)]" />
         <span>{t('categoryTitle')}</span>
@@ -27,7 +27,7 @@ export default function CategoriesWidget({ categories = [] }: CategoriesWidgetPr
         {categories.map((category) => (
           <li
             key={category.value}
-            className="rounded-lg px-2 py-2 text-[var(--second-text-color)] transition-colors hover:text-[var(--primary-color)]"
+            className="rp-category-item rounded-lg px-2 py-2 text-[var(--second-text-color)]"
           >
             <Link
               href={`/category/${category.value}`}

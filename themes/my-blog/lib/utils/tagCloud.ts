@@ -111,6 +111,7 @@ export default class TagCloudEngine {
 
     this.sineCosine(0, 0, 0);
     this.positionAll();
+    this.doPosition();
     this.rafId = requestAnimationFrame(this.update);
   };
 

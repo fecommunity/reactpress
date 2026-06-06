@@ -91,7 +91,7 @@ export default function ArticleViewClient({ article: initialArticle }: ArticleVi
 
   const content = (
     <ImageViewer containerSelector="#js-article-wrapper">
-      <article id="js-article-wrapper" className="rp-article-wrap overflow-hidden rounded-lg bg-[var(--bg-box)] p-4 shadow-[var(--box-shadow)] md:p-4">
+      <article id="js-article-wrapper" className="rp-article-wrap overflow-hidden rounded-xl bg-[var(--bg-box)] p-4 shadow-[var(--box-shadow)] ring-1 ring-black/5 dark:ring-white/5 md:p-4">
         {setting.systemUrl ? (
           <>
             <meta itemProp="url" content={new URL(`/article/${article.id}`, setting.systemUrl).href} />

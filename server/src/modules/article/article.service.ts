@@ -396,7 +396,7 @@ export class ArticleService {
    * 推荐文章
    * @param articleId
    */
-  async recommend(articleId = null) {
+  async recommend(articleId = null, pageSize = 6) {
     const query = this.articleRepository
       .createQueryBuilder('article')
       .orderBy('article.publishAt', 'DESC')
@@ -405,7 +405,7 @@ export class ArticleService {
 
     if (!articleId) {
       query.where('article.status=:status').setParameter('status', 'publish');
-      return query.take(6).getMany();
+      return query.take(pageSize).getMany();
     }
     const sub = this.articleRepository
       .createQueryBuilder('article')
@@ -417,7 +417,7 @@ export class ArticleService {
     const exist = await sub.getOne();
 
     if (!exist) {
-      return query.take(6).getMany();
+      return query.take(pageSize).getMany();
     }
 
     const { title, summary } = exist;
@@ -454,6 +454,6 @@ export class ArticleService {
     } catch (e) {} // eslint-disable-line no-empty
 
     const data = await query.getMany();
-    return data.filter((d) => d.id !== articleId && d.status === 'publish');
+    return data.filter((d) => d.id !== articleId && d.status === 'publish').slice(0, pageSize);
   }
 }

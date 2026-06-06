@@ -34,17 +34,17 @@ export default function CategoryMenu({ categories }: CategoryMenuProps) {
 
   return (
     <nav
-      className="rounded-t-lg bg-[var(--bg-box)]"
+      className="rp-category-menu-glass rounded-t-xl"
       aria-label={t('categoryTitle')}
     >
-      <ul className="m-0 flex list-none flex-nowrap gap-0 overflow-x-auto border-b border-[var(--border-color)] p-2 [-ms-overflow-style:none] [scrollbar-width:none] md:flex-wrap [&::-webkit-scrollbar]:hidden">
+      <ul className="m-0 flex list-none flex-nowrap gap-0 overflow-x-auto border-b border-[color-mix(in_srgb,var(--border-color)_65%,transparent)] p-2 [-ms-overflow-style:none] [scrollbar-width:none] md:flex-wrap [&::-webkit-scrollbar]:hidden">
         <li className="shrink-0 md:shrink">
           <Link
             href="/"
-            className={`inline-block px-4 leading-10 whitespace-nowrap no-underline transition-colors ${
+            className={`inline-block rounded-lg px-4 leading-10 whitespace-nowrap no-underline transition-all duration-300 ${
               selectedKey === 'all'
-                ? 'border-b-2 border-[var(--primary-color)] text-[var(--primary-color)] dark:border-[#ff6659] dark:text-[#ff6659]'
-                : 'border-b-2 border-transparent text-[var(--main-text-color)] hover:border-[var(--primary-color)] hover:text-[var(--primary-color)] dark:hover:border-[#ff6659] dark:hover:text-[#ff6659]'
+                ? 'bg-[color-mix(in_srgb,var(--primary-color)_12%,transparent)] font-medium text-[var(--primary-color)] dark:text-[#ff6659]'
+                : 'text-[var(--main-text-color)] hover:bg-[color-mix(in_srgb,var(--primary-color)_8%,transparent)] hover:text-[var(--primary-color)] dark:hover:text-[#ff6659]'
             }`}
           >
             {t('all')}
@@ -54,10 +54,10 @@ export default function CategoryMenu({ categories }: CategoryMenuProps) {
           <li key={category.value} className="shrink-0 md:shrink">
             <Link
               href={`/category/${category.value}`}
-              className={`inline-block px-4 leading-10 whitespace-nowrap no-underline transition-colors ${
+              className={`inline-block rounded-lg px-4 leading-10 whitespace-nowrap no-underline transition-all duration-300 ${
                 selectedKey === category.value
-                  ? 'border-b-2 border-[var(--primary-color)] text-[var(--primary-color)] dark:border-[#ff6659] dark:text-[#ff6659]'
-                  : 'border-b-2 border-transparent text-[var(--main-text-color)] hover:border-[var(--primary-color)] hover:text-[var(--primary-color)] dark:hover:border-[#ff6659] dark:hover:text-[#ff6659]'
+                  ? 'bg-[color-mix(in_srgb,var(--primary-color)_12%,transparent)] font-medium text-[var(--primary-color)] dark:text-[#ff6659]'
+                  : 'text-[var(--main-text-color)] hover:bg-[color-mix(in_srgb,var(--primary-color)_8%,transparent)] hover:text-[var(--primary-color)] dark:hover:text-[#ff6659]'
               }`}
             >
               {category.label}

@@ -26,9 +26,9 @@ export default function ArticleFeedSection({
   const { categories } = useSiteCatalog();
 
   return (
-    <div className="w-full overflow-hidden rounded-lg">
+    <div className="rp-page-enter-delayed w-full overflow-hidden rounded-xl">
       {showCategoryMenu ? (
-        <header className="overflow-hidden rounded-t-lg bg-[var(--bg-box)]">
+        <header className="overflow-hidden rounded-t-xl shadow-[var(--box-shadow)] ring-1 ring-black/5 dark:ring-white/5">
           <CategoryMenu categories={categories as Array<{ value: string; label: string }>} />
         </header>
       ) : null}
@@ -38,7 +38,12 @@ export default function ArticleFeedSection({
           loadMore={loadMore}
           hasMore={hasMore}
           loader={
-            <div className="loading py-6 text-center text-sm text-[var(--second-text-color)]" key={0}>
+            <div className="loading flex items-center justify-center gap-2 py-8 text-sm text-[var(--second-text-color)]" key={0}>
+              <span className="rp-load-indicator" aria-hidden>
+                <span />
+                <span />
+                <span />
+              </span>
               {t('gettingArticle')}
             </div>
           }

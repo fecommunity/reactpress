@@ -12,7 +12,7 @@ export default function NotFound() {
       <p className="mt-4 text-lg text-[var(--main-text-color)]">{t('pageMissing')}</p>
       <Link
         href="/"
-        className="mt-6 inline-block rounded-lg bg-[var(--primary-color)] px-6 py-2 text-white no-underline hover:opacity-90"
+        className="rp-primary-action mt-6 inline-block rounded-xl bg-[var(--primary-color)] px-6 py-2.5 text-white no-underline hover:opacity-95"
       >
         {t('backHome')}
       </Link>

@@ -70,8 +70,8 @@ export default function DoubleColumnLayout({
       <div className="rp-double-column relative flex flex-wrap pt-4 pb-8">
         {hasFloating ? (
           <div
-            className={`rp-floating-widgets fixed top-[30vh] z-10 hidden -translate-x-full flex-col gap-3 transition-transform duration-200 xl:flex ${
-              showWidget ? 'translate-y-0' : ''
+            className={`rp-floating-widgets rp-floating-widget fixed top-[30vh] z-10 hidden -translate-x-full flex-col gap-3 xl:flex ${
+              showWidget ? 'translate-y-0 opacity-100' : 'translate-y-2 opacity-0'
             }`}
           >
             {likesProps ? <LikesWidget {...likesProps} /> : null}
@@ -80,8 +80,8 @@ export default function DoubleColumnLayout({
         ) : null}
         {hasFloating ? (
           <div
-            className={`fixed right-0 bottom-0 left-0 z-10 flex h-[52px] border-t border-[var(--border-color)] bg-[var(--bg-box)] transition-transform duration-200 xl:hidden ${
-              showWidget ? '-translate-y-full' : 'translate-y-0'
+            className={`fixed right-0 bottom-0 left-0 z-10 flex h-[52px] border-t border-[var(--border-color)] bg-[color-mix(in_srgb,var(--bg-box)_92%,transparent)] backdrop-blur-md transition-[transform,opacity] duration-300 ease-out xl:hidden ${
+              showWidget ? '-translate-y-full opacity-100' : 'translate-y-0 opacity-95'
             }`}
           >
             {likesProps ? (

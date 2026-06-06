@@ -50,7 +50,7 @@ export default function HomeClient({
       leftNode={
         <>
           {recommendedArticles?.some((article) => article.cover) ? (
-            <div className="mb-4">
+            <div className="mb-5">
               <ArticleCarousel articles={recommendedArticles} />
             </div>
           ) : null}

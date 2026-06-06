@@ -104,7 +104,7 @@ function NavListItem({ child }: { child: NavChild }) {
 
 function NavCard({ group }: { group: NavGroup }) {
   return (
-    <section className="rp-nav-card overflow-hidden rounded-lg bg-[var(--bg-box)] shadow-[var(--box-shadow)]">
+    <section className="rp-nav-card rp-surface rp-surface--interactive overflow-hidden rounded-xl ring-1 ring-black/5 dark:ring-white/5">
       <header className="border-b border-[var(--border-color)] px-4 py-4 text-base font-semibold text-[var(--main-text-color)]">
         <span id={`nav-card-title-${group.key}`}>
           <NavGroupIcon icon={group.icon} />
@@ -127,7 +127,7 @@ export default function NavCardGrid({ dataSource = [] }: NavCardGridProps) {
   if (!dataSource.length) return null;
 
   return (
-    <div className="rp-nav-card-wrapper relative flex justify-between">
+    <div className="rp-nav-card-wrapper rp-page-enter-delayed relative flex justify-between">
       <NavCategoryMenu dataSource={dataSource} />
       <div className="rp-nav-card-list min-w-0 flex-1">
         {dataSource.map((group, index) => (
