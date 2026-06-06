@@ -1,12 +1,9 @@
 'use client';
 
-import { useEffect } from 'react';
+import 'highlight.js/styles/atom-one-dark.css';
+import 'viewerjs/dist/viewer.css';
 
-/** Loads third-party content CSS only on article/knowledge/page routes. */
+/** Ensures article content styles (hljs, viewerjs) are bundled on reading routes. */
 export function ContentStylesLoader() {
-  useEffect(() => {
-    void import('highlight.js/styles/atom-one-dark.css');
-    void import('viewerjs/dist/viewer.css');
-  }, []);
   return null;
 }

@@ -410,43 +410,98 @@ input:-webkit-autofill:focus {
 
 .markdown pre {
   position: relative;
-  max-height: 400px;
-  padding-top: 30px;
+  display: flex;
+  flex-direction: column;
   border-radius: 5px;
   margin: 10px 0;
   background-color: var(--bg-code);
   font-size: 1em;
-  overflow: auto;
+  overflow: hidden;
   overscroll-behavior: auto;
-  -webkit-overflow-scrolling: touch;
 }
 
 .markdown pre::before {
-  position: absolute;
-  top: 0;
-  z-index: 1;
-  display: block;
-  width: 100%;
+  display: none;
+}
+
+.rp-code-toolbar {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 10px;
   height: 30px;
-  background-position: 10px 10px;
-  background-size: 40px;
-  background-repeat: no-repeat;
+  padding: 0 8px 0 10px;
   background-color: var(--bg-code);
-  content: '';
-  pointer-events: none;
+}
+
+.markdown pre:has(> .rp-code-toolbar + code.hljs) .rp-code-toolbar,
+.markdown pre:has(> .rp-code-toolbar + code.hljsln) .rp-code-toolbar,
+.markdown pre:has(> code.hljs) .rp-code-toolbar,
+.markdown pre:has(> code.hljsln) .rp-code-toolbar {
+  background-color: #282c34;
 }
 
 .markdown pre code {
   display: block;
+  max-height: 370px;
   padding: 12px 10px;
   padding-top: 9px;
   border-radius: 0;
   color: var(--main-text-color);
   background-color: var(--bg-code);
-  overflow: visible;
+  overflow: auto;
+  overscroll-behavior: contain;
   font-size: inherit;
   margin: 0;
   white-space: pre-wrap;
+  -webkit-overflow-scrolling: touch;
+}
+
+.markdown pre:has(> code.hljs),
+.markdown pre:has(> code.hljsln) {
+  background-color: #282c34;
+}
+
+.markdown pre:has(> code.hljs)::before,
+.markdown pre:has(> code.hljsln)::before {
+  display: none;
+}
+
+.markdown pre:has(.rp-code-lang) code[class*='language-']::before {
+  content: none !important;
+}
+
+.rp-code-window-dots {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  pointer-events: none;
+}
+
+.rp-code-lang {
+  margin-left: auto;
+  flex-shrink: 0;
+  font-size: 12px;
+  line-height: 1;
+  color: hsl(0deg 0% 54.9% / 80%);
+  pointer-events: none;
+  text-transform: lowercase;
+  transition: opacity 0.15s ease;
+}
+
+.markdown pre.rp-code-copy-active .rp-code-lang {
+  opacity: 0;
+}
+
+.markdown pre:has(> code.hljs) .rp-code-lang,
+.markdown pre:has(> code.hljsln) .rp-code-lang {
+  color: hsl(0deg 0% 65% / 90%);
+}
+
+.markdown pre code.hljs,
+.markdown pre code.hljsln {
+  color: #abb2bf;
+  background-color: transparent;
 }
 
 .markdown strong {
@@ -524,11 +579,13 @@ input:-webkit-autofill:focus {
   position: absolute;
   top: 8px;
   right: 45px;
+  z-index: 2;
   font-size: 12px;
   line-height: 1;
-  cursor: pointer;
+  cursor: default;
   color: hsl(0deg 0% 54.9% / 80%);
   transition: color 0.1s;
+  pointer-events: none;
 }
 
 .markdown code.language-ts::before { content: 'ts'; }
@@ -589,9 +646,8 @@ input:-webkit-autofill:focus {
 }
 
 .rp-copy-code-btn {
-  position: absolute;
-  top: 8px;
-  right: 5px;
+  flex-shrink: 0;
+  min-width: 2em;
   font-size: 12px;
   line-height: 1;
   color: hsl(0deg 0% 54.9% / 80%);
@@ -599,17 +655,23 @@ input:-webkit-autofill:focus {
   background: transparent;
   border: 0;
   padding: 0;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.markdown pre:has(> code.hljs) .rp-copy-code-btn,
+.markdown pre:has(> code.hljsln) .rp-copy-code-btn {
+  color: hsl(0deg 0% 65% / 90%);
 }
 
 .rp-copy-code-btn:hover {
   opacity: 0.6;
 }
 
-.rp-code-window-dots {
-  position: absolute;
-  top: 0;
-  z-index: 2;
-  pointer-events: none;
+.rp-copy-code-btn.rp-copy-code-btn--copied {
+  min-width: 1em;
+  color: hsl(142deg 45% 62%);
+  opacity: 1;
 }
 
 .rp-code-window-dots i {
@@ -618,6 +680,10 @@ input:-webkit-autofill:focus {
   height: 12px;
   border-radius: 6px;
   margin-left: 6px;
+}
+
+.rp-code-window-dots i:first-child {
+  margin-left: 0;
 }
 
 .rp-copy-toast {
