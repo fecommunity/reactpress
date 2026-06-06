@@ -32,6 +32,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang={bootstrap.initialLocale} suppressHydrationWarning>
       <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `document.documentElement.setAttribute('data-rp-loading','');`,
+          }}
+        />
         <link rel="preconnect" href="https://api.gaoredu.com" crossOrigin="anonymous" />
         <link rel="icon" href={`${basePath}/favicon.ico`} sizes="any" />
         <link

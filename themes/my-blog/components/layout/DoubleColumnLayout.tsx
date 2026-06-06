@@ -1,11 +1,14 @@
 'use client';
 
+import ArticleReadingChrome from '@/components/article/ArticleReadingChrome';
 import CommentIconButton from '@/components/comment/CommentIconButton';
+import BookmarkWidget from '@/components/widgets/BookmarkWidget';
 import LikesWidget from '@/components/widgets/LikesWidget';
+import ShareWidget from '@/components/widgets/ShareWidget';
 import SystemNotification from '@/components/layout/SystemNotification';
-import { getDocumentScrollTop } from '@/lib/utils/scroll';
-import { useToggle } from '@fecommunity/reactpress-toolkit/theme';
-import { type ReactNode, useEffect } from 'react';
+import { useSiteCatalog } from '@fecommunity/reactpress-toolkit/theme';
+import { type ReactNode, useCallback, useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 
 interface LikesProps {
   defaultCount?: number;
@@ -18,23 +21,67 @@ interface DoubleColumnLayoutProps {
   rightNode?: ReactNode | null;
   topNode?: ReactNode;
   likesProps?: LikesProps;
+  bookmarkId?: string;
   showComment?: boolean;
+  showShare?: boolean;
   coverPreloadUrl?: string;
   className?: string;
   fillMinHeight?: boolean;
+  sidebarCollapsible?: boolean;
 }
+
+const TOC_COLLAPSED_KEY = 'rp-toc-collapsed';
 
 export default function DoubleColumnLayout({
   leftNode,
   rightNode,
   topNode,
   likesProps,
+  bookmarkId,
   showComment = false,
+  showShare = false,
   coverPreloadUrl,
   className = '',
   fillMinHeight = true,
+  sidebarCollapsible = false,
 }: DoubleColumnLayoutProps) {
-  const [showWidget, toggleWidget] = useToggle(true);
+  const { locale } = useSiteCatalog();
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  const hasActions = Boolean(likesProps || bookmarkId || showComment || showShare);
+  const useFixedSidebar = Boolean(rightNode) && sidebarCollapsible;
+  const showInlineSidebar = Boolean(rightNode) && !sidebarCollapsible;
+  const showReadingChrome = hasActions || useFixedSidebar;
+
+  const collapseLabel = locale === 'zh' ? '收起目录' : 'Collapse table of contents';
+  const expandLabel = locale === 'zh' ? '展开目录' : 'Expand table of contents';
+  const tocLabel = locale === 'zh' ? '目录' : 'TOC';
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!sidebarCollapsible) return;
+    try {
+      setSidebarCollapsed(window.localStorage.getItem(TOC_COLLAPSED_KEY) === '1');
+    } catch {
+      setSidebarCollapsed(false);
+    }
+  }, [sidebarCollapsible]);
+
+  const toggleSidebar = useCallback(() => {
+    setSidebarCollapsed((prev) => {
+      const next = !prev;
+      try {
+        window.localStorage.setItem(TOC_COLLAPSED_KEY, next ? '1' : '0');
+      } catch {
+        /* ignore */
+      }
+      return next;
+    });
+  }, []);
 
   useEffect(() => {
     if (!coverPreloadUrl) return;
@@ -48,24 +95,69 @@ export default function DoubleColumnLayout({
     };
   }, [coverPreloadUrl]);
 
-  useEffect(() => {
-    let beforeY = 0;
-    let ticking = false;
-    const handler = () => {
-      if (ticking) return;
-      ticking = true;
-      window.requestAnimationFrame(() => {
-        const y = getDocumentScrollTop();
-        toggleWidget(beforeY <= y);
-        beforeY = y;
-        ticking = false;
-      });
-    };
-    document.addEventListener('scroll', handler, { passive: true });
-    return () => document.removeEventListener('scroll', handler);
-  }, [toggleWidget]);
+  const floatingActions =
+    hasActions ? (
+      <>
+        {likesProps ? <LikesWidget {...likesProps} /> : null}
+        {bookmarkId ? <BookmarkWidget id={bookmarkId} /> : null}
+        {showComment ? <CommentIconButton /> : null}
+        {showShare ? <ShareWidget /> : null}
+      </>
+    ) : null;
 
-  const hasFloating = Boolean(likesProps || showComment);
+  const mobileActions =
+    hasActions ? (
+      <>
+        {likesProps ? <LikesWidget {...likesProps} variant="mobile" /> : null}
+        {bookmarkId ? <BookmarkWidget id={bookmarkId} variant="mobile" /> : null}
+        {showComment ? <CommentIconButton variant="mobile" /> : null}
+        {showShare ? <ShareWidget variant="mobile" /> : null}
+      </>
+    ) : null;
+
+  const layoutClass = [
+    'rp-double-column',
+    showReadingChrome ? 'rp-double-column--reading-chrome' : '',
+    showInlineSidebar ? 'rp-double-column--sidebar' : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
+
+  const readingChromeProps = {
+    actions: floatingActions,
+    mobileActions,
+    showToc: useFixedSidebar,
+    tocExpanded: !sidebarCollapsed,
+    onToggleToc: toggleSidebar,
+    tocPanel: rightNode,
+    collapseLabel,
+    expandLabel,
+    tocLabel,
+  };
+
+  const mobileChromePortal =
+    showReadingChrome && mounted
+      ? createPortal(
+          <ArticleReadingChrome {...readingChromeProps} mode="mobile" />,
+          document.body,
+        )
+      : null;
+
+  const tocChromePortal =
+    useFixedSidebar && mounted
+      ? createPortal(
+          <ArticleReadingChrome {...readingChromeProps} mode="toc" />,
+          document.body,
+        )
+      : null;
+
+  const sideChromePortal =
+    showReadingChrome && hasActions && mounted
+      ? createPortal(
+          <ArticleReadingChrome {...readingChromeProps} mode="side" />,
+          document.body,
+        )
+      : null;
 
   return (
     <div
@@ -73,45 +165,20 @@ export default function DoubleColumnLayout({
     >
       <SystemNotification />
       {topNode}
-      <div className="rp-double-column relative flex flex-wrap pt-4 pb-8">
-        {hasFloating ? (
-          <div
-            className={`rp-floating-widgets rp-floating-widget fixed top-[30vh] z-10 hidden -translate-x-full flex-col gap-3 xl:flex ${
-              showWidget ? 'translate-y-0 opacity-100' : 'translate-y-2 opacity-0'
-            }`}
-          >
-            {likesProps ? <LikesWidget {...likesProps} /> : null}
-            {showComment ? <CommentIconButton /> : null}
-          </div>
-        ) : null}
-        {hasFloating ? (
-          <div
-            className={`fixed right-0 bottom-0 left-0 z-10 flex h-[52px] border-t border-[var(--border-color)] bg-[color-mix(in_srgb,var(--bg-box)_92%,transparent)] backdrop-blur-md transition-[transform,opacity] duration-300 ease-out xl:hidden ${
-              showWidget ? '-translate-y-full opacity-100' : 'translate-y-0 opacity-95'
-            }`}
-          >
-            {likesProps ? (
-              <div className="flex flex-1 items-center justify-center">
-                <LikesWidget {...likesProps} />
-              </div>
-            ) : null}
-            {showComment ? (
-              <div className="flex flex-1 items-center justify-center">
-                <CommentIconButton />
-              </div>
-            ) : null}
-          </div>
-        ) : null}
-
-        <section className="min-w-0 flex-1 pt-0 pb-8 max-md:w-full md:w-[calc(100%-19rem-1rem)]">
+      <div className={`${layoutClass} relative pt-4 pb-8`}>
+        <section className="rp-double-column__main min-w-0 w-full flex-1 pt-0 pb-6 min-[1280px]:pb-8">
           {leftNode}
         </section>
-        {rightNode ? (
-          <aside className="ml-0 w-full pt-0 pb-4 max-md:hidden md:ml-4 md:w-72">
-            {rightNode}
+
+        {showInlineSidebar ? (
+          <aside className="rp-double-column__aside rp-sidebar-slot hidden min-[1280px]:block">
+            <div className="rp-sidebar-slot__content">{rightNode}</div>
           </aside>
         ) : null}
       </div>
+      {sideChromePortal}
+      {mobileChromePortal}
+      {tocChromePortal}
     </div>
   );
 }

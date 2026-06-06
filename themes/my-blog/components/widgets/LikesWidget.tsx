@@ -1,16 +1,21 @@
 'use client';
 
+import ArticleActionButton, { type ArticleActionVariant } from '@/components/widgets/ArticleActionButton';
+import { useSiteCatalog } from '@fecommunity/reactpress-toolkit/theme';
 import { useCallback, useEffect, useState } from 'react';
 
 interface LikesWidgetProps {
   defaultCount?: number;
   id: string;
   api: (id: string, type: 'like' | 'dislike') => Promise<number>;
+  variant?: ArticleActionVariant;
 }
 
-export default function LikesWidget({ defaultCount = 0, id, api }: LikesWidgetProps) {
+export default function LikesWidget({ defaultCount = 0, id, api, variant = 'floating' }: LikesWidgetProps) {
+  const { locale } = useSiteCatalog();
   const [count, setCount] = useState(defaultCount);
   const [liked, setLiked] = useState(false);
+  const label = locale === 'zh' ? '点赞' : 'Like';
 
   useEffect(() => {
     setCount(defaultCount);
@@ -41,22 +46,17 @@ export default function LikesWidget({ defaultCount = 0, id, api }: LikesWidgetPr
   }, [api, id, liked]);
 
   return (
-    <button
-      type="button"
-      aria-label="Like"
+    <ArticleActionButton
+      active={liked}
+      label={label}
+      count={count}
       onClick={toggle}
-      className={`rp-like-btn relative flex h-11 w-11 items-center justify-center rounded-full border border-[var(--border-color)] bg-[var(--bg-box)] text-[var(--primary-color)] shadow-[var(--box-shadow)] ${
-        liked ? 'is-liked text-[var(--primary-color)]' : 'text-[var(--second-text-color)]'
-      }`}
+      variant={variant}
+      activeClassName="is-liked"
     >
-      <svg viewBox="0 0 1024 1024" width="20" height="20" fill="currentColor" aria-hidden>
-        <path d="M859.8 191.2c-80.8-84.2-212-84.2-292.8 0L512 248.2l-55-57.2c-81-84.2-212-84.2-292.8 0-91 94.6-91 248.2 0 342.8L512 896l347.8-362C950.8 439.4 950.8 285.8 859.8 191.2z" />
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden>
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
       </svg>
-      {count > 0 ? (
-        <span className="absolute -top-1 -right-1 min-w-[18px] rounded-full bg-[var(--primary-color)] px-1 text-xs text-white">
-          {count}
-        </span>
-      ) : null}
-    </button>
+    </ArticleActionButton>
   );
 }

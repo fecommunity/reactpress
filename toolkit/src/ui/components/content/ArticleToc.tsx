@@ -15,6 +15,7 @@ export interface ArticleTocProps {
   maxHeight?: string | number;
   title?: React.ReactNode;
   showTitle?: boolean;
+  indentStep?: number;
 }
 
 function elementInViewport(el: HTMLElement): boolean {
@@ -32,6 +33,7 @@ export function ArticleToc({
   maxHeight = '80vh',
   title = 'Contents',
   showTitle = true,
+  indentStep = 12,
 }: ArticleTocProps) {
   const listRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
@@ -71,7 +73,7 @@ export function ArticleToc({
             key={item.id}
             type="button"
             className={`${itemClassName}${index === active ? ` ${activeClassName}` : ''}`}
-            style={{ paddingLeft: 12 * (Math.max(1, Number(item.level) || 1) - 1) }}
+            style={{ paddingLeft: indentStep * (Math.max(1, Number(item.level) || 1) - 1) }}
             onClick={() => goto(item)}
             dangerouslySetInnerHTML={{ __html: item.text }}
           />

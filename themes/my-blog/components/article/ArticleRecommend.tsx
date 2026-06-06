@@ -2,17 +2,22 @@
 
 import ArticleList from '@/components/article/ArticleList';
 import Link from '@/components/shared/Link';
+import SectionHeading, { EmptyState } from '@/components/shared/SectionHeading';
 import { ArticleProvider } from '@/lib/providers/client';
 import { EyeIcon } from '@/lib/utils/icons';
 import { useLocale } from '@fecommunity/reactpress-toolkit/ui';
 import { slimArticlesForList } from '@fecommunity/reactpress-toolkit/theme';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 
 interface ArticleRecommendProps {
   articleId?: string | null;
   mode?: 'inline' | 'vertical';
   needTitle?: boolean;
   deferFetch?: boolean;
+  /** Render as article page section (heading + panel wrapper). */
+  asPageSection?: boolean;
+  /** Hide entire section when loaded with no articles. */
+  hideWhenEmpty?: boolean;
 }
 
 type RecommendArticle = {
@@ -215,6 +220,8 @@ export default function ArticleRecommend({
   articleId = null,
   needTitle = true,
   deferFetch = false,
+  asPageSection = false,
+  hideWhenEmpty = false,
 }: ArticleRecommendProps) {
   const { t } = useLocale();
   const requestKey = `${articleId ?? ''}:${mode}`;
@@ -260,9 +267,27 @@ export default function ArticleRecommend({
   const showEmpty = ready && articles.length === 0;
 
   if (mode === 'vertical') {
-    if (showSkeleton) return <RecommendSkeleton />;
-    if (showEmpty) return <div className="text-sm text-[var(--second-text-color)]">{t('empty')}</div>;
-    return <ArticleList articles={articles as Parameters<typeof ArticleList>[0]['articles']} />;
+    if (hideWhenEmpty && showEmpty) return null;
+
+    let body: ReactNode;
+    if (showSkeleton) {
+      body = <RecommendSkeleton />;
+    } else if (showEmpty) {
+      body = <EmptyState />;
+    } else {
+      body = <ArticleList articles={articles as Parameters<typeof ArticleList>[0]['articles']} />;
+    }
+
+    if (asPageSection) {
+      return (
+        <section className="rp-article-recommend">
+          <SectionHeading>{t('recommendToReading')}</SectionHeading>
+          <div className="rp-article-recommend-panel">{body}</div>
+        </section>
+      );
+    }
+
+    return body;
   }
 
   return (
@@ -277,7 +302,7 @@ export default function ArticleRecommend({
       {showSkeleton ? (
         <RecommendSkeleton />
       ) : showEmpty ? (
-        <div className="px-4 py-3 pb-4 text-sm text-[var(--second-text-color)]">{t('empty')}</div>
+        <EmptyState />
       ) : (
         <RecommendInlineScroller articles={articles} />
       )}
