@@ -1,6 +1,7 @@
 'use client';
 
 import { getNavIconByName, MenuFoldIcon, MenuUnfoldIcon } from '@/lib/utils/icons';
+import { useLocale } from '@fecommunity/reactpress-toolkit/ui';
 import { useMemo, useState } from 'react';
 
 interface NavCategoryItem {
@@ -14,6 +15,7 @@ interface NavCategoryMenuProps {
 }
 
 export default function NavCategoryMenu({ dataSource = [] }: NavCategoryMenuProps) {
+  const { t } = useLocale();
   const [collapsed, setCollapsed] = useState(true);
 
   const items = useMemo(
@@ -36,7 +38,7 @@ export default function NavCategoryMenu({ dataSource = [] }: NavCategoryMenuProp
       <button
         type="button"
         onClick={() => setCollapsed((prev) => !prev)}
-        aria-label={collapsed ? '展开目录' : '收起目录'}
+        aria-label={collapsed ? t('navExpandMenu') : t('navCollapseMenu')}
         className="absolute top-3 left-4 z-10 border-0 bg-transparent p-0 text-[var(--main-text-color)] shadow-none hover:text-[var(--primary-color)]"
         style={{ left: collapsed ? 16 : 4 }}
       >
@@ -47,7 +49,7 @@ export default function NavCategoryMenu({ dataSource = [] }: NavCategoryMenuProp
         className={`rp-nav-menu overflow-hidden rounded-lg bg-[var(--bg-box)] pt-11 shadow-[var(--box-shadow)] transition-[width] duration-200 ${
           collapsed ? 'w-14' : 'w-40'
         }`}
-        aria-label="导航分类"
+        aria-label={t('navCategoryMenu')}
       >
         <ul className="m-0 list-none p-2">
           {items.map((item) => (

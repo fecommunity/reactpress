@@ -1,18 +1,23 @@
 'use client';
 
+import { SettingProvider } from '@/lib/providers/client';
 import {
   ReactPressProvider,
   SiteCatalogProvider,
+  readPersistedLocale,
+  useLocale,
   type SiteCatalogContextValue,
 } from '@fecommunity/reactpress-toolkit/ui';
 import {
   applyColorModeClass,
   clearThemeSession,
+  mergeVisitorI18n,
   persistColorMode,
   persistThemeSession,
   persistVisitorLocale,
   resolveClientThemeMode,
   resolveStoredUser,
+  safeJsonParse,
   type ThemeColorMode,
 } from '@fecommunity/reactpress-toolkit/theme';
 import type { AppBootstrapResult } from '@fecommunity/reactpress-toolkit/theme/server';
@@ -25,13 +30,32 @@ type Props = {
   children: React.ReactNode;
 };
 
+function VisitorLocaleBootstrap({
+  locales,
+  ssrLocale,
+}: {
+  locales: string[];
+  ssrLocale: string;
+}) {
+  const { setLocale } = useLocale();
+
+  useLayoutEffect(() => {
+    const stored = readPersistedLocale(locales, ssrLocale);
+    if (stored && stored !== ssrLocale) {
+      setLocale(stored);
+    }
+  }, [locales, setLocale, ssrLocale]);
+
+  return null;
+}
+
 export function ReactPressAppProviders({ bootstrap, children }: Props) {
   const {
     setting: initialSetting,
     tags,
     categories,
     pages,
-    i18n,
+    i18n: bootstrapI18n,
     globalSetting,
     siteConfig,
     locales,
@@ -44,6 +68,9 @@ export function ReactPressAppProviders({ bootstrap, children }: Props) {
   const [collapsed, setCollapsed] = useState(false);
   const [user, setUserState] = useState<SiteCatalogContextValue['user']>(null);
   const [setting] = useState(initialSetting);
+  const [i18nCatalog, setI18nCatalog] = useState<Record<string, Record<string, string>>>(() =>
+    mergeVisitorI18n(bootstrapI18n as Record<string, unknown>) as Record<string, Record<string, string>>,
+  );
 
   useLayoutEffect(() => {
     const storedUser = resolveStoredUser();
@@ -61,6 +88,26 @@ export function ReactPressAppProviders({ bootstrap, children }: Props) {
     applyColorModeClass(theme === 'dark');
   }, [theme]);
 
+  const prefetchRemainingI18nLocales = useCallback(() => {
+    if (!Array.isArray(locales) || locales.length <= 1) return;
+
+    SettingProvider.getSetting()
+      .then((res) => {
+        const full = mergeVisitorI18n(safeJsonParse(res.i18n, {})) as Record<
+          string,
+          Record<string, string>
+        >;
+        setI18nCatalog((prev) => ({ ...prev, ...full }));
+      })
+      .catch(() => {
+        // Active locale messages are already available from SSR / builtins.
+      });
+  }, [locales]);
+
+  useEffect(() => {
+    prefetchRemainingI18nLocales();
+  }, [prefetchRemainingI18nLocales]);
+
   const changeTheme = useCallback((next: ThemeColorMode) => {
     const isDark = next === 'dark';
     applyColorModeClass(isDark);
@@ -73,8 +120,12 @@ export function ReactPressAppProviders({ bootstrap, children }: Props) {
       if (!key || key === locale) return;
       persistVisitorLocale(key);
       setLocale(key);
+
+      if (!i18nCatalog[key]) {
+        prefetchRemainingI18nLocales();
+      }
     },
-    [locale],
+    [i18nCatalog, locale, prefetchRemainingI18nLocales],
   );
 
   const setUser = useCallback((next: SiteCatalogContextValue['user']) => {
@@ -93,7 +144,7 @@ export function ReactPressAppProviders({ bootstrap, children }: Props) {
   const catalogValue = useMemo<SiteCatalogContextValue>(
     () => ({
       setting,
-      i18n,
+      i18n: i18nCatalog,
       locale,
       locales,
       globalSetting,
@@ -113,7 +164,7 @@ export function ReactPressAppProviders({ bootstrap, children }: Props) {
     }),
     [
       setting,
-      i18n,
+      i18nCatalog,
       locale,
       locales,
       globalSetting,
@@ -132,21 +183,23 @@ export function ReactPressAppProviders({ bootstrap, children }: Props) {
     ],
   );
 
-  const messages = (i18n?.[locale] ?? {}) as Record<string, string>;
-  const catalog = i18n as Record<string, Record<string, string>>;
+  const messages = (i18nCatalog[locale] ?? {}) as Record<string, string>;
 
   return (
     <ReactPressProvider
       locale={locale}
       locales={locales}
       messages={messages}
-      catalog={catalog}
+      catalog={i18nCatalog}
       themeId="my-blog"
       mods={themeMods}
       onLocaleChange={changeLocale}
     >
       <SiteCatalogProvider value={catalogValue}>
-        <LayoutShell>{children}</LayoutShell>
+        <LayoutShell>
+          <VisitorLocaleBootstrap locales={locales} ssrLocale={initialLocale} />
+          {children}
+        </LayoutShell>
       </SiteCatalogProvider>
     </ReactPressProvider>
   );

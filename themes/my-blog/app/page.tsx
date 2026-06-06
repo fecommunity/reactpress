@@ -1,5 +1,5 @@
 import HomeClient from '@/components/views/HomeClient';
-import { buildListPageMetadata } from '@/lib/reactpress/siteMetadata';
+import { buildLocalizedListPageMetadata } from '@/lib/reactpress/siteMetadata';
 import {
   fetchHomePageProps,
   resolveImageUrl,
@@ -17,7 +17,7 @@ export async function generateMetadata(): Promise<Metadata> {
     const data = await withApiRetry(() => fetchHomePageProps(themeApi));
     const lcpCover = data.recommendedArticles.find((article) => article.cover)?.cover;
     const imageUrl = lcpCover ? resolveImageUrl(lcpCover, 'medium') : undefined;
-    const base = await buildListPageMetadata('首页');
+    const base = await buildLocalizedListPageMetadata('home');
     if (!imageUrl) return base;
     return {
       ...base,
@@ -27,7 +27,7 @@ export async function generateMetadata(): Promise<Metadata> {
       },
     };
   } catch {
-    return buildListPageMetadata('首页');
+    return buildLocalizedListPageMetadata('home');
   }
 }
 

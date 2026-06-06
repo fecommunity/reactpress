@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { createTranslator } from '../../theme/visitor/locale';
 import type { LocaleCatalog, LocaleMessages } from '../../theme/visitor/locale';
 import { VISITOR_LOCALE_COOKIE } from '../../theme/visitor/visitorLocale';
@@ -27,6 +27,10 @@ export function LocaleProvider({
 }: LocaleProviderProps) {
   const [locale, setLocaleState] = useState(initialLocale);
   const [messages, setMessages] = useState(initialMessages);
+
+  useEffect(() => {
+    setMessages({ ...(catalog[locale] ?? {}) });
+  }, [catalog, locale]);
 
   const setLocale = useCallback(
     (next: string) => {

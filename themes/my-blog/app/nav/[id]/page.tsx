@@ -1,5 +1,6 @@
 import NavDetailClient from '@/components/views/NavDetailClient';
-import { buildListPageMetadata } from '@/lib/reactpress/siteMetadata';
+import { buildLocalizedListPageMetadata } from '@/lib/reactpress/siteMetadata';
+import { getServerTranslator } from '@/lib/reactpress/serverLocale';
 import { fetchSiteNavConfig } from '@fecommunity/reactpress-toolkit/theme/server';
 import { SettingProvider } from '@/lib/providers/server';
 import themeManifest from '../../../theme.json';
@@ -14,17 +15,18 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id } = await params;
   const siteKey = id.split('.')[0];
-  return buildListPageMetadata(`导航：${siteKey}`);
+  return buildLocalizedListPageMetadata('pageTitleNavDetail', { label: siteKey });
 }
 
 export default async function NavDetailPage({ params }: PageProps) {
   const { id } = await params;
   const siteKey = id.split('.')[0];
+  const { locale } = await getServerTranslator();
 
   let navConfig;
   try {
     navConfig = await fetchSiteNavConfig({
-      locale: 'zh',
+      locale,
       manifest: themeManifest,
       getSetting: () => SettingProvider.getSetting(),
     });

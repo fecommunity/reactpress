@@ -7,6 +7,8 @@ import {
 } from '@fecommunity/reactpress-toolkit/theme/server';
 import type { Metadata } from 'next';
 
+import { tServer } from './serverLocale';
+
 async function fetchSiteSeoBase() {
   const [siteMeta, settingRow] = await Promise.all([
     withApiRetry(() => fetchSiteMeta(themeApi)),
@@ -58,6 +60,15 @@ export async function buildRootMetadata(): Promise<Metadata> {
       description: 'Blog powered by ReactPress',
     };
   }
+}
+
+export async function buildLocalizedListPageMetadata(
+  titleKey: string,
+  vars?: Record<string, string | number>,
+  description?: string,
+): Promise<Metadata> {
+  const pageTitle = await tServer(titleKey, vars);
+  return buildListPageMetadata(pageTitle, description);
 }
 
 export async function buildListPageMetadata(

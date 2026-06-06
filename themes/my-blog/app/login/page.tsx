@@ -1,9 +1,9 @@
 import LoginClient from '@/components/views/LoginClient';
-import { buildListPageMetadata } from '@/lib/reactpress/siteMetadata';
+import { buildLocalizedListPageMetadata } from '@/lib/reactpress/siteMetadata';
 import type { Metadata } from 'next';
 
 export async function generateMetadata(): Promise<Metadata> {
-  return buildListPageMetadata('登录');
+  return buildLocalizedListPageMetadata('pageTitleLogin');
 }
 
 interface PageProps {

@@ -1,13 +1,13 @@
 import TagsClient from '@/components/views/TagsClient';
 import { loadAppBootstrap } from '@/lib/reactpress/bootstrap';
-import { buildListPageMetadata } from '@/lib/reactpress/siteMetadata';
+import { buildLocalizedListPageMetadata } from '@/lib/reactpress/siteMetadata';
 import type { ITag } from '@fecommunity/reactpress-toolkit/types';
 import type { Metadata } from 'next';
 
 export const revalidate = 60;
 
 export async function generateMetadata(): Promise<Metadata> {
-  return buildListPageMetadata('标签');
+  return buildLocalizedListPageMetadata('tagTitle');
 }
 
 export default async function TagsPage() {

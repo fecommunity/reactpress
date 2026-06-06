@@ -46,7 +46,7 @@ export default function NavDetailClient({ siteKey, navConfig }: NavDetailClientP
       summary: urlItem?.description ?? '',
       url: urlItem?.url ?? '',
       tags: [
-        { label: '网址导航', value: '' },
+        { label: t('pageTitleNavSite'), value: '' },
         { label: urlItem?.label ?? siteKey, value: siteKey },
       ],
     };
@@ -82,7 +82,7 @@ export default function NavDetailClient({ siteKey, navConfig }: NavDetailClientP
               ) : null}
             </div>
             <div className="mt-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-800 dark:bg-amber-950/30 dark:text-amber-200">
-              本站只做内容预览，不做任何信息存储，请注意您的账号和财产安全。如遇内容无法预览，请点击「打开网站」按钮预览。
+              {t('navPreviewDisclaimer')}
             </div>
             {article.url ? (
               <button
@@ -90,7 +90,7 @@ export default function NavDetailClient({ siteKey, navConfig }: NavDetailClientP
                 onClick={() => window.open(article.url, '_blank')}
                 className="mt-4 rounded-lg bg-[var(--primary-color)] px-5 py-2 text-sm text-white"
               >
-                打开网站 ›
+                {t('navOpenSite')}
               </button>
             ) : null}
             <div className="mt-6 flex flex-wrap gap-2">

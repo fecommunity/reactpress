@@ -1,5 +1,5 @@
 import KnowledgeBookClient from '@/components/views/KnowledgeBookClient';
-import { buildListPageMetadata } from '@/lib/reactpress/siteMetadata';
+import { buildListPageMetadata, buildLocalizedListPageMetadata } from '@/lib/reactpress/siteMetadata';
 import {
   fetchKnowledgeBookPageProps,
   themeApi,
@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   } catch {
     // fall through
   }
-  return buildListPageMetadata('知识库');
+  return buildLocalizedListPageMetadata('knowledge');
 }
 
 export default async function KnowledgeBookPage({ params }: PageProps) {

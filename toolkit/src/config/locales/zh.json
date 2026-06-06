@@ -105,5 +105,20 @@
     "switch": "切换语言",
     "switchToEn": "切换到 English",
     "switchToZh": "切换到中文"
-  }
+  },
+  "pageTitleNavSite": "网址导航",
+  "pageTitleLogin": "登录",
+  "pageTitleTag": "标签：{label}",
+  "pageTitleCategory": "分类：{label}",
+  "pageTitleNavDetail": "导航：{label}",
+  "navPreviewDisclaimer": "本站只做内容预览，不做任何信息存储，请注意您的账号和财产安全。如遇内容无法预览，请点击「打开网站」按钮预览。",
+  "navOpenSite": "打开网站 ›",
+  "commentShowMore": "查看更多 ↓",
+  "commentShowLess": "收起 ↑",
+  "navExpandMenu": "展开目录",
+  "navCollapseMenu": "收起目录",
+  "navCategoryMenu": "导航分类",
+  "carouselPrev": "上一张，第 {current} 张，共 {total} 张",
+  "carouselNext": "下一张，第 {current} 张，共 {total} 张",
+  "aboutUsFallback": "ReactPress — 现代化博客发布平台"
 }

@@ -97,7 +97,7 @@ export default function UserAuth() {
                 }}
                 className="block w-full px-4 py-2 text-left text-sm text-[var(--main-text-color)] hover:bg-[var(--bg-second)]"
               >
-                {t('logout')}
+                {t('commentNamespace.logout')}
               </button>
             </div>
           </>
@@ -114,21 +114,21 @@ export default function UserAuth() {
           onClick={() => setLoginOpen(true)}
           className="px-3 py-1.5 text-sm text-[var(--main-text-color)] hover:bg-[var(--bg-second)]"
         >
-          {t('userInfoConfirm')}
+          {t('commentNamespace.userInfoConfirm')}
         </button>
         <button
           type="button"
           onClick={() => setRegisterOpen(true)}
           className="border-l border-[var(--border-color)] px-3 py-1.5 text-sm text-[var(--main-text-color)] hover:bg-[var(--bg-second)]"
         >
-          {t('register')}
+          {t('commentNamespace.register')}
         </button>
       </div>
 
       {loginOpen ? (
         <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/40 p-4">
           <div className="w-full max-w-md rounded-lg bg-[var(--bg-box)] p-6 shadow-xl">
-            <h3 className="mt-0 text-lg font-semibold">{t('userInfoConfirm')}</h3>
+            <h3 className="mt-0 text-lg font-semibold">{t('commentNamespace.userInfoConfirm')}</h3>
             <input
               type="email"
               value={form.email}
@@ -145,7 +145,7 @@ export default function UserAuth() {
             />
             <div className="mt-4 flex justify-end gap-2">
               <button type="button" onClick={() => setLoginOpen(false)} className="px-4 py-2 text-sm">
-                {t('userInfoCancel')}
+                {t('commentNamespace.userInfoCancel')}
               </button>
               <button
                 type="button"
@@ -153,7 +153,7 @@ export default function UserAuth() {
                 onClick={submitLogin}
                 className="rounded-md bg-[var(--primary-color)] px-4 py-2 text-sm text-white"
               >
-                {loading ? t('loading') : t('userInfoConfirm')}
+                {loading ? t('loading') : t('commentNamespace.userInfoConfirm')}
               </button>
             </div>
           </div>
@@ -163,7 +163,7 @@ export default function UserAuth() {
       {registerOpen ? (
         <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/40 p-4">
           <div className="w-full max-w-md rounded-lg bg-[var(--bg-box)] p-6 shadow-xl">
-            <h3 className="mt-0 text-lg font-semibold">{t('userRegister')}</h3>
+            <h3 className="mt-0 text-lg font-semibold">{t('commentNamespace.userRegister')}</h3>
             <input
               value={form.name}
               onChange={(e) => setForm((prev) => ({ ...prev, name: e.target.value }))}
@@ -188,12 +188,12 @@ export default function UserAuth() {
               type="password"
               value={form.confirm}
               onChange={(e) => setForm((prev) => ({ ...prev, confirm: e.target.value }))}
-              placeholder={t('userInfoPleaseEnterConfirmPassword')}
+              placeholder={t('commentNamespace.userInfoPleaseEnterConfirmPassword')}
               className="mt-3 w-full rounded-md border border-[var(--border-color)] px-3 py-2"
             />
             <div className="mt-4 flex justify-end gap-2">
               <button type="button" onClick={() => setRegisterOpen(false)} className="px-4 py-2 text-sm">
-                {t('userInfoCancel')}
+                {t('commentNamespace.userInfoCancel')}
               </button>
               <button
                 type="button"
@@ -201,7 +201,7 @@ export default function UserAuth() {
                 onClick={submitRegister}
                 className="rounded-md bg-[var(--primary-color)] px-4 py-2 text-sm text-white"
               >
-                {loading ? t('loading') : t('register')}
+                {loading ? t('loading') : t('commentNamespace.register')}
               </button>
             </div>
           </div>

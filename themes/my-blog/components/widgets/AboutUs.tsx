@@ -134,7 +134,7 @@ export default function AboutUs({ variant = 'default' }: AboutUsProps) {
             dangerouslySetInnerHTML={{ __html: setting.systemFooterInfo }}
           />
         ) : (
-          <p className="m-0 leading-relaxed">ReactPress — 现代化博客发布平台</p>
+          <p className="m-0 leading-relaxed">{t('aboutUsFallback')}</p>
         )}
         <ContactInfo />
       </div>

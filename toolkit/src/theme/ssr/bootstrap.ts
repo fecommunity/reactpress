@@ -38,6 +38,8 @@ export interface FetchAppBootstrapOptions {
   api?: ThemeApi;
   manifest?: { id: string; options?: ThemeConfigurationSchema };
   ctx?: NextPreviewCtx;
+  /** Explicit request (e.g. App Router `cookies()` / `headers()` shim) for locale resolution. */
+  req?: IncomingMessage;
 }
 
 /** Safe defaults when the API is unreachable during dev startup or SSR. */
@@ -86,7 +88,10 @@ export async function fetchAppBootstrap(
   const i18n = mergeVisitorI18n(safeJsonParse<Record<string, unknown>>(setting.i18n, {}));
   const globalSettingRaw = safeJsonParse<Record<string, unknown>>(setting.globalSetting, {});
   const localeKeys = Object.keys(i18n);
-  const locale = resolveVisitorLocale(localeKeys, options.ctx?.req as IncomingMessage | undefined);
+  const locale = resolveVisitorLocale(
+    localeKeys,
+    (options.req ?? options.ctx?.req) as IncomingMessage | undefined,
+  );
   const globalSetting = (globalSettingRaw?.[locale] ?? undefined) as
     | Record<string, unknown>
     | undefined;

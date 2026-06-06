@@ -1,5 +1,5 @@
 import CategoryClient from '@/components/views/CategoryClient';
-import { buildListPageMetadata } from '@/lib/reactpress/siteMetadata';
+import { buildListPageMetadata, buildLocalizedListPageMetadata } from '@/lib/reactpress/siteMetadata';
 import { generateCategoryStaticParams } from '@/lib/reactpress/staticParams';
 import {
   fetchCategoryArchivePageProps,
@@ -28,9 +28,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       fetchCategoryArchivePageProps(themeApi, categoryValue),
     );
     const label = data.category?.label || categoryValue;
-    return buildListPageMetadata(`分类：${label}`);
+    return buildLocalizedListPageMetadata('pageTitleCategory', { label });
   } catch {
-    return buildListPageMetadata(`分类：${categoryValue}`);
+    return buildLocalizedListPageMetadata('pageTitleCategory', { label: categoryValue });
   }
 }
 

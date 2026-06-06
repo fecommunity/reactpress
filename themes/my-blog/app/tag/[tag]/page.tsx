@@ -1,5 +1,5 @@
 import TagArchiveClient from '@/components/views/TagArchiveClient';
-import { buildListPageMetadata } from '@/lib/reactpress/siteMetadata';
+import { buildListPageMetadata, buildLocalizedListPageMetadata } from '@/lib/reactpress/siteMetadata';
 import { generateTagStaticParams } from '@/lib/reactpress/staticParams';
 import {
   fetchTagArchivePageProps,
@@ -26,9 +26,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   try {
     const data = await withApiRetry(() => fetchTagArchivePageProps(themeApi, tagValue));
     const label = data.tag?.label || tagValue;
-    return buildListPageMetadata(`标签：${label}`);
+    return buildLocalizedListPageMetadata('pageTitleTag', { label });
   } catch {
-    return buildListPageMetadata(`标签：${tagValue}`);
+    return buildLocalizedListPageMetadata('pageTitleTag', { label: tagValue });
   }
 }
 

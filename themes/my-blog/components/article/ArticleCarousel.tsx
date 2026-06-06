@@ -184,7 +184,9 @@ export default function ArticleCarousel({ articles = [] }: ArticleCarouselProps)
           <button
             type="button"
             className={`${navBtnClass} left-3 opacity-90 max-md:left-2.5`}
-            aria-label={`上一张，第 ${active + 1} 张，共 ${slides.length} 张`}
+            aria-label={t('carouselPrev')
+              .replace('{current}', String(active + 1))
+              .replace('{total}', String(slides.length))}
             onClick={goPrev}
           >
             <ChevronIcon direction="left" />
@@ -192,7 +194,9 @@ export default function ArticleCarousel({ articles = [] }: ArticleCarouselProps)
           <button
             type="button"
             className={`${navBtnClass} right-3 opacity-90 max-md:right-2.5`}
-            aria-label={`下一张，第 ${active + 1} 张，共 ${slides.length} 张`}
+            aria-label={t('carouselNext')
+              .replace('{current}', String(active + 1))
+              .replace('{total}', String(slides.length))}
             onClick={goNext}
           >
             <ChevronIcon direction="right" />

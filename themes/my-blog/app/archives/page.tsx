@@ -1,5 +1,5 @@
 import ArchivesClient from '@/components/views/ArchivesClient';
-import { buildListPageMetadata } from '@/lib/reactpress/siteMetadata';
+import { buildLocalizedListPageMetadata } from '@/lib/reactpress/siteMetadata';
 import {
   fetchArchivesPageProps,
   themeApi,
@@ -11,7 +11,7 @@ import type { Metadata } from 'next';
 export const revalidate = 60;
 
 export async function generateMetadata(): Promise<Metadata> {
-  return buildListPageMetadata('归档');
+  return buildLocalizedListPageMetadata('archives');
 }
 
 export default async function ArchivesPage() {

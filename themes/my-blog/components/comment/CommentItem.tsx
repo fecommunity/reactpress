@@ -90,7 +90,7 @@ export default function CommentItem({
               />
               {comment.children.length > 2 ? (
                 <div className="rp-comment-show-more" onClick={toggleMore}>
-                  {showMore ? '收起 ↑' : '查看更多 ↓'}
+                  {showMore ? t('commentShowLess') : t('commentShowMore')}
                 </div>
               ) : null}
             </div>
