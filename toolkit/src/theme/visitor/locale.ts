@@ -80,10 +80,30 @@ export function parseSiteLocale(
   };
 }
 
+function resolveLocaleMessage(messages: Record<string, unknown>, key: string): string | undefined {
+  const flat = messages[key];
+  if (typeof flat === 'string' && flat !== '') {
+    return flat;
+  }
+
+  const parts = key.split('.');
+  let current: unknown = messages;
+  for (const part of parts) {
+    if (!current || typeof current !== 'object') {
+      return undefined;
+    }
+    current = (current as Record<string, unknown>)[part];
+  }
+
+  return typeof current === 'string' && current !== '' ? current : undefined;
+}
+
 export function createTranslator(messages: LocaleMessages) {
+  const lookup = messages as Record<string, unknown>;
   return function t(key: string, fallback?: string): string {
-    if (messages[key] != null && messages[key] !== '') {
-      return messages[key];
+    const resolved = resolveLocaleMessage(lookup, key);
+    if (resolved != null) {
+      return resolved;
     }
     return fallback ?? key;
   };

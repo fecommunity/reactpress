@@ -412,6 +412,9 @@ importers:
       cross-env:
         specifier: ^10.1.0
         version: 10.1.0
+      highlight.js:
+        specifier: ^9.18.5
+        version: 9.18.5
       next:
         specifier: 15.5.12
         version: 15.5.12(@babel/core@7.29.0)(@playwright/test@1.60.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(sass@1.79.3)
@@ -427,6 +430,9 @@ importers:
       tailwindcss:
         specifier: ^4.1.18
         version: 4.3.0
+      viewerjs:
+        specifier: ^1.5.0
+        version: 1.11.7
     devDependencies:
       '@eslint/eslintrc':
         specifier: ^3.3.3
@@ -15685,9 +15691,7 @@ snapshots:
       source-map: 0.6.1
       string-length: 2.0.0
     transitivePeerDependencies:
-      - bufferutil
       - supports-color
-      - utf-8-validate
 
   '@jest/schemas@29.6.3':
     dependencies:
@@ -15712,9 +15716,7 @@ snapshots:
       jest-runner: 24.9.0
       jest-runtime: 24.9.0
     transitivePeerDependencies:
-      - bufferutil
       - supports-color
-      - utf-8-validate
 
   '@jest/transform@24.9.0':
     dependencies:

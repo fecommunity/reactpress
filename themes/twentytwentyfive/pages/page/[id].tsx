@@ -11,6 +11,7 @@ import dynamic from 'next/dynamic';
 import type { GetStaticProps } from 'next';
 import { NextPage } from 'next';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
 
@@ -45,15 +46,20 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
 };
 
 const Page: NextPage<IProps> = ({ page }) => {
+  const router = useRouter();
   const t = useTranslations();
   const setting = useSiteSetting();
 
   useEffect(() => {
-    if (!page) {
+    if (!page?.id) {
       return;
     }
     PageProvider.updatePageViews(page.id);
   }, [page]);
+
+  if (router.isFallback || !page?.id) {
+    return <div className="loading">{t('loading')}</div>;
+  }
 
   return (
     <ImageViewer containerSelector="#js-page-wrapper">

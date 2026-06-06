@@ -1,18 +1,17 @@
 import './globals.css';
 
-import Header from '@/components/Header';
-import SectionContainer from '@/components/SectionContainer';
-import Footer from '@/components/Footer';
+import SiteHeader from '@/components/reactpress/SiteHeader';
+import ConditionalSiteFooter from '@/components/reactpress/ConditionalSiteFooter';
+import PageContainer from '@/components/reactpress/PageContainer';
 import { loadAppBootstrap } from '@/src/reactpress/bootstrap';
 import { buildMyBlogAppearanceCss } from '@/src/reactpress/appearance';
-import { resolveSiteShell } from '@/src/reactpress/site-shell';
+import { ReactPressAppProviders } from '@/src/reactpress/providers';
 
 export const dynamic = 'force-dynamic';
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const bootstrap = await loadAppBootstrap('/');
   const appearanceCss = buildMyBlogAppearanceCss(bootstrap.themeMods);
-  const { siteTitle, navLinks, stickyNav } = resolveSiteShell(bootstrap);
   const basePath = process.env.BASE_PATH || '';
 
   return (
@@ -25,15 +24,17 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           href={`${basePath}/static/favicons/favicon-32x32.png`}
         />
       </head>
-      <body className="bg-white text-black antialiased dark:bg-gray-950 dark:text-white">
+      <body className="bg-[var(--bg-body)] text-[var(--main-text-color)] antialiased">
         {appearanceCss ? (
           <style dangerouslySetInnerHTML={{ __html: appearanceCss }} />
         ) : null}
-        <SectionContainer>
-          <Header siteTitle={siteTitle} navLinks={navLinks} stickyNav={stickyNav} />
-          <main className="mb-auto">{children}</main>
-          <Footer siteTitle={siteTitle} />
-        </SectionContainer>
+        <ReactPressAppProviders bootstrap={bootstrap}>
+          <SiteHeader />
+          <main id="main-content" className="mb-auto">
+            <PageContainer>{children}</PageContainer>
+          </main>
+          <ConditionalSiteFooter />
+        </ReactPressAppProviders>
       </body>
     </html>
   );

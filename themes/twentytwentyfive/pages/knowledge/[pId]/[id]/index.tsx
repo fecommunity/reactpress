@@ -5,6 +5,7 @@ import type { GetStaticProps } from 'next';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useTranslations } from 'next-intl';
 import { useEffect, useMemo } from 'react';
 
@@ -56,7 +57,7 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
   }
 };
 
-const Page: NextPage<IProps> = ({ pId, id, book, chapter }) => {
+function KnowledgeChapterView({ pId, id, book, chapter }: IProps) {
   const t = useTranslations();
   const chapters = book.children || [];
   const tocs = chapter.toc ? JSON.parse(chapter.toc) : [];
@@ -232,6 +233,17 @@ const Page: NextPage<IProps> = ({ pId, id, book, chapter }) => {
       />
     </>
   );
+}
+
+const Page: NextPage<IProps> = (props) => {
+  const router = useRouter();
+  const t = useTranslations();
+
+  if (router.isFallback || !props.book?.id || !props.chapter?.id) {
+    return <div className="loading">{t('loading')}</div>;
+  }
+
+  return <KnowledgeChapterView {...props} />;
 };
 
 export default Page;

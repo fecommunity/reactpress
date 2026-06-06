@@ -36,14 +36,6 @@ export function HtmlContent({
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!content || !ref.current) return;
-    const range = document.createRange();
-    const slot = range.createContextualFragment(content);
-    ref.current.innerHTML = '';
-    ref.current.appendChild(slot);
-  }, [content]);
-
-  useEffect(() => {
     if (!highlightCode || !ref.current || !content) return undefined;
 
     let hljs: { highlightBlock: (el: HTMLElement) => void } | null = null;
@@ -83,9 +75,23 @@ export function HtmlContent({
         });
         el.parentNode?.insertBefore(colorGroup, el);
 
+        const pre = el.parentElement;
+        const onWheel = (event: WheelEvent) => {
+          if (!pre) return;
+          const { scrollTop, scrollHeight, clientHeight } = pre;
+          const delta = event.deltaY;
+          const canScrollUp = scrollTop > 0 && delta < 0;
+          const canScrollDown = scrollTop + clientHeight < scrollHeight - 1 && delta > 0;
+          if (canScrollUp || canScrollDown) {
+            event.stopPropagation();
+          }
+        };
+        pre?.addEventListener('wheel', onWheel, { passive: true, capture: true });
+
         cleanups.push(() => {
           copyBtn.remove();
           colorGroup.remove();
+          pre?.removeEventListener('wheel', onWheel, true);
         });
 
         hljs?.highlightBlock(el);
@@ -103,6 +109,10 @@ export function HtmlContent({
       ref={ref}
       className={className}
       data-rp-component="html-content"
+      suppressHydrationWarning
+      {...(content
+        ? { dangerouslySetInnerHTML: { __html: content } }
+        : {})}
     />
   );
 }

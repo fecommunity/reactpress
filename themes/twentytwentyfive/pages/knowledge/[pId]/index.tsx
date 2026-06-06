@@ -5,6 +5,7 @@ import type { GetStaticProps } from 'next';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useTranslations } from 'next-intl';
 import { useCallback, useMemo } from 'react';
 
@@ -48,14 +49,20 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
 };
 
 const Page: NextPage<IProps> = ({ pId, book, otherBooks = [] }) => {
+  const router = useRouter();
   const setting = useSiteSetting();
   const t = useTranslations();
   const chapters = useMemo(() => (book && book.children) || [], [book]);
 
   const start = useCallback(() => {
     const chapter = chapters[0];
+    if (!chapter) return;
     window.open(`/knowledge/${pId}/${chapter.id}`);
   }, [chapters, pId]);
+
+  if (router.isFallback || !book?.id) {
+    return <div className="loading">{t('loading')}</div>;
+  }
 
   if (!book) {
     return null;

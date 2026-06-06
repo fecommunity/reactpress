@@ -4,6 +4,7 @@ import cls from 'classnames';
 import type { GetStaticProps } from 'next';
 import { NextPage } from 'next';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -57,6 +58,7 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
 };
 
 const CategoryPage: NextPage<IProps> = ({ articles: defaultArticles = [], total, category }) => {
+  const router = useRouter();
   const t = useTranslations();
   const setting = useSiteSetting();
   const { tags, categories } = useSiteCatalog();
@@ -70,6 +72,7 @@ const CategoryPage: NextPage<IProps> = ({ articles: defaultArticles = [], total,
 
   const getArticles = useCallback(
     (nextPage: number) => {
+      if (!category?.value) return;
       ArticleProvider.getArticlesByCategory(category.value, {
         page: nextPage,
         pageSize,
@@ -79,8 +82,12 @@ const CategoryPage: NextPage<IProps> = ({ articles: defaultArticles = [], total,
         setArticles((prev) => [...prev, ...slimArticlesForList(res[0])]);
       });
     },
-    [category],
+    [category?.value],
   );
+
+  if (router.isFallback || !category?.value) {
+    return <div className="loading">{t('loading')}</div>;
+  }
 
   return (
     <div className={style.wrapper}>

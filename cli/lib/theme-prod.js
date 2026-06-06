@@ -19,8 +19,15 @@ function resolveProductionThemeEnv(projectRoot, themeDir) {
   ).replace(/\/$/, '');
   const visitorPort =
     process.env.CLIENT_PORT || process.env.PORT || '3001';
-  const apiPort =
-    process.env.SERVER_PORT || '3002';
+  const serverApiUrl =
+    process.env.REACTPRESS_THEME_API_URL ||
+    process.env.SERVER_API_URL ||
+    process.env.REACTPRESS_API_URL ||
+    `${nginxEntry}/api`;
+  const publicApiUrl =
+    process.env.REACTPRESS_THEME_PUBLIC_API_URL ||
+    process.env.NEXT_PUBLIC_REACTPRESS_API_URL ||
+    `${nginxEntry}/api`;
 
   return {
     ...process.env,
@@ -31,10 +38,9 @@ function resolveProductionThemeEnv(projectRoot, themeDir) {
     CLIENT_PORT: String(visitorPort),
     NGINX_ENTRY_URL: nginxEntry,
     REACTPRESS_NGINX_ENTRY_URL: nginxEntry,
-    REACTPRESS_API_URL: process.env.REACTPRESS_API_URL || `http://127.0.0.1:${apiPort}/api`,
-    SERVER_API_URL: process.env.SERVER_API_URL || `http://127.0.0.1:${apiPort}/api`,
-    NEXT_PUBLIC_REACTPRESS_API_URL:
-      process.env.NEXT_PUBLIC_REACTPRESS_API_URL || `${nginxEntry}/api`,
+    REACTPRESS_API_URL: serverApiUrl,
+    SERVER_API_URL: serverApiUrl,
+    NEXT_PUBLIC_REACTPRESS_API_URL: publicApiUrl,
     NEXT_PUBLIC_REACTPRESS_ADMIN_URL:
       process.env.NEXT_PUBLIC_REACTPRESS_ADMIN_URL || `${nginxEntry}/admin`,
   };
