@@ -55,6 +55,8 @@ module.exports = {
   },
   async redirects() {
     return [
+      { source: '/blog', destination: '/', permanent: true },
+      { source: '/blog/', destination: '/', permanent: true },
       { source: '/tags/:tag', destination: '/tag/:tag', permanent: true },
       { source: '/tags/:tag/page/:page', destination: '/tag/:tag', permanent: true },
       { source: '/page/suggestions', destination: '/suggestions', permanent: true },
@@ -63,12 +65,6 @@ module.exports = {
   },
   async headers() {
     return [
-      {
-        source: '/static/:path*',
-        headers: [
-          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
-        ],
-      },
       {
         source: '/:path*',
         headers: [

@@ -82,7 +82,7 @@ pnpm export:brand
 # 或: node scripts/export-brand-assets.mjs
 ```
 
-生成文件包括 `public/logo.png`、`logo-200.png`、`logo-400.png`、`logo.svg`、`favicon.ico` 等。后台「站点 Logo」留空时，顶栏与文章列表占位使用 `data/logo.svg`。
+生成文件包括 `public/logo.png`、`logo-400.png`、`favicon.ico` 等。组件内默认 Logo 使用 `data/logo.svg`（SVGR 打包）。
 
 ## 开发说明
 
