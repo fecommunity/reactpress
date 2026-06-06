@@ -99,7 +99,7 @@ export default function ArticleCarousel({ articles = [] }: ArticleCarouselProps)
 
   return (
     <section
-      className="group/carousel relative isolate overflow-hidden rounded-xl bg-[var(--bg-second)] shadow-[var(--box-shadow)] ring-1 ring-black/5 dark:ring-white/5"
+      className="rp-carousel group/carousel relative isolate overflow-hidden rounded-xl bg-[var(--bg-second)] shadow-[var(--box-shadow)] ring-1 ring-black/5 dark:ring-white/5"
       aria-roledescription="carousel"
       aria-label={t('recommendToReading')}
       style={{ '--rp-autoplay-ms': `${AUTOPLAY_MS}ms` } as CSSProperties}
@@ -124,7 +124,7 @@ export default function ArticleCarousel({ articles = [] }: ArticleCarouselProps)
           return (
             <article
               key={article.id}
-              className={`rp-carousel-slide absolute inset-0 ${isActive ? 'is-active' : ''}`}
+              className={`rp-carousel-slide absolute inset-0 overflow-hidden ${isActive ? 'is-active' : ''}`}
               style={{ pointerEvents: isActive ? 'auto' : 'none' }}
               aria-hidden={!isActive}
             >
@@ -132,7 +132,7 @@ export default function ArticleCarousel({ articles = [] }: ArticleCarouselProps)
                 <img
                   src={coverSrc}
                   alt=""
-                  className="absolute inset-0 h-full w-full bg-[var(--bg-second)] object-contain object-center"
+                  className="rp-cover-zoom absolute inset-0 h-full w-full bg-[var(--bg-second)] object-contain object-center"
                   width={1200}
                   height={460}
                   decoding={index === 0 ? 'sync' : 'async'}
