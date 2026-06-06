@@ -1,9 +1,8 @@
 'use client';
 
-import { UserProvider } from '@/lib/providers/client';
 import { useLocale } from '@fecommunity/reactpress-toolkit/ui';
 import { resolveImageUrl, useSiteUser } from '@fecommunity/reactpress-toolkit/theme';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 
 function resolveAdminHref(): string {
   const configured = process.env.NEXT_PUBLIC_REACTPRESS_ADMIN_URL?.trim();
@@ -12,41 +11,14 @@ function resolveAdminHref(): string {
   return 'http://localhost/admin/';
 }
 
+function resolveAdminAuthHref(path: 'login' | 'register'): string {
+  return `${resolveAdminHref()}${path}`;
+}
+
 export default function UserAuth() {
   const { t } = useLocale();
-  const { user, setUser, removeUser } = useSiteUser();
-  const [loginOpen, setLoginOpen] = useState(false);
-  const [registerOpen, setRegisterOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [form, setForm] = useState({ name: '', email: '', password: '', confirm: '' });
+  const { user, removeUser } = useSiteUser();
   const [menuOpen, setMenuOpen] = useState(false);
-
-  const submitLogin = useCallback(async () => {
-    setLoading(true);
-    try {
-      const res = await UserProvider.login({ email: form.email, password: form.password });
-      setUser(res);
-      setLoginOpen(false);
-    } finally {
-      setLoading(false);
-    }
-  }, [form.email, form.password, setUser]);
-
-  const submitRegister = useCallback(async () => {
-    if (form.password !== form.confirm) return;
-    setLoading(true);
-    try {
-      const res = await UserProvider.register({
-        name: form.name,
-        email: form.email,
-        password: form.password,
-      });
-      setUser(res);
-      setRegisterOpen(false);
-    } finally {
-      setLoading(false);
-    }
-  }, [form, setUser]);
 
   if (user?.name) {
     const initial = user.name.trim().charAt(0).toUpperCase();
@@ -107,106 +79,19 @@ export default function UserAuth() {
   }
 
   return (
-    <>
-      <div className="flex overflow-hidden rounded-md border border-[var(--border-color)]">
-        <button
-          type="button"
-          onClick={() => setLoginOpen(true)}
-          className="px-3 py-1.5 text-sm text-[var(--main-text-color)] hover:bg-[var(--bg-second)]"
-        >
-          {t('commentNamespace.userInfoConfirm')}
-        </button>
-        <button
-          type="button"
-          onClick={() => setRegisterOpen(true)}
-          className="border-l border-[var(--border-color)] px-3 py-1.5 text-sm text-[var(--main-text-color)] hover:bg-[var(--bg-second)]"
-        >
-          {t('commentNamespace.register')}
-        </button>
-      </div>
-
-      {loginOpen ? (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/40 p-4">
-          <div className="w-full max-w-md rounded-lg bg-[var(--bg-box)] p-6 shadow-xl">
-            <h3 className="mt-0 text-lg font-semibold">{t('commentNamespace.userInfoConfirm')}</h3>
-            <input
-              type="email"
-              value={form.email}
-              onChange={(e) => setForm((prev) => ({ ...prev, email: e.target.value }))}
-              placeholder={t('commentNamespace.userInfoEmail')}
-              className="mt-4 w-full rounded-md border border-[var(--border-color)] px-3 py-2"
-            />
-            <input
-              type="password"
-              value={form.password}
-              onChange={(e) => setForm((prev) => ({ ...prev, password: e.target.value }))}
-              placeholder={t('commentNamespace.userInfoPassword')}
-              className="mt-3 w-full rounded-md border border-[var(--border-color)] px-3 py-2"
-            />
-            <div className="mt-4 flex justify-end gap-2">
-              <button type="button" onClick={() => setLoginOpen(false)} className="px-4 py-2 text-sm">
-                {t('commentNamespace.userInfoCancel')}
-              </button>
-              <button
-                type="button"
-                disabled={loading}
-                onClick={submitLogin}
-                className="rounded-md bg-[var(--primary-color)] px-4 py-2 text-sm text-white"
-              >
-                {loading ? t('loading') : t('commentNamespace.userInfoConfirm')}
-              </button>
-            </div>
-          </div>
-        </div>
-      ) : null}
-
-      {registerOpen ? (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/40 p-4">
-          <div className="w-full max-w-md rounded-lg bg-[var(--bg-box)] p-6 shadow-xl">
-            <h3 className="mt-0 text-lg font-semibold">{t('commentNamespace.userRegister')}</h3>
-            <input
-              value={form.name}
-              onChange={(e) => setForm((prev) => ({ ...prev, name: e.target.value }))}
-              placeholder={t('commentNamespace.userInfoName')}
-              className="mt-4 w-full rounded-md border border-[var(--border-color)] px-3 py-2"
-            />
-            <input
-              type="email"
-              value={form.email}
-              onChange={(e) => setForm((prev) => ({ ...prev, email: e.target.value }))}
-              placeholder={t('commentNamespace.userInfoEmail')}
-              className="mt-3 w-full rounded-md border border-[var(--border-color)] px-3 py-2"
-            />
-            <input
-              type="password"
-              value={form.password}
-              onChange={(e) => setForm((prev) => ({ ...prev, password: e.target.value }))}
-              placeholder={t('commentNamespace.userInfoPassword')}
-              className="mt-3 w-full rounded-md border border-[var(--border-color)] px-3 py-2"
-            />
-            <input
-              type="password"
-              value={form.confirm}
-              onChange={(e) => setForm((prev) => ({ ...prev, confirm: e.target.value }))}
-              placeholder={t('commentNamespace.userInfoPleaseEnterConfirmPassword')}
-              className="mt-3 w-full rounded-md border border-[var(--border-color)] px-3 py-2"
-            />
-            <div className="mt-4 flex justify-end gap-2">
-              <button type="button" onClick={() => setRegisterOpen(false)} className="px-4 py-2 text-sm">
-                {t('commentNamespace.userInfoCancel')}
-              </button>
-              <button
-                type="button"
-                disabled={loading}
-                onClick={submitRegister}
-                className="rounded-md bg-[var(--primary-color)] px-4 py-2 text-sm text-white"
-              >
-                {loading ? t('loading') : t('commentNamespace.register')}
-              </button>
-            </div>
-          </div>
-        </div>
-      ) : null}
-    </>
+    <div className="flex overflow-hidden rounded-md border border-[var(--border-color)]">
+      <a
+        href={resolveAdminAuthHref('login')}
+        className="px-3 py-1.5 text-sm text-[var(--main-text-color)] no-underline hover:bg-[var(--bg-second)]"
+      >
+        {t('commentNamespace.userInfoConfirm')}
+      </a>
+      <a
+        href={resolveAdminAuthHref('register')}
+        className="border-l border-[var(--border-color)] px-3 py-1.5 text-sm text-[var(--main-text-color)] no-underline hover:bg-[var(--bg-second)]"
+      >
+        {t('commentNamespace.register')}
+      </a>
+    </div>
   );
 }
