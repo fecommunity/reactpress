@@ -1,13 +1,35 @@
+# [3.1.0](https://github.com/fecommunity/reactpress/compare/v3.0.0...v3.1.0) (2026-06-07)
+
+### Toolkit Theme Refactor
+
+* **Toolkit 3.1**: `@fecommunity/reactpress-toolkit` split into `theme` / `ui` / `app` / `plugin` submodules; theme manifest parsing, appearance config (Formily), SSR bootstrap, site settings & preview
+* **Export paths**: `package.json` exports add `./theme`, `./ui`, `./app`, `./plugin/*` subpaths for on-demand theme and plugin imports
+
+### CLI & Operations
+
+* **CLI 3.0.3**: `reactpress nginx` reverse proxy management; `reactpress db backup` supports Docker `mysqldump`; `reactpress build` target selection & step logging; improved interactive theming and error messages
+* **Fix**: enhanced monorepo root detection logic
+
+### Brand Assets
+
+* **Unified branding**: `public/brand/`, `public/favicon/`, and `public/icons/` centrally manage logo / favicon / PWA icons
+* **Export script**: `pnpm export:brand` syncs assets to server, web, cli, themes, and other directories
+
+### Docs & Other
+
+* **README**: added official theme section, Lighthouse performance metrics, and "Why ReactPress?" overview
+* **Theme schema**: `theme.manifest.schema.json` `$id` updated to `reactpress.surge.sh`
+
 # [3.0.0](https://github.com/fecommunity/reactpress/compare/v2.0.2...v3.0.0) (2026-05-17)
 
 ### Platform 3.0 — CLI-first Headless
 
-* **CLI**: 主包更名为 `@fecommunity/reactpress`；`reactpress dev` 就绪后输出前台/admin/API/Swagger 链接；`doctor`/`dev` 失败含可操作建议；CLI 多语言（`REACTPRESS_LANG` / `--lang`）；`reactpress-cli` bin deprecated
-* **Headless**: `GET /api/health`；API Key（`X-API-Key` + `/api/article/headless/list`）；Webhook（`article.published`、`comment.created`，HMAC 签名 + 3 次重试）
-* **内容**: 文章定时发布（`scheduledPublishAt`）；文章修订历史与回滚
-* **配置**: 根目录 `.env.example`；移除废弃 `.reactpress` 配置路径
-* **运维**: `cli/templates/docker-compose.prod.yml` 生产示例；`scripts/benchmark-cold-start.mjs` 二次冷启动验收
-* **Breaking**: `@fecommunity/reactpress-server` deprecated；主推 `@fecommunity/reactpress@3`；迁移见 [docs/migration-2-to-3.md](./docs/migration-2-to-3.md)
+* **CLI**: main package renamed to `@fecommunity/reactpress`; `reactpress dev` prints frontend/admin/API/Swagger URLs on ready; `doctor`/`dev` failures include actionable suggestions; CLI i18n (`REACTPRESS_LANG` / `--lang`); `reactpress-cli` bin deprecated
+* **Headless**: `GET /api/health`; API Key (`X-API-Key` + `/api/article/headless/list`); Webhooks (`article.published`, `comment.created`, HMAC signature + 3 retries)
+* **Content**: scheduled article publishing (`scheduledPublishAt`); article revision history & rollback
+* **Config**: root `.env.example`; removed deprecated `.reactpress` config path
+* **Ops**: `cli/templates/docker-compose.prod.yml` production example; `scripts/benchmark-cold-start.mjs` cold-start benchmark
+* **Breaking**: `@fecommunity/reactpress-server` deprecated; use `@fecommunity/reactpress@3`; see [docs/migration-2-to-3.md](./docs/migration-2-to-3.md)
 
 # [2.0.0-beta-4-beta.1](https://github.com/fecommunity/reactpress/compare/v2.0.1...v2.0.0-beta-4-beta.1) (2025-11-16)
 

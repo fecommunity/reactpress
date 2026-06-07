@@ -12,7 +12,11 @@ function readPreviewTokenFromBrowser() {
   return new URLSearchParams(window.location.search).get(PREVIEW_TOKEN_QUERY_KEY)?.trim() ?? '';
 }
 
-/** Minimal theme `_app` — hello-world style, ReactPressProvider + ThemeCssVars only. */
+/**
+ * Minimal theme `_app` — hello-world style, ReactPressProvider + ThemeCssVars only.
+ * @param {{ id: string }} manifest
+ * @returns {unknown}
+ */
 function createThemeApp(manifest) {
   function ThemeApp({ Component, pageProps }) {
     const { reactPress, ...rest } = pageProps;

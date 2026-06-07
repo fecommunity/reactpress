@@ -1,0 +1,253 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/fecommunity/reactpress/blob/master/themes/theme.manifest.schema.json",
+  "title": "Theme Manifest",
+  "description": "Portable theme manifest for ReactPress and compatible platforms. Parsed by `parseThemeManifest()`; stored at `themes/{id}/theme.json`. Platform fields are top-level (no vendor namespace). Appearance controls map to WordPress theme_mod storage.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "name", "version"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "JSON Schema reference. Use \"../theme.manifest.schema.json\" for editor validation.",
+      "examples": ["../theme.manifest.schema.json"]
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "description": "Theme slug / Text Domain. Matches directory `themes/{id}/`, kebab-case.",
+      "examples": ["twentytwentyfive", "hello-world"]
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Human-readable theme name (WordPress Theme Name).",
+      "examples": ["Twenty Twenty-Five", "Hello World"]
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$",
+      "description": "Semantic version (WordPress Version header).",
+      "examples": ["3.0.4", "1.0.0"]
+    },
+    "description": { "type": "string", "description": "Theme description." },
+    "author": { "type": "string", "description": "Author name." },
+    "authorUri": { "type": "string", "description": "Author homepage URL." },
+    "themeUri": { "type": "string", "description": "Theme homepage or documentation URL." },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true,
+      "description": "Theme tags for marketplace or admin filters."
+    },
+    "cover": {
+      "type": "string",
+      "description": "Theme cover image for admin theme list and preview. Path relative to theme root (recommended 1200×900, e.g. cover.png).",
+      "examples": ["cover.png", "public/cover.jpg"]
+    },
+    "requires": {
+      "type": "string",
+      "description": "Minimum host platform version (semver range). WordPress: Requires at least.",
+      "examples": [">=3.0.0"]
+    },
+    "supports": {
+      "type": "object",
+      "description": "Theme feature flags. WordPress: add_theme_support().",
+      "properties": {
+        "darkMode": { "type": "boolean", "description": "Visitor-facing light/dark toggle." },
+        "menus": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["primary", "footer", "social"] },
+          "description": "Registered navigation menu locations."
+        }
+      },
+      "additionalProperties": true
+    },
+    "templates": {
+      "type": "object",
+      "description": "Template hierarchy slug → page file path. WordPress Template Hierarchy.",
+      "propertyNames": {
+        "enum": ["home", "single", "page", "archive-category", "archive-tag", "archives", "search", "404"]
+      },
+      "additionalProperties": {
+        "type": "string",
+        "examples": ["pages/index.tsx", "pages/article/[id].tsx"]
+      }
+    },
+    "options": {
+      "$ref": "#/definitions/themeOptions"
+    },
+    "appearance": {
+      "type": "object",
+      "description": "Appearance editor: panels, sections, and theme_mod controls. Stored in `globalSetting.theme.mods[themeId]`.",
+      "additionalProperties": false,
+      "required": ["sections"],
+      "properties": {
+        "panels": {
+          "type": "array",
+          "description": "Sidebar navigation panels (WordPress Customizer panels).",
+          "items": { "$ref": "#/definitions/appearancePanel" }
+        },
+        "sections": {
+          "type": "array",
+          "minItems": 1,
+          "description": "Appearance sections (WordPress Customizer sections).",
+          "items": { "$ref": "#/definitions/appearanceSection" }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "themeOptions": {
+      "type": "object",
+      "description": "JSON Schema for structured theme options. Persisted in `globalSetting.config[themeId]`.",
+      "required": ["type"],
+      "properties": {
+        "$schema": { "type": "string", "const": "http://json-schema.org/draft-07/schema#" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "type": { "const": "object" },
+        "properties": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/definitions/optionsProperty" }
+        },
+        "required": { "type": "array", "items": { "type": "string" } },
+        "additionalProperties": { "type": "boolean" }
+      },
+      "additionalProperties": true
+    },
+    "optionsProperty": {
+      "type": "object",
+      "properties": {
+        "type": {},
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "default": {},
+        "properties": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/definitions/optionsProperty" }
+        },
+        "items": { "$ref": "#/definitions/optionsProperty" },
+        "required": { "type": "array", "items": { "type": "string" } },
+        "additionalProperties": { "type": "boolean" },
+        "x-ui": {
+          "type": "object",
+          "description": "Admin UI metadata (schema-only, not persisted).",
+          "properties": {
+            "widget": { "type": "string", "examples": ["navLinkList", "urlConfigEditor", "navSearchEditor"] },
+            "section": { "type": "string" },
+            "order": { "type": "number" },
+            "scope": { "type": "string", "enum": ["site", "locale"] },
+            "hidden": { "type": "boolean" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": true
+    },
+    "appearancePanel": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+          "examples": ["basic", "style", "layout"]
+        },
+        "title": { "type": "string" },
+        "description": { "type": "string" }
+      }
+    },
+    "appearanceSection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-zA-Z0-9]*(?:-[a-z0-9]+)*$",
+          "examples": ["identity", "colors", "themeConfiguration"]
+        },
+        "panel": {
+          "type": "string",
+          "description": "Parent panel id (`appearance.panels[].id`)."
+        },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "embed": {
+          "type": "string",
+          "enum": ["options"],
+          "description": "Embed the theme `options` schema form instead of inline controls."
+        },
+        "groups": {
+          "type": "array",
+          "description": "Control groups within the section (e.g. light / dark palettes).",
+          "items": { "$ref": "#/definitions/appearanceGroup" }
+        },
+        "settings": {
+          "type": "array",
+          "description": "theme_mod controls.",
+          "items": { "$ref": "#/definitions/appearanceSetting" }
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "embed": { "const": "options" } }, "required": ["embed"] },
+          "then": { "not": { "required": ["settings"] } },
+          "else": { "required": ["settings"] }
+        }
+      ]
+    },
+    "appearanceGroup": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+          "examples": ["light", "dark"]
+        },
+        "title": { "type": "string" },
+        "description": { "type": "string" }
+      }
+    },
+    "appearanceSetting": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "label"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-zA-Z0-9]*$",
+          "description": "theme_mod key (camelCase). Path: `globalSetting.theme.mods[themeId][id]`.",
+          "examples": ["displayTitle", "primaryColor", "siteLogo"]
+        },
+        "type": {
+          "type": "string",
+          "enum": ["color", "text", "image", "textarea", "checkbox", "select", "noticeList"]
+        },
+        "label": { "type": "string" },
+        "description": { "type": "string" },
+        "default": { "type": "string" },
+        "group": {
+          "type": "string",
+          "description": "Parent group id within the section (`appearance.sections[].groups[].id`)."
+        },
+        "choices": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["value", "label"],
+            "properties": {
+              "value": { "type": "string" },
+              "label": { "type": "string" }
+            },
+            "additionalProperties": false
+          }
+        }
+      }
+    }
+  }
+}

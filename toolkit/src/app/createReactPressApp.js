@@ -59,6 +59,9 @@ function ViewStatisticsBridge() {
 /**
  * Full-featured theme `_app` factory (UI-framework agnostic).
  * Alias: `createCatalogThemeApp` (deprecated name).
+ * @param {Record<string, unknown>} manifest
+ * @param {Record<string, unknown>} [options]
+ * @returns {unknown}
  */
 function createReactPressApp(manifest, options = {}) {
   const {

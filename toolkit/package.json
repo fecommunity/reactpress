@@ -1,6 +1,6 @@
 {
   "name": "@fecommunity/reactpress-toolkit",
-  "version": "3.0.4",
+  "version": "3.1.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
@@ -109,9 +109,24 @@
   "files": [
     "dist"
   ],
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "reactpress",
+    "cms",
+    "toolkit",
+    "theme",
+    "headless"
+  ],
+  "author": "fecommunity",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fecommunity/reactpress.git",
+    "directory": "toolkit"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "description": "ReactPress TypeScript toolkit: OpenAPI clients, theme SSR helpers, headless UI, and admin plugin registry.",
   "dependencies": {
     "ajv": "^8.17.1",

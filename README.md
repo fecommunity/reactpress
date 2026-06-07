@@ -1,75 +1,140 @@
 <div align="center">
   <a href="https://blog.gaoredu.com" title="ReactPress">
-    <img height="72" src="./public/brand/logo.png" alt="ReactPress Logo">
+    <img height="120" src="./public/brand/logo.png" alt="ReactPress Logo">
   </a>
 
   <p align="center">
-    <strong>Your publishing platform — live in about a minute</strong><br />
-    One global install. Two commands. Site, admin, and API ready to go.
+    <strong>Fast, smooth, and effortless publishing — live in about a minute.</strong><br />
+    One CLI · Full-stack CMS · Headless themes · Built for production deployment.
+  </p>
+
+  <a href="https://reactpress-theme-starter.vercel.app">
+    <img src="./public/home-dark.png" alt="ReactPress official theme — dark mode preview" width="100%" />
+  </a>
+
+  <p>
+    <a href="https://reactpress-theme-starter.vercel.app"><strong>Theme live demo</strong></a>
+    ·
+    <a href="https://blog.gaoredu.com"><strong>Full stack demo</strong></a>
+    ·
+    <a href="https://github.com/fecommunity/reactpress-theme-starter"><strong>Theme Starter</strong></a>
   </p>
 
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/fecommunity/reactpress/blob/master/LICENSE)
 [![NPM Version](https://img.shields.io/npm/v/@fecommunity/reactpress.svg?style=flat-square)](https://www.npmjs.com/package/@fecommunity/reactpress)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/fecommunity/reactpress/pulls)
+[![Lighthouse Performance](https://img.shields.io/badge/Lighthouse-95%20Performance-0cce6b?style=flat-square&logo=lighthouse&logoColor=white)](https://reactpress-theme-starter.vercel.app)
+[![Lighthouse SEO](https://img.shields.io/badge/SEO-100-0cce6b?style=flat-square&logo=google&logoColor=white)](https://reactpress-theme-starter.vercel.app)
 
   <p>
     <a href="https://github.com/fecommunity/reactpress/issues">Report Bug</a>
     ·
     <a href="https://github.com/fecommunity/reactpress/issues">Request Feature</a>
     ·
-    <a href="./README-zh_CN.md">中文文档</a>
+    <a href="https://reactpress.surge.sh/">Documentation</a>
     ·
-    <a href="https://blog.gaoredu.com">Live Demo</a>
+    <a href="./README-zh_CN.md">中文文档</a>
   </p>
+
+  <p><strong>If this project helps you, a ⭐ on GitHub helps others discover it.</strong></p>
 </div>
 
 ---
 
 ## Table of contents
 
-- [Table of contents](#table-of-contents)
 - [What is ReactPress?](#what-is-reactpress)
-- [Quick start](#quick-start)
-  - [Prerequisites](#prerequisites)
-  - [Install and run](#install-and-run)
-  - [Tips](#tips)
-- [See it in action](#see-it-in-action)
-  - [Usage demo](#usage-demo)
-  - [Screenshots](#screenshots)
-- [Highlights](#highlights)
-  - [How it compares](#how-it-compares)
-- [CLI reference](#cli-reference)
-- [Deploy](#deploy)
-- [Develop this repository](#develop-this-repository)
+- [Why ReactPress?](#why-reactpress)
+- [How to use](#how-to-use)
 - [Contributing](#contributing)
-- [Acknowledgments](#acknowledgments)
-- [Star history](#star-history)
 
 ---
 
 ## What is ReactPress?
 
-**ReactPress** is a modern publishing platform for blogs, company sites, and content-driven products. Install the CLI once, run `init` and `dev`, and you get a public site, admin console, and API — without hand-writing config files or wiring a database yourself.
+**ReactPress is a publishing platform built around a CMS backend, an admin console, and optional frontends** — install one CLI package to run the API, manage content in the admin, and connect a public theme when you are ready.
 
-> **One backend, many fronts.** Publish in one place; show content on the web, in admin, or through your own apps via the API.
+| Component | Role |
+| :-------- | :--- |
+| **CMS backend (API)** | Stores and serves posts, pages, media, categories, and settings |
+| **Admin console** | Web UI for writing and managing content (included in full-stack setups) |
+| **[Official theme](https://github.com/fecommunity/reactpress-theme-starter)** | Recommended public site — search, knowledge base, comments, dark mode |
+| **CLI (`reactpress`)** | Initialize, run locally, build, and deploy |
 
-[![ReactPress Poster](./public/poster.png)](https://blog.gaoredu.com)
+### What you can do
 
-[3.0 overview](./docs/tutorial/tutorial-extras/reactpress-3-0.md) · [Upgrade from 2.x](./docs/migration-2-to-3.md)
+- **Publish** — posts, pages, scheduled publishing, categories, and tags
+- **Manage media** — upload images and files, reuse across content
+- **Customize the site** — title, logo, navigation, and appearance from the admin
+- **Choose your frontend** — use the official theme or connect a custom one via the API
+- **Preview the theme instantly** — sample-data mode in the theme repo, no backend required
+
+> **Write once, publish everywhere.** Create content in the admin; render it on the web or through any connected frontend.
+
+<div align="center">
+
+<img src="./public/cli.png" alt="ReactPress CLI interactive menu" width="100%" />
+
+</div>
 
 ---
 
-## Quick start
+## Why ReactPress?
 
-### Prerequisites
+### Why use it?
 
-| Requirement     | Notes                                                   |
-| :-------------- | :------------------------------------------------------ |
-| **Node.js 18+** | Required for the CLI                                    |
-| **Docker**      | Recommended — default bundled MySQL runs in a container |
-| **MySQL**       | Optional — use your own instance instead of Docker      |
+Most publishing tools force a trade-off: either **an easy CMS with a slow or tightly coupled frontend**, or **a fast static site without a proper editor**. ReactPress is designed to reduce that trade-off.
 
-### Install and run
+| What you need | What ReactPress gives you |
+| :------------ | :------------------------ |
+| **Start quickly** | One global install; `init` + `dev` brings up the CMS backend in about a minute¹ |
+| **Write in a familiar way** | Web admin for posts, pages, media, and categories |
+| **A site visitors enjoy** | Official theme: fast pages, search, comments, knowledge base, dark mode |
+| **Room to grow** | Headless API — swap or customize the public frontend without migrating content |
+| **Fewer moving parts** | Core publishing features without assembling plugins; official theme demo scores Lighthouse **95 / 100 / 100 / 100**² |
+
+**In one line:** WordPress-style content workflow + a modern public site — with a clearer path to performance and frontend flexibility.
+
+¹ After Node.js and Docker are available; the first Docker image pull may take longer.  
+² Measured on the [official theme live demo](https://reactpress-theme-starter.vercel.app); your scores depend on hosting and content.
+
+<div align="center">
+
+<a href="https://reactpress-theme-starter.vercel.app">
+  <img src="./public/lighthouse.png" alt="Lighthouse scores: Performance 95, Accessibility 100, Best Practices 100, SEO 100" width="720" />
+</a>
+
+</div>
+
+### How it compares
+
+| | **ReactPress** | WordPress | Ghost | Static site (Hugo, Hexo, etc.) |
+| :-- | :-- | :-- | :-- | :-- |
+| **Time to first running stack** | **`init` + `dev` — about 1 minute**¹ | Server, PHP, themes, and plugins | Managed hosting or self-hosted install | New repo and build pipeline per site |
+| **Content editing** | **Web admin** | Web admin | Web admin | Markdown or MDX in Git |
+| **Public site speed & SEO** | **Lighthouse 95/100/100/100** (official theme demo)² | Varies widely by theme and plugins | Generally strong | Excellent, but no built-in CMS |
+| **Frontend flexibility** | **Headless — connect or replace the theme** | Strong theme/plugin ecosystem, often coupled | Theme system tied to Ghost | Fixed at build time |
+| **Built-in publishing extras** | **Search, comments, knowledge base** (official theme + API) | Often via plugins | Membership/newsletter focus | Build yourself |
+| **Best for** | **Blogs, content sites, custom publishing** | General-purpose websites | Newsletters and publishing businesses | Docs and developer blogs |
+
+**vs WordPress** — Similar admin-driven publishing, with a faster default public theme path and less reliance on plugins for a modern frontend.
+
+**vs Ghost** — Both target blogging and content publishing. ReactPress emphasizes a CLI-first, headless setup and a swappable Next.js theme; Ghost emphasizes its integrated publishing and membership stack.
+
+**vs static generators** — Keep strong performance and SEO potential, while adding a CMS so editors can publish without working in Git.
+
+**Who is it for?** Bloggers, indie creators, teams that need a content hub, and anyone who wants a production-capable stack without a week of integration work.
+
+¹ After dependencies are installed; first Docker pull may take longer.  
+² Official theme demo at [reactpress-theme-starter.vercel.app](https://reactpress-theme-starter.vercel.app).
+
+---
+
+## How to use
+
+### 1. Start the CMS backend
+
+**Requirements:** Node.js 18+ · Docker recommended (for the bundled MySQL)
 
 ```bash
 npm i -g @fecommunity/reactpress@3
@@ -78,7 +143,7 @@ reactpress init
 reactpress dev
 ```
 
-When `dev` is ready, open the URLs printed in the terminal:
+The CLI starts the **CMS API** and prints the URLs when ready:
 
 | Service              | Port   | Typical URL                          |
 | :------------------- | :----: | :----------------------------------- |
@@ -90,75 +155,65 @@ When `dev` is ready, open the URLs printed in the terminal:
 
 Port **3001** is the active theme (visitor site), not the admin SPA. Theme preview uses **3003** so the public site stays on the activated theme.
 
-### Tips
+Run `reactpress` anytime for the interactive menu. Use `reactpress doctor` if startup fails.
 
-- Run `reactpress` with no arguments for the interactive menu.
-- Run `reactpress doctor` or `reactpress status` if something does not look right.
-- Upgrading from 2.x? See the [migration guide](./docs/migration-2-to-3.md).
+> In a new project directory, `reactpress dev` starts the API first. Connect the [official theme](#3-connect-the-public-site) for the visitor-facing site, or see the [docs](https://reactpress.surge.sh/) for a full-stack setup with the admin console.
 
----
+### 2. Preview the official theme (no backend)
 
-## See it in action
-
-### Usage demo
-
-Install, initialize, start dev, and open your site — all from the terminal:
-
-![ReactPress CLI demo](./public/usage.gif)
-
-### Screenshots
-
-|                          Admin dashboard                           |                          Demo site                          |
-| :----------------------------------------------------------------: | :---------------------------------------------------------: |
-| [![Admin Dashboard](./public/admin.png)](https://blog.gaoredu.com) | [![Demo Site](./public/demo.png)](https://blog.gaoredu.com) |
-
----
-
-## Highlights
-
-| Topic                    | What you get                                                             |
-| :----------------------- | :----------------------------------------------------------------------- |
-| **Go live fast**         | `init` + `dev` — guided setup, automatic database, URLs when ready       |
-| **Publish & manage**     | Posts, pages, media, and site settings from the admin                    |
-| **Customize**            | Themes, light/dark mode, templates from hello-world starter to full blog |
-| **Flexible runtime**     | All-in-one local dev, API-only headless mode, or production deploy       |
-| **Developer experience** | Interactive menu, `doctor`, `status`, and clear error messages           |
-
-### How it compares
-
-|                     | Traditional CMS                | Static generators      | **ReactPress**                                         |
-| :------------------ | :----------------------------- | :--------------------- | :----------------------------------------------------- |
-| **Getting started** | Server, plugins, manual setup  | Repo + build per site  | **One CLI, ~1 minute to a working CMS**                |
-| **Content**         | Admin UI, coupled themes       | Markdown in git        | **Admin UI + optional code-first workflows**           |
-| **Frontends**       | Theme/plugin ecosystem         | Fixed at build time    | **One content hub, your choice of presentation**       |
-| **Best for**        | General blogs & business sites | Docs & marketing pages | **Blogs, multi-site content, custom publishing flows** |
-
----
-
-## CLI reference
+Preview the theme UI with sample content — no ReactPress install required:
 
 ```bash
-npm i -g @fecommunity/reactpress@3
+npx create-next-app@latest my-blog --example "https://github.com/fecommunity/reactpress-theme-starter" --use-pnpm
+cd my-blog
+pnpm dev:mock
 ```
 
-| Command                     | Description                            |
-| :-------------------------- | :------------------------------------- |
-| `reactpress`                | Interactive menu                       |
-| `reactpress init`           | Set up a new project (config + `.env`) |
-| `reactpress dev`            | Run site + admin + API locally         |
-| `reactpress dev --api-only` | API only — for custom frontends        |
-| `reactpress doctor`         | Check your environment                 |
-| `reactpress status`         | See what is running                    |
-| `reactpress build`          | Production build                       |
-| `reactpress start`          | Run production build                   |
+Open **http://localhost:3001** — same as the [live demo](https://reactpress-theme-starter.vercel.app).
 
-More: [documentation](https://blog.gaoredu.com) · [Configuration](./docs/tutorial/tutorial-extras/config-intro.md)
+[![Deploy theme with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/fecommunity/reactpress-theme-starter)
 
----
+### 3. Connect the public site
 
-## Deploy
+When the theme should show **your** content from the CMS:
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/fecommunity/reactpress)
+1. Keep the ReactPress API running (`reactpress init` → `reactpress dev`, or `reactpress dev --api-only`).
+2. Clone [reactpress-theme-starter](https://github.com/fecommunity/reactpress-theme-starter) and run `pnpm install`.
+3. Copy `.env.example` to `.env`, then run `pnpm dev`.
+
+Open **http://localhost:3001** for the public site. Customize colors, logo, and navigation in the ReactPress admin when running a full-stack deployment.
+
+Full guide: [theme starter README](https://github.com/fecommunity/reactpress-theme-starter#readme).
+
+### 4. See it in action
+
+<div align="center">
+
+![ReactPress CLI demo — from install to live site](./public/usage.gif)
+
+</div>
+
+| Admin console | Live site |
+| :-----------: | :-------: |
+| [![Admin dashboard](./public/admin.png)](https://blog.gaoredu.com) | [![Demo site](./public/demo.png)](https://blog.gaoredu.com) |
+
+[Full stack demo](https://blog.gaoredu.com) · [Theme demo](https://reactpress-theme-starter.vercel.app)
+
+### 5. Everyday commands
+
+| Command | What it does |
+| :------ | :----------- |
+| `reactpress` | Open the interactive menu |
+| `reactpress init` | Set up a new site |
+| `reactpress dev` | Run the CMS API locally (add a theme for the public site) |
+| `reactpress build` | Prepare for production |
+| `reactpress start` | Run in production |
+| `reactpress doctor` | Diagnose setup issues |
+| `reactpress status` | See what is running |
+
+More options: [documentation](https://reactpress.surge.sh/)
+
+### 6. Deploy to production
 
 ```bash
 npm i -g @fecommunity/reactpress@3
@@ -166,24 +221,17 @@ reactpress build
 reactpress start
 ```
 
-For PM2, Docker, and monorepo deployment details, see [README-zh_CN.md](./README-zh_CN.md) and the [docs](./docs/tutorial/intro.md).
+For Docker, PM2, backups, and advanced setup, see the [full documentation](https://reactpress.surge.sh/).
 
----
-
-## Develop this repository
-
-This repo is a **monorepo** (CLI, client, server, toolkit, templates). If you are contributing code here — not just using the published npm package — use **pnpm** and follow the full workflow in [README-zh_CN.md](./README-zh_CN.md):
-
-```bash
-pnpm install
-pnpm run dev
-```
+To deploy only the public theme, use [reactpress-theme-starter](https://github.com/fecommunity/reactpress-theme-starter) and point it at your ReactPress API.
 
 ---
 
 ## Contributing
 
-**Thank you** to everyone who has helped shape ReactPress — through code, documentation, issues, feedback, and early inspiration.
+**Thank you** to everyone who has helped shape ReactPress.
+
+[Contributing Guide](./CONTRIBUTING.md) · [Code of Conduct](./CODE_OF_CONDUCT.md) · [Security Policy](./SECURITY.md)
 
 <table>
   <tbody>
@@ -203,29 +251,12 @@ pnpm run dev
       <td align="center" width="12.5%"><a href="https://github.com/Xiaonan2020"><img src="https://github.com/Xiaonan2020.png?s=72" width="72" height="72" style="border-radius:50%" alt="Xiaonan2020"/><br/><sub><b>Xiaonan2020</b></sub></a></td>
       <td align="center" width="12.5%"><a href="https://github.com/gaoredu"><img src="https://avatars.githubusercontent.com/u/190012690?s=72" width="72" height="72" style="border-radius:50%" alt="gaoredu"/><br/><sub><b>redtea</b></sub></a></td>
       <td align="center" width="12.5%"><a href="https://github.com/fecommunity"><img src="https://avatars.githubusercontent.com/u/55874467?s=72" width="72" height="72" style="border-radius:50%" alt="m0_37981569"/><br/><sub><b>m0_37981569</b></sub></a></td>
-      <td align="center" width="12.5%"></td>
-      <td align="center" width="12.5%"></td>
-      <td align="center" width="12.5%"></td>
     </tr>
   </tbody>
 </table>
 
-**You are welcome to join us.**
-
-1. Fork and clone the repo
-2. `pnpm install`
-3. `pnpm run dev`
-
-Meaningful contributions are credited here after your PR is merged. See the [Contributing Guide](https://github.com/fecommunity/reactpress/blob/master/CONTRIBUTING.md).
-
 ---
 
-## Acknowledgments
-
-ReactPress builds on [Next.js](https://github.com/vercel/next.js), [NestJS](https://github.com/nestjs/nest), [Ant Design](https://github.com/ant-design/ant-design), and [TypeORM](https://github.com/typeorm/typeorm). Thank you to everyone who maintains the tools we rely on.
-
----
-
-## Star history
+MIT License · © ReactPress / FECommunity
 
 [![Star History Chart](https://api.star-history.com/svg?repos=fecommunity/reactpress&type=Date)](https://star-history.com/#fecommunity/reactpress&Date)
