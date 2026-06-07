@@ -1,12 +1,29 @@
 ---
 slug: changelog
 title: 更新日志
-date: 2026-05-17
+date: 2026-06-07
 authors: [fecommunity]
 tags: [reactpress, release]
 ---
 
 <!--truncate-->
+
+## [3.1.0](https://github.com/fecommunity/reactpress/compare/v3.0.0...v3.1.0) (2026-06-07)
+
+**Toolkit 主题化重构** — 模块化导出，主题开发一等公民。
+
+### 新特性
+
+- **Toolkit 3.1**：拆分为 `theme` / `ui` / `app` / `plugin` 子模块；主题 manifest 解析、外观配置（Formily）、SSR bootstrap、站点设置与预览
+- **CLI 3.0.3**：`reactpress nginx` 反向代理；`db backup` 支持 Docker 内 `mysqldump`；`build` 目标选择与分步日志；交互体验优化
+- **品牌资产**：`public/brand/` 集中管理 + `pnpm export:brand` 一键同步至各目录
+- **文档**：README 新增官方主题章节与 Lighthouse 性能指标
+
+### Bug Fixes
+
+- 增强 monorepo 根目录检测；主题 manifest schema URL 更新为 `reactpress.surge.sh`
+
+---
 
 ## [3.0.0](https://github.com/fecommunity/reactpress/compare/v2.0.2...v3.0.0) (2026-05-17)
 
