@@ -20,6 +20,8 @@
     <a href="./README-zh_CN.md">中文文档</a>
     ·
     <a href="https://blog.gaoredu.com">Live Demo</a>
+    ·
+    <a href="https://github.com/fecommunity/reactpress-theme-starter">Theme Starter</a>
   </p>
 </div>
 
@@ -27,23 +29,15 @@
 
 ## Table of contents
 
-- [Table of contents](#table-of-contents)
 - [What is ReactPress?](#what-is-reactpress)
 - [Quick start](#quick-start)
-  - [Prerequisites](#prerequisites)
-  - [Install and run](#install-and-run)
-  - [Tips](#tips)
 - [See it in action](#see-it-in-action)
-  - [Usage demo](#usage-demo)
-  - [Screenshots](#screenshots)
 - [Highlights](#highlights)
-  - [How it compares](#how-it-compares)
 - [CLI reference](#cli-reference)
+- [Official theme](#official-theme)
 - [Deploy](#deploy)
 - [Develop this repository](#develop-this-repository)
 - [Contributing](#contributing)
-- [Acknowledgments](#acknowledgments)
-- [Star history](#star-history)
 
 ---
 
@@ -53,7 +47,11 @@
 
 > **One backend, many fronts.** Publish in one place; show content on the web, in admin, or through your own apps via the API.
 
-[![ReactPress Poster](./public/poster.png)](https://blog.gaoredu.com)
+<div align="center">
+
+<img src="./public/cli.png" alt="ReactPress CLI interactive menu" width="100%" />
+
+</div>
 
 [3.0 overview](./docs/tutorial/tutorial-extras/reactpress-3-0.md) · [Upgrade from 2.x](./docs/migration-2-to-3.md)
 
@@ -86,41 +84,29 @@ When `dev` is ready, open the URLs printed in the terminal:
 | Admin       | `http://localhost:3001/admin`      |
 | API health  | `http://localhost:3002/api/health` |
 
-### Tips
-
-- Run `reactpress` with no arguments for the interactive menu.
-- Run `reactpress doctor` or `reactpress status` if something does not look right.
-- Upgrading from 2.x? See the [migration guide](./docs/migration-2-to-3.md).
+**Tips:** Run `reactpress` with no arguments for the interactive menu. Use `reactpress doctor` or `reactpress status` if something does not look right. Upgrading from 2.x? See the [migration guide](./docs/migration-2-to-3.md).
 
 ---
 
 ## See it in action
 
-### Usage demo
-
-Install, initialize, start dev, and open your site — all from the terminal:
-
 ![ReactPress CLI demo](./public/usage.gif)
-
-### Screenshots
 
 |                          Admin dashboard                           |                          Demo site                          |
 | :----------------------------------------------------------------: | :---------------------------------------------------------: |
-| [![Admin Dashboard](./public/admin.png)](https://blog.gaoredu.com) | [![Demo Site](./public/demo.png)](https://blog.gaoredu.com) |
+| [![Admin Dashboard](./public/admin.png)](https://blog.gaoredu.com) | [![Demo Site](./public/home-dark.png)](https://reactpress-theme-starter.vercel.app) |
 
 ---
 
 ## Highlights
 
-| Topic                    | What you get                                                             |
-| :----------------------- | :----------------------------------------------------------------------- |
-| **Go live fast**         | `init` + `dev` — guided setup, automatic database, URLs when ready       |
-| **Publish & manage**     | Posts, pages, media, and site settings from the admin                    |
-| **Customize**            | Themes, light/dark mode, templates from minimal hello-world to full blog |
-| **Flexible runtime**     | All-in-one local dev, API-only headless mode, or production deploy       |
-| **Developer experience** | Interactive menu, `doctor`, `status`, and clear error messages           |
-
-### How it compares
+| Topic                    | What you get                                                                                      |
+| :----------------------- | :------------------------------------------------------------------------------------------------ |
+| **Go live fast**         | `init` + `dev` — guided setup, automatic database, URLs when ready                                |
+| **Publish & manage**     | Posts, pages, media, and site settings from the admin                                             |
+| **Customize**            | [Official theme starter](https://github.com/fecommunity/reactpress-theme-starter), light/dark mode |
+| **Flexible runtime**     | All-in-one local dev, API-only headless mode, or production deploy                                |
+| **Developer experience** | Interactive menu, `doctor`, `status`, and clear error messages                                    |
 
 |                     | Traditional CMS                | Static generators      | **ReactPress**                                         |
 | :------------------ | :----------------------------- | :--------------------- | :----------------------------------------------------- |
@@ -152,6 +138,54 @@ More: [documentation](https://blog.gaoredu.com) · [Configuration](./docs/tutori
 
 ---
 
+## Official theme
+
+The recommended visitor frontend is **[reactpress-theme-starter](https://github.com/fecommunity/reactpress-theme-starter)** — Next.js 15 · React 19 · Tailwind CSS 4 · App Router. Includes articles, archives, search, knowledge base, comments, RSS/sitemap, and a built-in mock API for offline development.
+
+[![Theme preview](./public/home-dark.png)](https://reactpress-theme-starter.vercel.app)
+
+[Live demo](https://reactpress-theme-starter.vercel.app) · [Source & docs](https://github.com/fecommunity/reactpress-theme-starter)
+
+```text
+ReactPress API  ──REST──▶  Theme Starter (Next.js)  ──▶  Public Site
+```
+
+### Try in 60 seconds (no backend)
+
+**Option A — `create-next-app` (recommended)**
+
+```bash
+npx create-next-app@latest my-blog --example "https://github.com/fecommunity/reactpress-theme-starter" --use-pnpm
+cd my-blog
+pnpm dev:mock
+```
+
+**Option B — clone manually**
+
+```bash
+git clone https://github.com/fecommunity/reactpress-theme-starter.git
+cd reactpress-theme-starter
+pnpm install
+pnpm dev:mock
+```
+
+Open **http://localhost:3001** — same mode as the [live demo](https://reactpress-theme-starter.vercel.app).
+
+[![Deploy theme with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/fecommunity/reactpress-theme-starter)
+
+### Connect theme to ReactPress API
+
+1. Start the API: `reactpress dev --api-only` (or run the full stack).
+2. In the theme directory, copy `.env.example` to `.env` and run `pnpm dev`.
+
+For commands, environment variables, and production deployment, see the [theme starter README](https://github.com/fecommunity/reactpress-theme-starter#readme).
+
+### Classic themes (monorepo)
+
+Legacy Pages Router themes for reference live under [`themes/`](./themes/) (`hello-world`, `twentytwentyfive`, `twentytwentysix`). Theme manifest schema: [`theme.manifest.schema.json`](./themes/theme.manifest.schema.json).
+
+---
+
 ## Deploy
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/fecommunity/reactpress)
@@ -168,12 +202,23 @@ For PM2, Docker, and monorepo deployment details, see [README-zh_CN.md](./README
 
 ## Develop this repository
 
-This repo is a **monorepo** (CLI, client, server, toolkit, templates). If you are contributing code here — not just using the published npm package — use **pnpm** and follow the full workflow in [README-zh_CN.md](./README-zh_CN.md):
+This repo is a **monorepo** (CLI, client, server, toolkit, classic themes). Contributors use **pnpm**:
 
 ```bash
 pnpm install
-pnpm run dev
+pnpm run dev    # init + Docker MySQL + toolkit + API (:3002) + client (:3001)
 ```
+
+| Command           | Description                          |
+| :---------------- | :----------------------------------- |
+| `pnpm dev:api`    | API only                             |
+| `pnpm dev:client` | Next.js client only                  |
+| `pnpm build`      | Production build (toolkit → server → client) |
+| `pnpm start`      | Run production API + client          |
+
+After API changes, regenerate types: `pnpm run generate:swagger` → `pnpm run build:toolkit`.
+
+Full workflow: [README-zh_CN.md](./README-zh_CN.md).
 
 ---
 
@@ -206,19 +251,17 @@ pnpm run dev
   </tbody>
 </table>
 
-**You are welcome to join us.**
-
 1. Fork and clone the repo
 2. `pnpm install`
 3. `pnpm run dev`
 
-Meaningful contributions are credited here after your PR is merged. See the [Contributing Guide](https://github.com/fecommunity/reactpress/blob/master/CONTRIBUTING.md).
+See the [Contributing Guide](https://github.com/fecommunity/reactpress/blob/master/CONTRIBUTING.md).
 
 ---
 
 ## Acknowledgments
 
-ReactPress builds on [Next.js](https://github.com/vercel/next.js), [NestJS](https://github.com/nestjs/nest), [Ant Design](https://github.com/ant-design/ant-design), and [TypeORM](https://github.com/typeorm/typeorm). Thank you to everyone who maintains the tools we rely on.
+ReactPress builds on [Next.js](https://github.com/vercel/next.js), [NestJS](https://github.com/nestjs/nest), [Ant Design](https://github.com/ant-design/ant-design), and [TypeORM](https://github.com/typeorm/typeorm).
 
 ---
 
