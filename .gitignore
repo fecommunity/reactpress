@@ -26,8 +26,8 @@ tsconfig.tsbuildinfo
 
 
 
-# Production
-build
+# Production (root output only; do not use bare `build` — toolkit/src/theme/build is source)
+/build
 
 # Generated files
 .docusaurus
