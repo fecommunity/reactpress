@@ -1,12 +1,23 @@
 ---
 slug: changelog
 title: Changelog
-date: 2026-05-17
+date: 2026-06-07
 authors: [fecommunity]
 tags: [reactpress, release]
 ---
 
 <!--truncate-->
+
+## [3.1.0](https://github.com/fecommunity/reactpress/compare/v3.0.0...v3.1.0) (2026-06-07)
+
+**Toolkit theme refactor** — modular exports, first-class theme development.
+
+- **Toolkit 3.1**: split into `theme` / `ui` / `app` / `plugin` submodules; theme manifest, appearance config (Formily), SSR bootstrap, site settings & preview
+- **CLI 3.0.3**: `reactpress nginx` reverse proxy; Docker `mysqldump` in `db backup`; build target selection & step logging; improved UX
+- **Brand assets**: centralized `public/brand/` + `pnpm export:brand` to sync logos/favicons across server, web, cli, and themes
+- **Docs**: official theme section, Lighthouse scores; theme manifest schema URL updated
+
+---
 
 ## [3.0.0](https://github.com/fecommunity/reactpress/compare/v2.0.2...v3.0.0) (2026-05-17)
 
