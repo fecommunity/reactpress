@@ -1,6 +1,6 @@
 <div align="center">
   <a href="https://blog.gaoredu.com" title="ReactPress">
-    <img height="180" src="./public/logo.png" alt="ReactPress Logo">
+    <img height="72" src="./public/brand/logo.png" alt="ReactPress Logo">
   </a>
 
   <p align="center">
