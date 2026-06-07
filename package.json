@@ -39,7 +39,8 @@
     "test": "pnpm --dir cli test",
     "test:cli": "pnpm --dir cli test",
     "test:smoke": "node scripts/smoke-api-health.mjs",
-    "test:benchmark": "node scripts/benchmark-cold-start.mjs"
+    "test:benchmark": "node scripts/benchmark-cold-start.mjs",
+    "export:brand": "node scripts/export-brand-assets.mjs"
   },
   "dependencies": {
     "@fecommunity/reactpress": "workspace:*"
@@ -48,6 +49,7 @@
     "husky": "^7.0.4",
     "lint-staged": "^12.4.1",
     "prettier": "^2.3.2",
+    "to-ico": "^1.1.5",
     "typescript": "~4.1.6"
   }
 }
