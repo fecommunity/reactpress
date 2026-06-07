@@ -12,14 +12,16 @@ interface I18nResult {
 }
 
 function parseI18n(): I18nResult {
-  // Locales are now in the dist directory, one level up from config
-  const localesDir = path.join(__dirname, '../locales');
+  const localesDir = path.join(__dirname, 'locales');
 
   if (!fs.existsSync(localesDir)) {
     return { messages: {}, locales: [], defaultLocale: '' };
   }
 
-  const files = fs.readdirSync(localesDir);
+  const files = fs.readdirSync(localesDir).filter((file) => {
+    const filePath = path.join(localesDir, file);
+    return file.endsWith('.json') && fs.statSync(filePath).isFile();
+  });
   const messages: I18nMessages = files.reduce((i18n: I18nMessages, file: string) => {
     const language = file.replace(path.extname(file), '');
     const json = fs.readJsonSync(path.join(localesDir, file));

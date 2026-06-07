@@ -2,8 +2,8 @@
  * 环境变量配置
  */
 import { config as envConfig, file } from './env';
-import { messages, locales, defaultLocale } from './i18n';
-import { globalSetting } from './global';
+import { globalSetting, systemGlobalSettingDefaults } from './global';
+import { defaultLocale,locales, messages } from './i18n';
 
 // Create a unified config object that includes all configuration properties
 const config = {
@@ -15,6 +15,6 @@ const config = {
   file
 };
 
-export { config, file, messages, locales, defaultLocale, globalSetting };
+export { config, defaultLocale, file, globalSetting, locales, messages, systemGlobalSettingDefaults };
 
 export default config;

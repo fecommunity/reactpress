@@ -1,7 +1,9 @@
-const { getBundledSwaggerPath, getBundledServerDir } = require('../../scripts/bundled-server-path');
+const path = require('path');
+const { getBundledServerDir, getSwaggerPath } = require('../../cli/lib/paths');
 
 function getSwaggerInputPath() {
-  return getBundledSwaggerPath();
+  const root = path.resolve(__dirname, '../..');
+  return getSwaggerPath(root);
 }
 
 function getBundledServerPathForGenerate() {
