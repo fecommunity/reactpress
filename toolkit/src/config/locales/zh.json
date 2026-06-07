@@ -67,14 +67,19 @@
     "openAuth": "第三方登录",
     "areYouHasAccount": "已有账号？",
     "loginNow": "立即登录",
-    "toggleNeedSetInfo": "邮箱信息不完整，请完善个人资料。"
+    "toggleNeedSetInfo": "邮箱信息不完整，请完善个人资料。",
+    "guestCommentLead": "填写昵称与邮箱即可评论，无需登录。",
+    "commentingAs": "以 {name} 的身份发表评论"
   },
   "loading": "加载中",
-  "copySuccess": "复制成功",
+  "copySuccess": "已复制",
+  "shareLinkCopied": "分享链接复制成功",
   "copy": "复制",
   "article": "文章",
   "home": "首页",
+  "skipToContent": "跳到正文",
   "knowledge": "专辑",
+  "search": "搜索",
   "searchArticle": "文章搜索",
   "searchArticlePlaceholder": "输入关键字，搜索文章",
   "shareNamespace": {
@@ -93,5 +98,28 @@
   "rssSubscribe": "RSS 订阅",
   "aboutUs": "关于我们",
   "nav": "导航",
-  "suggestions": "建议"
+  "suggestions": "建议",
+  "theme": {
+    "toggle": "切换主题"
+  },
+  "locale": {
+    "switch": "切换语言",
+    "switchToEn": "切换到 English",
+    "switchToZh": "切换到中文"
+  },
+  "pageTitleNavSite": "网址导航",
+  "pageTitleLogin": "登录",
+  "pageTitleTag": "标签：{label}",
+  "pageTitleCategory": "分类：{label}",
+  "pageTitleNavDetail": "导航：{label}",
+  "navPreviewDisclaimer": "本站只做内容预览，不做任何信息存储，请注意您的账号和财产安全。如遇内容无法预览，请点击「打开网站」按钮预览。",
+  "navOpenSite": "打开网站 ›",
+  "commentShowMore": "查看更多 ↓",
+  "commentShowLess": "收起 ↑",
+  "navExpandMenu": "展开目录",
+  "navCollapseMenu": "收起目录",
+  "navCategoryMenu": "导航分类",
+  "carouselPrev": "上一张，第 {current} 张，共 {total} 张",
+  "carouselNext": "下一张，第 {current} 张，共 {total} 张",
+  "aboutUsFallback": "ReactPress — 现代化博客发布平台"
 }

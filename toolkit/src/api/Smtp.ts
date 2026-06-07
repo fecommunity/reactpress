@@ -10,7 +10,7 @@
  */
 
 import { ISmtpControllerCreateData, ISmtpControllerDeleteByIdData, ISmtpControllerFindAllData } from '../types';
-import { HttpClient, RequestParams } from './HttpClient';
+import { HttpClient, ContentType, RequestParams } from './HttpClient';
 
 export class Smtp<SecurityDataType = unknown> {
   http: HttpClient<SecurityDataType>;
@@ -59,6 +59,31 @@ export class Smtp<SecurityDataType = unknown> {
     this.http.request<ISmtpControllerDeleteByIdData, any>({
       path: `/smtp/${id}`,
       method: 'DELETE',
+      ...params,
+    });
+  /**
+   * 发送测试邮件（验证 SMTP 配置）
+   *
+   * @tags Smtp
+   * @name SmtpControllerTestSend
+   * @request POST:/smtp/test
+   */
+  testSend = (
+    data: {
+      to: string;
+      smtpHost?: string;
+      smtpPort?: string;
+      smtpUser?: string;
+      smtpPass?: string;
+      smtpFromUser?: string;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.http.request<{ ok: true }, any>({
+      path: `/smtp/test`,
+      method: 'POST',
+      body: data,
+      type: ContentType.Json,
       ...params,
     });
 }
