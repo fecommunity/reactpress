@@ -1,6 +1,6 @@
+import * as dotenv from 'dotenv';
 import * as fs from 'fs-extra';
 import * as path from 'path';
-import * as dotenv from 'dotenv';
 
 const isProd = process.env.NODE_ENV === 'production';
 

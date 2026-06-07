@@ -1,12 +1,11 @@
 
-import { HttpClient } from './HttpClient';
 // Auto-generated API instance
-
 import { Article } from './Article';
 import { Auth } from './Auth';
 import { Category } from './Category';
 import { Comment } from './Comment';
 import { File } from './File';
+import { HttpClient } from './HttpClient';
 import { Knowledge } from './Knowledge';
 import { Page } from './Page';
 import { Search } from './Search';

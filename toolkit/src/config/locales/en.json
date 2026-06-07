@@ -69,12 +69,17 @@
     "openAuth": "Use third-party login",
     "areYouHasAccount": "Do you already have an account?",
     "loginNow": "Login now",
-    "toggleNeedSetInfo": "Incomplete email information, please complete personal information."
+    "toggleNeedSetInfo": "Incomplete email information, please complete personal information.",
+    "guestCommentLead": "Enter your name and email to comment — no login required.",
+    "commentingAs": "Commenting as {name}"
   },
   "loading": "Loading",
-  "copySuccess": "Copy successfully",
+  "copySuccess": "Copied",
+  "shareLinkCopied": "Share link copied",
   "copy": "copy",
   "article": "Articles",
+  "skipToContent": "Skip to content",
+  "search": "Search",
   "searchArticle": "Search Articles",
   "searchArticlePlaceholder": "Enter keywords, search articles",
   "shareNamespace": {
@@ -93,5 +98,28 @@
   "rssSubscribe": "RSS Subscription",
   "aboutUs": "About Us",
   "nav": "Navigation",
-  "suggestions": "Suggestions"
+  "suggestions": "Suggestions",
+  "theme": {
+    "toggle": "Toggle theme"
+  },
+  "locale": {
+    "switch": "Switch language",
+    "switchToEn": "Switch to English",
+    "switchToZh": "Switch to Chinese"
+  },
+  "pageTitleNavSite": "Site Navigation",
+  "pageTitleLogin": "Login",
+  "pageTitleTag": "Tag: {label}",
+  "pageTitleCategory": "Category: {label}",
+  "pageTitleNavDetail": "Navigation: {label}",
+  "navPreviewDisclaimer": "This site only provides content previews and does not store any information. Please protect your account and property. If content cannot be previewed, click \"Open site\" to view it externally.",
+  "navOpenSite": "Open site ›",
+  "commentShowMore": "Show more ↓",
+  "commentShowLess": "Collapse ↑",
+  "navExpandMenu": "Expand menu",
+  "navCollapseMenu": "Collapse menu",
+  "navCategoryMenu": "Navigation categories",
+  "carouselPrev": "Previous slide, {current} of {total}",
+  "carouselNext": "Next slide, {current} of {total}",
+  "aboutUsFallback": "ReactPress — Modern blog publishing platform"
 }
