@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://reactpress.dev/schemas/theme.manifest.json",
+  "$id": "https://reactpress.surge.sh/schemas/theme.manifest.json",
   "title": "Theme Manifest",
   "description": "Portable theme manifest for ReactPress and compatible platforms. Parsed by `parseThemeManifest()`; stored at `themes/{id}/theme.json`. Platform fields are top-level (no vendor namespace). Appearance controls map to WordPress theme_mod storage.",
   "type": "object",
