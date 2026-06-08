@@ -86,10 +86,20 @@ function syncThemeLaunchFilesFromTemplate(projectRoot, themeId, themeDir) {
   }
 }
 
+const PREVIEW_DIST_DIR = '.next-preview';
 const BUILD_STAMP_REL = path.join('.next', '.reactpress-theme-id');
 
-function writeThemeBuildStamp(themeDir, themeId) {
-  const stampPath = path.join(themeDir, BUILD_STAMP_REL);
+function resolveBuildDistDir(options = {}) {
+  return options.distDir || '.next';
+}
+
+function buildStampRel(distDir) {
+  return path.join(distDir, '.reactpress-theme-id');
+}
+
+function writeThemeBuildStamp(themeDir, themeId, options = {}) {
+  const distDir = resolveBuildDistDir(options);
+  const stampPath = path.join(themeDir, buildStampRel(distDir));
   fs.mkdirSync(path.dirname(stampPath), { recursive: true });
   fs.writeFileSync(stampPath, themeId, 'utf8');
 }
@@ -98,7 +108,9 @@ function newestSourceMtime(rootDir, depth = 0) {
   if (!fs.existsSync(rootDir)) return 0;
   let max = 0;
   for (const entry of fs.readdirSync(rootDir, { withFileTypes: true })) {
-    if (entry.name === 'node_modules' || entry.name === '.next') continue;
+    if (entry.name === 'node_modules' || entry.name === '.next' || entry.name === PREVIEW_DIST_DIR) {
+      continue;
+    }
     const full = path.join(rootDir, entry.name);
     if (entry.isDirectory()) {
       if (depth < 10) max = Math.max(max, newestSourceMtime(full, depth + 1));
@@ -117,8 +129,8 @@ const GENERATED_PUBLIC_FILES = new Set([
   'sitemap-1.xml',
 ]);
 
-function themeSourcesNewerThanBuild(themeDir) {
-  const stampPath = path.join(themeDir, BUILD_STAMP_REL);
+function themeSourcesNewerThanBuild(themeDir, distDir = '.next') {
+  const stampPath = path.join(themeDir, buildStampRel(distDir));
   if (!fs.existsSync(stampPath)) return true;
   const buildMtime = fs.statSync(stampPath).mtimeMs;
 
@@ -142,29 +154,44 @@ function themeSourcesNewerThanBuild(themeDir) {
   return false;
 }
 
-function hasUsableProductionBuild(themeDir, themeId) {
+function hasUsableProductionBuild(themeDir, themeId, options = {}) {
   if (process.env.REACTPRESS_FORCE_THEME_BUILD === '1') return false;
-  const nextDir = path.join(themeDir, '.next');
+  const distDir = resolveBuildDistDir(options);
+  const nextDir = path.join(themeDir, distDir);
   if (!fs.existsSync(path.join(nextDir, 'BUILD_ID'))) return false;
   if (!fs.existsSync(path.join(nextDir, 'server'))) return false;
-  const stampPath = path.join(themeDir, BUILD_STAMP_REL);
+  const stampPath = path.join(themeDir, buildStampRel(distDir));
   if (!fs.existsSync(stampPath)) return false;
   try {
     if (fs.readFileSync(stampPath, 'utf8').trim() !== themeId) return false;
   } catch {
     return false;
   }
-  if (themeSourcesNewerThanBuild(themeDir)) return false;
+  if (themeSourcesNewerThanBuild(themeDir, distDir)) return false;
   return true;
 }
 
-function resolvePreviewThemeEnv(projectRoot, themeDir, port) {
+function resolvePreviewThemeEnv(projectRoot, themeDir, port, options = {}) {
+  const distDir = resolveBuildDistDir(options);
   return {
     ...resolveProductionThemeEnv(projectRoot, themeDir),
-    NODE_ENV: 'production',
+    NODE_ENV: options.mode === 'dev' ? 'development' : 'production',
+    INIT_CWD: themeDir,
+    NEXT_DIST_DIR: distDir,
     PORT: String(port),
     CLIENT_PORT: String(port),
   };
+}
+
+function ensureThemeDependenciesInstalled(projectRoot, themeDir, themeId, logPrefix = 'themePreview') {
+  const nextModule = path.join(themeDir, 'node_modules', 'next');
+  if (fs.existsSync(nextModule)) return;
+
+  const { installThemeDependencies } = require('./theme-install');
+  const installingKey =
+    logPrefix === 'themePreview' ? 'themePreview.installingDeps' : 'themeProd.installingDeps';
+  console.log(`[reactpress] ${t(installingKey, { id: themeId })}`);
+  installThemeDependencies(themeDir, projectRoot);
 }
 
 function resolveThemeBuildState(projectRoot, themeId) {
@@ -185,7 +212,11 @@ function readActiveThemeBuildState(projectRoot) {
 /** @type {Promise<unknown>} */
 let themeBuildChain = Promise.resolve();
 
-function doBuildThemeSync(projectRoot, themeId, { force = false, logPrefix = 'themeProd' } = {}) {
+function doBuildThemeSync(
+  projectRoot,
+  themeId,
+  { force = false, logPrefix = 'themeProd', distDir } = {},
+) {
   const state = resolveThemeBuildState(projectRoot, themeId);
   if (!state) {
     const err = new Error(`Theme not found: ${themeId}`);
@@ -193,8 +224,10 @@ function doBuildThemeSync(projectRoot, themeId, { force = false, logPrefix = 'th
     throw err;
   }
   const { themeDir } = state;
+  const buildDistDir =
+    distDir || (logPrefix === 'themePreview' ? PREVIEW_DIST_DIR : '.next');
 
-  if (!force && hasUsableProductionBuild(themeDir, themeId)) {
+  if (!force && hasUsableProductionBuild(themeDir, themeId, { distDir: buildDistDir })) {
     if (logPrefix === 'themePreview') {
       console.log(`[reactpress] ${t('themePreview.reusingBuild', { id: themeId })}`);
     } else {
@@ -204,6 +237,7 @@ function doBuildThemeSync(projectRoot, themeId, { force = false, logPrefix = 'th
   }
 
   syncThemeLaunchFilesFromTemplate(projectRoot, themeId, themeDir);
+  ensureThemeDependenciesInstalled(projectRoot, themeDir, themeId, logPrefix);
 
   const buildingKey =
     logPrefix === 'themePreview' ? 'themePreview.building' : 'themeProd.building';
@@ -212,10 +246,11 @@ function doBuildThemeSync(projectRoot, themeId, { force = false, logPrefix = 'th
     cwd: themeDir,
     env: resolveBuildNodeEnv({
       ...resolveProductionThemeEnv(projectRoot, themeDir),
+      NEXT_DIST_DIR: buildDistDir,
       ...(logPrefix === 'themeProd' ? { REACTPRESS_BUILD_ACTIVE: '1' } : {}),
     }),
   });
-  writeThemeBuildStamp(themeDir, themeId);
+  writeThemeBuildStamp(themeDir, themeId, { distDir: buildDistDir });
   return { themeId, themeDir, skippedBuild: false };
 }
 
@@ -296,6 +331,7 @@ async function restartProductionVisitorClient(projectRoot = resolveProjectRoot()
 }
 
 module.exports = {
+  PREVIEW_DIST_DIR,
   buildActiveTheme,
   buildTheme,
   enqueueThemeBuild,
@@ -303,6 +339,7 @@ module.exports = {
   restartProductionVisitorClient,
   resolveProductionThemeEnv,
   resolvePreviewThemeEnv,
+  ensureThemeDependenciesInstalled,
   hasUsableProductionBuild,
   readActiveThemeBuildState,
   resolveThemeBuildState,

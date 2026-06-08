@@ -177,11 +177,17 @@ pnpm dev:mock
 
 当主题需要展示 **CMS 中的真实内容** 时：
 
-1. 保持 ReactPress API 运行（`reactpress init` → `reactpress dev`，或 `reactpress dev --api-only`）。
-2. 克隆 [reactpress-theme-starter](https://github.com/fecommunity/reactpress-theme-starter) 并执行 `pnpm install`。
-3. 复制 `.env.example` 为 `.env`，然后运行 `pnpm dev`。
+**推荐 — 从 npm 安装**（与 CMS 同一项目）：
 
-**http://localhost:3001** 为访客站。在全栈部署中，可在 ReactPress 管理后台调整颜色、Logo 与导航。
+```bash
+reactpress theme add @fecommunity/reactpress-theme-starter@1.0.0-beta.0
+# 或在管理后台 → 外观 → 主题 → 从 npm 安装
+reactpress dev
+```
+
+npm 包：[@fecommunity/reactpress-theme-starter](https://www.npmjs.com/package/@fecommunity/reactpress-theme-starter) · 在后台启用 **ReactPress Theme Starter** 后打开 **http://localhost:3001**。
+
+**备选 — 独立主题仓库：** 克隆 [reactpress-theme-starter](https://github.com/fecommunity/reactpress-theme-starter)，`pnpm install`，复制 `.env.example` → `.env`，`pnpm dev`。
 
 完整说明：[主题 README](https://github.com/fecommunity/reactpress-theme-starter/blob/master/README_zh.md)。
 

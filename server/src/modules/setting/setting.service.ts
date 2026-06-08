@@ -17,7 +17,7 @@ import { Setting } from './setting.entity';
 import { getSystemSettingSeedDefaults } from '../bootstrap/bootstrap.constants';
 import { resolveInstallLocale } from '../bootstrap/install-locale';
 
-const THEMES_WITH_CONFIGURATION = ['twentytwentyfive'] as const;
+const THEMES_WITH_CONFIGURATION = ['reactpress-theme-starter'] as const;
 
 function trimUrl(url: string): string {
   return url.replace(/\/+$/, '');
@@ -220,7 +220,7 @@ export class SettingService implements OnModuleInit {
     }
 
     const themeState = getThemeStateFromGlobalSetting(gs);
-    const activeTheme = themeState.activeTheme || 'twentytwentyfive';
+    const activeTheme = themeState.activeTheme || 'hello-world';
     const config =
       gs.config && typeof gs.config === 'object'
         ? ({ ...(gs.config as Record<string, Record<string, unknown>>) } as Record<string, Record<string, unknown>>)

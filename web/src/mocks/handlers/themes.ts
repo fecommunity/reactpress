@@ -3,37 +3,19 @@ import {
   getConfigurationSchemaFromManifest,
   getMergedThemeConfiguration,
   getThemeConfigurationSeed,
-  TWENTYTWENTYFIVE_APPEARANCE,
-  TWENTYTWENTYFIVE_CONFIGURATION_SCHEMA,
   validateAndMergeThemeConfiguration,
 } from "@fecommunity/reactpress-toolkit/theme";
 import { http, HttpResponse, passthrough } from "msw";
 
 import helloWorldAdminEn from "../../../../themes/hello-world/locales/en.json";
-import twentytwentyfiveAdminEn from "../../../../themes/twentytwentyfive/locales/en.json";
 import { successResponse, withDelay } from "../createHandler";
 import { getMockGlobalSetting, patchMockGlobalSettingTheme, setMockGlobalSetting } from "./page";
 
 const THEME_ADMIN_LOCALES: Record<string, Record<string, Record<string, unknown>>> = {
-  twentytwentyfive: { en: twentytwentyfiveAdminEn },
   "hello-world": { en: helloWorldAdminEn },
 };
 
 const MOCK_THEMES = [
-  {
-    id: "twentytwentyfive",
-    name: "Twenty Twenty-Five",
-    version: "1.0.0",
-    description: "支持多栏布局的现代博客主题。",
-    author: "ReactPress",
-    tags: ["博客", "自适应"],
-    source: "starter" as const,
-    installed: true,
-    active: true,
-    coverUrl: "/api/extension/themes/twentytwentyfive/cover",
-    options: TWENTYTWENTYFIVE_CONFIGURATION_SCHEMA,
-    appearance: TWENTYTWENTYFIVE_APPEARANCE,
-  },
   {
     id: "hello-world",
     name: "Hello World",
@@ -43,7 +25,7 @@ const MOCK_THEMES = [
     tags: ["极简", "入门"],
     source: "starter" as const,
     installed: true,
-    active: false,
+    active: true,
     coverUrl: "/api/extension/themes/hello-world/cover",
     appearance: {
       sections: [
@@ -75,6 +57,48 @@ const MOCK_THEMES = [
   },
 ];
 
+const MOCK_CATALOG_THEME = {
+  id: "reactpress-theme-starter",
+  name: "ReactPress Theme Starter",
+  version: "1.0.0-beta.0",
+  description: "Official Next.js 15 theme with Tailwind CSS.",
+  author: "ReactPress",
+  tags: ["official", "Tailwind"],
+  source: "catalog" as const,
+  installed: false,
+  active: false,
+  coverUrl: "/api/extension/themes/reactpress-theme-starter/cover",
+  catalog: {
+    npm: "@fecommunity/reactpress-theme-starter@1.0.0-beta.0",
+    featured: true,
+    themeUri: "https://github.com/fecommunity/reactpress-theme-starter",
+  },
+};
+
+function mockThemeList() {
+  const bundled = MOCK_THEMES.map((t) => ({
+    ...t,
+    active: t.id === themeState.activeTheme,
+    installed: themeState.installedThemes.includes(t.id),
+  }));
+  if (themeState.installedThemes.includes(MOCK_CATALOG_THEME.id)) {
+    return [
+      ...bundled,
+      {
+        ...MOCK_CATALOG_THEME,
+        source: "npm" as const,
+        installed: true,
+        active: MOCK_CATALOG_THEME.id === themeState.activeTheme,
+        npm: {
+          spec: MOCK_CATALOG_THEME.catalog.npm,
+          resolvedVersion: "1.0.0-beta.0",
+        },
+      },
+    ];
+  }
+  return [...bundled, MOCK_CATALOG_THEME];
+}
+
 /** 仅默认主题已安装，便于在 Web 端验证「安装 → 启用」流程 */
 let themeState: typeof defaultSiteThemeState = {
   activeTheme: defaultSiteThemeState.activeTheme,
@@ -84,7 +108,7 @@ let themeState: typeof defaultSiteThemeState = {
 };
 
 function themeManifest(themeId: string) {
-  return MOCK_THEMES.find((t) => t.id === themeId) ?? null;
+  return mockThemeList().find((t) => t.id === themeId) ?? null;
 }
 
 function coverSvg(themeId: string, name: string, primary = "#2271b1", accent = "#72aee6") {
@@ -108,7 +132,7 @@ function coverSvg(themeId: string, name: string, primary = "#2271b1", accent = "
 }
 
 function previewHtml(themeId: string, mods: Record<string, string> = {}) {
-  const theme = MOCK_THEMES.find((t) => t.id === themeId) ?? MOCK_THEMES[0];
+  const theme = themeManifest(themeId) ?? MOCK_CATALOG_THEME;
   const defaults: Record<string, string> = {};
   for (const section of theme.appearance?.sections ?? []) {
     for (const s of section.settings ?? []) {
@@ -131,18 +155,28 @@ function previewHtml(themeId: string, mods: Record<string, string> = {}) {
 export const themeHandlers = [
   http.get("/api/extension/themes", async () => {
     await withDelay(120);
-    return successResponse(
-      MOCK_THEMES.map((t) => ({
-        ...t,
-        active: t.id === themeState.activeTheme,
-        installed: themeState.installedThemes.includes(t.id),
-      })),
-    );
+    return successResponse(mockThemeList());
+  }),
+
+  http.get("/api/extension/themes/catalog", async () => {
+    await withDelay(80);
+    return successResponse([
+      {
+        id: MOCK_CATALOG_THEME.id,
+        name: MOCK_CATALOG_THEME.name,
+        version: MOCK_CATALOG_THEME.version,
+        description: MOCK_CATALOG_THEME.description,
+        npm: MOCK_CATALOG_THEME.catalog.npm,
+        featured: true,
+        themeUri: MOCK_CATALOG_THEME.catalog.themeUri,
+        tags: MOCK_CATALOG_THEME.tags,
+      },
+    ]);
   }),
 
   http.get("/api/extension/themes/:id", async ({ params }) => {
     await withDelay(100);
-    const theme = MOCK_THEMES.find((t) => t.id === params.id);
+    const theme = themeManifest(String(params.id));
     if (!theme) return successResponse(null);
     return successResponse({
       ...theme,
@@ -218,7 +252,12 @@ export const themeHandlers = [
 
   http.get("/api/extension/themes/:id/cover", async ({ params }) => {
     await withDelay(60);
-    const theme = MOCK_THEMES.find((t) => t.id === params.id) ?? MOCK_THEMES[0];
+    const theme = themeManifest(String(params.id));
+    if (!theme) {
+      return new Response(coverSvg(String(params.id), String(params.id)), {
+        headers: { "Content-Type": "image/svg+xml; charset=utf-8" },
+      });
+    }
     const primary =
       theme.appearance?.sections
         ?.flatMap((sec) => sec.settings ?? [])
@@ -256,6 +295,47 @@ export const themeHandlers = [
     }
     return new Response(previewHtml(String(params.id), mods), {
       headers: { "Content-Type": "text/html; charset=utf-8" },
+    });
+  }),
+
+  http.post("/api/extension/themes/install-npm", async ({ request }) => {
+    await withDelay(200);
+    const body = (await request.json()) as { spec?: string };
+    const spec = String(body?.spec ?? "").trim();
+    if (!spec) {
+      return HttpResponse.json({ code: 400, message: "npm spec is required" }, { status: 400 });
+    }
+
+    const mockId = spec.includes("theme-starter")
+      ? "reactpress-theme-starter"
+      : spec.includes("hello-world")
+        ? "hello-world"
+        : "npm-theme";
+    const mockTheme =
+      MOCK_THEMES.find((theme) => theme.id === mockId) ??
+      ({
+        id: mockId,
+        name: "Npm Theme",
+        version: "1.0.0",
+        description: `Installed from ${spec}`,
+        source: "npm" as const,
+        installed: true,
+        active: false,
+        coverUrl: `/api/extension/themes/${mockId}/cover`,
+        npm: { spec, resolvedVersion: "1.0.0" },
+      } as const);
+
+    if (!themeState.installedThemes.includes(mockTheme.id)) {
+      themeState = {
+        ...themeState,
+        installedThemes: [...themeState.installedThemes, mockTheme.id],
+      };
+    }
+    patchMockGlobalSettingTheme(themeState);
+    return successResponse({
+      ...themeState,
+      themeId: mockTheme.id,
+      npmSpec: spec,
     });
   }),
 

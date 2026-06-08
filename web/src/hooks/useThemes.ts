@@ -8,6 +8,7 @@ import {
   fetchTheme,
   fetchThemes,
   installTheme,
+  installThemeFromNpm,
   saveThemeMods,
   type ThemeListItem,
 } from "@/shared/api/themes";
@@ -81,6 +82,11 @@ export function useThemeMutations() {
     onSuccess: onThemeStateChange,
   });
 
+  const installNpmMutation = useMutation({
+    mutationFn: (spec: string) => installThemeFromNpm(spec),
+    onSuccess: onThemeStateChange,
+  });
+
   const activateMutation = useMutation({
     mutationFn: (id: string) => activateTheme(id),
     onSuccess: onThemeStateChange,
@@ -92,7 +98,7 @@ export function useThemeMutations() {
     onSuccess: invalidate,
   });
 
-  return { installMutation, activateMutation, modsMutation };
+  return { installMutation, installNpmMutation, activateMutation, modsMutation };
 }
 
 export type { ThemeListItem };

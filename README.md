@@ -177,11 +177,17 @@ Open **http://localhost:3001** — same as the [live demo](https://reactpress-th
 
 When the theme should show **your** content from the CMS:
 
-1. Keep the ReactPress API running (`reactpress init` → `reactpress dev`, or `reactpress dev --api-only`).
-2. Clone [reactpress-theme-starter](https://github.com/fecommunity/reactpress-theme-starter) and run `pnpm install`.
-3. Copy `.env.example` to `.env`, then run `pnpm dev`.
+**Recommended — install from npm** (same project as the CMS):
 
-Open **http://localhost:3001** for the public site. Customize colors, logo, and navigation in the ReactPress admin when running a full-stack deployment.
+```bash
+reactpress theme add @fecommunity/reactpress-theme-starter@1.0.0-beta.0
+# or in Admin → Appearance → Themes → Install from npm
+reactpress dev
+```
+
+Package: [@fecommunity/reactpress-theme-starter](https://www.npmjs.com/package/@fecommunity/reactpress-theme-starter) · Activate **ReactPress Theme Starter** in the admin, then open **http://localhost:3001**.
+
+**Alternative — standalone theme repo:** clone [reactpress-theme-starter](https://github.com/fecommunity/reactpress-theme-starter), `pnpm install`, copy `.env.example` → `.env`, `pnpm dev`.
 
 Full guide: [theme starter README](https://github.com/fecommunity/reactpress-theme-starter#readme).
 

@@ -9,6 +9,19 @@ import { clearInvalidServerSession } from "@/shared/auth/session";
 import { useAuthStore } from "@/stores/auth";
 import { API_BASE_URL } from "@/utils/constants";
 
+export interface ThemeNpmLockMeta {
+  spec: string;
+  resolvedVersion?: string;
+  packageName?: string;
+  installedAt?: string;
+}
+
+export interface ThemeCatalogMeta {
+  npm: string;
+  featured?: boolean;
+  themeUri?: string;
+}
+
 export interface ThemeListItem {
   id: string;
   name: string;
@@ -16,10 +29,12 @@ export interface ThemeListItem {
   description?: string;
   author?: string;
   tags?: string[];
-  source: "starter" | "installed";
+  source: "starter" | "installed" | "npm" | "catalog";
   installed: boolean;
   active: boolean;
   coverUrl?: string;
+  npm?: ThemeNpmLockMeta;
+  catalog?: ThemeCatalogMeta;
   appearance?: {
     panels?: Array<{
       id: string;
@@ -87,12 +102,42 @@ export function fetchThemes() {
   return themeFetch<ThemeListItem[]>("/extension/themes");
 }
 
+export function fetchThemeCatalog() {
+  return themeFetch<
+    Array<{
+      id: string;
+      name: string;
+      version: string;
+      description?: string;
+      npm: string;
+      featured?: boolean;
+      themeUri?: string;
+      tags?: string[];
+    }>
+  >("/extension/themes/catalog");
+}
+
+export const OFFICIAL_THEME_STARTER_SPEC = "@fecommunity/reactpress-theme-starter@1.0.0-beta.0";
+
 export function fetchTheme(id: string) {
   return themeFetch<ThemeListItem>(`/extension/themes/${id}`);
 }
 
 export function installTheme(id: string) {
   return themeFetch<SiteThemeState>(`/extension/themes/${id}/install`, { method: "POST" });
+}
+
+export function installThemeFromNpm(spec: string, options?: { skipDependencies?: boolean }) {
+  return themeFetch<SiteThemeState & { themeId: string; npmSpec: string }>(
+    "/extension/themes/install-npm",
+    {
+      method: "POST",
+      body: JSON.stringify({
+        spec,
+        skipDependencies: options?.skipDependencies === true,
+      }),
+    },
+  );
 }
 
 export function activateTheme(id: string) {

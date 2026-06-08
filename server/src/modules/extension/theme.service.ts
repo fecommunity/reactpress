@@ -28,13 +28,32 @@ import { Repository } from 'typeorm';
 import { resolveProjectRoot } from '../../utils/project-root.util';
 import { SettingService } from '../setting/setting.service';
 import { Setting } from '../setting/setting.entity';
+import {
+  findThemeCatalogEntry,
+  loadThemeRegistry,
+  readThemeCatalogEntries,
+  readThemesPackageMeta,
+  resolveThemeCatalogInstallSpec,
+  type ThemeRegistryCatalogEntry,
+} from './theme-registry.bridge';
 import { getPreviewDraft, putPreviewDraft } from './preview-draft.store';
 
+export interface ThemeNpmLockMeta {
+  spec: string;
+  resolvedVersion?: string;
+  packageName?: string;
+  installedAt?: string;
+}
+
+export interface ThemeCatalogEntry extends ThemeRegistryCatalogEntry {}
+
 export interface ThemeListItem extends ThemeManifest {
-  source: 'starter' | 'installed';
+  source: 'starter' | 'installed' | 'npm' | 'catalog';
   installed: boolean;
   active: boolean;
   coverUrl?: string;
+  npm?: ThemeNpmLockMeta;
+  catalog?: Pick<ThemeCatalogEntry, 'npm' | 'featured' | 'themeUri'>;
 }
 
 export type ThemePreviewSessionResult = SiteThemeState & {
@@ -53,7 +72,7 @@ const PREVIEW_POOL_MANIFEST = path.join('.reactpress', 'preview-pool.json');
 /** Ephemeral installed copies — under .reactpress/ with active-theme.json */
 const THEME_RUNTIME_REL = path.join('.reactpress', 'runtime');
 const LEGACY_THEMES_RUNTIME_REL = path.join('themes', 'runtime');
-const THEMES_RESERVED_SUBDIRS = new Set(['starter', 'bundled', 'core']);
+const THEMES_RESERVED_SUBDIRS = new Set(['starter', 'bundled', 'core', 'theme-starter']);
 const THEMES_LEGACY_STARTER_SUBDIRS = ['starter', 'bundled', 'core'];
 
 @Injectable()
@@ -128,9 +147,79 @@ export class ThemeService {
     }
   }
 
+  private readNpmThemeLock(): Record<string, ThemeNpmLockMeta> {
+    const lockPath = path.join(projectRoot(), '.reactpress', 'themes.lock.json');
+    if (!fs.existsSync(lockPath)) return {};
+    try {
+      const raw = JSON.parse(fs.readFileSync(lockPath, 'utf8')) as {
+        themes?: Record<string, ThemeNpmLockMeta & { source?: string }>;
+      };
+      const themes = raw.themes ?? {};
+      const npmOnly: Record<string, ThemeNpmLockMeta> = {};
+      for (const [id, entry] of Object.entries(themes)) {
+        if (entry?.source === 'npm' && entry.spec) {
+          npmOnly[id] = {
+            spec: entry.spec,
+            resolvedVersion: entry.resolvedVersion,
+            packageName: entry.packageName,
+            installedAt: entry.installedAt,
+          };
+        }
+      }
+      return npmOnly;
+    } catch {
+      return {};
+    }
+  }
+
+  private readThemeCatalogFile(): ThemeCatalogEntry[] {
+    return readThemeCatalogEntries(projectRoot());
+  }
+
+  getThemeCatalog(): ThemeCatalogEntry[] {
+    return this.readThemeCatalogFile();
+  }
+
+  private findCatalogEntry(id: string): ThemeCatalogEntry | null {
+    return findThemeCatalogEntry(id, projectRoot());
+  }
+
+  private getThemeManifestFromSources(themeId: string): ThemeManifest | null {
+    const dir = this.resolveThemeDir(themeId);
+    if (dir) {
+      return this.readManifest(dir);
+    }
+    const catalog = this.findCatalogEntry(themeId);
+    if (!catalog) return null;
+    const manifest = loadThemeRegistry().catalogEntryToManifest(catalog);
+    return manifest ? (manifest as unknown as ThemeManifest) : null;
+  }
+
+  /** Ensure theme exists on disk — bundled copy or catalog npm install. */
+  private async ensureThemeMaterialized(id: string): Promise<string> {
+    const existing = this.resolveThemeDir(id);
+    if (existing) return existing;
+
+    const templatePath = path.join(this.templatesDir(), id);
+    if (fs.existsSync(templatePath) && !THEMES_RESERVED_SUBDIRS.has(id)) {
+      await this.installTheme(id);
+      const installed = this.resolveThemeDir(id);
+      if (installed) return installed;
+    }
+
+    const catalog = this.findCatalogEntry(id);
+    if (catalog?.npm) {
+      await this.installThemeFromNpm(catalog.npm);
+      const installed = this.resolveThemeDir(id);
+      if (installed) return installed;
+    }
+
+    throw new NotFoundException(`Theme "${id}" not found`);
+  }
+
   private listDirThemes(
     dir: string,
-    source: 'starter' | 'installed',
+    source: 'starter' | 'installed' | 'npm',
     options?: { skipDirNames?: Set<string> },
   ): ThemeManifest[] {
     if (!fs.existsSync(dir)) return [];
@@ -168,13 +257,29 @@ export class ThemeService {
     return merged.theme as SiteThemeState;
   }
 
+  private listBundledThemes(): ThemeManifest[] {
+    const { bundled } = readThemesPackageMeta(projectRoot());
+    const manifests: ThemeManifest[] = [];
+    for (const id of bundled) {
+      const manifest = this.readManifest(path.join(this.templatesDir(), id));
+      if (manifest) manifests.push(manifest);
+    }
+    return manifests;
+  }
+
   async listThemes(): Promise<ThemeListItem[]> {
     const state = await this.getThemeState();
     const installedSet = new Set(state.installedThemes);
+    const npmLock = this.readNpmThemeLock();
     const byId = new Map<string, ThemeListItem>();
 
-    const add = (manifest: ThemeManifest, source: 'starter' | 'installed') => {
-      const installed = installedSet.has(manifest.id) || source === 'installed';
+    const add = (
+      manifest: ThemeManifest,
+      source: 'starter' | 'installed' | 'npm' | 'catalog',
+      npm?: ThemeNpmLockMeta,
+      catalog?: ThemeListItem['catalog'],
+    ) => {
+      const installed = installedSet.has(manifest.id) || source === 'installed' || source === 'npm';
       const merged = this.applyTemplateAppearanceSchema(manifest);
       byId.set(merged.id, {
         ...merged,
@@ -182,16 +287,36 @@ export class ThemeService {
         installed,
         active: state.activeTheme === merged.id,
         coverUrl: `/api/extension/themes/${merged.id}/cover`,
+        npm,
+        catalog,
       });
     };
 
-    for (const m of this.listDirThemes(this.templatesDir(), 'starter', {
-      skipDirNames: THEMES_RESERVED_SUBDIRS,
-    })) {
+    for (const m of this.listBundledThemes()) {
       add(m, 'starter');
     }
     for (const m of this.listDirThemes(this.runtimeDir(), 'installed')) {
-      add(m, 'installed');
+      const npm = npmLock[m.id];
+      add(m, npm ? 'npm' : 'installed', npm);
+    }
+
+    for (const entry of this.readThemeCatalogFile()) {
+      if (byId.has(entry.id)) continue;
+      add(
+        {
+          id: entry.id,
+          name: entry.name,
+          version: entry.version,
+          description: entry.description,
+          author: entry.author,
+          themeUri: entry.themeUri,
+          tags: entry.tags,
+          requires: entry.requires,
+        },
+        'catalog',
+        undefined,
+        { npm: entry.npm, featured: entry.featured, themeUri: entry.themeUri },
+      );
     }
 
     return Array.from(byId.values()).sort((a, b) => a.name.localeCompare(b.name));
@@ -410,6 +535,10 @@ export class ThemeService {
     }
     const templatePath = path.join(this.templatesDir(), id);
     if (!fs.existsSync(templatePath) || THEMES_RESERVED_SUBDIRS.has(id)) {
+      const catalog = this.findCatalogEntry(id);
+      if (catalog?.npm) {
+        return this.installThemeFromNpm(catalog.npm);
+      }
       throw new NotFoundException(`Theme template "${id}" not found`);
     }
     const targetDir = path.join(this.runtimeDir(), id);
@@ -427,19 +556,65 @@ export class ThemeService {
     return this.saveThemeState({ installedThemes });
   }
 
+  async installThemeFromNpm(
+    spec: string,
+    options?: { skipDependencies?: boolean },
+  ): Promise<SiteThemeState & { themeId: string; npmSpec: string }> {
+    const trimmed = typeof spec === 'string' ? spec.trim() : '';
+    if (!trimmed) {
+      throw new BadRequestException('npm spec is required');
+    }
+
+    const resolvedSpec = resolveThemeCatalogInstallSpec(trimmed, projectRoot()) ?? trimmed;
+
+    const installScript = path.join(projectRoot(), 'cli', 'lib', 'theme-install.js');
+    if (!fs.existsSync(installScript)) {
+      throw new BadRequestException('Theme npm installer is not available in this deployment');
+    }
+
+    let result: {
+      themeId: string;
+      npmSpec: string;
+    };
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const { installThemeFromNpm } = require(installScript) as {
+        installThemeFromNpm: (
+          root: string,
+          npmSpec: string,
+          opts?: { skipDependencies?: boolean },
+        ) => Promise<{ themeId: string; npmSpec: string }>;
+      };
+      result = await installThemeFromNpm(projectRoot(), resolvedSpec, {
+        skipDependencies: options?.skipDependencies === true,
+      });
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      throw new BadRequestException(message || 'Failed to install theme from npm');
+    }
+
+    const state = await this.getThemeState();
+    const installedThemes = state.installedThemes.includes(result.themeId)
+      ? state.installedThemes
+      : [...state.installedThemes, result.themeId];
+    const saved = await this.saveThemeState({ installedThemes });
+    return { ...saved, themeId: result.themeId, npmSpec: result.npmSpec };
+  }
+
   private writeThemeDevManifest(
     fileName: 'active-theme.json' | 'preview-theme.json',
     themeId: string,
   ): void {
     if (!this.isValidThemeId(themeId)) return;
     const themeDir = this.resolveThemeDir(themeId);
+    if (!themeDir) return;
     const manifestDir = path.join(projectRoot(), '.reactpress');
     const manifestPath = path.join(manifestDir, fileName);
-    const themeDirRel = themeDir ? path.relative(projectRoot(), themeDir) : null;
+    const themeDirRel = path.relative(projectRoot(), themeDir);
 
     if (!this.isSafeThemeDirRel(themeDirRel)) return;
 
-    if (fs.existsSync(manifestPath)) {
+    if (fileName === 'active-theme.json' && fs.existsSync(manifestPath)) {
       try {
         const existing = JSON.parse(fs.readFileSync(manifestPath, 'utf8')) as {
           activeTheme?: string;
@@ -502,6 +677,19 @@ export class ThemeService {
     const manifestPath = path.join(projectRoot(), '.reactpress', 'preview-theme.json');
     if (fs.existsSync(manifestPath)) {
       fs.unlinkSync(manifestPath);
+    }
+  }
+
+  /** Local dev manifest written by CLI — may differ from DB activeTheme during theme switching. */
+  private readLocalDevActiveThemeId(): string | null {
+    const manifestPath = path.join(projectRoot(), '.reactpress', 'active-theme.json');
+    if (!fs.existsSync(manifestPath)) return null;
+    try {
+      const raw = JSON.parse(fs.readFileSync(manifestPath, 'utf8')) as { activeTheme?: string };
+      const id = typeof raw.activeTheme === 'string' ? raw.activeTheme.trim() : '';
+      return this.isValidThemeId(id) ? id : null;
+    } catch {
+      return null;
     }
   }
 
@@ -598,6 +786,7 @@ export class ThemeService {
     if (!this.isValidThemeId(id)) {
       throw new BadRequestException(`Invalid theme id "${id}"`);
     }
+    await this.ensureThemeMaterialized(id);
     const themeDir = this.resolveThemeDir(id);
     if (!themeDir) throw new NotFoundException(`Theme "${id}" not found`);
 
@@ -658,6 +847,7 @@ export class ThemeService {
     if (!this.isValidThemeId(themeId)) {
       throw new BadRequestException(`Invalid theme id "${themeId}"`);
     }
+    await this.ensureThemeMaterialized(themeId);
     const themeDir = this.resolveThemeDir(themeId);
     if (!themeDir) throw new NotFoundException(`Theme "${themeId}" not found`);
 
@@ -666,8 +856,9 @@ export class ThemeService {
 
     const row = await this.getSettingRow();
     const siteUrl = this.resolveSiteUrlFromRow(row);
+    const runtimeActiveTheme = this.readLocalDevActiveThemeId() ?? state.activeTheme;
 
-    if (themeId !== state.activeTheme) {
+    if (themeId !== runtimeActiveTheme) {
       this.reservePreviewPortForTheme(themeId, siteUrl);
       this.syncPreviewThemeManifest(themeId);
     } else {
@@ -676,10 +867,10 @@ export class ThemeService {
 
     return {
       ...saved,
-      activeTheme: saved.activeTheme,
+      activeTheme: runtimeActiveTheme,
       siteUrl,
       previewSiteUrl:
-        themeId !== saved.activeTheme ? this.resolvePreviewSiteUrl(siteUrl, themeId) : undefined,
+        themeId !== runtimeActiveTheme ? this.resolvePreviewSiteUrl(siteUrl, themeId) : undefined,
     };
   }
 
@@ -719,8 +910,7 @@ export class ThemeService {
   }
 
   buildPlaceholderCoverSvg(id: string): string {
-    const dir = this.resolveThemeDir(id);
-    const manifest = dir ? this.readManifest(dir) : null;
+    const manifest = this.getThemeManifestFromSources(id);
     const name = manifest?.name ?? id;
     const defaults = this.themeAppearanceDefaults(manifest);
     const primary = defaults.primaryColor ?? '#2271b1';
@@ -763,8 +953,7 @@ export class ThemeService {
   }
 
   buildPreviewHtml(themeId: string, mods: ThemeMods = {}): string {
-    const dir = this.resolveThemeDir(themeId);
-    const manifest = dir ? this.readManifest(dir) : null;
+    const manifest = this.getThemeManifestFromSources(themeId);
     const name = manifest?.name ?? themeId;
     const primary = mods.primaryColor ?? '#2271b1';
     const accent = mods.accentColor ?? '#d63638';
@@ -870,14 +1059,47 @@ export class ThemeService {
     };
   }
 
+  private resolveFallbackActiveTheme(state: SiteThemeState): string | null {
+    const candidates = [
+      state.activeTheme,
+      'hello-world',
+      ...state.installedThemes,
+      defaultSiteThemeState.activeTheme,
+    ];
+    const seen = new Set<string>();
+    for (const id of candidates) {
+      if (!id || seen.has(id)) continue;
+      seen.add(id);
+      if (this.resolveThemeDir(id)) return id;
+    }
+    for (const manifest of this.listBundledThemes()) {
+      if (this.resolveThemeDir(manifest.id)) return manifest.id;
+    }
+    return null;
+  }
+
   async ensureDefaultTheme(): Promise<void> {
     const state = await this.getThemeState();
-    if (!state.activeTheme) {
-      const saved = await this.saveThemeState(defaultSiteThemeState);
-      this.syncActiveThemeManifest(saved.activeTheme);
-      return;
+    let activeTheme = state.activeTheme;
+    if (!activeTheme || !this.resolveThemeDir(activeTheme)) {
+      const fallback = this.resolveFallbackActiveTheme(state);
+      if (fallback) {
+        const saved = await this.saveThemeState({
+          activeTheme: fallback,
+          previewThemeId: fallback,
+          installedThemes: state.installedThemes.includes(fallback)
+            ? state.installedThemes
+            : [...state.installedThemes, fallback],
+        });
+        activeTheme = saved.activeTheme;
+      } else if (!activeTheme) {
+        const saved = await this.saveThemeState(defaultSiteThemeState);
+        activeTheme = saved.activeTheme;
+      }
     }
-    this.syncActiveThemeManifest(state.activeTheme);
+    if (this.resolveThemeDir(activeTheme)) {
+      this.syncActiveThemeManifest(activeTheme);
+    }
   }
 
   /** Dev: symlink template for instant install; prod: full copy. Set REACTPRESS_THEME_RUNTIME_COPY=1 to force copy. */

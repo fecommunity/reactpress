@@ -8,8 +8,14 @@ const {
   isThemePackageDir,
   getPreviewThemePort,
 } = require('./theme-runtime');
-const { enqueueThemeBuild, resolvePreviewThemeEnv } = require('./theme-prod');
+const {
+  enqueueThemeBuild,
+  resolvePreviewThemeEnv,
+  ensureThemeDependenciesInstalled,
+  PREVIEW_DIST_DIR,
+} = require('./theme-prod');
 const { warmupThemeHomepage } = require('./theme-warmup');
+const { ensurePreviewFrameAllowed } = require('./theme-preview-frame');
 const { t } = require('./i18n');
 
 /** Single preview slot — production `next start` on demand (low memory). */
@@ -132,6 +138,38 @@ async function releasePreviewPort(port) {
   return !isPortListening(port);
 }
 
+/** Themes with custom `server.js` vs Next.js dev / start (npm themes often omit server.js). */
+function themeHasCustomServer(themeDir) {
+  return fs.existsSync(path.join(themeDir, 'server.js'));
+}
+
+function themeHasDevScript(themeDir) {
+  try {
+    const pkg = JSON.parse(fs.readFileSync(path.join(themeDir, 'package.json'), 'utf8'));
+    return typeof pkg.scripts?.dev === 'string';
+  } catch {
+    return false;
+  }
+}
+
+/** Prefer dev script (matches visitor :3001) — faster preview without next build. */
+function resolvePreviewThemeLaunchPlan(themeDir, port) {
+  if (themeHasDevScript(themeDir)) {
+    return { mode: 'dev', cmd: 'pnpm', args: ['run', 'dev', '--', '--port', String(port)] };
+  }
+
+  if (themeHasCustomServer(themeDir)) {
+    return { mode: 'production', cmd: 'node', args: ['server.js'] };
+  }
+
+  const nextBin = path.join(themeDir, 'node_modules', 'next', 'dist', 'bin', 'next');
+  if (fs.existsSync(nextBin)) {
+    return { mode: 'production', cmd: process.execPath, args: [nextBin, 'start', '-p', String(port)] };
+  }
+
+  return { mode: 'production', cmd: 'pnpm', args: ['run', 'start'] };
+}
+
 /** @type {Map<string, Promise<{ themeId: string, port: number, url: string, reused: boolean } | null>>} */
 const previewEnsureInflight = new Map();
 
@@ -190,7 +228,8 @@ async function startPreviewThemeRunning(
   await releasePreviewPort(port);
 
   try {
-    await enqueueThemeBuild(projectRoot, themeId, { logPrefix: 'themePreview' });
+    ensureThemeDependenciesInstalled(projectRoot, themeDir, themeId, 'themePreview');
+    ensurePreviewFrameAllowed(themeDir);
   } catch (err) {
     console.warn(
       `[reactpress] ${t('themePreview.buildFailed', {
@@ -201,18 +240,48 @@ async function startPreviewThemeRunning(
     return null;
   }
 
+  const launch = resolvePreviewThemeLaunchPlan(themeDir, port);
+
+  if (launch.mode === 'production') {
+    try {
+      await enqueueThemeBuild(projectRoot, themeId, {
+        logPrefix: 'themePreview',
+        distDir: PREVIEW_DIST_DIR,
+      });
+    } catch (err) {
+      console.warn(
+        `[reactpress] ${t('themePreview.buildFailed', {
+          id: themeId,
+          message: err.message || err,
+        })}`,
+      );
+      return null;
+    }
+  }
+
   const relDir = path.relative(projectRoot, themeDir) || themeDir;
   const previewUrl = getPreviewSiteUrlForPort(projectRoot, port);
+  const modeLabel = launch.mode === 'dev' ? 'dev' : 'production';
   console.log(
-    `[reactpress] ${t('themePreview.starting', { id: themeId, url: previewUrl, port, dir: relDir })}`,
+    `[reactpress] ${t('themePreview.starting', {
+      id: themeId,
+      url: previewUrl,
+      port,
+      dir: relDir,
+      mode: modeLabel,
+    })}`,
   );
 
-  const child = spawnDevChild('node', ['server.js'], {
+  const { cmd, args } = launch;
+  const child = spawnDevChild(cmd, args, {
     cwd: themeDir,
     detached: process.platform !== 'win32',
     shell: process.platform === 'win32',
     env: {
-      ...resolvePreviewThemeEnv(projectRoot, themeDir, port),
+      ...resolvePreviewThemeEnv(projectRoot, themeDir, port, {
+        mode: launch.mode,
+        distDir: PREVIEW_DIST_DIR,
+      }),
       SERVER_API_URL: serverApiUrl,
       REACTPRESS_API_URL: serverApiUrl,
       NEXT_PUBLIC_REACTPRESS_API_URL: publicApiUrl,
@@ -225,6 +294,14 @@ async function startPreviewThemeRunning(
 
   previewPool.set(themeId, { child, port, lastUsed: Date.now() });
   writePreviewPoolManifest(projectRoot);
+
+  child.on('exit', () => {
+    const current = previewPool.get(themeId);
+    if (current?.child === child) {
+      previewPool.delete(themeId);
+      writePreviewPoolManifest(projectRoot);
+    }
+  });
 
   const homepageUrl = `${previewUrl.replace(/\/$/, '')}/`;
   const ready = await waitForHttpOk(homepageUrl, 120_000, PREVIEW_READY_POLL_MS);
@@ -254,4 +331,5 @@ module.exports = {
   stopPreviewPoolTheme,
   stopAllPreviewPool,
   isPreviewHomepageReady,
+  resolvePreviewThemeLaunchPlan,
 };

@@ -180,17 +180,7 @@ export function ThemePreviewPage({ themeIdFromSearch }: { themeIdFromSearch?: st
         </div>
 
         <div className={styles.previewSidebarActions}>
-          {!current.installed ? (
-            <Button
-              type="primary"
-              block
-              loading={installMutation.isPending}
-              onClick={() => void handleInstall()}
-            >
-              {t("appearance.install")}
-            </Button>
-          ) : null}
-          {!current.active && current.installed ? (
+          {!current.active && (current.installed || current.catalog?.npm) ? (
             <Button
               type="primary"
               block
@@ -199,7 +189,14 @@ export function ThemePreviewPage({ themeIdFromSearch }: { themeIdFromSearch?: st
             >
               {activatingId === current.id && activationStatusText
                 ? activationStatusText
-                : t("appearance.activate")}
+                : current.installed
+                  ? t("appearance.activate")
+                  : t("appearance.installAndActivate")}
+            </Button>
+          ) : null}
+          {!current.installed ? (
+            <Button block loading={installMutation.isPending} onClick={() => void handleInstall()}>
+              {t("appearance.install")}
             </Button>
           ) : null}
           {current.installed && !current.active ? (

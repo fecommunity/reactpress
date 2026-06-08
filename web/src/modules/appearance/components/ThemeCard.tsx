@@ -55,13 +55,17 @@ export function ThemeCard({
           >
             {t("appearance.preview")}
           </Button>
-          {!theme.installed ? (
+          {!theme.installed && !theme.catalog?.npm ? (
             <Button loading={installing} onClick={() => onInstall(theme.id)}>
               {t("appearance.install")}
             </Button>
           ) : !theme.active ? (
             <Button type="primary" loading={activating} onClick={() => onActivate(theme.id)}>
-              {activating && activatingLabel ? activatingLabel : t("appearance.activate")}
+              {activating && activatingLabel
+                ? activatingLabel
+                : theme.installed
+                  ? t("appearance.activate")
+                  : t("appearance.installAndActivate")}
             </Button>
           ) : null}
         </div>

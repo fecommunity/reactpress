@@ -24,6 +24,30 @@ export class ThemeController {
     return this.themeService.listThemes();
   }
 
+  @Get('catalog')
+  @Roles('admin')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiResponse({ status: 200, description: 'Official npm theme catalog' })
+  catalog() {
+    return this.themeService.getThemeCatalog();
+  }
+
+  @Post('install-npm')
+  @Roles('admin')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiResponse({ status: 200, description: 'Install a theme from an npm package spec' })
+  installFromNpm(
+    @Body()
+    body: {
+      spec?: string;
+      skipDependencies?: boolean;
+    },
+  ) {
+    return this.themeService.installThemeFromNpm(body?.spec ?? '', {
+      skipDependencies: body?.skipDependencies === true,
+    });
+  }
+
   @Post('preview-draft')
   @Roles('admin')
   @UseGuards(JwtAuthGuard, RolesGuard)

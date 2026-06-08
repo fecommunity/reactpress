@@ -3,7 +3,7 @@ import { http } from "msw";
 
 import { successResponse, withDelay } from "../createHandler";
 
-const mockThemeConfigSeed = (getThemeConfigurationSeed("twentytwentyfive", "zh") ?? {}) as {
+const mockThemeConfigSeed = (getThemeConfigurationSeed("hello-world", "zh") ?? {}) as {
   nav?: { urlConfig?: unknown; searchCategories?: unknown };
 };
 
@@ -46,13 +46,13 @@ let mockSettings: Record<string, unknown> = {
   aboutUsWechatQr: "https://www.gaoredu.com/wp-content/uploads/2024/11/wechat.png",
   globalSetting: JSON.stringify({
     theme: {
-      activeTheme: "twentytwentyfive",
-      installedThemes: ["twentytwentyfive", "hello-world"],
+      activeTheme: "hello-world",
+      installedThemes: ["hello-world"],
       mods: {},
-      previewThemeId: "twentytwentyfive",
+      previewThemeId: "hello-world",
     },
     config: {
-      twentytwentyfive: mockThemeConfigSeed,
+      "hello-world": mockThemeConfigSeed,
     },
     zh: {
       globalConfig: {

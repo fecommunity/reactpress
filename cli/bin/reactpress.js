@@ -413,6 +413,34 @@ program
     }
   });
 
+const themeCmd = program.command('theme').description(t('cli.theme.description'));
+
+themeCmd
+  .command('add')
+  .description(t('cli.theme.add.description'))
+  .argument('[spec]', t('cli.theme.add.spec'))
+  .option('--catalog <id>', t('cli.theme.add.catalog'))
+  .option('--skip-deps', t('cli.theme.add.skipDeps'))
+  .action(async (spec, options) => {
+    try {
+      const projectRoot = ensureOriginalCwd();
+      const targetSpec = options.catalog || spec;
+      if (!targetSpec) {
+        throw new Error(t('themeInstall.specRequired'));
+      }
+      await require('../lib/theme-cli').runThemeAdd(projectRoot, targetSpec, {
+        skipDependencies: !!options.skipDeps,
+      });
+    } catch (err) {
+      console.error(chalk.red('[reactpress]'), err.message || err);
+      process.exit(1);
+    }
+  });
+
+themeCmd.command('list').description(t('cli.theme.list.description')).action(() => {
+  require('../lib/theme-cli').runThemeList(ensureOriginalCwd());
+});
+
 program
   .command('start')
   .description(t('cli.start.description'))
@@ -452,6 +480,7 @@ program.on('--help', () => {
     t('cli.help.nginx'),
     t('cli.help.build'),
     t('cli.help.publish'),
+    t('cli.help.theme'),
   ];
   for (const line of lines) {
     console.log(brand.dim(line));

@@ -1,21 +1,22 @@
 const fs = require('fs');
 const path = require('path');
 
-const DEFAULT_ACTIVE_THEME = 'twentytwentyfive';
-const REACTPRESS_DIR = '.reactpress';
-const MANIFEST_REL = path.join(REACTPRESS_DIR, 'active-theme.json');
 const { DEV_PORTS, BLOCKED_THEME_DEV_PORTS } = require('./ports');
+const {
+  REACTPRESS_DIR,
+  THEME_RUNTIME_REL,
+  LEGACY_THEMES_RUNTIME_REL,
+  ACTIVE_THEME_MANIFEST_REL,
+  PREVIEW_THEME_MANIFEST_REL,
+  THEMES_RESERVED_SUBDIRS,
+  THEMES_LEGACY_STARTER_SUBDIRS,
+  THEME_ID_RE,
+  DEFAULT_ACTIVE_THEME,
+} = require('./theme-paths');
 
-const PREVIEW_MANIFEST_REL = path.join(REACTPRESS_DIR, 'preview-theme.json');
+const MANIFEST_REL = ACTIVE_THEME_MANIFEST_REL;
+const PREVIEW_MANIFEST_REL = PREVIEW_THEME_MANIFEST_REL;
 const DEFAULT_PREVIEW_THEME_PORT = DEV_PORTS.THEME_PREVIEW;
-const THEME_ID_RE = /^[a-z0-9][a-z0-9-]*$/i;
-/** Installed theme copies — ephemeral, alongside active-theme.json */
-const THEME_RUNTIME_REL = path.join(REACTPRESS_DIR, 'runtime');
-/** Legacy: themes/runtime/ before relocation to .reactpress/runtime/ */
-const LEGACY_THEMES_RUNTIME_REL = path.join('themes', 'runtime');
-/** Reserved under `themes/` — not theme template packages */
-const THEMES_RESERVED_SUBDIRS = ['starter', 'bundled', 'core'];
-const THEMES_LEGACY_STARTER_SUBDIRS = ['starter', 'bundled', 'core'];
 const BLOCKED_DEV_PORTS = BLOCKED_THEME_DEV_PORTS;
 
 function isValidThemeId(id) {
@@ -175,7 +176,20 @@ function readManifestSignature(projectRoot) {
 }
 
 function readPreviewManifestSignature(projectRoot) {
-  return readManifestSignatureFromPath(projectRoot, PREVIEW_MANIFEST_REL);
+  const manifestPath = path.join(projectRoot, PREVIEW_MANIFEST_REL);
+  try {
+    if (!fs.existsSync(manifestPath)) return '';
+    const raw = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+    const id = typeof raw.activeTheme === 'string' ? raw.activeTheme : '';
+    if (!isValidThemeId(id)) return '';
+    const themeDir = resolveThemeDirectory(projectRoot, id);
+    if (!themeDir) return '';
+    const rel = path.relative(projectRoot, themeDir);
+    const stamp = typeof raw.updatedAt === 'string' ? raw.updatedAt : '';
+    return `${id}:${rel}:${stamp}`;
+  } catch {
+    return '';
+  }
 }
 
 function readPreviewThemeManifest(projectRoot) {

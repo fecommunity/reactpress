@@ -1,9 +1,10 @@
-const {
-  createReactPressNextConfig,
-  resolveThemeNextEnv,
-} = require('@fecommunity/reactpress-toolkit/theme/next-config');
+const { createReactPressNextConfig } = require('@fecommunity/reactpress-toolkit/theme/next-config');
 
-const apiOrigin = resolveThemeNextEnv().SERVER_API_URL.replace(/\/api\/?$/, '');
+const apiOrigin = (
+  process.env.SERVER_API_URL ||
+  process.env.REACTPRESS_API_URL ||
+  'http://localhost:3002/api'
+).replace(/\/api\/?$/, '');
 
 module.exports = createReactPressNextConfig({
   poweredByHeader: false,

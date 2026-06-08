@@ -21,6 +21,7 @@ const { t } = require('./i18n');
 const {
   ensurePreviewThemeRunning,
   stopAllPreviewPool,
+  stopPreviewPoolTheme,
   isPreviewHomepageReady,
   getPreviewSiteUrlForPort,
 } = require('./theme-preview-pool');
@@ -506,13 +507,28 @@ async function restartPreviewThemeSite(projectRoot, { onClose } = {}) {
   const themeId = previewManifest?.activeTheme;
   if (!themeId) return;
 
+  const { activeTheme } = readActiveThemeManifest(projectRoot);
+  if (themeId === activeTheme) {
+    previewRunningSignature = null;
+    stopAllPreviewPool(projectRoot);
+    if (onClose) onClose(0);
+    return;
+  }
+
   if (signature === previewRunningSignature) {
     const { previewPool } = require('./theme-preview-pool');
     const entry = previewPool.get(themeId);
-    if (entry?.child && !entry.child.killed) {
-      const ready = await isPreviewHomepageReady(projectRoot, entry.port);
+    const port = entry?.port ?? parseInt(getPreviewThemePort(), 10);
+    const childAlive =
+      entry?.child && !entry.child.killed && entry.child.exitCode == null && entry.child.signalCode == null;
+    if (childAlive && isPortListening(port)) {
+      const ready = await isPreviewHomepageReady(projectRoot, port);
       if (ready) return;
     }
+    if (entry) {
+      stopPreviewPoolTheme(themeId);
+    }
+    previewRunningSignature = null;
   }
 
   const serverApiUrl = buildThemeServerApiUrl(projectRoot);
@@ -672,6 +688,11 @@ async function startThemeSiteWithWatch(projectRoot, { onClose } = {}) {
 
   const stopActiveWatch = watchActiveThemeManifest(projectRoot, restartActive);
   const stopPreviewWatch = watchPreviewThemeManifest(projectRoot, restartPreview);
+
+  const initialPreviewSignature = readPreviewManifestSignature(projectRoot);
+  if (initialPreviewSignature) {
+    previewRestartChain = previewRestartChain.then(() => restartPreviewThemeSite(projectRoot, { onClose }));
+  }
 
   themeWatchStop = () => {
     stopActiveWatch();

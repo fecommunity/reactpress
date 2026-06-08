@@ -1,3 +1,4 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 
 import { beginThemePreviewSession, endThemePreviewSession } from "@/shared/api/themes";
@@ -9,8 +10,8 @@ export type ThemePreviewSessionStatus = "idle" | "switching" | "ready";
 /** Debounce ending preview so React Strict Mode remount does not delete preview-theme.json twice. */
 const PREVIEW_SESSION_END_MS = 300;
 
-/** Target ~3s for warmed themes; hard cap 10s. */
-const PREVIEW_READY_MAX_MS = 10_000;
+/** First preview build can take several minutes (npm deps + next build). */
+const PREVIEW_READY_MAX_MS = 180_000;
 const PREVIEW_READY_POLL_MS = 200;
 const PREVIEW_READY_MIN_MS = 100;
 
@@ -50,6 +51,7 @@ export function useThemePreviewSession(
   options?: { enabled?: boolean },
 ) {
   const enabled = options?.enabled !== false;
+  const queryClient = useQueryClient();
   const [status, setStatus] = useState<ThemePreviewSessionStatus>("idle");
   const [previewSiteUrl, setPreviewSiteUrl] = useState<string | undefined>();
   const [resolvedActiveThemeId, setResolvedActiveThemeId] = useState<string | undefined>();
@@ -86,6 +88,8 @@ export function useThemePreviewSession(
         if (!cancelled) {
           setPreviewSiteUrl(sessionPreviewUrl);
           setResolvedActiveThemeId(sessionActiveTheme);
+          void queryClient.invalidateQueries({ queryKey: ["themes"] });
+          void queryClient.invalidateQueries({ queryKey: ["site-settings"] });
         }
       } catch {
         /* still try live preview / stub fallback */
@@ -113,12 +117,12 @@ export function useThemePreviewSession(
         return;
       }
 
-      await waitForVisitorSite(liveUrl, {
+      const ready = await waitForVisitorSite(liveUrl, {
         minWaitMs: PREVIEW_READY_MIN_MS,
         maxWaitMs: PREVIEW_READY_MAX_MS,
         intervalMs: PREVIEW_READY_POLL_MS,
       });
-      if (!cancelled) setStatus("ready");
+      if (!cancelled) setStatus(ready ? "ready" : "switching");
     })();
 
     return () => {
@@ -128,7 +132,7 @@ export function useThemePreviewSession(
       setResolvedActiveThemeId(undefined);
       releasePreviewSession();
     };
-  }, [enabled, themeId]);
+  }, [enabled, themeId, queryClient]);
 
   return {
     ready: status === "ready",

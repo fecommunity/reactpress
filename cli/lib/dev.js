@@ -348,13 +348,29 @@ async function startDevStack(
   }
 
   const includeAdmin = webOnly && hasWeb(projectRoot);
-  const includeThemeSite =
-    themeOnly || (!webOnly && hasResolvableActiveTheme(projectRoot));
-  if (!webOnly && !themeOnly && hasThemePackages(projectRoot) && !includeThemeSite) {
+  // Always run theme watchers when packages exist — admin activate/preview writes manifests
+  // and relies on fs.watch even if the current active theme is not yet resolvable.
+  const includeThemeSite = themeOnly || (!webOnly && hasThemePackages(projectRoot));
+  if (!webOnly && !themeOnly && includeThemeSite && !hasResolvableActiveTheme(projectRoot)) {
     const { activeTheme } = readActiveThemeManifest(projectRoot);
     console.warn(
       `[reactpress] ${t('themeDev.notFound', { id: activeTheme })} — ${t('dev.themeSiteSkipped')}`,
     );
+  }
+  if (includeThemeSite) {
+    const { validateBundledThemes, validateCatalogThemes } = require('./theme-registry');
+    const bundled = validateBundledThemes(projectRoot);
+    if (bundled.missing.length) {
+      console.warn(
+        `[reactpress] themes/package.json lists bundled theme(s) without theme.json: ${bundled.missing.join(', ')}`,
+      );
+    }
+    const catalog = validateCatalogThemes(projectRoot);
+    if (catalog.missing.length) {
+      console.warn(
+        `[reactpress] themes/package.json lists catalog dir(s) without reactpress.theme in package.json: ${catalog.missing.join(', ')}`,
+      );
+    }
   }
   const planNginx = process.env.REACTPRESS_SKIP_NGINX !== '1';
   const includeWebInStack = hasWeb(projectRoot) && !webOnly && !themeOnly;

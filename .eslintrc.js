@@ -47,13 +47,6 @@ module.exports = {
         tsconfigRootDir: __dirname,
       },
     },
-    {
-      files: ['themes/twentytwentyfive/**/*.{ts,tsx}'],
-      parserOptions: {
-        project: ['./themes/twentytwentyfive/tsconfig.eslint.json'],
-        tsconfigRootDir: __dirname,
-      },
-    },
   ],
   settings: {
     react: {
