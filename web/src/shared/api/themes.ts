@@ -20,6 +20,7 @@ export interface ThemeCatalogMeta {
   npm: string;
   featured?: boolean;
   themeUri?: string;
+  previewUrl?: string;
 }
 
 export interface ThemeListItem {
@@ -29,7 +30,8 @@ export interface ThemeListItem {
   description?: string;
   author?: string;
   tags?: string[];
-  source: "starter" | "installed" | "npm" | "catalog";
+  /** local = registry source in themes/; npm = catalog not yet installed; installed = in runtime */
+  source: "local" | "npm" | "installed";
   installed: boolean;
   active: boolean;
   coverUrl?: string;

@@ -48,12 +48,13 @@ export interface ThemeNpmLockMeta {
 export interface ThemeCatalogEntry extends ThemeRegistryCatalogEntry {}
 
 export interface ThemeListItem extends ThemeManifest {
-  source: 'starter' | 'installed' | 'npm' | 'catalog';
+  /** local = registry source in themes/; npm = catalog not yet installed; installed = in runtime */
+  source: 'local' | 'npm' | 'installed';
   installed: boolean;
   active: boolean;
   coverUrl?: string;
   npm?: ThemeNpmLockMeta;
-  catalog?: Pick<ThemeCatalogEntry, 'npm' | 'featured' | 'themeUri'>;
+  catalog?: Pick<ThemeCatalogEntry, 'npm' | 'featured' | 'themeUri' | 'previewUrl'>;
 }
 
 export type ThemePreviewSessionResult = SiteThemeState & {
@@ -219,7 +220,7 @@ export class ThemeService {
 
   private listDirThemes(
     dir: string,
-    source: 'starter' | 'installed' | 'npm',
+    source: 'installed',
     options?: { skipDirNames?: Set<string> },
   ): ThemeManifest[] {
     if (!fs.existsSync(dir)) return [];
@@ -257,10 +258,10 @@ export class ThemeService {
     return merged.theme as SiteThemeState;
   }
 
-  private listBundledThemes(): ThemeManifest[] {
-    const { bundled } = readThemesPackageMeta(projectRoot());
+  private listLocalThemes(): ThemeManifest[] {
+    const { bundled: local } = readThemesPackageMeta(projectRoot());
     const manifests: ThemeManifest[] = [];
-    for (const id of bundled) {
+    for (const id of local) {
       const manifest = this.readManifest(path.join(this.templatesDir(), id));
       if (manifest) manifests.push(manifest);
     }
@@ -275,11 +276,11 @@ export class ThemeService {
 
     const add = (
       manifest: ThemeManifest,
-      source: 'starter' | 'installed' | 'npm' | 'catalog',
+      source: 'local' | 'npm' | 'installed',
       npm?: ThemeNpmLockMeta,
       catalog?: ThemeListItem['catalog'],
     ) => {
-      const installed = installedSet.has(manifest.id) || source === 'installed' || source === 'npm';
+      const installed = installedSet.has(manifest.id) || source === 'installed';
       const merged = this.applyTemplateAppearanceSchema(manifest);
       byId.set(merged.id, {
         ...merged,
@@ -292,12 +293,12 @@ export class ThemeService {
       });
     };
 
-    for (const m of this.listBundledThemes()) {
-      add(m, 'starter');
+    for (const m of this.listLocalThemes()) {
+      add(m, 'local');
     }
     for (const m of this.listDirThemes(this.runtimeDir(), 'installed')) {
       const npm = npmLock[m.id];
-      add(m, npm ? 'npm' : 'installed', npm);
+      add(m, 'installed', npm, npm ? { npm: npm.spec } : undefined);
     }
 
     for (const entry of this.readThemeCatalogFile()) {
@@ -313,9 +314,9 @@ export class ThemeService {
           tags: entry.tags,
           requires: entry.requires,
         },
-        'catalog',
+        'npm',
         undefined,
-        { npm: entry.npm, featured: entry.featured, themeUri: entry.themeUri },
+        { npm: entry.npm, featured: entry.featured, themeUri: entry.themeUri, previewUrl: entry.previewUrl },
       );
     }
 

@@ -10,6 +10,8 @@ export type ThemeRegistryCatalogEntry = {
   description?: string;
   author?: string;
   themeUri?: string;
+  previewUrl?: string;
+  cover?: string;
   tags?: string[];
   npm: string;
   featured?: boolean;

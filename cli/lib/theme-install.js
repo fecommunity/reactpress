@@ -7,7 +7,7 @@ const { spawnSync } = require('child_process');
 const { upsertNpmThemeLock } = require('./theme-lock');
 const { buildThemeEnvOverrides, syncThemeEnvFromProject } = require('./theme-env');
 const { ensurePreviewFrameAllowed } = require('./theme-preview-frame');
-const { resolveCatalogInstallSpec } = require('./theme-catalog');
+const { resolveCatalogInstallSpec } = require('./theme-registry');
 
 const THEME_ID_RE = /^[a-z0-9][a-z0-9-]*$/i;
 const THEME_RUNTIME_REL = path.join('.reactpress', 'runtime');
