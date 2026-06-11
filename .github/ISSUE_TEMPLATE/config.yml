@@ -1,0 +1,24 @@
+blank_issues_enabled: false
+
+contact_links:
+  - name: Questions & Help
+    url: https://github.com/fecommunity/reactpress/discussions/categories/q-a
+    about: Ask setup questions or share tips — prefer Discussions over Issues
+  - name: ReactPress Docs
+    url: https://reactpress.surge.sh/
+    about: Official ReactPress documentation
+  - name: Theme starter Q&A
+    url: https://github.com/fecommunity/reactpress-theme-starter/discussions/categories/q-a
+    about: Theme development and customization — starter repo Discussions
+  - name: Browse existing issues
+    url: https://github.com/fecommunity/reactpress/issues
+    about: Search open issues before filing a duplicate (CMS, API, CLI, admin, toolkit)
+  - name: Proposed roadmap issues
+    url: https://github.com/fecommunity/reactpress/blob/master/docs/proposed-reactpress-upstream-issues.md
+    about: Curated core and community issues you can pick up
+  - name: Contributing guide
+    url: https://github.com/fecommunity/reactpress/blob/master/CONTRIBUTING.md
+    about: Setup, PR process, and project structure
+  - name: Security report
+    url: https://github.com/fecommunity/reactpress/blob/master/SECURITY.md
+    about: Report vulnerabilities privately — do not use public issues
