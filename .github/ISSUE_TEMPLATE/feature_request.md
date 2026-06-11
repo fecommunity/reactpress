@@ -1,20 +1,27 @@
 ---
 name: Feature request
-about: Suggest an idea for this project
-title: ''
-labels: ''
+about: Suggest a new capability or improvement
+title: '[Feature] '
+labels: enhancement
 assignees: ''
-
 ---
 
+<!-- Core areas: Plugin · Theme · Desktop · Docs · Integration -->
+
 **Is your feature request related to a problem? Please describe.**
-A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+
+What pain point does this solve? Who is affected (site owner, theme author, integrator, contributor)?
 
 **Describe the solution you'd like**
-A clear and concise description of what you want to happen.
+
+What should exist when this is done? CLI commands, API, admin UI, docs — be specific if you can.
 
 **Describe alternatives you've considered**
-A clear and concise description of any alternative solutions or features you've considered.
+
+Other approaches you rejected and why.
 
 **Additional context**
-Add any other context or screenshots about the feature request here.
+
+- **Area:** Plugin / Theme / Desktop / Docs / Integration / Other
+- **Related epic:** <!-- e.g. links to an existing issue or docs/proposed-reactpress-upstream-issues.md #3 -->
+- Screenshots, sketches, or links — optional
