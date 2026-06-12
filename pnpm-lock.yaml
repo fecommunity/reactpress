@@ -397,6 +397,8 @@ importers:
         specifier: ^7.0.3
         version: 7.0.3
 
+  themes/theme-starter: {}
+
   toolkit:
     dependencies:
       '@tanstack/react-query':

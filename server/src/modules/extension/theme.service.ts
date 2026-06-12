@@ -259,6 +259,10 @@ export class ThemeService {
   }
 
   private listLocalThemes(): ThemeManifest[] {
+    return this.listBundledThemes();
+  }
+
+  private listBundledThemes(): ThemeManifest[] {
     const { bundled: local } = readThemesPackageMeta(projectRoot());
     const manifests: ThemeManifest[] = [];
     for (const id of local) {
