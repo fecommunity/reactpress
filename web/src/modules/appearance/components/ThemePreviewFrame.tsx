@@ -104,7 +104,11 @@ export function ThemePreviewFrame({
       );
     }
     if (liveUrlLoading || !liveUrl) {
-      return <Spin style={{ margin: 48 }} />;
+      return (
+        <div className={styles.previewFrameLoading}>
+          <Spin size="large" />
+        </div>
+      );
     }
     return (
       <iframe
@@ -129,7 +133,11 @@ export function ThemePreviewFrame({
   }
 
   if (previewLoading || !previewHtml) {
-    return <Spin style={{ margin: 48 }} />;
+    return (
+      <div className={styles.previewFrameLoading}>
+        <Spin size="large" />
+      </div>
+    );
   }
 
   return (

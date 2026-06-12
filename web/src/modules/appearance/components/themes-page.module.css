@@ -385,7 +385,7 @@
   margin: 8px 0 0 !important;
   font-size: 14px !important;
   font-weight: 600 !important;
-  color: #1d2327 !important;
+  color: var(--appearance-text) !important;
 }
 
 .customizeThemeRow {
@@ -401,14 +401,14 @@
 
 .customizeThemeLabel {
   font-size: 12px;
-  color: #646970;
+  color: var(--appearance-muted);
   display: block;
 }
 
 .customizeThemeName {
   font-size: 14px;
   font-weight: 600;
-  color: #1d2327;
+  color: var(--appearance-text);
 }
 
 .customizeSidebarFooter {
@@ -427,7 +427,7 @@
 .sidebarPreviewToolsLabel {
   font-size: 12px;
   font-weight: 600;
-  color: #646970;
+  color: var(--appearance-muted);
   text-transform: uppercase;
   letter-spacing: 0.02em;
 }
@@ -509,12 +509,15 @@
 }
 
 .previewFrameWrap {
+  display: flex;
+  flex-direction: column;
   width: 100%;
   height: 100%;
   margin: 0 auto;
   background: #fff;
   box-shadow: 0 0 24px rgba(0, 0, 0, 0.08);
   transition: max-width 0.2s ease;
+  overflow: hidden;
 }
 
 .previewFrameWrapDesktop {
@@ -530,12 +533,23 @@
 }
 
 .previewFrame {
+  flex: 1;
   width: 100%;
   height: 100%;
-  min-height: 400px;
+  min-height: 0;
   border: 0;
   display: block;
   background: #fff;
+}
+
+.previewFrameLoading {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 0;
+  background: inherit;
 }
 
 .customizerCollapse :global(.ant-collapse-header) {
@@ -613,7 +627,7 @@
   display: block;
   font-size: 12px;
   font-weight: 600;
-  color: #646970;
+  color: var(--appearance-muted);
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
@@ -622,7 +636,8 @@
   display: block;
   margin-top: 2px;
   font-size: 11px;
-  color: #a7aaad;
+  color: var(--appearance-muted);
+  opacity: 0.75;
   line-height: 1.4;
 }
 
@@ -855,7 +870,7 @@
   padding: 0;
   overflow: hidden;
   background: #f0f0f1;
-  color: #1d2327;
+  color: var(--appearance-text, #1d2327);
   border-right: 1px solid #dcdcde;
 }
 
@@ -883,7 +898,7 @@
 .previewThemeIndex {
   margin-left: 4px;
   font-size: 12px;
-  color: #646970;
+  color: var(--appearance-muted);
 }
 
 .previewSidebarMeta {
@@ -924,7 +939,7 @@
   font-size: 1.25rem;
   font-weight: 400;
   line-height: 1.3;
-  color: #1d2327;
+  color: var(--appearance-text);
 }
 
 .previewActiveBadge {
@@ -952,6 +967,7 @@
   flex-direction: column;
   min-height: 0;
   height: 100vh;
+  background: #f0f0f1;
 }
 
 .previewPaneLoading {
@@ -961,17 +977,18 @@
   align-items: center;
   justify-content: center;
   gap: 16px;
-  min-height: 320px;
+  width: 100%;
+  min-height: 0;
   padding: 32px 24px;
   text-align: center;
-  background: #fff;
+  background: inherit;
 }
 
 .previewPaneLoadingTitle {
   margin: 0;
   font-size: 16px;
   font-weight: 600;
-  color: #1d2327;
+  color: var(--appearance-text);
   max-width: 360px;
 }
 
@@ -979,6 +996,169 @@
   margin: 0;
   font-size: 13px;
   line-height: 1.6;
-  color: #646970;
+  color: var(--appearance-muted);
   max-width: 400px;
+}
+
+/* Full-screen customizer & preview — dark theme */
+:root[data-theme="dark"] .previewShell,
+:root[data-theme="dark"] .customizeShell {
+  --appearance-text: rgba(255, 255, 255, 0.85);
+  --appearance-muted: rgba(255, 255, 255, 0.45);
+  --appearance-body: rgba(255, 255, 255, 0.65);
+}
+
+:root[data-theme="dark"] .customizeShell,
+:root[data-theme="dark"] .customizeSidebar,
+:root[data-theme="dark"] .customizePreviewPane,
+:root[data-theme="dark"] .previewWrap,
+:root[data-theme="dark"] .previewShell,
+:root[data-theme="dark"] .previewSidebar,
+:root[data-theme="dark"] .previewMain {
+  background: var(--ant-color-bg-layout, #101010);
+}
+
+:root[data-theme="dark"] .previewFrameWrap {
+  background: var(--ant-color-bg-elevated, #141414);
+  box-shadow: 0 0 24px rgba(0, 0, 0, 0.45);
+}
+
+:root[data-theme="dark"] .customizeSidebar,
+:root[data-theme="dark"] .previewSidebar {
+  border-right-color: var(--ant-color-border-secondary, #303030);
+}
+
+:root[data-theme="dark"] .customizeSidebarHeader,
+:root[data-theme="dark"] .customizeSidebarFooter,
+:root[data-theme="dark"] .customizerActions,
+:root[data-theme="dark"] .previewSidebarHeader,
+:root[data-theme="dark"] .previewSidebarActions {
+  background: var(--ant-color-bg-elevated, #141414);
+  border-color: var(--ant-color-border-secondary, #303030);
+  box-shadow: none;
+}
+
+:root[data-theme="dark"] .customizeBack,
+:root[data-theme="dark"] .customizerSectionBack {
+  color: #72aee6 !important;
+}
+
+:root[data-theme="dark"] .customizeBack:hover,
+:root[data-theme="dark"] .customizerSectionBack:hover {
+  color: #9ec2e6 !important;
+}
+
+:root[data-theme="dark"] .customizeThemeRow {
+  background: var(--ant-color-bg-container, #141414);
+  border-color: var(--ant-color-border-secondary, #303030);
+}
+
+:root[data-theme="dark"] .sidebarToolBtn {
+  background: var(--ant-color-bg-container, #141414);
+  border-color: var(--ant-color-border-secondary, #303030);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+:root[data-theme="dark"] .sidebarToolBtn:hover {
+  border-color: #72aee6;
+  color: #72aee6;
+}
+
+:root[data-theme="dark"] .sidebarToolBtnActive {
+  background: #2271b1;
+  border-color: #2271b1;
+  color: #fff;
+}
+
+:root[data-theme="dark"] .sidebarToolBtnActive:hover {
+  background: #135e96;
+  border-color: #135e96;
+  color: #fff;
+}
+
+:root[data-theme="dark"] .sidebarToolBtn:disabled {
+  background: var(--ant-color-bg-elevated, #141414);
+  color: rgba(255, 255, 255, 0.25);
+}
+
+:root[data-theme="dark"] .sidebarToolBtn:disabled:hover {
+  border-color: var(--ant-color-border-secondary, #303030);
+  color: rgba(255, 255, 255, 0.25);
+}
+
+:root[data-theme="dark"] .customizerNav,
+:root[data-theme="dark"] .customizerSettingGroup {
+  border-color: var(--ant-color-border-secondary, #303030);
+}
+
+:root[data-theme="dark"] .customizerNavGroupList {
+  background: var(--ant-color-bg-container, #141414);
+  border-color: var(--ant-color-border-secondary, #303030);
+}
+
+:root[data-theme="dark"] .customizerNavGroupList .customizerNavItem {
+  border-bottom-color: var(--ant-color-border-secondary, #303030);
+}
+
+:root[data-theme="dark"] .customizerNavItem:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #72aee6;
+}
+
+:root[data-theme="dark"] .imageSettingPreview {
+  background: var(--ant-color-bg-elevated, #141414);
+  border-color: var(--ant-color-border-secondary, #303030);
+}
+
+:root[data-theme="dark"] .imageSettingPlaceholder {
+  border-color: var(--ant-color-border-secondary, #303030);
+}
+
+:root[data-theme="dark"] .previewShell :global(.ant-input),
+:root[data-theme="dark"] .customizeShell :global(.ant-input),
+:root[data-theme="dark"] .previewShell :global(.ant-input-affix-wrapper),
+:root[data-theme="dark"] .customizeShell :global(.ant-input-affix-wrapper),
+:root[data-theme="dark"] .previewShell :global(.ant-input-number),
+:root[data-theme="dark"] .customizeShell :global(.ant-input-number),
+:root[data-theme="dark"] .previewShell :global(.ant-select-selector),
+:root[data-theme="dark"] .customizeShell :global(.ant-select-selector) {
+  color: rgba(255, 255, 255, 0.85);
+  background: var(--ant-color-bg-container, #141414);
+}
+
+:root[data-theme="dark"] .previewSidebar :global(.ant-btn-default:not(:disabled)),
+:root[data-theme="dark"] .customizeSidebar :global(.ant-btn-default:not(:disabled)) {
+  color: rgba(255, 255, 255, 0.85) !important;
+  background: var(--ant-color-bg-container, #141414) !important;
+  border-color: var(--ant-color-border-secondary, #303030) !important;
+}
+
+:root[data-theme="dark"] .previewStatusBadge {
+  color: rgba(255, 255, 255, 0.65);
+  background: var(--ant-color-bg-container, #141414);
+  border-color: var(--ant-color-border-secondary, #303030);
+}
+
+:root[data-theme="dark"] .featureTag {
+  color: rgba(255, 255, 255, 0.65);
+  background: var(--ant-color-bg-container, #141414);
+  border-color: var(--ant-color-border-secondary, #303030);
+}
+
+:root[data-theme="dark"] .activePreview {
+  background: var(--ant-color-bg-layout, #101010);
+}
+
+:root[data-theme="dark"] .activeVersion,
+:root[data-theme="dark"] .activeAuthor,
+:root[data-theme="dark"] .cardStatusMuted {
+  color: rgba(255, 255, 255, 0.45) !important;
+}
+
+:root[data-theme="dark"] .activeDescription {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+:root[data-theme="dark"] .cardThumb {
+  background: var(--ant-color-bg-layout, #101010);
 }
