@@ -9,6 +9,7 @@ node_modules
 .DS_Store
 .idea
 .next
+.next-preview
 .cursor
 .brand-export/
 
@@ -22,9 +23,12 @@ node_modules
 sitemap.xml
 
 lib
+!cli/src/lib/
 !themes/hello-world/**/lib/
 !themes/theme-starter/**/lib/
 cli/out/
+desktop/.cli-bundle-prod/
+desktop/.cli-bundle-test/
 dist
 dist-ssr
 coverage

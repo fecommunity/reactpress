@@ -7,6 +7,7 @@ const apiOrigin = (
 ).replace(/\/api\/?$/, '');
 
 module.exports = createReactPressNextConfig({
+  distDir: process.env.NEXT_DIST_DIR || '.next',
   poweredByHeader: false,
   compress: true,
   async rewrites() {
