@@ -382,7 +382,7 @@ pnpm --filter @reactpress/plugin-hello-world run typecheck
 | `server/src/modules/hook/hook.service.ts` | Hook 注册表 |
 | `toolkit/src/plugin/server/` | 插件 SDK |
 | `toolkit/src/plugin/extension/plugin.ts` | manifest 解析与状态类型 |
-| `cli/lib/plugin-build.js` | dev 按需编译 |
+| `cli/out/lib/plugin-build.js` | dev 按需编译 |
 | `web/src/modules/plugins/` | 后台插件列表 |
 
 ## 路线图（未实现）

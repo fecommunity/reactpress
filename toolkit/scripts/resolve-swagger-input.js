@@ -1,5 +1,5 @@
 const path = require('path');
-const { getBundledServerDir, getSwaggerPath } = require('../../cli/lib/paths');
+const { getBundledServerDir, getSwaggerPath } = require('../../cli/out/lib/paths');
 
 function getSwaggerInputPath() {
   const root = path.resolve(__dirname, '../..');

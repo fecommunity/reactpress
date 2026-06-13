@@ -1,0 +1,24 @@
+{
+  "$schema": "../npm-catalog.schema.json",
+  "name": "theme-starter",
+  "version": "1.0.0",
+  "private": true,
+  "description": "官方 Next.js 15 主题 — Tailwind CSS、知识库、评论、深色模式，Lighthouse 95+。",
+  "author": "ReactPress",
+  "homepage": "https://github.com/fecommunity/reactpress-theme-starter",
+  "license": "MIT",
+  "dependencies": {
+    "@fecommunity/reactpress-theme-starter": "1.0.0-beta.0"
+  },
+  "reactpress": {
+    "theme": {
+      "id": "reactpress-theme-starter",
+      "name": "ReactPress Theme Starter",
+      "themeUri": "https://github.com/fecommunity/reactpress-theme-starter",
+      "previewUrl": "https://reactpress-theme-starter.vercel.app",
+      "tags": ["官方", "Tailwind", "App Router", "Next.js 15"],
+      "featured": true,
+      "requires": ">=3.0.0"
+    }
+  }
+}

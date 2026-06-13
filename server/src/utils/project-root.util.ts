@@ -21,7 +21,7 @@ export function resolveProjectRoot(): string {
   return process.cwd();
 }
 
-/** Monorepo / install root (contains `cli/lib/theme-registry.js`). */
+/** Monorepo / install root (contains `cli/out/lib/theme-registry.js`). */
 export function resolveMonorepoRoot(): string {
   if (process.env.REACTPRESS_MONOREPO_ROOT) {
     return process.env.REACTPRESS_MONOREPO_ROOT;
@@ -29,7 +29,7 @@ export function resolveMonorepoRoot(): string {
 
   let dir = process.cwd();
   for (let depth = 0; depth < 10; depth += 1) {
-    if (fs.existsSync(path.join(dir, 'cli', 'lib', 'theme-registry.js'))) {
+    if (fs.existsSync(path.join(dir, 'cli', 'out', 'lib', 'theme-registry.js'))) {
       process.env.REACTPRESS_MONOREPO_ROOT = dir;
       return dir;
     }

@@ -7,7 +7,7 @@ import path from 'path';
 import { createRequire } from 'module';
 
 const require = createRequire(import.meta.url);
-const { readActiveThemeManifest, resolveThemeDirectory } = require('../cli/lib/theme-runtime.js');
+const { readActiveThemeManifest, resolveThemeDirectory } = require('../cli/out/lib/theme-runtime.js');
 
 const root = process.cwd();
 const missing = [];

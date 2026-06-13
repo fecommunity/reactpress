@@ -8,7 +8,7 @@ import {
 import { http, HttpResponse, passthrough } from "msw";
 
 import helloWorldAdminEn from "../../../../themes/hello-world/locales/en.json";
-import { buildThemePlaceholderCoverSvg } from "../../../../cli/lib/theme-placeholder-cover.js";
+import { buildThemePlaceholderCoverSvg } from "../../../../cli/out/lib/theme-placeholder-cover.js";
 import { successResponse, withDelay } from "../createHandler";
 import { getMockGlobalSetting, patchMockGlobalSettingTheme, setMockGlobalSetting } from "./page";
 

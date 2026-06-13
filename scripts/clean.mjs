@@ -25,7 +25,7 @@ const CACHE_DIR_NAMES = new Set([
 ]);
 
 /** @type {string[]} */
-const EXTRA_TARGETS = [".reactpress/runtime"];
+const EXTRA_TARGETS = [".reactpress/runtime", "dist"];
 
 function shouldSkipDir(name) {
   return SKIP_DIRS.has(name);

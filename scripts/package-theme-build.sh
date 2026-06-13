@@ -11,7 +11,7 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
 ACTIVE="$(node -e "
-  const { readActiveThemeManifest, resolveThemeDirectory } = require('./cli/lib/theme-runtime');
+  const { readActiveThemeManifest, resolveThemeDirectory } = require('./cli/out/lib/theme-runtime');
   const { activeTheme } = readActiveThemeManifest(process.cwd());
   const dir = resolveThemeDirectory(process.cwd(), activeTheme);
   if (!dir) process.exit(1);

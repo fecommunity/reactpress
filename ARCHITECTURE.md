@@ -127,7 +127,8 @@ easy-blog-publish/
 ├── plugins/
 │   ├── hello-world/     # 示例插件（自动摘要）
 │   └── seo/             # SEO 增强插件
-├── docs/                # 项目文档
+├── docs/                # Docusaurus 文档站
+├── public/              # 营销/品牌静态资源（README 插图等）
 ├── scripts/             # 构建、部署、冒烟测试脚本
 ├── docker-compose.*.yml # Docker 编排
 ├── nginx*.conf          # 反向代理配置
@@ -139,7 +140,7 @@ easy-blog-publish/
 
 | 目录 | npm 包名 | 说明 |
 |------|----------|------|
-| `cli/` | `@fecommunity/reactpress` | 3.0 主包，全局命令 `reactpress` |
+| `cli/` | `@fecommunity/reactpress` | 4.0 主包，全局命令 `reactpress` |
 | `web/` | `@fecommunity/reactpress-web` | 管理后台 |
 | `server/` | `@fecommunity/reactpress-server` | API（monorepo 源码；npm 已 deprecated，CLI 内置副本） |
 | `toolkit/` | `@fecommunity/reactpress-toolkit` | 共享 SDK |
@@ -489,7 +490,7 @@ pnpm run build:toolkit
 
 | 命令 | 说明 |
 |------|------|
-| `reactpress init` | 初始化项目（生成 `.env` + `.reactpress/config.json`） |
+| `reactpress init` | 初始化项目（生成 `.env` + `.reactpress/config.json`；`--local` 为 SQLite） |
 | `reactpress dev` | 本地全栈开发（API + web + 激活主题 + Docker MySQL） |
 | `reactpress dev --api-only` | 仅 API（Headless 模式） |
 | `reactpress dev --web-only` | 仅管理后台 + API |
@@ -502,23 +503,40 @@ pnpm run build:toolkit
 | `reactpress theme list/add` | 主题 catalog 与 npm 安装 |
 | `reactpress desktop dev` | 桌面开发（SQLite + Admin + Electron） |
 
-### CLI 目录结构
+### CLI 目录结构（4.0 TypeScript 迁移）
+
+4.0 将 CLI 源码迁移至 TypeScript，编译产物统一输出到 `cli/out/`（已 gitignore，本地 `pnpm run --dir cli build` 生成）。
 
 ```
 cli/
-├── bin/reactpress.js       # 主入口
-├── lib/
-│   ├── dev.js              # 一键 dev 编排
-│   ├── bootstrap.js        # init / 环境
-│   ├── build.js, lifecycle.js, pm2.js
-│   ├── docker.js, nginx.js, doctor.js
-│   ├── theme-dev.js, theme-runtime.js
-│   ├── plugin-build.js, plugin-cli.js
-│   └── paths.js            # server/web/themes 路径解析
+├── bin/                    # 薄入口（require → out/bin/）
+├── src/                    # TypeScript 源码
+│   ├── bin/                # reactpress.ts、theme-client、cli-shim
+│   ├── core/
+│   │   ├── services/       # init、config、database、local-site、exec
+│   │   └── utils/          # paths、port、platform、cli-context
+│   ├── ui/                 # banner、interactive、theme（终端 UI）
+│   └── types/              # config 类型
+├── out/                    # 编译输出（gitignore）
+│   ├── bin/                # 命令入口
+│   ├── core/               # 核心服务
+│   ├── ui/                 # 终端 UI
+│   └── lib/                # 进程编排模块（dev/build/docker/theme/plugin…）
+├── dist/                   # legacy ESM 桥（sync-bundled-core 同步，npm 发布用）
 ├── server/                 # 打包进 npm 的 NestJS 运行时
-├── templates/              # init 脚手架
-└── ui/                     # 交互菜单
+├── templates/              # init 脚手架（含 config.local.json 本地 SQLite 模板）
+├── scripts/                # install-bundled-runtime、sync-bundled-core
+└── tests/                  # node:test 集成测试（引用 out/lib/）
 ```
+
+**构建流程：**
+
+```bash
+pnpm run --dir cli build    # tsc：src/ → out/{bin,core,ui,types}
+                            # out/lib/ 为编排层运行时（与 src/ 并存，随版本发布）
+```
+
+Monorepo 内其它包（`scripts/`、`server/`、`toolkit/scripts/`）引用 CLI 工具函数时，统一使用 `cli/out/lib/` 路径。
 
 ### Server 路径解析
 
@@ -556,7 +574,7 @@ CLI 启动 API 时的优先级：
 
 ## 11. 配置体系
 
-3.0 以 **`.reactpress/config.json`** 为配置真源，`.env` 由 CLI 在 `init` 时同步生成。
+3.0 以 **`.reactpress/config.json`** 为配置真源，`.env` 由 CLI 在 `init` 时同步生成。4.0 新增 **`--local`** 模式，使用 SQLite 与 `config.local.json` / `env.local.default` 模板。
 
 ### 关键配置文件
 
@@ -733,7 +751,8 @@ pnpm build:desktop     # web/dist + electron-builder → dmg/exe/AppImage
 |-----|-----|
 | 无官方插件运行时 | Hook + manifest + Admin 插槽；内置 hello-world、seo |
 | 仅 Web Admin | 可选 **Electron 桌面客户端**（SQLite 本地模式） |
-| 主题以 hello-world 为主 | npm catalog（theme-starter）+ 主题管理增强 |
+| 主题以 hello-world 为主 | npm catalog（theme-starter 锚点）+ 主题管理增强 |
+| CLI 纯 JavaScript `lib/` | TypeScript `src/` + 编译至 `out/`；编排层在 `out/lib/` |
 
 ### 3.0 主要变化
 
@@ -747,6 +766,7 @@ pnpm build:desktop     # web/dist + electron-builder → dmg/exe/AppImage
 
 - `server` npm 包标记 deprecated，推荐使用 CLI 内置 API
 - `dev:client` 脚本名保留，实际启动的是激活主题（`--client-only` → API + theme）
+- `cli/dist/` 为 legacy ESM 桥，由 `sync-bundled-core` 从 npm 同步，待完全移除
 - 插件 npm catalog、插件市场、Desktop 自动更新 → 4.x 后续迭代
 
 ### 功能域覆盖

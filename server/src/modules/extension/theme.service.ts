@@ -28,7 +28,7 @@ import { Repository } from 'typeorm';
 import { resolveProjectRoot, resolveMonorepoRoot } from '../../utils/project-root.util';
 import { SettingService } from '../setting/setting.service';
 import { Setting } from '../setting/setting.entity';
-import { buildThemePlaceholderCoverSvg } from '../../../../cli/lib/theme-placeholder-cover.js';
+import { buildThemePlaceholderCoverSvg } from '../../../../cli/out/lib/theme-placeholder-cover.js';
 import {
   findThemeCatalogEntry,
   loadThemeRegistry,

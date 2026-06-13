@@ -29,7 +29,7 @@ node -e "
     writeThemeBuildStamp,
     readActiveThemeBuildState,
     hasUsableProductionBuild,
-  } = require('./cli/lib/theme-prod');
+  } = require('./cli/out/lib/theme-prod');
   const state = readActiveThemeBuildState(process.cwd());
   if (!state) process.exit(1);
   if (hasUsableProductionBuild(state.themeDir, state.activeTheme)) {
@@ -54,7 +54,7 @@ OUT="dist/reactpress-release-${VERSION}-${STAMP}.tar.gz"
 mkdir -p dist
 
 ACTIVE="$(node -e "
-  const { readActiveThemeManifest, resolveThemeDirectory } = require('./cli/lib/theme-runtime');
+  const { readActiveThemeManifest, resolveThemeDirectory } = require('./cli/out/lib/theme-runtime');
   const { activeTheme } = readActiveThemeManifest(process.cwd());
   const dir = resolveThemeDirectory(process.cwd(), activeTheme);
   if (!dir) process.exit(1);

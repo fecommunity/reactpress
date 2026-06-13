@@ -144,9 +144,9 @@ themes/
 
 | 模块 | 职责 |
 | :--- | :--- |
-| `cli/lib/theme-sources.js` | local / npm 双来源读取 |
-| `cli/lib/theme-registry.js` | catalog 聚合、spec 解析 |
-| `cli/lib/theme-install.js` | 安装到 runtime |
+| `cli/out/lib/theme-sources.js` | local / npm 双来源读取 |
+| `cli/out/lib/theme-registry.js` | catalog 聚合、spec 解析 |
+| `cli/out/lib/theme-install.js` | 安装到 runtime |
 | `server/…/theme.service.ts` | REST API |
 
 ## CLI

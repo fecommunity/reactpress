@@ -12,7 +12,7 @@ const require = createRequire(import.meta.url);
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DEST = path.join(ROOT, 'cli/templates/theme-catalog.json');
 
-const { buildAggregatedCatalog, validateCatalogThemes } = require('../cli/lib/theme-registry.js');
+const { buildAggregatedCatalog, validateCatalogThemes } = require('../cli/out/lib/theme-registry.js');
 
 function assertCatalog(raw) {
   if (!raw || typeof raw !== 'object') {
