@@ -39,7 +39,7 @@ function shouldDropPnpmEntry(name) {
 }
 
 /**
- * @param {string} bundleDir Directory containing node_modules (e.g. .server-bundle)
+ * @param {string} bundleDir Directory containing node_modules (e.g. .cache/server-bundle)
  * @returns {{ removed: number; savedBytes: number }}
  */
 export function pruneBundleNodeModules(bundleDir) {

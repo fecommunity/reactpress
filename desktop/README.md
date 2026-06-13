@@ -90,6 +90,7 @@ REACTPRESS_DESKTOP_DEBUG=1 /path/to/ReactPress.app/Contents/MacOS/ReactPress
 
 ```
 desktop/
+├── .cache/             # 构建/开发缓存目录（git 忽略）
 ├── src/
 │   ├── main/           # Main 进程：窗口、IPC、local-server、local-site、config
 │   ├── preload/        # contextBridge → window.reactpressDesktop

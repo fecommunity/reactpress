@@ -1,5 +1,5 @@
 /**
- * Stage bundled server/toolkit/cli/themes into desktop/.app-resources for electron-builder.
+ * Stage bundled server/toolkit/cli/themes into desktop/.cache/app-resources for electron-builder.
  * Assumes toolkit, cli, and server are already built (see build-desktop.mjs).
  */
 import { spawn } from "node:child_process";
@@ -8,11 +8,12 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { formatBytes, pruneBundleNodeModules } from "./prune-bundle.mjs";
+import { CACHE_PATHS } from "./cache-dir.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const desktopDir = path.resolve(__dirname, "..");
 const root = path.resolve(desktopDir, "..");
-const outDir = path.join(desktopDir, ".app-resources");
+const outDir = CACHE_PATHS.appResources;
 
 /** Theme paths never needed inside the desktop installer. */
 const THEME_SKIP_DIRS = new Set(["node_modules", ".git", ".turbo"]);
@@ -81,7 +82,7 @@ function copyNextProduction(srcNext, destNext) {
 }
 
 async function stageHelloWorldRuntimeDeps() {
-  const themeBundle = path.join(desktopDir, ".theme-bundle");
+  const themeBundle = CACHE_PATHS.themeBundle;
   rmrf(themeBundle);
 
   console.log("[desktop] Deploying hello-world theme runtime dependencies…");
@@ -146,7 +147,7 @@ async function stageThemeStarterRuntime(outDir) {
 }
 
 export async function stageAppResources() {
-  const serverBundle = path.join(desktopDir, ".server-bundle");
+  const serverBundle = CACHE_PATHS.serverBundle;
   const toolkitDist = path.join(root, "toolkit/dist");
 
   rmrf(outDir);

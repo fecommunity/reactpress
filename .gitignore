@@ -27,8 +27,6 @@ lib
 !themes/hello-world/**/lib/
 !themes/theme-starter/**/lib/
 cli/out/
-desktop/.cli-bundle-prod/
-desktop/.cli-bundle-test/
 dist
 dist-ssr
 coverage
@@ -40,7 +38,7 @@ web/.tanstack
 
 # Electron desktop (desktop/)
 desktop/out/
-desktop/.dev-app/
+desktop/.cache/
 desktop/release/
 desktop/*.dmg
 desktop/*.zip
@@ -49,9 +47,6 @@ desktop/*.AppImage
 desktop/*.blockmap
 desktop/builder-debug.yml
 desktop/builder-effective-config.yaml
-desktop/.app-resources/
-desktop/.server-bundle/
-desktop/.toolkit-bundle/
 
 .pnpm-store
 tsconfig.tsbuildinfo

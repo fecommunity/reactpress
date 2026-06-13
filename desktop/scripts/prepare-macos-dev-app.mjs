@@ -1,11 +1,13 @@
 /**
- * macOS dev: copy Electron.app → .dev-app/ReactPress.app and patch Info.plist
+ * macOS dev: copy Electron.app → .cache/dev-app/ReactPress.app and patch Info.plist
  * so Dock hover text shows "ReactPress" instead of "Electron".
  */
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { createRequire } from "node:module";
+
+import { CACHE_PATHS } from "./cache-dir.mjs";
 
 const APP_NAME = "ReactPress";
 const BUNDLE_ID = "com.reactpress.desktop.dev";
@@ -28,7 +30,7 @@ export function prepareMacDevApp(desktopRoot) {
   const electronPkgDir = path.dirname(require.resolve("electron/package.json"));
   const electronVersion = require("electron/package.json").version;
   const sourceApp = path.join(electronPkgDir, "dist", "Electron.app");
-  const devAppDir = path.join(desktopRoot, ".dev-app");
+  const devAppDir = CACHE_PATHS.devApp;
   const targetApp = path.join(devAppDir, `${APP_NAME}.app`);
   const markerFile = path.join(devAppDir, ".electron-version");
 

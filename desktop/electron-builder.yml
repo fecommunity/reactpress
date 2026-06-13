@@ -6,7 +6,7 @@ files:
   - out/**/*
   - package.json
 extraResources:
-  - from: .app-resources
+  - from: .cache/app-resources
     to: .
     filter:
       - "**/*"
