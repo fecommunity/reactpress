@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 
 import styles from "@/modules/settings/components/settings-form.module.css";
 import { SettingsTabForm } from "@/modules/settings/components/SettingsTabForm";
-import { DesktopApiSetupPanel } from "@/shared/desktop/DesktopApiSetupPanel";
+import { DesktopWorkspacePanel } from "@/shared/desktop/DesktopWorkspacePanel";
 
 interface SettingsLayoutPageProps {
   tab: string;
@@ -18,12 +18,12 @@ export function SettingsLayoutPage({ tab }: SettingsLayoutPageProps) {
       <div className={styles.wrap}>
         <div className="admin-page-header">
           <Typography.Title level={2} className="admin-page-title">
-            {t("settings.pageTitle.desktop-api", { defaultValue: t("desktop.apiSetup.title") })}
+            {t("settings.pageTitle.desktop-api", { defaultValue: t("desktop.workspace.title") })}
           </Typography.Title>
         </div>
         <div className="admin-panel">
           <div className="admin-panel__body">
-            <DesktopApiSetupPanel />
+            <DesktopWorkspacePanel />
           </div>
         </div>
       </div>

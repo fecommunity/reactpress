@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { resolveProjectRoot } from '../../utils/project-root.util';
+import { resolveMonorepoRoot, resolveProjectRoot } from '../../utils/project-root.util';
 
 export type ThemeRegistryCatalogEntry = {
   id: string;
@@ -42,7 +42,7 @@ let cached: ThemeRegistryModule | null = null;
 /** Load CLI theme registry (single source for catalog + bundled metadata). */
 export function loadThemeRegistry(): ThemeRegistryModule {
   if (cached) return cached;
-  const registryPath = path.join(resolveProjectRoot(), 'cli', 'lib', 'theme-registry.js');
+  const registryPath = path.join(resolveMonorepoRoot(), 'cli', 'lib', 'theme-registry.js');
   if (!fs.existsSync(registryPath)) {
     throw new Error('Theme registry is not available in this deployment');
   }

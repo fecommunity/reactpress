@@ -10,8 +10,9 @@ import { AuthTokensSchema, LoginRequestSchema } from "@/api/schemas";
 import { LanguageSwitcher, ThemeSwitcher } from "@/components/LanguageSwitcher";
 import { useAppLocale } from "@/hooks/useAppLocale";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
+import { DesktopModeBadge } from "@/shared/desktop/DesktopModeBadge";
 import { isDesktopRuntime } from "@/shared/desktop/apiConfig";
-import { DesktopApiSetupPanel } from "@/shared/desktop/DesktopApiSetupPanel";
+import { DesktopWorkspacePanel } from "@/shared/desktop/DesktopWorkspacePanel";
 import { AdminAccessDeniedError } from "@/shared/auth/adminAccess";
 import { getLoginErrorMessage } from "@/shared/auth/loginErrorMessage";
 import { fetchSessionFromMockApi, loginWithServerCredentials } from "@/shared/auth/session";
@@ -96,6 +97,7 @@ function LoginPage() {
     <div className={pageStyles.page}>
       <header className={pageStyles.fixedToolbar}>
         <div className={pageStyles.utilities}>
+          {desktopRuntime ? <DesktopModeBadge /> : null}
           <LanguageSwitcher size={16} />
           <ThemeSwitcher size={16} />
         </div>
@@ -117,7 +119,7 @@ function LoginPage() {
               <LoginBrandMark />
 
               <section className={pageStyles.authCard} aria-labelledby="login-page-heading">
-                {desktopRuntime ? <DesktopApiSetupPanel required /> : null}
+                {desktopRuntime ? <DesktopWorkspacePanel gateLogin /> : null}
                 <Form
                   className={pageStyles.authForm}
                   layout="vertical"

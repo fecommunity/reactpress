@@ -16,13 +16,13 @@ export class ArticleRevision {
   @Column()
   title: string;
 
-  @Column({ type: 'mediumtext', nullable: true })
+  @Column({ type: 'text', nullable: true })
   content: string;
 
-  @Column({ type: 'mediumtext', nullable: true })
+  @Column({ type: 'text', nullable: true })
   html: string;
 
-  @Column('simple-enum', { enum: ['draft', 'publish'] })
+  @Column({ type: 'varchar', enum: ['draft', 'publish'] })
   status: string;
 
   @CreateDateColumn({ name: 'create_at' })

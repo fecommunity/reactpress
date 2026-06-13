@@ -2,19 +2,50 @@ import { app, BrowserWindow, dialog, ipcMain, shell } from "electron";
 
 import {
   getApiBaseUrl,
+  getApiMode,
+  getRemoteApiBaseUrl,
   getWindowBounds,
   saveWindowBounds,
-  setApiBaseUrl,
+  setApiMode,
+  setRemoteApiBaseUrl,
 } from "./config";
+import {
+  resolveDefaultSiteRoot,
+  startLocalServer,
+} from "./local-server";
+import type { ApiMode } from "../shared/types";
 
 export function registerIpcHandlers(): void {
+  ipcMain.handle("config:getApiMode", () => getApiMode());
+
+  ipcMain.handle("config:setApiMode", async (_event, mode: unknown) => {
+    if (mode !== "local" && mode !== "remote") {
+      throw new Error('API mode must be "local" or "remote"');
+    }
+    const next = setApiMode(mode as ApiMode);
+    if (next === "local") {
+      const siteRoot = resolveDefaultSiteRoot(app.getPath("userData"));
+      await startLocalServer({ siteRoot });
+    }
+    return next;
+  });
+
   ipcMain.handle("config:getApiBaseUrl", () => getApiBaseUrl());
 
   ipcMain.handle("config:setApiBaseUrl", (_event, url: unknown) => {
     if (typeof url !== "string") {
       throw new Error("API URL must be a string");
     }
-    return setApiBaseUrl(url);
+    return setRemoteApiBaseUrl(url);
+  });
+
+  ipcMain.handle("config:getRemoteApiBaseUrl", () => getRemoteApiBaseUrl() ?? "");
+
+  ipcMain.handle("config:setRemoteApiBaseUrl", (_event, url: unknown) => {
+    if (typeof url !== "string") {
+      throw new Error("API URL must be a string");
+    }
+    return setRemoteApiBaseUrl(url);
   });
 
   ipcMain.handle("config:getWindowBounds", () => getWindowBounds());

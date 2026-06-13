@@ -39,11 +39,11 @@ export class User {
   email: string; // 邮箱
 
   @ApiProperty()
-  @Column('simple-enum', { enum: ['admin', 'visitor'], default: 'visitor' })
+  @Column({ type: 'varchar', enum: ['admin', 'visitor'], default: 'visitor' })
   role: string; // 用户角色
 
   @ApiProperty()
-  @Column('simple-enum', { enum: ['locked', 'active'], default: 'active' })
+  @Column({ type: 'varchar', enum: ['locked', 'active'], default: 'active' })
   status: string; // 用户状态
 
   @ApiProperty()

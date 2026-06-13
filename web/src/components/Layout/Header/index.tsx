@@ -9,6 +9,7 @@ import { LanguageSwitcher, ThemeSwitcher } from "@/components/LanguageSwitcher";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 import { defaultMediaSearch, defaultUsersSearch } from "@/routes/searchDefaults";
 import { ReactPressLogoMark } from "@/shared/brand";
+import { DesktopModeBadge } from "@/shared/desktop/DesktopModeBadge";
 import { useAuthStore } from "@/stores/auth";
 import { useSettingsStore } from "@/stores/settings";
 import { APP_BRAND_NAME, REACTPRESS_GITHUB_URL } from "@/utils/constants";
@@ -131,6 +132,7 @@ export function Header() {
         </Dropdown>
       </div>
       <div className="admin-bar__right">
+        <DesktopModeBadge />
         <a
           className="admin-bar__action rp-toolbar-btn"
           href={REACTPRESS_GITHUB_URL}

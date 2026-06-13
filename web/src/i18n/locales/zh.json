@@ -82,7 +82,8 @@
     "settings.storage": "存储",
     "settings.seo": "SEO",
     "settings.api-keys": "API 密钥",
-    "settings.webhooks": "Webhooks"
+    "settings.webhooks": "Webhooks",
+    "settings.desktop-api": "桌面客户端"
   },
   "breadcrumb": {
     "dashboard": "仪表盘",
@@ -908,7 +909,7 @@
   "desktop": {
     "apiSetup": {
       "title": "连接 API 服务器",
-      "desc": "桌面客户端需要连接到 ReactPress API。本地开发请先运行 pnpm dev 或 pnpm dev:api，然后使用默认地址 http://127.0.0.1:3002/api；也可填写远程 API 地址。",
+      "desc": "默认使用内嵌 SQLite 本地模式，无需 Docker 或远程 Server。可切换到远程模式连接线上 API，或将本地内容同步到云端。",
       "apiUrlLabel": "API 地址",
       "apiUrlRequired": "请输入 API 地址",
       "testConnection": "测试连接",
@@ -917,6 +918,32 @@
       "saveAndContinue": "保存并继续",
       "saved": "API 地址已保存",
       "saveFailed": "保存失败"
+    },
+    "workspace": {
+      "title": "工作区",
+      "desc": "默认使用本地模式，无需 Docker 或远程 Server，可直接写作与管理。若已有线上站点，可切换到远程模式或把本地内容同步到远端。",
+      "localMode": "本地写作",
+      "remoteMode": "连接远程",
+      "localReady": "本地服务已就绪，可直接登录（默认 admin / admin）",
+      "localStarting": "正在启动本地服务…",
+      "useLocal": "使用本地模式"
+    },
+    "mode": {
+      "local": "本地模式",
+      "remote": "远程模式",
+      "loading": "…"
+    },
+    "sync": {
+      "title": "同步到远程",
+      "desc": "将本地文章、页面与设置推送到远程 ReactPress 站点（需远程管理员账号）。",
+      "push": "推送到远程",
+      "done": "同步完成：{{articles}} 篇文章、{{pages}} 个页面",
+      "failed": "同步失败",
+      "remoteLoginFailed": "远程登录失败，请检查用户名和密码",
+      "remoteApiUnreachable": "无法连接远程 API，请检查地址与服务状态",
+      "localApiUnreachable": "本地 API 未运行，请重启桌面客户端或执行 pnpm dev:desktop",
+      "remoteUsernameRequired": "请输入远程用户名",
+      "remotePasswordRequired": "请输入远程密码"
     }
   }
 }

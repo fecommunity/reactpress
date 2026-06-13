@@ -54,6 +54,8 @@ function printDevReadyBanner(
     dbOk = true,
     adminApiOrigin = null,
     clientApiOrigin = null,
+    localApiUrl = null,
+    dbType = null,
   } = {}
 ) {
   const urls = getDevUrls(projectRoot);
@@ -66,15 +68,29 @@ function printDevReadyBanner(
         ? 'devBanner.readyWeb'
         : 'devBanner.ready';
 
+  const useLocalDesktopApi = Boolean(desktop && localApiUrl);
+  const lights = useLocalDesktopApi || dbOk ? 'online' : 'degraded';
+  const readyGradient =
+    useLocalDesktopApi || dbOk ? [palette.green, palette.accent] : [palette.amber, palette.muted];
+
   console.log('');
-  const lights = dbOk ? 'online' : 'degraded';
-  const readyGradient = dbOk ? [palette.green, palette.accent] : [palette.amber, palette.muted];
   console.log(
-    `  ${dbOk ? icon.ok : icon.warn}  ${gradientText(t(readyKey), readyGradient, { bold: true })}  ${statusLights(lights)}`
+    `  ${useLocalDesktopApi || dbOk ? icon.ok : icon.warn}  ${gradientText(t(readyKey), readyGradient, { bold: true })}  ${statusLights(lights)}`
   );
   console.log(`  ${brand.primary('╔' + '═'.repeat(w) + '╗')}`);
 
-  if (nginx) {
+  if (useLocalDesktopApi) {
+    const dbLabel =
+      dbType === 'sqlite' ? t('devBanner.sqliteEmbedded') : t('devBanner.mysqlDocker');
+    console.log(urlLine(t('devBanner.database'), dbLabel, { underline: false }));
+    console.log(urlLine(t('devBanner.api'), localApiUrl));
+    console.log(urlLine(t('devBanner.admin'), urls.admin));
+    const healthUrl = localApiUrl.replace(/\/api\/?$/, '') + '/api/health';
+    console.log(urlLine(t('devBanner.health'), healthUrl, { underline: false }));
+    console.log(
+      `  ${brand.muted('  ')}${brand.dim(t('devBanner.desktopLocalHint'))}`
+    );
+  } else if (nginx) {
     const entry = nginxEntryUrl(projectRoot);
     if (!apiOnly && (hasThemeSite || !webOnly)) {
       console.log(urlLine(t('devBanner.site'), entry));
@@ -111,9 +127,11 @@ function printDevReadyBanner(
   if (pulseWidth > 6) {
     console.log(
       `  ${brand.muted('  ')}${pulseBar(pulseWidth, pulseWidth)}  ${
-        dbOk
-          ? brand.success(t('devBanner.allSystemsGo'))
-          : brand.warn(t('devBanner.dbDegraded'))
+        useLocalDesktopApi
+          ? brand.success(t('devBanner.localModeGo'))
+          : dbOk
+            ? brand.success(t('devBanner.allSystemsGo'))
+            : brand.warn(t('devBanner.dbDegraded'))
       }`
     );
   }

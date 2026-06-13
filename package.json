@@ -94,7 +94,8 @@
       "esbuild",
       "electron",
       "msw",
-      "sharp"
+      "sharp",
+      "sqlite3"
     ],
     "packageExtensions": {
       "next@12.3.4": {

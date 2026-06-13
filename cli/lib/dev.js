@@ -67,6 +67,20 @@ function logDevPhase(step, total, messageKey, vars = {}) {
   console.log(`[reactpress] [${step}/${total}] ${t(messageKey, vars)}`);
 }
 
+function isDesktopLocalMode() {
+  return process.env.REACTPRESS_DESKTOP_LOCAL === '1';
+}
+
+function desktopPhaseKey(defaultKey) {
+  if (!isDesktopLocalMode()) return defaultKey;
+  const map = {
+    'dev.phasePrerequisites': 'dev.phasePrerequisitesDesktop',
+    'dev.phaseInfra': 'dev.phaseInfraDesktop',
+    'dev.phaseServices': 'dev.phaseServicesDesktop',
+  };
+  return map[defaultKey] || defaultKey;
+}
+
 function formatDevFailureHint() {
   return [
     t('dev.nextSteps'),
@@ -87,6 +101,12 @@ function shutdown(signal = 'SIGINT') {
   shuttingDown = true;
   stopThemeSite();
   if (nginxEnabled) stopDevNginx(ensureOriginalCwd());
+  try {
+    const { stopLocalServer } = require(path.join(ensureOriginalCwd(), 'desktop/out/main/local-server.js'));
+    stopLocalServer();
+  } catch {
+    // desktop local API not running
+  }
   if (desktopChild && !desktopChild.killed) desktopChild.kill(signal);
   if (webChild && !webChild.killed) webChild.kill(signal);
   if (apiChild && !apiChild.killed) apiChild.kill(signal);
@@ -285,18 +305,29 @@ function assertDevPrerequisites() {
     console.error(formatDevFailureHint());
     process.exit(1);
   }
-  const docker = checkDocker();
-  if (!docker.ok) {
-    console.error(`[reactpress] ${docker.message}`);
-    if (docker.fix) console.error(`  → ${docker.fix}`);
-    console.error(formatDevFailureHint());
-    process.exit(1);
+  if (!isDesktopLocalMode()) {
+    const docker = checkDocker();
+    if (!docker.ok) {
+      console.error(`[reactpress] ${docker.message}`);
+      if (docker.fix) console.error(`  → ${docker.fix}`);
+      console.error(formatDevFailureHint());
+      process.exit(1);
+    }
   }
-  logDevStatus('dev.prerequisitesOk', { version: process.version });
+  logDevStatus(
+    isDesktopLocalMode() ? 'dev.prerequisitesOkDesktop' : 'dev.prerequisitesOk',
+    { version: process.version },
+  );
 }
 
 async function prepareDevInfrastructure(projectRoot, { needsLocalApi = true } = {}) {
   await acquireDevSession(projectRoot);
+  if (process.env.REACTPRESS_DESKTOP_LOCAL === '1') {
+    nginxEnabled = false;
+    delete process.env.REACTPRESS_NGINX_ENTRY_URL;
+    process.env.REACTPRESS_SKIP_DEV_PORT_REDIRECT = '1';
+    return;
+  }
   const planNginx = process.env.REACTPRESS_SKIP_NGINX !== '1';
   const clientApiOrigin = readDevClientApiOrigin(projectRoot);
 
@@ -335,9 +366,9 @@ async function startDevStack(
 ) {
   const { admin: adminApiOrigin, client: clientApiOrigin, needsLocalApi } = apiOrigins;
   if (!infraDone) {
-    logDevPhase(1, 3, 'dev.phasePrerequisites');
+    logDevPhase(1, 3, desktopPhaseKey('dev.phasePrerequisites'));
     assertDevPrerequisites();
-    logDevPhase(2, 3, 'dev.phaseInfra');
+    logDevPhase(2, 3, desktopPhaseKey('dev.phaseInfra'));
     try {
       await prepareDevInfrastructure(projectRoot, { needsLocalApi });
     } catch (err) {
@@ -386,7 +417,7 @@ async function startDevStack(
   const includeWebInStack = hasWeb(projectRoot) && !webOnly && !themeOnly;
 
   if (infraDone) {
-    logDevPhase(3, 3, 'dev.phaseServices');
+    logDevPhase(3, 3, desktopPhaseKey('dev.phaseServices'));
   }
 
   markDevPhase('services');
@@ -530,8 +561,12 @@ async function startDevStack(
     });
   }
 
-  const dbOk = needsLocalApi ? await probeMysqlHost(projectRoot) : true;
-  if (needsLocalApi && !dbOk) {
+  const dbOk = isDesktopLocalMode()
+    ? true
+    : needsLocalApi
+      ? await probeMysqlHost(projectRoot)
+      : true;
+  if (needsLocalApi && !dbOk && !isDesktopLocalMode()) {
     console.warn(t('dev.mysqlUnreachable'));
   }
 
@@ -548,6 +583,8 @@ async function startDevStack(
     dbOk,
     adminApiOrigin,
     clientApiOrigin,
+    localApiUrl: isDesktopLocalMode() ? process.env.REACTPRESS_DESKTOP_LOCAL_API || null : null,
+    dbType: isDesktopLocalMode() ? 'sqlite' : needsLocalApi ? 'mysql' : null,
   });
 
   logDevTimingSummary({
@@ -574,10 +611,10 @@ async function runDevStartup(
     process.exit(1);
   }
 
-  logDevPhase(1, 3, 'dev.phasePrerequisites');
+  logDevPhase(1, 3, desktopPhaseKey('dev.phasePrerequisites'));
   assertDevPrerequisites();
 
-  logDevPhase(2, 3, 'dev.phaseInfra');
+  logDevPhase(2, 3, desktopPhaseKey('dev.phaseInfra'));
   try {
     await Promise.all([
       prepareDevInfrastructure(projectRoot, { needsLocalApi: apiOrigins.needsLocalApi }),
@@ -646,6 +683,7 @@ async function runDesktopDev(projectRoot = ensureOriginalCwd()) {
   }
 
   process.env.REACTPRESS_SKIP_NGINX = '1';
+  process.env.REACTPRESS_DESKTOP_LOCAL = '1';
 
   process.on('SIGINT', () => shutdown('SIGINT'));
   process.on('SIGTERM', () => shutdown('SIGTERM'));
@@ -657,10 +695,38 @@ async function runDesktopDev(projectRoot = ensureOriginalCwd()) {
     }
   });
 
+  console.log('');
+  logDevLine('dev.desktopIntro');
+
+  const desktopBuild = spawnSync('pnpm', ['run', '--dir', './desktop', 'build'], {
+    cwd: projectRoot,
+    shell: true,
+    stdio: 'inherit',
+  });
+  if (desktopBuild.status !== 0) {
+    process.exit(desktopBuild.status ?? 1);
+  }
+
+  const {
+    startLocalServer,
+    resolveDevSiteRoot,
+    getLocalApiBaseUrl,
+  } = require(path.join(projectRoot, 'desktop/out/main/local-server.js'));
+
+  console.log('');
+  logDevStatus('dev.desktopLocalApiStarting');
+  const siteRoot = resolveDevSiteRoot(projectRoot);
+  await startLocalServer({ siteRoot, monorepoRoot: projectRoot });
+  const localApiBase = getLocalApiBaseUrl();
+  process.env.REACTPRESS_DESKTOP_LOCAL_API = localApiBase;
+  const localApiOrigin = localApiBase.replace(/\/api\/?$/, '');
+  process.env.VITE_DEV_API_PROXY_TARGET = localApiOrigin;
+  logDevStatus('dev.desktopLocalApiReady', { url: localApiBase, db: t('dev.dbTypeSqlite') });
+
   await runDevStartup(projectRoot, {
     webOnly: true,
     desktopMode: true,
-    apiOrigins: { admin: null, client: null, needsLocalApi: true },
+    apiOrigins: { admin: null, client: null, needsLocalApi: false },
   });
   await spawnDesktopApp(projectRoot);
 }

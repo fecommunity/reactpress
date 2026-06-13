@@ -5,6 +5,8 @@ import * as net from 'net';
 import * as open from 'open';
 import { dirname, join } from 'path';
 
+import { isLocalApiQuiet } from './utils/local-api-quiet.util';
+
 // 全局状态管理
 declare global {
   var installationServer: any;
@@ -154,15 +156,23 @@ const main = async () => {
     const projectRoot = getProjectRoot();
     const envPath = join(projectRoot, '.env');
 
-    console.log(`[ReactPress] Checking for environment file at: ${envPath}`);
-    console.log(`[ReactPress] Project root determined to be: ${projectRoot}`);
+    if (!isLocalApiQuiet()) {
+      console.log(`[ReactPress] Checking for environment file at: ${envPath}`);
+    }
+    if (!isLocalApiQuiet()) {
+      console.log(`[ReactPress] Project root determined to be: ${projectRoot}`);
+    }
 
     if (fs.existsSync(envPath)) {
       if (process.env.REACTPRESS_API_ENTRY === 'starter') {
-        console.log('[ReactPress] API dev uses nest starter entry; skip main bootstrap (see server npm run dev)');
+        if (!isLocalApiQuiet()) {
+          console.log('[ReactPress] API dev uses nest starter entry; skip main bootstrap (see server npm run dev)');
+        }
         return;
       }
-      console.log('[ReactPress] Environment file exists, starting main application');
+      if (!isLocalApiQuiet()) {
+        console.log('[ReactPress] Environment file exists, starting main application');
+      }
       await startMainApplication();
       return;
     }
@@ -185,15 +195,19 @@ const getProjectRoot = (): string => {
   // 优先使用通过环境变量传递的原始工作目录
   // 这是在 bin/reactpress-server.js 中设置的，表示用户执行 npx 命令的目录
   if (process.env.REACTPRESS_ORIGINAL_CWD) {
-    console.log(
-      `[ReactPress] Using original working directory from npx execution: ${process.env.REACTPRESS_ORIGINAL_CWD}`
-    );
+    if (!isLocalApiQuiet()) {
+      console.log(
+        `[ReactPress] Using original working directory from npx execution: ${process.env.REACTPRESS_ORIGINAL_CWD}`
+      );
+    }
     return process.env.REACTPRESS_ORIGINAL_CWD;
   }
 
   // 如果没有设置环境变量，则回退到当前工作目录
   const projectRoot = process.cwd();
-  console.log(`[ReactPress] Using current working directory as project root: ${projectRoot}`);
+  if (!isLocalApiQuiet()) {
+    console.log(`[ReactPress] Using current working directory as project root: ${projectRoot}`);
+  }
   return projectRoot;
 };
 
@@ -322,7 +336,9 @@ SERVER_SITE_URL=${site.serverUrl || 'http://localhost:3002'}
 // 启动主应用
 const startMainApplication = async (): Promise<void> => {
   try {
-    console.log('[ReactPress] Starting main application...');
+    if (!isLocalApiQuiet()) {
+      console.log('[ReactPress] Starting main application...');
+    }
 
     // 确保安装服务器完全关闭
     await safelyCloseServer();

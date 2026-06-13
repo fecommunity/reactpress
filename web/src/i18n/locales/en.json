@@ -82,7 +82,8 @@
     "settings.storage": "Storage",
     "settings.seo": "SEO",
     "settings.api-keys": "API Keys",
-    "settings.webhooks": "Webhooks"
+    "settings.webhooks": "Webhooks",
+    "settings.desktop-api": "Desktop Client"
   },
   "breadcrumb": {
     "dashboard": "Dashboard",
@@ -908,7 +909,7 @@
   "desktop": {
     "apiSetup": {
       "title": "Connect to API Server",
-      "desc": "The desktop app needs a ReactPress API endpoint. For local development, run pnpm dev or pnpm dev:api first, then use http://127.0.0.1:3002/api, or enter a remote API URL.",
+      "desc": "Local mode uses embedded SQLite by default — no Docker or remote server required. Switch to remote mode to connect a hosted ReactPress API, or sync local content to the cloud.",
       "apiUrlLabel": "API base URL",
       "apiUrlRequired": "API URL is required",
       "testConnection": "Test connection",
@@ -917,6 +918,32 @@
       "saveAndContinue": "Save and continue",
       "saved": "API URL saved",
       "saveFailed": "Failed to save"
+    },
+    "workspace": {
+      "title": "Workspace",
+      "desc": "Local mode works offline without Docker or a remote server. Switch to remote to manage a hosted site, or push local content to the cloud.",
+      "localMode": "Local writing",
+      "remoteMode": "Remote server",
+      "localReady": "Local service is ready — sign in (default admin / admin)",
+      "localStarting": "Starting local service…",
+      "useLocal": "Use local mode"
+    },
+    "mode": {
+      "local": "Local mode",
+      "remote": "Remote mode",
+      "loading": "…"
+    },
+    "sync": {
+      "title": "Sync to remote",
+      "desc": "Push local articles, pages, and settings to a remote ReactPress site (remote admin credentials required).",
+      "push": "Push to remote",
+      "done": "Sync complete: {{articles}} articles, {{pages}} pages",
+      "failed": "Sync failed",
+      "remoteLoginFailed": "Remote login failed — check username and password",
+      "remoteApiUnreachable": "Cannot reach remote API — check the URL and server status",
+      "localApiUnreachable": "Local API is not running — restart the desktop app or run pnpm dev:desktop",
+      "remoteUsernameRequired": "Remote username is required",
+      "remotePasswordRequired": "Remote password is required"
     }
   }
 }

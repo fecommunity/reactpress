@@ -1,6 +1,13 @@
+export type ApiMode = "local" | "remote";
+
 export interface DesktopConfig {
-  /** API root including `/api`, e.g. http://127.0.0.1:3002/api */
-  apiBaseUrl: string;
+  /** local = embedded SQLite API; remote = connect to hosted server */
+  apiMode: ApiMode;
+  /** Used when apiMode=remote */
+  remoteApiBaseUrl?: string;
+  /** @deprecated legacy field — migrated to remoteApiBaseUrl */
+  apiBaseUrl?: string;
+  localApiPort?: number;
   windowBounds?: {
     x: number;
     y: number;
@@ -11,8 +18,12 @@ export interface DesktopConfig {
 }
 
 export type IpcChannels =
+  | "config:getApiMode"
+  | "config:setApiMode"
   | "config:getApiBaseUrl"
   | "config:setApiBaseUrl"
+  | "config:getRemoteApiBaseUrl"
+  | "config:setRemoteApiBaseUrl"
   | "config:getWindowBounds"
   | "config:setWindowBounds"
   | "dialog:save"

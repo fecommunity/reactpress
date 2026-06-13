@@ -1,22 +1,126 @@
 .wrap {
-  margin-bottom: 24px;
-  padding: 20px;
-  border: 1px solid var(--admin-border-color, #e8e8e8);
-  border-radius: 8px;
-  background: var(--admin-panel-bg, #fafafa);
+  --desktop-text: #1d2327;
+  --desktop-muted: #646970;
+  --desktop-border: #dcdcde;
+  --desktop-surface: #f6f7f7;
+  --desktop-input-bg: #fff;
+  max-width: 640px;
 }
 
 .title {
   margin-top: 0 !important;
   margin-bottom: 8px !important;
+  color: var(--desktop-text) !important;
 }
 
 .desc {
   margin-bottom: 16px !important;
+  color: var(--desktop-muted) !important;
+}
+
+.sectionTitle {
+  margin: 0 0 8px !important;
+  color: var(--desktop-text) !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+}
+
+.sectionDesc {
+  margin-bottom: 12px !important;
+  color: var(--desktop-muted) !important;
+}
+
+.modeBar {
+  margin-bottom: 20px;
+}
+
+.status {
+  display: block;
+  margin-bottom: 12px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.statusReady {
+  color: #008a20;
+}
+
+.statusPending {
+  color: var(--desktop-muted);
+}
+
+.syncSection {
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid var(--desktop-border);
 }
 
 .actions {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+}
+
+.wrap :global(.ant-radio-button-wrapper) {
+  height: 32px;
+  line-height: 30px;
+}
+
+.wrap :global(.ant-form-item-label > label) {
+  color: var(--desktop-text);
+  font-weight: 600;
+}
+
+.wrap :global(.ant-input),
+.wrap :global(.ant-input-affix-wrapper),
+.wrap :global(.ant-input-password) {
+  background: var(--desktop-input-bg);
+  border-color: var(--desktop-border);
+  color: var(--desktop-text);
+}
+
+.wrap :global(.ant-input::placeholder) {
+  color: var(--desktop-muted);
+}
+
+:root[data-theme="dark"] .wrap {
+  --desktop-text: rgba(255, 255, 255, 0.88);
+  --desktop-muted: rgba(255, 255, 255, 0.55);
+  --desktop-border: #303030;
+  --desktop-surface: #1a1a1a;
+  --desktop-input-bg: #141414;
+}
+
+:root[data-theme="dark"] .wrap .statusReady {
+  color: #73d897;
+}
+
+:root[data-theme="dark"] .wrap :global(.ant-radio-button-wrapper) {
+  background: #141414;
+  border-color: #424242;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+:root[data-theme="dark"]
+  .wrap
+  :global(.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled)) {
+  background: #1668dc;
+  border-color: #1668dc;
+  color: #fff;
+}
+
+:root[data-theme="dark"] .wrap :global(.ant-radio-button-wrapper:not(:first-child)::before) {
+  background-color: #424242;
+}
+
+:global(.authCard) .wrap {
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--desktop-border);
+}
+
+:global(.authCard) .syncSection {
+  border-top: none;
+  margin-top: 16px;
+  padding-top: 0;
 }

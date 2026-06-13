@@ -17,6 +17,7 @@ import { ApiMsg } from './common/api-messages';
 import { HttpExceptionFilter } from './filters/http-exception.filter';
 import { TransformInterceptor } from './interceptors/transform.interceptor';
 import { resolveProjectRoot } from './utils/project-root.util';
+import { isLocalApiQuiet } from './utils/local-api-quiet.util';
 
 let nestApp: INestApplication | null = null;
 
@@ -110,7 +111,9 @@ export async function bootstrap() {
       nestApp = null;
     }
 
-    const app = await NestFactory.create(AppModule);
+    const app = await NestFactory.create(AppModule, {
+      logger: isLocalApiQuiet() ? ['error', 'warn'] : undefined,
+    });
     const configService = app.get('ConfigService');
     const listenPort = Number(configService.get('SERVER_PORT', configuredPort));
 
@@ -170,6 +173,10 @@ export async function bootstrap() {
     );
 
     const rootDir = join(__dirname, '../public');
+    const uploadDir = process.env.REACTPRESS_UPLOAD_DIR?.trim();
+    if (uploadDir && existsSync(uploadDir)) {
+      app.use('/public/uploads', express.static(uploadDir));
+    }
     app.use('/public', express.static(rootDir));
 
     for (const name of ['logo.png', 'favicon.png', 'favicon.ico'] as const) {
@@ -239,8 +246,15 @@ export async function bootstrap() {
 
     await app.listen(listenPort);
     nestApp = app;
-    console.log(`[ReactPress] Application started on http://localhost:${listenPort}`);
-    console.log(`[ReactPress] API Documentation available at http://localhost:${listenPort}/api`);
+    if (isLocalApiQuiet()) {
+      const dbType = String(configService.get('DB_TYPE') || 'mysql').toLowerCase();
+      console.log(
+        `[ReactPress] Local API ready · ${dbType === 'sqlite' ? 'SQLite' : dbType} · http://127.0.0.1:${listenPort}${listenPrefix}/health`,
+      );
+    } else {
+      console.log(`[ReactPress] Application started on http://localhost:${listenPort}`);
+      console.log(`[ReactPress] API Documentation available at http://localhost:${listenPort}/api`);
+    }
 
     return app;
   } catch (error) {

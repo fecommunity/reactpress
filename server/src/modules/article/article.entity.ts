@@ -44,15 +44,15 @@ export class Article {
   seoDescription: string;
 
   @ApiProperty()
-  @Column({ type: 'mediumtext', default: null, charset: 'utf8mb4' })
+  @Column({ type: 'text', default: null })
   content: string; // 原始内容
 
   @ApiProperty()
-  @Column({ type: 'mediumtext', default: null, charset: 'utf8mb4' })
+  @Column({ type: 'text', default: null })
   html: string; // 格式化内容，自动生成
 
   @ApiProperty()
-  @Column({ type: 'mediumtext', default: null })
+  @Column({ type: 'text', default: null })
   toc: string; // 格式化内容索引，自动生成
 
   @ApiProperty({ type: () => Category })
@@ -74,7 +74,7 @@ export class Article {
   tags: Array<Tag>;
 
   @ApiProperty()
-  @Column('simple-enum', { enum: ['draft', 'publish'] })
+  @Column({ type: 'varchar', enum: ['draft', 'publish'] })
   status: string; // 文章状态
 
   @ApiProperty()
@@ -102,11 +102,11 @@ export class Article {
   isCommentable: boolean;
 
   @ApiProperty()
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   publishAt: Date; // 发布日期
 
   @ApiProperty({ description: '定时发布时间（草稿状态下生效）' })
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: 'datetime', nullable: true })
   scheduledPublishAt: Date;
 
   @ApiProperty()

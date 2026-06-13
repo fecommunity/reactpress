@@ -72,6 +72,10 @@
   flex-shrink: 0;
 }
 
+.admin-bar__right :global(.ant-tag) {
+  margin-inline-end: 0;
+}
+
 .admin-bar__brandMark {
   --logo: #58c4dc;
   display: inline-flex;
@@ -386,6 +390,10 @@ a.admin-bar__action.rp-toolbar-btn:focus-visible {
   background: #141414;
   border-color: #303030;
   box-shadow: none;
+}
+
+:root[data-theme="dark"] .admin-page-title {
+  color: rgba(255, 255, 255, 0.88) !important;
 }
 
 .admin-panel__body {
