@@ -1,4 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { getHookReject, stripHookMeta } from '@fecommunity/reactpress-toolkit/plugin/server';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -6,6 +7,7 @@ import { ApiMsg } from '../../common/api-messages';
 import { marked } from '../../utils/markdown.util';
 import { parseUserAgent } from '../../utils/ua.util';
 import { ArticleService } from '../article/article.service';
+import { HookService } from '../hook/hook.service';
 import { SettingService } from '../setting/setting.service';
 import { SMTPService } from '../smtp/smtp.service';
 import { UserService } from '../user/user.service';
@@ -25,7 +27,8 @@ export class CommentService {
     private readonly smtpService: SMTPService,
     private readonly settingService: SettingService,
     private readonly userService: UserService,
-    private readonly webhookService: WebhookService
+    private readonly webhookService: WebhookService,
+    private readonly hookService: HookService,
   ) {}
 
   /**
@@ -39,10 +42,27 @@ export class CommentService {
       throw new HttpException(ApiMsg.MISSING_PARAMS, HttpStatus.BAD_REQUEST);
     }
 
+    const filtered = await this.hookService.applyFilters('comment.beforeCreate', {
+      ...comment,
+      pass: false,
+    });
+    const reject = getHookReject(filtered);
+    if (reject) {
+      throw new HttpException(
+        reject.message,
+        reject.statusCode ?? HttpStatus.BAD_REQUEST,
+      );
+    }
+    const payload = stripHookMeta(filtered as Record<string, unknown>) as Partial<Comment> & {
+      reply?: string;
+      createByAdmin?: boolean;
+    };
+    Object.assign(comment, payload);
+
     comment.pass = false;
     const { text: uaText } = parseUserAgent(userAgent);
     comment.userAgent = uaText;
-    comment.html = marked(content).html;
+    comment.html = marked(comment.content ?? content).html;
     const newComment = await this.commentRepository.create(comment);
     await this.commentRepository.save(comment);
 
@@ -78,6 +98,11 @@ export class CommentService {
       hostId: newComment.hostId,
       name: newComment.name,
       email: newComment.email,
+    });
+
+    await this.hookService.doAction('comment.afterCreate', {
+      comment: newComment,
+      createByAdmin,
     });
 
     return newComment;

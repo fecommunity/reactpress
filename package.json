@@ -26,6 +26,7 @@
     "build": "sh scripts/build.sh",
     "deploy": "sh scripts/deploy.sh",
     "build:toolkit": "pnpm run --dir ./toolkit build",
+    "build:plugins": "pnpm run --dir ./plugins build",
     "build:server": "pnpm run --dir ./server build",
     "build:web": "pnpm run --dir ./toolkit build && pnpm run --dir ./web build",
     "build:docs": "pnpm run --dir ./docs build",

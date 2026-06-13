@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { App, Table, theme } from "antd";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -13,6 +14,7 @@ import {
   PluginListSubHeader,
 } from "@/modules/plugins/components/PluginListSubHeader";
 import pluginStyles from "@/modules/plugins/components/plugins-page.module.css";
+import { pluginHasSettings } from "@/modules/plugins/utils/pluginSettingsSchema";
 import { usePluginMutations, usePlugins, type PluginListItem } from "@/hooks/usePlugins";
 import { ModulePlaceholder } from "@/shared/components/ModulePlaceholder";
 
@@ -114,6 +116,13 @@ export function PluginsPage() {
         label: t("plugins.deactivate"),
         onClick: () => void runAction("deactivate", plugin.id),
       });
+      if (pluginHasSettings(plugin.settings?.schema)) {
+        actions.push({
+          key: "settings",
+          label: t("plugins.settings"),
+          onClick: () => {},
+        });
+      }
     } else {
       actions.push({
         key: "activate",
@@ -133,13 +142,23 @@ export function PluginsPage() {
         {actions.map((action, index) => (
           <span key={action.key}>
             {index > 0 ? <span className={listStyles.rowActionSep}>|</span> : null}
-            <button
-              type="button"
-              className={`${listStyles.rowAction} ${action.danger ? listStyles.rowActionDanger : ""}`}
-              onClick={action.onClick}
-            >
-              {action.label}
-            </button>
+            {action.key === "settings" ? (
+              <Link
+                to="/plugins/$id/settings"
+                params={{ id: plugin.id }}
+                className={listStyles.rowAction}
+              >
+                {action.label}
+              </Link>
+            ) : (
+              <button
+                type="button"
+                className={`${listStyles.rowAction} ${action.danger ? listStyles.rowActionDanger : ""}`}
+                onClick={action.onClick}
+              >
+                {action.label}
+              </button>
+            )}
           </span>
         ))}
       </div>

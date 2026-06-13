@@ -10,6 +10,7 @@ import {
   installPlugin,
   type PluginListItem,
   uninstallPlugin,
+  updatePluginConfig,
 } from "@/shared/api/plugins";
 
 const PLUGINS_KEY = ["plugins"];
@@ -53,6 +54,7 @@ export function usePluginMutations() {
         ...plugin,
         installed: installedSet.has(plugin.id),
         active: activeSet.has(plugin.id),
+        config: state.entries[plugin.id]?.config ?? plugin.config,
       }));
     });
   };
@@ -88,7 +90,25 @@ export function usePluginMutations() {
     onSuccess: onPluginStateChange,
   });
 
-  return { installMutation, activateMutation, deactivateMutation, uninstallMutation };
+  const updateConfigMutation = useMutation({
+    mutationFn: ({ id, config }: { id: string; config: Record<string, unknown> }) =>
+      updatePluginConfig(id, config),
+    onSuccess: (state, { id }) => {
+      onPluginStateChange(state);
+      queryClient.setQueryData<PluginListItem>(["plugin", id], (old) => {
+        if (!old) return old;
+        return { ...old, config: state.entries[id]?.config ?? old.config };
+      });
+    },
+  });
+
+  return {
+    installMutation,
+    activateMutation,
+    deactivateMutation,
+    uninstallMutation,
+    updateConfigMutation,
+  };
 }
 
 export type { PluginListItem };

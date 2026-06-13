@@ -71,10 +71,15 @@ export class PluginController {
   @Put(':id/config')
   @Roles('admin')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  updateConfig(
+  async updateConfig(
     @Param('id') id: string,
     @Body() body: { config?: Record<string, unknown> },
   ) {
-    return this.pluginService.updatePluginConfig(id, body?.config ?? {});
+    const state = await this.pluginService.updatePluginConfig(id, body?.config ?? {});
+    const current = await this.pluginService.getPluginState();
+    if (current.activePlugins.includes(id)) {
+      await this.pluginLoader.reloadPlugin(id);
+    }
+    return state;
   }
 }

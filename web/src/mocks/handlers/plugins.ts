@@ -8,19 +8,39 @@ import { http } from "msw";
 import { successResponse, withDelay } from "../createHandler";
 import { getMockGlobalSetting, patchMockGlobalSettingPlugins, setMockGlobalSetting } from "./page";
 
+const HELLO_WORLD_SETTINGS = {
+  schema: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      enabled: { type: "boolean", title: "启用自动摘要", default: true },
+      maxLength: {
+        type: "integer",
+        title: "摘要最大长度",
+        minimum: 40,
+        maximum: 500,
+        default: 160,
+      },
+      suffix: { type: "string", title: "截断后缀", default: "…" },
+      fallbackToTitle: { type: "boolean", title: "正文为空时使用标题", default: true },
+    },
+  },
+};
+
 const MOCK_PLUGINS = [
   {
     id: "hello-world",
-    name: "Hello World",
-    version: "1.0.0",
-    description: "示例插件：发布文章时自动补全摘要，并在日志中记录发布事件。",
+    name: "自动摘要",
+    version: "1.2.0",
+    description: "发布文章时，若摘要为空，从正文或标题自动生成 summary。",
     author: "ReactPress",
     source: "local" as const,
     installed: false,
     active: false,
+    settings: HELLO_WORLD_SETTINGS,
     server: {
-      module: "./server/index.js",
-      hooks: { subscribe: ["article.beforePublish", "article.afterPublish"] },
+      module: "./dist/index.js",
+      hooks: { subscribe: ["article.beforePublish"] },
     },
   },
 ];
@@ -34,6 +54,7 @@ function listWithState() {
     installed: installedSet.has(plugin.id),
     active: activeSet.has(plugin.id),
     loadError: state.entries[plugin.id]?.loadError,
+    config: state.entries[plugin.id]?.config,
   }));
 }
 
@@ -63,7 +84,7 @@ export const pluginHandlers = [
       : [...state.installedPlugins, id];
     const entries = { ...state.entries };
     entries[id] = {
-      version: "1.0.0",
+      version: "1.2.0",
       source: "local",
       ...entries[id],
     };
@@ -85,7 +106,7 @@ export const pluginHandlers = [
       : [...state.activePlugins, id];
     const entries = { ...state.entries };
     entries[id] = {
-      ...(entries[id] ?? { version: "1.0.0", source: "local" }),
+      ...(entries[id] ?? { version: "1.2.0", source: "local" }),
       activatedAt: new Date().toISOString(),
       loadError: undefined,
     };
@@ -120,6 +141,20 @@ export const pluginHandlers = [
       installedPlugins,
       entries,
     });
+    setMockGlobalSetting(merged);
+    patchMockGlobalSettingPlugins(merged.plugins as object);
+    return successResponse(merged.plugins);
+  }),
+
+  http.put("/api/extension/plugins/:id/config", async ({ params, request }) => {
+    await withDelay(150);
+    const body = (await request.json()) as { config?: Record<string, unknown> };
+    const state = getPluginStateFromGlobalSetting(getMockGlobalSetting());
+    const id = String(params.id);
+    const entries = { ...state.entries };
+    const current = entries[id] ?? { version: "1.2.0", source: "local" as const };
+    entries[id] = { ...current, config: body.config ?? {} };
+    const merged = mergePluginStateIntoGlobalSetting(getMockGlobalSetting(), { entries });
     setMockGlobalSetting(merged);
     patchMockGlobalSettingPlugins(merged.plugins as object);
     return successResponse(merged.plugins);

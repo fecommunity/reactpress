@@ -862,7 +862,14 @@
     "uninstallConfirmDesc": "Plugins must be deactivated before uninstall. Runtime files will be removed.",
     "bulkNothingToDo": "No selected plugins can perform this action",
     "bulkUninstallHint": "Only inactive installed plugins can be bulk uninstalled",
-    "bulkUninstallTitle": "Uninstall {{count}} plugins?"
+    "bulkUninstallTitle": "Uninstall {{count}} plugins?",
+    "settings": "Settings",
+    "settingsSave": "Save Changes",
+    "settingsSaved": "Plugin settings saved",
+    "settingsNoSchema": "This plugin has no configurable settings.",
+    "settingsNotInstalled": "Install this plugin before opening its settings.",
+    "settingsTitle": "{{name}} Settings",
+    "backToPlugins": "← Back to plugins"
   },
   "placeholder": {
     "defaultDescription": "This module is mounted; business UI will be built here.",
@@ -875,7 +882,7 @@
     "customize": "Site Customization",
     "media": "Media Library",
     "plugins": "Plugins",
-    "pluginSettings": "Plugin settings: {{id}}",
+    "pluginSettings": "{{name}} Settings",
     "editPage": "Edit page #{{id}}",
     "newPage": "New Page"
   },

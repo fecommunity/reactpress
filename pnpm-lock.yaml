@@ -150,6 +150,18 @@ importers:
         specifier: ~5.9.3
         version: 5.9.3
 
+  plugins: {}
+
+  plugins/hello-world:
+    dependencies:
+      '@fecommunity/reactpress-toolkit':
+        specifier: workspace:*
+        version: link:../../toolkit
+    devDependencies:
+      typescript:
+        specifier: ~5.9.3
+        version: 5.9.3
+
   server:
     dependencies:
       '@fecommunity/reactpress-toolkit':
@@ -401,7 +413,7 @@ importers:
     dependencies:
       '@fecommunity/reactpress-theme-starter':
         specifier: 1.0.0-beta.0
-        version: 1.0.0-beta.0(@ant-design/cssinjs@2.1.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@playwright/test@1.60.0)(@tanstack/react-query@5.90.21(react@18.3.1))(encoding@0.1.13)(sass@1.79.3)
+        version: 1.0.0-beta.0(@ant-design/cssinjs@2.1.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@playwright/test@1.60.0)(@tanstack/react-query@5.90.21(react@18.3.1))(sass@1.79.3)
 
   toolkit:
     dependencies:
@@ -14640,9 +14652,9 @@ snapshots:
     transitivePeerDependencies:
       - '@types/node'
 
-  '@fecommunity/reactpress-theme-starter@1.0.0-beta.0(@ant-design/cssinjs@2.1.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@playwright/test@1.60.0)(@tanstack/react-query@5.90.21(react@18.3.1))(encoding@0.1.13)(sass@1.79.3)':
+  '@fecommunity/reactpress-theme-starter@1.0.0-beta.0(@ant-design/cssinjs@2.1.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@playwright/test@1.60.0)(@tanstack/react-query@5.90.21(react@18.3.1))(sass@1.79.3)':
     dependencies:
-      '@fecommunity/reactpress-toolkit': 3.1.0(@ant-design/cssinjs@2.1.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@tanstack/react-query@5.90.21(react@18.3.1))(encoding@0.1.13)(highlight.js@9.18.5)(next@15.5.12(@playwright/test@1.60.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.79.3))(nprogress@0.2.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(viewerjs@1.11.7)
+      '@fecommunity/reactpress-toolkit': 3.1.0(@ant-design/cssinjs@2.1.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@tanstack/react-query@5.90.21(react@18.3.1))(highlight.js@9.18.5)(next@15.5.12(@playwright/test@1.60.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.79.3))(nprogress@0.2.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(viewerjs@1.11.7)
       '@tailwindcss/forms': 0.5.11(tailwindcss@4.3.1)
       '@tailwindcss/postcss': 4.3.1
       '@tailwindcss/typography': 0.5.20(tailwindcss@4.3.1)
@@ -14667,7 +14679,7 @@ snapshots:
       - encoding
       - sass
 
-  '@fecommunity/reactpress-toolkit@3.1.0(@ant-design/cssinjs@2.1.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@tanstack/react-query@5.90.21(react@18.3.1))(encoding@0.1.13)(highlight.js@9.18.5)(next@15.5.12(@playwright/test@1.60.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.79.3))(nprogress@0.2.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(viewerjs@1.11.7)':
+  '@fecommunity/reactpress-toolkit@3.1.0(@ant-design/cssinjs@2.1.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@tanstack/react-query@5.90.21(react@18.3.1))(highlight.js@9.18.5)(next@15.5.12(@playwright/test@1.60.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.79.3))(nprogress@0.2.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(viewerjs@1.11.7)':
     dependencies:
       ajv: 8.17.1
       axios: 1.12.2
@@ -15008,9 +15020,7 @@ snapshots:
       source-map: 0.6.1
       string-length: 2.0.0
     transitivePeerDependencies:
-      - bufferutil
       - supports-color
-      - utf-8-validate
 
   '@jest/schemas@29.6.3':
     dependencies:

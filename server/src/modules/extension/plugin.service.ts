@@ -25,6 +25,7 @@ export interface PluginListItem extends PluginManifest {
   installed: boolean;
   active: boolean;
   loadError?: string;
+  config?: Record<string, unknown>;
 }
 
 const PLUGIN_RUNTIME_REL = path.join('.reactpress', 'plugins');
@@ -40,12 +41,13 @@ export class PluginService {
   private static readonly COPY_SKIP_NAMES = new Set([
     'node_modules',
     '.git',
-    'dist',
+    'src',
     '.turbo',
     'coverage',
     '.reactpress',
     '.cache',
     'package-lock.json',
+    'tsconfig.json',
   ]);
 
   constructor(
@@ -152,6 +154,7 @@ export class PluginService {
         installed,
         active: activeSet.has(manifest.id),
         loadError: entry?.loadError,
+        config: entry?.config,
       });
     };
 

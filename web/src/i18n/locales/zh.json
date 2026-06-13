@@ -862,7 +862,14 @@
     "uninstallConfirmDesc": "停用后才会卸载；插件文件将从 runtime 目录移除。",
     "bulkNothingToDo": "所选插件无法执行该操作",
     "bulkUninstallHint": "只能批量卸载已安装且未启用的插件",
-    "bulkUninstallTitle": "卸载 {{count}} 个插件？"
+    "bulkUninstallTitle": "卸载 {{count}} 个插件？",
+    "settings": "设置",
+    "settingsSave": "保存更改",
+    "settingsSaved": "插件设置已保存",
+    "settingsNoSchema": "该插件未提供可配置项。",
+    "settingsNotInstalled": "请先安装该插件后再访问设置。",
+    "settingsTitle": "{{name}} 设置",
+    "backToPlugins": "← 返回插件列表"
   },
   "placeholder": {
     "defaultDescription": "该模块页面已挂载，业务 UI 将在此迭代。",
@@ -875,7 +882,7 @@
     "customize": "站点定制",
     "media": "媒体库",
     "plugins": "插件",
-    "pluginSettings": "插件设置：{{id}}",
+    "pluginSettings": "{{name}} 设置",
     "editPage": "编辑页面 #{{id}}",
     "newPage": "新建页面"
   },

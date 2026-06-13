@@ -15,6 +15,10 @@ export interface PluginListItem {
   installed: boolean;
   active: boolean;
   loadError?: string;
+  config?: Record<string, unknown>;
+  settings?: {
+    schema?: Record<string, unknown>;
+  };
   server?: {
     module: string;
     hooks?: { subscribe?: string[]; provide?: string[] };
@@ -89,5 +93,12 @@ export function deactivatePlugin(id: string) {
 export function uninstallPlugin(id: string) {
   return pluginFetch<SitePluginState>(`/extension/plugins/${encodeURIComponent(id)}`, {
     method: "DELETE",
+  });
+}
+
+export function updatePluginConfig(id: string, config: Record<string, unknown>) {
+  return pluginFetch<SitePluginState>(`/extension/plugins/${encodeURIComponent(id)}/config`, {
+    method: "PUT",
+    body: JSON.stringify({ config }),
   });
 }

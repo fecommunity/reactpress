@@ -24,6 +24,7 @@ const {
   resolveThemeDirectory,
 } = require('./theme-runtime');
 const { shouldBuildToolkit } = require('./toolkit-build');
+const { buildLocalPlugins } = require('./plugin-build');
 const { startThemeSiteWithWatch, stopThemeSite } = require('./theme-dev');
 const { scheduleBackgroundThemeBuilds } = require('./theme-prod');
 const {
@@ -98,9 +99,15 @@ async function buildToolkit(projectRoot) {
   if (!hasToolkit(projectRoot)) return;
   if (!shouldBuildToolkit(projectRoot)) {
     logDevDetail('dev.toolkitUpToDate');
-    return;
+  } else {
+    await runBuild('toolkit', projectRoot);
   }
-  await runBuild('toolkit', projectRoot);
+  try {
+    buildLocalPlugins(projectRoot);
+  } catch (err) {
+    console.error(`[reactpress] ${err.message || err}`);
+    throw err;
+  }
 }
 
 async function spawnApi(projectRoot) {

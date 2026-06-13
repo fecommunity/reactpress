@@ -15,6 +15,7 @@ const FORBIDDEN_SCRIPTS = new Set(['build']);
 /** @type {Record<string, { script: string, labelKey: string }[]>} */
 const BUILD_STEPS = {
   toolkit: [{ script: 'build:toolkit', labelKey: 'build.label.toolkit' }],
+  plugins: [{ script: 'build:plugins', labelKey: 'build.label.plugins' }],
   server: [{ script: 'build:server', labelKey: 'build.label.server' }],
   web: [{ script: 'build:web', labelKey: 'build.label.web' }],
   theme: [{ script: 'build:theme', labelKey: 'build.label.theme' }],
@@ -30,6 +31,7 @@ function getBuildSteps(target, projectRoot) {
 
   const steps = [
     { script: 'build:toolkit', labelKey: 'build.label.toolkit' },
+    { script: 'build:plugins', labelKey: 'build.label.plugins' },
     { script: 'build:server', labelKey: 'build.label.server' },
   ];
   if (hasWeb(projectRoot)) {
@@ -70,6 +72,17 @@ function resolveBuildInvocation(script, projectRoot) {
     const serverDir = path.join(root, 'server');
     if (fs.existsSync(path.join(serverDir, 'package.json'))) {
       return { command: 'pnpm', args: ['run', 'build'], cwd: serverDir };
+    }
+  }
+
+  if (script === 'build:plugins') {
+    const pluginsDir = path.join(root, 'plugins');
+    if (fs.existsSync(path.join(pluginsDir, 'package.json'))) {
+      return { command: 'pnpm', args: ['run', 'build'], cwd: pluginsDir };
+    }
+    const rootScripts = readPackageScripts(path.join(root, 'package.json'));
+    if (rootScripts['build:plugins']) {
+      return { command: 'pnpm', args: ['run', 'build:plugins'], cwd: root };
     }
   }
 

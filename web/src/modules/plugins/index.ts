@@ -13,5 +13,6 @@ export const pluginsModule: AdminModule = {
       sort: 40,
     });
     routes.registerRoute({ path: "/plugins", permission: "extension:manage" });
+    routes.registerRoute({ path: "/plugins/$id/settings", permission: "extension:manage" });
   },
 };
