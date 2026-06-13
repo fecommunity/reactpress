@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 const PLUGIN_RUNTIME_REL = path.join('.reactpress', 'plugins');
-const PLUGIN_ID_RE = /^[a-z0-9][a-z0-9-]*$/i;
+const PLUGIN_ID_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const COPY_SKIP_NAMES = new Set([
   'node_modules',
   '.git',
@@ -50,7 +50,7 @@ function copyDir(src, dest) {
     const from = path.join(src, entry.name);
     const to = path.join(dest, entry.name);
     if (entry.isSymbolicLink()) {
-      fs.symlinkSync(fs.readlinkSync(from), to);
+      continue;
     } else if (entry.isDirectory()) {
       copyDir(from, to);
     } else if (entry.isFile()) {

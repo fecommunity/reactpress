@@ -1,4 +1,5 @@
 import type { PluginManifest } from '@fecommunity/reactpress-toolkit/plugin/extension';
+import { isValidPluginId } from '@fecommunity/reactpress-toolkit/plugin/extension';
 import type { PluginContext } from '@fecommunity/reactpress-toolkit/plugin/server';
 import { Injectable, Logger } from '@nestjs/common';
 import * as fs from 'fs';
@@ -18,11 +19,22 @@ export class PluginLoaderService {
   async loadActivePlugins(): Promise<void> {
     const state = await this.pluginService.getPluginState();
     for (const pluginId of state.activePlugins) {
+      if (!isValidPluginId(pluginId)) {
+        this.logger.warn(`Skipping active plugin with invalid id: ${pluginId}`);
+        continue;
+      }
       await this.loadPlugin(pluginId);
     }
   }
 
   async loadPlugin(pluginId: string): Promise<void> {
+    if (!isValidPluginId(pluginId)) {
+      this.logger.warn(`Refusing to load plugin with invalid id: ${pluginId}`);
+      return;
+    }
+
+    await this.unloadPlugin(pluginId);
+
     const manifest = this.pluginService.readRuntimeManifest(pluginId);
     if (!manifest?.server?.module) {
       return;
@@ -58,6 +70,7 @@ export class PluginLoaderService {
       await this.pluginService.clearLoadError(pluginId);
       this.logger.log(`Loaded plugin "${pluginId}" v${manifest.version}`);
     } catch (err) {
+      await this.unloadPlugin(pluginId);
       const message = err instanceof Error ? err.message : String(err);
       await this.pluginService.recordLoadError(pluginId, message);
       this.logger.error(`Failed to load plugin "${pluginId}": ${message}`);

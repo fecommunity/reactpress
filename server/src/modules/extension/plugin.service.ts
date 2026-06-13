@@ -9,6 +9,8 @@ import {
   isValidPluginId,
   mergePluginStateIntoGlobalSetting,
   parsePluginManifest,
+  resolvePluginServerModulePath,
+  validatePluginSettings,
 } from '@fecommunity/reactpress-toolkit/plugin/extension';
 import type { PluginContext } from '@fecommunity/reactpress-toolkit/plugin/server';
 import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
@@ -116,9 +118,9 @@ export class PluginService {
   }
 
   resolveServerModulePath(pluginId: string, moduleRel: string): string | null {
-    const rel = moduleRel.replace(/^\.\//, '');
-    const abs = path.join(this.runtimeDir(), pluginId, rel);
-    return abs;
+    if (!isValidPluginId(pluginId)) return null;
+    const pluginRoot = path.join(this.runtimeDir(), pluginId);
+    return resolvePluginServerModulePath(pluginRoot, moduleRel);
   }
 
   private listLocalPlugins(): PluginManifest[] {
@@ -324,6 +326,13 @@ export class PluginService {
     if (!state.installedPlugins.includes(id)) {
       throw new NotFoundException(`Plugin "${id}" is not installed`);
     }
+
+    const manifest = this.readRuntimeManifest(id);
+    const validation = validatePluginSettings(manifest?.settings?.schema, config);
+    if (!validation.valid) {
+      throw new BadRequestException(validation.message ?? 'Invalid plugin configuration');
+    }
+
     const entries = { ...state.entries };
     const current = entries[id] ?? { version: '0.0.0', source: 'local' as const };
     entries[id] = { ...current, config };
@@ -369,6 +378,9 @@ export class PluginService {
   ): void {
     const required = manifest.requiresPlugins ?? [];
     for (const dep of required) {
+      if (!isValidPluginId(dep)) {
+        throw new BadRequestException(`Plugin "${id}" declares invalid dependency "${dep}"`);
+      }
       if (!state.activePlugins.includes(dep) && dep !== id) {
         throw new BadRequestException(`Plugin "${id}" requires active plugin "${dep}"`);
       }
@@ -399,8 +411,8 @@ export class PluginService {
       const from = path.join(src, entry.name);
       const to = path.join(dest, entry.name);
       if (entry.isSymbolicLink()) {
-        const link = fs.readlinkSync(from);
-        fs.symlinkSync(link, to);
+        // Do not recreate symlinks — avoids copying links that escape the plugin tree.
+        continue;
       } else if (entry.isDirectory()) {
         this.copyDir(from, to);
       } else if (entry.isFile()) {

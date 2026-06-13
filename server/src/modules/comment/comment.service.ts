@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { getHookReject, stripHookMeta } from '@fecommunity/reactpress-toolkit/plugin/server';
+import { getHookReject, sanitizeHookRejectStatusCode, stripHookMeta } from '@fecommunity/reactpress-toolkit/plugin/server';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -50,7 +50,7 @@ export class CommentService {
     if (reject) {
       throw new HttpException(
         reject.message,
-        reject.statusCode ?? HttpStatus.BAD_REQUEST,
+        sanitizeHookRejectStatusCode(reject.statusCode),
       );
     }
     const payload = stripHookMeta(filtered as Record<string, unknown>) as Partial<Comment> & {

@@ -1,5 +1,7 @@
 /** WordPress-style plugin manifest and site plugin state (shared by server / web). */
 
+import { isSafePluginModuleRel } from './security';
+
 export interface PluginServerManifest {
   module: string;
   hooks?: {
@@ -94,36 +96,40 @@ export function parsePluginManifest(raw: unknown): PluginManifest | null {
   const serverRaw = o.server;
   const server =
     serverRaw && typeof serverRaw === 'object'
-      ? {
-          module:
-            typeof (serverRaw as Record<string, unknown>).module === 'string'
-              ? ((serverRaw as Record<string, unknown>).module as string)
-              : '',
-          hooks:
-            (serverRaw as Record<string, unknown>).hooks &&
-            typeof (serverRaw as Record<string, unknown>).hooks === 'object'
-              ? {
-                  subscribe: Array.isArray(
-                    ((serverRaw as Record<string, unknown>).hooks as Record<string, unknown>)
-                      .subscribe,
-                  )
-                    ? (
-                        ((serverRaw as Record<string, unknown>).hooks as Record<string, unknown>)
-                          .subscribe as unknown[]
-                      ).filter((h): h is string => typeof h === 'string')
-                    : undefined,
-                  provide: Array.isArray(
-                    ((serverRaw as Record<string, unknown>).hooks as Record<string, unknown>)
-                      .provide,
-                  )
-                    ? (
-                        ((serverRaw as Record<string, unknown>).hooks as Record<string, unknown>)
-                          .provide as unknown[]
-                      ).filter((h): h is string => typeof h === 'string')
-                    : undefined,
-                }
-              : undefined,
-        }
+      ? (() => {
+          const moduleRaw = (serverRaw as Record<string, unknown>).module;
+          const modulePath = typeof moduleRaw === 'string' ? moduleRaw.trim() : '';
+          if (!modulePath || !isSafePluginModuleRel(modulePath)) {
+            return undefined;
+          }
+          return {
+            module: modulePath,
+            hooks:
+              (serverRaw as Record<string, unknown>).hooks &&
+              typeof (serverRaw as Record<string, unknown>).hooks === 'object'
+                ? {
+                    subscribe: Array.isArray(
+                      ((serverRaw as Record<string, unknown>).hooks as Record<string, unknown>)
+                        .subscribe,
+                    )
+                      ? (
+                          ((serverRaw as Record<string, unknown>).hooks as Record<string, unknown>)
+                            .subscribe as unknown[]
+                        ).filter((h): h is string => typeof h === 'string')
+                      : undefined,
+                    provide: Array.isArray(
+                      ((serverRaw as Record<string, unknown>).hooks as Record<string, unknown>)
+                        .provide,
+                    )
+                      ? (
+                          ((serverRaw as Record<string, unknown>).hooks as Record<string, unknown>)
+                            .provide as unknown[]
+                        ).filter((h): h is string => typeof h === 'string')
+                      : undefined,
+                  }
+                : undefined,
+          };
+        })()
       : undefined;
 
   const adminRaw = o.admin;
@@ -188,10 +194,14 @@ export function getPluginStateFromGlobalSetting(raw: unknown): SitePluginState {
 
   return {
     installedPlugins: Array.isArray(plugins.installedPlugins)
-      ? plugins.installedPlugins.filter((id): id is string => typeof id === 'string')
+      ? plugins.installedPlugins.filter(
+          (id): id is string => typeof id === 'string' && isValidPluginId(id),
+        )
       : [],
     activePlugins: Array.isArray(plugins.activePlugins)
-      ? plugins.activePlugins.filter((id): id is string => typeof id === 'string')
+      ? plugins.activePlugins.filter(
+          (id): id is string => typeof id === 'string' && isValidPluginId(id),
+        )
       : [],
     entries:
       plugins.entries && typeof plugins.entries === 'object'

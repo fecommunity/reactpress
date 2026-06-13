@@ -57,7 +57,7 @@ export class PluginController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   async activate(@Param('id') id: string) {
     const state = await this.pluginService.activatePlugin(id);
-    await this.pluginLoader.loadPlugin(id);
+    await this.pluginLoader.reloadPlugin(id);
     return state;
   }
 

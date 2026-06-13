@@ -23,6 +23,16 @@ export function getHookReject(value: unknown): HookRejectMeta | null {
   return reject as HookRejectMeta;
 }
 
+export function sanitizeHookRejectStatusCode(statusCode?: number): number {
+  if (typeof statusCode !== 'number' || !Number.isInteger(statusCode)) {
+    return 400;
+  }
+  if (statusCode < 400 || statusCode > 599) {
+    return 400;
+  }
+  return statusCode;
+}
+
 export function stripHookMeta<T extends Record<string, unknown>>(value: T): T {
   if (!(HOOK_REJECT_KEY in value)) return value;
   const next = { ...value };

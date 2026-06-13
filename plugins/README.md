@@ -259,16 +259,21 @@ reactpress plugin install hello-world
 
 ## 权限与安全
 
-- 安装/启停需 `extension:manage`（admin）。
-- manifest `permissions` 声明插件需要的 Admin 能力。
-- 自定义权限命名：`plugin:{id}:{action}`。
+- 安装/启停/改配置需 **admin JWT** + `extension:manage`（Web 路由层）。
+- **已启用插件 = 受信任代码**：在 Node 进程内 `require()` 执行，与 WordPress 插件模型相同；仅 admin 可安装/启用。
+- **`server.module` 路径约束**：仅允许插件目录内的相对路径（禁止 `..`、绝对路径），且扩展名限 `.js`/`.cjs`/`.mjs`。
+- **配置写入**：服务端按 manifest `settings.schema` 做 JSON Schema 校验（Ajv），拒绝 `__proto__` 等危险键。
+- **物化复制**：生产环境复制插件文件时跳过 symlink，避免链出插件目录。
+- **插件 id**：全局 kebab-case 校验；`globalSetting.plugins` 中的非法 id 会被忽略。
 
-| capability | 含义 | 默认 |
+| capability | 含义 | 运行时 enforcement |
 | :--- | :--- | :--- |
-| `headless` | 仅 Server，无 Admin UI | — |
-| `network` | 出站 HTTP | `false` |
-| `filesystem` | 读写项目外路径 | `false` |
-| `database` | 注册 entity（二期） | `false` |
+| `headless` | 仅 Server，无 Admin UI | 文档约定 |
+| `network` | 出站 HTTP | 二期 |
+| `filesystem` | 读写项目外路径 | 二期 |
+| `database` | 注册 entity | 二期 |
+
+manifest `permissions[]` 为 Admin UI 能力声明，Server API 侧目前以 **admin 角色** 为边界。
 
 ## 典型场景
 
