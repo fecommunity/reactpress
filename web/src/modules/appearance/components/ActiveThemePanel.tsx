@@ -5,7 +5,9 @@ import { useTranslation } from "react-i18next";
 import { useThemeListItemMeta } from "@/hooks/useThemeListItemMeta";
 import type { ThemeListItem } from "@/hooks/useThemes";
 import { ThemeCoverImage } from "@/modules/appearance/components/ThemeCoverImage";
+import { ThemeOfficialBadge } from "@/modules/appearance/components/ThemeOfficialBadge";
 import styles from "@/modules/appearance/components/themes-page.module.css";
+import { isOfficialTheme } from "@/modules/appearance/utils/isOfficialTheme";
 
 type Props = {
   theme: ThemeListItem;
@@ -15,6 +17,7 @@ export function ActiveThemePanel({ theme }: Props) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { description, tags } = useThemeListItemMeta(theme);
+  const official = isOfficialTheme(theme);
 
   return (
     <section className={styles.activePanel} data-testid="active-theme-panel">
@@ -25,6 +28,7 @@ export function ActiveThemePanel({ theme }: Props) {
           className={styles.activeCover}
           fill
         />
+        {official ? <ThemeOfficialBadge /> : null}
       </div>
       <div className={styles.activeMeta}>
         <span className={styles.activeBadge}>{t("appearance.activeTheme")}</span>

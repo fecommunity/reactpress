@@ -727,6 +727,7 @@
     "installNpmSpecPlaceholder": "@fecommunity/reactpress-theme-starter@1.0.0-beta.0",
     "officialThemesTitle": "官方主题",
     "officialThemesDesc": "推荐用于访客站的主题，一键安装即可使用。",
+    "officialThemeBadge": "官方",
     "installNpmSubmit": "安装",
     "refreshCatalog": "刷新目录",
     "browseThemes": "浏览更多主题",

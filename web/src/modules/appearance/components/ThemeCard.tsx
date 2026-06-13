@@ -4,7 +4,9 @@ import { useTranslation } from "react-i18next";
 
 import type { ThemeListItem } from "@/hooks/useThemes";
 import { ThemeCoverImage } from "@/modules/appearance/components/ThemeCoverImage";
+import { ThemeOfficialBadge } from "@/modules/appearance/components/ThemeOfficialBadge";
 import styles from "@/modules/appearance/components/themes-page.module.css";
+import { isOfficialTheme } from "@/modules/appearance/utils/isOfficialTheme";
 
 type Props = {
   theme: ThemeListItem;
@@ -25,6 +27,7 @@ export function ThemeCard({
 }: Props) {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const official = isOfficialTheme(theme);
 
   return (
     <article
@@ -33,6 +36,7 @@ export function ThemeCard({
     >
       <div className={styles.cardThumb}>
         <ThemeCoverImage coverUrl={theme.coverUrl} name={theme.name} />
+        {official ? <ThemeOfficialBadge /> : null}
         <div className={styles.cardOverlay}>
           <Button
             type="primary"

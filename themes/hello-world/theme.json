@@ -5,6 +5,7 @@
   "version": "1.0.0",
   "description": "Hello Elementor 风格的入门主题，含文章、分类、标签与搜索等基础模板。",
   "author": "ReactPress",
+  "cover": "cover.svg",
   "tags": ["入门", "博客", "Hello"],
   "requires": ">=3.0.0",
   "supports": { "darkMode": true, "menus": ["primary"] },

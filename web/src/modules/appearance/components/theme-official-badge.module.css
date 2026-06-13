@@ -1,0 +1,52 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 11px 5px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.06em;
+  color: #135e96;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.96) 0%,
+    rgba(236, 245, 255, 0.94) 55%,
+    rgba(224, 240, 255, 0.92) 100%
+  );
+  border: 1px solid rgba(34, 113, 177, 0.28);
+  border-radius: 999px;
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.06),
+    0 4px 14px rgba(34, 113, 177, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+  pointer-events: none;
+  user-select: none;
+}
+
+.icon {
+  flex-shrink: 0;
+  color: #2271b1;
+}
+
+.onCover {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 3;
+}
+
+:root[data-theme="dark"] .badge {
+  color: #dbeafe;
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.92) 0%, rgba(30, 58, 95, 0.88) 100%);
+  border-color: rgba(96, 165, 250, 0.35);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.24),
+    0 4px 14px rgba(37, 99, 235, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+:root[data-theme="dark"] .icon {
+  color: #60a5fa;
+}

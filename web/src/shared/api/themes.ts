@@ -41,6 +41,8 @@ export interface ThemeListItem {
   source: "local" | "npm" | "installed";
   installed: boolean;
   active: boolean;
+  /** Shipped with ReactPress registry or featured npm catalog entry */
+  official?: boolean;
   coverUrl?: string;
   npm?: ThemeNpmLockMeta;
   catalog?: ThemeCatalogMeta;

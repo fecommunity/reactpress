@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="750" viewBox="0 0 1200 750" role="img" aria-label="Hello World theme cover">
+  <defs>
+    <linearGradient id="hw-bg" x1="0" y1="0" x2="1200" y2="750" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#fcfcfc"/>
+      <stop offset="100%" stop-color="#f4f4f5"/>
+    </linearGradient>
+    <filter id="hw-shadow" x="-8%" y="-8%" width="116%" height="116%">
+      <feDropShadow dx="0" dy="8" stdDeviation="14" flood-color="#18181b" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="750" fill="url(#hw-bg)"/>
+
+  <text x="600" y="72" text-anchor="middle" fill="#a1a1aa" font-family="system-ui,-apple-system,sans-serif" font-size="11" font-weight="500" letter-spacing="0.12em">REACTPRESS</text>
+
+  <g transform="translate(180 108)" filter="url(#hw-shadow)">
+    <rect width="840" height="492" rx="14" fill="#ffffff" stroke="#e4e4e7" stroke-width="1"/>
+    <path d="M0 14C0 6.268 6.268 0 14 0h812c7.732 0 14 6.268 14 14v40H0V14z" fill="#fafafa"/>
+    <circle cx="36" cy="20" r="5.5" fill="#d4d4d8"/>
+    <circle cx="56" cy="20" r="5.5" fill="#d4d4d8"/>
+    <circle cx="76" cy="20" r="5.5" fill="#d4d4d8"/>
+    <rect x="128" y="12" width="400" height="14" rx="7" fill="#ececef"/>
+
+    <text x="40" y="94" fill="#3f3f46" font-family="Georgia,'Times New Roman',serif" font-size="26" font-weight="600">Hello World</text>
+    <rect x="40" y="106" width="96" height="2" rx="1" fill="#d4d4d8"/>
+    <rect x="40" y="122" width="200" height="8" rx="4" fill="#f4f4f5"/>
+
+    <rect x="40" y="152" width="500" height="80" rx="8" fill="#f4f4f5" stroke="#ececef" stroke-width="1"/>
+    <rect x="56" y="172" width="160" height="10" rx="5" fill="#e4e4e7"/>
+    <rect x="56" y="190" width="240" height="7" rx="3.5" fill="#ececef"/>
+
+    <rect x="40" y="256" width="320" height="8" rx="4" fill="#e4e4e7"/>
+    <rect x="40" y="274" width="400" height="7" rx="3.5" fill="#ececef"/>
+    <rect x="40" y="290" width="360" height="7" rx="3.5" fill="#f4f4f5"/>
+    <rect x="40" y="306" width="280" height="7" rx="3.5" fill="#f4f4f5"/>
+
+    <rect x="40" y="336" width="500" height="1" fill="#ececef"/>
+    <rect x="40" y="356" width="260" height="8" rx="4" fill="#e4e4e7"/>
+    <rect x="40" y="374" width="380" height="7" rx="3.5" fill="#ececef"/>
+    <rect x="40" y="390" width="320" height="7" rx="3.5" fill="#f4f4f5"/>
+
+    <rect x="580" y="152" width="220" height="252" rx="10" fill="#fafafa" stroke="#ececef" stroke-width="1"/>
+    <text x="600" y="182" fill="#71717a" font-family="system-ui,-apple-system,sans-serif" font-size="12" font-weight="500">Sidebar</text>
+    <rect x="600" y="198" width="160" height="7" rx="3.5" fill="#e4e4e7"/>
+    <rect x="600" y="216" width="120" height="7" rx="3.5" fill="#ececef"/>
+    <rect x="600" y="234" width="140" height="7" rx="3.5" fill="#ececef"/>
+    <rect x="600" y="268" width="160" height="7" rx="3.5" fill="#e4e4e7"/>
+    <rect x="600" y="286" width="100" height="7" rx="3.5" fill="#ececef"/>
+    <rect x="600" y="304" width="130" height="7" rx="3.5" fill="#ececef"/>
+  </g>
+
+  <text x="600" y="668" text-anchor="middle" fill="#52525b" font-family="system-ui,-apple-system,sans-serif" font-size="26" font-weight="600">Hello World</text>
+  <text x="600" y="698" text-anchor="middle" fill="#a1a1aa" font-family="system-ui,-apple-system,sans-serif" font-size="13">Starter theme - Hello Elementor style</text>
+</svg>

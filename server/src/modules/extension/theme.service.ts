@@ -53,6 +53,8 @@ export interface ThemeListItem extends ThemeManifest {
   source: 'local' | 'npm' | 'installed';
   installed: boolean;
   active: boolean;
+  /** Shipped with ReactPress registry or featured npm catalog entry */
+  official?: boolean;
   coverUrl?: string;
   npm?: ThemeNpmLockMeta;
   catalog?: Pick<ThemeCatalogEntry, 'dependency' | 'npm' | 'featured' | 'themeUri' | 'previewUrl'>;
@@ -313,6 +315,37 @@ export class ThemeService {
     return manifests;
   }
 
+  private isRegistryLocalTheme(id: string): boolean {
+    const { bundled: local } = readThemesPackageMeta(projectRoot());
+    return local.includes(id);
+  }
+
+  private hasOfficialTag(tags?: string[]): boolean {
+    return (tags ?? []).some((tag) => /^(official|官方)$/i.test(String(tag).trim()));
+  }
+
+  private resolveThemeOfficial(
+    manifest: ThemeManifest,
+    catalog?: ThemeListItem['catalog'],
+  ): boolean {
+    if (this.isRegistryLocalTheme(manifest.id)) return true;
+    if (catalog?.featured === true) return true;
+    if (this.hasOfficialTag(manifest.tags)) return true;
+    const catalogEntry = this.findCatalogEntry(manifest.id);
+    if (catalogEntry?.featured === true) return true;
+    return this.hasOfficialTag(catalogEntry?.tags);
+  }
+
+  private catalogMetaFromEntry(entry: ThemeCatalogEntry): ThemeListItem['catalog'] {
+    return {
+      dependency: entry.dependency,
+      npm: entry.npm,
+      featured: entry.featured,
+      themeUri: entry.themeUri,
+      previewUrl: entry.previewUrl,
+    };
+  }
+
   async listThemes(): Promise<ThemeListItem[]> {
     const state = await this.getThemeState();
     const installedSet = new Set(state.installedThemes);
@@ -332,6 +365,7 @@ export class ThemeService {
         source,
         installed,
         active: state.activeTheme === merged.id,
+        official: this.resolveThemeOfficial(merged, catalog),
         coverUrl: `/api/extension/themes/${merged.id}/cover`,
         npm,
         catalog,
@@ -343,7 +377,17 @@ export class ThemeService {
     }
     for (const m of this.listDirThemes(this.runtimeDir(), 'installed')) {
       const npm = npmLock[m.id];
-      add(m, 'installed', npm, npm ? { npm: npm.spec } : undefined);
+      const catalogEntry = this.findCatalogEntry(m.id);
+      add(
+        m,
+        'installed',
+        npm,
+        catalogEntry
+          ? this.catalogMetaFromEntry(catalogEntry)
+          : npm
+            ? { npm: npm.spec }
+            : undefined,
+      );
     }
 
     for (const entry of this.readThemeCatalogFile()) {

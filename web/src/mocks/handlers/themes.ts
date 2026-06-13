@@ -27,6 +27,7 @@ const MOCK_THEMES = [
     source: "local" as const,
     installed: true,
     active: true,
+    official: true,
     coverUrl: "/api/extension/themes/hello-world/cover",
     appearance: {
       sections: [
@@ -68,6 +69,7 @@ const MOCK_CATALOG_THEME = {
   source: "npm" as const,
   installed: false,
   active: false,
+  official: true,
   coverUrl: "/api/extension/themes/reactpress-theme-starter/cover",
   catalog: {
     npm: "@fecommunity/reactpress-theme-starter@1.0.0-beta.0",
