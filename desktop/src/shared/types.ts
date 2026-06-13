@@ -28,4 +28,6 @@ export type IpcChannels =
   | "config:setWindowBounds"
   | "dialog:save"
   | "shell:openExternal"
-  | "app:getVersion";
+  | "app:getVersion"
+  | "app:getSystemLogPath"
+  | "app:openSystemLogDirectory";

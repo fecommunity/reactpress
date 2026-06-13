@@ -8,7 +8,7 @@ import { waitForVisitorSite } from "@/shared/theme/waitForVisitorSite";
 export type ThemePreviewSessionStatus = "idle" | "switching" | "ready";
 
 /** Debounce ending preview so React Strict Mode remount does not delete preview-theme.json twice. */
-const PREVIEW_SESSION_END_MS = 300;
+const PREVIEW_SESSION_END_MS = 400;
 
 /** First preview build can take several minutes (npm deps + next build). */
 const PREVIEW_READY_MAX_MS = 180_000;
@@ -17,6 +17,8 @@ const PREVIEW_READY_MIN_MS = 100;
 
 let previewSessionRefCount = 0;
 let previewSessionEndTimer: ReturnType<typeof setTimeout> | null = null;
+/** Monotonic id — stale begin/end pairs are ignored after rapid theme switches. */
+let previewSessionGeneration = 0;
 
 function retainPreviewSession(): void {
   if (previewSessionEndTimer) {
@@ -26,13 +28,13 @@ function retainPreviewSession(): void {
   previewSessionRefCount += 1;
 }
 
-function releasePreviewSession(): void {
+function releasePreviewSession(generation: number): void {
   previewSessionRefCount = Math.max(0, previewSessionRefCount - 1);
   if (previewSessionRefCount > 0) return;
   if (previewSessionEndTimer) clearTimeout(previewSessionEndTimer);
   previewSessionEndTimer = setTimeout(() => {
     previewSessionEndTimer = null;
-    if (previewSessionRefCount === 0) {
+    if (previewSessionRefCount === 0 && previewSessionGeneration === generation) {
       void endThemePreviewSession().catch(() => {
         /* ignore cleanup errors */
       });
@@ -68,6 +70,7 @@ export function useThemePreviewSession(
       return;
     }
 
+    const generation = ++previewSessionGeneration;
     retainPreviewSession();
 
     let cancelled = false;
@@ -81,21 +84,22 @@ export function useThemePreviewSession(
 
       try {
         const result = await beginThemePreviewSession(themeId);
+        if (cancelled || generation !== previewSessionGeneration) return;
+
         sessionPreviewUrl = result.previewSiteUrl;
         if (typeof result.activeTheme === "string" && result.activeTheme) {
           sessionActiveTheme = result.activeTheme;
         }
-        if (!cancelled) {
-          setPreviewSiteUrl(sessionPreviewUrl);
-          setResolvedActiveThemeId(sessionActiveTheme);
-          void queryClient.invalidateQueries({ queryKey: ["themes"] });
-          void queryClient.invalidateQueries({ queryKey: ["site-settings"] });
-        }
+        setPreviewSiteUrl(sessionPreviewUrl);
+        setResolvedActiveThemeId(sessionActiveTheme);
+        void queryClient.invalidateQueries({ queryKey: ["themes"] });
+        void queryClient.invalidateQueries({ queryKey: ["site-settings"] });
       } catch {
+        if (cancelled || generation !== previewSessionGeneration) return;
         /* still try live preview / stub fallback */
       }
 
-      if (cancelled) return;
+      if (cancelled || generation !== previewSessionGeneration) return;
 
       const effectiveActiveThemeId = sessionActiveTheme;
 
@@ -107,13 +111,12 @@ export function useThemePreviewSession(
       });
 
       if (!liveUrl) {
-        if (!cancelled) setStatus("ready");
+        setStatus("ready");
         return;
       }
 
-      // Active theme uses public origin; non-active themes boot on previewSiteUrl.
       if (!sessionPreviewUrl) {
-        if (!cancelled) setStatus("ready");
+        setStatus("ready");
         return;
       }
 
@@ -122,7 +125,9 @@ export function useThemePreviewSession(
         maxWaitMs: PREVIEW_READY_MAX_MS,
         intervalMs: PREVIEW_READY_POLL_MS,
       });
-      if (!cancelled) setStatus(ready ? "ready" : "switching");
+      if (!cancelled && generation === previewSessionGeneration) {
+        setStatus(ready ? "ready" : "switching");
+      }
     })();
 
     return () => {
@@ -130,7 +135,7 @@ export function useThemePreviewSession(
       setStatus("idle");
       setPreviewSiteUrl(undefined);
       setResolvedActiveThemeId(undefined);
-      releasePreviewSession();
+      releasePreviewSession(generation);
     };
   }, [enabled, themeId, queryClient]);
 

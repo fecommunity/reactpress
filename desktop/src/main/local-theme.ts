@@ -1,9 +1,15 @@
-import { spawn, type ChildProcess } from "node:child_process";
+import { type ChildProcess } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 
 import { DEFAULT_LOCAL_API_PORT } from "../shared/constants";
 import { getLocalApiBaseUrl } from "./local-server";
+import {
+  attachChildProcessLogging,
+  logError,
+  logInfo,
+  logWarn,
+} from "./system-log";
 
 const VISITOR_PORT = 3001;
 const PREVIEW_PORT = 3003;
@@ -64,6 +70,44 @@ type ThemeRuntimeModule = {
   readPreviewManifestSignature: (projectRoot: string) => string;
 };
 
+type ThemePreviewPoolModule = {
+  resolvePreviewThemeLaunchPlan: (themeDir: string, port: number) => { mode: string; cmd: string; args: string[] };
+  spawnThemeProcess: (
+    projectRoot: string,
+    options: {
+      themeDir: string;
+      themeId: string;
+      port: number;
+      serverApiUrl: string;
+      publicApiUrl: string;
+      launch: { mode: string; cmd: string; args: string[] };
+      role?: "visitor" | "preview";
+      extraEnv?: Record<string, string | undefined>;
+    },
+  ) => ChildProcess;
+  releasePreviewPort: (port: number) => Promise<boolean>;
+  withPreviewPortLock: <T>(fn: () => Promise<T>) => Promise<T>;
+};
+
+type ThemeProdModule = {
+  enqueueThemeBuild: (
+    projectRoot: string,
+    themeId: string,
+    options?: { logPrefix?: string; distDir?: string },
+  ) => Promise<{ themeId: string; themeDir: string; skippedBuild?: boolean }>;
+  PREVIEW_DIST_DIR: string;
+  ensureThemeDependenciesInstalled: (
+    projectRoot: string,
+    themeDir: string,
+    themeId: string,
+    logPrefix?: string,
+  ) => void;
+};
+
+type ThemePreviewFrameModule = {
+  ensurePreviewFrameAllowed: (dir: string) => boolean;
+};
+
 function loadThemeRuntime(monorepoRoot: string, siteRoot: string): ThemeRuntimeModule {
   process.env.REACTPRESS_DESKTOP_SITE_ROOT = siteRoot;
   process.env.REACTPRESS_MONOREPO_ROOT = monorepoRoot;
@@ -71,8 +115,27 @@ function loadThemeRuntime(monorepoRoot: string, siteRoot: string): ThemeRuntimeM
   return require(resolveCliLib(monorepoRoot, "theme-runtime.js")) as ThemeRuntimeModule;
 }
 
-function hasProductionBuild(themeDir: string): boolean {
-  const nextDir = path.join(themeDir, ".next");
+function loadThemePreviewPool(monorepoRoot: string): ThemePreviewPoolModule {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  return require(resolveCliLib(monorepoRoot, "theme-preview-pool.js")) as ThemePreviewPoolModule;
+}
+
+function loadThemeProd(monorepoRoot: string): ThemeProdModule {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  return require(resolveCliLib(monorepoRoot, "theme-prod.js")) as ThemeProdModule;
+}
+
+function loadThemePreviewFrame(monorepoRoot: string): ThemePreviewFrameModule | null {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    return require(resolveCliLib(monorepoRoot, "theme-preview-frame.js")) as ThemePreviewFrameModule;
+  } catch {
+    return null;
+  }
+}
+
+function hasProductionBuild(themeDir: string, distDir = ".next"): boolean {
+  const nextDir = path.join(themeDir, distDir);
   return (
     fs.existsSync(path.join(nextDir, "BUILD_ID")) &&
     fs.existsSync(path.join(nextDir, "server"))
@@ -91,7 +154,10 @@ function resolveThemeDirForRuntime(
   const bundled = path.join(monorepoRoot, "themes", themeId);
   if (fs.existsSync(bundled) && hasProductionBuild(bundled)) return bundled;
 
-  if (resolved && fs.existsSync(path.join(resolved, "server.js"))) return resolved;
+  const bundledRuntime = path.join(monorepoRoot, ".reactpress", "runtime", themeId);
+  if (fs.existsSync(bundledRuntime) && hasProductionBuild(bundledRuntime)) return bundledRuntime;
+
+  if (resolved && fs.existsSync(path.join(resolved, "package.json"))) return resolved;
   return resolved;
 }
 
@@ -113,49 +179,91 @@ function resolveThemeNodePath(themeDir: string, monorepoRoot: string): string {
   return existing.join(path.delimiter);
 }
 
-function spawnThemeProduction(options: {
+function ensureThemePreviewFrame(themeDir: string, monorepoRoot: string): void {
+  const frame = loadThemePreviewFrame(monorepoRoot);
+  if (!frame) return;
+  try {
+    frame.ensurePreviewFrameAllowed(themeDir);
+  } catch {
+    // optional patch for Next.js themes
+  }
+}
+
+async function spawnThemeServer(options: {
   themeDir: string;
+  themeId: string;
   port: number;
   siteRoot: string;
   apiPort: number;
   monorepoRoot: string;
-}): ChildProcess | null {
-  const serverJs = path.join(options.themeDir, "server.js");
-  if (!fs.existsSync(serverJs)) {
-    console.error("[ReactPress Desktop] Theme server.js missing:", options.themeDir);
+  role: "visitor" | "preview";
+}): Promise<ChildProcess | null> {
+  const pool = loadThemePreviewPool(options.monorepoRoot);
+  const prod = loadThemeProd(options.monorepoRoot);
+  const apiBase = getLocalApiBaseUrl(options.apiPort);
+
+  try {
+    prod.ensureThemeDependenciesInstalled(
+      options.siteRoot,
+      options.themeDir,
+      options.themeId,
+      "themePreview",
+    );
+    ensureThemePreviewFrame(options.themeDir, options.monorepoRoot);
+  } catch (err) {
+    logError(
+      "theme",
+      `setup failed for ${options.themeId}: ${err instanceof Error ? err.message : String(err)}`,
+    );
     return null;
   }
 
-  const apiBase = getLocalApiBaseUrl(options.apiPort);
-  const child = spawn(process.execPath, [serverJs], {
-    cwd: options.themeDir,
-    env: {
-      ...process.env,
+  const launch = pool.resolvePreviewThemeLaunchPlan(options.themeDir, options.port);
+
+  if (launch.mode === "production") {
+    const distDir = options.role === "preview" ? prod.PREVIEW_DIST_DIR : ".next";
+    if (!hasProductionBuild(options.themeDir, distDir)) {
+      try {
+        await prod.enqueueThemeBuild(options.siteRoot, options.themeId, {
+          logPrefix: "themePreview",
+          distDir: options.role === "preview" ? prod.PREVIEW_DIST_DIR : undefined,
+        });
+      } catch (err) {
+        logError(
+          "theme",
+          `build failed for ${options.themeId}: ${err instanceof Error ? err.message : String(err)}`,
+        );
+        return null;
+      }
+    }
+  }
+
+  const child = pool.spawnThemeProcess(options.siteRoot, {
+    themeDir: options.themeDir,
+    themeId: options.themeId,
+    port: options.port,
+    serverApiUrl: apiBase,
+    publicApiUrl: apiBase,
+    launch,
+    role: options.role,
+    extraEnv: {
       ...(isElectronHost() ? { ELECTRON_RUN_AS_NODE: "1" } : {}),
-      NODE_ENV: "production",
-      PORT: String(options.port),
-      CLIENT_PORT: String(options.port),
       REACTPRESS_ORIGINAL_CWD: options.siteRoot,
       REACTPRESS_THEME_DIR: options.themeDir,
-      REACTPRESS_API_URL: apiBase,
-      SERVER_API_URL: apiBase,
-      NEXT_PUBLIC_REACTPRESS_API_URL: apiBase,
-      REACTPRESS_SKIP_DEV_PORT_REDIRECT: "1",
       NODE_PATH: resolveThemeNodePath(options.themeDir, options.monorepoRoot),
     },
-    stdio: "pipe",
   });
 
-  child.stderr?.on("data", (chunk: Buffer) => {
-    const text = chunk.toString();
-    if (text.includes("Error") || text.includes("Failed") || text.includes("Cannot find")) {
-      console.error("[ReactPress Desktop Theme]", text.trim());
-    }
-  });
+  attachChildProcessLogging(child, `theme:${options.role}:${options.themeId}`);
 
-  child.on("exit", (code) => {
+  child.on("exit", (code, signal) => {
     if (code && code !== 0) {
-      console.error(`[ReactPress Desktop] Theme process exited with code ${code}`);
+      logError(
+        "theme",
+        `${options.themeId} on :${options.port} exited (code=${code}, signal=${signal ?? "none"})`,
+      );
+    } else {
+      logInfo("theme", `${options.themeId} on :${options.port} exited (code=${code ?? 0})`);
     }
   });
 
@@ -203,7 +311,7 @@ async function restartActiveTheme(options: {
     activeTheme,
   );
   if (!themeDir) {
-    console.error(`[ReactPress Desktop] Active theme not found: ${activeTheme}`);
+    logError("theme", `active theme not found: ${activeTheme}`);
     return;
   }
 
@@ -211,21 +319,23 @@ async function restartActiveTheme(options: {
   activeThemeProcess = null;
   runningActiveSignature = "";
 
-  activeThemeProcess = spawnThemeProduction({
+  activeThemeProcess = await spawnThemeServer({
     themeDir,
+    themeId: activeTheme,
     port: VISITOR_PORT,
     siteRoot: options.siteRoot,
     apiPort: options.apiPort,
     monorepoRoot: options.monorepoRoot,
+    role: "visitor",
   });
   if (!activeThemeProcess) return;
 
   runningActiveSignature = signature;
   const ready = await waitForThemePort(VISITOR_PORT);
   if (ready) {
-    console.log(`[ReactPress Desktop] Visitor site ready: http://localhost:${VISITOR_PORT}/ (${activeTheme})`);
+    logInfo("theme", `visitor site ready http://localhost:${VISITOR_PORT}/ (${activeTheme})`);
   } else {
-    console.warn(`[ReactPress Desktop] Visitor site slow or failed on :${VISITOR_PORT}`);
+    logWarn("theme", `visitor site slow or failed on :${VISITOR_PORT} (${activeTheme})`);
   }
 }
 
@@ -234,6 +344,7 @@ async function restartPreviewTheme(options: {
   apiPort: number;
   monorepoRoot: string;
 }): Promise<void> {
+  const pool = loadThemePreviewPool(options.monorepoRoot);
   const runtime = loadThemeRuntime(options.monorepoRoot, options.siteRoot);
   const signature = runtime.readPreviewManifestSignature(options.siteRoot);
 
@@ -272,26 +383,33 @@ async function restartPreviewTheme(options: {
   );
   if (!themeDir) return;
 
-  killThemeProcess(previewThemeProcess);
-  previewThemeProcess = null;
-  runningPreviewSignature = "";
+  await pool.withPreviewPortLock(async () => {
+    killThemeProcess(previewThemeProcess);
+    previewThemeProcess = null;
+    runningPreviewSignature = "";
 
-  previewThemeProcess = spawnThemeProduction({
-    themeDir,
-    port: PREVIEW_PORT,
-    siteRoot: options.siteRoot,
-    apiPort: options.apiPort,
-    monorepoRoot: options.monorepoRoot,
+    await pool.releasePreviewPort(PREVIEW_PORT);
+
+    previewThemeProcess = await spawnThemeServer({
+      themeDir,
+      themeId: previewThemeId,
+      port: PREVIEW_PORT,
+      siteRoot: options.siteRoot,
+      apiPort: options.apiPort,
+      monorepoRoot: options.monorepoRoot,
+      role: "preview",
+    });
+    if (!previewThemeProcess) return;
+
+    runningPreviewSignature = signature;
+    const ready = await waitForThemePort(PREVIEW_PORT);
+    if (ready) {
+      logInfo(
+        "theme",
+        `preview ready http://localhost:${PREVIEW_PORT}/ (${previewThemeId})`,
+      );
+    }
   });
-  if (!previewThemeProcess) return;
-
-  runningPreviewSignature = signature;
-  const ready = await waitForThemePort(PREVIEW_PORT);
-  if (ready) {
-    console.log(
-      `[ReactPress Desktop] Theme preview ready: http://localhost:${PREVIEW_PORT}/ (${previewThemeId})`,
-    );
-  }
 }
 
 function watchThemeManifests(
@@ -323,6 +441,8 @@ export async function startLocalThemeSite(options: {
   monorepoRoot?: string;
 }): Promise<void> {
   if (!isPackagedRuntime()) return;
+
+  logInfo("theme", `starting theme site watcher (siteRoot=${options.siteRoot})`);
 
   const apiPort = options.apiPort ?? DEFAULT_LOCAL_API_PORT;
   const monorepoRoot = resolveMonorepoRoot(options);

@@ -5,6 +5,7 @@ import { app, BrowserWindow, shell } from "electron";
 import { APP_DISPLAY_NAME, DEV_SERVER_URL, WINDOW_DEFAULTS } from "../shared/constants";
 import { browserWindowIcon } from "./app-icon";
 import { getWindowBounds, saveWindowBounds } from "./config";
+import { isDesktopDebugVerbose } from "./system-log";
 
 const isDev = !app.isPackaged || process.env.ELECTRON_IS_DEV === "1";
 
@@ -62,6 +63,9 @@ export function createMainWindow(): BrowserWindow {
   } else {
     // Hash routes — renderer uses createHashHistory() under file://
     void win.loadFile(rendererIndexPath(), { hash: "/login" });
+    if (isDesktopDebugVerbose()) {
+      win.webContents.openDevTools({ mode: "detach" });
+    }
   }
 
   return win;

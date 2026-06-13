@@ -101,6 +101,50 @@ async function stageHelloWorldRuntimeDeps() {
   return themeBundle;
 }
 
+async function stageThemeStarterRuntime(outDir) {
+  const runtimeSrc = path.join(root, ".reactpress", "runtime", "reactpress-theme-starter");
+  if (!fs.existsSync(runtimeSrc)) {
+    console.warn(
+      "[desktop] Skip theme-starter runtime — missing .reactpress/runtime/reactpress-theme-starter (run: pnpm --dir themes theme add reactpress-theme-starter)",
+    );
+    return;
+  }
+
+  const buildId = path.join(runtimeSrc, ".next", "BUILD_ID");
+  if (!fs.existsSync(buildId)) {
+    console.log("[desktop] Building reactpress-theme-starter for packaged visitor/preview…");
+    await runAsync("build theme-starter runtime", "pnpm", ["run", "build"], runtimeSrc);
+  }
+
+  const runtimeOut = path.join(outDir, ".reactpress", "runtime", "reactpress-theme-starter");
+  copyThemeTree(runtimeSrc, runtimeOut);
+
+  const srcNodeModules = path.join(runtimeSrc, "node_modules");
+  if (fs.existsSync(srcNodeModules)) {
+    copyInto(srcNodeModules, path.join(runtimeOut, "node_modules"));
+    const pruneStats = pruneBundleNodeModules(runtimeOut);
+    if (pruneStats.removed > 0) {
+      console.log(
+        `[desktop] Pruned ${pruneStats.removed} dev packages from theme-starter runtime (~${formatBytes(pruneStats.savedBytes)} saved)`,
+      );
+    }
+  } else {
+    console.warn("[desktop] theme-starter runtime has no node_modules — run theme install in dev first");
+  }
+
+  const runtimeMetaSrc = path.join(root, ".reactpress", "runtime", "tsconfig.base.json");
+  const runtimeMetaDst = path.join(outDir, ".reactpress", "runtime", "tsconfig.base.json");
+  if (fs.existsSync(runtimeMetaSrc)) {
+    copyInto(runtimeMetaSrc, runtimeMetaDst);
+  }
+
+  const lockSrc = path.join(root, ".reactpress", "themes.lock.json");
+  const lockDst = path.join(outDir, ".reactpress", "themes.lock.json");
+  if (fs.existsSync(lockSrc)) {
+    copyInto(lockSrc, lockDst);
+  }
+}
+
 export async function stageAppResources() {
   const serverBundle = path.join(desktopDir, ".server-bundle");
   const toolkitDist = path.join(root, "toolkit/dist");
@@ -160,6 +204,8 @@ export async function stageAppResources() {
   }
 
   rmrf(themeBundle);
+
+  await stageThemeStarterRuntime(outDir);
 
   const stagedMb = (dirSize(outDir) / (1024 * 1024)).toFixed(1);
   console.log(`[desktop] App resources ready: ${outDir} (~${stagedMb} MB)`);

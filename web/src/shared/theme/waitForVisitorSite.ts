@@ -12,6 +12,20 @@ function isCrossOriginSiteUrl(siteUrl: string): boolean {
   }
 }
 
+/** Cross-origin preview (:3003) — opaque fetch succeeds on any HTTP response. */
+async function probeCrossOriginPreview(siteUrl: string): Promise<boolean> {
+  try {
+    await fetch(siteUrl, {
+      method: "GET",
+      mode: "no-cors",
+      cache: "no-store",
+    });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 /** Poll visitor / preview dev until reachable (theme restart / compile). */
 export async function waitForVisitorSite(
   siteUrl: string,
@@ -28,6 +42,7 @@ export async function waitForVisitorSite(
   const started = Date.now();
   const crossOrigin = isCrossOriginSiteUrl(siteUrl);
   let attempt = 0;
+  let crossOriginHits = 0;
 
   await sleep(minWaitMs);
 
@@ -37,22 +52,24 @@ export async function waitForVisitorSite(
 
     try {
       if (crossOrigin) {
-        // Preview dev on :3003+ has no CORS headers — opaque probe avoids console noise.
-        await fetch(siteUrl, {
+        const hit = await probeCrossOriginPreview(siteUrl);
+        if (hit) {
+          crossOriginHits += 1;
+          // Require two consecutive probes so we don't treat a dying process as ready.
+          if (crossOriginHits >= 2) return true;
+        } else {
+          crossOriginHits = 0;
+        }
+      } else {
+        const res = await fetch(siteUrl, {
           method: "GET",
-          mode: "no-cors",
           cache: "no-store",
+          credentials: "same-origin",
         });
-        return true;
+        if (res.ok) return true;
       }
-
-      const res = await fetch(siteUrl, {
-        method: "GET",
-        cache: "no-store",
-        credentials: "same-origin",
-      });
-      if (res.ok) return true;
     } catch {
+      crossOriginHits = 0;
       /* theme dev still starting */
     }
     await sleep(intervalMs);

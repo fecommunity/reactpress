@@ -82,6 +82,13 @@ async function main() {
       if (!fs.existsSync(helloWorldDir)) return Promise.resolve();
       return runAsync("hello-world theme", "pnpm", ["run", "build"], helloWorldDir);
     },
+    () => {
+      const starterRuntime = path.join(root, ".reactpress", "runtime", "reactpress-theme-starter");
+      if (!fs.existsSync(starterRuntime)) return Promise.resolve();
+      const buildId = path.join(starterRuntime, ".next", "BUILD_ID");
+      if (fs.existsSync(buildId)) return Promise.resolve();
+      return runAsync("theme-starter runtime", "pnpm", ["run", "build"], starterRuntime);
+    },
   ]);
 
   await stageAppResources();

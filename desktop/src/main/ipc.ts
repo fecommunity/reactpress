@@ -14,6 +14,10 @@ import {
   startLocalServer,
 } from "./local-server";
 import { startLocalThemeSite } from "./local-theme";
+import {
+  getSystemLogDirectory,
+  getSystemLogFilePath,
+} from "./system-log";
 import type { ApiMode } from "../shared/types";
 
 export function registerIpcHandlers(): void {
@@ -97,4 +101,13 @@ export function registerIpcHandlers(): void {
   });
 
   ipcMain.handle("app:getVersion", () => app.getVersion());
+
+  ipcMain.handle("app:getSystemLogPath", () => getSystemLogFilePath() ?? "");
+
+  ipcMain.handle("app:openSystemLogDirectory", async () => {
+    const dir = getSystemLogDirectory();
+    if (!dir) return false;
+    const result = await shell.openPath(dir);
+    return result === "";
+  });
 }

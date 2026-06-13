@@ -4,6 +4,12 @@ import path from "node:path";
 
 import { DEFAULT_LOCAL_API_PORT } from "../shared/constants";
 import { ensureLocalSite } from "./local-site";
+import {
+  attachChildProcessLogging,
+  isDesktopDebugVerbose,
+  logError,
+  logInfo,
+} from "./system-log";
 
 let serverProcess: ChildProcess | null = null;
 let activePort = DEFAULT_LOCAL_API_PORT;
@@ -116,6 +122,7 @@ export async function startLocalServer(options: {
 
   // Dev: CLI may have already started the API in another process — reuse it.
   if (await isLocalApiHealthy(port)) {
+    logInfo("api", `reusing existing healthy API on :${port}`);
     activePort = port;
     activeSiteRoot = options.siteRoot;
     return { port, apiBaseUrl: getLocalApiBaseUrl(port) };
@@ -127,6 +134,9 @@ export async function startLocalServer(options: {
 
   const serverMain = resolveServerMain(monorepoRoot);
   const serverCwd = resolveServerCwd(serverMain);
+  const pipeChildLogs = isPackagedRuntime() || isDesktopDebugVerbose();
+
+  logInfo("api", `spawning local API on :${port} (siteRoot=${options.siteRoot})`);
 
   serverProcess = spawn(process.execPath, [serverMain], {
     cwd: serverCwd,
@@ -139,7 +149,7 @@ export async function startLocalServer(options: {
       NODE_ENV: "production",
       REACTPRESS_ORIGINAL_CWD: options.siteRoot,
       REACTPRESS_MONOREPO_ROOT: monorepoRoot,
-      REACTPRESS_LOCAL_API_QUIET: "1",
+      ...(isDesktopDebugVerbose() ? {} : { REACTPRESS_LOCAL_API_QUIET: "1" }),
       ...(isPackagedRuntime()
         ? {
             REACTPRESS_THEME_RUNTIME_SYMLINK: "1",
@@ -147,21 +157,18 @@ export async function startLocalServer(options: {
           }
         : {}),
     },
-    stdio: isPackagedRuntime() ? "pipe" : "inherit",
+    stdio: pipeChildLogs ? "pipe" : "inherit",
   });
 
-  if (isPackagedRuntime() && serverProcess.stderr) {
-    serverProcess.stderr.on("data", (chunk: Buffer) => {
-      const text = chunk.toString();
-      if (text.includes("Error") || text.includes("Failed")) {
-        console.error("[ReactPress Desktop API]", text.trim());
-      }
-    });
+  if (pipeChildLogs && serverProcess) {
+    attachChildProcessLogging(serverProcess, "api");
   }
 
-  serverProcess.on("exit", (code) => {
+  serverProcess.on("exit", (code, signal) => {
     if (code && code !== 0) {
-      console.error(`[ReactPress Desktop] Local API exited with code ${code}`);
+      logError("api", `process exited (code=${code}, signal=${signal ?? "none"})`);
+    } else {
+      logInfo("api", `process exited (code=${code ?? 0})`);
     }
     serverProcess = null;
   });

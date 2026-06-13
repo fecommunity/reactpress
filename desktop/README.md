@@ -60,6 +60,24 @@ pnpm build:desktop:dir
 
 体积优化说明见 [docs/size-optimization.md](./docs/size-optimization.md)。
 
+## 系统执行日志
+
+打包后默认将主进程、内嵌 API、主题子进程的输出写入日志文件（不再只过滤 `Error` 行）。
+
+| 项 | 路径 / 说明 |
+|----|-------------|
+| 日志目录 | `~/Library/Application Support/ReactPress/logs/`（macOS） |
+| 日志文件 | `system-YYYY-MM-DD.log`（按日切分，单文件超过 5MB 自动轮转） |
+| 内容 | 启动参数、API / 主题进程 stdout/stderr、未捕获异常 |
+
+**详细调试**（同时镜像到终端 / 打开 DevTools、API 完整 Nest 日志）：
+
+```bash
+REACTPRESS_DESKTOP_DEBUG=1 /path/to/ReactPress.app/Contents/MacOS/ReactPress
+```
+
+在 Admin 中可通过 `window.reactpressDesktop.getSystemLogPath()` 获取当前日志路径，`openSystemLogDirectory()` 在 Finder 中打开日志目录（需 Preload 已暴露）。
+
 ## 目录结构
 
 ```

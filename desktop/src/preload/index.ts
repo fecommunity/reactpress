@@ -12,5 +12,8 @@ contextBridge.exposeInMainWorld("reactpressDesktop", {
   showSaveDialog: (opts: { defaultPath?: string }) =>
     ipcRenderer.invoke("dialog:save", opts) as Promise<string | undefined>,
   openExternal: (url: string) => ipcRenderer.invoke("shell:openExternal", url) as Promise<void>,
+  getSystemLogPath: () => ipcRenderer.invoke("app:getSystemLogPath") as Promise<string>,
+  openSystemLogDirectory: () =>
+    ipcRenderer.invoke("app:openSystemLogDirectory") as Promise<boolean>,
   platform: process.platform,
 });

@@ -13,6 +13,12 @@ import {
 import { startLocalThemeSite, stopLocalThemeSite } from "./local-theme";
 import { createMainWindow, focusMainWindow } from "./window";
 import { applyAppIcon } from "./app-icon";
+import {
+  closeSystemLog,
+  initSystemLog,
+  logError,
+  logInfo,
+} from "./system-log";
 
 // macOS dev runs inside Electron.app — set name before ready for Dock hover label.
 app.setName(APP_DISPLAY_NAME);
@@ -65,12 +71,18 @@ if (!gotLock) {
   });
 
   app.whenReady().then(async () => {
+    initSystemLog(app.getPath("userData"));
     registerIpcHandlers();
     applyAppIcon();
     try {
+      logInfo("main", `apiMode=${getApiMode()}`);
       await ensureBackendReady();
+      logInfo("main", "backend ready");
     } catch (err) {
-      console.error("[ReactPress Desktop] Failed to start local API:", err);
+      logError(
+        "main",
+        `backend startup failed: ${err instanceof Error ? err.message : String(err)}`,
+      );
     }
     mainWindow = createMainWindow();
 
@@ -84,6 +96,7 @@ if (!gotLock) {
   app.on("before-quit", () => {
     stopLocalThemeSite();
     stopLocalServer();
+    closeSystemLog();
   });
 
   app.on("window-all-closed", () => {
