@@ -42,19 +42,70 @@ function seedBundledThemes(siteRoot: string, monorepoRoot?: string): void {
     fs.copyFileSync(sourcePackageJson, targetPackageJson);
   }
 
-  let meta: { reactpress?: { local?: string[] } } = {};
+  let meta: { reactpress?: { local?: string[]; npm?: string[] } } = {};
   try {
     meta = JSON.parse(fs.readFileSync(targetPackageJson, "utf8")) as typeof meta;
   } catch {
     return;
   }
 
+  const symlinkThemeDir = (sourceDir: string, targetDir: string): void => {
+    if (!fs.existsSync(sourceDir) || fs.existsSync(targetDir)) return;
+    fs.symlinkSync(sourceDir, targetDir, "dir");
+  };
+
   const localThemes = Array.isArray(meta.reactpress?.local) ? meta.reactpress.local : [];
   for (const themeId of localThemes) {
-    const sourceThemeDir = path.join(sourceThemesDir, themeId);
-    const targetThemeDir = path.join(targetThemesDir, themeId);
-    if (!fs.existsSync(sourceThemeDir) || fs.existsSync(targetThemeDir)) continue;
-    fs.symlinkSync(sourceThemeDir, targetThemeDir, "dir");
+    symlinkThemeDir(
+      path.join(sourceThemesDir, themeId),
+      path.join(targetThemesDir, themeId),
+    );
+  }
+
+  const npmAnchors = Array.isArray(meta.reactpress?.npm) ? meta.reactpress.npm : [];
+  for (const anchor of npmAnchors) {
+    if (typeof anchor !== "string" || !anchor.trim()) continue;
+    symlinkThemeDir(
+      path.join(sourceThemesDir, anchor.trim()),
+      path.join(targetThemesDir, anchor.trim()),
+    );
+  }
+}
+
+function seedRuntimeThemes(siteRoot: string, monorepoRoot?: string): void {
+  if (!monorepoRoot) return;
+
+  const sourceRuntime = path.join(monorepoRoot, ".reactpress", "runtime");
+  const targetRuntime = path.join(siteRoot, ".reactpress", "runtime");
+  if (!fs.existsSync(sourceRuntime)) return;
+
+  fs.mkdirSync(path.join(siteRoot, ".reactpress"), { recursive: true });
+
+  for (const entry of fs.readdirSync(sourceRuntime, { withFileTypes: true })) {
+    if (!entry.isDirectory() && !entry.isSymbolicLink()) continue;
+    const sourcePath = path.join(sourceRuntime, entry.name);
+    const targetPath = path.join(targetRuntime, entry.name);
+    if (fs.existsSync(targetPath)) continue;
+    try {
+      if (!fs.statSync(sourcePath).isDirectory()) continue;
+      fs.mkdirSync(targetRuntime, { recursive: true });
+      fs.symlinkSync(sourcePath, targetPath, "dir");
+    } catch {
+      // skip broken entries
+    }
+  }
+
+  const tsconfigSrc = path.join(sourceRuntime, "tsconfig.base.json");
+  const tsconfigDst = path.join(targetRuntime, "tsconfig.base.json");
+  if (fs.existsSync(tsconfigSrc) && !fs.existsSync(tsconfigDst)) {
+    fs.mkdirSync(targetRuntime, { recursive: true });
+    fs.copyFileSync(tsconfigSrc, tsconfigDst);
+  }
+
+  const lockSrc = path.join(monorepoRoot, ".reactpress", "themes.lock.json");
+  const lockDst = path.join(siteRoot, ".reactpress", "themes.lock.json");
+  if (fs.existsSync(lockSrc) && !fs.existsSync(lockDst)) {
+    fs.copyFileSync(lockSrc, lockDst);
   }
 }
 
@@ -69,11 +120,13 @@ export function ensureLocalSite(
   fs.mkdirSync(paths.reactpressDir, { recursive: true });
 
   const siteUrl = `http://127.0.0.1:${port}`;
+  const clientSiteUrl = "http://localhost:3001";
   const envLines = [
     "DB_TYPE=sqlite",
     `DB_DATABASE=${paths.dbPath}`,
     `SERVER_PORT=${port}`,
     `SERVER_SITE_URL=${siteUrl}`,
+    `CLIENT_SITE_URL=${clientSiteUrl}`,
     "SERVER_API_PREFIX=/api",
     `REACTPRESS_UPLOAD_DIR=${paths.uploadsDir}`,
     "ADMIN_USER=admin",
@@ -84,6 +137,7 @@ export function ensureLocalSite(
   fs.writeFileSync(paths.envPath, envLines.join("\n"), "utf8");
 
   seedBundledThemes(siteRoot, options?.monorepoRoot);
+  seedRuntimeThemes(siteRoot, options?.monorepoRoot);
 
   const configPath = path.join(paths.reactpressDir, "config.json");
   if (!fs.existsSync(configPath)) {

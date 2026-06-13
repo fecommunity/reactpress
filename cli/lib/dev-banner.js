@@ -85,6 +85,9 @@ function printDevReadyBanner(
     console.log(urlLine(t('devBanner.database'), dbLabel, { underline: false }));
     console.log(urlLine(t('devBanner.api'), localApiUrl));
     console.log(urlLine(t('devBanner.admin'), urls.admin));
+    if (hasThemeSite) {
+      console.log(urlLine(t('devBanner.site'), urls.site));
+    }
     const healthUrl = localApiUrl.replace(/\/api\/?$/, '') + '/api/health';
     console.log(urlLine(t('devBanner.health'), healthUrl, { underline: false }));
     console.log(

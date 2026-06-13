@@ -3,7 +3,9 @@ import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { type ActivateThemeResult, useThemeMutations } from "@/hooks/useThemes";
+import { isDesktopRuntime } from "@/shared/desktop/apiConfig";
 import { waitForVisitorSite } from "@/shared/theme/waitForVisitorSite";
+import { useDesktopStore } from "@/stores/desktop";
 
 /** Match CLI theme dev / compile time — keep loading until the public site responds. */
 const ACTIVATE_READY_TIMEOUT_MS = 120_000;
@@ -22,6 +24,7 @@ export function useThemeActivation() {
   const { t } = useTranslation();
   const { message } = App.useApp();
   const { activateMutation } = useThemeMutations();
+  const desktopMode = useDesktopStore((s) => s.mode);
   const [activatingId, setActivatingId] = useState<string | null>(null);
   const [activationPhase, setActivationPhase] = useState<ThemeActivationPhase>("idle");
   const [activationSiteUrl, setActivationSiteUrl] = useState<string | undefined>();
@@ -69,6 +72,13 @@ export function useThemeActivation() {
           return;
         }
 
+        const skipVisitorWait = isDesktopRuntime() && (desktopMode ?? "local") === "local";
+        if (skipVisitorWait) {
+          message.destroy(ACTIVATE_MSG_KEY);
+          message.success(t("appearance.activateSuccess"), 6);
+          return;
+        }
+
         showPhaseMessage("restarting", siteUrl);
         await new Promise((resolve) => setTimeout(resolve, 400));
         showPhaseMessage("checking", siteUrl);
@@ -100,7 +110,7 @@ export function useThemeActivation() {
         setActivationSiteUrl(undefined);
       }
     },
-    [activateMutation, message, showPhaseMessage, t],
+    [activateMutation, desktopMode, message, showPhaseMessage, t],
   );
 
   return {

@@ -726,7 +726,7 @@
     "installNpmDesc": "Enter an npm package spec. Official theme: @fecommunity/reactpress-theme-starter@1.0.0-beta.0",
     "installNpmSpecPlaceholder": "@fecommunity/reactpress-theme-starter@1.0.0-beta.0",
     "officialThemesTitle": "Official themes",
-    "officialThemesDesc": "Recommended for the public site — install from npm in one click.",
+    "officialThemesDesc": "Recommended themes for your public site — install in one click.",
     "installNpmSubmit": "Install",
     "refreshCatalog": "Refresh catalog",
     "browseThemes": "Browse themes",

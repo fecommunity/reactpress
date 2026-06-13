@@ -3,6 +3,7 @@ import { Button, Typography } from "antd";
 import { useTranslation } from "react-i18next";
 
 import type { ThemeListItem } from "@/hooks/useThemes";
+import { ThemeCoverImage } from "@/modules/appearance/components/ThemeCoverImage";
 import styles from "@/modules/appearance/components/themes-page.module.css";
 
 type Props = {
@@ -25,24 +26,13 @@ export function ThemeCard({
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const thumb = theme.coverUrl ? (
-    <img
-      src={theme.coverUrl}
-      alt={theme.name}
-      onError={(e) => {
-        (e.target as HTMLImageElement).style.display = "none";
-      }}
-    />
-  ) : null;
-
   return (
     <article
       className={`${styles.themeCard} ${theme.active ? styles.themeCardActive : ""}`}
       data-testid={`theme-card-${theme.id}`}
     >
       <div className={styles.cardThumb}>
-        {thumb}
-        {!thumb && <div className={styles.previewPlaceholder}>{theme.name}</div>}
+        <ThemeCoverImage coverUrl={theme.coverUrl} name={theme.name} />
         <div className={styles.cardOverlay}>
           <Button
             type="primary"
@@ -55,25 +45,28 @@ export function ThemeCard({
           >
             {t("appearance.preview")}
           </Button>
-          {!theme.installed && !theme.catalog?.npm ? (
+          {!theme.installed ? (
             <Button loading={installing} onClick={() => onInstall(theme.id)}>
               {t("appearance.install")}
             </Button>
           ) : !theme.active ? (
             <Button type="primary" loading={activating} onClick={() => onActivate(theme.id)}>
-              {activating && activatingLabel
-                ? activatingLabel
-                : theme.installed
-                  ? t("appearance.activate")
-                  : t("appearance.installAndActivate")}
+              {activating && activatingLabel ? activatingLabel : t("appearance.activate")}
             </Button>
           ) : null}
         </div>
       </div>
       <footer className={styles.cardFooter}>
-        <Typography.Text strong className={styles.cardName}>
-          {theme.name}
-        </Typography.Text>
+        <div className={styles.cardFooterMain}>
+          <Typography.Text strong className={styles.cardName}>
+            {theme.name}
+          </Typography.Text>
+          {theme.version ? (
+            <Typography.Text type="secondary" className={styles.cardVersion}>
+              {theme.version}
+            </Typography.Text>
+          ) : null}
+        </div>
         {theme.installed && !theme.active ? (
           <span className={styles.cardStatus}>{t("appearance.installed")}</span>
         ) : null}

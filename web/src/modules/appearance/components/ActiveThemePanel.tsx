@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 
 import { useThemeListItemMeta } from "@/hooks/useThemeListItemMeta";
 import type { ThemeListItem } from "@/hooks/useThemes";
+import { ThemeCoverImage } from "@/modules/appearance/components/ThemeCoverImage";
 import styles from "@/modules/appearance/components/themes-page.module.css";
 
 type Props = {
@@ -18,18 +19,12 @@ export function ActiveThemePanel({ theme }: Props) {
   return (
     <section className={styles.activePanel} data-testid="active-theme-panel">
       <div className={styles.activePreview}>
-        {theme.coverUrl ? (
-          <img
-            className={styles.previewShot}
-            src={theme.coverUrl}
-            alt={theme.name}
-            onError={(e) => {
-              (e.target as HTMLImageElement).style.display = "none";
-            }}
-          />
-        ) : (
-          <div className={styles.previewPlaceholder}>{theme.name}</div>
-        )}
+        <ThemeCoverImage
+          coverUrl={theme.coverUrl}
+          name={theme.name}
+          className={styles.activeCover}
+          fill
+        />
       </div>
       <div className={styles.activeMeta}>
         <span className={styles.activeBadge}>{t("appearance.activeTheme")}</span>

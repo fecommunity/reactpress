@@ -726,7 +726,7 @@
     "installNpmDesc": "输入 npm 包名与版本。官方主题：@fecommunity/reactpress-theme-starter@1.0.0-beta.0",
     "installNpmSpecPlaceholder": "@fecommunity/reactpress-theme-starter@1.0.0-beta.0",
     "officialThemesTitle": "官方主题",
-    "officialThemesDesc": "推荐用于生产访客站，支持 npm 一键安装。",
+    "officialThemesDesc": "推荐用于访客站的主题，一键安装即可使用。",
     "installNpmSubmit": "安装",
     "refreshCatalog": "刷新目录",
     "browseThemes": "浏览更多主题",

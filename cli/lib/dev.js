@@ -59,6 +59,7 @@ const DEV_POLL_MS = 250;
 const DEV_POLL_FAST_MS = 150;
 
 function shouldWaitForThemeInForeground() {
+  if (process.env.REACTPRESS_DESKTOP_LOCAL === '1') return true;
   return process.env.REACTPRESS_DEV_WAIT_THEME === '1';
 }
 
@@ -265,6 +266,12 @@ async function spawnAdminWeb(
     if (adminApiOrigin) {
       // Vite proxies `/api` → `${target}/api/...`; target is host-only origin.
       adminEnv.VITE_DEV_API_PROXY_TARGET = normalizeRemoteOrigin(adminApiOrigin) || adminApiOrigin;
+    } else if (isDesktopLocalMode() && process.env.REACTPRESS_DESKTOP_LOCAL_API) {
+      // Desktop dev embeds SQLite API on a dedicated port (default :13102), not :3002.
+      adminEnv.VITE_DEV_API_PROXY_TARGET = process.env.REACTPRESS_DESKTOP_LOCAL_API.replace(
+        /\/api\/?$/,
+        '',
+      );
     } else {
       adminEnv.VITE_DEV_API_PROXY_TARGET = loadServerSiteUrl(projectRoot).replace(/\/$/, '');
     }
@@ -391,7 +398,10 @@ async function startDevStack(
   const includeAdmin = webOnly && hasWeb(projectRoot);
   // Always run theme watchers when packages exist — admin activate/preview writes manifests
   // and relies on fs.watch even if the current active theme is not yet resolvable.
-  const includeThemeSite = themeOnly || (!webOnly && hasThemePackages(projectRoot));
+  const includeThemeSite =
+    themeOnly ||
+    (desktopMode && hasThemePackages(projectRoot)) ||
+    (!webOnly && hasThemePackages(projectRoot));
   if (!webOnly && !themeOnly && includeThemeSite && !hasResolvableActiveTheme(projectRoot)) {
     const { activeTheme } = readActiveThemeManifest(projectRoot);
     console.warn(
@@ -719,6 +729,9 @@ async function runDesktopDev(projectRoot = ensureOriginalCwd()) {
   await startLocalServer({ siteRoot, monorepoRoot: projectRoot });
   const localApiBase = getLocalApiBaseUrl();
   process.env.REACTPRESS_DESKTOP_LOCAL_API = localApiBase;
+  process.env.REACTPRESS_DESKTOP_SITE_ROOT = siteRoot;
+  process.env.REACTPRESS_THEME_API_URL = localApiBase;
+  process.env.REACTPRESS_THEME_PUBLIC_API_URL = localApiBase;
   const localApiOrigin = localApiBase.replace(/\/api\/?$/, '');
   process.env.VITE_DEV_API_PROXY_TARGET = localApiOrigin;
   logDevStatus('dev.desktopLocalApiReady', { url: localApiBase, db: t('dev.dbTypeSqlite') });

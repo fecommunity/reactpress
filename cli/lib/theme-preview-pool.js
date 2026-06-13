@@ -7,6 +7,7 @@ const {
   resolveThemeDirectory,
   isThemePackageDir,
   getPreviewThemePort,
+  themeWorkspaceRoot,
 } = require('./theme-runtime');
 const {
   enqueueThemeBuild,
@@ -31,7 +32,7 @@ function sleep(ms) {
 }
 
 function getPreviewPoolManifestPath(projectRoot) {
-  return path.join(projectRoot, PREVIEW_POOL_MANIFEST);
+  return path.join(themeWorkspaceRoot(projectRoot), PREVIEW_POOL_MANIFEST);
 }
 
 function getPreviewSiteUrlForPort(projectRoot, port) {

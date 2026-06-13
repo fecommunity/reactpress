@@ -1,9 +1,10 @@
 import { app, BrowserWindow } from "electron";
 
-import { getApiMode } from "./config";
+import { getApiMode, getLocalApiPort } from "./config";
 import { registerIpcHandlers } from "./ipc";
 import {
   resolveDefaultSiteRoot,
+  resolveDevSiteRoot,
   startLocalServer,
   stopLocalServer,
 } from "./local-server";
@@ -13,10 +14,40 @@ let mainWindow: BrowserWindow | null = null;
 
 const gotLock = app.requestSingleInstanceLock();
 
+function isDevRuntime(): boolean {
+  return !app.isPackaged || process.env.ELECTRON_IS_DEV === "1";
+}
+
+function resolveStartupSiteRoot(): string {
+  const monorepoRoot = process.env.REACTPRESS_ORIGINAL_CWD?.trim();
+  if (isDevRuntime() && monorepoRoot) {
+    return resolveDevSiteRoot(monorepoRoot);
+  }
+  return resolveDefaultSiteRoot(app.getPath("userData"));
+}
+
+async function isLocalApiHealthy(port: number): Promise<boolean> {
+  try {
+    const res = await fetch(`http://127.0.0.1:${port}/api/health`);
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
 async function ensureBackendReady(): Promise<void> {
   if (getApiMode() !== "local") return;
-  const siteRoot = resolveDefaultSiteRoot(app.getPath("userData"));
-  await startLocalServer({ siteRoot });
+
+  const port = getLocalApiPort();
+  if (await isLocalApiHealthy(port)) return;
+
+  const siteRoot = resolveStartupSiteRoot();
+  const monorepoRoot = process.env.REACTPRESS_ORIGINAL_CWD?.trim();
+  await startLocalServer({
+    siteRoot,
+    port,
+    monorepoRoot: monorepoRoot || undefined,
+  });
 }
 
 if (!gotLock) {

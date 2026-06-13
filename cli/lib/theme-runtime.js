@@ -19,6 +19,27 @@ const PREVIEW_MANIFEST_REL = PREVIEW_THEME_MANIFEST_REL;
 const DEFAULT_PREVIEW_THEME_PORT = DEV_PORTS.THEME_PREVIEW;
 const BLOCKED_DEV_PORTS = BLOCKED_THEME_DEV_PORTS;
 
+/** Desktop dev stores manifests under `.reactpress/desktop-dev-site/` (embedded SQLite site root). */
+function themeWorkspaceRoot(projectRoot) {
+  const site = process.env.REACTPRESS_DESKTOP_SITE_ROOT?.trim();
+  return site ? path.resolve(site) : path.resolve(projectRoot);
+}
+
+function resolveMonorepoRoot(projectRoot) {
+  const fromEnv = process.env.REACTPRESS_MONOREPO_ROOT?.trim();
+  if (fromEnv) return path.resolve(fromEnv);
+  let dir = path.resolve(projectRoot);
+  for (let depth = 0; depth < 10; depth += 1) {
+    if (fs.existsSync(path.join(dir, 'cli', 'lib', 'theme-registry.js'))) {
+      return dir;
+    }
+    const parent = path.dirname(dir);
+    if (parent === dir) break;
+    dir = parent;
+  }
+  return path.resolve(projectRoot);
+}
+
 function isValidThemeId(id) {
   return typeof id === 'string' && THEME_ID_RE.test(id) && id.length <= 64;
 }
@@ -29,7 +50,7 @@ function isUnderDir(child, parent) {
 }
 
 function themeRoots(projectRoot) {
-  const root = path.resolve(projectRoot);
+  const root = themeWorkspaceRoot(projectRoot);
   const themes = path.join(root, 'themes');
   return {
     themes,
@@ -45,6 +66,16 @@ function isThemePackageAt(dir) {
     fs.existsSync(path.join(dir, 'package.json')) ||
     fs.existsSync(path.join(dir, 'theme.json'))
   );
+}
+
+/** `readdir` symlinks report as links, not directories — follow for desktop-dev-site theme seeds. */
+function isResolvableThemeDirEntry(entry, parentDir) {
+  if (!entry.isDirectory() && !entry.isSymbolicLink()) return false;
+  try {
+    return fs.statSync(path.join(parentDir, entry.name)).isDirectory();
+  } catch {
+    return false;
+  }
 }
 
 function isThemePackageDir(projectRoot, dir) {
@@ -113,7 +144,7 @@ function isAllowedThemeDirRel(themeDir) {
 }
 
 function readActiveThemeManifest(projectRoot) {
-  const manifestPath = path.join(projectRoot, MANIFEST_REL);
+  const manifestPath = path.join(themeWorkspaceRoot(projectRoot), MANIFEST_REL);
   if (!fs.existsSync(manifestPath)) {
     return { activeTheme: DEFAULT_ACTIVE_THEME };
   }
@@ -133,30 +164,42 @@ function readActiveThemeManifest(projectRoot) {
 function resolveThemeDirectory(projectRoot, themeId) {
   if (!isValidThemeId(themeId)) return null;
 
-  const runtime = path.join(projectRoot, THEME_RUNTIME_REL, themeId);
+  const root = themeWorkspaceRoot(projectRoot);
+  const runtime = path.join(root, THEME_RUNTIME_REL, themeId);
   if (isThemePackageAt(runtime)) return runtime;
 
-  const legacyRuntime = path.join(projectRoot, LEGACY_THEMES_RUNTIME_REL, themeId);
+  const legacyRuntime = path.join(root, LEGACY_THEMES_RUNTIME_REL, themeId);
   if (isThemePackageAt(legacyRuntime)) return legacyRuntime;
 
-  const template = path.join(projectRoot, 'themes', themeId);
+  const template = path.join(root, 'themes', themeId);
   if (isThemePackageAt(template) && !THEMES_RESERVED_SUBDIRS.includes(themeId)) {
     return template;
   }
 
   for (const legacyStarterName of THEMES_LEGACY_STARTER_SUBDIRS) {
-    const legacyStarter = path.join(projectRoot, 'themes', legacyStarterName, themeId);
+    const legacyStarter = path.join(root, 'themes', legacyStarterName, themeId);
     if (isThemePackageAt(legacyStarter)) return legacyStarter;
   }
 
-  const legacyBundled = path.join(projectRoot, 'templates', themeId);
+  const legacyBundled = path.join(root, 'templates', themeId);
   if (isThemePackageAt(legacyBundled)) return legacyBundled;
+
+  const mono = resolveMonorepoRoot(projectRoot);
+  if (mono !== root) {
+    const monoRuntime = path.join(mono, THEME_RUNTIME_REL, themeId);
+    if (isThemePackageAt(monoRuntime)) return monoRuntime;
+    const monoTheme = path.join(mono, 'themes', themeId);
+    if (isThemePackageAt(monoTheme) && !THEMES_RESERVED_SUBDIRS.includes(themeId)) {
+      return monoTheme;
+    }
+  }
 
   return null;
 }
 
 function readManifestSignatureFromPath(projectRoot, manifestRel) {
-  const manifestPath = path.join(projectRoot, manifestRel);
+  const root = themeWorkspaceRoot(projectRoot);
+  const manifestPath = path.join(root, manifestRel);
   try {
     if (!fs.existsSync(manifestPath)) return '';
     const raw = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
@@ -164,7 +207,7 @@ function readManifestSignatureFromPath(projectRoot, manifestRel) {
     if (!isValidThemeId(id)) return '';
     const themeDir = resolveThemeDirectory(projectRoot, id);
     if (!themeDir) return '';
-    const rel = path.relative(projectRoot, themeDir);
+    const rel = path.relative(root, themeDir);
     return `${id}:${rel}`;
   } catch {
     return '';
@@ -176,7 +219,8 @@ function readManifestSignature(projectRoot) {
 }
 
 function readPreviewManifestSignature(projectRoot) {
-  const manifestPath = path.join(projectRoot, PREVIEW_MANIFEST_REL);
+  const root = themeWorkspaceRoot(projectRoot);
+  const manifestPath = path.join(root, PREVIEW_MANIFEST_REL);
   try {
     if (!fs.existsSync(manifestPath)) return '';
     const raw = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
@@ -184,7 +228,7 @@ function readPreviewManifestSignature(projectRoot) {
     if (!isValidThemeId(id)) return '';
     const themeDir = resolveThemeDirectory(projectRoot, id);
     if (!themeDir) return '';
-    const rel = path.relative(projectRoot, themeDir);
+    const rel = path.relative(root, themeDir);
     const stamp = typeof raw.updatedAt === 'string' ? raw.updatedAt : '';
     return `${id}:${rel}:${stamp}`;
   } catch {
@@ -193,7 +237,8 @@ function readPreviewManifestSignature(projectRoot) {
 }
 
 function readPreviewThemeManifest(projectRoot) {
-  const manifestPath = path.join(projectRoot, PREVIEW_MANIFEST_REL);
+  const root = themeWorkspaceRoot(projectRoot);
+  const manifestPath = path.join(root, PREVIEW_MANIFEST_REL);
   if (!fs.existsSync(manifestPath)) {
     return null;
   }
@@ -205,7 +250,7 @@ function readPreviewThemeManifest(projectRoot) {
         : null;
     if (!id) return null;
     const themeDir = resolveThemeDirectory(projectRoot, id);
-    return { activeTheme: id, themeDir: themeDir ? path.relative(projectRoot, themeDir) : null };
+    return { activeTheme: id, themeDir: themeDir ? path.relative(root, themeDir) : null };
   } catch {
     return null;
   }
@@ -235,14 +280,15 @@ function listAvailableThemeIds(projectRoot) {
   for (const dir of [runtime, legacyThemesRuntime]) {
     if (!fs.existsSync(dir)) continue;
     for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-      if (!entry.isDirectory() || !isValidThemeId(entry.name)) continue;
+      if (!isResolvableThemeDirEntry(entry, dir) || !isValidThemeId(entry.name)) continue;
       if (isThemePackageAt(path.join(dir, entry.name))) ids.add(entry.name);
     }
   }
 
   if (fs.existsSync(themes)) {
     for (const entry of fs.readdirSync(themes, { withFileTypes: true })) {
-      if (!entry.isDirectory() || THEMES_RESERVED_SUBDIRS.includes(entry.name)) continue;
+      if (!isResolvableThemeDirEntry(entry, themes)) continue;
+      if (THEMES_RESERVED_SUBDIRS.includes(entry.name)) continue;
       if (!isValidThemeId(entry.name)) continue;
       if (isThemePackageAt(path.join(themes, entry.name))) ids.add(entry.name);
     }
@@ -251,7 +297,7 @@ function listAvailableThemeIds(projectRoot) {
   for (const base of [...legacyStarter, legacyBundled]) {
     if (!fs.existsSync(base)) continue;
     for (const entry of fs.readdirSync(base, { withFileTypes: true })) {
-      if (!entry.isDirectory() || !isValidThemeId(entry.name)) continue;
+      if (!isResolvableThemeDirEntry(entry, base) || !isValidThemeId(entry.name)) continue;
       if (isThemePackageAt(path.join(base, entry.name))) ids.add(entry.name);
     }
   }
@@ -265,7 +311,11 @@ function hasThemePackages(projectRoot) {
 
   for (const dir of [runtime, legacyThemesRuntime]) {
     if (!fs.existsSync(dir)) continue;
-    if (fs.readdirSync(dir, { withFileTypes: true }).some((d) => d.isDirectory())) {
+    if (
+      fs
+        .readdirSync(dir, { withFileTypes: true })
+        .some((entry) => isResolvableThemeDirEntry(entry, dir))
+    ) {
       return true;
     }
   }
@@ -274,7 +324,11 @@ function hasThemePackages(projectRoot) {
     if (
       fs
         .readdirSync(themes, { withFileTypes: true })
-        .some((d) => d.isDirectory() && !THEMES_RESERVED_SUBDIRS.includes(d.name))
+        .some(
+          (entry) =>
+            isResolvableThemeDirEntry(entry, themes) &&
+            !THEMES_RESERVED_SUBDIRS.includes(entry.name),
+        )
     ) {
       return true;
     }
@@ -282,7 +336,11 @@ function hasThemePackages(projectRoot) {
 
   for (const dir of [...legacyStarter, legacyBundled]) {
     if (!fs.existsSync(dir)) continue;
-    if (fs.readdirSync(dir, { withFileTypes: true }).some((d) => d.isDirectory())) {
+    if (
+      fs
+        .readdirSync(dir, { withFileTypes: true })
+        .some((entry) => isResolvableThemeDirEntry(entry, dir))
+    ) {
       return true;
     }
   }
@@ -314,4 +372,5 @@ module.exports = {
   hasResolvableActiveTheme,
   listAvailableThemeIds,
   themeRoots,
+  themeWorkspaceRoot,
 };

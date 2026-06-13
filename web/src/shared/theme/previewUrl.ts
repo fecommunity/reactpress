@@ -28,7 +28,6 @@ export function resolveLiveSitePreviewUrl(
     if (!siteUrl) return null;
     try {
       const site = new URL(siteUrl, window.location.origin);
-      if (site.origin !== window.location.origin) return null;
       publicOrigin = `${site.origin}/`;
     } catch {
       return null;

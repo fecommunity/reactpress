@@ -8,6 +8,7 @@ import {
 import { http, HttpResponse, passthrough } from "msw";
 
 import helloWorldAdminEn from "../../../../themes/hello-world/locales/en.json";
+import { buildThemePlaceholderCoverSvg } from "../../../../cli/lib/theme-placeholder-cover.js";
 import { successResponse, withDelay } from "../createHandler";
 import { getMockGlobalSetting, patchMockGlobalSettingTheme, setMockGlobalSetting } from "./page";
 
@@ -111,24 +112,20 @@ function themeManifest(themeId: string) {
   return mockThemeList().find((t) => t.id === themeId) ?? null;
 }
 
-function coverSvg(themeId: string, name: string, primary = "#2271b1", accent = "#72aee6") {
-  const safeName = name.replace(/[<>&"']/g, (ch) => {
-    const map: Record<string, string> = {
-      "<": "&lt;",
-      ">": "&gt;",
-      "&": "&amp;",
-      '"': "&quot;",
-      "'": "&#39;",
-    };
-    return map[ch] ?? ch;
+function coverSvg(
+  themeId: string,
+  name: string,
+  primary = "#2563eb",
+  accent = "#7c3aed",
+  version?: string,
+) {
+  return buildThemePlaceholderCoverSvg({
+    id: themeId,
+    name,
+    primary,
+    accent,
+    version,
   });
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500">
-  <defs><linearGradient id="bg-${themeId}" x1="0%" y1="0%" x2="100%" y2="100%">
-    <stop offset="0%" stop-color="${primary}" /><stop offset="55%" stop-color="${accent}" /><stop offset="100%" stop-color="#ffffff" />
-  </linearGradient></defs>
-  <rect width="800" height="500" fill="url(#bg-${themeId})" />
-  <text x="400" y="250" text-anchor="middle" fill="#ffffff" font-family="sans-serif" font-size="42" font-weight="700">${safeName}</text>
-</svg>`;
 }
 
 function previewHtml(themeId: string, mods: Record<string, string> = {}) {
@@ -266,7 +263,7 @@ export const themeHandlers = [
       theme.appearance?.sections
         ?.flatMap((sec) => sec.settings ?? [])
         .find((s) => s.id === "accentColor")?.default ?? "#d63638";
-    return new Response(coverSvg(String(params.id), theme.name, primary, accent), {
+    return new Response(coverSvg(String(params.id), theme.name, primary, accent, theme.version), {
       headers: { "Content-Type": "image/svg+xml; charset=utf-8" },
     });
   }),

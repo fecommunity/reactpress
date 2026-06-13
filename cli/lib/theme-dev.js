@@ -14,6 +14,7 @@ const {
   getPreviewThemePort,
   isThemePackageDir,
   isAllowedThemePort,
+  themeWorkspaceRoot,
 } = require('./theme-runtime');
 const { isDevVerbose, logDevDetail, logDevLine } = require('./dev-log');
 const { resolveProjectRoot } = require('./paths');
@@ -260,6 +261,10 @@ function useLocalThemeApiInDev() {
 }
 
 function buildLocalThemeApiUrl(projectRoot, { forBrowser = false } = {}) {
+  const desktopApi = process.env.REACTPRESS_DESKTOP_LOCAL_API?.trim().replace(/\/$/, '');
+  if (desktopApi) {
+    return desktopApi;
+  }
   if (forBrowser && process.env.REACTPRESS_BEHIND_NGINX === '1') {
     return `${nginxEntryUrl(projectRoot).replace(/\/$/, '')}/api`;
   }
@@ -553,7 +558,7 @@ async function restartPreviewThemeSite(projectRoot, { onClose } = {}) {
 }
 
 function watchActiveThemeManifest(projectRoot, onChange) {
-  const manifestPath = path.join(projectRoot, '.reactpress', 'active-theme.json');
+  const manifestPath = path.join(themeWorkspaceRoot(projectRoot), '.reactpress', 'active-theme.json');
   const dir = path.dirname(manifestPath);
   fs.mkdirSync(dir, { recursive: true });
 
@@ -586,7 +591,7 @@ function watchActiveThemeManifest(projectRoot, onChange) {
 }
 
 function watchPreviewThemeManifest(projectRoot, onChange) {
-  const manifestPath = path.join(projectRoot, '.reactpress', 'preview-theme.json');
+  const manifestPath = path.join(themeWorkspaceRoot(projectRoot), '.reactpress', 'preview-theme.json');
   const dir = path.dirname(manifestPath);
   fs.mkdirSync(dir, { recursive: true });
 
@@ -655,7 +660,7 @@ function watchPreviewThemeManifest(projectRoot, onChange) {
 
 /** Drop stale preview manifest so `pnpm dev` does not auto-start :3003 from a prior admin session. */
 function clearPreviewThemeManifestFile(projectRoot) {
-  const manifestPath = path.join(projectRoot, '.reactpress', 'preview-theme.json');
+  const manifestPath = path.join(themeWorkspaceRoot(projectRoot), '.reactpress', 'preview-theme.json');
   if (fs.existsSync(manifestPath)) {
     fs.unlinkSync(manifestPath);
   }

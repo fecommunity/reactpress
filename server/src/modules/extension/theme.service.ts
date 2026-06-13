@@ -25,9 +25,10 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { Repository } from 'typeorm';
 
-import { resolveProjectRoot } from '../../utils/project-root.util';
+import { resolveProjectRoot, resolveMonorepoRoot } from '../../utils/project-root.util';
 import { SettingService } from '../setting/setting.service';
 import { Setting } from '../setting/setting.entity';
+import { buildThemePlaceholderCoverSvg } from '../../../../cli/lib/theme-placeholder-cover.js';
 import {
   findThemeCatalogEntry,
   loadThemeRegistry,
@@ -65,6 +66,30 @@ export type ThemePreviewSessionResult = SiteThemeState & {
 
 function projectRoot(): string {
   return resolveProjectRoot();
+}
+
+function monorepoRoot(): string {
+  return resolveMonorepoRoot();
+}
+
+function resolveThemeInstallScript(): string {
+  const candidates = [
+    path.join(monorepoRoot(), 'cli', 'lib', 'theme-install.js'),
+    path.join(projectRoot(), 'cli', 'lib', 'theme-install.js'),
+  ];
+  for (const candidate of candidates) {
+    if (fs.existsSync(candidate)) return candidate;
+  }
+  return candidates[0];
+}
+
+function isResolvableThemeDirEntry(entry: fs.Dirent, parentDir: string): boolean {
+  if (!entry.isDirectory() && !entry.isSymbolicLink()) return false;
+  try {
+    return fs.statSync(path.join(parentDir, entry.name)).isDirectory();
+  } catch {
+    return false;
+  }
 }
 
 const THEME_ID_RE = /^[a-z0-9][a-z0-9-]*$/i;
@@ -106,6 +131,22 @@ export class ThemeService {
 
   private runtimeDir(): string {
     return path.join(projectRoot(), THEME_RUNTIME_REL);
+  }
+
+  /** Link monorepo-installed themes into the desktop site runtime for manifest + preview dev. */
+  private ensureSiteRuntimeLink(id: string, sourceDir: string): string {
+    const targetDir = path.join(this.runtimeDir(), id);
+    fs.mkdirSync(this.runtimeDir(), { recursive: true });
+    if (fs.existsSync(targetDir)) {
+      return targetDir;
+    }
+    try {
+      fs.symlinkSync(sourceDir, targetDir, 'dir');
+    } catch {
+      return sourceDir;
+    }
+    this.ensureRuntimeThemeTsconfigBase();
+    return targetDir;
   }
 
   private legacyStarterDirs(): string[] {
@@ -227,7 +268,7 @@ export class ThemeService {
     const skip = options?.skipDirNames;
     return fs
       .readdirSync(dir, { withFileTypes: true })
-      .filter((d) => d.isDirectory() && !(skip && skip.has(d.name)))
+      .filter((d) => isResolvableThemeDirEntry(d, dir) && !(skip && skip.has(d.name)))
       .map((d) => this.readManifest(path.join(dir, d.name)))
       .filter((m): m is ThemeManifest => m !== null);
   }
@@ -531,6 +572,23 @@ export class ThemeService {
       return legacyBundled;
     }
 
+    const site = projectRoot();
+    const mono = monorepoRoot();
+    if (mono !== site) {
+      const monoRuntime = path.join(mono, THEME_RUNTIME_REL, id);
+      if (fs.existsSync(monoRuntime) && fs.statSync(monoRuntime).isDirectory()) {
+        return this.ensureSiteRuntimeLink(id, monoRuntime);
+      }
+      const monoTheme = path.join(mono, 'themes', id);
+      if (
+        fs.existsSync(monoTheme) &&
+        fs.statSync(monoTheme).isDirectory() &&
+        !THEMES_RESERVED_SUBDIRS.has(id)
+      ) {
+        return monoTheme;
+      }
+    }
+
     return null;
   }
 
@@ -572,7 +630,7 @@ export class ThemeService {
 
     const resolvedSpec = resolveThemeCatalogInstallSpec(trimmed, projectRoot()) ?? trimmed;
 
-    const installScript = path.join(projectRoot(), 'cli', 'lib', 'theme-install.js');
+    const installScript = resolveThemeInstallScript();
     if (!fs.existsSync(installScript)) {
       throw new BadRequestException('Theme npm installer is not available in this deployment');
     }
@@ -916,34 +974,14 @@ export class ThemeService {
 
   buildPlaceholderCoverSvg(id: string): string {
     const manifest = this.getThemeManifestFromSources(id);
-    const name = manifest?.name ?? id;
     const defaults = this.themeAppearanceDefaults(manifest);
-    const primary = defaults.primaryColor ?? '#2271b1';
-    const accent = defaults.accentColor ?? '#72aee6';
-    const safeName = name.replace(/[<>&"']/g, (ch) => {
-      const map: Record<string, string> = {
-        '<': '&lt;',
-        '>': '&gt;',
-        '&': '&amp;',
-        '"': '&quot;',
-        "'": '&#39;',
-      };
-      return map[ch] ?? ch;
+    return buildThemePlaceholderCoverSvg({
+      id,
+      name: manifest?.name ?? id,
+      primary: defaults.primaryColor,
+      accent: defaults.accentColor,
+      version: manifest?.version,
     });
-
-    return `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500">
-  <defs>
-    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="${primary}" />
-      <stop offset="55%" stop-color="${accent}" />
-      <stop offset="100%" stop-color="#ffffff" />
-    </linearGradient>
-  </defs>
-  <rect width="800" height="500" fill="url(#bg)" />
-  <rect x="48" y="48" width="704" height="404" rx="12" fill="rgba(255,255,255,0.14)" />
-  <text x="400" y="250" text-anchor="middle" fill="#ffffff" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif" font-size="42" font-weight="700">${safeName}</text>
-  <text x="400" y="300" text-anchor="middle" fill="rgba(255,255,255,0.88)" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif" font-size="18">ReactPress Theme</text>
-</svg>`;
   }
 
   private resolveSiteUrlFromRow(row: Setting): string {

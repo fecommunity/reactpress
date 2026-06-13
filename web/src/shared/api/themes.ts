@@ -5,6 +5,7 @@ import type {
 } from "@fecommunity/reactpress-toolkit/theme";
 import { resolveApiBaseUrl } from "@fecommunity/reactpress-toolkit/plugin/react";
 
+import { isDesktopRuntime } from "@/shared/desktop/apiConfig";
 import { clearInvalidServerSession } from "@/shared/auth/session";
 import { useAuthStore } from "@/stores/auth";
 import { API_BASE_URL } from "@/utils/constants";
@@ -72,6 +73,28 @@ export interface ThemeListItem {
   };
 }
 
+/** Resolve `/api/...` extension asset paths to an absolute API URL (required in Electron). */
+export function normalizeExtensionAssetUrl(
+  url: string | undefined,
+  apiBase: string,
+): string | undefined {
+  if (!url?.trim()) return undefined;
+  if (/^https?:\/\//i.test(url)) return url;
+  const base = apiBase.replace(/\/$/, "");
+  if (url.startsWith("/api/")) return `${base}${url.slice(4)}`;
+  if (url.startsWith("/")) return `${base}${url}`;
+  return `${base}/${url}`;
+}
+
+async function withResolvedCoverUrls(themes: ThemeListItem[]): Promise<ThemeListItem[]> {
+  if (!isDesktopRuntime()) return themes;
+  const base = await resolveApiBaseUrl(API_BASE_URL || "/api");
+  return themes.map((theme) => ({
+    ...theme,
+    coverUrl: normalizeExtensionAssetUrl(theme.coverUrl, base),
+  }));
+}
+
 async function themeFetch<T>(path: string, init?: RequestInit): Promise<T> {
   const base = await resolveApiBaseUrl(API_BASE_URL || "/api");
   const token = useAuthStore.getState().tokens?.accessToken;
@@ -106,8 +129,9 @@ async function themeFetch<T>(path: string, init?: RequestInit): Promise<T> {
   return body.data as T;
 }
 
-export function fetchThemes() {
-  return themeFetch<ThemeListItem[]>("/extension/themes");
+export async function fetchThemes() {
+  const themes = await themeFetch<ThemeListItem[]>("/extension/themes");
+  return withResolvedCoverUrls(themes);
 }
 
 export function fetchThemeCatalog() {
@@ -128,8 +152,10 @@ export function fetchThemeCatalog() {
 
 export const OFFICIAL_THEME_STARTER_SPEC = "@fecommunity/reactpress-theme-starter@1.0.0-beta.0";
 
-export function fetchTheme(id: string) {
-  return themeFetch<ThemeListItem>(`/extension/themes/${id}`);
+export async function fetchTheme(id: string) {
+  const theme = await themeFetch<ThemeListItem>(`/extension/themes/${id}`);
+  const [resolved] = await withResolvedCoverUrls([theme]);
+  return resolved;
 }
 
 export function installTheme(id: string) {
