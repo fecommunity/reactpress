@@ -4,6 +4,7 @@ import { App, Button, Input, Spin } from "antd";
 import { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { useIsPluginActive } from "@/hooks/useIsPluginActive";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 import {
   type ArticleVisibility,
@@ -96,6 +97,7 @@ export function ArticleEditorPage({ articleId }: ArticleEditorPageProps) {
   const { message, modal } = App.useApp();
   const { t } = useTranslation();
   const { data: siteSettings } = useSiteSettings();
+  const seoPluginActive = useIsPluginActive("seo");
   const queryClient = useQueryClient();
   const [draft, setDraft] = useState<ArticleDraft>(emptyDraft);
   const draftRef = useRef(draft);
@@ -213,7 +215,7 @@ export function ArticleEditorPage({ articleId }: ArticleEditorPageProps) {
 
   const saveMutation = useMutation({
     mutationFn: async (status: "draft" | "publish") => {
-      const body = buildArticleSaveBody({ ...draft, status });
+      const body = buildArticleSaveBody({ ...draft, status }, { includeSeo: seoPluginActive });
       const id = savedId ?? articleId;
       if (id) {
         return httpClient.patch<ArticleSaveResponse>(`/article/${id}`, body);
@@ -309,9 +311,9 @@ export function ArticleEditorPage({ articleId }: ArticleEditorPageProps) {
       message.error(t("article.previewNoSiteUrl"));
       return;
     }
-    const url = `${base.replace(/\/$/, "")}/article/${draft.slug.trim() || id}`;
+    const url = `${base.replace(/\/$/, "")}/article/${seoPluginActive && draft.slug.trim() ? draft.slug.trim() : id}`;
     window.open(url, "_blank", "noopener,noreferrer");
-  }, [articleId, draft.slug, message, savedId, siteSettings?.systemUrl, t]);
+  }, [articleId, draft.slug, message, savedId, seoPluginActive, siteSettings?.systemUrl, t]);
 
   if (articleId && isLoading) {
     return (
@@ -375,41 +377,43 @@ export function ArticleEditorPage({ articleId }: ArticleEditorPageProps) {
               <p className={styles.hint}>{t("editor.excerptHint")}</p>
             </EditorMetaPanel>
 
-            <EditorMetaPanel title={t("article.seoTitle")} defaultOpen={false}>
-              <label className={styles.label} htmlFor="article-seo-slug">
-                {t("article.seoSlug")}
-              </label>
-              <Input
-                id="article-seo-slug"
-                value={draft.slug}
-                placeholder={t("article.seoSlugPlaceholder")}
-                onChange={(e) => patch("slug", e.target.value)}
-              />
-              <p className={styles.hint}>{t("article.seoSlugHint")}</p>
+            {seoPluginActive ? (
+              <EditorMetaPanel title={t("article.seoTitle")} defaultOpen={false}>
+                <label className={styles.label} htmlFor="article-seo-slug">
+                  {t("article.seoSlug")}
+                </label>
+                <Input
+                  id="article-seo-slug"
+                  value={draft.slug}
+                  placeholder={t("article.seoSlugPlaceholder")}
+                  onChange={(e) => patch("slug", e.target.value)}
+                />
+                <p className={styles.hint}>{t("article.seoSlugHint")}</p>
 
-              <label className={styles.label} htmlFor="article-seo-keywords">
-                {t("article.seoKeywords")}
-              </label>
-              <Input
-                id="article-seo-keywords"
-                value={draft.seoKeywords}
-                placeholder={t("article.seoKeywordsPlaceholder")}
-                onChange={(e) => patch("seoKeywords", e.target.value)}
-              />
-              <p className={styles.hint}>{t("article.seoKeywordsHint")}</p>
+                <label className={styles.label} htmlFor="article-seo-keywords">
+                  {t("article.seoKeywords")}
+                </label>
+                <Input
+                  id="article-seo-keywords"
+                  value={draft.seoKeywords}
+                  placeholder={t("article.seoKeywordsPlaceholder")}
+                  onChange={(e) => patch("seoKeywords", e.target.value)}
+                />
+                <p className={styles.hint}>{t("article.seoKeywordsHint")}</p>
 
-              <label className={styles.label} htmlFor="article-seo-description">
-                {t("article.seoDescription")}
-              </label>
-              <Input.TextArea
-                id="article-seo-description"
-                value={draft.seoDescription}
-                autoSize={{ minRows: 3, maxRows: 8 }}
-                placeholder={t("article.seoDescriptionPlaceholder")}
-                onChange={(e) => patch("seoDescription", e.target.value)}
-              />
-              <p className={styles.hint}>{t("article.seoDescriptionHint")}</p>
-            </EditorMetaPanel>
+                <label className={styles.label} htmlFor="article-seo-description">
+                  {t("article.seoDescription")}
+                </label>
+                <Input.TextArea
+                  id="article-seo-description"
+                  value={draft.seoDescription}
+                  autoSize={{ minRows: 3, maxRows: 8 }}
+                  placeholder={t("article.seoDescriptionPlaceholder")}
+                  onChange={(e) => patch("seoDescription", e.target.value)}
+                />
+                <p className={styles.hint}>{t("article.seoDescriptionHint")}</p>
+              </EditorMetaPanel>
+            ) : null}
           </div>
         </div>
 

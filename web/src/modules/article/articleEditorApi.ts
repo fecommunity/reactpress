@@ -110,34 +110,35 @@ export function normalizeEditorTags(raw: unknown, options: EditorTag[]): EditorT
   return result;
 }
 
-export function buildArticleSaveBody(draft: {
-  title: string;
-  content: string;
-  html: string;
-  toc: string;
-  summary: string;
-  slug: string;
-  seoKeywords: string;
-  seoDescription: string;
-  status: "draft" | "publish";
-  cover: string | null;
-  category: EditorCategory | null;
-  tags: EditorTag[];
-  isRecommended: boolean;
-  isCommentable: boolean;
-  visibility: ArticleVisibility;
-  password: string | null;
-}) {
+export function buildArticleSaveBody(
+  draft: {
+    title: string;
+    content: string;
+    html: string;
+    toc: string;
+    summary: string;
+    slug: string;
+    seoKeywords: string;
+    seoDescription: string;
+    status: "draft" | "publish";
+    cover: string | null;
+    category: EditorCategory | null;
+    tags: EditorTag[];
+    isRecommended: boolean;
+    isCommentable: boolean;
+    visibility: ArticleVisibility;
+    password: string | null;
+  },
+  options?: { includeSeo?: boolean },
+) {
   const isPrivate = draft.visibility === "private";
-  return {
+  const includeSeo = options?.includeSeo !== false;
+  const body: Record<string, unknown> = {
     title: draft.title.trim(),
     content: draft.content,
     html: draft.html,
     toc: draft.toc,
     summary: draft.summary,
-    slug: slugifyMetaValue(draft.slug) || null,
-    seoKeywords: draft.seoKeywords.trim() || null,
-    seoDescription: draft.seoDescription.trim() || null,
     status: draft.status,
     cover: draft.cover,
     category: draft.category?.id ?? null,
@@ -146,4 +147,10 @@ export function buildArticleSaveBody(draft: {
     isCommentable: draft.isCommentable,
     password: isPrivate ? draft.password : null,
   };
+  if (includeSeo) {
+    body.slug = slugifyMetaValue(draft.slug) || null;
+    body.seoKeywords = draft.seoKeywords.trim() || null;
+    body.seoDescription = draft.seoDescription.trim() || null;
+  }
+  return body;
 }
