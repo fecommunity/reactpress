@@ -1149,6 +1149,11 @@ export class ThemeService {
 
   private removeDir(dir: string): void {
     if (!fs.existsSync(dir)) return;
+    const stat = fs.lstatSync(dir);
+    if (stat.isSymbolicLink() || !stat.isDirectory()) {
+      fs.unlinkSync(dir);
+      return;
+    }
     for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
       const target = path.join(dir, entry.name);
       if (entry.isSymbolicLink()) {

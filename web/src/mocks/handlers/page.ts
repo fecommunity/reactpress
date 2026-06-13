@@ -97,6 +97,12 @@ export function patchMockGlobalSettingTheme(theme: Record<string, unknown> | obj
   setMockGlobalSetting(global);
 }
 
+export function patchMockGlobalSettingPlugins(plugins: Record<string, unknown> | object) {
+  const global = getMockGlobalSetting();
+  global.plugins = plugins;
+  setMockGlobalSetting(global);
+}
+
 export const pageHandlers = [
   http.get("/api/page", async ({ request }) => {
     await withDelay(200);

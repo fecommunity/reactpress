@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { ApiMsg } from '../../common/api-messages';
 import { dateFormat } from '../../utils/date.util';
 import { CategoryService } from '../category/category.service';
+import { HookService } from '../hook/hook.service';
 import { TagService } from '../tag/tag.service';
 import { WebhookService } from '../webhook/webhook.service';
 import { Article } from './article.entity';
@@ -25,7 +26,8 @@ export class ArticleService {
     private readonly revisionRepository: Repository<ArticleRevision>,
     private readonly tagService: TagService,
     private readonly categoryService: CategoryService,
-    private readonly webhookService: WebhookService
+    private readonly webhookService: WebhookService,
+    private readonly hookService: HookService,
   ) {}
 
   private async saveRevision(article: Article) {
@@ -51,22 +53,28 @@ export class ArticleService {
     });
   }
 
+  private async applyPublishFilters(article: Partial<Article>): Promise<Partial<Article>> {
+    return this.hookService.applyFilters('article.beforePublish', { ...article });
+  }
+
   /**
    * 创建文章
    * @param article
    */
   async create(article: Partial<Article>): Promise<Article> {
-    const { title } = article;
+    let payload = await this.hookService.applyFilters('article.beforeCreate', { ...article });
+    const { title } = payload;
     const exist = await this.articleRepository.findOne({ where: { title } });
 
     if (exist) {
       throw new HttpException(ApiMsg.ARTICLE_TITLE_EXISTS, HttpStatus.BAD_REQUEST);
     }
 
-    let { tags, category, status } = article; // eslint-disable-line prefer-const
+    let { tags, category, status } = payload; // eslint-disable-line prefer-const
 
     if (status === 'publish') {
-      Object.assign(article, {
+      payload = await this.applyPublishFilters(payload);
+      Object.assign(payload, {
         publishAt: dateFormat(),
       });
     }
@@ -74,12 +82,18 @@ export class ArticleService {
     tags = await this.tagService.findByIds(('' + tags).split(','));
     const existCategory = await this.categoryService.findById(category);
     const newArticle = await this.articleRepository.create({
-      ...article,
+      ...payload,
       category: existCategory,
       tags,
-      needPassword: !!article.password,
+      needPassword: !!payload.password,
     });
     await this.articleRepository.save(newArticle);
+    if (newArticle.status === 'publish') {
+      await this.hookService.doAction('article.afterPublish', {
+        article: newArticle,
+        isNew: true,
+      });
+    }
     await this.notifyPublished(newArticle);
     return newArticle;
   }
@@ -298,22 +312,37 @@ export class ArticleService {
     const existCategory = await this.categoryService.findById(category);
 
     const becomingPublish = oldArticle.status === 'draft' && status === 'publish';
-    const newArticle = {
+    let patch: Partial<Article> = {
       ...article,
       views: oldArticle.views,
       category: existCategory,
       needPassword: !!article.password,
-      publishAt: becomingPublish ? dateFormat() : oldArticle.publishAt,
+      publishAt: becomingPublish ? (dateFormat() as unknown as Date) : oldArticle.publishAt,
       scheduledPublishAt: status === 'publish' ? null : article.scheduledPublishAt ?? oldArticle.scheduledPublishAt,
     };
 
     if (tags) {
-      Object.assign(newArticle, { tags });
+      Object.assign(patch, { tags });
     }
 
-    const updatedArticle = await this.articleRepository.merge(oldArticle, newArticle);
+    if (status === 'publish' || becomingPublish) {
+      const filtered = await this.applyPublishFilters({
+        ...oldArticle,
+        ...patch,
+      });
+      if (filtered.summary !== undefined && filtered.summary !== null) {
+        patch.summary = filtered.summary;
+      }
+      patch.publishAt = becomingPublish ? (dateFormat() as unknown as Date) : oldArticle.publishAt;
+    }
+
+    const updatedArticle = await this.articleRepository.merge(oldArticle, patch);
     const saved = await this.articleRepository.save(updatedArticle);
     if (becomingPublish) {
+      await this.hookService.doAction('article.afterPublish', {
+        article: saved,
+        isNew: false,
+      });
       await this.notifyPublished(saved);
     }
     return saved;

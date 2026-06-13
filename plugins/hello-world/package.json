@@ -1,0 +1,7 @@
+{
+  "name": "@reactpress/plugin-hello-world",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ReactPress hello-world example plugin",
+  "license": "MIT"
+}

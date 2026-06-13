@@ -74,6 +74,12 @@ type ArticleEditorPageProps = {
   articleId?: string;
 };
 
+type ArticleSaveResponse = {
+  id: string;
+  status: string;
+  summary?: string | null;
+};
+
 export function ArticleEditorPage({ articleId }: ArticleEditorPageProps) {
   const isCreate = !articleId;
   const navigate = useNavigate();
@@ -197,15 +203,19 @@ export function ArticleEditorPage({ articleId }: ArticleEditorPageProps) {
       const body = buildArticleSaveBody({ ...draft, status });
       const id = savedId ?? articleId;
       if (id) {
-        return httpClient.patch<{ id: string; status: string }>(`/article/${id}`, body);
+        return httpClient.patch<ArticleSaveResponse>(`/article/${id}`, body);
       }
-      return httpClient.post<{ id: string; status: string }>("/article", body);
+      return httpClient.post<ArticleSaveResponse>("/article", body);
     },
     onSuccess: (res) => {
       const id = String(res.id);
       setSavedId(id);
       setDirty(false);
-      setDraft((prev) => ({ ...prev, status: res.status === "publish" ? "publish" : "draft" }));
+      setDraft((prev) => ({
+        ...prev,
+        status: res.status === "publish" ? "publish" : "draft",
+        summary: res.summary != null ? String(res.summary) : prev.summary,
+      }));
       void queryClient.invalidateQueries({ queryKey: ["articles"] });
       void queryClient.invalidateQueries({ queryKey: ["article", id] });
       message.success(

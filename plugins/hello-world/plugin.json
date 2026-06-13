@@ -1,0 +1,19 @@
+{
+  "$schema": "../plugin.manifest.schema.json",
+  "id": "hello-world",
+  "name": "Hello World",
+  "version": "1.0.0",
+  "description": "示例插件：发布文章时若摘要为空，自动用标题生成摘要；发布后在 Server 日志记录事件。",
+  "author": "ReactPress",
+  "requires": ">=3.5.0",
+  "server": {
+    "module": "./server/index.js",
+    "hooks": {
+      "subscribe": ["article.beforePublish", "article.afterPublish"]
+    }
+  },
+  "permissions": ["article:read"],
+  "capabilities": {
+    "headless": true
+  }
+}

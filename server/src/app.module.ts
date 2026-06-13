@@ -23,6 +23,7 @@ import { File } from './modules/file/file.entity';
 // 文件模块
 import { FileModule } from './modules/file/file.module';
 import { HealthModule } from './modules/health/health.module';
+import { HookModule } from './modules/hook/hook.module';
 import { Knowledge } from './modules/knowledge/knowledge.entity';
 // 知识库模块
 import { KnowledgeModule } from './modules/knowledge/knowledge.module';
@@ -99,6 +100,7 @@ import { WebhookModule } from './modules/webhook/webhook.module';
     ViewModule,
     SearchModule,
     HealthModule,
+    HookModule,
     ApiKeyModule,
     WebhookModule,
     ExtensionModule,

@@ -23,6 +23,10 @@ const toolkitAliases = [
     replacement: toolkitEntry("plugin/dev"),
   },
   {
+    find: "@fecommunity/reactpress-toolkit/plugin/extension",
+    replacement: toolkitEntry("plugin/extension"),
+  },
+  {
     find: "@fecommunity/reactpress-toolkit/theme",
     replacement: toolkitEntry("theme"),
   },

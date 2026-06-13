@@ -12,3 +12,6 @@ packages:
   # 官方主题包
   - 'themes'
   - 'themes/*'
+  # 官方插件包
+  - 'plugins'
+  - 'plugins/*'

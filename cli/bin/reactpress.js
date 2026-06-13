@@ -441,6 +441,25 @@ themeCmd.command('list').description(t('cli.theme.list.description')).action(() 
   require('../lib/theme-cli').runThemeList(ensureOriginalCwd());
 });
 
+const pluginCmd = program.command('plugin').description('Manage ReactPress plugins');
+
+pluginCmd
+  .command('install')
+  .description('Install a local plugin into .reactpress/plugins')
+  .argument('<id>', 'Plugin id from plugins/ registry')
+  .action((id) => {
+    try {
+      require('../lib/plugin-cli').runPluginInstall(ensureOriginalCwd(), id);
+    } catch (err) {
+      console.error(chalk.red('[reactpress]'), err.message || err);
+      process.exit(1);
+    }
+  });
+
+pluginCmd.command('list').description('List registered plugins').action(() => {
+  require('../lib/plugin-cli').runPluginList(ensureOriginalCwd());
+});
+
 program
   .command('start')
   .description(t('cli.start.description'))

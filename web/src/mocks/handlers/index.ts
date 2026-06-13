@@ -10,6 +10,7 @@ import {
   smtpHandlers,
   viewHandlers,
 } from "./page";
+import { pluginHandlers } from "./plugins";
 import { tagHandlers } from "./tag";
 import { themeHandlers } from "./themes";
 import { userHandlers } from "./user";
@@ -28,4 +29,5 @@ export const handlers = [
   ...viewHandlers,
   ...apiKeyHandlers,
   ...themeHandlers,
+  ...pluginHandlers,
 ];

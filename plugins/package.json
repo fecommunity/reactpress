@@ -1,0 +1,10 @@
+{
+  "name": "@fecommunity/reactpress-plugins",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ReactPress plugin registry — local sources",
+  "license": "MIT",
+  "reactpress": {
+    "local": ["hello-world"]
+  }
+}
