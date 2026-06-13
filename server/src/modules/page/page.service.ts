@@ -25,11 +25,11 @@ export class PageService {
       throw new HttpException(ApiMsg.PAGE_EXISTS, HttpStatus.BAD_REQUEST);
     }
 
-    const newPage = await this.pageRepository.create({
+    const newPage = this.pageRepository.create({
       ...page,
+      publishAt: page.status === 'publish' ? dateFormat() : page.publishAt,
     });
-    await this.pageRepository.save(newPage);
-    return newPage;
+    return this.pageRepository.save(newPage);
   }
 
   /**

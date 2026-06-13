@@ -11,7 +11,7 @@
   "templates": {
     "home": "pages/index.tsx",
     "single": "pages/article/[id].tsx",
-    "page": "pages/about.tsx",
+    "page": "pages/[path].tsx",
     "archive-category": "pages/category/[category].tsx",
     "archive-tag": "pages/tag/[tag].tsx",
     "search": "pages/search.tsx",

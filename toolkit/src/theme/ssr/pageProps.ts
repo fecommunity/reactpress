@@ -8,8 +8,9 @@ import {
 } from '../content/articleSlim';
 import { slimArchiveTree, type ArchiveTree } from '../content/archiveSlim';
 import { resolveCarouselArticles } from '../content/carouselArticles';
+import { rewriteArticleHtmlAssets } from '../content/assets';
 import { withApiRetry } from './fetch';
-import type { IArticle, ICategory, IKnowledge, ITag } from '../../types';
+import type { IArticle, ICategory, IKnowledge, IPage, ITag } from '../../types';
 
 export type HomePageProps = {
   articles: ListArticle[];
@@ -183,9 +184,28 @@ export async function fetchSearchPageProps(
   return { keyword: trimmed, articles };
 }
 
-/** CMS static page by id. */
-export async function fetchCmsPageProps(api: ThemeApi, id: string) {
-  return { page: unpackOne(await api.page.findById(id)) };
+export type CmsPageProps = Pick<IPage, 'id' | 'name' | 'path' | 'html' | 'toc' | 'status' | 'publishAt' | 'views'>;
+
+/** CMS static page by id or path slug (admin → 页面). */
+export async function fetchCmsPageProps(
+  api: ThemeApi,
+  idOrPath: string | undefined,
+): Promise<{ page: CmsPageProps | null }> {
+  if (!idOrPath?.trim()) return { page: null };
+  const raw = unpackOne<IPage>(await api.page.findById(idOrPath.trim()));
+  if (!raw || raw.status !== 'publish') return { page: null };
+  return {
+    page: {
+      id: raw.id,
+      name: raw.name,
+      path: raw.path,
+      html: raw.html ? rewriteArticleHtmlAssets(raw.html) : raw.html,
+      toc: raw.toc,
+      status: raw.status,
+      publishAt: raw.publishAt,
+      views: raw.views,
+    },
+  };
 }
 
 /** Single article by id (full entity from API). */
