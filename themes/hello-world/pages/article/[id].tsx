@@ -109,8 +109,6 @@ export default function ArticlePage({ article }: ArticleProps) {
             <img
               src={article.cover}
               alt={article.title}
-              width={768}
-              height={432}
               loading="lazy"
               decoding="async"
             />

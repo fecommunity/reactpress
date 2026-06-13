@@ -31,6 +31,9 @@ function resolveProductionThemeEnv(projectRoot, themeDir) {
     process.env.NEXT_PUBLIC_REACTPRESS_API_URL ||
     `${nginxEntry}/api`;
 
+  const clientSiteUrl =
+    process.env.CLIENT_SITE_URL?.trim() || `http://127.0.0.1:${visitorPort}`;
+
   return {
     ...process.env,
     NODE_ENV: 'production',
@@ -38,6 +41,7 @@ function resolveProductionThemeEnv(projectRoot, themeDir) {
     REACTPRESS_THEME_DIR: themeDir,
     PORT: String(visitorPort),
     CLIENT_PORT: String(visitorPort),
+    CLIENT_SITE_URL: clientSiteUrl,
     NGINX_ENTRY_URL: nginxEntry,
     REACTPRESS_NGINX_ENTRY_URL: nginxEntry,
     REACTPRESS_API_URL: serverApiUrl,
@@ -189,13 +193,23 @@ function hasUsableProductionBuild(themeDir, themeId, options = {}) {
 
 function resolvePreviewThemeEnv(projectRoot, themeDir, port, options = {}) {
   const distDir = resolveBuildDistDir(options);
+  const base = resolveProductionThemeEnv(projectRoot, themeDir);
+  let clientSiteUrl = base.CLIENT_SITE_URL;
+  try {
+    const url = new URL(clientSiteUrl || 'http://127.0.0.1:3001');
+    url.port = String(port);
+    clientSiteUrl = url.origin;
+  } catch {
+    clientSiteUrl = `http://127.0.0.1:${port}`;
+  }
   return {
-    ...resolveProductionThemeEnv(projectRoot, themeDir),
+    ...base,
     NODE_ENV: options.mode === 'dev' ? 'development' : 'production',
     INIT_CWD: themeDir,
     NEXT_DIST_DIR: distDir,
     PORT: String(port),
     CLIENT_PORT: String(port),
+    CLIENT_SITE_URL: clientSiteUrl,
   };
 }
 

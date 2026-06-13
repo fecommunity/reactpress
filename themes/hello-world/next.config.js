@@ -14,6 +14,7 @@ module.exports = createReactPressNextConfig({
     return [
       { source: '/api/:path*', destination: `${apiOrigin}/api/:path*` },
       { source: '/uploads/:path*', destination: `${apiOrigin}/uploads/:path*` },
+      { source: '/public/:path*', destination: `${apiOrigin}/public/:path*` },
       { source: '/logo.png', destination: `${apiOrigin}/public/logo.png` },
       { source: '/favicon.png', destination: `${apiOrigin}/public/favicon.png` },
       { source: '/favicon.ico', destination: '/favicon.svg' },
