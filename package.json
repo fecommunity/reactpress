@@ -29,6 +29,10 @@
     "build:plugins": "pnpm run --dir ./plugins build",
     "build:server": "pnpm run --dir ./server build",
     "build:web": "pnpm run --dir ./toolkit build && pnpm run --dir ./web build",
+    "build:web:electron": "pnpm run --dir ./toolkit build && pnpm run --dir ./web build:electron",
+    "dev:desktop": "node ./cli/bin/reactpress.js desktop dev",
+    "build:desktop": "pnpm run build:web:electron && pnpm run --dir ./desktop dist",
+    "build:desktop:dir": "pnpm run build:web:electron && pnpm run --dir ./desktop dist:dir",
     "build:docs": "pnpm run --dir ./docs build",
     "clean": "node ./scripts/clean.mjs",
     "start": "node ./cli/bin/reactpress.js server start",
@@ -88,6 +92,7 @@
     },
     "onlyBuiltDependencies": [
       "esbuild",
+      "electron",
       "msw",
       "sharp"
     ],

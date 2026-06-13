@@ -1,3 +1,5 @@
+import { resolveApiBaseUrl } from "@fecommunity/reactpress-toolkit/plugin/react";
+
 import { API_BASE_URL } from "@/utils/constants";
 
 export type UploadScene = "default" | "content" | "cover" | "avatar";
@@ -16,13 +18,14 @@ function getAuthHeaders(): Record<string, string> {
 }
 
 export async function uploadFile(file: File, unique = 0, scene: UploadScene = "default") {
+  const apiBase = (await resolveApiBaseUrl(API_BASE_URL || "/api")).replace(/\/$/, "");
   const formData = new FormData();
   formData.append("file", file);
   const params = new URLSearchParams({
     unique: String(unique),
     scene,
   });
-  const res = await fetch(`${API_BASE_URL}/file/upload?${params.toString()}`, {
+  const res = await fetch(`${apiBase}/file/upload?${params.toString()}`, {
     method: "POST",
     headers: getAuthHeaders(),
     body: formData,

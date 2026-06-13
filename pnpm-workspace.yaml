@@ -5,6 +5,8 @@ packages:
   - 'server'
   # Admin SPA
   - 'web'
+  # Desktop shell (Electron)
+  - 'desktop'
   # 文档
   - 'docs'
   # 工具包

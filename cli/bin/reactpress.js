@@ -11,7 +11,7 @@ const chalk = require('chalk');
 const { brand, divider } = require('../ui/theme');
 const { ensureOriginalCwd } = require('../lib/root');
 const { ensureProjectEnvironment, initMonorepoProject } = require('../lib/bootstrap');
-const { runDev, runWebDev, runThemeDev } = require('../lib/dev');
+const { runDev, runWebDev, runThemeDev, runDesktopDev } = require('../lib/dev');
 const { resolveDevApiOrigins, applyDevApiOriginsToEnv } = require('../lib/remote-dev');
 const { runApiDev } = require('../lib/api-dev');
 const { runLifecycleCommand } = require('../lib/lifecycle');
@@ -118,6 +118,21 @@ program
         return;
       }
       await runDev(projectRoot, { apiOrigins });
+    } catch (err) {
+      console.error(chalk.red('[reactpress]'), err.message || err);
+      process.exit(err.exitCode ?? 1);
+    }
+  });
+
+const desktopCmd = program.command('desktop').description(t('cli.desktopDev.description'));
+
+desktopCmd
+  .command('dev')
+  .description(t('cli.desktopDev.description'))
+  .action(async () => {
+    const projectRoot = ensureOriginalCwd();
+    try {
+      await runDesktopDev(projectRoot);
     } catch (err) {
       console.error(chalk.red('[reactpress]'), err.message || err);
       process.exit(err.exitCode ?? 1);

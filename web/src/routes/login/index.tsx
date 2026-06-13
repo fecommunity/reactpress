@@ -10,6 +10,8 @@ import { AuthTokensSchema, LoginRequestSchema } from "@/api/schemas";
 import { LanguageSwitcher, ThemeSwitcher } from "@/components/LanguageSwitcher";
 import { useAppLocale } from "@/hooks/useAppLocale";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
+import { isDesktopRuntime } from "@/shared/desktop/apiConfig";
+import { DesktopApiSetupPanel } from "@/shared/desktop/DesktopApiSetupPanel";
 import { AdminAccessDeniedError } from "@/shared/auth/adminAccess";
 import { getLoginErrorMessage } from "@/shared/auth/loginErrorMessage";
 import { fetchSessionFromMockApi, loginWithServerCredentials } from "@/shared/auth/session";
@@ -50,6 +52,7 @@ function LoginPage() {
   const locale = useSettingsStore((s) => s.locale);
   const setTokens = useAuthStore((s) => s.setTokens);
   const scrollerRef = useRef<HTMLDivElement>(null);
+  const desktopRuntime = isDesktopRuntime();
 
   const docsUrl = reactpressDocsPath(locale, "/docs/tutorial-basics/start");
 
@@ -114,6 +117,7 @@ function LoginPage() {
               <LoginBrandMark />
 
               <section className={pageStyles.authCard} aria-labelledby="login-page-heading">
+                {desktopRuntime ? <DesktopApiSetupPanel required /> : null}
                 <Form
                   className={pageStyles.authForm}
                   layout="vertical"

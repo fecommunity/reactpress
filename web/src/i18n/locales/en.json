@@ -516,7 +516,8 @@
       "storage": "Storage Settings",
       "seo": "SEO Settings",
       "api-keys": "API Keys",
-      "webhooks": "Webhooks"
+      "webhooks": "Webhooks",
+      "desktop-api": "Desktop Client"
     },
     "saveChanges": "Save Changes",
     "removeFavicon": "Remove site icon",
@@ -903,5 +904,19 @@
     "404Subtitle": "Sorry, the page you visited does not exist.",
     "403Title": "403",
     "403Subtitle": "Sorry, you don't have permission to access this page."
+  },
+  "desktop": {
+    "apiSetup": {
+      "title": "Connect to API Server",
+      "desc": "The desktop app needs a ReactPress API endpoint. For local development, run pnpm dev or pnpm dev:api first, then use http://127.0.0.1:3002/api, or enter a remote API URL.",
+      "apiUrlLabel": "API base URL",
+      "apiUrlRequired": "API URL is required",
+      "testConnection": "Test connection",
+      "testSuccess": "Connection successful",
+      "testFailed": "Cannot reach the API. Check the URL and ensure the server is running.",
+      "saveAndContinue": "Save and continue",
+      "saved": "API URL saved",
+      "saveFailed": "Failed to save"
+    }
   }
 }

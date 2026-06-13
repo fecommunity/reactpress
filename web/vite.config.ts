@@ -49,77 +49,78 @@ const toolkitAliases = [
   },
 ];
 
-const mode = process.env.NODE_ENV === "production" ? "production" : "development";
-const env = loadEnv(mode, process.cwd(), "");
-const apiProxyTarget =
-  process.env.VITE_DEV_API_PROXY_TARGET?.trim() ||
-  env.VITE_DEV_API_PROXY_TARGET?.trim() ||
-  "https://api.gaoredu.com";
-/** Dev behind nginx: `reactpress dev` sets process.env.VITE_ADMIN_BASE=/admin/ */
-const adminBase = process.env.VITE_ADMIN_BASE?.trim() || env.VITE_ADMIN_BASE?.trim() || "/";
-const adminPort = Number(
-  process.env.WEB_ADMIN_PORT?.trim() ||
-    env.WEB_ADMIN_PORT?.trim() ||
-    process.env.PORT?.trim() ||
-    "3000",
-);
+export default defineConfig(({ mode: viteMode }) => {
+  const env = loadEnv(viteMode, process.cwd(), "");
+  const apiProxyTarget =
+    process.env.VITE_DEV_API_PROXY_TARGET?.trim() ||
+    env.VITE_DEV_API_PROXY_TARGET?.trim() ||
+    "https://api.gaoredu.com";
+  /** Dev behind nginx: `reactpress dev` sets process.env.VITE_ADMIN_BASE=/admin/ */
+  const adminBase = process.env.VITE_ADMIN_BASE?.trim() || env.VITE_ADMIN_BASE?.trim() || "/";
+  const adminPort = Number(
+    process.env.WEB_ADMIN_PORT?.trim() ||
+      env.WEB_ADMIN_PORT?.trim() ||
+      process.env.PORT?.trim() ||
+      "3000",
+  );
 
-export default defineConfig({
-  base: adminBase,
-  staged: {
-    "*": "vp check --fix",
-  },
-  lint: { options: { typeAware: true, typeCheck: false } },
-  plugins: [
-    tanstackRouter({
-      routesDirectory: "./src/routes",
-      generatedRouteTree: "./src/routeTree.gen.ts",
-      routeFileIgnorePattern: "Login.*|loginHeroSlides",
-    }),
-    react(),
-    ...(process.env.REACTPRESS_NGINX_ENTRY_URL?.trim() ? [devPortRedirectPlugin(adminPort)] : []),
-  ],
-  server: {
-    host: true,
-    port: adminPort,
-    strictPort: true,
-    fs: {
-      allow: [path.resolve(__dirname, "..")],
+  return {
+    base: adminBase,
+    staged: {
+      "*": "vp check --fix",
     },
-    proxy: {
-      "/api": {
-        target: apiProxyTarget,
-        changeOrigin: true,
-        secure: true,
-      },
-    },
-  },
-  resolve: {
-    // Plugin admin lives under repo `plugins/` — resolve React from web's node_modules.
-    dedupe: ["react", "react-dom"],
-    alias: [
-      { find: "@", replacement: path.resolve(__dirname, "src") },
-      { find: "react", replacement: path.join(webNodeModules, "react") },
-      { find: "react-dom", replacement: path.join(webNodeModules, "react-dom") },
-      ...toolkitAliases,
+    lint: { options: { typeAware: true, typeCheck: false } },
+    plugins: [
+      tanstackRouter({
+        routesDirectory: "./src/routes",
+        generatedRouteTree: "./src/routeTree.gen.ts",
+        routeFileIgnorePattern: "Login.*|loginHeroSlides",
+      }),
+      react(),
+      ...(process.env.REACTPRESS_NGINX_ENTRY_URL?.trim() ? [devPortRedirectPlugin(adminPort)] : []),
     ],
-  },
-  build: {
-    rollupOptions: {
-      output: {
-        manualChunks: (id: string) => {
-          if (id.includes("node_modules/antd")) {
-            return "vendor-antd";
-          }
-          if (id.includes("@tanstack/react-router") || id.includes("@tanstack/react-query")) {
-            return "vendor-tanstack";
-          }
-          if (id.includes("lucide-react")) {
-            return "vendor-ui";
-          }
+    server: {
+      host: true,
+      port: adminPort,
+      strictPort: true,
+      fs: {
+        allow: [path.resolve(__dirname, "..")],
+      },
+      proxy: {
+        "/api": {
+          target: apiProxyTarget,
+          changeOrigin: true,
+          secure: true,
         },
       },
     },
-    chunkSizeWarningLimit: 1024,
-  },
+    resolve: {
+      // Plugin admin lives under repo `plugins/` — resolve React from web's node_modules.
+      dedupe: ["react", "react-dom"],
+      alias: [
+        { find: "@", replacement: path.resolve(__dirname, "src") },
+        { find: "react", replacement: path.join(webNodeModules, "react") },
+        { find: "react-dom", replacement: path.join(webNodeModules, "react-dom") },
+        ...toolkitAliases,
+      ],
+    },
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks: (id: string) => {
+            if (id.includes("node_modules/antd")) {
+              return "vendor-antd";
+            }
+            if (id.includes("@tanstack/react-router") || id.includes("@tanstack/react-query")) {
+              return "vendor-tanstack";
+            }
+            if (id.includes("lucide-react")) {
+              return "vendor-ui";
+            }
+          },
+        },
+      },
+      chunkSizeWarningLimit: 1024,
+    },
+  };
 });

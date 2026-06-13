@@ -9,6 +9,7 @@
     "dev:themes": "VITE_ENABLE_MOCK=true VITE_AUTH_MODE=mock vp dev",
     "test:e2e:themes": "playwright test e2e/themes.spec.ts",
     "build": "vp build",
+    "build:electron": "vp build --mode electron",
     "pretypecheck": "pnpm --dir ../toolkit run build",
     "typecheck": "tsc --noEmit",
     "preview": "vp preview",

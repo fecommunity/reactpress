@@ -37,6 +37,18 @@ test-results
 web/dist
 web/playwright-report
 web/.tanstack
+
+# Electron desktop (desktop/)
+desktop/out/
+desktop/release/
+desktop/*.dmg
+desktop/*.zip
+desktop/*.exe
+desktop/*.AppImage
+desktop/*.blockmap
+desktop/builder-debug.yml
+desktop/builder-effective-config.yaml
+
 .pnpm-store
 tsconfig.tsbuildinfo
 .pnpm-store

@@ -48,6 +48,7 @@ function printDevReadyBanner(
   {
     apiOnly = false,
     webOnly = false,
+    desktop = false,
     nginx = false,
     hasThemeSite = false,
     dbOk = true,
@@ -57,7 +58,13 @@ function printDevReadyBanner(
 ) {
   const urls = getDevUrls(projectRoot);
   const w = Math.min(terminalWidth() - 4, 56);
-  const readyKey = apiOnly ? 'devBanner.readyApi' : webOnly ? 'devBanner.readyWeb' : 'devBanner.ready';
+  const readyKey = apiOnly
+    ? 'devBanner.readyApi'
+    : desktop
+      ? 'devBanner.readyDesktop'
+      : webOnly
+        ? 'devBanner.readyWeb'
+        : 'devBanner.ready';
 
   console.log('');
   const lights = dbOk ? 'online' : 'degraded';

@@ -1,0 +1,22 @@
+.wrap {
+  margin-bottom: 24px;
+  padding: 20px;
+  border: 1px solid var(--admin-border-color, #e8e8e8);
+  border-radius: 8px;
+  background: var(--admin-panel-bg, #fafafa);
+}
+
+.title {
+  margin-top: 0 !important;
+  margin-bottom: 8px !important;
+}
+
+.desc {
+  margin-bottom: 16px !important;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}

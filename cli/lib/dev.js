@@ -1,4 +1,4 @@
-const { spawn } = require('child_process');
+const { spawn, spawnSync } = require('child_process');
 const { spawnDevChild } = require('./dev-child-io');
 const fs = require('fs');
 const path = require('path');
@@ -78,6 +78,7 @@ function formatDevFailureHint() {
 
 let apiChild;
 let webChild;
+let desktopChild;
 let shuttingDown = false;
 let nginxEnabled = false;
 
@@ -86,6 +87,7 @@ function shutdown(signal = 'SIGINT') {
   shuttingDown = true;
   stopThemeSite();
   if (nginxEnabled) stopDevNginx(ensureOriginalCwd());
+  if (desktopChild && !desktopChild.killed) desktopChild.kill(signal);
   if (webChild && !webChild.killed) webChild.kill(signal);
   if (apiChild && !apiChild.killed) apiChild.kill(signal);
   try {
@@ -326,6 +328,7 @@ async function startDevStack(
   {
     webOnly = false,
     themeOnly = false,
+    desktopMode = false,
     infraDone = false,
     apiOrigins = { admin: null, client: null, needsLocalApi: true },
   } = {},
@@ -436,8 +439,8 @@ async function startDevStack(
   } else if (includeAdmin) {
     logDevDetail('dev.phaseAdmin');
     spawnAdminWeb(projectRoot, {
-      behindNginx: planNginx,
-      integratedStack: false,
+      behindNginx: desktopMode ? false : planNginx,
+      integratedStack: desktopMode ? true : false,
       adminApiOrigin,
       waitForReady: false,
     });
@@ -539,6 +542,7 @@ async function startDevStack(
 
   printDevReadyBanner(projectRoot, {
     webOnly: includeAdmin && !includeThemeSite,
+    desktop: desktopMode,
     nginx: nginxEnabled,
     hasThemeSite: includeThemeSite,
     dbOk,
@@ -553,7 +557,12 @@ async function startDevStack(
 
 async function runDevStartup(
   projectRoot,
-  { webOnly = false, themeOnly = false, apiOrigins = { admin: null, client: null, needsLocalApi: true } } = {},
+  {
+    webOnly = false,
+    themeOnly = false,
+    desktopMode = false,
+    apiOrigins = { admin: null, client: null, needsLocalApi: true },
+  } = {},
 ) {
   startDevTimer();
   try {
@@ -581,7 +590,79 @@ async function runDevStartup(
     process.exit(1);
   }
 
-  await startDevStack(projectRoot, { webOnly, themeOnly, infraDone: true, apiOrigins });
+  await startDevStack(projectRoot, { webOnly, themeOnly, desktopMode, infraDone: true, apiOrigins });
+}
+
+async function spawnDesktopApp(projectRoot) {
+  const desktopDir = path.join(projectRoot, 'desktop');
+  if (!fs.existsSync(path.join(desktopDir, 'package.json'))) {
+    console.error(`[reactpress] ${t('dev.desktopMissing')}`);
+    shutdown('SIGINT');
+    process.exit(1);
+  }
+
+  const adminUrl = loadWebAdminUrl(projectRoot).replace(/\/$/, '');
+  logDevStatus('dev.desktopStarting', { url: adminUrl });
+
+  const buildResult = spawnSync('pnpm', ['run', '--dir', './desktop', 'build'], {
+    cwd: projectRoot,
+    shell: true,
+    stdio: 'inherit',
+    env: {
+      ...process.env,
+      REACTPRESS_ORIGINAL_CWD: projectRoot,
+    },
+  });
+  if (buildResult.status !== 0) {
+    shutdown('SIGINT');
+    process.exit(buildResult.status ?? 1);
+  }
+
+  desktopChild = spawnDevChild(
+    'pnpm',
+    ['exec', 'cross-env', `VITE_DEV_SERVER_URL=${adminUrl}`, 'ELECTRON_IS_DEV=1', 'electron', '.'],
+    {
+      shell: true,
+      cwd: desktopDir,
+      env: {
+        ...process.env,
+        REACTPRESS_ORIGINAL_CWD: projectRoot,
+        VITE_DEV_SERVER_URL: adminUrl,
+        ELECTRON_IS_DEV: '1',
+      },
+    },
+  );
+
+  desktopChild.on('close', (code) => {
+    if (!shuttingDown) shutdown('SIGINT');
+    process.exit(code ?? 0);
+  });
+}
+
+async function runDesktopDev(projectRoot = ensureOriginalCwd()) {
+  if (!hasWeb(projectRoot)) {
+    console.error(t('dev.noWeb'));
+    process.exit(1);
+  }
+
+  process.env.REACTPRESS_SKIP_NGINX = '1';
+
+  process.on('SIGINT', () => shutdown('SIGINT'));
+  process.on('SIGTERM', () => shutdown('SIGTERM'));
+  process.on('exit', () => {
+    try {
+      releaseDevSession(projectRoot);
+    } catch {
+      // ignore
+    }
+  });
+
+  await runDevStartup(projectRoot, {
+    webOnly: true,
+    desktopMode: true,
+    apiOrigins: { admin: null, client: null, needsLocalApi: true },
+  });
+  await spawnDesktopApp(projectRoot);
 }
 
 async function runThemeDev(
@@ -649,6 +730,7 @@ module.exports = {
   runDev,
   runWebDev,
   runThemeDev,
+  runDesktopDev,
   runDevStartup,
   buildToolkit,
   assertDevPrerequisites,

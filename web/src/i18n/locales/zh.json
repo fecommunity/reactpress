@@ -516,7 +516,8 @@
       "storage": "存储设置",
       "seo": "SEO 设置",
       "api-keys": "API 密钥",
-      "webhooks": "Webhooks"
+      "webhooks": "Webhooks",
+      "desktop-api": "桌面客户端"
     },
     "saveChanges": "保存更改",
     "removeFavicon": "移除站点图标",
@@ -903,5 +904,19 @@
     "404Subtitle": "抱歉，您访问的页面不存在。",
     "403Title": "403",
     "403Subtitle": "抱歉，您没有权限访问此页面。"
+  },
+  "desktop": {
+    "apiSetup": {
+      "title": "连接 API 服务器",
+      "desc": "桌面客户端需要连接到 ReactPress API。本地开发请先运行 pnpm dev 或 pnpm dev:api，然后使用默认地址 http://127.0.0.1:3002/api；也可填写远程 API 地址。",
+      "apiUrlLabel": "API 地址",
+      "apiUrlRequired": "请输入 API 地址",
+      "testConnection": "测试连接",
+      "testSuccess": "连接成功",
+      "testFailed": "无法连接 API，请检查地址与服务是否已启动",
+      "saveAndContinue": "保存并继续",
+      "saved": "API 地址已保存",
+      "saveFailed": "保存失败"
+    }
   }
 }

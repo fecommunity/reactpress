@@ -1,3 +1,5 @@
+import { resolveApiBaseUrl } from "@fecommunity/reactpress-toolkit/plugin/react";
+
 import { API_BASE_URL } from "./constants";
 
 export class ApiError extends Error {
@@ -22,10 +24,22 @@ type RequestOptions = Omit<RequestInit, "method" | "body"> & {
   params?: Record<string, string | number | null | undefined>;
 };
 
-function buildUrl(path: string, params?: RequestOptions["params"]): string {
-  const base = path.startsWith("http") ? path : `${API_BASE_URL}${path}`;
+async function getResolvedApiBaseUrl(): Promise<string> {
+  const base = await resolveApiBaseUrl(API_BASE_URL || "/api");
+  return base.replace(/\/$/, "");
+}
+
+async function buildUrl(path: string, params?: RequestOptions["params"]): Promise<string> {
+  let base: string;
+  if (path.startsWith("http://") || path.startsWith("https://")) {
+    base = path;
+  } else {
+    const apiBase = await getResolvedApiBaseUrl();
+    const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+    base = `${apiBase}${normalizedPath}`;
+  }
   if (!params) return base;
-  const url = new URL(base, window.location.origin);
+  const url = new URL(base);
   for (const [key, value] of Object.entries(params)) {
     if (value != null) url.searchParams.set(key, String(value));
   }
@@ -72,7 +86,7 @@ async function request<T>(
   body?: unknown,
   options?: RequestOptions,
 ): Promise<T> {
-  const url = buildUrl(path, options?.params);
+  const url = await buildUrl(path, options?.params);
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
     ...getAuthHeaders(),
