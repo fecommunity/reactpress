@@ -142,6 +142,16 @@ export function PluginsPage() {
 
   const renderRowActions = (plugin: PluginListItem) => {
     const actions: { key: string; label: string; onClick: () => void; danger?: boolean }[] = [];
+    const hasSettings = pluginHasSettings(plugin.settings?.schema);
+
+    const pushSettingsAction = () => {
+      if (!hasSettings) return;
+      actions.push({
+        key: "settings",
+        label: t("plugins.settings"),
+        onClick: () => {},
+      });
+    };
 
     if (!plugin.installed) {
       actions.push({
@@ -155,19 +165,14 @@ export function PluginsPage() {
         label: t("plugins.deactivate"),
         onClick: () => void runAction("deactivate", plugin.id),
       });
-      if (pluginHasSettings(plugin.settings?.schema)) {
-        actions.push({
-          key: "settings",
-          label: t("plugins.settings"),
-          onClick: () => {},
-        });
-      }
+      pushSettingsAction();
     } else {
       actions.push({
         key: "activate",
         label: t("plugins.activate"),
         onClick: () => void runAction("activate", plugin.id),
       });
+      pushSettingsAction();
       actions.push({
         key: "uninstall",
         label: t("plugins.uninstall"),
