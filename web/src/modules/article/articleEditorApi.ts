@@ -1,5 +1,6 @@
 import type { ArticleCategoryItem, ArticleTagItem } from "@/modules/article/articleListApi";
 import { getToolkitClient } from "@/shared/client";
+import { coerceApiString } from "@/shared/coerceApiString";
 
 export type EditorCategory = ArticleCategoryItem & { labelKey?: string };
 export type EditorTag = ArticleTagItem;
@@ -21,9 +22,9 @@ export async function createEditorCategory(label: string): Promise<EditorCategor
   } as Parameters<typeof api.category.create>[0]);
   const item = (Array.isArray(res) ? res[0] : res) as unknown as Record<string, unknown>;
   return {
-    id: String(item.id ?? ""),
-    label: String(item.label ?? label.trim()),
-    value: String(item.value ?? value),
+    id: coerceApiString(item.id),
+    label: coerceApiString(item.label, label.trim()),
+    value: coerceApiString(item.value, value),
   };
 }
 
@@ -35,9 +36,9 @@ export async function createEditorTag(label: string): Promise<EditorTag> {
   } as Parameters<typeof api.tag.create>[0]);
   const item = (Array.isArray(res) ? res[0] : res) as unknown as Record<string, unknown>;
   return {
-    id: String(item.id ?? ""),
-    label: String(item.label ?? label.trim()),
-    value: String(item.value ?? value),
+    id: coerceApiString(item.id),
+    label: coerceApiString(item.label, label.trim()),
+    value: coerceApiString(item.value, value),
   };
 }
 
@@ -47,7 +48,7 @@ export function visibilityFromArticle(loaded: {
 }): ArticleVisibility {
   if (loaded.needPassword === true) return "private";
   const pwd = loaded.password;
-  if (pwd != null && String(pwd).length > 0) return "private";
+  if (typeof pwd === "string" && pwd.length > 0) return "private";
   return "public";
 }
 
@@ -115,6 +116,9 @@ export function buildArticleSaveBody(draft: {
   html: string;
   toc: string;
   summary: string;
+  slug: string;
+  seoKeywords: string;
+  seoDescription: string;
   status: "draft" | "publish";
   cover: string | null;
   category: EditorCategory | null;
@@ -131,6 +135,9 @@ export function buildArticleSaveBody(draft: {
     html: draft.html,
     toc: draft.toc,
     summary: draft.summary,
+    slug: slugifyMetaValue(draft.slug) || null,
+    seoKeywords: draft.seoKeywords.trim() || null,
+    seoDescription: draft.seoDescription.trim() || null,
     status: draft.status,
     cover: draft.cover,
     category: draft.category?.id ?? null,

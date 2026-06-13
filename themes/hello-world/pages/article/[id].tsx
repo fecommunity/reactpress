@@ -23,7 +23,10 @@ interface ArticleProps {
   article: {
     id: string;
     title: string;
+    slug?: string;
     summary?: string;
+    seoDescription?: string;
+    seoKeywords?: string;
     html?: string;
     cover?: string;
     publishAt?: string;
@@ -77,7 +80,9 @@ export default function ArticlePage({ article }: ArticleProps) {
       head={
         <PageHead
           title={article.title}
-          description={article.summary || article.title}
+          description={article.seoDescription || article.summary || article.title}
+          keywords={article.seoKeywords}
+          canonicalPath={`/article/${article.slug || article.id}`}
         />
       }
     >

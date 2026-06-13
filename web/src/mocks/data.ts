@@ -45,6 +45,9 @@ export interface MockArticle {
   id: string;
   title: string;
   summary: string;
+  slug?: string | null;
+  seoKeywords?: string | null;
+  seoDescription?: string | null;
   content: string;
   html: string;
   cover: string | null;
@@ -94,6 +97,9 @@ function articleSeed(
   const content = partial.content ?? `# ${partial.title}\n\n示例正文内容。`;
   return {
     summary: partial.summary ?? `${partial.title} 的摘要。`,
+    slug: null,
+    seoKeywords: null,
+    seoDescription: null,
     content,
     html: `<h1>${partial.title}</h1><p>${content.replace(/\n/g, "<br/>")}</p>`,
     cover: null,

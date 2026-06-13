@@ -31,6 +31,18 @@ export class Article {
   @Column({ type: 'text', default: null })
   summary: string; // 摘要，自动生成
 
+  @ApiProperty({ description: 'URL 别名（slug）' })
+  @Column({ type: 'varchar', length: 191, default: null, unique: true })
+  slug: string;
+
+  @ApiProperty({ description: 'SEO 关键词，逗号分隔' })
+  @Column({ type: 'text', default: null })
+  seoKeywords: string;
+
+  @ApiProperty({ description: 'SEO 描述（meta description）' })
+  @Column({ type: 'text', default: null })
+  seoDescription: string;
+
   @ApiProperty()
   @Column({ type: 'mediumtext', default: null, charset: 'utf8mb4' })
   content: string; // 原始内容

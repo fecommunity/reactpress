@@ -5,10 +5,10 @@
   "description": "ReactPress plugin registry — local sources",
   "license": "MIT",
   "scripts": {
-    "build": "pnpm --filter @fecommunity/reactpress-plugin-hello-world run build",
-    "typecheck": "pnpm --filter @fecommunity/reactpress-plugin-hello-world run typecheck"
+    "build": "pnpm --filter @fecommunity/reactpress-plugin-hello-world run build && pnpm --filter @fecommunity/reactpress-plugin-seo run build",
+    "typecheck": "pnpm --filter @fecommunity/reactpress-plugin-hello-world run typecheck && pnpm --filter @fecommunity/reactpress-plugin-seo run typecheck"
   },
   "reactpress": {
-    "local": ["hello-world"]
+    "local": ["hello-world", "seo"]
   }
 }

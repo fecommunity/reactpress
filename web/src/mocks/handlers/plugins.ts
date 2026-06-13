@@ -7,6 +7,8 @@ import { http } from "msw";
 
 import helloWorldAdminEn from "../../../../plugins/hello-world/locales/en.json";
 import helloWorldAdminZh from "../../../../plugins/hello-world/locales/zh.json";
+import seoAdminEn from "../../../../plugins/seo/locales/en.json";
+import seoAdminZh from "../../../../plugins/seo/locales/zh.json";
 import { successResponse, withDelay } from "../createHandler";
 import { getMockGlobalSetting, patchMockGlobalSettingPlugins, setMockGlobalSetting } from "./page";
 
@@ -29,6 +31,27 @@ const HELLO_WORLD_SETTINGS = {
   },
 };
 
+const SEO_SETTINGS = {
+  schema: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      enabled: { type: "boolean", title: "启用 SEO 自动补全", default: true },
+      autoSlug: { type: "boolean", title: "自动生成 URL 别名", default: true },
+      autoDescription: { type: "boolean", title: "自动生成 SEO 描述", default: true },
+      autoKeywords: { type: "boolean", title: "自动生成 SEO 关键词", default: true },
+      descriptionMaxLength: {
+        type: "integer",
+        title: "描述最大长度",
+        minimum: 80,
+        maximum: 320,
+        default: 160,
+      },
+      descriptionSuffix: { type: "string", title: "描述截断后缀", default: "…" },
+    },
+  },
+};
+
 const MOCK_PLUGINS = [
   {
     id: "hello-world",
@@ -43,6 +66,21 @@ const MOCK_PLUGINS = [
     server: {
       module: "./dist/index.js",
       hooks: { subscribe: ["article.beforePublish"] },
+    },
+  },
+  {
+    id: "seo",
+    name: "SEO 增强",
+    version: "1.0.0",
+    description: "为文章提供 URL 别名、SEO 关键词与 meta 描述，发布时可自动补全。",
+    author: "ReactPress",
+    source: "local" as const,
+    installed: false,
+    active: false,
+    settings: SEO_SETTINGS,
+    server: {
+      module: "./dist/index.js",
+      hooks: { subscribe: ["article.beforeCreate", "article.beforePublish"] },
     },
   },
 ];
@@ -81,11 +119,17 @@ export const pluginHandlers = [
     await withDelay(80);
     const id = String(params.id);
     const locale = String(params.locale);
-    if (id !== "hello-world") {
-      return successResponse({ pluginId: id, locale, messages: {} });
+    if (id === "hello-world") {
+      const messages = locale.toLowerCase().startsWith("zh")
+        ? helloWorldAdminZh
+        : helloWorldAdminEn;
+      return successResponse({ pluginId: id, locale, messages });
     }
-    const messages = locale.toLowerCase().startsWith("zh") ? helloWorldAdminZh : helloWorldAdminEn;
-    return successResponse({ pluginId: id, locale, messages });
+    if (id === "seo") {
+      const messages = locale.toLowerCase().startsWith("zh") ? seoAdminZh : seoAdminEn;
+      return successResponse({ pluginId: id, locale, messages });
+    }
+    return successResponse({ pluginId: id, locale, messages: {} });
   }),
 
   http.post("/api/extension/plugins/:id/install", async ({ params }) => {

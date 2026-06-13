@@ -10,22 +10,26 @@ import { useRouter } from 'next/router';
 export interface PageHeadProps {
   title: string;
   description?: string;
+  keywords?: string;
+  canonicalPath?: string;
 }
 
-export default function PageHead({ title, description }: PageHeadProps) {
-  const { siteName, siteDescription, siteFavicon, siteUrl } = useSiteMeta();
+export default function PageHead({ title, description, keywords, canonicalPath }: PageHeadProps) {
+  const { siteName, siteDescription, siteFavicon, siteUrl, siteKeywords } = useSiteMeta();
   const router = useRouter();
   const fullTitle = getPageTitle(title, { systemTitle: siteName }, siteName);
   const metaDescription = description ?? siteDescription;
+  const metaKeywords = keywords ?? siteKeywords;
   const showFavicon = isLikelyValidAssetPath(siteFavicon);
   const favicon = showFavicon ? resolvePublicAssetUrl(siteFavicon) : '';
-  const path = router.asPath.split('?')[0] || '/';
+  const path = canonicalPath ?? router.asPath.split('?')[0] ?? '/';
   const canonical = siteUrl ? `${siteUrl.replace(/\/$/, '')}${path}` : undefined;
 
   return (
     <Head>
       <title>{fullTitle}</title>
       <meta name="description" content={metaDescription} />
+      {metaKeywords ? <meta name="keywords" content={metaKeywords} /> : null}
       <meta
         name="viewport"
         content="width=device-width, initial-scale=1, viewport-fit=cover"

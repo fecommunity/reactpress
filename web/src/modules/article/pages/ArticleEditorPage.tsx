@@ -20,6 +20,7 @@ import { ArticleEditorSidebar } from "@/modules/article/components/ArticleEditor
 import { EditorMetaPanel } from "@/modules/article/components/EditorMetaPanel";
 import type { ArticleListSearch } from "@/modules/article/pages/ArticleListPage";
 import { getToolkitClient } from "@/shared/client";
+import { coerceApiString } from "@/shared/coerceApiString";
 import { MarkdownEditor } from "@/shared/components/Editor";
 import { ModulePlaceholder } from "@/shared/components/ModulePlaceholder";
 import { httpClient } from "@/utils/http";
@@ -30,6 +31,9 @@ type ArticleDraft = {
   html: string;
   toc: string;
   summary: string;
+  slug: string;
+  seoKeywords: string;
+  seoDescription: string;
   status: "draft" | "publish";
   cover: string | null;
   category: EditorCategory | null;
@@ -57,6 +61,9 @@ const emptyDraft = (): ArticleDraft => ({
   html: "",
   toc: "[]",
   summary: "",
+  slug: "",
+  seoKeywords: "",
+  seoDescription: "",
   status: "draft",
   cover: null,
   category: null,
@@ -78,6 +85,9 @@ type ArticleSaveResponse = {
   id: string;
   status: string;
   summary?: string | null;
+  slug?: string | null;
+  seoKeywords?: string | null;
+  seoDescription?: string | null;
 };
 
 export function ArticleEditorPage({ articleId }: ArticleEditorPageProps) {
@@ -129,16 +139,19 @@ export function ArticleEditorPage({ articleId }: ArticleEditorPageProps) {
       setEditorReady(false);
       return;
     }
-    if (String(loaded.id ?? "") !== String(articleId)) {
+    if (coerceApiString(loaded.id) !== String(articleId)) {
       setEditorReady(false);
       return;
     }
     setDraft({
-      title: String(loaded.title ?? ""),
-      content: String(loaded.content ?? ""),
-      html: String(loaded.html ?? ""),
-      toc: String(loaded.toc ?? "[]"),
-      summary: String(loaded.summary ?? ""),
+      title: coerceApiString(loaded.title),
+      content: coerceApiString(loaded.content),
+      html: coerceApiString(loaded.html),
+      toc: coerceApiString(loaded.toc, "[]"),
+      summary: coerceApiString(loaded.summary),
+      slug: coerceApiString(loaded.slug),
+      seoKeywords: coerceApiString(loaded.seoKeywords),
+      seoDescription: coerceApiString(loaded.seoDescription),
       status: loaded.status === "publish" ? "publish" : "draft",
       cover: (loaded.cover as string | null) ?? null,
       category: normalizeEditorCategory(loaded.category, categories),
@@ -156,7 +169,7 @@ export function ArticleEditorPage({ articleId }: ArticleEditorPageProps) {
 
   useLayoutEffect(() => {
     if (isCreate || !loaded || !editorReady) return;
-    if (String(loaded.id ?? "") !== String(articleId)) return;
+    if (coerceApiString(loaded.id) !== String(articleId)) return;
 
     setDraft((prev) => {
       const category = normalizeEditorCategory(loaded.category, categories);
@@ -215,6 +228,10 @@ export function ArticleEditorPage({ articleId }: ArticleEditorPageProps) {
         ...prev,
         status: res.status === "publish" ? "publish" : "draft",
         summary: res.summary != null ? String(res.summary) : prev.summary,
+        slug: res.slug != null ? String(res.slug) : prev.slug,
+        seoKeywords: res.seoKeywords != null ? String(res.seoKeywords) : prev.seoKeywords,
+        seoDescription:
+          res.seoDescription != null ? String(res.seoDescription) : prev.seoDescription,
       }));
       void queryClient.invalidateQueries({ queryKey: ["articles"] });
       void queryClient.invalidateQueries({ queryKey: ["article", id] });
@@ -292,9 +309,9 @@ export function ArticleEditorPage({ articleId }: ArticleEditorPageProps) {
       message.error(t("article.previewNoSiteUrl"));
       return;
     }
-    const url = `${base.replace(/\/$/, "")}/article/${id}`;
+    const url = `${base.replace(/\/$/, "")}/article/${draft.slug.trim() || id}`;
     window.open(url, "_blank", "noopener,noreferrer");
-  }, [articleId, message, savedId, siteSettings?.systemUrl, t]);
+  }, [articleId, draft.slug, message, savedId, siteSettings?.systemUrl, t]);
 
   if (articleId && isLoading) {
     return (
@@ -356,6 +373,42 @@ export function ArticleEditorPage({ articleId }: ArticleEditorPageProps) {
                 onChange={(e) => patch("summary", e.target.value)}
               />
               <p className={styles.hint}>{t("editor.excerptHint")}</p>
+            </EditorMetaPanel>
+
+            <EditorMetaPanel title={t("article.seoTitle")} defaultOpen={false}>
+              <label className={styles.label} htmlFor="article-seo-slug">
+                {t("article.seoSlug")}
+              </label>
+              <Input
+                id="article-seo-slug"
+                value={draft.slug}
+                placeholder={t("article.seoSlugPlaceholder")}
+                onChange={(e) => patch("slug", e.target.value)}
+              />
+              <p className={styles.hint}>{t("article.seoSlugHint")}</p>
+
+              <label className={styles.label} htmlFor="article-seo-keywords">
+                {t("article.seoKeywords")}
+              </label>
+              <Input
+                id="article-seo-keywords"
+                value={draft.seoKeywords}
+                placeholder={t("article.seoKeywordsPlaceholder")}
+                onChange={(e) => patch("seoKeywords", e.target.value)}
+              />
+              <p className={styles.hint}>{t("article.seoKeywordsHint")}</p>
+
+              <label className={styles.label} htmlFor="article-seo-description">
+                {t("article.seoDescription")}
+              </label>
+              <Input.TextArea
+                id="article-seo-description"
+                value={draft.seoDescription}
+                autoSize={{ minRows: 3, maxRows: 8 }}
+                placeholder={t("article.seoDescriptionPlaceholder")}
+                onChange={(e) => patch("seoDescription", e.target.value)}
+              />
+              <p className={styles.hint}>{t("article.seoDescriptionHint")}</p>
             </EditorMetaPanel>
           </div>
         </div>

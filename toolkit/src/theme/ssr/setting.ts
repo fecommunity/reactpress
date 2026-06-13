@@ -19,6 +19,7 @@ export function unwrapSetting(response: unknown): Record<string, unknown> | null
 export interface SiteMeta {
   siteName: string;
   siteDescription: string;
+  siteKeywords?: string;
   siteUrl?: string;
   siteLogo?: string;
   siteFavicon?: string;
@@ -39,6 +40,10 @@ export function parseSiteMeta(row: Record<string, unknown> | null): SiteMeta {
     siteDescription:
       String(row.systemSubTitle ?? DEFAULT_SITE_META.siteDescription).trim() ||
       DEFAULT_SITE_META.siteDescription,
+    siteKeywords:
+      row.seoKeyword != null && String(row.seoKeyword).trim()
+        ? String(row.seoKeyword).trim()
+        : undefined,
     siteUrl: row.systemUrl != null ? String(row.systemUrl).trim() || undefined : undefined,
     siteLogo:
       row.systemLogo != null && String(row.systemLogo).trim()

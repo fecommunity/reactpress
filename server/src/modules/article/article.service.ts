@@ -9,8 +9,9 @@ import { HookService } from '../hook/hook.service';
 import { TagService } from '../tag/tag.service';
 import { WebhookService } from '../webhook/webhook.service';
 import { Article } from './article.entity';
-import { extractProtectedArticle } from './article.util';
 import { ArticleRevision } from './article-revision.entity';
+import { normalizeArticleSlug } from './article-slug.util';
+import { extractProtectedArticle } from './article.util';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Segment = require('segment');
@@ -57,12 +58,56 @@ export class ArticleService {
     return this.hookService.applyFilters('article.beforePublish', { ...article });
   }
 
+  private normalizeSeoPayload(payload: Partial<Article>): Partial<Article> {
+    const next = { ...payload };
+    if ('slug' in next) {
+      next.slug = normalizeArticleSlug(next.slug);
+    }
+    if (typeof next.seoKeywords === 'string') {
+      next.seoKeywords = next.seoKeywords.trim() || null;
+    }
+    if (typeof next.seoDescription === 'string') {
+      next.seoDescription = next.seoDescription.trim() || null;
+    }
+    return next;
+  }
+
+  private applyPublishFilterPatch(
+    patch: Partial<Article>,
+    filtered: Partial<Article>,
+  ): Partial<Article> {
+    const next = { ...patch };
+    for (const key of ['summary', 'slug', 'seoKeywords', 'seoDescription'] as const) {
+      if (filtered[key] !== undefined && filtered[key] !== null) {
+        next[key] = filtered[key] as never;
+      }
+    }
+    return next;
+  }
+
+  private async assertSlugAvailable(slug: string | null | undefined, excludeId?: string): Promise<void> {
+    if (!slug) return;
+    const query = this.articleRepository
+      .createQueryBuilder('article')
+      .where('article.slug = :slug', { slug })
+      .take(1);
+    if (excludeId) {
+      query.andWhere('article.id != :excludeId', { excludeId });
+    }
+    const exist = await query.getOne();
+    if (exist) {
+      throw new HttpException(ApiMsg.ARTICLE_SLUG_EXISTS, HttpStatus.BAD_REQUEST);
+    }
+  }
+
   /**
    * 创建文章
    * @param article
    */
   async create(article: Partial<Article>): Promise<Article> {
-    let payload = await this.hookService.applyFilters('article.beforeCreate', { ...article });
+    let payload = this.normalizeSeoPayload(
+      await this.hookService.applyFilters('article.beforeCreate', { ...article }),
+    );
     const { title } = payload;
     const exist = await this.articleRepository.findOne({ where: { title } });
 
@@ -70,10 +115,13 @@ export class ArticleService {
       throw new HttpException(ApiMsg.ARTICLE_TITLE_EXISTS, HttpStatus.BAD_REQUEST);
     }
 
+    await this.assertSlugAvailable(payload.slug);
+
     let { tags, category, status } = payload; // eslint-disable-line prefer-const
 
     if (status === 'publish') {
-      payload = await this.applyPublishFilters(payload);
+      payload = this.normalizeSeoPayload(await this.applyPublishFilters(payload));
+      await this.assertSlugAvailable(payload.slug);
       Object.assign(payload, {
         publishAt: dateFormat(),
       });
@@ -279,8 +327,10 @@ export class ArticleService {
       .leftJoinAndSelect('article.tags', 'tags')
       .where('article.id=:id')
       .orWhere('article.title=:title')
+      .orWhere('article.slug=:slug')
       .setParameter('id', id)
-      .setParameter('title', id);
+      .setParameter('title', id)
+      .setParameter('slug', id);
 
     if (status) {
       query.andWhere('article.status=:status').setParameter('status', status);
@@ -305,6 +355,14 @@ export class ArticleService {
     await this.saveRevision(oldArticle);
     let { tags, category, status } = article; // eslint-disable-line prefer-const
 
+    let patch: Partial<Article> = this.normalizeSeoPayload({
+      ...article,
+      views: oldArticle.views,
+      needPassword: !!article.password,
+    });
+
+    await this.assertSlugAvailable(patch.slug, id);
+
     if (tags) {
       tags = await this.tagService.findByIds(('' + tags).split(','));
     }
@@ -312,11 +370,9 @@ export class ArticleService {
     const existCategory = await this.categoryService.findById(category);
 
     const becomingPublish = oldArticle.status === 'draft' && status === 'publish';
-    let patch: Partial<Article> = {
-      ...article,
-      views: oldArticle.views,
+    patch = {
+      ...patch,
       category: existCategory,
-      needPassword: !!article.password,
       publishAt: becomingPublish ? (dateFormat() as unknown as Date) : oldArticle.publishAt,
       scheduledPublishAt: status === 'publish' ? null : article.scheduledPublishAt ?? oldArticle.scheduledPublishAt,
     };
@@ -326,13 +382,14 @@ export class ArticleService {
     }
 
     if (status === 'publish' || becomingPublish) {
-      const filtered = await this.applyPublishFilters({
-        ...oldArticle,
-        ...patch,
-      });
-      if (filtered.summary !== undefined && filtered.summary !== null) {
-        patch.summary = filtered.summary;
-      }
+      const filtered = this.normalizeSeoPayload(
+        await this.applyPublishFilters({
+          ...oldArticle,
+          ...patch,
+        }),
+      );
+      patch = this.applyPublishFilterPatch(patch, filtered);
+      await this.assertSlugAvailable(patch.slug, id);
       patch.publishAt = becomingPublish ? (dateFormat() as unknown as Date) : oldArticle.publishAt;
     }
 

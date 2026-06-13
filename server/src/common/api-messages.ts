@@ -26,6 +26,7 @@ export const ApiMsg = {
   FORBIDDEN_ACTION: 'Forbidden',
 
   ARTICLE_TITLE_EXISTS: 'Article title already exists',
+  ARTICLE_SLUG_EXISTS: 'Article slug already exists',
   REVISION_NOT_FOUND: 'Revision not found',
 
   TAG_EXISTS: 'Tag already exists',
