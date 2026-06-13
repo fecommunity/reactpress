@@ -51,8 +51,13 @@ export default function Home({ articles = [], categories = [], tags = [] }: Home
 export const getStaticProps: GetStaticProps<HomeProps> = async () => {
   const reactPress = await resolveStaticVisitorContext();
   try {
-    const { articles, categories, tags } = await fetchThemeCatalog(themeApi);
-    return themeStaticProps({ articles, categories, tags, reactPress });
+    const catalog = await fetchThemeCatalog(themeApi);
+    return themeStaticProps({
+      articles: catalog.articles as HomeProps['articles'],
+      categories: catalog.categories as HomeProps['categories'],
+      tags: catalog.tags as HomeProps['tags'],
+      reactPress,
+    });
   } catch {
     return themeStaticProps({ articles: [], categories: [], tags: [], reactPress });
   }

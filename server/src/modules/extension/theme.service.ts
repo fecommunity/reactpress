@@ -54,7 +54,7 @@ export interface ThemeListItem extends ThemeManifest {
   active: boolean;
   coverUrl?: string;
   npm?: ThemeNpmLockMeta;
-  catalog?: Pick<ThemeCatalogEntry, 'npm' | 'featured' | 'themeUri' | 'previewUrl'>;
+  catalog?: Pick<ThemeCatalogEntry, 'dependency' | 'npm' | 'featured' | 'themeUri' | 'previewUrl'>;
 }
 
 export type ThemePreviewSessionResult = SiteThemeState & {
@@ -320,7 +320,7 @@ export class ThemeService {
         },
         'npm',
         undefined,
-        { npm: entry.npm, featured: entry.featured, themeUri: entry.themeUri, previewUrl: entry.previewUrl },
+        { dependency: entry.dependency, npm: entry.npm, featured: entry.featured, themeUri: entry.themeUri, previewUrl: entry.previewUrl },
       );
     }
 

@@ -6,7 +6,7 @@
  *   npm   — `npm pack` a package spec, then copy into runtime
  *
  * NPM REGISTRY SPEC (canonical):
- *   themes/{anchor}/package.json  →  reactpress.theme  (see npm-catalog.schema.json)
+ *   themes/{anchor}/package.json  →  dependencies + reactpress.theme  (see npm-catalog.schema.json)
  *   themes/package.json           →  reactpress.npm: ["{anchor}", …]
  *
  * THREE LAYERS:
@@ -33,12 +33,93 @@ function isNonEmptyString(value) {
   return typeof value === 'string' && value.trim().length > 0;
 }
 
+function formatNpmInstallSpec(name, version) {
+  return `${name.trim()}@${version.trim()}`;
+}
+
+/** Split `package@version` into structured dependency (supports scoped packages). */
+function parseNpmSpecToDependency(spec) {
+  const trimmed = String(spec || '').trim();
+  const atIndex = trimmed.lastIndexOf('@');
+  if (atIndex <= 0) return null;
+  const name = trimmed.slice(0, atIndex).trim();
+  const version = trimmed.slice(atIndex + 1).trim();
+  if (!name || !version) return null;
+  return { name, version };
+}
+
+function readPackageDependencies(raw) {
+  const deps = raw?.dependencies;
+  if (!deps || typeof deps !== 'object') return null;
+  for (const [name, version] of Object.entries(deps)) {
+    if (isNonEmptyString(name) && isNonEmptyString(version)) {
+      return { name: name.trim(), version: String(version).trim() };
+    }
+  }
+  return null;
+}
+
+function readThemeDependency(theme, raw) {
+  const fromDeps = raw ? readPackageDependencies(raw) : null;
+  if (fromDeps) return fromDeps;
+
+  if (theme && typeof theme === 'object') {
+    const dep = theme.dependency;
+    if (dep && typeof dep === 'object' && isNonEmptyString(dep.name) && isNonEmptyString(dep.version)) {
+      return { name: dep.name.trim(), version: dep.version.trim() };
+    }
+    if (isNonEmptyString(theme.npm)) {
+      return parseNpmSpecToDependency(theme.npm);
+    }
+  }
+
+  const pkgName = typeof raw?.name === 'string' ? raw.name : undefined;
+  const pkgVersion = typeof raw?.version === 'string' ? raw.version : undefined;
+  if (isNonEmptyString(pkgName) && isNonEmptyString(pkgVersion)) {
+    return { name: pkgName.trim(), version: pkgVersion.trim() };
+  }
+
+  return null;
+}
+
+function resolveThemeNpmSpec(theme, raw) {
+  const dependency = readThemeDependency(theme, raw);
+  return dependency ? formatNpmInstallSpec(dependency.name, dependency.version) : undefined;
+}
+
 function isValidNpmCatalogEntry(entry) {
-  return entry && isNonEmptyString(entry.id) && isNonEmptyString(entry.name) && isNonEmptyString(entry.npm);
+  return (
+    entry &&
+    isNonEmptyString(entry.id) &&
+    isNonEmptyString(entry.name) &&
+    (isNonEmptyString(entry.npm) ||
+      (entry.dependency &&
+        typeof entry.dependency === 'object' &&
+        isNonEmptyString(entry.dependency.name) &&
+        isNonEmptyString(entry.dependency.version)))
+  );
 }
 
 function normalizeNpmCatalogEntry(entry) {
-  if (!isValidNpmCatalogEntry(entry)) return null;
+  if (!entry || !isNonEmptyString(entry.id) || !isNonEmptyString(entry.name)) return null;
+
+  let dependency =
+    entry.dependency &&
+    typeof entry.dependency === 'object' &&
+    isNonEmptyString(entry.dependency.name) &&
+    isNonEmptyString(entry.dependency.version)
+      ? { name: entry.dependency.name.trim(), version: entry.dependency.version.trim() }
+      : undefined;
+
+  let npmSpec = isNonEmptyString(entry.npm) ? entry.npm.trim() : undefined;
+  if (dependency) {
+    npmSpec = formatNpmInstallSpec(dependency.name, dependency.version);
+  } else if (npmSpec) {
+    dependency = parseNpmSpecToDependency(npmSpec) ?? undefined;
+  }
+
+  if (!npmSpec) return null;
+
   return {
     id: entry.id.trim(),
     name: entry.name,
@@ -50,7 +131,8 @@ function normalizeNpmCatalogEntry(entry) {
     previewUrl: entry.previewUrl,
     cover: entry.cover,
     tags: Array.isArray(entry.tags) ? entry.tags : undefined,
-    npm: entry.npm.trim(),
+    dependency,
+    npm: npmSpec,
     featured: entry.featured === true,
     requires: entry.requires,
     dir: typeof entry.dir === 'string' ? entry.dir.trim() : undefined,
@@ -105,10 +187,9 @@ function readNpmEntryFromPackageDir(catalogDir, pkgPath) {
       : null;
   if (!theme || !isNonEmptyString(theme.id)) return null;
 
-  const pkgName = typeof raw.name === 'string' ? raw.name : undefined;
   const pkgVersion = typeof raw.version === 'string' ? raw.version : '0.0.0';
-  const npmSpec =
-    isNonEmptyString(theme.npm) ? theme.npm.trim() : pkgName ? `${pkgName}@${pkgVersion}` : undefined;
+  const dependency = readThemeDependency(theme, raw);
+  const npmSpec = dependency ? formatNpmInstallSpec(dependency.name, dependency.version) : undefined;
   if (!npmSpec) return null;
 
   return normalizeNpmCatalogEntry({
@@ -116,7 +197,7 @@ function readNpmEntryFromPackageDir(catalogDir, pkgPath) {
     dir: catalogDir,
     name:
       isNonEmptyString(theme.name) ? theme.name : isNonEmptyString(raw.description) ? raw.description : theme.id,
-    version: isNonEmptyString(theme.version) ? theme.version : pkgVersion,
+    version: isNonEmptyString(theme.version) ? theme.version : dependency.version ?? pkgVersion,
     description:
       isNonEmptyString(theme.description) ? theme.description : isNonEmptyString(raw.description) ? raw.description : undefined,
     author: isNonEmptyString(theme.author) ? theme.author : raw.author,
@@ -126,6 +207,7 @@ function readNpmEntryFromPackageDir(catalogDir, pkgPath) {
     previewUrl: isNonEmptyString(theme.previewUrl) ? theme.previewUrl.trim() : undefined,
     cover: isNonEmptyString(theme.cover) ? theme.cover.trim() : undefined,
     tags: Array.isArray(theme.tags) ? theme.tags : undefined,
+    dependency,
     npm: npmSpec,
     featured: theme.featured === true,
     requires: isNonEmptyString(theme.requires) ? theme.requires : undefined,
@@ -134,8 +216,17 @@ function readNpmEntryFromPackageDir(catalogDir, pkgPath) {
 
 function readInlineNpmEntry(item) {
   if (!item || typeof item !== 'object') return null;
-  const npmSpec = isNonEmptyString(item.npm) ? item.npm.trim() : undefined;
-  if (!npmSpec) return null;
+  const dependency =
+    readPackageDependencies(item) ??
+    (item.dependency &&
+    typeof item.dependency === 'object' &&
+    isNonEmptyString(item.dependency.name) &&
+    isNonEmptyString(item.dependency.version)
+      ? { name: item.dependency.name.trim(), version: item.dependency.version.trim() }
+      : isNonEmptyString(item.npm)
+        ? parseNpmSpecToDependency(item.npm)
+        : undefined);
+  if (!dependency && !isNonEmptyString(item.npm)) return null;
   return normalizeNpmCatalogEntry({
     id: item.id,
     name: item.name,
@@ -147,7 +238,8 @@ function readInlineNpmEntry(item) {
     previewUrl: item.previewUrl,
     cover: item.cover,
     tags: item.tags,
-    npm: npmSpec,
+    dependency,
+    npm: dependency ? formatNpmInstallSpec(dependency.name, dependency.version) : item.npm,
     featured: item.featured,
     requires: item.requires,
   });
@@ -242,11 +334,11 @@ function validateNpmThemes(projectRoot) {
         missing.push(`${dir}/ must not contain theme.json (npm anchor vs local theme)`);
       }
       const entry = readNpmEntryFromPackageDir(dir, pkgPath);
-      if (!entry) missing.push(`${dir}/package.json (reactpress.theme)`);
+      if (!entry) missing.push(`${dir}/package.json (dependencies + reactpress.theme)`);
       continue;
     }
     if (!readInlineNpmEntry(item)) {
-      missing.push(`inline npm entry (id + npm required): ${JSON.stringify(item)}`);
+      missing.push(`inline npm entry (id + dependencies or npm required): ${JSON.stringify(item)}`);
     }
   }
 
@@ -270,6 +362,11 @@ module.exports = {
   readThemeSources,
   readNpmEntryFromPackageDir,
   readInlineNpmEntry,
+  formatNpmInstallSpec,
+  parseNpmSpecToDependency,
+  readPackageDependencies,
+  readThemeDependency,
+  resolveThemeNpmSpec,
   normalizeNpmCatalogEntry,
   isValidNpmCatalogEntry,
   validateLocalThemes,

@@ -22,7 +22,7 @@ function assertCatalog(raw) {
     throw new Error('catalog must contain a "themes" array');
   }
   for (const entry of raw.themes) {
-    if (!entry?.id || !entry?.name || !entry?.npm) {
+    if (!entry?.id || !entry?.name || !(entry?.npm || entry?.dependency)) {
       throw new Error(`Invalid catalog entry: ${JSON.stringify(entry)}`);
     }
   }

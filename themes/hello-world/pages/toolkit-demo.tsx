@@ -434,7 +434,10 @@ export default function ToolkitDemo({ articles, categories, tags, stats }: Toolk
 
 export const getStaticProps: GetStaticProps<ToolkitDemoProps> = async () => {
   try {
-    const { articles, categories, tags } = await fetchThemeCatalog(themeApi);
+    const catalog = await fetchThemeCatalog(themeApi);
+    const articles = catalog.articles as IArticle[];
+    const categories = catalog.categories as ICategory[];
+    const tags = catalog.tags as ITag[];
     const stats = {
       articlesCount: articles.length,
       categoriesCount: categories.length,

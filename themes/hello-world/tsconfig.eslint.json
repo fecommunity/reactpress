@@ -16,10 +16,19 @@
     "baseUrl": ".",
     "paths": {
       "@fecommunity/reactpress-toolkit": ["../../toolkit/dist/index.d.ts"],
+      "@fecommunity/reactpress-toolkit/app": ["../../toolkit/dist/app/index.d.ts"],
       "@fecommunity/reactpress-toolkit/api": ["../../toolkit/dist/api/index.d.ts"],
+      "@fecommunity/reactpress-toolkit/api/instance": ["../../toolkit/dist/api/instance.d.ts"],
+      "@fecommunity/reactpress-toolkit/config": ["../../toolkit/dist/config/index.d.ts"],
       "@fecommunity/reactpress-toolkit/types": ["../../toolkit/dist/types/index.d.ts"],
       "@fecommunity/reactpress-toolkit/utils": ["../../toolkit/dist/utils/index.d.ts"],
-      "@fecommunity/reactpress-toolkit/theme": ["../../toolkit/dist/theme/index.d.ts"]
+      "@fecommunity/reactpress-toolkit/theme": ["../../toolkit/dist/theme/index.d.ts"],
+      "@fecommunity/reactpress-toolkit/theme/server": ["../../toolkit/dist/theme/server.d.ts"],
+      "@fecommunity/reactpress-toolkit/theme/next-config": ["../../toolkit/dist/theme/next-config.d.ts"],
+      "@fecommunity/reactpress-toolkit/theme/node": ["../../toolkit/dist/theme/node.d.ts"],
+      "@fecommunity/reactpress-toolkit/theme/providers": ["../../toolkit/dist/theme/providers/index.d.ts"],
+      "@fecommunity/reactpress-toolkit/ui": ["../../toolkit/dist/ui/index.d.ts"],
+      "@fecommunity/reactpress-toolkit/ui/content": ["../../toolkit/dist/ui/components/content/index.d.ts"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

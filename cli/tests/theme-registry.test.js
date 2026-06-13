@@ -25,6 +25,10 @@ describe('lib/theme-registry', () => {
     const starter = catalog.themes.find((entry) => entry.id === OFFICIAL_THEME_STARTER_ID);
     assert.ok(starter);
     assert.equal(starter.npm, OFFICIAL_THEME_STARTER_SPEC);
+    assert.deepEqual(starter.dependency, {
+      name: '@fecommunity/reactpress-theme-starter',
+      version: '1.0.0-beta.0',
+    });
     assert.equal(starter.featured, true);
     assert.equal(starter.dir, 'theme-starter');
     assert.equal(starter.previewUrl, 'https://reactpress-theme-starter.vercel.app');

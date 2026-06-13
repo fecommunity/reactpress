@@ -13,6 +13,7 @@ export type ThemeRegistryCatalogEntry = {
   previewUrl?: string;
   cover?: string;
   tags?: string[];
+  dependency?: { name: string; version: string };
   npm: string;
   featured?: boolean;
   requires?: string;

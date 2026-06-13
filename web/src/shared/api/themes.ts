@@ -16,7 +16,13 @@ export interface ThemeNpmLockMeta {
   installedAt?: string;
 }
 
+export interface ThemeCatalogDependency {
+  name: string;
+  version: string;
+}
+
 export interface ThemeCatalogMeta {
+  dependency?: ThemeCatalogDependency;
   npm: string;
   featured?: boolean;
   themeUri?: string;
@@ -111,6 +117,7 @@ export function fetchThemeCatalog() {
       name: string;
       version: string;
       description?: string;
+      dependency?: ThemeCatalogDependency;
       npm: string;
       featured?: boolean;
       themeUri?: string;
