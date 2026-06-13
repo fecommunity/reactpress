@@ -1,9 +1,7 @@
 # 官方主题模板（运行时副本在 .reactpress/runtime/，已由 .reactpress/ 忽略）
 themes/*
 !themes/hello-world/
-!themes/twentytwentyfive/
 !themes/twentytwentysix/
-!themes/my-blog/
 !themes/.gitkeep
 !themes/README.md
 
@@ -26,9 +24,7 @@ sitemap.xml
 lib
 !cli/lib
 !themes/hello-world/**/lib/
-!themes/twentytwentyfive/**/lib/
 !themes/twentytwentysix/**/lib/
-!themes/my-blog/**/lib/
 dist
 dist-ssr
 coverage
@@ -40,6 +36,7 @@ web/.tanstack
 
 # Electron desktop (desktop/)
 desktop/out/
+desktop/.dev-app/
 desktop/release/
 desktop/*.dmg
 desktop/*.zip

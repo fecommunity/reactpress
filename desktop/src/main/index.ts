@@ -1,5 +1,6 @@
 import { app, BrowserWindow } from "electron";
 
+import { APP_DISPLAY_NAME } from "../shared/constants";
 import { getApiMode, getLocalApiPort } from "./config";
 import { registerIpcHandlers } from "./ipc";
 import {
@@ -9,6 +10,10 @@ import {
   stopLocalServer,
 } from "./local-server";
 import { createMainWindow, focusMainWindow } from "./window";
+import { applyAppIcon } from "./app-icon";
+
+// macOS dev runs inside Electron.app — set name before ready for Dock hover label.
+app.setName(APP_DISPLAY_NAME);
 
 let mainWindow: BrowserWindow | null = null;
 
@@ -59,6 +64,7 @@ if (!gotLock) {
 
   app.whenReady().then(async () => {
     registerIpcHandlers();
+    applyAppIcon();
     try {
       await ensureBackendReady();
     } catch (err) {

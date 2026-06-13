@@ -2,7 +2,8 @@ import path from "node:path";
 
 import { app, BrowserWindow, shell } from "electron";
 
-import { DEV_SERVER_URL, WINDOW_DEFAULTS } from "../shared/constants";
+import { APP_DISPLAY_NAME, DEV_SERVER_URL, WINDOW_DEFAULTS } from "../shared/constants";
+import { browserWindowIcon } from "./app-icon";
 import { getWindowBounds, saveWindowBounds } from "./config";
 
 const isDev = !app.isPackaged || process.env.ELECTRON_IS_DEV === "1";
@@ -28,7 +29,8 @@ export function createMainWindow(): BrowserWindow {
     minWidth: WINDOW_DEFAULTS.minWidth,
     minHeight: WINDOW_DEFAULTS.minHeight,
     show: false,
-    title: "ReactPress",
+    title: APP_DISPLAY_NAME,
+    icon: browserWindowIcon(),
     webPreferences: {
       preload: preloadPath(),
       contextIsolation: true,

@@ -44,11 +44,6 @@ function getPackages() {
     name: '@fecommunity/reactpress-template-hello-world',
     path: 'themes/hello-world',
     description: 'Hello World template for ReactPress'
-  },
-  {
-    name: '@fecommunity/reactpress-template-twentytwentyfive',
-    path: 'themes/twentytwentyfive',
-    description: 'Twenty Twenty Five blog template for ReactPress'
   }
 ];
 }
@@ -406,10 +401,7 @@ function buildPackage(pkg) {
         execSync('pnpm run prebuild && pnpm run build', { cwd: pkgDir, stdio: 'inherit' });
       } else if (pkg.path === 'toolkit') {
         execSync('pnpm run build', { cwd: pkgDir, stdio: 'inherit' });
-      } else if (
-        pkg.path === 'themes/hello-world' ||
-        pkg.path === 'themes/twentytwentyfive'
-      ) {
+      } else if (pkg.path === 'themes/hello-world') {
         console.log(chalk.gray('  Templates do not require building, skipping...'));
       } else if (fs.existsSync(path.join(pkgDir, 'package.json'))) {
         execSync('pnpm run build', { cwd: pkgDir, stdio: 'inherit' });

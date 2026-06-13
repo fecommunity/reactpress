@@ -1,5 +1,7 @@
 export const CONFIG_FILE = "config.json";
 
+export const APP_DISPLAY_NAME = "ReactPress";
+
 export const DEFAULT_LOCAL_API_PORT = 13102;
 
 /** Fallback when switching to remote without saved URL */

@@ -109,8 +109,7 @@ easy-blog-publish/
 ├── web/                 # Vite 管理后台
 ├── toolkit/             # OpenAPI 生成的 SDK + React 集成
 ├── themes/
-│   ├── hello-world/     # 最小入门主题
-│   └── twentytwentyfive/ # 完整博客主题
+│   └── hello-world/     # 最小入门主题
 ├── docs/                # 项目文档
 ├── scripts/             # 构建、部署、冒烟测试脚本
 ├── docker-compose.*.yml # Docker 编排
@@ -128,7 +127,6 @@ easy-blog-publish/
 | `server/` | `@fecommunity/reactpress-server` | API（monorepo 源码；npm 已 deprecated，CLI 内置副本） |
 | `toolkit/` | `@fecommunity/reactpress-toolkit` | 共享 SDK |
 | `themes/hello-world` | `@fecommunity/reactpress-template-hello-world` | 入门主题 |
-| `themes/twentytwentyfive` | `@fecommunity/reactpress-template-twentytwentyfive` | 完整主题 |
 
 ---
 
@@ -414,7 +412,6 @@ sequenceDiagram
 | 主题 | 定位 |
 |------|------|
 | **hello-world** | 最小可运行模板，推荐新主题复制 |
-| **twentytwentyfive** | 功能完整的博客主题（含遗留 admin 路由） |
 
 ---
 

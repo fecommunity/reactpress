@@ -71,7 +71,6 @@ pm2 delete reactpress-server 2>/dev/null || true
 pm2 delete @fecommunity/reactpress-server 2>/dev/null || true
 pm2 delete @fecommunity/reactpress-client 2>/dev/null || true
 pm2 delete reactpress-client 2>/dev/null || true
-pm2 delete @fecommunity/reactpress-template-twentytwentyfive 2>/dev/null || true
 pm2 delete @fecommunity/reactpress-template-hello-world 2>/dev/null || true
 
 log "Starting nginx reverse proxy (production)..."

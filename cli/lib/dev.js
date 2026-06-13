@@ -667,7 +667,7 @@ async function spawnDesktopApp(projectRoot) {
 
   desktopChild = spawnDevChild(
     'pnpm',
-    ['exec', 'cross-env', `VITE_DEV_SERVER_URL=${adminUrl}`, 'ELECTRON_IS_DEV=1', 'electron', '.'],
+    ['exec', 'cross-env', `VITE_DEV_SERVER_URL=${adminUrl}`, 'ELECTRON_IS_DEV=1', 'pnpm', 'run', 'dev:shell'],
     {
       shell: true,
       cwd: desktopDir,

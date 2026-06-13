@@ -22,8 +22,8 @@ ReactPress 的 Docker 部署采用多容器架构，包含以下服务：
 ```
 reactpress/
 ├── docker-compose.prod.yml  # 生产环境 Docker 编排文件
-├── themes/twentytwentyfive/
-│   └── Dockerfile           # 访客主题 Docker 配置
+├── themes/hello-world/
+│   └── （访客主题由 runtime 安装，见主题文档）
 ├── server/
 │   └── Dockerfile           # 服务端 Docker 配置
 └── nginx.conf               # Nginx 配置文件

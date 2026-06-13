@@ -9,7 +9,6 @@ COPY toolkit/package.json ./toolkit/
 COPY server/package.json ./server/
 COPY cli/package.json ./cli/
 COPY web/package.json ./web/
-COPY themes/twentytwentyfive/package.json ./themes/twentytwentyfive/
 COPY themes/hello-world/package.json ./themes/hello-world/
 
 RUN pnpm install --frozen-lockfile

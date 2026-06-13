@@ -318,9 +318,6 @@ async function restartProductionVisitorClient(projectRoot = resolveProjectRoot()
   const env = resolveProductionThemeEnv(projectRoot, themeDir);
 
   spawnSync('pm2', ['delete', 'reactpress-client'], { stdio: 'ignore' });
-  spawnSync('pm2', ['delete', '@fecommunity/reactpress-template-twentytwentyfive'], {
-    stdio: 'ignore',
-  });
   spawnSync('pm2', ['delete', '@fecommunity/reactpress-template-hello-world'], {
     stdio: 'ignore',
   });

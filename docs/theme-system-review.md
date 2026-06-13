@@ -220,12 +220,7 @@ WordPress：`wp scaffold theme` 或复制 twentytwenty* 即可。
 
 #### ⑩ 僵尸目录
 
-| 目录 | 状态 |
-| --- | --- |
-| `themes/my-blog/` | 仅有 `public/` 静态资源，无 manifest |
-| `themes/twentytwentyfive/` | 仅有 `public/`，完整主题已外置；preset 在 toolkit |
-
-在主题树中造成「这是不是个主题？」的困惑。
+已清理历史上仅有 `public/` 静态资源、无 `theme.json` 的占位目录（如 `my-blog/`、`twentytwentyfive/`）。
 
 #### ⑪ 遗留路径与键名
 
@@ -311,9 +306,8 @@ get_header()/get_footer()    SiteDocument / ThemeLayout
 
 1. **重写 `themes/hello-world/README.md`**，删除 App Router / ThemeProvider 等过时内容
 2. **修正 `design.md` theme.json 示例**，与 `theme.manifest.schema.json` 一致
-3. **清理或标注** `my-blog/`、`twentytwentyfive/`（README 说明「仅资源，非完整主题」）
-4. **统一默认 themeId** 为 `hello-world`
-5. 后台增加 **「安装并启用」** 按钮（至少对 local 主题）
+3. **统一默认 themeId** 为 `hello-world`
+4. 后台增加 **「安装并启用」** 按钮（至少对 local 主题）
 
 ### 阶段 B — 降低作者门槛（2–4 周）
 

@@ -9,8 +9,8 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "postinstall": "node ./scripts/ensure-electron.mjs",
-    "dev": "pnpm run build && cross-env ELECTRON_IS_DEV=1 electron .",
-    "dev:shell": "pnpm run build && cross-env ELECTRON_IS_DEV=1 electron .",
+    "dev": "pnpm run build && pnpm run dev:shell",
+    "dev:shell": "cross-env ELECTRON_IS_DEV=1 node ./scripts/launch-dev.mjs",
     "dist": "pnpm run build && electron-builder --config electron-builder.yml",
     "dist:dir": "pnpm run build && electron-builder --config electron-builder.yml --dir",
     "typecheck": "tsc -p tsconfig.json --noEmit"
@@ -37,6 +37,10 @@
         "from": "../web/dist",
         "to": "renderer",
         "filter": ["**/*"]
+      },
+      {
+        "from": "resources/icon.png",
+        "to": "icon.png"
       }
     ],
     "mac": {
