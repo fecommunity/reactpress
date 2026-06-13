@@ -869,7 +869,9 @@
     "settingsNoSchema": "该插件未提供可配置项。",
     "settingsNotInstalled": "请先安装该插件后再访问设置。",
     "settingsTitle": "{{name}} 设置",
-    "backToPlugins": "← 返回插件列表"
+    "settingsSection": "插件选项",
+    "settingsSaveHint": "保存后立即生效，无需重启服务。",
+    "backToPlugins": "返回插件列表"
   },
   "placeholder": {
     "defaultDescription": "该模块页面已挂载，业务 UI 将在此迭代。",

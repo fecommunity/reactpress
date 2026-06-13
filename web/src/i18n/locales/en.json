@@ -869,7 +869,9 @@
     "settingsNoSchema": "This plugin has no configurable settings.",
     "settingsNotInstalled": "Install this plugin before opening its settings.",
     "settingsTitle": "{{name}} Settings",
-    "backToPlugins": "← Back to plugins"
+    "settingsSection": "Plugin options",
+    "settingsSaveHint": "Changes apply immediately without restarting the server.",
+    "backToPlugins": "Back to plugins"
   },
   "placeholder": {
     "defaultDescription": "This module is mounted; business UI will be built here.",
