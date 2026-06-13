@@ -23,6 +23,10 @@ export interface PluginListItem {
     module: string;
     hooks?: { subscribe?: string[]; provide?: string[] };
   };
+  admin?: {
+    slots?: { subscribe?: string[] };
+    menu?: { title: string; path: string; permission?: string; sort?: number };
+  };
   permissions?: string[];
 }
 

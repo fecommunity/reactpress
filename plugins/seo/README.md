@@ -44,6 +44,10 @@
 3. 写文章时在 **SEO 设置** 面板填写别名、关键词、描述（可留空由插件补全）
 4. 发布后在主题文章页查看 `<meta name="description">` 与 `<meta name="keywords">`
 
+## Admin UI
+
+文章编辑器的 **SEO 设置** 面板通过 Admin 插槽 `article.editor.meta.afterSummary` 注入（见 [`admin/`](./admin/)）。插件停用后插槽自动卸载，面板不再显示。
+
 ## 开发
 
 ```bash

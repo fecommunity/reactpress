@@ -1,10 +1,12 @@
+import { AdminSlotIds } from "@fecommunity/reactpress-toolkit/plugin/admin";
+import { AdminSlot, useAdminSlotFilled } from "@fecommunity/reactpress-toolkit/plugin/react";
+import type { ArticleEditorAdminSlotContext } from "@fecommunity/reactpress-toolkit/plugin/admin";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { App, Button, Input, Spin } from "antd";
-import { useCallback, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { useIsPluginActive } from "@/hooks/useIsPluginActive";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 import {
   type ArticleVisibility,
@@ -97,7 +99,7 @@ export function ArticleEditorPage({ articleId }: ArticleEditorPageProps) {
   const { message, modal } = App.useApp();
   const { t } = useTranslation();
   const { data: siteSettings } = useSiteSettings();
-  const seoPluginActive = useIsPluginActive("seo");
+  const seoSlotFilled = useAdminSlotFilled(AdminSlotIds.ARTICLE_EDITOR_META_AFTER_SUMMARY);
   const queryClient = useQueryClient();
   const [draft, setDraft] = useState<ArticleDraft>(emptyDraft);
   const draftRef = useRef(draft);
@@ -189,6 +191,35 @@ export function ArticleEditorPage({ articleId }: ArticleEditorPageProps) {
     setDirty(true);
   }, []);
 
+  const articleEditorSlotContext = useMemo<ArticleEditorAdminSlotContext>(
+    () => ({
+      articleId: savedId ?? articleId,
+      draft: {
+        title: draft.title,
+        summary: draft.summary,
+        slug: draft.slug,
+        seoKeywords: draft.seoKeywords,
+        seoDescription: draft.seoDescription,
+        status: draft.status,
+      },
+      patch: (key, value) =>
+        patch(key as keyof ArticleDraft, value as ArticleDraft[keyof ArticleDraft]),
+      translate: t,
+    }),
+    [
+      articleId,
+      draft.seoDescription,
+      draft.seoKeywords,
+      draft.slug,
+      draft.status,
+      draft.summary,
+      draft.title,
+      patch,
+      savedId,
+      t,
+    ],
+  );
+
   const handleEditorChange = useCallback(
     ({ value, html, toc }: { value: string; html: string; toc: string }) => {
       const prev = draftRef.current;
@@ -215,7 +246,7 @@ export function ArticleEditorPage({ articleId }: ArticleEditorPageProps) {
 
   const saveMutation = useMutation({
     mutationFn: async (status: "draft" | "publish") => {
-      const body = buildArticleSaveBody({ ...draft, status }, { includeSeo: seoPluginActive });
+      const body = buildArticleSaveBody({ ...draft, status }, { includeSeo: seoSlotFilled });
       const id = savedId ?? articleId;
       if (id) {
         return httpClient.patch<ArticleSaveResponse>(`/article/${id}`, body);
@@ -311,9 +342,9 @@ export function ArticleEditorPage({ articleId }: ArticleEditorPageProps) {
       message.error(t("article.previewNoSiteUrl"));
       return;
     }
-    const url = `${base.replace(/\/$/, "")}/article/${seoPluginActive && draft.slug.trim() ? draft.slug.trim() : id}`;
+    const url = `${base.replace(/\/$/, "")}/article/${seoSlotFilled && draft.slug.trim() ? draft.slug.trim() : id}`;
     window.open(url, "_blank", "noopener,noreferrer");
-  }, [articleId, draft.slug, message, savedId, seoPluginActive, siteSettings?.systemUrl, t]);
+  }, [articleId, draft.slug, message, savedId, seoSlotFilled, siteSettings?.systemUrl, t]);
 
   if (articleId && isLoading) {
     return (
@@ -377,43 +408,10 @@ export function ArticleEditorPage({ articleId }: ArticleEditorPageProps) {
               <p className={styles.hint}>{t("editor.excerptHint")}</p>
             </EditorMetaPanel>
 
-            {seoPluginActive ? (
-              <EditorMetaPanel title={t("article.seoTitle")} defaultOpen={false}>
-                <label className={styles.label} htmlFor="article-seo-slug">
-                  {t("article.seoSlug")}
-                </label>
-                <Input
-                  id="article-seo-slug"
-                  value={draft.slug}
-                  placeholder={t("article.seoSlugPlaceholder")}
-                  onChange={(e) => patch("slug", e.target.value)}
-                />
-                <p className={styles.hint}>{t("article.seoSlugHint")}</p>
-
-                <label className={styles.label} htmlFor="article-seo-keywords">
-                  {t("article.seoKeywords")}
-                </label>
-                <Input
-                  id="article-seo-keywords"
-                  value={draft.seoKeywords}
-                  placeholder={t("article.seoKeywordsPlaceholder")}
-                  onChange={(e) => patch("seoKeywords", e.target.value)}
-                />
-                <p className={styles.hint}>{t("article.seoKeywordsHint")}</p>
-
-                <label className={styles.label} htmlFor="article-seo-description">
-                  {t("article.seoDescription")}
-                </label>
-                <Input.TextArea
-                  id="article-seo-description"
-                  value={draft.seoDescription}
-                  autoSize={{ minRows: 3, maxRows: 8 }}
-                  placeholder={t("article.seoDescriptionPlaceholder")}
-                  onChange={(e) => patch("seoDescription", e.target.value)}
-                />
-                <p className={styles.hint}>{t("article.seoDescriptionHint")}</p>
-              </EditorMetaPanel>
-            ) : null}
+            <AdminSlot
+              slot={AdminSlotIds.ARTICLE_EDITOR_META_AFTER_SUMMARY}
+              context={articleEditorSlotContext}
+            />
           </div>
         </div>
 

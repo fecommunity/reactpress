@@ -4,6 +4,7 @@ import { Outlet, useLocation } from "@tanstack/react-router";
 import { Layout } from "antd";
 
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
+import { PluginAdminProvider } from "@/shell/PluginAdminProvider";
 import { normalizeAppPath } from "@/utils/appMenu";
 
 import { Header } from "../Header";
@@ -23,14 +24,16 @@ export function MainLayout() {
   }
 
   return (
-    <Layout className="admin-shell">
-      <Header />
-      <Layout className="admin-shell__body">
-        <Sidebar />
-        <Content className="main-layout-main">
-          <Outlet />
-        </Content>
+    <PluginAdminProvider>
+      <Layout className="admin-shell">
+        <Header />
+        <Layout className="admin-shell__body">
+          <Sidebar />
+          <Content className="main-layout-main">
+            <Outlet />
+          </Content>
+        </Layout>
       </Layout>
-    </Layout>
+    </PluginAdminProvider>
   );
 }

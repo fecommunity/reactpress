@@ -51,7 +51,24 @@
     "admin": {
       "type": "object",
       "properties": {
-        "entry": { "type": "string" },
+        "slots": {
+          "type": "object",
+          "properties": {
+            "subscribe": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "article.editor.meta.afterSummary",
+                  "article.editor.sidebar.afterPublish"
+                ]
+              },
+              "uniqueItems": true,
+              "minItems": 1
+            }
+          },
+          "additionalProperties": false
+        },
         "menu": {
           "type": "object",
           "required": ["title", "path"],

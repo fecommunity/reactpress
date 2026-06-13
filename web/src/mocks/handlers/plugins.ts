@@ -82,6 +82,17 @@ const MOCK_PLUGINS = [
       module: "./dist/index.js",
       hooks: { subscribe: ["article.beforeCreate", "article.beforePublish"] },
     },
+    admin: {
+      slots: {
+        subscribe: ["article.editor.meta.afterSummary"],
+      },
+      menu: {
+        title: "SEO 增强",
+        path: "/plugins/seo/settings",
+        permission: "extension:manage",
+        sort: 20,
+      },
+    },
   },
 ];
 

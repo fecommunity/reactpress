@@ -1,4 +1,21 @@
 import type { AdminModule } from "@fecommunity/reactpress-toolkit/plugin/admin";
+import { AdminSlotIds } from "@fecommunity/reactpress-toolkit/plugin/admin";
+
+/** Admin UI slots owned by the article module (see toolkit `AdminSlotIds`). */
+export const ARTICLE_ADMIN_SLOTS = [
+  {
+    id: AdminSlotIds.ARTICLE_EDITOR_META_AFTER_SUMMARY,
+    title: "文章编辑器 · 摘要下方",
+    module: "article",
+    description: "挂载 SEO、自定义 meta 等扩展面板",
+  },
+  {
+    id: AdminSlotIds.ARTICLE_EDITOR_SIDEBAR_AFTER_PUBLISH,
+    title: "文章编辑器 · 发布框下方",
+    module: "article",
+    description: "挂载发布相关扩展控件",
+  },
+] as const;
 
 export const articleModule: AdminModule = {
   id: "article",

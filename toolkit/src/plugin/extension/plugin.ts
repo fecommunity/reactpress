@@ -1,5 +1,7 @@
 /** WordPress-style plugin manifest and site plugin state (shared by server / web). */
 
+import type { AdminSlotId } from '../admin/slots';
+import { isAdminSlotId } from '../admin/slots';
 import { isSafePluginModuleRel } from './security';
 
 export interface PluginServerManifest {
@@ -18,8 +20,16 @@ export interface PluginAdminMenuManifest {
   sort?: number;
 }
 
+/** Declarative admin UI — mirrors `server.hooks.subscribe` for Admin slots. */
+export interface PluginAdminSlotsManifest {
+  /** Built-in slot ids this plugin mounts UI into (see `AdminSlotIds`). */
+  subscribe?: AdminSlotId[];
+}
+
 export interface PluginAdminManifest {
+  /** @deprecated Use convention `admin/index.ts`; declared slots drive loading. */
   entry?: string;
+  slots?: PluginAdminSlotsManifest;
   menu?: PluginAdminMenuManifest;
 }
 
@@ -135,17 +145,27 @@ export function parsePluginManifest(raw: unknown): PluginManifest | null {
   const adminRaw = o.admin;
   const admin =
     adminRaw && typeof adminRaw === 'object'
-      ? {
-          entry:
-            typeof (adminRaw as Record<string, unknown>).entry === 'string'
-              ? ((adminRaw as Record<string, unknown>).entry as string)
-              : undefined,
-          menu:
-            (adminRaw as Record<string, unknown>).menu &&
-            typeof (adminRaw as Record<string, unknown>).menu === 'object'
-              ? ((adminRaw as Record<string, unknown>).menu as PluginAdminMenuManifest)
-              : undefined,
-        }
+      ? (() => {
+          const raw = adminRaw as Record<string, unknown>;
+          const slotsRaw = raw.slots;
+          const subscribe =
+            slotsRaw &&
+            typeof slotsRaw === 'object' &&
+            Array.isArray((slotsRaw as Record<string, unknown>).subscribe)
+              ? ((slotsRaw as Record<string, unknown>).subscribe as unknown[]).filter(
+                  (slot): slot is AdminSlotId =>
+                    typeof slot === 'string' && isAdminSlotId(slot),
+                )
+              : undefined;
+          return {
+            entry: typeof raw.entry === 'string' ? raw.entry : undefined,
+            slots: subscribe?.length ? { subscribe } : undefined,
+            menu:
+              raw.menu && typeof raw.menu === 'object'
+                ? (raw.menu as PluginAdminMenuManifest)
+                : undefined,
+          };
+        })()
       : undefined;
 
   const settingsRaw = o.settings;
@@ -225,4 +245,13 @@ export function mergePluginStateIntoGlobalSetting(
     entries: patch.entries ?? current.entries,
   };
   return base;
+}
+
+/** Conventional admin module path relative to plugin package root. */
+export const PLUGIN_ADMIN_MODULE_CONVENTION = 'admin/index';
+
+/** Whether manifest declares admin UI (slot and/or settings menu). */
+export function pluginManifestHasAdminUI(admin: PluginAdminManifest | undefined): boolean {
+  if (!admin) return false;
+  return Boolean(admin.menu || (admin.slots?.subscribe?.length ?? 0) > 0);
 }

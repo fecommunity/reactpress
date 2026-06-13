@@ -110,13 +110,14 @@ Schema：[`plugin.manifest.schema.json`](./plugin.manifest.schema.json)。解析
 | `requiresPlugins` | | 依赖的其他插件 id |
 | `server.module` | ✓* | Server 入口（编译后的 JS） |
 | `server.hooks.subscribe` | | 声明订阅的 Hook 名 |
-| `admin.entry` / `admin.menu` | | Admin 动态加载（二期） |
+| `admin.slots.subscribe` | | 声明挂载的内置 Admin 插槽 id（枚举） |
+| `admin.menu` | | 插件独立设置页菜单 |
 | `settings.schema` | | JSON Schema，驱动配置表单 |
 | `locales/{locale}.json` | | 管理端文案（与主题相同目录约定） |
 | `permissions` | | Admin 能力声明 |
 | `capabilities` | | 安全能力（见下文） |
 
-\* 至少存在 `server.module` 或 `admin.entry` 之一。
+\* 至少存在 `server.module`，或 `admin.slots` / `admin.menu` 之一（Admin 代码约定在 `admin/index.ts`）。
 
 | WordPress 插件头 | ReactPress |
 | :--- | :--- |
@@ -154,12 +155,81 @@ plugins/my-plugin/
 
 ```
 plugins/{id}/src   →  仅 @fecommunity/reactpress-toolkit/plugin/server
-plugins/{id}/admin →  toolkit/plugin/admin + toolkit/react（二期）
+plugins/{id}/admin →  toolkit/plugin/admin + toolkit/plugin/react
 server 核心        →  只依赖 HookService，不 import 具体插件
-web / themes       →  不直接 import 插件源码
+web / themes       →  通过 Admin 插槽加载插件 admin（约定路径 `admin/index.ts`）
 ```
 
-入口契约：
+### Admin UI 插槽
+
+与 `server.hooks.subscribe` 对称：**manifest 声明插槽枚举**，**代码约定入口路径**。
+
+| 层级 | 声明方式 | 说明 |
+| :--- | :--- | :--- |
+| `plugin.json` | `admin.slots.subscribe: ["article.editor.meta.afterSummary"]` | 内置插槽 id 枚举，驱动是否加载 Admin |
+| 插件包 | 固定 `admin/index.ts` → `registerAdmin()` | 无需在 manifest 写路径 |
+| 核心页面 | `<AdminSlot slot={AdminSlotIds.…} />` | 宿主挂载点 |
+
+**manifest 示例：**
+
+```json
+"admin": {
+  "slots": {
+    "subscribe": ["article.editor.meta.afterSummary"]
+  },
+  "menu": {
+    "title": "SEO 增强",
+    "path": "/plugins/seo/settings",
+    "permission": "extension:manage"
+  }
+}
+```
+
+**内置插槽**（`AdminSlotIds` / JSON Schema `enum`）：
+
+| 插槽 id | 位置 |
+| :--- | :--- |
+| `article.editor.meta.afterSummary` | 文章编辑器 · 摘要下方 |
+| `article.editor.sidebar.afterPublish` | 文章编辑器 · 右侧发布框下方 |
+
+**核心页面挂载：**
+
+```tsx
+import { AdminSlot, AdminSlotIds } from '@fecommunity/reactpress-toolkit/plugin/react';
+
+<AdminSlot slot={AdminSlotIds.ARTICLE_EDITOR_META_AFTER_SUMMARY} context={slotContext} />
+```
+
+**插件 admin 入口**（`plugins/{id}/admin/index.ts`）：
+
+```typescript
+import {
+  AdminSlotIds,
+  type PluginAdminModule,
+  type PluginAdminRegistry,
+  type PluginAdminContext,
+} from '@fecommunity/reactpress-toolkit/plugin/admin';
+
+export function registerAdmin(registry: PluginAdminRegistry, ctx: PluginAdminContext): void {
+  registry.registerSlot(AdminSlotIds.ARTICLE_EDITOR_META_AFTER_SUMMARY, MyPanel, {
+    priority: 10,
+  });
+}
+
+export default { registerAdmin } satisfies PluginAdminModule;
+```
+
+插槽组件 props：`{ context, pluginId, config }`。`context` 由宿主页面定义（如 `ArticleEditorAdminSlotContext` 含 `draft` / `patch` / `translate`）。
+
+已启用且 manifest 含 `admin.slots` 或 `admin.menu` 时，`PluginAdminProvider` 按约定加载 `plugins/{id}/admin/index`；启停插件后自动重新 bootstrap。
+
+**依赖规则（admin）**
+
+```
+plugins/{id}/admin →  @fecommunity/reactpress-toolkit/plugin/admin + plugin/react + react/antd
+```
+
+入口契约（Server）：
 
 ```typescript
 import type { HookService, PluginContext } from '@fecommunity/reactpress-toolkit/plugin/server';

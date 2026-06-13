@@ -1,15 +1,20 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { defineConfig, loadEnv } from "vite-plus";
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 import react from "@vitejs/plugin-react-swc";
 import { tanstackRouter } from "@tanstack/router-plugin/vite";
 import { devPortRedirectPlugin } from "@fecommunity/reactpress-toolkit/plugin/dev";
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const webNodeModules = path.resolve(__dirname, "node_modules");
+
 const toolkitSrc = path.resolve(__dirname, "../toolkit/src");
 const toolkitEntry = (subpath: string) => path.join(toolkitSrc, subpath, "index.ts");
 const toolkitAliases = [
+  {
+    find: "@reactpress-plugins",
+    replacement: path.resolve(__dirname, "../plugins"),
+  },
   {
     find: "@fecommunity/reactpress-toolkit/plugin/react",
     replacement: toolkitEntry("plugin/react"),
@@ -90,7 +95,14 @@ export default defineConfig({
     },
   },
   resolve: {
-    alias: [{ find: "@", replacement: path.resolve(__dirname, "src") }, ...toolkitAliases],
+    // Plugin admin lives under repo `plugins/` — resolve React from web's node_modules.
+    dedupe: ["react", "react-dom"],
+    alias: [
+      { find: "@", replacement: path.resolve(__dirname, "src") },
+      { find: "react", replacement: path.join(webNodeModules, "react") },
+      { find: "react-dom", replacement: path.join(webNodeModules, "react-dom") },
+      ...toolkitAliases,
+    ],
   },
   build: {
     rollupOptions: {
