@@ -39,11 +39,22 @@ type ThemeRegistryModule = {
 
 let cached: ThemeRegistryModule | null = null;
 
+function resolveThemeRegistryPath(monorepoRoot: string): string | null {
+  const candidates = [
+    path.join(monorepoRoot, 'cli', 'out', 'lib', 'theme-registry.js'),
+    path.join(monorepoRoot, 'cli', 'lib', 'theme-registry.js'),
+  ];
+  for (const candidate of candidates) {
+    if (fs.existsSync(candidate)) return candidate;
+  }
+  return null;
+}
+
 /** Load CLI theme registry (single source for catalog + bundled metadata). */
 export function loadThemeRegistry(): ThemeRegistryModule {
   if (cached) return cached;
-  const registryPath = path.join(resolveMonorepoRoot(), 'cli', 'lib', 'theme-registry.js');
-  if (!fs.existsSync(registryPath)) {
+  const registryPath = resolveThemeRegistryPath(resolveMonorepoRoot());
+  if (!registryPath) {
     throw new Error('Theme registry is not available in this deployment');
   }
   // eslint-disable-next-line @typescript-eslint/no-require-imports

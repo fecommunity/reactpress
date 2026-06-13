@@ -45,6 +45,9 @@ desktop/*.AppImage
 desktop/*.blockmap
 desktop/builder-debug.yml
 desktop/builder-effective-config.yaml
+desktop/.app-resources/
+desktop/.server-bundle/
+desktop/.toolkit-bundle/
 
 .pnpm-store
 tsconfig.tsbuildinfo

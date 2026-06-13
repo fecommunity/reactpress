@@ -1,11 +1,12 @@
 import "dashicons/dashicons.css";
 import "@/i18n";
 
-import { createRouter, RouterProvider } from "@tanstack/react-router";
+import { createHashHistory, createRouter, RouterProvider } from "@tanstack/react-router";
 import React from "react";
 import ReactDOM from "react-dom/client";
 
 import i18n from "@/i18n";
+import { isElectronFileProtocol } from "@/shared/desktop/electronRouting";
 
 import { routeTree } from "./routeTree.gen";
 import {
@@ -21,13 +22,16 @@ import { useSettingsStore } from "./stores/settings";
 import { AUTH_MODE } from "./utils/constants";
 import { fetchSessionAndApplyToStore } from "./utils/session";
 
+const useHashHistory = isElectronFileProtocol();
+
 const routerBase =
-  import.meta.env.BASE_URL && import.meta.env.BASE_URL !== "/"
+  !useHashHistory && import.meta.env.BASE_URL && import.meta.env.BASE_URL !== "/"
     ? import.meta.env.BASE_URL.replace(/\/$/, "")
     : undefined;
 
 const router = createRouter({
   routeTree,
+  ...(useHashHistory ? { history: createHashHistory() } : {}),
   ...(routerBase ? { basepath: routerBase } : {}),
 });
 

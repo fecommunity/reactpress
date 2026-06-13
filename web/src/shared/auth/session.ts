@@ -10,6 +10,7 @@ import {
 } from "@/api/schemas";
 import { AdminAccessDeniedError, assertAdminConsoleAccess } from "@/shared/auth/adminAccess";
 import { getToolkitClient, resetToolkitClient } from "@/shared/client";
+import { isElectronFileProtocol } from "@/shared/desktop/electronRouting";
 import { adminMenuToSidebar } from "@/shared/menu";
 import { getMenuTreeForPermissions } from "@/shell/bootstrap";
 import { useAuthStore } from "@/stores/auth";
@@ -21,11 +22,17 @@ export function isMockAccessToken(token: string | undefined): boolean {
 }
 
 function redirectToLogin() {
+  if (typeof window === "undefined") return;
+  if (window.location.pathname.includes("/login") || window.location.hash.includes("/login")) {
+    return;
+  }
+  if (isElectronFileProtocol()) {
+    window.location.hash = "#/login";
+    return;
+  }
   const base = import.meta.env.BASE_URL || "/";
   const loginPath = `${base}${base.endsWith("/") ? "" : "/"}login`.replace(/\/{2,}/g, "/");
-  if (typeof window !== "undefined" && !window.location.pathname.includes("/login")) {
-    window.location.assign(loginPath);
-  }
+  window.location.assign(loginPath);
 }
 
 export function clearInvalidServerSession() {

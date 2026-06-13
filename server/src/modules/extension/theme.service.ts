@@ -1192,7 +1192,8 @@ export class ThemeService {
   /** Dev: symlink template for instant install; prod: full copy. Set REACTPRESS_THEME_RUNTIME_COPY=1 to force copy. */
   private materializeRuntimeTheme(templatePath: string, targetDir: string): void {
     const forceCopy =
-      process.env.REACTPRESS_THEME_RUNTIME_COPY === '1' || process.env.NODE_ENV === 'production';
+      process.env.REACTPRESS_THEME_RUNTIME_SYMLINK !== '1' &&
+      (process.env.REACTPRESS_THEME_RUNTIME_COPY === '1' || process.env.NODE_ENV === 'production');
     if (!forceCopy) {
       const linkTarget = path.relative(path.dirname(targetDir), templatePath);
       fs.symlinkSync(linkTarget, targetDir, 'dir');

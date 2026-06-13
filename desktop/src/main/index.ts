@@ -4,11 +4,13 @@ import { APP_DISPLAY_NAME } from "../shared/constants";
 import { getApiMode, getLocalApiPort } from "./config";
 import { registerIpcHandlers } from "./ipc";
 import {
+  isLocalApiHealthy,
   resolveDefaultSiteRoot,
   resolveDevSiteRoot,
   startLocalServer,
   stopLocalServer,
 } from "./local-server";
+import { startLocalThemeSite, stopLocalThemeSite } from "./local-theme";
 import { createMainWindow, focusMainWindow } from "./window";
 import { applyAppIcon } from "./app-icon";
 
@@ -31,26 +33,26 @@ function resolveStartupSiteRoot(): string {
   return resolveDefaultSiteRoot(app.getPath("userData"));
 }
 
-async function isLocalApiHealthy(port: number): Promise<boolean> {
-  try {
-    const res = await fetch(`http://127.0.0.1:${port}/api/health`);
-    return res.ok;
-  } catch {
-    return false;
-  }
-}
-
 async function ensureBackendReady(): Promise<void> {
   if (getApiMode() !== "local") return;
 
   const port = getLocalApiPort();
-  if (await isLocalApiHealthy(port)) return;
-
   const siteRoot = resolveStartupSiteRoot();
   const monorepoRoot = process.env.REACTPRESS_ORIGINAL_CWD?.trim();
-  await startLocalServer({
+
+  let apiPort = port;
+  if (!(await isLocalApiHealthy(port))) {
+    const started = await startLocalServer({
+      siteRoot,
+      port,
+      monorepoRoot: monorepoRoot || undefined,
+    });
+    apiPort = started.port;
+  }
+
+  await startLocalThemeSite({
     siteRoot,
-    port,
+    apiPort,
     monorepoRoot: monorepoRoot || undefined,
   });
 }
@@ -80,6 +82,7 @@ if (!gotLock) {
   });
 
   app.on("before-quit", () => {
+    stopLocalThemeSite();
     stopLocalServer();
   });
 

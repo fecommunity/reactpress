@@ -47,14 +47,18 @@ pnpm run --dir desktop dev
 ## 构建与打包
 
 ```bash
-# 构建 Electron 用 Admin + 打安装包
+# 并行构建 + 打安装包（推荐）
 pnpm build:desktop
 
-# 仅输出未打包目录（便于调试 electron-builder）
+# 仅输出未打包目录（跳过 dmg/zip，更快）
 pnpm build:desktop:dir
 ```
 
+`build:desktop` 会并行编译 toolkit / cli / desktop 壳，再并行构建 server 与 web，最后并行 deploy 依赖并打包。日常调试可优先用 `build:desktop:dir`。
+
 产物目录：`desktop/release/`（已在根 `.gitignore` 忽略）。
+
+体积优化说明见 [docs/size-optimization.md](./docs/size-optimization.md)。
 
 ## 目录结构
 

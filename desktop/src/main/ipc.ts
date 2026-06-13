@@ -13,6 +13,7 @@ import {
   resolveDefaultSiteRoot,
   startLocalServer,
 } from "./local-server";
+import { startLocalThemeSite } from "./local-theme";
 import type { ApiMode } from "../shared/types";
 
 export function registerIpcHandlers(): void {
@@ -25,7 +26,16 @@ export function registerIpcHandlers(): void {
     const next = setApiMode(mode as ApiMode);
     if (next === "local") {
       const siteRoot = resolveDefaultSiteRoot(app.getPath("userData"));
-      await startLocalServer({ siteRoot });
+      const monorepoRoot = process.env.REACTPRESS_ORIGINAL_CWD?.trim();
+      const { port } = await startLocalServer({
+        siteRoot,
+        monorepoRoot: monorepoRoot || undefined,
+      });
+      await startLocalThemeSite({
+        siteRoot,
+        apiPort: port,
+        monorepoRoot: monorepoRoot || undefined,
+      });
     }
     return next;
   });

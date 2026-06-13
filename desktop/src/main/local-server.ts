@@ -9,21 +9,63 @@ let serverProcess: ChildProcess | null = null;
 let activePort = DEFAULT_LOCAL_API_PORT;
 let activeSiteRoot: string | null = null;
 
-function resolveMonorepoRoot(): string {
+/** True only inside a packaged Electron app (not CLI Node or dev Electron). */
+function isPackagedRuntime(): boolean {
+  try {
+    const { app: electronApp } = require("electron") as typeof import("electron");
+    return Boolean(electronApp?.isPackaged) && process.env.ELECTRON_IS_DEV !== "1";
+  } catch {
+    return false;
+  }
+}
+
+function isElectronHost(): boolean {
+  return Boolean(process.versions.electron);
+}
+
+function bundledResourcesRoot(): string {
+  return process.resourcesPath;
+}
+
+function resolveDevMonorepoRoot(): string {
   return path.resolve(__dirname, "../../..");
 }
 
+function resolveMonorepoRootForServer(options?: { monorepoRoot?: string }): string {
+  if (options?.monorepoRoot) return options.monorepoRoot;
+  if (isPackagedRuntime()) return bundledResourcesRoot();
+  return resolveDevMonorepoRoot();
+}
+
 function resolveServerMain(monorepoRoot: string): string {
+  if (isPackagedRuntime()) {
+    const bundledMain = path.join(bundledResourcesRoot(), "server", "dist", "main.js");
+    if (fs.existsSync(bundledMain)) return bundledMain;
+    throw new Error("Bundled ReactPress server not found. Rebuild with: pnpm build:desktop");
+  }
+
   const devMain = path.join(monorepoRoot, "server/dist/main.js");
   if (fs.existsSync(devMain)) return devMain;
-  const bundledMain = path.join(monorepoRoot, "cli/server/dist/main.js");
-  if (fs.existsSync(bundledMain)) return bundledMain;
+
+  const cliBundledMain = path.join(monorepoRoot, "cli/server/dist/main.js");
+  if (fs.existsSync(cliBundledMain)) return cliBundledMain;
+
   throw new Error("ReactPress server is not built. Run: pnpm run --dir server build");
 }
 
+function resolveServerCwd(serverMain: string): string {
+  if (isPackagedRuntime()) {
+    return path.join(bundledResourcesRoot(), "server");
+  }
+  return path.dirname(path.dirname(serverMain));
+}
+
 function ensureServerBuilt(monorepoRoot: string): void {
+  if (isPackagedRuntime()) return;
+
   const devMain = path.join(monorepoRoot, "server/dist/main.js");
   if (fs.existsSync(devMain)) return;
+
   const build = spawnSync("pnpm", ["run", "--dir", "./server", "build"], {
     cwd: monorepoRoot,
     shell: true,
@@ -38,15 +80,19 @@ async function waitForHealth(port: number, timeoutMs = 120_000): Promise<void> {
   const url = `http://127.0.0.1:${port}/api/health`;
   const started = Date.now();
   while (Date.now() - started < timeoutMs) {
-    try {
-      const res = await fetch(url);
-      if (res.ok) return;
-    } catch {
-      // retry
-    }
+    if (await isLocalApiHealthy(port)) return;
     await new Promise((r) => setTimeout(r, 300));
   }
   throw new Error(`Local API did not become ready at ${url}`);
+}
+
+export async function isLocalApiHealthy(port: number): Promise<boolean> {
+  try {
+    const res = await fetch(`http://127.0.0.1:${port}/api/health`);
+    return res.ok;
+  } catch {
+    return false;
+  }
 }
 
 export function getLocalApiBaseUrl(port = activePort): string {
@@ -62,31 +108,61 @@ export async function startLocalServer(options: {
   port?: number;
   monorepoRoot?: string;
 }): Promise<{ port: number; apiBaseUrl: string }> {
+  const port = options.port ?? DEFAULT_LOCAL_API_PORT;
+
   if (serverProcess && !serverProcess.killed) {
     return { port: activePort, apiBaseUrl: getLocalApiBaseUrl(activePort) };
   }
 
-  const monorepoRoot = options.monorepoRoot ?? resolveMonorepoRoot();
-  const port = options.port ?? DEFAULT_LOCAL_API_PORT;
+  // Dev: CLI may have already started the API in another process — reuse it.
+  if (await isLocalApiHealthy(port)) {
+    activePort = port;
+    activeSiteRoot = options.siteRoot;
+    return { port, apiBaseUrl: getLocalApiBaseUrl(port) };
+  }
+
+  const monorepoRoot = resolveMonorepoRootForServer(options);
   ensureServerBuilt(monorepoRoot);
   ensureLocalSite(options.siteRoot, port, { monorepoRoot });
 
   const serverMain = resolveServerMain(monorepoRoot);
-  const serverDir = path.dirname(path.dirname(serverMain));
+  const serverCwd = resolveServerCwd(serverMain);
 
   serverProcess = spawn(process.execPath, [serverMain], {
-    cwd: serverDir,
+    cwd: serverCwd,
     env: {
       ...process.env,
+      ...(isElectronHost() ? { ELECTRON_RUN_AS_NODE: "1" } : {}),
+      NODE_PATH: isPackagedRuntime()
+        ? path.join(bundledResourcesRoot(), "server", "node_modules")
+        : process.env.NODE_PATH,
       NODE_ENV: "production",
       REACTPRESS_ORIGINAL_CWD: options.siteRoot,
       REACTPRESS_MONOREPO_ROOT: monorepoRoot,
       REACTPRESS_LOCAL_API_QUIET: "1",
+      ...(isPackagedRuntime()
+        ? {
+            REACTPRESS_THEME_RUNTIME_SYMLINK: "1",
+            REACTPRESS_DESKTOP_SITE_ROOT: options.siteRoot,
+          }
+        : {}),
     },
-    stdio: "inherit",
+    stdio: isPackagedRuntime() ? "pipe" : "inherit",
   });
 
-  serverProcess.on("exit", () => {
+  if (isPackagedRuntime() && serverProcess.stderr) {
+    serverProcess.stderr.on("data", (chunk: Buffer) => {
+      const text = chunk.toString();
+      if (text.includes("Error") || text.includes("Failed")) {
+        console.error("[ReactPress Desktop API]", text.trim());
+      }
+    });
+  }
+
+  serverProcess.on("exit", (code) => {
+    if (code && code !== 0) {
+      console.error(`[ReactPress Desktop] Local API exited with code ${code}`);
+    }
     serverProcess = null;
   });
 

@@ -6,6 +6,10 @@ files:
   - out/**/*
   - package.json
 extraResources:
+  - from: .app-resources
+    to: .
+    filter:
+      - "**/*"
   - from: ../web/dist
     to: renderer
     filter:

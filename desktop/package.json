@@ -13,6 +13,9 @@
     "dev:shell": "cross-env ELECTRON_IS_DEV=1 node ./scripts/launch-dev.mjs",
     "dist": "pnpm run build && electron-builder --config electron-builder.yml",
     "dist:dir": "pnpm run build && electron-builder --config electron-builder.yml --dir",
+    "build:release": "node ./scripts/build-desktop.mjs",
+    "build:release:dir": "node ./scripts/build-desktop.mjs --dir",
+    "prepare:resources": "node ./scripts/prepare-app-resources.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "devDependencies": {
@@ -33,6 +36,11 @@
       "package.json"
     ],
     "extraResources": [
+      {
+        "from": ".app-resources",
+        "to": ".",
+        "filter": ["**/*"]
+      },
       {
         "from": "../web/dist",
         "to": "renderer",

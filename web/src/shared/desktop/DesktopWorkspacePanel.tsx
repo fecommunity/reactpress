@@ -1,4 +1,4 @@
-import { App, Button, Form, Input, Radio, Typography } from "antd";
+import { App, Button, Form, Input, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -10,13 +10,14 @@ import {
   testApiConnection,
   type DesktopApiMode,
 } from "@/shared/desktop/apiConfig";
+import { DesktopModeSwitch } from "@/shared/desktop/DesktopModeSwitch";
 import { syncLocalToRemote } from "@/shared/desktop/syncToRemote";
 import { useDesktopStore } from "@/stores/desktop";
 
 import styles from "./desktop-api-setup.module.css";
 
 type DesktopWorkspacePanelProps = {
-  /** When true, block login until API is reachable (remote mode only). */
+  /** When true, hide the panel once local API is ready (login page). */
   gateLogin?: boolean;
   onReady?: () => void;
 };
@@ -62,6 +63,26 @@ export function DesktopWorkspacePanel({ gateLogin = false, onReady }: DesktopWor
     };
   }, [onReady, setStoreMode, syncForm]);
 
+  useEffect(() => {
+    if (!gateLogin || mode !== "local" || localReady) return;
+
+    let cancelled = false;
+    const tryConnect = async () => {
+      const url = await getConfiguredApiBaseUrl();
+      const ok = await testApiConnection(url);
+      if (cancelled || !ok) return;
+      setLocalReady(true);
+      onReady?.();
+    };
+
+    void tryConnect();
+    const timer = window.setInterval(() => void tryConnect(), 1500);
+    return () => {
+      cancelled = true;
+      window.clearInterval(timer);
+    };
+  }, [gateLogin, localReady, mode, onReady]);
+
   const applyMode = async (next: DesktopApiMode) => {
     await setDesktopApiMode(next);
     setStoreMode(next);
@@ -70,6 +91,67 @@ export function DesktopWorkspacePanel({ gateLogin = false, onReady }: DesktopWor
 
   if (gateLogin && ((mode === "local" && localReady) || (mode === "remote" && remoteReady))) {
     return null;
+  }
+
+  const remoteSetupForm = (
+    <Form
+      layout="vertical"
+      initialValues={{ remoteUrl }}
+      onFinish={async (values) => {
+        await applyMode("remote");
+        const saved = await saveRemoteApiBaseUrl(values.remoteUrl.trim());
+        const ok = await testApiConnection(saved);
+        setRemoteReady(ok);
+        if (!ok) {
+          message.error(t("desktop.apiSetup.testFailed"));
+          return;
+        }
+        message.success(t("desktop.apiSetup.saved"));
+        onReady?.();
+      }}
+    >
+      <Form.Item
+        name="remoteUrl"
+        label={t("desktop.apiSetup.apiUrlLabel")}
+        rules={[{ required: true, message: t("desktop.apiSetup.apiUrlRequired") }]}
+      >
+        <Input placeholder="https://api.example.com/api" />
+      </Form.Item>
+      <div className={styles.actions}>
+        <Button
+          onClick={async () => {
+            const url = syncForm.getFieldValue("remoteUrl")?.trim();
+            if (!url) return;
+            const ok = await testApiConnection(url);
+            if (ok) message.success(t("desktop.apiSetup.testSuccess"));
+            else message.error(t("desktop.apiSetup.testFailed"));
+          }}
+        >
+          {t("desktop.apiSetup.testConnection")}
+        </Button>
+        <Button type="primary" htmlType="submit">
+          {t("desktop.apiSetup.saveAndContinue")}
+        </Button>
+      </div>
+    </Form>
+  );
+
+  const modeSwitch = (
+    <DesktopModeSwitch
+      value={mode}
+      onChange={setMode}
+      localLabel={t("desktop.workspace.localMode")}
+      remoteLabel={t("desktop.workspace.remoteMode")}
+    />
+  );
+
+  if (gateLogin) {
+    return (
+      <div className={`${styles.wrap} ${styles.gateLogin}`}>
+        {modeSwitch}
+        {mode === "remote" ? remoteSetupForm : null}
+      </div>
+    );
   }
 
   return (
@@ -81,17 +163,7 @@ export function DesktopWorkspacePanel({ gateLogin = false, onReady }: DesktopWor
         {t("desktop.workspace.desc")}
       </Typography.Paragraph>
 
-      <div className={styles.modeBar}>
-        <Radio.Group
-          value={mode}
-          onChange={(e) => {
-            setMode(e.target.value as DesktopApiMode);
-          }}
-        >
-          <Radio.Button value="local">{t("desktop.workspace.localMode")}</Radio.Button>
-          <Radio.Button value="remote">{t("desktop.workspace.remoteMode")}</Radio.Button>
-        </Radio.Group>
-      </div>
+      {modeSwitch}
 
       {mode === "local" ? (
         <>
@@ -119,46 +191,7 @@ export function DesktopWorkspacePanel({ gateLogin = false, onReady }: DesktopWor
           </Button>
         </>
       ) : (
-        <Form
-          layout="vertical"
-          initialValues={{ remoteUrl }}
-          onFinish={async (values) => {
-            await applyMode("remote");
-            const saved = await saveRemoteApiBaseUrl(values.remoteUrl.trim());
-            const ok = await testApiConnection(saved);
-            setRemoteReady(ok);
-            if (!ok) {
-              message.error(t("desktop.apiSetup.testFailed"));
-              return;
-            }
-            message.success(t("desktop.apiSetup.saved"));
-            onReady?.();
-          }}
-        >
-          <Form.Item
-            name="remoteUrl"
-            label={t("desktop.apiSetup.apiUrlLabel")}
-            rules={[{ required: true, message: t("desktop.apiSetup.apiUrlRequired") }]}
-          >
-            <Input placeholder="https://api.example.com/api" />
-          </Form.Item>
-          <div className={styles.actions}>
-            <Button
-              onClick={async () => {
-                const url = syncForm.getFieldValue("remoteUrl")?.trim();
-                if (!url) return;
-                const ok = await testApiConnection(url);
-                if (ok) message.success(t("desktop.apiSetup.testSuccess"));
-                else message.error(t("desktop.apiSetup.testFailed"));
-              }}
-            >
-              {t("desktop.apiSetup.testConnection")}
-            </Button>
-            <Button type="primary" htmlType="submit">
-              {t("desktop.apiSetup.saveAndContinue")}
-            </Button>
-          </div>
-        </Form>
+        remoteSetupForm
       )}
 
       {mode === "local" && localReady ? (

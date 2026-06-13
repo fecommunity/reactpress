@@ -60,7 +60,8 @@ export function createMainWindow(): BrowserWindow {
     void win.loadURL(DEV_SERVER_URL);
     win.webContents.openDevTools({ mode: "detach" });
   } else {
-    void win.loadFile(rendererIndexPath());
+    // Hash routes — renderer uses createHashHistory() under file://
+    void win.loadFile(rendererIndexPath(), { hash: "/login" });
   }
 
   return win;
