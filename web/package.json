@@ -8,6 +8,7 @@
     "dev": "vp dev",
     "dev:themes": "VITE_ENABLE_MOCK=true VITE_AUTH_MODE=mock vp dev",
     "test:e2e:themes": "playwright test e2e/themes.spec.ts",
+    "test:e2e:preview-starter": "playwright test e2e/theme-preview-starter.spec.ts",
     "build": "vp build",
     "build:electron": "vp build --mode electron",
     "pretypecheck": "pnpm --dir ../toolkit run build",

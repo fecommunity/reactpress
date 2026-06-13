@@ -801,7 +801,7 @@
     "previewLiveHint": "Showing the live public site (active theme)",
     "previewStubHint": "Placeholder preview (activate the theme to view the live site)",
     "previewSwitchingTitle": "Loading “{{name}}”",
-    "previewSwitchingHint": "Warmed themes usually switch within 3 seconds. First-time preview may compile for up to 10 seconds.",
+    "previewSwitchingHint": "Pre-built themes usually switch within 10 seconds. First preview after a clean install may take longer while builds run.",
     "previewSwitchingSidebar": "Switching theme, please wait…",
     "flowTitle": "Theme flow (local MSW)",
     "flowInstall": "Install Hello World",

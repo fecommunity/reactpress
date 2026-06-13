@@ -6,6 +6,7 @@ import { useMemo } from "react";
 
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 import { useThemes } from "@/hooks/useThemes";
+import { SITE_SETTING_FIELD_DEFAULTS } from "@/modules/settings/siteSettingDefaults";
 
 /**
  * Theme state from site settings, with `activeThemeId` reconciled against the themes list
@@ -34,7 +35,9 @@ export function useSiteThemeState(): {
     [themes, themeState.activeTheme],
   );
 
-  const siteUrl = typeof settings?.systemUrl === "string" ? settings.systemUrl.trim() : undefined;
+  const siteUrl =
+    (typeof settings?.systemUrl === "string" && settings.systemUrl.trim()) ||
+    SITE_SETTING_FIELD_DEFAULTS.systemUrl;
 
   return { themeState, activeThemeId, siteUrl };
 }

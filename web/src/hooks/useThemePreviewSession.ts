@@ -10,10 +10,11 @@ export type ThemePreviewSessionStatus = "idle" | "switching" | "ready";
 /** Debounce ending preview so React Strict Mode remount does not delete preview-theme.json twice. */
 const PREVIEW_SESSION_END_MS = 400;
 
-/** First preview build can take several minutes (npm deps + next build). */
-const PREVIEW_READY_MAX_MS = 180_000;
-const PREVIEW_READY_POLL_MS = 200;
-const PREVIEW_READY_MIN_MS = 100;
+/** Poll visitor / preview dev until reachable (theme restart / compile). */
+const PREVIEW_READY_MAX_MS = 10_000;
+const PREVIEW_READY_POLL_MS = 120;
+const PREVIEW_READY_MIN_MS = 0;
+const DEFAULT_CLIENT_SITE_URL = "http://localhost:3001";
 
 let previewSessionRefCount = 0;
 let previewSessionEndTimer: ReturnType<typeof setTimeout> | null = null;
@@ -81,6 +82,7 @@ export function useThemePreviewSession(
     void (async () => {
       let sessionPreviewUrl: string | undefined;
       let sessionActiveTheme = activeThemeIdRef.current ?? themeId;
+      let resolvedSiteUrl = siteUrlRef.current?.trim() || DEFAULT_CLIENT_SITE_URL;
 
       try {
         const result = await beginThemePreviewSession(themeId);
@@ -89,6 +91,9 @@ export function useThemePreviewSession(
         sessionPreviewUrl = result.previewSiteUrl;
         if (typeof result.activeTheme === "string" && result.activeTheme) {
           sessionActiveTheme = result.activeTheme;
+        }
+        if (typeof result.siteUrl === "string" && result.siteUrl.trim()) {
+          resolvedSiteUrl = result.siteUrl.trim();
         }
         setPreviewSiteUrl(sessionPreviewUrl);
         setResolvedActiveThemeId(sessionActiveTheme);
@@ -103,7 +108,7 @@ export function useThemePreviewSession(
 
       const effectiveActiveThemeId = sessionActiveTheme;
 
-      const liveUrl = resolveLiveSitePreviewUrl(siteUrlRef.current, {
+      const liveUrl = resolveLiveSitePreviewUrl(resolvedSiteUrl, {
         themeId,
         activeThemeId: effectiveActiveThemeId,
         previewSiteUrl: sessionPreviewUrl,
@@ -111,11 +116,6 @@ export function useThemePreviewSession(
       });
 
       if (!liveUrl) {
-        setStatus("ready");
-        return;
-      }
-
-      if (!sessionPreviewUrl) {
         setStatus("ready");
         return;
       }

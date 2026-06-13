@@ -651,6 +651,7 @@ pnpm install          # 安装依赖
 pnpm dev              # 一键本地：API + Admin + 主题 + MySQL
 pnpm dev:api          # 仅 API
 pnpm dev:web          # 管理后台 + API
+pnpm dev:web:local    # 管理后台 + SQLite API（浏览器调试，无需 Docker）
 pnpm dev:themes       # 主题开发
 pnpm dev:desktop      # 桌面客户端（SQLite，无需 Docker）
 pnpm build:plugins    # 编译官方插件 dist

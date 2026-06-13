@@ -43,6 +43,19 @@ export async function waitForVisitorSite(
   const crossOrigin = isCrossOriginSiteUrl(siteUrl);
   let attempt = 0;
   let crossOriginHits = 0;
+  let localThemePreview = false;
+  try {
+    const parsed = new URL(
+      siteUrl,
+      typeof window !== "undefined" ? window.location.href : undefined,
+    );
+    localThemePreview =
+      crossOrigin &&
+      /^(localhost|127\.0\.0\.1)$/i.test(parsed.hostname) &&
+      /^(3001|3003)$/.test(parsed.port);
+  } catch {
+    localThemePreview = false;
+  }
 
   await sleep(minWaitMs);
 
@@ -55,8 +68,8 @@ export async function waitForVisitorSite(
         const hit = await probeCrossOriginPreview(siteUrl);
         if (hit) {
           crossOriginHits += 1;
-          // Require two consecutive probes so we don't treat a dying process as ready.
-          if (crossOriginHits >= 2) return true;
+          const requiredHits = localThemePreview ? 1 : 2;
+          if (crossOriginHits >= requiredHits) return true;
         } else {
           crossOriginHits = 0;
         }

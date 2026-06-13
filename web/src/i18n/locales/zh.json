@@ -801,7 +801,7 @@
     "previewLiveHint": "正在预览真实访客站点（当前已启用主题）",
     "previewStubHint": "预览占位页（启用主题后可查看真实站点）",
     "previewSwitchingTitle": "正在加载「{{name}}」",
-    "previewSwitchingHint": "已预热的主题通常 3 秒内完成切换；首次预览需编译，最长约 10 秒。",
+    "previewSwitchingHint": "预构建完成后，主题切换通常在 10 秒内；全新安装后的首次预构建可能更久。",
     "previewSwitchingSidebar": "主题正在切换中，请稍候…",
     "flowTitle": "主题验证流程（本地 MSW）",
     "flowInstall": "安装 Hello World",

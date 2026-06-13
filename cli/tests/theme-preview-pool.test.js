@@ -15,9 +15,22 @@ describe('lib/theme-preview-pool launch plan', () => {
     assert.deepEqual(plan.args, ['run', 'dev', '--', '--port', '3003']);
   });
 
-  it('uses dev script for reactpress-theme-starter', () => {
+  it('uses production launch for App Router reactpress-theme-starter (fast switch when pre-built)', () => {
     const plan = resolvePreviewThemeLaunchPlan(STARTER, 3003);
-    assert.equal(plan.mode, 'dev');
-    assert.equal(plan.cmd, 'pnpm');
+    assert.equal(plan.mode, 'production');
+    assert.equal(plan.cmd, process.execPath);
+    assert.match(plan.args.join(' '), /next/);
+  });
+
+  it('allows admin iframe when REACTPRESS_DESKTOP_LOCAL is set', () => {
+    const { shouldHonorThemePreviewFrame } = require('../out/lib/theme-preview-pool');
+    const prev = process.env.REACTPRESS_DESKTOP_LOCAL;
+    process.env.REACTPRESS_DESKTOP_LOCAL = '1';
+    try {
+      assert.equal(shouldHonorThemePreviewFrame(), true);
+    } finally {
+      if (prev === undefined) delete process.env.REACTPRESS_DESKTOP_LOCAL;
+      else process.env.REACTPRESS_DESKTOP_LOCAL = prev;
+    }
   });
 });

@@ -15,6 +15,7 @@
     "dev:client": "node ./cli/bin/reactpress.js dev --client-only",
     "dev:docs": "pnpm run --dir ./docs dev",
     "dev:web": "node ./cli/bin/reactpress.js dev --web-only",
+    "dev:web:local": "node ./cli/bin/reactpress.js dev --web-only --local",
     "dev:themes": "node ./scripts/dev-themes.mjs",
     "dev:themes:api": "node ./scripts/dev-themes.mjs",
     "docker:dev": "node ./cli/bin/reactpress.js docker start",

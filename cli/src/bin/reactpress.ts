@@ -12,7 +12,7 @@ const chalk = require('chalk');
 const { brand, divider } = require('../ui/theme');
 const { ensureOriginalCwd } = require('../lib/root');
 const { ensureProjectEnvironment, initMonorepoProject } = require('../lib/bootstrap');
-const { runDev, runWebDev, runThemeDev, runDesktopDev } = require('../lib/dev');
+const { runDev, runWebDev, runLocalWebDev, runThemeDev, runDesktopDev } = require('../lib/dev');
 const { resolveDevApiOrigins, applyDevApiOriginsToEnv } = require('../lib/remote-dev');
 const { runApiDev } = require('../lib/api-dev');
 const { runLifecycleCommand } = require('../lib/lifecycle');
@@ -117,6 +117,10 @@ program
         return;
       }
       if (options.webOnly) {
+        if (options.local) {
+          await runLocalWebDev(projectRoot, { apiOrigins });
+          return;
+        }
         await runWebDev(projectRoot, { apiOrigins });
         return;
       }
