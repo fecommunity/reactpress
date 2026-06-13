@@ -2,7 +2,7 @@
 
 > 目标：对标 WordPress 的「简单易用」——作者能 drop-in 主题，管理员能一键换肤，文档与实现一致。
 >
-> 梳理日期：2026-06-12
+> 梳理日期：2026-06-12 · **文档状态（2026-06-13）**：`hello-world/README.md` 已重写；`ARCHITECTURE.md` / `design.md` 已同步 4.0（插件、桌面）；阶段 A 部分项仍待实现（见 §6）。
 
 ---
 
@@ -17,7 +17,7 @@ ReactPress 主题系统在**概念模型**上已对齐 WordPress（manifest、Cu
 | 概念对齐 | ★★★★☆ | theme.json ≈ style.css + Customizer |
 | 管理员换主题 | ★★☆☆☆ | 安装与启用分离，启用需等待进程重启（最长 ~120s） |
 | 主题作者上手 | ★★☆☆☆ | 需理解三层目录 + Next.js 工程，无统一脚手架 |
-| 文档一致性 | ★☆☆☆☆ | hello-world README 与真实代码严重不符 |
+| 文档一致性 | ★★★☆☆ | hello-world README 已对齐 Pages Router；`theme create` 等待实现 |
 | 长期架构 | ★★★★☆ | 独立 Next 进程 + toolkit 契约，SSR 稳定 |
 
 ---
@@ -304,7 +304,7 @@ get_header()/get_footer()    SiteDocument / ThemeLayout
 
 ### 阶段 A — 快速止血（1–2 周）
 
-1. **重写 `themes/hello-world/README.md`**，删除 App Router / ThemeProvider 等过时内容
+1. ~~**重写 `themes/hello-world/README.md`**~~ ✅ 已完成（2026-06-13）
 2. **修正 `design.md` theme.json 示例**，与 `theme.manifest.schema.json` 一致
 3. **统一默认 themeId** 为 `hello-world`
 4. 后台增加 **「安装并启用」** 按钮（至少对 local 主题）
@@ -346,7 +346,7 @@ pnpm dev
 2. 编辑 themes/my-theme/theme.json（id: my-theme）
 3. themes/package.json → "local": [..., "my-theme"]
 4. pnpm dev → 后台安装并启用
-5. 只读 themes/README.md，勿信 hello-world/README.md
+5. 只读 [`themes/README.md`](../themes/README.md) 与 [`hello-world/README.md`](../themes/hello-world/README.md)
 ```
 
 **主题开发者（npm / 完整能力）**

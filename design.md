@@ -522,8 +522,8 @@ flowchart TB
 |----|------|
 | **web** | 全部 Admin UI 与业务逻辑（与浏览器版相同） |
 | **toolkit** | API 客户端、鉴权、React Query（与浏览器版相同） |
-| **desktop** | 仅 Main/Preload：窗口、托盘、快捷键、自动更新、原生对话框 |
-| **server** | 仍独立进程或远程部署；**不嵌入 Electron**（首期） |
+| **desktop** | 仅 Main/Preload：窗口、IPC、本地 API spawn（SQLite）、配置持久化 |
+| **server** | REST API；全栈 dev 为独立进程；**桌面本地模式**由 Main spawn 内嵌实例 |
 
 **原则：** Electron 是「容器 + 原生增强」，不是第二个 Admin 应用。
 
@@ -628,7 +628,7 @@ export function getDesktopApi() {
 | 导出文件 | `dialog.showSaveDialog` | 数据导出 JSON/CSV |
 | 自动更新 | `electron-updater` | 检查新版本 |
 
-**二期可选：** 深度链接（`reactpress://article/123`）、开机自启、本地 server 一键启动（spawn `server` 子进程）。
+**二期可选：** 深度链接（`reactpress://article/123`）、开机自启、系统托盘、全局快捷键、`electron-updater` 自动更新。
 
 #### 6.4.5 鉴权与存储
 
@@ -638,8 +638,9 @@ export function getDesktopApi() {
 | Refresh | toolkit `onUnauthorized` | 同左 |
 | Cookie | 可选 | 一般不用；Bearer JWT 即可 |
 | 多账号 | 单 profile | 可选：每窗口独立 session partition |
+| 本地数据库 | — | **SQLite**（`DB_TYPE=sqlite`），数据目录见 `desktop/README.md` |
 
-**不在 Electron 内嵌数据库或 server 逻辑**——保持 headless API 单一事实来源，避免桌面版与 Web 版数据不一致。
+**桌面本地模式**在 Main 进程 spawn 内嵌 API（SQLite），便于离线写作；**远程模式**与 Web Admin 共用同一套 headless API，避免业务逻辑分叉。业务规则仍只在 server 中实现，Electron 不复制 Service 层代码。
 
 #### 6.4.6 安全
 
@@ -678,22 +679,24 @@ export function getDesktopApi() {
 
 #### 6.4.9 实施阶段
 
-| 阶段 | 内容 | 周期（估） |
-|------|------|------------|
-| D0 | `desktop/` 脚手架；dev 加载 Vite；生产加载 `web/dist` | 2～3 天 |
-| D1 | API 地址配置、登录全流程、打包 macOS/Windows | 3～5 天 |
-| D2 | 托盘、快捷键、原生通知 | 2～3 天 |
-| D3 | `electron-updater` 自动更新 | 2～3 天 |
-| D4 | 导出/打开对话框、深度链接（可选） | 按需 |
+| 阶段 | 内容 | 状态 |
+|------|------|------|
+| D0 | `desktop/` 脚手架；dev 加载 Vite；生产加载 `web/dist` | ✅ 4.0 |
+| D1 | 本地 SQLite API、远程 API 切换、登录与打包 macOS/Windows | ✅ 4.0 MVP |
+| D1+ | 本地 → 远程内容同步 | ✅ 4.0 |
+| D2 | 托盘、快捷键、原生通知 | 🔲 后续 |
+| D3 | `electron-updater` 自动更新 | 🔲 后续 |
+| D4 | 深度链接、导出对话框增强 | 🔲 后续 |
 
 **前置条件：** web 已接 toolkit 真实 API（步骤 1～2 完成）后再做 D0，否则壳子无内容可载。
 
 #### 6.4.10 验收标准
 
 - 安装包打开即为 Admin 登录页，登录后功能与浏览器版一致
-- 未改 server、未复制业务组件，仅新增 `desktop/` 包
-- macOS / Windows 各一安装包；自动更新可用
-- 包体积与内存可接受（Admin 场景通常可接受 Electron 体积）
+- 未改 server 业务组件、未 fork Admin 源码，仅新增 `desktop/` 包
+- macOS / Windows / Linux 可产出安装包（`pnpm build:desktop`）
+- 本地模式默认 `admin` / `admin`，数据持久化在 userData 目录
+- 远程模式与 Web Admin 行为一致
 
 ### 6.5 不做的清单（控成本）
 
@@ -881,6 +884,7 @@ reactpress/
 | 7 | 主题 theme.json + CLI 命令 | 主题生态 |
 | 8 | Responsive 组件 + E2E 三视口 | 多端验收 |
 | 9 | 数据导入导出 + PWA（可选） | 运维增强 |
-| 10 | **desktop/ Electron 壳**（可选） | macOS/Windows 安装包 |
+| 10 | **desktop/ Electron 壳** | ✅ 4.0 MVP（SQLite 本地模式 + 远程 API） |
+| 11 | **plugins/ Hook + Admin 插槽** | ✅ 4.0（hello-world、seo 内置） |
 
-每一步可独立交付、独立验证，不要求 Big Bang 切换。**Electron（步骤 10）依赖 web 接 toolkit 完成（步骤 1～2）后启动。**
+步骤 1～9 已在 3.x 交付。Electron 与插件系统在 4.0 落地。

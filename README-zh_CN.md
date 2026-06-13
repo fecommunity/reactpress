@@ -114,6 +114,8 @@
 | **内容编辑** | **Web 后台** | Web 后台 | Web 后台 | Git 中的 Markdown / MDX |
 | **前台速度与 SEO** | **Lighthouse 95/100/100/100**（官方主题演示）² | 因主题与插件差异大 | 通常较好 | 优秀，但无内置 CMS |
 | **前端灵活性** | **Headless — 可对接或替换主题** | 主题/插件生态强，耦合度高 | 与 Ghost 主题体系绑定 | 构建时固定 |
+| **Headless 扩展** | **插件 Hook + Admin 插槽**（SEO、自动摘要等） |
+| **本地写作** | **Electron 桌面客户端**（SQLite，免 Docker） |
 | **发布相关内置能力** | **搜索、评论、知识库**（官方主题 + API） | 常靠插件扩展 | 侧重会员/通讯 | 需自行实现 |
 | **更适合** | **博客、内容站、定制发布** | 通用网站 | 通讯与出版业务 | 文档站、开发者博客 |
 
@@ -191,7 +193,22 @@ npm 包：[@fecommunity/reactpress-theme-starter](https://www.npmjs.com/package/
 
 完整说明：[主题 README](https://github.com/fecommunity/reactpress-theme-starter/blob/master/README_zh.md)。
 
-### 4. 演示
+### 4. 桌面客户端（4.0）
+
+无需 Docker，本地 SQLite 即可写作与管理：
+
+```bash
+# 在 monorepo 根目录
+pnpm dev:desktop
+```
+
+打包安装程序：`pnpm build:desktop`。默认本地账号 `admin` / `admin`；可在设置中切换远程 API 或将内容同步到线上站点。详见 [desktop/README.md](./desktop/README.md)。
+
+### 5. 插件（4.0）
+
+管理后台 → **插件** → 安装/启用内置插件（如 SEO 增强、自动摘要）。开发说明见 [plugins/README.md](./plugins/README.md)。
+
+### 6. 演示
 
 <div align="center">
 
@@ -205,7 +222,7 @@ npm 包：[@fecommunity/reactpress-theme-starter](https://www.npmjs.com/package/
 
 [全栈演示](https://blog.gaoredu.com) · [主题演示](https://reactpress-theme-starter.vercel.app)
 
-### 5. 常用命令
+### 7. 常用命令
 
 | 命令 | 作用 |
 | :--- | :--- |
@@ -216,13 +233,15 @@ npm 包：[@fecommunity/reactpress-theme-starter](https://www.npmjs.com/package/
 | `reactpress start` | 生产环境启动 |
 | `reactpress doctor` | 诊断环境问题 |
 | `reactpress status` | 查看运行状态 |
+| `pnpm dev:desktop` | 桌面客户端开发（SQLite + Electron） |
+| `pnpm build:desktop` | 打包桌面安装程序 |
 
-更多选项见 [官方文档](https://reactpress.surge.sh/)。
+更多选项见 [官方文档](https://reactpress.surge.sh/) 与 [4.0 扩展版说明](./docs/tutorial/tutorial-extras/reactpress-4-0.md)。
 
-### 6. 部署上线
+### 8. 部署上线
 
 ```bash
-npm i -g @fecommunity/reactpress@3
+npm i -g @fecommunity/reactpress@4
 reactpress build
 reactpress start
 ```

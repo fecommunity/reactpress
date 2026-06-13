@@ -120,10 +120,11 @@ pnpm dev
 
 ## 从 2.x 升级
 
-见 [2.x → 3.0 迁移指南](./migration-2-to-3.md)。
+见 [2.x → 3.0 迁移指南](./migration-2-to-3.md)。升级至 4.0 见 [3.x → 4.0 迁移指南](./migration-3-to-4.md) 与 [ReactPress 4.0 扩展版](./reactpress-4-0.md)。
 
 ## 相关文档
 
+- [ReactPress 4.0 扩展版](./reactpress-4-0.md)
 - [项目配置项](./config-intro.md) — `.env` 与 `.reactpress/config.json`
 - [ReactPress 2.0 架构](./reactpress-2-0.md) — 历史架构说明（多包时代）
 - [Server / Client 包指南](./server-package.md) — 独立包进阶场景

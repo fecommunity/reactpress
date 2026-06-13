@@ -8,6 +8,17 @@ tags: [reactpress, release]
 
 <!--truncate-->
 
+## [4.0.0](https://github.com/fecommunity/reactpress/compare/v3.1.0...v4.0.0) (Unreleased)
+
+**ReactPress 4.0 Extend** — plugins, desktop client, theme catalog.
+
+- **Plugins**: Hook system, `plugin.json` manifest, Admin slots; built-in `hello-world` + `seo`
+- **Desktop**: Electron + SQLite local mode; remote API + sync to server
+- **Themes**: npm catalog (`theme-starter`); hello-world docs refresh
+- **Migration**: [3.x → 4.0 guide](/docs/tutorial-extras/migration-3-to-4)
+
+---
+
 ## [3.1.0](https://github.com/fecommunity/reactpress/compare/v3.0.0...v3.1.0) (2026-06-07)
 
 **Toolkit theme refactor** — modular exports, first-class theme development.

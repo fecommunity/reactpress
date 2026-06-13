@@ -1,297 +1,107 @@
-# ReactPress Hello World Template
+# Hello World 主题
 
-Minimal template for ReactPress using Next.js 14 App Router.
+ReactPress 官方**入门主题**：Hello Elementor 风格，含首页、文章、分类、标签、搜索与自定义页面等基础模板。适合复制后二次开发。
 
-[![NPM Version](https://img.shields.io/npm/v/@fecommunity/reactpress-template-hello-world.svg)](https://www.npmjs.com/package/@fecommunity/reactpress-template-hello-world)
-[![License](https://img.shields.io/npm/l/@fecommunity/reactpress-template-hello-world.svg)](https://github.com/fecommunity/reactpress/blob/master/themes/starter/hello-world/LICENSE)
-[![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-%230074c1.svg)](http://www.typescriptlang.org/)
-[![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org/)
+> 主题开发总览见 [`themes/README.md`](../README.md)。完整能力演示请使用 npm 官方主题 [@fecommunity/reactpress-theme-starter](https://github.com/fecommunity/reactpress-theme-starter)。
 
-## Features
+## 技术栈
 
-- Minimal and clean design
-- Responsive layout with mobile-first approach
-- Easy to customize with component-based architecture
-- Built with TypeScript 5 for type safety
-- Next.js 14 App Router with Server Components
-- Integrated with ReactPress Toolkit for API communication
-- Simple setup
-- Optimized build configuration
-- SEO optimized with automatic metadata generation
-- Accessibility compliant (WCAG 2.1 AA)
-- PWA support
+| 项 | 说明 |
+| --- | --- |
+| 路由 | **Next.js Pages Router**（`pages/`） |
+| 入口 | `pages/_app.tsx` → `createThemeApp(theme.json)` |
+| 构建 | `createReactPressNextConfig()`（`next.config.js`） |
+| 契约 | `theme.json`（manifest + appearance + templates） |
+| SDK | `@fecommunity/reactpress-toolkit/app`、`/theme`、`/ui` |
 
-## Getting Started
+## 目录结构
 
-1. Initialize the template:
-   ```bash
-   npx @fecommunity/reactpress-template-hello-world my-blog
-   ```
-
-2. Navigate to your project directory:
-   ```bash
-   cd my-blog
-   ```
-
-3. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-4. Start the development server:
-   ```bash
-   npm run dev
-   ```
-
-5. Open your browser and visit `http://localhost:3000`
-
-## Template Structure
-
-- `app/page.tsx` - Main page with data fetching using ReactPress Toolkit
-- `app/about/page.tsx` - About page with site information
-- `app/toolkit-demo/page.tsx` - Demonstration of ReactPress Toolkit usage
-- `app/not-found.tsx` - Custom 404 error page
-- `components/Header.tsx` - Header component with navigation
-- `components/Footer.tsx` - Footer component
-- `components/Layout.tsx` - Root layout component
-
-## ReactPress Toolkit Usage
-
-This template demonstrates how to use all aspects of the ReactPress Toolkit:
-
-### 1. API Client Usage
-
-```typescript
-import { http } from '@fecommunity/reactpress-toolkit';
-
-// Create a custom API instance
-const customApi = http.createApiInstance({
-  baseURL: 'https://api.gaoredu.com/'
-});
-
-// Fetch data from the API
-const articlesResponse = await customApi.article.findAll();
-const categoriesResponse = await customApi.category.findAll();
-const tagsResponse = await customApi.tag.findAll();
+```
+hello-world/
+├── theme.json              # 主题清单（id、templates、appearance）
+├── package.json
+├── cover.svg               # 后台主题列表封面
+├── locales/                # 管理端 Customizer 文案
+├── pages/
+│   ├── _app.tsx            # createThemeApp 入口
+│   ├── _document.tsx
+│   ├── index.tsx           # 首页
+│   ├── article/[id].tsx    # 文章详情
+│   ├── category/[category].tsx
+│   ├── tag/[tag].tsx
+│   ├── search.tsx
+│   ├── about.tsx
+│   ├── [path].tsx          # 自定义页面
+│   └── 404.tsx
+├── components/             # Header、Footer、ThemeShell 等
+├── styles/globals.css
+└── next.config.js
 ```
 
-### 2. Type Definitions
+## 本地开发（Monorepo）
 
-```typescript
-import { types } from '@fecommunity/reactpress-toolkit';
-
-// Use type definitions for better type safety
-type IArticle = types.IArticle;
-type ICategory = types.ICategory;
-type ITag = types.ITag;
-
-interface MyComponentProps {
-  articles: IArticle[];
-  categories: ICategory[];
-  tags: ITag[];
-}
-```
-
-### 3. Utility Functions
-
-```typescript
-import { utils } from '@fecommunity/reactpress-toolkit';
-
-// Use utility functions for common operations
-const formattedDate = utils.formatDate(new Date(), 'YYYY-MM-DD');
-
-// Handle API errors properly
-if (utils.ApiError.isInstance(error)) {
-  console.error(`API Error ${error.code}: ${error.message}`);
-}
-```
-
-### 4. Complete Example
-
-The toolkit demo page shows a complete example of using all toolkit features:
-
-```typescript
-import { http } from '@fecommunity/reactpress-toolkit';
-import { types, utils } from '@fecommunity/reactpress-toolkit';
-
-// Type definitions
-type IArticle = types.IArticle;
-
-// API client with retry mechanism
-const customApi = http.createApiInstance({
-  baseURL: 'https://api.gaoredu.com/',
-  retry: {
-    retries: 3,
-    retryDelay: 1000
-  }
-});
-
-// Utility functions
-const formatDate = (dateString: string) => {
-  const date = new Date(dateString);
-  return utils.formatDate(date, 'YYYY-MM-DD');
-};
-
-// Error handling with proper logging
-const handleApiError = (error: any) => {
-  if (utils.ApiError.isInstance(error)) {
-    console.error(`API Error ${error.code}: ${error.message}`);
-    // Log error
-    logError(error);
-  }
-};
-```
-
-## Advanced Customization
-
-### Theme Customization
-```typescript
-// app/layout.tsx
-import { ThemeProvider } from '@fecommunity/reactpress-components';
-
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <ThemeProvider
-      theme={{
-        colors: {
-          primary: '#0070f3',
-          secondary: '#7928ca',
-        },
-        typography: {
-          fontFamily: 'Inter, sans-serif',
-        }
-      }}
-    >
-      <html lang="en">
-        <body>{children}</body>
-      </html>
-    </ThemeProvider>
-  );
-}
-```
-
-### Component Extension
-```typescript
-// components/CustomHeader.tsx
-import { Header } from '@fecommunity/reactpress-components';
-import styled from 'styled-components';
-
-const StyledHeader = styled(Header)`
-  background-color: ${props => props.theme.colors.primary};
-  padding: 1rem 2rem;
-  
-  nav a {
-    color: white;
-    &:hover {
-      color: #e0e0e0;
-    }
-  }
-`;
-
-export default StyledHeader;
-```
-
-## Performance Optimization
-
-### Image Optimization
-```typescript
-// components/ArticleImage.tsx
-import Image from 'next/image';
-
-export default function ArticleImage({ src, alt }: { src: string; alt: string }) {
-  return (
-    <Image
-      src={src}
-      alt={alt}
-      width={800}
-      height={400}
-      layout="responsive"
-      priority={true} // For above-the-fold images
-    />
-  );
-}
-```
-
-### Code Splitting
-```typescript
-// app/articles/page.tsx
-import dynamic from 'next/dynamic';
-
-// Dynamically import heavy components
-const ArticleEditor = dynamic(() => import('../../components/ArticleEditor'), {
-  ssr: false, // Disable SSR for client-only components
-  loading: () => <p>Loading editor...</p>
-});
-
-export default function ArticlesPage() {
-  return (
-    <div>
-      <h1>Articles</h1>
-      <ArticleEditor />
-    </div>
-  );
-}
-```
-
-## Requirements
-
-- Node.js 18.20.4 or later
-- A ReactPress backend server running
-- npm or pnpm package manager
-
-## Deployment
-
-### Vercel Deployment (Recommended)
-```bash
-# Install Vercel CLI
-npm install -g vercel
-
-# Deploy to Vercel
-vercel
-```
-
-### Custom Deployment
-```bash
-# Build for production
-npm run build
-
-# Start production server
-npm start
-```
-
-## Testing
+在仓库根目录：
 
 ```bash
-# Run unit tests with Vitest
-npm run test
-
-# Run integration tests with Playwright
-npm run test:e2e
-
-# Run linting
-npm run lint
-
-# Run formatting
-npm run format
-
-# Run type checking
-npm run type-check
+pnpm install
+pnpm dev
 ```
 
-## Learn More
+1. 打开管理后台 **外观 → 主题**
+2. 对 **Hello World**：安装 → 启用
+3. 等待访客站就绪：**http://localhost:3001**
 
-To learn more about ReactPress, visit [https://reactpress.dev](https://reactpress.dev)
+`hello-world` 已在 [`themes/package.json`](../package.json) 的 `reactpress.local` 中注册，无需手动改注册表。
 
-### Documentation
-- [ReactPress Client Documentation](https://github.com/fecommunity/reactpress/client)
-- [ReactPress Server Documentation](https://github.com/fecommunity/reactpress/server)
-- [ReactPress Toolkit Documentation](https://github.com/fecommunity/reactpress/toolkit)
+## 从本主题复制新主题
 
-### Community
-- [GitHub Discussions](https://github.com/fecommunity/reactpress/discussions)
-- [Stack Overflow](https://stackoverflow.com/questions/tagged/reactpress)
-- [Twitter](https://twitter.com/reactpress)
+```bash
+cp -r themes/hello-world themes/my-theme
+```
+
+1. 修改 `themes/my-theme/theme.json` 中的 `id`（与目录名一致）
+2. 在 `themes/package.json` → `reactpress.local` 加入 `"my-theme"`
+3. `pnpm dev` → 后台安装并启用
+
+## theme.json 要点
+
+| 字段 | 作用 |
+| --- | --- |
+| `templates` | 模板 id → `pages/` 路径映射 |
+| `appearance.sections` | Customizer 表单项（颜色、Logo、深色模式等） |
+| `supports` | 能力声明（如 `darkMode`、`menus`） |
+| `requires` | 最低 ReactPress 版本 |
+
+完整 Schema：[`theme.manifest.schema.json`](../theme.manifest.schema.json)。
+
+## Toolkit 用法示例
+
+```tsx
+// pages/index.tsx
+import { fetchArticles, themeStaticProps } from '@fecommunity/reactpress-toolkit/theme';
+
+export const getStaticProps = themeStaticProps(async () => {
+  const articles = await fetchArticles({ page: 1, pageSize: 10 });
+  return { props: { articles } };
+});
+```
+
+入口应用壳：
+
+```tsx
+// pages/_app.tsx
+import { createThemeApp } from '@fecommunity/reactpress-toolkit/app';
+import themeManifest from '../theme.json';
+
+export default createThemeApp(themeManifest);
+```
+
+## 发布
+
+本包可单独发布为 `@fecommunity/reactpress-template-hello-world`。生产站点推荐使用功能更完整的 [@fecommunity/reactpress-theme-starter](https://www.npmjs.com/package/@fecommunity/reactpress-theme-starter)。
+
+## 相关文档
+
+- [主题系统 README](../README.md)
+- [ARCHITECTURE.md](../../ARCHITECTURE.md) — 主题生命周期
+- [toolkit/README.md](../../toolkit/README.md) — SDK 说明
