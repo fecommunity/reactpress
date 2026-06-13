@@ -9,7 +9,7 @@ const {
   readActiveThemeManifest,
   resolveThemeDirectory,
   readManifestSignature,
-} = require('../lib/theme-runtime');
+} = require('../out/lib/theme-runtime');
 const { createStandaloneProject, rmDir } = require('./helpers/tmp-project');
 
 const HELLO_WORLD = path.join(__dirname, '../../themes/hello-world');

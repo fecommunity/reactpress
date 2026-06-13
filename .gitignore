@@ -22,9 +22,9 @@ node_modules
 sitemap.xml
 
 lib
-!cli/lib
 !themes/hello-world/**/lib/
 !themes/twentytwentysix/**/lib/
+cli/out/
 dist
 dist-ssr
 coverage

@@ -15,7 +15,7 @@ const {
   validateBundledThemes,
   validateCatalogThemes,
   catalogEntryToManifest,
-} = require('../lib/theme-registry');
+} = require('../out/lib/theme-registry');
 
 const REPO_ROOT = path.join(__dirname, '../..');
 

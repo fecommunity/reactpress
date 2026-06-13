@@ -7,7 +7,7 @@ const {
   resolveNginxComposeContext,
   ensureNginxConfig,
   renderDevNginxConfig,
-} = require('../lib/nginx');
+} = require('../out/lib/nginx');
 const { createStandaloneProject, createMonorepoFixture, rmDir } = require('./helpers/tmp-project');
 
 describe('lib/nginx', () => {

@@ -87,8 +87,8 @@ module.exports = {
     // Prettier 2.x cannot parse modern TS (`import type`, inline `type` imports).
     // web uses `vp fmt` (Oxfmt); keep formatting out of ESLint to avoid false IDE errors.
     'prettier/prettier': 0,
-    'simple-import-sort/imports': 'warn',
-    'simple-import-sort/exports': 'warn',
+    'simple-import-sort/imports': 'off',
+    'simple-import-sort/exports': 'off',
   },
   ignorePatterns: [
     'dist/',

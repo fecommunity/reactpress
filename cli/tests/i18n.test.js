@@ -1,6 +1,6 @@
 const { describe, it } = require('node:test');
 const assert = require('node:assert/strict');
-const { t, setLocale, getLocale } = require('../lib/i18n');
+const { t, setLocale, getLocale } = require('../out/lib/i18n');
 
 describe('lib/i18n', () => {
   it('translates known keys in en and zh', () => {

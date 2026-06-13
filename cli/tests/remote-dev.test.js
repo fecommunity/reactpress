@@ -3,14 +3,14 @@ const assert = require('node:assert/strict');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
-const { renderDevNginxConfig } = require('../lib/nginx');
+const { renderDevNginxConfig } = require('../out/lib/nginx');
 const {
   normalizeRemoteOrigin,
   resolveRemoteThemeApiBase,
   parseOriginSpec,
   resolveDevApiOrigins,
   applyDevApiOriginsToEnv,
-} = require('../lib/remote-dev');
+} = require('../out/lib/remote-dev');
 
 describe('lib/remote-dev', () => {
   it('normalizes bare hostnames to https origins', () => {

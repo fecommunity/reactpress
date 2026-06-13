@@ -4,7 +4,7 @@ const path = require('path');
 const { describe, it } = require('node:test');
 const assert = require('node:assert/strict');
 
-const { ensurePreviewFrameAllowed, PATCH_MARKER } = require('../lib/theme-preview-frame');
+const { ensurePreviewFrameAllowed, PATCH_MARKER } = require('../out/lib/theme-preview-frame');
 
 describe('lib/theme-preview-frame', () => {
   it('patches next.config.js to skip X-Frame-Options during admin preview', () => {

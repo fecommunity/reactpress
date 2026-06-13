@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { describe, it } = require('node:test');
 const assert = require('node:assert/strict');
-const { resolveBuildInvocation, TARGETS } = require('../lib/build');
+const { resolveBuildInvocation, TARGETS } = require('../out/lib/build');
 const { createMonorepoFixture, createStandaloneProject, rmDir } = require('./helpers/tmp-project');
 
 describe('lib/build', () => {
@@ -41,7 +41,7 @@ describe('lib/build', () => {
         path.join(root, 'web', 'package.json'),
         JSON.stringify({ name: 'web', scripts: { build: 'echo build' } })
       );
-      const { getBuildSteps } = require('../lib/build');
+      const { getBuildSteps } = require('../out/lib/build');
       const steps = getBuildSteps('all', root);
       assert.ok(steps.some((s) => s.script === 'build:web'));
     } finally {

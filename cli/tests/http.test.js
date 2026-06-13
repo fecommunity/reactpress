@@ -6,7 +6,7 @@ const {
   getApiPrefix,
   getHealthUrl,
   normalizeProbeUrl,
-} = require('../lib/http');
+} = require('../out/lib/http');
 const { createStandaloneProject, rmDir } = require('./helpers/tmp-project');
 
 describe('lib/http', () => {

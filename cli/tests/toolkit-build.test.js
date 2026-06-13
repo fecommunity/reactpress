@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { describe, it } = require('node:test');
 const assert = require('node:assert/strict');
-const { shouldBuildToolkit } = require('../lib/toolkit-build');
+const { shouldBuildToolkit } = require('../out/lib/toolkit-build');
 const { createMonorepoFixture, rmDir } = require('./helpers/tmp-project');
 
 describe('lib/toolkit-build', () => {

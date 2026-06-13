@@ -1,7 +1,7 @@
 const { describe, it } = require('node:test');
 const assert = require('node:assert/strict');
 const path = require('path');
-const { pageFileToRoute, collectWarmupRoutes, isWarmupSafeRoute } = require('../lib/theme-warmup');
+const { pageFileToRoute, collectWarmupRoutes, isWarmupSafeRoute } = require('../out/lib/theme-warmup');
 const { createMonorepoFixture, rmDir } = require('./helpers/tmp-project');
 
 describe('lib/theme-warmup', () => {

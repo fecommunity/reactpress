@@ -9,8 +9,8 @@ const {
   parseNpmSpec,
   resolveThemeIdentity,
   installThemeFromNpm,
-} = require('../lib/theme-install');
-const { readThemeLock } = require('../lib/theme-lock');
+} = require('../out/lib/theme-install');
+const { readThemeLock } = require('../out/lib/theme-lock');
 const { createStandaloneProject, rmDir } = require('./helpers/tmp-project');
 
 const HELLO_WORLD_THEME = path.join(__dirname, '../../themes/hello-world');

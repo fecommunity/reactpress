@@ -7,7 +7,7 @@ const {
   THEMES_CATALOG_REL,
   PREVIEW_POOL_PORTS,
   themesRoot,
-} = require('../lib/theme-paths');
+} = require('../out/lib/theme-paths');
 
 describe('lib/theme-paths', () => {
   it('exports stable relative paths', () => {

@@ -2,7 +2,7 @@ const path = require('path');
 const { describe, it } = require('node:test');
 const assert = require('node:assert/strict');
 
-const { resolvePreviewThemeLaunchPlan } = require('../lib/theme-preview-pool');
+const { resolvePreviewThemeLaunchPlan } = require('../out/lib/theme-preview-pool');
 
 const HELLO_WORLD = path.join(__dirname, '../../themes/hello-world');
 const STARTER = path.join(__dirname, '../../.reactpress/runtime/reactpress-theme-starter');

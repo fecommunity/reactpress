@@ -1,7 +1,7 @@
 const { describe, it } = require('node:test');
 const assert = require('node:assert/strict');
 const path = require('path');
-const { resolveComposeContext } = require('../lib/docker');
+const { resolveComposeContext } = require('../out/lib/docker');
 const { createStandaloneProject, createMonorepoFixture, rmDir } = require('./helpers/tmp-project');
 
 describe('lib/docker', () => {

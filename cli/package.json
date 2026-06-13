@@ -1,7 +1,7 @@
 {
   "name": "@fecommunity/reactpress",
-  "version": "3.0.3",
-  "description": "ReactPress 3.0 — zero-config CMS: one package, one reactpress command",
+  "version": "4.0.0",
+  "description": "ReactPress 4.0 — zero-config CMS: CLI, plugins, desktop, MySQL & SQLite",
   "author": "fecommunity",
   "license": "MIT",
   "repository": {
@@ -22,11 +22,10 @@
     "reactpress": "./bin/reactpress.js",
     "reactpress-cli": "./bin/reactpress-cli-shim.js"
   },
-  "main": "./bin/reactpress.js",
+  "main": "./out/bin/reactpress.js",
   "files": [
     "bin",
-    "lib",
-    "ui",
+    "out",
     "dist",
     "server",
     "templates",
@@ -35,9 +34,11 @@
     "LICENSE"
   ],
   "scripts": {
-    "test": "node --test tests",
-    "prepare": "node scripts/sync-bundled-core.mjs",
-    "prepack": "node scripts/sync-bundled-core.mjs"
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "pnpm run build && node --test tests",
+    "prepare": "node scripts/sync-bundled-core.mjs && pnpm run build",
+    "prepack": "node scripts/sync-bundled-core.mjs && pnpm run build"
   },
   "publishConfig": {
     "access": "public",
@@ -57,6 +58,11 @@
     "ora": "^5.4.1"
   },
   "devDependencies": {
-    "@fecommunity/reactpress-cli-core": "npm:@fecommunity/reactpress-cli@0.1.0"
+    "@fecommunity/reactpress-cli-core": "npm:@fecommunity/reactpress-cli@0.1.0",
+    "@types/cross-spawn": "^6.0.6",
+    "@types/fs-extra": "^11.0.4",
+    "@types/inquirer": "^8.2.10",
+    "@types/node": "^24.5.2",
+    "typescript": "~5.9.3"
   }
 }

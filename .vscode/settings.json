@@ -6,7 +6,6 @@
   "eslint.workingDirectories": [{ "mode": "auto" }],
   "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
   "eslint.rules.customizations": [
-    { "rule": "simple-import-sort/*", "severity": "warn" },
     { "rule": "react-hooks/exhaustive-deps", "severity": "warn" },
     { "rule": "@typescript-eslint/no-inferrable-types", "severity": "warn" }
   ],
