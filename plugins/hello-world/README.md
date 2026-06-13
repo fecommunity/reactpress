@@ -26,6 +26,8 @@
 
 通过 `plugin.json` → `settings.schema` 声明，写入 `globalSetting.plugins.entries.hello-world.config`：
 
+管理端展示文案（插件名、描述、各设置项标题）放在 [`locales/`](./locales/)（与主题相同：`locales/{locale}.json`），随后台中/英文切换；`plugin.json` 内中文为缺省回退。
+
 | 字段 | 类型 | 默认 | 说明 |
 | :--- | :--- | :--- | :--- |
 | `enabled` | boolean | `true` | 是否启用自动摘要 |

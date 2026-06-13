@@ -6,7 +6,12 @@ import { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
+import { usePluginListItemMeta } from "@/hooks/usePluginListItemMeta";
 import { usePluginMutations } from "@/hooks/usePlugins";
+import {
+  usePluginAdminLocaleText,
+  PluginAdminLocaleProvider,
+} from "@/modules/plugins/context/PluginAdminLocaleContext";
 import styles from "@/modules/plugins/components/plugin-settings-page.module.css";
 import {
   listPluginSchemaFields,
@@ -15,6 +20,7 @@ import {
   type PluginSchemaProperty,
   type PluginSettingsSchema,
 } from "@/modules/plugins/utils/pluginSettingsSchema";
+import { localizePluginSettingsSchema } from "@/modules/plugins/utils/resolvePluginManifestText";
 import { fetchPlugin } from "@/shared/api/plugins";
 import { getApiErrorMessage } from "@/shared/api/getApiErrorMessage";
 import { ModulePlaceholder } from "@/shared/components/ModulePlaceholder";
@@ -41,11 +47,20 @@ function renderControl(prop: PluginSchemaProperty) {
 }
 
 export function PluginSettingsPage({ pluginId }: PluginSettingsPageProps) {
+  return (
+    <PluginAdminLocaleProvider pluginId={pluginId}>
+      <PluginSettingsPageInner pluginId={pluginId} />
+    </PluginAdminLocaleProvider>
+  );
+}
+
+function PluginSettingsPageInner({ pluginId }: PluginSettingsPageProps) {
   const { t } = useTranslation();
   const { message } = App.useApp();
   const navigate = useNavigate();
   const [form] = Form.useForm();
   const { updateConfigMutation } = usePluginMutations();
+  const { messages } = usePluginAdminLocaleText();
 
   const {
     data: plugin,
@@ -57,11 +72,17 @@ export function PluginSettingsPage({ pluginId }: PluginSettingsPageProps) {
     queryFn: () => fetchPlugin(pluginId),
   });
 
+  const { name: displayName, description: displayDescription } = usePluginListItemMeta(plugin);
+
   const schema = plugin?.settings?.schema;
   const hasSchema = pluginHasSettings(schema);
+  const localizedSchema = useMemo(
+    () => (hasSchema ? localizePluginSettingsSchema(schema, messages) : null),
+    [hasSchema, messages, schema],
+  );
   const fieldKeys = useMemo(
-    () => (hasSchema ? listPluginSchemaFields(schema) : []),
-    [hasSchema, schema],
+    () => (localizedSchema ? listPluginSchemaFields(localizedSchema) : []),
+    [localizedSchema],
   );
 
   useEffect(() => {
@@ -71,7 +92,7 @@ export function PluginSettingsPage({ pluginId }: PluginSettingsPageProps) {
 
   useDocumentTitle(
     plugin ? "placeholder.pluginSettings" : null,
-    plugin ? { name: plugin.name } : undefined,
+    plugin ? { name: displayName ?? plugin.name } : undefined,
   );
 
   if (isLoading) {
@@ -94,7 +115,10 @@ export function PluginSettingsPage({ pluginId }: PluginSettingsPageProps) {
   if (!plugin.installed) {
     return (
       <div className={styles.emptyWrap}>
-        <ModulePlaceholder title={plugin.name} description={t("plugins.settingsNotInstalled")} />
+        <ModulePlaceholder
+          title={displayName ?? plugin.name}
+          description={t("plugins.settingsNotInstalled")}
+        />
         <Link to="/plugins" className={styles.emptyBack}>
           {t("plugins.backToPlugins")}
         </Link>
@@ -105,7 +129,10 @@ export function PluginSettingsPage({ pluginId }: PluginSettingsPageProps) {
   if (!hasSchema) {
     return (
       <div className={styles.emptyWrap}>
-        <ModulePlaceholder title={plugin.name} description={t("plugins.settingsNoSchema")} />
+        <ModulePlaceholder
+          title={displayName ?? plugin.name}
+          description={t("plugins.settingsNoSchema")}
+        />
         <Link to="/plugins" className={styles.emptyBack}>
           {t("plugins.backToPlugins")}
         </Link>
@@ -113,7 +140,7 @@ export function PluginSettingsPage({ pluginId }: PluginSettingsPageProps) {
     );
   }
 
-  const typedSchema = schema as PluginSettingsSchema;
+  const typedSchema = localizedSchema as PluginSettingsSchema;
 
   const onFinish = (values: Record<string, unknown>) => {
     const config: Record<string, unknown> = {};
@@ -141,7 +168,7 @@ export function PluginSettingsPage({ pluginId }: PluginSettingsPageProps) {
             onClick={() => void navigate({ to: "/plugins" })}
           />
           <Typography.Title level={2} className="admin-page-title">
-            {plugin.name}
+            {displayName ?? plugin.name}
           </Typography.Title>
         </div>
         <div className={styles.headerTags}>
@@ -153,7 +180,9 @@ export function PluginSettingsPage({ pluginId }: PluginSettingsPageProps) {
         </div>
       </div>
 
-      {plugin.description ? <p className={styles.intro}>{plugin.description}</p> : null}
+      {(displayDescription ?? plugin.description) ? (
+        <p className={styles.intro}>{displayDescription ?? plugin.description}</p>
+      ) : null}
       <p className={styles.meta}>
         {t("plugins.versionLabel", { version: plugin.version })}
         <span aria-hidden="true"> · </span>

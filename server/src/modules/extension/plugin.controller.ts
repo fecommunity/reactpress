@@ -30,6 +30,14 @@ export class PluginController {
     return this.pluginService.getPluginState();
   }
 
+  @Get(':id/locales/:locale')
+  @Roles('admin')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiResponse({ status: 200, description: 'Admin locale strings bundled with the plugin' })
+  getLocale(@Param('id') id: string, @Param('locale') locale: string) {
+    return this.pluginService.getPluginAdminLocale(id, locale);
+  }
+
   @Get(':id')
   @Roles('admin')
   @UseGuards(JwtAuthGuard, RolesGuard)

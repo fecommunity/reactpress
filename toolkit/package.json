@@ -87,6 +87,10 @@
     "./plugin/server": {
       "types": "./dist/plugin/server/index.d.ts",
       "default": "./dist/plugin/server/index.js"
+    },
+    "./plugin/node": {
+      "types": "./dist/plugin/node.d.ts",
+      "default": "./dist/plugin/node.js"
     }
   },
   "peerDependencies": {

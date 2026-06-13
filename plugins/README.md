@@ -112,6 +112,7 @@ Schema：[`plugin.manifest.schema.json`](./plugin.manifest.schema.json)。解析
 | `server.hooks.subscribe` | | 声明订阅的 Hook 名 |
 | `admin.entry` / `admin.menu` | | Admin 动态加载（二期） |
 | `settings.schema` | | JSON Schema，驱动配置表单 |
+| `locales/{locale}.json` | | 管理端文案（与主题相同目录约定） |
 | `permissions` | | Admin 能力声明 |
 | `capabilities` | | 安全能力（见下文） |
 
@@ -132,6 +133,9 @@ TypeScript 插件采用 **扁平 `src/` → `dist/`**：
 ```
 plugins/my-plugin/
 ├── plugin.json
+├── locales/
+│   ├── en.json
+│   └── zh.json
 ├── package.json
 ├── tsconfig.json
 ├── README.md
@@ -143,6 +147,8 @@ plugins/my-plugin/
     dist/
     └── index.js         # plugin.json → server.module
 ```
+
+管理端国际化与主题一致：包根目录 `locales/{locale}.json`，API `GET /extension/plugins/:id/locales/:locale`（对应主题的 `…/themes/:id/locales/:locale`）。
 
 **依赖规则**
 
@@ -242,6 +248,7 @@ pnpm dev   # 启动前按需编译 local 插件
 | 停用 | `POST /api/extension/plugins/:id/deactivate` |
 | 卸载 | `DELETE /api/extension/plugins/:id` |
 | 配置 | `PUT /api/extension/plugins/:id/config`（保存后自动 reload） |
+| 管理端文案 | `GET /api/extension/plugins/:id/locales/:locale` |
 
 已启用且 manifest 含 `settings.schema` 的插件，在插件列表显示 **设置** 链接，打开 WordPress 风格配置页（`/plugins/{id}/settings`）。
 

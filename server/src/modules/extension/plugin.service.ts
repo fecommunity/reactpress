@@ -1,7 +1,9 @@
 import type {
+  PluginAdminLocaleMessages,
   PluginManifest,
   SitePluginState,
 } from '@fecommunity/reactpress-toolkit/plugin/extension';
+import { readPluginAdminLocaleFile } from '@fecommunity/reactpress-toolkit/plugin/node';
 import {
   getPluginStateFromGlobalSetting,
   isValidPluginId,
@@ -173,6 +175,51 @@ export class PluginService {
     const found = items.find((p) => p.id === id);
     if (!found) throw new NotFoundException(`Plugin "${id}" not found`);
     return found;
+  }
+
+  /** Admin copy from `plugins/{id}/locales/{locale}.json` (same layout as themes). */
+  async getPluginAdminLocale(
+    pluginId: string,
+    locale: string,
+  ): Promise<{ pluginId: string; locale: string; messages: PluginAdminLocaleMessages }> {
+    if (!isValidPluginId(pluginId)) {
+      throw new BadRequestException(`Invalid plugin id "${pluginId}"`);
+    }
+    const dirs = this.pluginLocaleSearchDirs(pluginId);
+    if (dirs.length === 0) {
+      throw new NotFoundException(`Plugin "${pluginId}" not found`);
+    }
+
+    const safeLocale = /^[a-z]{2}(?:-[a-z]{2})?$/i.test(locale) ? locale : 'en';
+    for (const dir of dirs) {
+      const messages = readPluginAdminLocaleFile(dir, safeLocale);
+      if (messages) {
+        return { pluginId, locale: safeLocale, messages };
+      }
+    }
+
+    return { pluginId, locale: safeLocale, messages: {} };
+  }
+
+  /** Prefer bundled template copy over ephemeral runtime install. */
+  private pluginLocaleSearchDirs(pluginId: string): string[] {
+    const seen = new Set<string>();
+    const ordered: string[] = [];
+    const push = (dir: string | null) => {
+      if (!dir || seen.has(dir)) return;
+      seen.add(dir);
+      ordered.push(dir);
+    };
+
+    const template = path.join(this.templatesDir(), pluginId);
+    if (fs.existsSync(template)) {
+      push(template);
+    }
+    const runtime = path.join(this.runtimeDir(), pluginId);
+    if (fs.existsSync(runtime)) {
+      push(runtime);
+    }
+    return ordered;
   }
 
   async installPlugin(id: string): Promise<SitePluginState> {

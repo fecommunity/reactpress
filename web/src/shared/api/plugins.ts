@@ -102,3 +102,9 @@ export function updatePluginConfig(id: string, config: Record<string, unknown>) 
     body: JSON.stringify({ config }),
   });
 }
+
+export function fetchPluginAdminLocale(pluginId: string, locale: string) {
+  return pluginFetch<{ pluginId: string; locale: string; messages: Record<string, unknown> }>(
+    `/extension/plugins/${encodeURIComponent(pluginId)}/locales/${encodeURIComponent(locale)}`,
+  );
+}

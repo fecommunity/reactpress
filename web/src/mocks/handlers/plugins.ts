@@ -5,6 +5,8 @@ import {
 } from "@fecommunity/reactpress-toolkit/plugin/extension";
 import { http } from "msw";
 
+import helloWorldAdminEn from "../../../../plugins/hello-world/locales/en.json";
+import helloWorldAdminZh from "../../../../plugins/hello-world/locales/zh.json";
 import { successResponse, withDelay } from "../createHandler";
 import { getMockGlobalSetting, patchMockGlobalSettingPlugins, setMockGlobalSetting } from "./page";
 
@@ -73,6 +75,17 @@ export const pluginHandlers = [
     await withDelay(100);
     const found = listWithState().find((p) => p.id === params.id);
     return successResponse(found ?? null);
+  }),
+
+  http.get("/api/extension/plugins/:id/locales/:locale", async ({ params }) => {
+    await withDelay(80);
+    const id = String(params.id);
+    const locale = String(params.locale);
+    if (id !== "hello-world") {
+      return successResponse({ pluginId: id, locale, messages: {} });
+    }
+    const messages = locale.toLowerCase().startsWith("zh") ? helloWorldAdminZh : helloWorldAdminEn;
+    return successResponse({ pluginId: id, locale, messages });
   }),
 
   http.post("/api/extension/plugins/:id/install", async ({ params }) => {

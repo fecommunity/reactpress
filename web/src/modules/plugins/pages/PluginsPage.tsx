@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { App, Table, theme } from "antd";
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 
 import { articleListThemeVars } from "@/modules/article/components/articleListThemeVars";
@@ -16,7 +16,46 @@ import {
 import pluginStyles from "@/modules/plugins/components/plugins-page.module.css";
 import { pluginHasSettings } from "@/modules/plugins/utils/pluginSettingsSchema";
 import { usePluginMutations, usePlugins, type PluginListItem } from "@/hooks/usePlugins";
+import { usePluginListItemMeta } from "@/hooks/usePluginListItemMeta";
 import { ModulePlaceholder } from "@/shared/components/ModulePlaceholder";
+
+function PluginListNameCell({
+  plugin,
+  actions,
+  loadError,
+}: {
+  plugin: PluginListItem;
+  actions: ReactNode;
+  loadError?: string;
+}) {
+  const { name } = usePluginListItemMeta(plugin);
+  return (
+    <div>
+      <span className={pluginStyles.pluginName}>{name}</span>
+      {actions}
+      {loadError ? <span className={pluginStyles.loadError}>{loadError}</span> : null}
+    </div>
+  );
+}
+
+function PluginListDescriptionCell({ plugin }: { plugin: PluginListItem }) {
+  const { t } = useTranslation();
+  const { description } = usePluginListItemMeta(plugin);
+  return (
+    <div className={pluginStyles.descCell}>
+      <div>{description || "—"}</div>
+      <p className={pluginStyles.pluginMeta}>
+        {t("plugins.versionLabel", { version: plugin.version })}
+        {plugin.author ? (
+          <>
+            <span className={pluginStyles.pluginMetaSep}>|</span>
+            {t("plugins.authorLabel", { author: plugin.author })}
+          </>
+        ) : null}
+      </p>
+    </div>
+  );
+}
 
 function matchesKeyword(plugin: PluginListItem, keyword: string): boolean {
   const needle = keyword.trim().toLowerCase();
@@ -228,31 +267,18 @@ export function PluginsPage() {
         key: "name",
         width: "28%",
         render: (_: unknown, plugin: PluginListItem) => (
-          <div>
-            <span className={pluginStyles.pluginName}>{plugin.name}</span>
-            {renderRowActions(plugin)}
-            {plugin.loadError ? (
-              <span className={pluginStyles.loadError}>{plugin.loadError}</span>
-            ) : null}
-          </div>
+          <PluginListNameCell
+            plugin={plugin}
+            actions={renderRowActions(plugin)}
+            loadError={plugin.loadError}
+          />
         ),
       },
       {
         title: t("plugins.colDescription"),
         key: "description",
         render: (_: unknown, plugin: PluginListItem) => (
-          <div className={pluginStyles.descCell}>
-            <div>{plugin.description || "—"}</div>
-            <p className={pluginStyles.pluginMeta}>
-              {t("plugins.versionLabel", { version: plugin.version })}
-              {plugin.author ? (
-                <>
-                  <span className={pluginStyles.pluginMetaSep}>|</span>
-                  {t("plugins.authorLabel", { author: plugin.author })}
-                </>
-              ) : null}
-            </p>
-          </div>
+          <PluginListDescriptionCell plugin={plugin} />
         ),
       },
       {
