@@ -26,6 +26,43 @@ export function getLocalSitePaths(siteRoot: string): LocalSitePaths {
   };
 }
 
+function seedBundledPlugins(siteRoot: string, monorepoRoot?: string): void {
+  if (!monorepoRoot) return;
+
+  const sourcePluginsDir = path.join(monorepoRoot, "plugins");
+  const targetPluginsDir = path.join(siteRoot, "plugins");
+  const sourcePackageJson = path.join(sourcePluginsDir, "package.json");
+  const targetPackageJson = path.join(targetPluginsDir, "package.json");
+
+  if (!fs.existsSync(sourcePackageJson)) return;
+
+  fs.mkdirSync(targetPluginsDir, { recursive: true });
+
+  if (!fs.existsSync(targetPackageJson)) {
+    fs.copyFileSync(sourcePackageJson, targetPackageJson);
+  }
+
+  let meta: { reactpress?: { local?: string[] } } = {};
+  try {
+    meta = JSON.parse(fs.readFileSync(targetPackageJson, "utf8")) as typeof meta;
+  } catch {
+    return;
+  }
+
+  const symlinkPluginDir = (sourceDir: string, targetDir: string): void => {
+    if (!fs.existsSync(sourceDir) || fs.existsSync(targetDir)) return;
+    fs.symlinkSync(sourceDir, targetDir, "dir");
+  };
+
+  const localPlugins = Array.isArray(meta.reactpress?.local) ? meta.reactpress.local : [];
+  for (const pluginId of localPlugins) {
+    symlinkPluginDir(
+      path.join(sourcePluginsDir, pluginId),
+      path.join(targetPluginsDir, pluginId),
+    );
+  }
+}
+
 function seedBundledThemes(siteRoot: string, monorepoRoot?: string): void {
   if (!monorepoRoot) return;
 
@@ -136,6 +173,7 @@ export function ensureLocalSite(
   ];
   fs.writeFileSync(paths.envPath, envLines.join("\n"), "utf8");
 
+  seedBundledPlugins(siteRoot, options?.monorepoRoot);
   seedBundledThemes(siteRoot, options?.monorepoRoot);
   seedRuntimeThemes(siteRoot, options?.monorepoRoot);
 
