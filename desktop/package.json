@@ -7,9 +7,9 @@
   "author": "fecommunity",
   "license": "ISC",
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "build": "electron-vite build",
     "postinstall": "node ./scripts/ensure-electron.mjs",
-    "dev": "pnpm run build && pnpm run dev:shell",
+    "dev": "node ./scripts/launch-dev.mjs",
     "dev:shell": "cross-env ELECTRON_IS_DEV=1 node ./scripts/launch-dev.mjs",
     "dist": "pnpm run build && electron-builder --config electron-builder.yml",
     "dist:dir": "pnpm run build && electron-builder --config electron-builder.yml --dir",
@@ -23,7 +23,9 @@
     "cross-env": "^7.0.3",
     "electron": "^35.0.3",
     "electron-builder": "^25.1.8",
-    "typescript": "~5.9.3"
+    "electron-vite": "^3.1.0",
+    "typescript": "~5.9.3",
+    "vite": "^6.2.0"
   },
   "build": {
     "appId": "com.reactpress.desktop",
@@ -31,6 +33,8 @@
     "directories": {
       "output": "release"
     },
+    "asar": true,
+    "npmRebuild": false,
     "files": [
       "out/**/*",
       "package.json"

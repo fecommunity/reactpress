@@ -2,14 +2,15 @@ import * as fs from 'fs-extra';
 import * as log4js from 'log4js';
 import { join } from 'path';
 
-const LOG_DIR_NAME = '../../logs';
+const LOG_DIR =
+  process.env.REACTPRESS_SERVER_LOG_DIR?.trim() || join(__dirname, '../../logs');
 
-fs.ensureDirSync(join(__dirname, LOG_DIR_NAME));
+fs.ensureDirSync(LOG_DIR);
 void ['request', 'response', 'error'].forEach((t) => {
-  fs.ensureDirSync(join(__dirname, LOG_DIR_NAME, t));
+  fs.ensureDirSync(join(LOG_DIR, t));
 });
 
-const resolvePath = (dir, filename) => join(__dirname, LOG_DIR_NAME, dir, filename);
+const resolvePath = (dir, filename) => join(LOG_DIR, dir, filename);
 
 const commonCinfig = {
   type: 'dateFile',

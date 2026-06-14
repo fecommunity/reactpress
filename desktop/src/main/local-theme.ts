@@ -5,6 +5,12 @@ import path from "node:path";
 import { DEFAULT_LOCAL_API_PORT } from "../shared/constants";
 import { getLocalApiBaseUrl } from "./local-server";
 import {
+  bundledResourcesRoot,
+  ensurePackagedModuleResolution,
+  isPackagedRuntime,
+  listPackagedNodeModuleDirs,
+} from "./packaged-runtime";
+import {
   attachChildProcessLogging,
   logError,
   logInfo,
@@ -20,21 +26,8 @@ let watchCleanup: (() => void) | null = null;
 let runningActiveSignature = "";
 let runningPreviewSignature = "";
 
-function isPackagedRuntime(): boolean {
-  try {
-    const { app: electronApp } = require("electron") as typeof import("electron");
-    return Boolean(electronApp?.isPackaged) && process.env.ELECTRON_IS_DEV !== "1";
-  } catch {
-    return false;
-  }
-}
-
 function isElectronHost(): boolean {
   return Boolean(process.versions.electron);
-}
-
-function bundledResourcesRoot(): string {
-  return process.resourcesPath;
 }
 
 function resolveDevMonorepoRoot(): string {
@@ -45,6 +38,18 @@ function resolveMonorepoRoot(options?: { monorepoRoot?: string }): string {
   if (options?.monorepoRoot) return options.monorepoRoot;
   if (isPackagedRuntime()) return bundledResourcesRoot();
   return resolveDevMonorepoRoot();
+}
+
+function resolveSharedRuntimeNodeModules(monorepoRoot: string): string | null {
+  if (!isPackagedRuntime()) return null;
+  const shared = path.join(bundledResourcesRoot(), "runtime-deps", "node_modules");
+  return fs.existsSync(shared) ? shared : null;
+}
+
+function resolveCliRuntimeNodeModules(): string | null {
+  if (!isPackagedRuntime()) return null;
+  const cliNm = path.join(bundledResourcesRoot(), "cli", "node_modules");
+  return fs.existsSync(cliNm) ? cliNm : null;
 }
 
 function resolveServerNodeModules(monorepoRoot: string): string {
@@ -60,6 +65,12 @@ function resolveCliLib(monorepoRoot: string, fileName: string): string {
   const dev = path.join(resolveDevMonorepoRoot(), "cli", "out", "lib", fileName);
   if (fs.existsSync(dev)) return dev;
   throw new Error(`CLI lib missing: ${fileName}`);
+}
+
+function requireCliLib<T>(monorepoRoot: string, fileName: string): T {
+  ensurePackagedModuleResolution();
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  return require(resolveCliLib(monorepoRoot, fileName)) as T;
 }
 
 type ThemeRuntimeModule = {
@@ -111,24 +122,20 @@ type ThemePreviewFrameModule = {
 function loadThemeRuntime(monorepoRoot: string, siteRoot: string): ThemeRuntimeModule {
   process.env.REACTPRESS_DESKTOP_SITE_ROOT = siteRoot;
   process.env.REACTPRESS_MONOREPO_ROOT = monorepoRoot;
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  return require(resolveCliLib(monorepoRoot, "theme-runtime.js")) as ThemeRuntimeModule;
+  return requireCliLib<ThemeRuntimeModule>(monorepoRoot, "theme-runtime.js");
 }
 
 function loadThemePreviewPool(monorepoRoot: string): ThemePreviewPoolModule {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  return require(resolveCliLib(monorepoRoot, "theme-preview-pool.js")) as ThemePreviewPoolModule;
+  return requireCliLib<ThemePreviewPoolModule>(monorepoRoot, "theme-preview-pool.js");
 }
 
 function loadThemeProd(monorepoRoot: string): ThemeProdModule {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  return require(resolveCliLib(monorepoRoot, "theme-prod.js")) as ThemeProdModule;
+  return requireCliLib<ThemeProdModule>(monorepoRoot, "theme-prod.js");
 }
 
 function loadThemePreviewFrame(monorepoRoot: string): ThemePreviewFrameModule | null {
   try {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    return require(resolveCliLib(monorepoRoot, "theme-preview-frame.js")) as ThemePreviewFrameModule;
+    return requireCliLib<ThemePreviewFrameModule>(monorepoRoot, "theme-preview-frame.js");
   } catch {
     return null;
   }
@@ -173,10 +180,102 @@ function killThemeProcess(child: ChildProcess | null): void {
 function resolveThemeNodePath(themeDir: string, monorepoRoot: string): string {
   const parts = [
     path.join(themeDir, "node_modules"),
+    resolveCliRuntimeNodeModules(),
+    resolveSharedRuntimeNodeModules(monorepoRoot),
     resolveServerNodeModules(monorepoRoot),
-  ];
+  ].filter((p): p is string => Boolean(p));
   const existing = parts.filter((p) => fs.existsSync(p));
   return existing.join(path.delimiter);
+}
+
+type ThemeLaunchPlan = { mode: string; cmd: string; args: string[] };
+
+function resolveSharedNextBin(themeDir: string, monorepoRoot: string): string | null {
+  const candidates = [
+    path.join(themeDir, "node_modules", "next", "dist", "bin", "next"),
+    path.join(monorepoRoot, "node_modules", "next", "dist", "bin", "next"),
+  ];
+
+  if (isPackagedRuntime()) {
+    for (const dir of [
+      resolveCliRuntimeNodeModules(),
+      ...listPackagedNodeModuleDirs(),
+    ]) {
+      if (dir) candidates.push(path.join(dir, "next", "dist", "bin", "next"));
+    }
+  } else {
+    for (const dir of [resolveSharedRuntimeNodeModules(monorepoRoot)]) {
+      if (dir) candidates.push(path.join(dir, "next", "dist", "bin", "next"));
+    }
+  }
+
+  for (const candidate of candidates) {
+    if (fs.existsSync(candidate)) return candidate;
+  }
+  return null;
+}
+
+/** Electron packaged apps have no `node`/`pnpm` on PATH — use Electron as Node. */
+function normalizeThemeLaunchForElectron(
+  launch: ThemeLaunchPlan,
+  options: { themeDir: string; port: number; monorepoRoot: string },
+): ThemeLaunchPlan {
+  if (!isElectronHost()) return launch;
+
+  const { execPath } = process;
+
+  if (launch.cmd === "node") {
+    return { ...launch, cmd: execPath };
+  }
+
+  if (launch.cmd === "pnpm" || launch.cmd === "npm") {
+    const script = launch.args[launch.args[0] === "run" ? 1 : 0];
+    const nextBin = resolveSharedNextBin(options.themeDir, options.monorepoRoot);
+
+    if (nextBin && (script === "start" || script === "dev")) {
+      const portIdx = launch.args.indexOf("--port");
+      const pIdx = launch.args.indexOf("-p");
+      let port = options.port;
+      if (portIdx >= 0) port = Number(launch.args[portIdx + 1]) || port;
+      else if (pIdx >= 0) port = Number(launch.args[pIdx + 1]) || port;
+
+      if (script === "dev") {
+        return { mode: "dev", cmd: execPath, args: [nextBin, "dev", "-p", String(port)] };
+      }
+      return { mode: launch.mode, cmd: execPath, args: [nextBin, "start", "-p", String(port)] };
+    }
+
+    if (fs.existsSync(path.join(options.themeDir, "server.js"))) {
+      return { mode: "production", cmd: execPath, args: ["server.js"] };
+    }
+  }
+
+  return launch;
+}
+
+/** Packaged app ships shared node_modules — skip npm/pnpm install in theme dir. */
+function themeRuntimeReady(themeDir: string): boolean {
+  const localNext = path.join(themeDir, "node_modules", "next");
+  if (fs.existsSync(localNext)) return true;
+
+  if (!isPackagedRuntime()) return false;
+
+  const candidates = [
+    ...listPackagedNodeModuleDirs(),
+    resolveCliRuntimeNodeModules(),
+  ].filter((p): p is string => Boolean(p));
+
+  return candidates.some((nm) => fs.existsSync(path.join(nm, "next")));
+}
+
+function maybeEnsureThemeDependencies(
+  prod: ThemeProdModule,
+  siteRoot: string,
+  themeDir: string,
+  themeId: string,
+): void {
+  if (themeRuntimeReady(themeDir)) return;
+  prod.ensureThemeDependenciesInstalled(siteRoot, themeDir, themeId, "themePreview");
 }
 
 function ensureThemePreviewFrame(themeDir: string, monorepoRoot: string): void {
@@ -203,12 +302,7 @@ async function spawnThemeServer(options: {
   const apiBase = getLocalApiBaseUrl(options.apiPort);
 
   try {
-    prod.ensureThemeDependenciesInstalled(
-      options.siteRoot,
-      options.themeDir,
-      options.themeId,
-      "themePreview",
-    );
+    maybeEnsureThemeDependencies(prod, options.siteRoot, options.themeDir, options.themeId);
     ensureThemePreviewFrame(options.themeDir, options.monorepoRoot);
   } catch (err) {
     logError(
@@ -218,7 +312,10 @@ async function spawnThemeServer(options: {
     return null;
   }
 
-  const launch = pool.resolvePreviewThemeLaunchPlan(options.themeDir, options.port);
+  const launch = normalizeThemeLaunchForElectron(
+    pool.resolvePreviewThemeLaunchPlan(options.themeDir, options.port),
+    options,
+  );
 
   if (launch.mode === "production") {
     const distDir = options.role === "preview" ? prod.PREVIEW_DIST_DIR : ".next";
@@ -248,6 +345,7 @@ async function spawnThemeServer(options: {
     role: options.role,
     extraEnv: {
       ...(isElectronHost() ? { ELECTRON_RUN_AS_NODE: "1" } : {}),
+      ...(isPackagedRuntime() ? { REACTPRESS_SKIP_THEME_INSTALL: "1" } : {}),
       REACTPRESS_ORIGINAL_CWD: options.siteRoot,
       REACTPRESS_THEME_DIR: options.themeDir,
       NODE_PATH: resolveThemeNodePath(options.themeDir, options.monorepoRoot),

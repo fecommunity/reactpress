@@ -1,5 +1,7 @@
 appId: com.reactpress.desktop
 productName: ReactPress
+asar: true
+npmRebuild: false
 directories:
   output: release
 files:

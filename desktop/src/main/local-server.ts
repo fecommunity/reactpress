@@ -5,6 +5,11 @@ import path from "node:path";
 import { DEFAULT_LOCAL_API_PORT } from "../shared/constants";
 import { ensureLocalSite } from "./local-site";
 import {
+  bundledResourcesRoot,
+  isPackagedRuntime,
+  resolvePackagedNodePath,
+} from "./packaged-runtime";
+import {
   attachChildProcessLogging,
   isDesktopDebugVerbose,
   logError,
@@ -15,22 +20,8 @@ let serverProcess: ChildProcess | null = null;
 let activePort = DEFAULT_LOCAL_API_PORT;
 let activeSiteRoot: string | null = null;
 
-/** True only inside a packaged Electron app (not CLI Node or dev Electron). */
-function isPackagedRuntime(): boolean {
-  try {
-    const { app: electronApp } = require("electron") as typeof import("electron");
-    return Boolean(electronApp?.isPackaged) && process.env.ELECTRON_IS_DEV !== "1";
-  } catch {
-    return false;
-  }
-}
-
 function isElectronHost(): boolean {
   return Boolean(process.versions.electron);
-}
-
-function bundledResourcesRoot(): string {
-  return process.resourcesPath;
 }
 
 function resolveDevMonorepoRoot(): string {
@@ -144,7 +135,7 @@ export async function startLocalServer(options: {
       ...process.env,
       ...(isElectronHost() ? { ELECTRON_RUN_AS_NODE: "1" } : {}),
       NODE_PATH: isPackagedRuntime()
-        ? path.join(bundledResourcesRoot(), "server", "node_modules")
+        ? resolvePackagedNodePath()
         : process.env.NODE_PATH,
       NODE_ENV: "production",
       REACTPRESS_ORIGINAL_CWD: options.siteRoot,
@@ -154,6 +145,11 @@ export async function startLocalServer(options: {
         ? {
             REACTPRESS_THEME_RUNTIME_SYMLINK: "1",
             REACTPRESS_DESKTOP_SITE_ROOT: options.siteRoot,
+            REACTPRESS_SERVER_LOG_DIR: path.join(
+              path.dirname(options.siteRoot),
+              "logs",
+              "server",
+            ),
           }
         : {}),
     },

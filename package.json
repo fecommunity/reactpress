@@ -87,7 +87,8 @@
       "@fecommunity/reactpress-template-hello-world>typescript": "~4.9.5",
       "next@12.3.4>typescript": "~4.9.5",
       "vite": "npm:@voidzero-dev/vite-plus-core@latest",
-      "vitest": "npm:@voidzero-dev/vite-plus-test@latest"
+      "vitest": "npm:@voidzero-dev/vite-plus-test@latest",
+      "@fecommunity/reactpress-desktop>vite": "^6.2.0"
     },
     "onlyBuiltDependencies": [
       "esbuild",

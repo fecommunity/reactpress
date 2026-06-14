@@ -122,11 +122,20 @@ export function logError(source: string, message: string): void {
 
 /** Pipe child stdout/stderr into the system log (full text, not filtered). */
 export function attachChildProcessLogging(
-  child: { stdout?: NodeJS.ReadableStream | null; stderr?: NodeJS.ReadableStream | null; pid?: number },
+  child: {
+    stdout?: NodeJS.ReadableStream | null;
+    stderr?: NodeJS.ReadableStream | null;
+    pid?: number;
+    on?: (event: "error", listener: (err: Error) => void) => void;
+  },
   source: string,
 ): void {
   const pid = child.pid ?? "unknown";
   logInfo(source, `process started (pid=${pid})`);
+
+  child.on?.("error", (err) => {
+    logError(source, `process error: ${err.message}`);
+  });
 
   const onChunk = (stream: "stdout" | "stderr", chunk: Buffer | string) => {
     const text = chunk.toString();

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Launch Electron for local desktop dev.
+ * Launch electron-vite dev for local desktop development.
  * macOS uses a patched ReactPress.app bundle so Dock label/icon branding works.
  */
 import { spawn } from "node:child_process";
@@ -21,20 +21,28 @@ function resolveElectronExecutable() {
   return require("electron");
 }
 
-const child = spawn(resolveElectronExecutable(), ["."], {
-  cwd: desktopRoot,
-  env: {
-    ...process.env,
-    ELECTRON_IS_DEV: process.env.ELECTRON_IS_DEV || "1",
+const electronExecPath = resolveElectronExecutable();
+
+const child = spawn(
+  "pnpm",
+  ["exec", "electron-vite", "dev"],
+  {
+    cwd: desktopRoot,
+    env: {
+      ...process.env,
+      ELECTRON_IS_DEV: process.env.ELECTRON_IS_DEV || "1",
+      ELECTRON_EXEC_PATH: electronExecPath,
+    },
+    stdio: "inherit",
+    shell: process.platform === "win32",
   },
-  stdio: "inherit",
-});
+);
 
 child.on("close", (code) => {
   process.exit(code ?? 0);
 });
 
 child.on("error", (err) => {
-  console.error("[ReactPress Desktop] Failed to launch Electron:", err);
+  console.error("[ReactPress Desktop] Failed to launch electron-vite:", err);
   process.exit(1);
 });

@@ -62,7 +62,9 @@ pnpm build:desktop
 pnpm build:desktop:dir
 ```
 
-`build:desktop` 会并行编译 toolkit / cli / desktop 壳，再并行构建 server 与 web，最后并行 deploy 依赖并打包。日常调试可优先用 `build:desktop:dir`。
+`build:desktop` 会并行编译 toolkit / cli / desktop 壳（**electron-vite**），再并行构建 server 与 web，最后单次 hoisted deploy 组装 Resources 并打包。日常调试可优先用 `build:desktop:dir`。
+
+打包前会校验源码与 `desktop/out`、`server/dist` 的时间戳；staging 后与最终 `.app` 会与 workspace 产物逐文件比对。若源码比编译产物新，或安装包内容不一致，构建会直接失败，避免误用旧的 `release/*.dmg`。每次成功打包会在 `Resources/build-manifest.json` 写入 `builtAt` 时间戳。
 
 产物目录：`desktop/release/`（已在根 `.gitignore` 忽略）。
 
@@ -91,6 +93,7 @@ REACTPRESS_DESKTOP_DEBUG=1 /path/to/ReactPress.app/Contents/MacOS/ReactPress
 ```
 desktop/
 ├── .cache/             # 构建/开发缓存目录（git 忽略）
+├── electron.vite.config.ts
 ├── src/
 │   ├── main/           # Main 进程：窗口、IPC、local-server、local-site、config
 │   ├── preload/        # contextBridge → window.reactpressDesktop

@@ -15,6 +15,9 @@ export function cachePath(name) {
 export const CACHE_PATHS = {
   appResources: cachePath("app-resources"),
   serverBundle: cachePath("server-bundle"),
+  sharedRuntime: cachePath("shared-runtime"),
+  cliBundle: cachePath("cli-bundle"),
   themeBundle: cachePath("theme-bundle"),
+  themeStarterDeps: cachePath("theme-starter-deps"),
   devApp: cachePath("dev-app"),
 };

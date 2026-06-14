@@ -1,6 +1,9 @@
 import { app, BrowserWindow } from "electron";
 
 import { APP_DISPLAY_NAME } from "../shared/constants";
+import { ensurePackagedModuleResolution } from "./packaged-runtime";
+
+ensurePackagedModuleResolution();
 import { getApiMode, getLocalApiPort } from "./config";
 import { registerIpcHandlers } from "./ipc";
 import {

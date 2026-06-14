@@ -29,8 +29,11 @@
 | 仅拷贝 `toolkit/dist`，不再 `deploy toolkit` | ~350 MB | 低（依赖由 server `node_modules` + `NODE_PATH` 解析） |
 | `prune-bundle` 裁剪 server 中 Playwright/TS/eslint 等 | ~150–400 MB | 中低（**保留 `next`**，主题依赖单独 deploy） |
 | hello-world 单独 `pnpm deploy` 运行时依赖 | +~200–370 MB | 低（`next start` 必需） |
+| **electron-vite** 构建 main/preload（替代 tsc） | 构建更快 | 低 |
+| **server 单次 hoisted deploy** + **runtime-deps 共享主题依赖** | ~200–370 MB | 低（不再为每个主题拷贝 `node_modules`） |
+| 去掉 hello-world / theme-starter 独立 `node_modules` 拷贝 | ~200–370 MB | 低 |
 
-**P0 合计（安装后）**：约 **650–970 MB** → 目标 **~700 MB–1 GB**
+**P0 合计（安装后）**：约 **450–750 MB** → 目标 **~500 MB–800 MB**
 
 ### P1 — 建议下一迭代
 
