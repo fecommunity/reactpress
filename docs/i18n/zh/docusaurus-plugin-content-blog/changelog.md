@@ -21,7 +21,7 @@ tags: [reactpress, release]
 
 ### Bug Fixes
 
-- 增强 monorepo 根目录检测；主题 manifest schema URL 更新为 `reactpress.surge.sh`
+- 增强 monorepo 根目录检测；主题 manifest schema URL 更新为 `reactpress-docs.vercel.app`
 
 ---
 
