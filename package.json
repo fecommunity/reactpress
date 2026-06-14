@@ -34,6 +34,8 @@
     "dev:desktop": "node ./cli/bin/reactpress.js desktop dev",
     "build:desktop": "node ./desktop/scripts/build-desktop.mjs",
     "build:desktop:dir": "node ./desktop/scripts/build-desktop.mjs --dir",
+    "build:desktop:force": "node ./desktop/scripts/build-desktop.mjs --force",
+    "open:desktop": "node ./desktop/scripts/run-release-dir.mjs",
     "build:docs": "pnpm run --dir ./docs build",
     "clean": "node ./scripts/clean.mjs",
     "start": "node ./cli/bin/reactpress.js server start",

@@ -15,6 +15,7 @@
     "dist:dir": "pnpm run build && electron-builder --config electron-builder.yml --dir",
     "build:release": "node ./scripts/build-desktop.mjs",
     "build:release:dir": "node ./scripts/build-desktop.mjs --dir",
+    "open:release": "node ./scripts/run-release-dir.mjs",
     "prepare:resources": "node ./scripts/prepare-app-resources.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },

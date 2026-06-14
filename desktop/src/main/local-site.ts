@@ -26,6 +26,21 @@ export function getLocalSitePaths(siteRoot: string): LocalSitePaths {
   };
 }
 
+function ensureDirSymlink(sourceDir: string, targetDir: string): void {
+  if (!fs.existsSync(sourceDir)) return;
+
+  if (fs.existsSync(targetDir)) {
+    try {
+      if (fs.realpathSync(targetDir) === fs.realpathSync(sourceDir)) return;
+    } catch {
+      // broken or stale symlink — recreate below
+    }
+    fs.rmSync(targetDir, { recursive: true, force: true });
+  }
+
+  fs.symlinkSync(sourceDir, targetDir, "dir");
+}
+
 function seedBundledPlugins(siteRoot: string, monorepoRoot?: string): void {
   if (!monorepoRoot) return;
 
@@ -49,10 +64,7 @@ function seedBundledPlugins(siteRoot: string, monorepoRoot?: string): void {
     return;
   }
 
-  const symlinkPluginDir = (sourceDir: string, targetDir: string): void => {
-    if (!fs.existsSync(sourceDir) || fs.existsSync(targetDir)) return;
-    fs.symlinkSync(sourceDir, targetDir, "dir");
-  };
+  const symlinkPluginDir = ensureDirSymlink;
 
   const localPlugins = Array.isArray(meta.reactpress?.local) ? meta.reactpress.local : [];
   for (const pluginId of localPlugins) {
@@ -86,10 +98,7 @@ function seedBundledThemes(siteRoot: string, monorepoRoot?: string): void {
     return;
   }
 
-  const symlinkThemeDir = (sourceDir: string, targetDir: string): void => {
-    if (!fs.existsSync(sourceDir) || fs.existsSync(targetDir)) return;
-    fs.symlinkSync(sourceDir, targetDir, "dir");
-  };
+  const symlinkThemeDir = ensureDirSymlink;
 
   const localThemes = Array.isArray(meta.reactpress?.local) ? meta.reactpress.local : [];
   for (const themeId of localThemes) {
@@ -122,11 +131,10 @@ function seedRuntimeThemes(siteRoot: string, monorepoRoot?: string): void {
     if (!entry.isDirectory() && !entry.isSymbolicLink()) continue;
     const sourcePath = path.join(sourceRuntime, entry.name);
     const targetPath = path.join(targetRuntime, entry.name);
-    if (fs.existsSync(targetPath)) continue;
     try {
       if (!fs.statSync(sourcePath).isDirectory()) continue;
       fs.mkdirSync(targetRuntime, { recursive: true });
-      fs.symlinkSync(sourcePath, targetPath, "dir");
+      ensureDirSymlink(sourcePath, targetPath);
     } catch {
       // skip broken entries
     }

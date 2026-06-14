@@ -14,18 +14,35 @@ import { fileURLToPath } from "node:url";
 
 import {
   assertWorkspaceBuildsFresh,
-  isBuildArtifactStale,
+  computePackagingFingerprint,
+  isElectronPackagingFresh,
+  isThemePackageBuildFresh,
+  isWorkspaceTargetStale,
   pruneStaleReleaseArtifacts,
   verifyPackagedApp,
-  workspaceBuildSpecs,
+  writePackagingFingerprint,
+  writeThemePackageBuildFingerprint,
   writeWorkspaceBuildFingerprints,
 } from "./build-freshness.mjs";
-import { stageAppResources } from "./prepare-app-resources.mjs";
+import { resolveSharedRuntimeVersions, stageAppResources } from "./prepare-app-resources.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const desktopDir = path.resolve(__dirname, "..");
 const root = path.resolve(desktopDir, "..");
 const dirOnly = process.argv.includes("--dir");
+const forceRebuild = process.argv.includes("--force");
+
+function logSkipped(label) {
+  console.log(`[desktop] ✓ ${label} (up to date, skipped)`);
+}
+
+async function buildIfStale(label, buildTask) {
+  if (!forceRebuild && !isWorkspaceTargetStale(label)) {
+    logSkipped(label);
+    return;
+  }
+  await buildTask();
+}
 
 function runAsync(label, cmd, args, cwd = root, options = {}) {
   return new Promise((resolve, reject) => {
@@ -65,18 +82,30 @@ async function main() {
   console.log("[desktop] build:desktop — parallel pipeline");
 
   await runAll("Phase 1/4 · foundation (toolkit, cli, desktop shell)", [
-    () => runAsync("toolkit", "pnpm", ["run", "build:toolkit"]),
-    () => runAsync("cli", "pnpm", ["run", "--dir", "cli", "build"]),
-    () => runAsync("desktop shell (electron-vite)", "pnpm", ["run", "build"], desktopDir),
+    () => buildIfStale("toolkit", () => runAsync("toolkit", "pnpm", ["run", "build:toolkit"])),
+    () => buildIfStale("cli", () => runAsync("cli", "pnpm", ["run", "--dir", "cli", "build"])),
+    () =>
+      buildIfStale("desktop shell", () =>
+        runAsync("desktop shell (electron-vite)", "pnpm", ["run", "build"], desktopDir),
+      ),
   ]);
 
   await runAll("Phase 2/4 · app bundles (server, web, theme)", [
-    () => runAsync("server", "pnpm", ["run", "--dir", "server", "build"]),
-    () => runAsync("web (electron)", "pnpm", ["run", "--dir", "web", "build:electron"]),
+    () => buildIfStale("server API", () => runAsync("server", "pnpm", ["run", "--dir", "server", "build"])),
+    () =>
+      buildIfStale("web (electron)", () =>
+        runAsync("web (electron)", "pnpm", ["run", "--dir", "web", "build:electron"]),
+      ),
     () => {
       const helloWorldDir = path.join(root, "themes", "hello-world");
       if (!fs.existsSync(helloWorldDir)) return Promise.resolve();
-      return runAsync("hello-world theme", "pnpm", ["run", "build"], helloWorldDir);
+      if (!forceRebuild && isThemePackageBuildFresh(helloWorldDir, "hello-world theme")) {
+        logSkipped("hello-world theme");
+        return Promise.resolve();
+      }
+      return runAsync("hello-world theme", "pnpm", ["run", "build"], helloWorldDir).then(() => {
+        writeThemePackageBuildFingerprint(helloWorldDir, "hello-world theme");
+      });
     },
     () => {
       const starterRuntime = path.join(root, ".reactpress", "runtime", "reactpress-theme-starter");
@@ -99,35 +128,27 @@ async function main() {
     },
   ]);
 
-  console.log("\n[desktop] Verifying workspace build outputs are up to date…");
-  const staleBuilds = workspaceBuildSpecs().filter(isBuildArtifactStale);
-  if (staleBuilds.length > 0) {
-    console.log(
-      `[desktop] Rebuilding stale workspace outputs: ${staleBuilds.map((spec) => spec.label).join(", ")}`,
-    );
-    for (const spec of staleBuilds) {
-      if (spec.label === "desktop shell") {
-        await runAsync("desktop shell (freshness retry)", "pnpm", ["run", "build"], desktopDir);
-        continue;
-      }
-      if (spec.label === "server API") {
-        await runAsync("server (freshness retry)", "pnpm", ["run", "--dir", "server", "build"]);
-      }
-    }
-  }
   writeWorkspaceBuildFingerprints();
   assertWorkspaceBuildsFresh();
 
-  await stageAppResources();
+  await stageAppResources({ force: forceRebuild });
 
   pruneStaleReleaseArtifacts();
 
-  console.log("\n[desktop] Phase 4/4 · electron-builder…");
-  const builderArgs = ["exec", "electron-builder", "--config", "electron-builder.yml"];
-  if (dirOnly) builderArgs.push("--dir");
-  await runAsync("electron-builder", "pnpm", builderArgs, desktopDir);
+  const packagingFingerprint = computePackagingFingerprint(resolveSharedRuntimeVersions());
+  const packagedAppPath = path.join(desktopDir, "release/mac/ReactPress.app");
 
-  const { appPath, manifest } = verifyPackagedApp();
+  if (!forceRebuild && isElectronPackagingFresh(packagingFingerprint, packagedAppPath)) {
+    console.log("\n[desktop] Phase 4/4 · electron-builder (up to date, skipped)");
+  } else {
+    console.log("\n[desktop] Phase 4/4 · electron-builder…");
+    const builderArgs = ["exec", "electron-builder", "--config", "electron-builder.yml"];
+    if (dirOnly) builderArgs.push("--dir");
+    await runAsync("electron-builder", "pnpm", builderArgs, desktopDir);
+    writePackagingFingerprint(packagingFingerprint);
+  }
+
+  const { appPath, manifest } = verifyPackagedApp(packagedAppPath);
   const elapsed = ((Date.now() - totalStarted) / 1000).toFixed(1);
   console.log(`\n[desktop] ✓ packaged app verified (${appPath})`);
   if (manifest?.builtAt) {

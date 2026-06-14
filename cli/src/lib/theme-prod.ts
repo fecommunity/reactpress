@@ -213,7 +213,25 @@ function resolvePreviewThemeEnv(projectRoot, themeDir, port, options = {}) {
   };
 }
 
+function canResolveSharedNext(themeDir) {
+  const searchPaths = [themeDir];
+  const nodePath = String(process.env.NODE_PATH || '').trim();
+  if (nodePath) {
+    searchPaths.push(...nodePath.split(path.delimiter).filter(Boolean));
+  }
+  try {
+    require.resolve('next/package.json', { paths: searchPaths });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 function ensureThemeDependenciesInstalled(projectRoot, themeDir, themeId, logPrefix = 'themePreview') {
+  if (process.env.REACTPRESS_SKIP_THEME_INSTALL === '1' || canResolveSharedNext(themeDir)) {
+    return;
+  }
+
   const nextModule = path.join(themeDir, 'node_modules', 'next');
   if (fs.existsSync(nextModule)) return;
 

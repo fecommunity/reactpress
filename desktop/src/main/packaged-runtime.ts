@@ -59,6 +59,17 @@ export function ensurePackagedModuleResolution(): void {
   modulePathsReady = true;
 }
 
+export function configurePackagedRuntimeEnv(): void {
+  if (!isPackagedRuntime()) return;
+
+  process.env.REACTPRESS_SKIP_THEME_INSTALL = "1";
+  process.env.REACTPRESS_MONOREPO_ROOT = bundledResourcesRoot();
+  const nodePath = resolvePackagedNodePath();
+  if (nodePath) {
+    process.env.NODE_PATH = nodePath;
+  }
+}
+
 export function resolvePackagedNodePath(): string {
   return listPackagedNodeModuleDirs().join(path.delimiter);
 }

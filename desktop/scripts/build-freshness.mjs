@@ -20,12 +20,14 @@ const SKIP_DIRS = new Set([
   "release",
   ".git",
   "coverage",
+  ".next",
+  ".next-preview",
 ]);
 
 const SOURCE_EXTENSIONS = new Set([".ts", ".tsx", ".js", ".mjs", ".json"]);
 const FINGERPRINT_EXTENSIONS = new Set([".ts", ".tsx", ".js", ".mjs"]);
 
-/** @typedef {{ label: string, sourceDirs: string[], artifactPath?: string, artifactDir?: string, toleranceMs?: number }} BuildArtifactSpec */
+/** @typedef {{ label: string, sourceDirs: string[], sourceFiles?: string[], dependsOn?: string[], artifactPath?: string, artifactDir?: string, toleranceMs?: number }} BuildArtifactSpec */
 
 /** @param {string} dir */
 function newestSourceMtime(dir) {
@@ -100,13 +102,28 @@ function collectSourcePaths(sourceDirs) {
   return paths.sort();
 }
 
-/** @param {string[]} sourceDirs */
-function sourceTreeFingerprint(sourceDirs) {
+/** @param {string} filePath */
+function fileContentFingerprint(filePath) {
+  if (!fs.existsSync(filePath)) return "";
+  const hash = crypto.createHash("sha256");
+  hash.update(path.relative(root, filePath));
+  hash.update("\0");
+  hash.update(fs.readFileSync(filePath));
+  hash.update("\0");
+  return hash.digest("hex");
+}
+
+/** @param {string[]} sourceDirs @param {string[]} [sourceFiles] */
+function sourceTreeFingerprint(sourceDirs, sourceFiles = []) {
   const hash = crypto.createHash("sha256");
   for (const filePath of collectSourcePaths(sourceDirs)) {
     hash.update(path.relative(root, filePath));
     hash.update("\0");
     hash.update(fs.readFileSync(filePath));
+    hash.update("\0");
+  }
+  for (const filePath of sourceFiles) {
+    hash.update(fileContentFingerprint(filePath));
     hash.update("\0");
   }
   return hash.digest("hex");
@@ -143,32 +160,102 @@ function artifactExists({ artifactPath, artifactDir }) {
 export function workspaceBuildSpecs() {
   return [
     {
+      label: "toolkit",
+      sourceDirs: [path.join(root, "toolkit/src")],
+      artifactDir: path.join(root, "toolkit/dist"),
+    },
+    {
+      label: "cli",
+      sourceDirs: [path.join(root, "cli/src")],
+      artifactDir: path.join(root, "cli/out"),
+      dependsOn: ["toolkit"],
+    },
+    {
       label: "desktop shell",
-      sourceDirs: [path.join(desktopDir, "src/main"), path.join(desktopDir, "src/shared")],
+      sourceDirs: [
+        path.join(desktopDir, "src/main"),
+        path.join(desktopDir, "src/shared"),
+        path.join(desktopDir, "src/preload"),
+      ],
       artifactPath: path.join(desktopDir, "out/main/index.js"),
     },
     {
       label: "server API",
       sourceDirs: [path.join(root, "server/src")],
       artifactDir: path.join(root, "server/dist"),
+      dependsOn: ["toolkit"],
+    },
+    {
+      label: "web (electron)",
+      sourceDirs: [path.join(root, "web/src")],
+      sourceFiles: [
+        path.join(root, "web/index.html"),
+        path.join(root, "web/.env.electron"),
+      ],
+      artifactDir: path.join(root, "web/dist"),
+      dependsOn: ["toolkit"],
     },
   ];
 }
 
+/** @param {string} label @param {BuildArtifactSpec[]} [specs] */
+function findBuildSpec(label, specs = workspaceBuildSpecs()) {
+  const spec = specs.find((entry) => entry.label === label);
+  if (!spec) throw new Error(`[desktop] Unknown build spec: ${label}`);
+  return spec;
+}
+
 /** @param {BuildArtifactSpec} spec */
-export function isBuildArtifactStale(spec) {
+function currentBuildFingerprint(spec) {
+  return sourceTreeFingerprint(spec.sourceDirs, spec.sourceFiles);
+}
+
+/** @param {BuildArtifactSpec} spec @param {BuildArtifactSpec[]} [specs] */
+export function isBuildArtifactStale(spec, specs = workspaceBuildSpecs()) {
   if (!artifactExists(spec)) return true;
 
   const stored = readStoredFingerprint(spec);
-  if (stored === null) return false;
+  if (stored !== null && stored !== currentBuildFingerprint(spec)) return true;
 
-  return stored !== sourceTreeFingerprint(spec.sourceDirs);
+  for (const depLabel of spec.dependsOn ?? []) {
+    if (isBuildArtifactStale(findBuildSpec(depLabel, specs), specs)) return true;
+  }
+
+  return false;
+}
+
+/** @param {string} label @param {BuildArtifactSpec[]} [specs] */
+export function isWorkspaceTargetStale(label, specs = workspaceBuildSpecs()) {
+  return isBuildArtifactStale(findBuildSpec(label, specs), specs);
+}
+
+/** @param {string} themeDir @param {string} label */
+export function themePackageBuildSpec(themeDir, label) {
+  return {
+    label,
+    sourceDirs: [themeDir],
+    artifactPath: path.join(themeDir, ".next", "BUILD_ID"),
+  };
+}
+
+/** @param {string} themeDir @param {string} label */
+export function isThemePackageBuildFresh(themeDir, label) {
+  if (!fs.existsSync(path.join(themeDir, ".next", "BUILD_ID"))) return false;
+  return !isBuildArtifactStale(themePackageBuildSpec(themeDir, label));
+}
+
+/** @param {string} themeDir @param {string} label */
+export function writeThemePackageBuildFingerprint(themeDir, label) {
+  writeBuildArtifactFingerprint(
+    themePackageBuildSpec(themeDir, label),
+    sourceTreeFingerprint([themeDir]),
+  );
 }
 
 /** @param {BuildArtifactSpec[]} [specs] */
 export function writeWorkspaceBuildFingerprints(specs = workspaceBuildSpecs()) {
   for (const spec of specs) {
-    writeBuildArtifactFingerprint(spec, sourceTreeFingerprint(spec.sourceDirs));
+    writeBuildArtifactFingerprint(spec, currentBuildFingerprint(spec));
   }
 }
 
@@ -179,6 +266,7 @@ export function writeWorkspaceBuildFingerprints(specs = workspaceBuildSpecs()) {
 export function assertBuildArtifactFresh({
   label,
   sourceDirs,
+  sourceFiles = [],
   artifactPath,
   artifactDir,
   toleranceMs = 1500,
@@ -196,8 +284,8 @@ export function assertBuildArtifactFresh({
     );
   }
 
-  const spec = { label, sourceDirs, artifactPath, artifactDir, toleranceMs };
-  const currentFingerprint = sourceTreeFingerprint(sourceDirs);
+  const spec = { label, sourceDirs, sourceFiles, artifactPath, artifactDir, toleranceMs };
+  const currentFingerprint = currentBuildFingerprint(spec);
   const storedFingerprint = readStoredFingerprint(spec);
 
   if (storedFingerprint === currentFingerprint) return;
@@ -234,7 +322,7 @@ function assertSameFile(src, dest, label) {
   }
 }
 
-/** Ensure Phase 1/2 outputs reflect current desktop + server sources. */
+/** Ensure Phase 1/2 outputs reflect current workspace sources. */
 export function assertWorkspaceBuildsFresh() {
   for (const spec of workspaceBuildSpecs()) {
     assertBuildArtifactFresh(spec);
@@ -338,4 +426,113 @@ export function verifyPackagedApp(appPath) {
   }
 
   return { appPath: resolved, manifest };
+}
+
+const STAGING_FINGERPRINT_PATH = path.join(desktopDir, ".cache", "staging-fingerprint");
+
+/** @param {Record<string, string>} sharedRuntimeVersions */
+export function computeAppResourcesStagingFingerprint(sharedRuntimeVersions) {
+  const hash = crypto.createHash("sha256");
+
+  const add = (key, value) => {
+    hash.update(key);
+    hash.update("\0");
+    hash.update(value);
+    hash.update("\0");
+  };
+
+  for (const spec of workspaceBuildSpecs()) {
+    add(`build:${spec.label}`, currentBuildFingerprint(spec));
+  }
+
+  add("web-dist", fileContentFingerprint(path.join(root, "web/dist/index.html")));
+
+  for (const name of ["hello-world", "theme-starter"]) {
+    const themeDir = path.join(root, "themes", name);
+    if (!fs.existsSync(themeDir)) continue;
+    add(`theme:${name}`, sourceTreeFingerprint([themeDir]));
+    add(`theme:${name}:next`, fileContentFingerprint(path.join(themeDir, ".next", "BUILD_ID")));
+    add(
+      `theme:${name}:preview`,
+      fileContentFingerprint(path.join(themeDir, ".next-preview", "BUILD_ID")),
+    );
+  }
+
+  const starterRuntime = path.join(root, ".reactpress", "runtime", "reactpress-theme-starter");
+  if (fs.existsSync(starterRuntime)) {
+    add("runtime-starter", sourceTreeFingerprint([starterRuntime]));
+    add(
+      "runtime-starter:next",
+      fileContentFingerprint(path.join(starterRuntime, ".next", "BUILD_ID")),
+    );
+    add(
+      "runtime-starter:preview",
+      fileContentFingerprint(path.join(starterRuntime, ".next-preview", "BUILD_ID")),
+    );
+  }
+
+  add("shared-runtime-versions", JSON.stringify(sharedRuntimeVersions));
+  add("themes-lock", fileContentFingerprint(path.join(root, ".reactpress", "themes.lock.json")));
+  add("pnpm-lock", fileContentFingerprint(path.join(root, "pnpm-lock.yaml")));
+
+  return hash.digest("hex");
+}
+
+/** @param {string} fingerprint */
+export function writeStagingFingerprint(fingerprint) {
+  fs.mkdirSync(path.dirname(STAGING_FINGERPRINT_PATH), { recursive: true });
+  fs.writeFileSync(STAGING_FINGERPRINT_PATH, `${fingerprint}\n`);
+}
+
+export function readStagingFingerprint() {
+  if (!fs.existsSync(STAGING_FINGERPRINT_PATH)) return null;
+  return fs.readFileSync(STAGING_FINGERPRINT_PATH, "utf8").trim();
+}
+
+/** @param {string} fingerprint */
+export function isAppResourcesStagingFresh(fingerprint) {
+  return (
+    readStagingFingerprint() === fingerprint &&
+    fs.existsSync(CACHE_PATHS.appResources) &&
+    fs.existsSync(path.join(CACHE_PATHS.appResources, "server/dist/main.js"))
+  );
+}
+
+const PACKAGING_FINGERPRINT_PATH = path.join(desktopDir, ".cache", "packaging-fingerprint");
+
+/** @param {Record<string, string>} sharedRuntimeVersions */
+export function computePackagingFingerprint(sharedRuntimeVersions) {
+  const hash = crypto.createHash("sha256");
+  hash.update(computeAppResourcesStagingFingerprint(sharedRuntimeVersions));
+  hash.update("\0");
+  hash.update(fileContentFingerprint(path.join(desktopDir, "out/main/index.js")));
+  hash.update("\0");
+  hash.update(fileContentFingerprint(path.join(root, "web/dist/index.html")));
+  return hash.digest("hex");
+}
+
+export function readPackagingFingerprint() {
+  if (!fs.existsSync(PACKAGING_FINGERPRINT_PATH)) return null;
+  return fs.readFileSync(PACKAGING_FINGERPRINT_PATH, "utf8").trim();
+}
+
+/** @param {string} fingerprint */
+export function writePackagingFingerprint(fingerprint) {
+  fs.mkdirSync(path.dirname(PACKAGING_FINGERPRINT_PATH), { recursive: true });
+  fs.writeFileSync(PACKAGING_FINGERPRINT_PATH, `${fingerprint}\n`);
+}
+
+/**
+ * @param {string} fingerprint
+ * @param {string} [appPath]
+ */
+export function isElectronPackagingFresh(fingerprint, appPath) {
+  const resolved =
+    appPath ?? path.join(desktopDir, "release/mac/ReactPress.app");
+  if (readPackagingFingerprint() !== fingerprint) return false;
+  if (!fs.existsSync(resolved)) return false;
+
+  const asarPath = path.join(resolved, "Contents/Resources/app.asar");
+  const stagedLogger = path.join(resolved, "Contents/Resources/server/dist/logger/index.js");
+  return fs.existsSync(asarPath) && fs.existsSync(stagedLogger);
 }

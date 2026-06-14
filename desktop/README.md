@@ -55,14 +55,41 @@ pnpm run --dir desktop dev
 ## 构建与打包
 
 ```bash
-# 并行构建 + 打安装包（推荐）
+# 并行构建 + 打安装包（发版用）
 pnpm build:desktop
 
-# 仅输出未打包目录（跳过 dmg/zip，更快）
+# 仅输出未打包目录（跳过 dmg/zip，日常验证生产行为首选）
 pnpm build:desktop:dir
+
+# 启动未打包的 .app（与 DMG 安装后走同一套 isPackaged 代码路径）
+pnpm open:desktop
+
+# 忽略增量缓存，全量重编（怀疑产物不一致时用）
+pnpm build:desktop:force
 ```
 
-`build:desktop` 会并行编译 toolkit / cli / desktop 壳（**electron-vite**），再并行构建 server 与 web，最后单次 hoisted deploy 组装 Resources 并打包。日常调试可优先用 `build:desktop:dir`。
+`build:desktop` 会并行编译 toolkit / cli / desktop 壳（**electron-vite**），再并行构建 server 与 web，最后并行 deploy 组装 Resources 并打包。
+
+**推荐调试流程（兼顾速度与 dev/prod 一致性）：**
+
+| 阶段 | 命令 | 说明 |
+|------|------|------|
+| 日常 UI / API 逻辑 | `pnpm dev:desktop` | Vite 热更新，走 monorepo 源码路径，最快 |
+| 验证打包行为 | `pnpm build:desktop:dir && pnpm open:desktop` | 与安装包相同的 `process.resourcesPath`、NODE_PATH、主题启动逻辑 |
+| 发版 | `pnpm build:desktop` | 在 dir 验证通过后再打 DMG |
+
+增量优化：未改动的 workspace 编译（toolkit/cli/server/web/desktop）与 staging（`pnpm deploy` + 共享 Next 安装）会自动跳过；仅改 desktop 主进程时，二次 `build:desktop:dir` 通常只需数十秒 + electron-builder。
+
+`dev:desktop` 与打包版的核心差异见下表：
+
+| 维度 | `dev:desktop` | 打包版 (`open:desktop` / DMG) |
+|------|---------------|-------------------------------|
+| Admin UI | Vite dev server (`localhost`) | 静态 `web/dist`（`file://`） |
+| API / 主题路径 | monorepo 源码 + workspace `node_modules` | `Resources/` 下 hoisted deploy |
+| 主题依赖 | 可 `pnpm install` | 共享 `runtime-deps`，`REACTPRESS_SKIP_THEME_INSTALL` |
+| 判定 | `ELECTRON_IS_DEV=1` | `app.isPackaged` |
+
+日常调试可优先用 `build:desktop:dir` + `open:desktop`，避免每次等 DMG。
 
 打包前会校验源码与 `desktop/out`、`server/dist` 的时间戳；staging 后与最终 `.app` 会与 workspace 产物逐文件比对。若源码比编译产物新，或安装包内容不一致，构建会直接失败，避免误用旧的 `release/*.dmg`。每次成功打包会在 `Resources/build-manifest.json` 写入 `builtAt` 时间戳。
 
@@ -112,6 +139,8 @@ desktop/
 | `pnpm dev:web:local` | 本地 SQLite + Admin（浏览器调试，无 Electron） |
 | `pnpm build:web:electron` | 构建 Admin（Vite `electron` mode，`base: './'`） |
 | `pnpm build:desktop` | 上述 + electron-builder 打包 |
+| `pnpm build:desktop:dir` | 未打包 `.app`（更快，验证生产路径） |
+| `pnpm open:desktop` | 启动 `build:desktop:dir` 产物 |
 
 ## Web 侧适配要点
 
