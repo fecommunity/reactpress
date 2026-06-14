@@ -91,6 +91,26 @@ function copyNextProduction(srcNext, destNext) {
   }
 }
 
+/** Canonical Next/React versions for all packaged themes (from theme-starter when present). */
+function resolveSharedRuntimeVersions() {
+  const runtimeSrc = path.join(root, ".reactpress", "runtime", "reactpress-theme-starter");
+  const runtimePkgPath = path.join(runtimeSrc, "package.json");
+  if (fs.existsSync(runtimePkgPath)) {
+    const pkg = JSON.parse(fs.readFileSync(runtimePkgPath, "utf8"));
+    return {
+      next: pkg.dependencies?.next,
+      react: pkg.dependencies?.react,
+      "react-dom": pkg.dependencies?.["react-dom"],
+    };
+  }
+
+  return {
+    next: "15.5.12",
+    react: "19.2.4",
+    "react-dom": "19.2.4",
+  };
+}
+
 function assertSharedRuntimeDeps(bundleDir) {
   const nodeModules = path.join(bundleDir, "node_modules");
   const missing = SHARED_RUNTIME_PACKAGES.filter(
@@ -100,22 +120,49 @@ function assertSharedRuntimeDeps(bundleDir) {
 
   throw new Error(
     `Shared runtime bundle missing packages: ${missing.join(", ")}. ` +
-      "Adjust hello-world deploy or SHARED_RUNTIME_PACKAGES.",
+      "Adjust SHARED_RUNTIME_PACKAGES or resolveSharedRuntimeVersions().",
   );
+}
+
+function assertSharedNextVersion(bundleDir) {
+  const nextPkg = path.join(bundleDir, "node_modules", "next", "package.json");
+  if (!fs.existsSync(nextPkg)) {
+    throw new Error("Shared runtime deps missing next — themes cannot start");
+  }
+
+  const nextVersion = JSON.parse(fs.readFileSync(nextPkg, "utf8")).version || "unknown";
+  if (!String(nextVersion).startsWith("15.")) {
+    throw new Error(
+      `Shared runtime resolved next@${nextVersion}, expected Next 15.x for packaged themes`,
+    );
+  }
 }
 
 async function stageSharedRuntimeDeps(outDir) {
   const sharedBundle = CACHE_PATHS.sharedRuntime;
   rmrf(sharedBundle);
+  fs.mkdirSync(sharedBundle, { recursive: true });
 
-  console.log("[desktop] Deploying shared theme runtime (hoisted, single copy)…");
-  await runAsync("deploy shared runtime", "pnpm", [
-    "--filter",
-    "@fecommunity/reactpress-template-hello-world",
-    "deploy",
-    ...PNPM_DEPLOY_FLAGS,
+  const versions = resolveSharedRuntimeVersions();
+  const minimalPkg = {
+    name: "reactpress-shared-theme-runtime",
+    private: true,
+    dependencies: versions,
+  };
+  fs.writeFileSync(
+    path.join(sharedBundle, "package.json"),
+    `${JSON.stringify(minimalPkg, null, 2)}\n`,
+  );
+
+  console.log(
+    `[desktop] Installing shared theme runtime (Next ${versions.next}, hoisted, single copy)…`,
+  );
+  await runAsync(
+    "install shared runtime",
+    "pnpm",
+    ["install", "--prod", "--ignore-workspace", ...PNPM_DEPLOY_FLAGS, "--no-frozen-lockfile"],
     sharedBundle,
-  ]);
+  );
 
   const pruneStats = pruneBundleNodeModules(sharedBundle);
   if (pruneStats.removed > 0) {
@@ -125,61 +172,11 @@ async function stageSharedRuntimeDeps(outDir) {
   }
 
   assertSharedRuntimeDeps(sharedBundle);
+  assertSharedNextVersion(sharedBundle);
 
   const runtimeOut = path.join(outDir, "runtime-deps", "node_modules");
   copyInto(path.join(sharedBundle, "node_modules"), runtimeOut);
   rmrf(sharedBundle);
-}
-
-async function stageThemeStarterRuntimeDeps(runtimeOut) {
-  const runtimeSrc = path.join(root, ".reactpress", "runtime", "reactpress-theme-starter");
-  const bundle = CACHE_PATHS.themeStarterDeps;
-  rmrf(bundle);
-  fs.mkdirSync(bundle, { recursive: true });
-
-  const pkg = JSON.parse(fs.readFileSync(path.join(runtimeSrc, "package.json"), "utf8"));
-  const minimalPkg = {
-    name: "reactpress-theme-starter-runtime-deps",
-    private: true,
-    dependencies: {
-      next: pkg.dependencies?.next,
-      react: pkg.dependencies?.react,
-      "react-dom": pkg.dependencies?.["react-dom"],
-    },
-  };
-  fs.writeFileSync(path.join(bundle, "package.json"), `${JSON.stringify(minimalPkg, null, 2)}\n`);
-
-  console.log(
-    "[desktop] Installing theme-starter runtime deps (Next 15, isolated from hello-world Next 12)…",
-  );
-  await runAsync(
-    "install theme-starter deps",
-    "pnpm",
-    ["install", "--prod", ...PNPM_DEPLOY_FLAGS, "--no-frozen-lockfile"],
-    bundle,
-  );
-
-  const pruneStats = pruneBundleNodeModules(bundle);
-  if (pruneStats.removed > 0) {
-    console.log(
-      `[desktop] Pruned ${pruneStats.removed} dev packages from theme-starter deps (~${formatBytes(pruneStats.savedBytes)} saved)`,
-    );
-  }
-
-  const nextPkg = path.join(bundle, "node_modules", "next", "package.json");
-  if (!fs.existsSync(nextPkg)) {
-    throw new Error("theme-starter runtime deps missing next — preview theme cannot start");
-  }
-
-  const nextVersion = JSON.parse(fs.readFileSync(nextPkg, "utf8")).version || "unknown";
-  if (!String(nextVersion).startsWith("15.")) {
-    throw new Error(
-      `theme-starter runtime deps resolved next@${nextVersion}, expected Next 15.x for App Router preview`,
-    );
-  }
-
-  copyInto(path.join(bundle, "node_modules"), path.join(runtimeOut, "node_modules"));
-  rmrf(bundle);
 }
 
 async function stageThemeStarterRuntime(outDir) {
@@ -216,7 +213,6 @@ async function stageThemeStarterRuntime(outDir) {
 
   const runtimeOut = path.join(outDir, ".reactpress", "runtime", "reactpress-theme-starter");
   copyThemeTree(runtimeSrc, runtimeOut);
-  await stageThemeStarterRuntimeDeps(runtimeOut);
 
   const runtimeMetaSrc = path.join(root, ".reactpress", "runtime", "tsconfig.base.json");
   const runtimeMetaDst = path.join(outDir, ".reactpress", "runtime", "tsconfig.base.json");

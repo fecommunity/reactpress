@@ -18,6 +18,5 @@ export const CACHE_PATHS = {
   sharedRuntime: cachePath("shared-runtime"),
   cliBundle: cachePath("cli-bundle"),
   themeBundle: cachePath("theme-bundle"),
-  themeStarterDeps: cachePath("theme-starter-deps"),
   devApp: cachePath("dev-app"),
 };

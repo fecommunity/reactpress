@@ -12,7 +12,7 @@
 | 部分 | 约 | 说明 |
 |------|-----|------|
 | `server/node_modules` | 866 MB | `pnpm deploy` 带入 dev/可选依赖（Next、TS、Playwright 等） |
-| `toolkit/node_modules` | 366 MB | 与 server 大量重复，且含 Next 12 |
+| `toolkit/node_modules` | 366 MB | 与 server 大量重复 |
 | `themes/hello-world/.next/cache` | 222 MB | 开发缓存，不应进安装包 |
 | Electron Framework | 250 MB | 运行时，难压缩 |
 | `renderer` (Admin SPA) | 8 MB | 已较精简 |
@@ -30,7 +30,7 @@
 | `prune-bundle` 裁剪 server 中 Playwright/TS/eslint 等 | ~150–400 MB | 中低（**保留 `next`**，主题依赖单独 deploy） |
 | hello-world 单独 `pnpm deploy` 运行时依赖 | +~200–370 MB | 低（`next start` 必需） |
 | **electron-vite** 构建 main/preload（替代 tsc） | 构建更快 | 低 |
-| **server 单次 hoisted deploy** + **runtime-deps 共享主题依赖** | ~200–370 MB | 低（不再为每个主题拷贝 `node_modules`） |
+| **server 单次 hoisted deploy** + **runtime-deps 共享主题依赖（Next 15 单份）** | ~200–370 MB | 低（不再为每个主题拷贝 `node_modules`） |
 | 去掉 hello-world / theme-starter 独立 `node_modules` 拷贝 | ~200–370 MB | 低 |
 
 **P0 合计（安装后）**：约 **450–750 MB** → 目标 **~500 MB–800 MB**

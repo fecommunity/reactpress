@@ -84,8 +84,10 @@
       "eslint": "^8.57.0",
       "typescript": "~5.9.3",
       "@fecommunity/reactpress-server>typescript": "~4.9.5",
-      "@fecommunity/reactpress-template-hello-world>typescript": "~4.9.5",
-      "next@12.3.4>typescript": "~4.9.5",
+      "@fecommunity/reactpress-template-hello-world>react": "19.2.4",
+      "@fecommunity/reactpress-template-hello-world>react-dom": "19.2.4",
+      "@fecommunity/reactpress-template-hello-world>@types/react": "19.2.7",
+      "@fecommunity/reactpress-template-hello-world>@types/react-dom": "19.2.3",
       "vite": "npm:@voidzero-dev/vite-plus-core@latest",
       "vitest": "npm:@voidzero-dev/vite-plus-test@latest",
       "@fecommunity/reactpress-desktop>vite": "^6.2.0"
@@ -97,12 +99,6 @@
       "sharp",
       "sqlite3"
     ],
-    "packageExtensions": {
-      "next@12.3.4": {
-        "dependencies": {
-          "typescript": "~4.9.5"
-        }
-      }
-    }
+    "packageExtensions": {}
   }
 }

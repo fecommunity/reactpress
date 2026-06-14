@@ -60,10 +60,7 @@ function resolveThemeClientBin(projectRoot, themeDir) {
   throw new Error(`Theme entry not found under ${themeDir}`);
 }
 
-const LAUNCH_FILE_REL_PATHS = [
-  'server.js',
-  path.join('scripts', 'ensure-typescript-for-next.js'),
-];
+const LAUNCH_FILE_REL_PATHS = ['server.js'];
 
 function syncThemeLaunchFilesFromTemplate(projectRoot, themeId, themeDir) {
   const templateDir = path.join(resolveProjectRoot(projectRoot), 'themes', themeId);

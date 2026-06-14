@@ -1,5 +1,3 @@
-require('./scripts/ensure-typescript-for-next');
-
 const { config } = require('@fecommunity/reactpress-toolkit');
 const cliProd = require('next/dist/cli/next-start');
 const cliDev = require('next/dist/cli/next-dev');
