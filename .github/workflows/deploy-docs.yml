@@ -38,7 +38,7 @@ jobs:
       - name: Build docs
         run: pnpm run build:docs
         env:
-          DOCS_SITE_URL: ${{ vars.DOCS_SITE_URL }}
+          DOCS_SITE_URL: ${{ vars.DOCS_SITE_URL || 'https://reactpress.surge.sh' }}
 
       - name: Deploy to Vercel
         run: npx vercel@latest deploy build --prod --yes --token=${{ secrets.VERCEL_TOKEN }}
