@@ -38,7 +38,7 @@ const config: Config = {
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here (override via DOCS_SITE_URL in CI/Vercel)
-  url: process.env.DOCS_SITE_URL?.trim() || 'https://reactpress.surge.sh',
+  url: process.env.DOCS_SITE_URL?.trim() || 'https://reactpress-docs.vercel.app',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',

@@ -18,7 +18,7 @@
 ### Docs & Other
 
 * **README**: added official theme section, Lighthouse performance metrics, and "Why ReactPress?" overview
-* **Theme schema**: `theme.manifest.schema.json` `$id` updated to `reactpress.surge.sh`
+* **Theme schema**: `theme.manifest.schema.json` `$id` updated to `reactpress-docs.vercel.app`
 
 # [3.0.0](https://github.com/fecommunity/reactpress/compare/v2.0.2...v3.0.0) (2026-05-17)
 

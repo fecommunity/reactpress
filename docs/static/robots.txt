@@ -1,5 +1,5 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://reactpress.surge.sh/sitemap.xml
-Sitemap: https://reactpress.surge.sh/zh/sitemap.xml
+Sitemap: https://reactpress-docs.vercel.app/sitemap.xml
+Sitemap: https://reactpress-docs.vercel.app/zh/sitemap.xml
