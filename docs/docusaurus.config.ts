@@ -37,8 +37,8 @@ const config: Config = {
   tagline: 'One package. Your CMS in about a minute.',
   favicon: 'img/favicon.ico',
 
-  // Set the production url of your site here
-  url: 'https://reactpress.surge.sh',
+  // Set the production url of your site here (override via DOCS_SITE_URL in CI/Vercel)
+  url: process.env.DOCS_SITE_URL ?? 'https://reactpress.surge.sh',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
