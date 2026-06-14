@@ -9,7 +9,6 @@
     "build": "docusaurus build",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
-    "deploy:vercel": "pnpm build && vercel deploy build --prod",
     "deploy:surge": "pnpm build && surge build/ reactpress.surge.sh",
     "clear": "docusaurus clear",
     "serve": "docusaurus serve",

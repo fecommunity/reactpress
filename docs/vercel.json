@@ -3,5 +3,6 @@
   "installCommand": "cd .. && pnpm install --frozen-lockfile",
   "buildCommand": "cd .. && pnpm run build:docs",
   "outputDirectory": "build",
-  "framework": null
+  "framework": null,
+  "ignoreCommand": "git diff --quiet HEAD^ HEAD -- . ../pnpm-lock.yaml"
 }
