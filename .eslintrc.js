@@ -9,22 +9,17 @@ module.exports = {
   ],
   overrides: [
     {
-      files: ['*.ts', '*.tsx', '.js', '.jsx'],
+      files: ['**/*.{ts,tsx,js,jsx}'],
       parserOptions: {
-        project: ['./packages/client/tsconfig.json'],
+        project: ['./client/tsconfig.json'],
+        tsconfigRootDir: __dirname,
         sourceType: 'module',
       },
     },
   ],
   settings: {
-    'react': {
-      version: 'detect',
-    },
-    'import/resolver': {
-      node: {
-        paths: ['./'],
-        extensions: ['.js', '.jsx', '.ts', '.tsx'],
-      },
+    react: {
+      version: '17.0',
     },
   },
   env: {
@@ -50,11 +45,10 @@ module.exports = {
     'react-hooks/rules-of-hooks': 2,
     'react-hooks/exhaustive-deps': 2,
     'react/prop-types': 0,
-    'testing-library/no-unnecessary-act': 0,
     'react/react-in-jsx-scope': 0,
-    'prettier/prettier': ['error', {}, { usePrettierrc: true }],
+    'prettier/prettier': 'error',
     'simple-import-sort/imports': 'error',
     'simple-import-sort/exports': 'error',
   },
-  ignorePatterns: ['dist/', 'node_modules', 'scripts', 'examples'],
+  ignorePatterns: ['dist/', 'node_modules', 'scripts'],
 };
