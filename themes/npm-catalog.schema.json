@@ -1,0 +1,73 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/fecommunity/reactpress/blob/master/themes/npm-catalog.schema.json",
+  "title": "ReactPress npm Theme Catalog Anchor",
+  "description": "Standard package.json with dependencies pointing at the theme npm package, plus reactpress.theme for admin catalog metadata.",
+  "type": "object",
+  "required": ["name", "reactpress"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "examples": ["../npm-catalog.schema.json"]
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Anchor package name (catalog id; may differ from the theme npm package)."
+    },
+    "version": { "type": "string" },
+    "private": { "type": "boolean" },
+    "description": { "type": "string" },
+    "author": { "type": "string" },
+    "homepage": { "type": "string", "format": "uri" },
+    "license": { "type": "string" },
+    "dependencies": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": { "type": "string", "minLength": 1 },
+      "description": "Standard package.json dependencies. The first entry is the theme package to install."
+    },
+    "reactpress": {
+      "type": "object",
+      "required": ["theme"],
+      "additionalProperties": false,
+      "properties": {
+        "theme": {
+          "type": "object",
+          "required": ["id", "name"],
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+              "description": "Runtime theme slug (.reactpress/runtime/{id}/)."
+            },
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Display name in admin theme list."
+            },
+            "version": {
+              "type": "string",
+              "description": "Catalog version label; defaults to dependencies version."
+            },
+            "description": { "type": "string" },
+            "author": { "type": "string" },
+            "authorUri": { "type": "string", "format": "uri" },
+            "themeUri": { "type": "string", "format": "uri" },
+            "previewUrl": { "type": "string", "format": "uri" },
+            "cover": { "type": "string" },
+            "tags": {
+              "type": "array",
+              "items": { "type": "string", "minLength": 1 },
+              "uniqueItems": true
+            },
+            "featured": { "type": "boolean" },
+            "requires": { "type": "string", "examples": [">=3.0.0"] }
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": true
+}

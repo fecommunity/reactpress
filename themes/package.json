@@ -1,0 +1,16 @@
+{
+  "name": "@fecommunity/reactpress-themes",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ReactPress theme registry — local sources and npm catalog anchors",
+  "license": "MIT",
+  "scripts": {
+    "add:starter": "node ../cli/bin/reactpress.js theme add reactpress-theme-starter",
+    "list": "node ../cli/bin/reactpress.js theme list",
+    "sync:catalog": "node ../scripts/sync-theme-catalog.mjs"
+  },
+  "reactpress": {
+    "local": ["hello-world"],
+    "npm": ["theme-starter"]
+  }
+}
