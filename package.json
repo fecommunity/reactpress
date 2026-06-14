@@ -51,5 +51,10 @@
     "prettier": "^2.3.2",
     "to-ico": "^1.1.5",
     "typescript": "~4.1.6"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx,mjs,json,md}": "prettier --write",
+    "client/**/*.{ts,tsx,js,jsx}": "eslint --fix",
+    "server/**/*.ts": "eslint --fix"
   }
 }
