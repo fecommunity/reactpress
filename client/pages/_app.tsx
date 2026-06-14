@@ -3,10 +3,11 @@ import 'highlight.js/styles/atom-one-dark.css';
 import 'viewerjs/dist/viewer.css';
 
 import { NProgress } from '@components/NProgress';
+import { Analytics as VercelAnalytics } from '@vercel/analytics/react';
 import { ConfigProvider, theme } from 'antd';
-import { IntlMessages, NextIntlProvider } from 'next-intl';
 import App from 'next/app';
 import { default as Router } from 'next/router';
+import { IntlMessages, NextIntlProvider } from 'next-intl';
 
 import { Analytics } from '@/components/Analytics';
 import { FixAntdStyleTransition } from '@/components/FixAntdStyleTransition';
@@ -83,7 +84,6 @@ class MyApp extends App<IGlobalContext, unknown> {
     this.setState({ theme });
   };
 
-
   getSetting = () => {
     SettingProvider.getSetting().then((res) => {
       this.setState({ setting: res });
@@ -93,7 +93,7 @@ class MyApp extends App<IGlobalContext, unknown> {
   isAdminPage = () => {
     const isAdminPage = this.props?.router?.route?.startsWith('/admin');
     return isAdminPage;
-  }
+  };
 
   getUserFromStorage = () => {
     const str = localStorage.getItem('user');
@@ -154,6 +154,7 @@ class MyApp extends App<IGlobalContext, unknown> {
           <FixAntdStyleTransition />
           <ViewStatistics />
           <Analytics />
+          <VercelAnalytics />
           <ConfigProvider
             locale={{
               locale,
