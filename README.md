@@ -9,7 +9,7 @@
   </p>
 
   <a href="https://reactpress-theme-starter.vercel.app">
-    <img src="./public/home-dark.png" alt="ReactPress official theme — dark mode preview" width="100%" />
+    <img src="./public/demo.gif" alt="ReactPress official theme — live demo" width="100%" />
   </a>
 
   <p>
