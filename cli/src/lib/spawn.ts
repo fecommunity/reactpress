@@ -9,7 +9,7 @@ const { t, resolveLocale } = require('./i18n');
 function runSync(command, args, options = {}) {
   const result = spawnSync(command, args, {
     cwd: options.cwd || ensureOriginalCwd(),
-    stdio: 'inherit',
+    stdio: options.stdio ?? 'inherit',
     env: {
       ...process.env,
       REACTPRESS_LANG: process.env.REACTPRESS_LANG || resolveLocale(),

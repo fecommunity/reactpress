@@ -56,7 +56,7 @@
       }
     ],
     "mac": {
-      "target": ["dmg", "zip"],
+      "target": ["dmg"],
       "icon": "resources/icon.png",
       "category": "public.app-category.productivity"
     },

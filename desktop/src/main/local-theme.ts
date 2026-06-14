@@ -243,6 +243,19 @@ function normalizeThemeLaunchForElectron(
   const { execPath } = process;
 
   if (launch.cmd === "node") {
+    const runsServerJs =
+      launch.args.length === 1 &&
+      (launch.args[0] === "server.js" || path.basename(launch.args[0]) === "server.js");
+    if (runsServerJs) {
+      const nextBin = resolveSharedNextBin(options.themeDir, options.monorepoRoot);
+      if (nextBin) {
+        return {
+          mode: "production",
+          cmd: execPath,
+          args: [nextBin, "start", "-p", String(options.port)],
+        };
+      }
+    }
     return { ...launch, cmd: execPath };
   }
 

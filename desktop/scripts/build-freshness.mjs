@@ -1,6 +1,7 @@
 /**
  * Guardrails so desktop release artifacts cannot silently lag behind source edits.
  */
+import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -22,6 +23,9 @@ const SKIP_DIRS = new Set([
 ]);
 
 const SOURCE_EXTENSIONS = new Set([".ts", ".tsx", ".js", ".mjs", ".json"]);
+const FINGERPRINT_EXTENSIONS = new Set([".ts", ".tsx", ".js", ".mjs"]);
+
+/** @typedef {{ label: string, sourceDirs: string[], artifactPath?: string, artifactDir?: string, toleranceMs?: number }} BuildArtifactSpec */
 
 /** @param {string} dir */
 function newestSourceMtime(dir) {
@@ -71,9 +75,106 @@ function newestFileMtime(dir, extension = ".js") {
   return newest;
 }
 
+/** @param {string[]} sourceDirs */
+function collectSourcePaths(sourceDirs) {
+  /** @type {string[]} */
+  const paths = [];
+
+  /** @param {string} dir */
+  function walk(dir) {
+    if (!fs.existsSync(dir)) return;
+
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const fullPath = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        if (SKIP_DIRS.has(entry.name)) continue;
+        walk(fullPath);
+        continue;
+      }
+      if (!FINGERPRINT_EXTENSIONS.has(path.extname(entry.name))) continue;
+      paths.push(fullPath);
+    }
+  }
+
+  for (const dir of sourceDirs) walk(dir);
+  return paths.sort();
+}
+
+/** @param {string[]} sourceDirs */
+function sourceTreeFingerprint(sourceDirs) {
+  const hash = crypto.createHash("sha256");
+  for (const filePath of collectSourcePaths(sourceDirs)) {
+    hash.update(path.relative(root, filePath));
+    hash.update("\0");
+    hash.update(fs.readFileSync(filePath));
+    hash.update("\0");
+  }
+  return hash.digest("hex");
+}
+
+/** @param {BuildArtifactSpec} spec */
+function fingerprintFilePath({ label, artifactPath, artifactDir }) {
+  const base = artifactDir ?? path.dirname(artifactPath ?? "");
+  const slug = label.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  return path.join(base, `.source-fingerprint-${slug}`);
+}
+
+/** @param {BuildArtifactSpec} spec */
+function readStoredFingerprint(spec) {
+  const fpPath = fingerprintFilePath(spec);
+  if (!fs.existsSync(fpPath)) return null;
+  return fs.readFileSync(fpPath, "utf8").trim();
+}
+
+/** @param {BuildArtifactSpec} spec @param {string} fingerprint */
+export function writeBuildArtifactFingerprint(spec, fingerprint) {
+  const fpPath = fingerprintFilePath(spec);
+  fs.mkdirSync(path.dirname(fpPath), { recursive: true });
+  fs.writeFileSync(fpPath, `${fingerprint}\n`);
+}
+
+/** @param {BuildArtifactSpec} spec */
+function artifactExists({ artifactPath, artifactDir }) {
+  if (artifactDir) return newestFileMtime(artifactDir) > 0;
+  return Boolean(artifactPath && fs.existsSync(artifactPath));
+}
+
+/** @returns {BuildArtifactSpec[]} */
+export function workspaceBuildSpecs() {
+  return [
+    {
+      label: "desktop shell",
+      sourceDirs: [path.join(desktopDir, "src/main"), path.join(desktopDir, "src/shared")],
+      artifactPath: path.join(desktopDir, "out/main/index.js"),
+    },
+    {
+      label: "server API",
+      sourceDirs: [path.join(root, "server/src")],
+      artifactDir: path.join(root, "server/dist"),
+    },
+  ];
+}
+
+/** @param {BuildArtifactSpec} spec */
+export function isBuildArtifactStale(spec) {
+  if (!artifactExists(spec)) return true;
+
+  const stored = readStoredFingerprint(spec);
+  if (stored === null) return false;
+
+  return stored !== sourceTreeFingerprint(spec.sourceDirs);
+}
+
+/** @param {BuildArtifactSpec[]} [specs] */
+export function writeWorkspaceBuildFingerprints(specs = workspaceBuildSpecs()) {
+  for (const spec of specs) {
+    writeBuildArtifactFingerprint(spec, sourceTreeFingerprint(spec.sourceDirs));
+  }
+}
+
 /**
  * Fail when compiled output is older than its source tree (common stale-DMG cause).
- * @param {{ label: string, sourceDirs: string[], artifactPath?: string, artifactDir?: string, toleranceMs?: number }} options
+ * @param {BuildArtifactSpec} options
  */
 export function assertBuildArtifactFresh({
   label,
@@ -95,19 +196,28 @@ export function assertBuildArtifactFresh({
     );
   }
 
-  const sourceNewest = Math.max(0, ...sourceDirs.map((dir) => newestSourceMtime(dir)));
+  const spec = { label, sourceDirs, artifactPath, artifactDir, toleranceMs };
+  const currentFingerprint = sourceTreeFingerprint(sourceDirs);
+  const storedFingerprint = readStoredFingerprint(spec);
 
-  if (sourceNewest > artifactMtime + toleranceMs) {
-    const target = artifactDir ?? artifactPath;
-    throw new Error(
-      [
-        `[desktop] ${label}: source is newer than build output — refusing to package stale artifacts.`,
-        `  newest source : ${new Date(sourceNewest).toISOString()}`,
-        `  build output  : ${new Date(artifactMtime).toISOString()} (${target})`,
-        "  Fix: save files and re-run pnpm build:desktop (do not reuse an older release/*.dmg).",
-      ].join("\n"),
-    );
+  if (storedFingerprint === currentFingerprint) return;
+
+  if (storedFingerprint === null) {
+    writeBuildArtifactFingerprint(spec, currentFingerprint);
+    return;
   }
+
+  const sourceNewest = Math.max(0, ...sourceDirs.map((dir) => newestSourceMtime(dir)));
+  const target = artifactDir ?? artifactPath;
+  throw new Error(
+    [
+      `[desktop] ${label}: source is newer than build output — refusing to package stale artifacts.`,
+      "  reason        : source content changed since the last recorded build",
+      `  newest source : ${new Date(sourceNewest).toISOString()}`,
+      `  build output  : ${new Date(artifactMtime).toISOString()} (${target})`,
+      "  Fix: save files and re-run pnpm build:desktop (do not reuse an older release/*.dmg).",
+    ].join("\n"),
+  );
 }
 
 /** @param {string} src @param {string} dest */
@@ -126,16 +236,9 @@ function assertSameFile(src, dest, label) {
 
 /** Ensure Phase 1/2 outputs reflect current desktop + server sources. */
 export function assertWorkspaceBuildsFresh() {
-  assertBuildArtifactFresh({
-    label: "desktop shell",
-    sourceDirs: [path.join(desktopDir, "src/main"), path.join(desktopDir, "src/shared")],
-    artifactPath: path.join(desktopDir, "out/main/index.js"),
-  });
-  assertBuildArtifactFresh({
-    label: "server API",
-    sourceDirs: [path.join(root, "server/src")],
-    artifactDir: path.join(root, "server/dist"),
-  });
+  for (const spec of workspaceBuildSpecs()) {
+    assertBuildArtifactFresh(spec);
+  }
 }
 
 /** Ensure staged Resources mirror freshly built workspace artifacts. */

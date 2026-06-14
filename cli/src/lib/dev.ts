@@ -579,7 +579,7 @@ async function startDevStack(
     const themeBoot = startThemeSiteWithWatch(projectRoot);
     const themeWait = themeBoot.then(async (started) => {
       themeSiteStarted = started;
-      if (!started) return true;
+      if (!started) return false;
       const clientUrl = loadClientSiteUrl(projectRoot);
       const port = readEnvPort(projectRoot, 'CLIENT_PORT', DEV_PORTS.VISITOR);
       const portOpen = await (async () => {

@@ -14,9 +14,17 @@ const port = Number(
   process.env.PORT || process.env.CLIENT_PORT || config.CLIENT_PORT || 3001,
 );
 
+function resolveNextBin() {
+  try {
+    return require.resolve('next/dist/bin/next', { paths: [__dirname] });
+  } catch {
+    return path.join(__dirname, 'node_modules', 'next', 'dist', 'bin', 'next');
+  }
+}
+
 try {
   if (process.env.NODE_ENV === 'production') {
-    const nextBin = path.join(__dirname, 'node_modules', 'next', 'dist', 'bin', 'next');
+    const nextBin = resolveNextBin();
     spawn(process.execPath, [nextBin, 'start', '-p', String(port)], {
       cwd: __dirname,
       env: process.env,

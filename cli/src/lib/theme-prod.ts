@@ -274,9 +274,11 @@ function doBuildThemeSync(
   console.log(`[reactpress] ${t(buildingKey, { id: themeId })}`);
   runSync('pnpm', ['run', 'build'], {
     cwd: themeDir,
+    stdio: ['ignore', 'inherit', 'inherit'],
     env: resolveBuildNodeEnv({
       ...resolveProductionThemeEnv(projectRoot, themeDir),
       NEXT_DIST_DIR: buildDistDir,
+      CI: '1',
       ...(logPrefix === 'themeProd' ? { REACTPRESS_BUILD_ACTIVE: '1' } : {}),
       ...(shouldHonorThemePreviewFrame() || logPrefix === 'themePreview'
         ? { REACTPRESS_HONOR_PREVIEW: '1' }
@@ -330,11 +332,12 @@ function scheduleBackgroundThemeBuilds(projectRoot, { excludeThemeId } = {}) {
  */
 async function warmupAllPreviewThemeBuilds(
   projectRoot,
-  { themeIds, concurrency = 2 } = {},
+  { themeIds, concurrency = 2, excludeThemeId } = {},
 ) {
   if (process.env.REACTPRESS_SKIP_PREVIEW_BUILD === '1') return { built: 0, skipped: 0 };
 
-  const ids = themeIds || listAvailableThemeIds(projectRoot);
+  const activeTheme = excludeThemeId || readActiveThemeManifest(projectRoot).activeTheme;
+  const ids = (themeIds || listAvailableThemeIds(projectRoot)).filter((id) => id !== activeTheme);
   if (ids.length === 0) return { built: 0, skipped: 0 };
 
   const { mapWithConcurrency } = require('./theme-warmup');
@@ -357,7 +360,7 @@ async function warmupAllPreviewThemeBuilds(
       return;
     }
     try {
-      const result = buildTheme(projectRoot, themeId, {
+      const result = await enqueueThemeBuild(projectRoot, themeId, {
         logPrefix: 'themePreview',
         distDir: PREVIEW_DIST_DIR,
       });

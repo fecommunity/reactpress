@@ -1,4 +1,6 @@
 const path = require('path');
+const fs = require('fs');
+const os = require('os');
 const { describe, it } = require('node:test');
 const assert = require('node:assert/strict');
 
@@ -37,6 +39,33 @@ describe('lib/theme-preview-pool launch plan', () => {
       else process.env.REACTPRESS_DESKTOP_LOCAL = prevLocal;
       if (prevSite === undefined) delete process.env.REACTPRESS_DESKTOP_SITE_ROOT;
       else process.env.REACTPRESS_DESKTOP_SITE_ROOT = prevSite;
+    }
+  });
+
+  it('uses shared next when packaged theme has no local node_modules', () => {
+    const prevLocal = process.env.REACTPRESS_DESKTOP_LOCAL;
+    const prevPath = process.env.NODE_PATH;
+    const prevRoot = process.env.REACTPRESS_MONOREPO_ROOT;
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'rp-theme-packaged-'));
+    process.env.REACTPRESS_DESKTOP_LOCAL = '1';
+    process.env.NODE_PATH = path.join(HELLO_WORLD, 'node_modules');
+    process.env.REACTPRESS_MONOREPO_ROOT = path.join(__dirname, '../..');
+    fs.copyFileSync(path.join(HELLO_WORLD, 'package.json'), path.join(tmpDir, 'package.json'));
+    fs.copyFileSync(path.join(HELLO_WORLD, 'server.js'), path.join(tmpDir, 'server.js'));
+    try {
+      const plan = resolvePreviewThemeLaunchPlan(tmpDir, 3005);
+      assert.equal(plan.mode, 'production');
+      assert.equal(plan.cmd, process.execPath);
+      assert.match(plan.args.join(' '), /next start -p 3005/);
+      assert.doesNotMatch(plan.args.join(' '), /server\.js/);
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+      if (prevLocal === undefined) delete process.env.REACTPRESS_DESKTOP_LOCAL;
+      else process.env.REACTPRESS_DESKTOP_LOCAL = prevLocal;
+      if (prevPath === undefined) delete process.env.NODE_PATH;
+      else process.env.NODE_PATH = prevPath;
+      if (prevRoot === undefined) delete process.env.REACTPRESS_MONOREPO_ROOT;
+      else process.env.REACTPRESS_MONOREPO_ROOT = prevRoot;
     }
   });
 

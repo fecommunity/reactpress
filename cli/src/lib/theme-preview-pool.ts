@@ -313,6 +313,36 @@ function shouldPreferProductionLaunch(themeDir) {
   return false;
 }
 
+/** Resolve Next CLI bin — theme-local, NODE_PATH, or packaged Resources/runtime-deps. */
+function resolveThemeNextBin(themeDir) {
+  const rel = path.join('next', 'dist', 'bin', 'next');
+  const local = path.join(themeDir, 'node_modules', rel);
+  if (fs.existsSync(local)) return local;
+
+  const nodePath = process.env.NODE_PATH?.split(path.delimiter).filter(Boolean) ?? [];
+  for (const dir of nodePath) {
+    const candidate = path.join(dir, rel);
+    if (fs.existsSync(candidate)) return candidate;
+  }
+
+  const monorepoRoot = process.env.REACTPRESS_MONOREPO_ROOT?.trim();
+  if (monorepoRoot) {
+    const bundled = [
+      path.join(monorepoRoot, 'runtime-deps', 'node_modules', rel),
+      path.join(monorepoRoot, 'node_modules', rel),
+    ];
+    for (const candidate of bundled) {
+      if (fs.existsSync(candidate)) return candidate;
+    }
+  }
+
+  try {
+    return require.resolve('next/dist/bin/next', { paths: [themeDir, ...nodePath] });
+  } catch {
+    return null;
+  }
+}
+
 function resolvePreviewThemeLaunchPlan(themeDir, port, options = {}) {
   const preferProduction =
     options.preferProduction ?? shouldPreferProductionLaunch(themeDir);
@@ -321,9 +351,9 @@ function resolvePreviewThemeLaunchPlan(themeDir, port, options = {}) {
     return { mode: 'dev', cmd: 'pnpm', args: ['run', 'dev', '--', '--port', String(port)] };
   }
 
-  const nextBin = path.join(themeDir, 'node_modules', 'next', 'dist', 'bin', 'next');
+  const nextBin = resolveThemeNextBin(themeDir);
   // Prefer `next start -p` — hello-world server.js uses Next CLI internals that ignore `-p` on Next 15.
-  if (preferProduction && fs.existsSync(nextBin)) {
+  if (preferProduction && nextBin) {
     return { mode: 'production', cmd: process.execPath, args: [nextBin, 'start', '-p', String(port)] };
   }
 
@@ -331,7 +361,7 @@ function resolvePreviewThemeLaunchPlan(themeDir, port, options = {}) {
     return { mode: 'production', cmd: 'node', args: ['server.js'] };
   }
 
-  if (fs.existsSync(nextBin)) {
+  if (nextBin) {
     return { mode: 'production', cmd: process.execPath, args: [nextBin, 'start', '-p', String(port)] };
   }
 

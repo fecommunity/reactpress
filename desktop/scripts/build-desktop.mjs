@@ -14,8 +14,11 @@ import { fileURLToPath } from "node:url";
 
 import {
   assertWorkspaceBuildsFresh,
+  isBuildArtifactStale,
   pruneStaleReleaseArtifacts,
   verifyPackagedApp,
+  workspaceBuildSpecs,
+  writeWorkspaceBuildFingerprints,
 } from "./build-freshness.mjs";
 import { stageAppResources } from "./prepare-app-resources.mjs";
 
@@ -97,6 +100,22 @@ async function main() {
   ]);
 
   console.log("\n[desktop] Verifying workspace build outputs are up to date…");
+  const staleBuilds = workspaceBuildSpecs().filter(isBuildArtifactStale);
+  if (staleBuilds.length > 0) {
+    console.log(
+      `[desktop] Rebuilding stale workspace outputs: ${staleBuilds.map((spec) => spec.label).join(", ")}`,
+    );
+    for (const spec of staleBuilds) {
+      if (spec.label === "desktop shell") {
+        await runAsync("desktop shell (freshness retry)", "pnpm", ["run", "build"], desktopDir);
+        continue;
+      }
+      if (spec.label === "server API") {
+        await runAsync("server (freshness retry)", "pnpm", ["run", "--dir", "server", "build"]);
+      }
+    }
+  }
+  writeWorkspaceBuildFingerprints();
   assertWorkspaceBuildsFresh();
 
   await stageAppResources();
