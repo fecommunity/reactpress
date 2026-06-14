@@ -473,6 +473,22 @@ export function computeAppResourcesStagingFingerprint(sharedRuntimeVersions) {
 
   add("shared-runtime-versions", JSON.stringify(sharedRuntimeVersions));
   add("themes-lock", fileContentFingerprint(path.join(root, ".reactpress", "themes.lock.json")));
+  add("plugins-registry", fileContentFingerprint(path.join(root, "plugins", "package.json")));
+
+  const pluginsRoot = path.join(root, "plugins");
+  if (fs.existsSync(pluginsRoot)) {
+    for (const entry of fs.readdirSync(pluginsRoot, { withFileTypes: true })) {
+      if (!entry.isDirectory()) continue;
+      const pluginDir = path.join(pluginsRoot, entry.name);
+      if (!fs.existsSync(path.join(pluginDir, "plugin.json"))) continue;
+      add(`plugin:${entry.name}`, sourceTreeFingerprint([pluginDir]));
+      add(
+        `plugin:${entry.name}:dist`,
+        fileContentFingerprint(path.join(pluginDir, "dist", "index.js")),
+      );
+    }
+  }
+
   add("pnpm-lock", fileContentFingerprint(path.join(root, "pnpm-lock.yaml")));
 
   return hash.digest("hex");

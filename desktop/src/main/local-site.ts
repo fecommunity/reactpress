@@ -53,9 +53,7 @@ function seedBundledPlugins(siteRoot: string, monorepoRoot?: string): void {
 
   fs.mkdirSync(targetPluginsDir, { recursive: true });
 
-  if (!fs.existsSync(targetPackageJson)) {
-    fs.copyFileSync(sourcePackageJson, targetPackageJson);
-  }
+  fs.copyFileSync(sourcePackageJson, targetPackageJson);
 
   let meta: { reactpress?: { local?: string[] } } = {};
   try {

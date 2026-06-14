@@ -28,6 +28,9 @@ const outDir = CACHE_PATHS.appResources;
 const THEME_SKIP_DIRS = new Set(["node_modules", ".git", ".turbo"]);
 const THEME_SKIP_UNDER_NEXT = new Set(["cache"]);
 
+/** Plugin paths omitted from the desktop installer bundle. */
+const PLUGIN_SKIP_DIRS = new Set(["node_modules", ".git", ".turbo", "src", "coverage"]);
+
 /** Packages themes expect via shared server NODE_PATH. */
 const SHARED_RUNTIME_PACKAGES = ["next", "react", "react-dom"];
 
@@ -62,6 +65,22 @@ function rmrf(target) {
 function copyInto(src, dest) {
   fs.mkdirSync(path.dirname(dest), { recursive: true });
   fs.cpSync(src, dest, { recursive: true });
+}
+
+function copyPluginTree(srcDir, destDir) {
+  fs.mkdirSync(destDir, { recursive: true });
+  for (const entry of fs.readdirSync(srcDir, { withFileTypes: true })) {
+    const src = path.join(srcDir, entry.name);
+    const dest = path.join(destDir, entry.name);
+
+    if (entry.isDirectory()) {
+      if (PLUGIN_SKIP_DIRS.has(entry.name)) continue;
+      copyPluginTree(src, dest);
+      continue;
+    }
+
+    copyInto(src, dest);
+  }
 }
 
 function copyThemeTree(srcDir, destDir) {
@@ -301,6 +320,42 @@ function copyBundledThemes(themesOut) {
   }
 }
 
+function copyBundledPlugins(pluginsOut) {
+  const pluginsRoot = path.join(root, "plugins");
+  if (!fs.existsSync(pluginsRoot)) return;
+
+  const registryPkg = path.join(pluginsRoot, "package.json");
+  fs.mkdirSync(pluginsOut, { recursive: true });
+  if (fs.existsSync(registryPkg)) {
+    copyInto(registryPkg, path.join(pluginsOut, "package.json"));
+  }
+
+  for (const entry of fs.readdirSync(pluginsRoot, { withFileTypes: true })) {
+    if (!entry.isDirectory()) continue;
+    if (PLUGIN_SKIP_DIRS.has(entry.name)) continue;
+    if (!fs.existsSync(path.join(pluginsRoot, entry.name, "plugin.json"))) continue;
+    copyPluginTree(path.join(pluginsRoot, entry.name), path.join(pluginsOut, entry.name));
+  }
+}
+
+async function ensurePluginsBuilt() {
+  const pluginsRoot = path.join(root, "plugins");
+  if (!fs.existsSync(path.join(pluginsRoot, "package.json"))) return;
+
+  const required = ["hello-world", "seo"]
+    .map((id) => path.join(pluginsRoot, id, "dist", "index.js"))
+    .filter((file) => {
+      const pluginDir = path.dirname(path.dirname(file));
+      return fs.existsSync(path.join(pluginDir, "plugin.json"));
+    });
+
+  if (required.length === 0) return;
+  if (required.every((file) => fs.existsSync(file))) return;
+
+  console.log("[desktop] Building bundled plugins for packaged runtime…");
+  await runAsync("build plugins", "pnpm", ["run", "build:plugins"]);
+}
+
 /** @param {{ force?: boolean }} [options] */
 export async function stageAppResources({ force = false } = {}) {
   const toolkitDist = path.join(root, "toolkit/dist");
@@ -319,6 +374,7 @@ export async function stageAppResources({ force = false } = {}) {
 
   await ensureHelloWorldBuilt();
   await ensureThemeStarterRuntimeBuilt();
+  await ensurePluginsBuilt();
 
   console.log("[desktop] Deploying runtime bundles in parallel (server, cli, shared Next)…");
   const [serverBundle, cliNodeModules, sharedNodeModules] = await Promise.all([
@@ -335,6 +391,7 @@ export async function stageAppResources({ force = false } = {}) {
   copyInto(path.join(root, "cli/out/lib"), path.join(outDir, "cli/out/lib"));
   await stageCliRuntimeDeps(outDir, cliNodeModules);
   copyBundledThemes(path.join(outDir, "themes"));
+  copyBundledPlugins(path.join(outDir, "plugins"));
   await stageSharedRuntimeDeps(outDir, sharedNodeModules);
 
   const runtimeSrc = path.join(root, ".reactpress", "runtime", "reactpress-theme-starter");
