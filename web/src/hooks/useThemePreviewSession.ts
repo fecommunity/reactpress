@@ -11,8 +11,8 @@ export type ThemePreviewSessionStatus = "idle" | "switching" | "ready";
 const PREVIEW_SESSION_END_MS = 400;
 
 /** Poll visitor / preview dev until reachable (theme restart / compile). */
-const PREVIEW_READY_MAX_MS = 10_000;
-const PREVIEW_READY_POLL_MS = 120;
+const PREVIEW_READY_MAX_MS = 60_000;
+const PREVIEW_READY_POLL_MS = 200;
 const PREVIEW_READY_MIN_MS = 0;
 const DEFAULT_CLIENT_SITE_URL = "http://localhost:3001";
 
@@ -107,6 +107,12 @@ export function useThemePreviewSession(
       if (cancelled || generation !== previewSessionGeneration) return;
 
       const effectiveActiveThemeId = sessionActiveTheme;
+
+      // Active theme already runs on :3001 during local dev — no preview pool restart needed.
+      if (!sessionPreviewUrl && themeId === effectiveActiveThemeId) {
+        setStatus("ready");
+        return;
+      }
 
       const liveUrl = resolveLiveSitePreviewUrl(resolvedSiteUrl, {
         themeId,

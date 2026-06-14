@@ -721,7 +721,7 @@ export class ThemeService {
 
     if (!this.isSafeThemeDirRel(themeDirRel)) return;
 
-    if (fileName === 'active-theme.json' && fs.existsSync(manifestPath)) {
+    if (fs.existsSync(manifestPath)) {
       try {
         const existing = JSON.parse(fs.readFileSync(manifestPath, 'utf8')) as {
           activeTheme?: string;
@@ -830,37 +830,11 @@ export class ThemeService {
     fs.writeFileSync(poolPath, `${JSON.stringify(pool, null, 2)}\n`, 'utf8');
   }
 
-  /** Reserve a stable preview port per theme so admin iframe polls the correct URL immediately. */
+  /** All preview themes share the stable :3003 proxy URL; backends rotate on :3004+. */
   private reservePreviewPortForTheme(themeId: string, siteUrl: string): string {
-    const pool = this.readPreviewPoolManifest();
-    const existing = pool[themeId]?.port;
-    if (existing && PREVIEW_POOL_PORTS.includes(parseInt(existing, 10))) {
-      return existing;
-    }
-    const used = new Set(
-      Object.values(pool)
-        .map((entry) => parseInt(String(entry?.port ?? ''), 10))
-        .filter((n) => Number.isInteger(n)),
-    );
-    let port = PREVIEW_POOL_PORTS.find((p) => !used.has(p)) ?? PREVIEW_POOL_PORTS[0];
-    if (used.size >= PREVIEW_POOL_PORTS.length) {
-      let oldestId: string | null = null;
-      let oldestAt = Infinity;
-      for (const [id, entry] of Object.entries(pool)) {
-        const ts = Date.parse(String(entry?.updatedAt ?? ''));
-        if (Number.isFinite(ts) && ts < oldestAt) {
-          oldestAt = ts;
-          oldestId = id;
-        }
-      }
-      if (oldestId && pool[oldestId]?.port) {
-        port = parseInt(String(pool[oldestId].port), 10);
-        delete pool[oldestId];
-      }
-    }
-    const portStr = String(port);
-    this.writePreviewPoolEntry(themeId, portStr, siteUrl);
-    return portStr;
+    const proxyPort = process.env.REACTPRESS_PREVIEW_PORT || '3003';
+    this.writePreviewPoolEntry(themeId, proxyPort, siteUrl);
+    return proxyPort;
   }
 
   private resolvePreviewSiteUrl(siteUrl: string, themeId?: string): string {

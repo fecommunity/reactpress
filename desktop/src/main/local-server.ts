@@ -104,6 +104,8 @@ export async function startLocalServer(options: {
   siteRoot: string;
   port?: number;
   monorepoRoot?: string;
+  /** Skip health reuse and spawn a process this session owns (CLI dev restart). */
+  forceRestart?: boolean;
 }): Promise<{ port: number; apiBaseUrl: string }> {
   const port = options.port ?? DEFAULT_LOCAL_API_PORT;
 
@@ -112,7 +114,7 @@ export async function startLocalServer(options: {
   }
 
   // Dev: CLI may have already started the API in another process — reuse it.
-  if (await isLocalApiHealthy(port)) {
+  if (!options.forceRestart && (await isLocalApiHealthy(port))) {
     logInfo("api", `reusing existing healthy API on :${port}`);
     activePort = port;
     activeSiteRoot = options.siteRoot;

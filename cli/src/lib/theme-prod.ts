@@ -189,7 +189,7 @@ function hasUsableProductionBuild(themeDir, themeId, options = {}) {
 }
 
 function resolvePreviewThemeEnv(projectRoot, themeDir, port, options = {}) {
-  const distDir = resolveBuildDistDir(options);
+  const distDir = options.distDir || PREVIEW_DIST_DIR;
   const base = resolveProductionThemeEnv(projectRoot, themeDir);
   let clientSiteUrl = base.CLIENT_SITE_URL;
   try {
@@ -207,6 +207,9 @@ function resolvePreviewThemeEnv(projectRoot, themeDir, port, options = {}) {
     PORT: String(port),
     CLIENT_PORT: String(port),
     CLIENT_SITE_URL: clientSiteUrl,
+    REACTPRESS_THEME_DIR: themeDir,
+    NEXT_TELEMETRY_DISABLED: '1',
+    NEXT_IGNORE_INCORRECT_LOCKFILE: '1',
   };
 }
 

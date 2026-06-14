@@ -18,13 +18,12 @@ import {
 } from "./system-log";
 
 const VISITOR_PORT = 3001;
-const PREVIEW_PORT = 3003;
 
 let activeThemeProcess: ChildProcess | null = null;
-let previewThemeProcess: ChildProcess | null = null;
 let watchCleanup: (() => void) | null = null;
 let runningActiveSignature = "";
 let runningPreviewSignature = "";
+let activeSiteRoot = "";
 
 function isElectronHost(): boolean {
   return Boolean(process.versions.electron);
@@ -96,8 +95,27 @@ type ThemePreviewPoolModule = {
       extraEnv?: Record<string, string | undefined>;
     },
   ) => ChildProcess;
-  releasePreviewPort: (port: number) => Promise<boolean>;
+  ensurePreviewThemeRunning: (
+    projectRoot: string,
+    themeId: string,
+    options: {
+      serverApiUrl: string;
+      publicApiUrl: string;
+      spawnOptions?: {
+        useThemeProcessSpawn?: boolean;
+        normalizeLaunch?: (
+          launch: ThemeLaunchPlan,
+          ctx: { themeDir: string; port: number; projectRoot: string; themeId: string },
+        ) => ThemeLaunchPlan;
+        extraEnv?: Record<string, string | undefined>;
+        resolveThemeDir?: (projectRoot: string, themeId: string) => string | null;
+      };
+    },
+  ) => Promise<{ themeId: string; port: number; url: string; reused: boolean } | null>;
+  ensurePreviewProxyRunning: (port?: number) => Promise<unknown>;
+  stopAllPreviewPool: (projectRoot: string) => Promise<void>;
   withPreviewPortLock: <T>(fn: () => Promise<T>) => Promise<T>;
+  getPreviewProxyPort: () => number;
 };
 
 type ThemeProdModule = {
@@ -448,8 +466,7 @@ async function restartPreviewTheme(options: {
 
   if (!signature) {
     runningPreviewSignature = "";
-    killThemeProcess(previewThemeProcess);
-    previewThemeProcess = null;
+    await pool.stopAllPreviewPool(options.siteRoot);
     return;
   }
 
@@ -460,54 +477,92 @@ async function restartPreviewTheme(options: {
   const { activeTheme } = runtime.readActiveThemeManifest(options.siteRoot);
   if (previewThemeId === activeTheme) {
     runningPreviewSignature = "";
-    killThemeProcess(previewThemeProcess);
-    previewThemeProcess = null;
+    await pool.stopAllPreviewPool(options.siteRoot);
     return;
   }
 
-  if (
-    signature === runningPreviewSignature &&
-    previewThemeProcess &&
-    !previewThemeProcess.killed
-  ) {
+  if (signature === runningPreviewSignature) {
     return;
   }
 
-  const themeDir = resolveThemeDirForRuntime(
-    runtime,
-    options.siteRoot,
-    options.monorepoRoot,
-    previewThemeId,
-  );
-  if (!themeDir) return;
+  const apiBase = getLocalApiBaseUrl(options.apiPort);
+  const previewPort = pool.getPreviewProxyPort();
 
   await pool.withPreviewPortLock(async () => {
-    killThemeProcess(previewThemeProcess);
-    previewThemeProcess = null;
-    runningPreviewSignature = "";
-
-    await pool.releasePreviewPort(PREVIEW_PORT);
-
-    previewThemeProcess = await spawnThemeServer({
-      themeDir,
-      themeId: previewThemeId,
-      port: PREVIEW_PORT,
-      siteRoot: options.siteRoot,
-      apiPort: options.apiPort,
-      monorepoRoot: options.monorepoRoot,
-      role: "preview",
+    const result = await pool.ensurePreviewThemeRunning(options.siteRoot, previewThemeId, {
+      serverApiUrl: apiBase,
+      publicApiUrl: apiBase,
+      spawnOptions: buildPreviewSpawnOptions(options, previewThemeId),
     });
-    if (!previewThemeProcess) return;
+    if (!result) {
+      runningPreviewSignature = "";
+      return;
+    }
 
     runningPreviewSignature = signature;
-    const ready = await waitForThemePort(PREVIEW_PORT);
+    if (result.reused) {
+      logInfo(
+        "theme",
+        `preview ready (reused) http://localhost:${previewPort}/ (${previewThemeId})`,
+      );
+      return;
+    }
+
+    const ready = await waitForThemePort(previewPort, 120_000);
     if (ready) {
       logInfo(
         "theme",
-        `preview ready http://localhost:${PREVIEW_PORT}/ (${previewThemeId})`,
+        `preview ready http://localhost:${previewPort}/ (${previewThemeId})`,
       );
+    } else {
+      logWarn("theme", `preview slow or failed on :${previewPort} (${previewThemeId})`);
     }
   });
+}
+
+function buildPreviewSpawnOptions(
+  options: { siteRoot: string; apiPort: number; monorepoRoot: string },
+  previewThemeId: string,
+) {
+  return {
+    useThemeProcessSpawn: true,
+    resolveThemeDir: (projectRoot: string, themeId: string) => {
+      const runtime = loadThemeRuntime(options.monorepoRoot, projectRoot);
+      return resolveThemeDirForRuntime(runtime, projectRoot, options.monorepoRoot, themeId);
+    },
+    normalizeLaunch: (launch: ThemeLaunchPlan, ctx: { themeDir: string; port: number }) =>
+      normalizeThemeLaunchForElectron(launch, {
+        themeDir: ctx.themeDir,
+        port: ctx.port,
+        monorepoRoot: options.monorepoRoot,
+      }),
+    extraEnv: {
+      ...(isElectronHost() ? { ELECTRON_RUN_AS_NODE: "1" } : {}),
+      ...(isPackagedRuntime() ? { REACTPRESS_SKIP_THEME_INSTALL: "1" } : {}),
+      REACTPRESS_ORIGINAL_CWD: options.siteRoot,
+      REACTPRESS_THEME_DIR: (() => {
+        const runtime = loadThemeRuntime(options.monorepoRoot, options.siteRoot);
+        return (
+          resolveThemeDirForRuntime(
+            runtime,
+            options.siteRoot,
+            options.monorepoRoot,
+            previewThemeId,
+          ) ?? ""
+        );
+      })(),
+      NODE_PATH: (() => {
+        const runtime = loadThemeRuntime(options.monorepoRoot, options.siteRoot);
+        const themeDir = resolveThemeDirForRuntime(
+          runtime,
+          options.siteRoot,
+          options.monorepoRoot,
+          previewThemeId,
+        );
+        return themeDir ? resolveThemeNodePath(themeDir, options.monorepoRoot) : "";
+      })(),
+    },
+  };
 }
 
 function watchThemeManifests(
@@ -545,6 +600,10 @@ export async function startLocalThemeSite(options: {
   const apiPort = options.apiPort ?? DEFAULT_LOCAL_API_PORT;
   const monorepoRoot = resolveMonorepoRoot(options);
   const ctx = { siteRoot: options.siteRoot, apiPort, monorepoRoot };
+  activeSiteRoot = options.siteRoot;
+
+  const pool = loadThemePreviewPool(monorepoRoot);
+  await pool.ensurePreviewProxyRunning(pool.getPreviewProxyPort());
 
   const sync = () => {
     void restartActiveTheme(ctx).then(() => restartPreviewTheme(ctx));
@@ -560,9 +619,18 @@ export function stopLocalThemeSite(): void {
     watchCleanup = null;
   }
   killThemeProcess(activeThemeProcess);
-  killThemeProcess(previewThemeProcess);
   activeThemeProcess = null;
-  previewThemeProcess = null;
   runningActiveSignature = "";
   runningPreviewSignature = "";
+
+  if (activeSiteRoot) {
+    try {
+      const monorepoRoot = resolveMonorepoRoot({ monorepoRoot: undefined });
+      const pool = loadThemePreviewPool(monorepoRoot);
+      void pool.stopAllPreviewPool(activeSiteRoot);
+    } catch {
+      // ignore shutdown errors
+    }
+    activeSiteRoot = "";
+  }
 }

@@ -23,15 +23,15 @@ describe('lib/theme-preview-pool launch plan', () => {
     }
   });
 
-  it('uses production custom server for hello-world in dev:web:local stack', () => {
+  it('uses production next start for hello-world in dev:web:local stack', () => {
     const prevLocal = process.env.REACTPRESS_DESKTOP_LOCAL;
     const prevSite = process.env.REACTPRESS_DESKTOP_SITE_ROOT;
     process.env.REACTPRESS_DESKTOP_LOCAL = '1';
     try {
-      const plan = resolvePreviewThemeLaunchPlan(HELLO_WORLD, 3003);
+      const plan = resolvePreviewThemeLaunchPlan(HELLO_WORLD, 3004);
       assert.equal(plan.mode, 'production');
-      assert.equal(plan.cmd, 'node');
-      assert.deepEqual(plan.args, ['server.js']);
+      assert.equal(plan.cmd, process.execPath);
+      assert.match(plan.args.join(' '), /next start -p 3004/);
     } finally {
       if (prevLocal === undefined) delete process.env.REACTPRESS_DESKTOP_LOCAL;
       else process.env.REACTPRESS_DESKTOP_LOCAL = prevLocal;

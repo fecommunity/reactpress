@@ -16,6 +16,7 @@ const {
   isThemePackageDir,
   isAllowedThemePort,
   themeWorkspaceRoot,
+  listAvailableThemeIds,
 } = require('./theme-runtime');
 const { isDevVerbose, logDevDetail, logDevLine } = require('./dev-log');
 const { resolveProjectRoot } = require('./paths');
@@ -26,8 +27,13 @@ const {
   stopPreviewPoolTheme,
   isPreviewHomepageReady,
   getPreviewSiteUrlForPort,
+  getPreviewProxyPort,
+  ensurePreviewProxyRunning,
   resolvePreviewThemeLaunchPlan,
   spawnThemeProcess,
+  withPreviewPortLock,
+  setPreviewProxyTarget,
+  isIntegratedDesktopDev,
 } = require('./theme-preview-pool');
 const { enqueueThemeBuild, ensureThemeDependenciesInstalled } = require('./theme-prod');
 
@@ -402,7 +408,7 @@ function stopThemeSite() {
     themeWatchStop = null;
   }
   stopActiveThemeProcess();
-  stopAllPreviewPool(resolveProjectRoot());
+  void stopAllPreviewPool(resolveProjectRoot());
   runningSignature = null;
   previewRunningSignature = null;
   restartChain = Promise.resolve();
@@ -562,62 +568,109 @@ async function restartThemeSite(projectRoot, { onClose } = {}) {
 }
 
 async function restartPreviewThemeSite(projectRoot, { onClose } = {}) {
-  const signature = readPreviewManifestSignature(projectRoot);
+  await withPreviewPortLock(async () => {
+    const signature = readPreviewManifestSignature(projectRoot);
 
-  if (!signature) {
-    previewRunningSignature = null;
-    stopAllPreviewPool(projectRoot);
+    if (!signature) {
+      previewRunningSignature = null;
+      await stopAllPreviewPool(projectRoot);
+      if (onClose) onClose(0);
+      return;
+    }
+
+    const previewManifest = readPreviewThemeManifest(projectRoot);
+    const themeId = previewManifest?.activeTheme;
+    if (!themeId) return;
+
+    const { activeTheme } = readActiveThemeManifest(projectRoot);
+    if (themeId === activeTheme) {
+      previewRunningSignature = null;
+      await stopAllPreviewPool(projectRoot);
+      if (onClose) onClose(0);
+      return;
+    }
+
+    await ensurePreviewProxyRunning(getPreviewProxyPort());
+
+    if (signature === previewRunningSignature) {
+      const { previewPool } = require('./theme-preview-pool');
+      const entry = previewPool.get(themeId);
+      const proxyPort = getPreviewProxyPort();
+      const childAlive =
+        entry?.child &&
+        !entry.child.killed &&
+        entry.child.exitCode == null &&
+        entry.child.signalCode == null;
+      if (childAlive && entry?.backendPort) {
+        setPreviewProxyTarget(entry.backendPort);
+        entry.lastUsed = Date.now();
+        const ready = await isPreviewHomepageReady(projectRoot, proxyPort);
+        if (ready) return;
+      }
+      if (entry) {
+        stopPreviewPoolTheme(themeId);
+      }
+      previewRunningSignature = null;
+    }
+
+    const serverApiUrl = buildThemeServerApiUrl(projectRoot);
+    const publicApiUrl = buildThemePublicApiUrl(projectRoot);
+
+    const result = await ensurePreviewThemeRunning(projectRoot, themeId, {
+      serverApiUrl,
+      publicApiUrl,
+    });
+
+    if (!result) {
+      previewRunningSignature = null;
+      console.warn(`[reactpress] Preview failed to start for theme "${themeId}"`);
+      if (onClose) onClose(1);
+      return;
+    }
+
+    previewRunningSignature = signature;
+    if (result.reused) {
+      console.log(`[reactpress] Preview ready (reused): ${result.url} (theme: ${themeId})`);
+    } else {
+      console.log(`[reactpress] Preview ready: ${result.url} (theme: ${themeId})`);
+    }
     if (onClose) onClose(0);
-    return;
-  }
+  });
+}
 
-  const previewManifest = readPreviewThemeManifest(projectRoot);
-  const themeId = previewManifest?.activeTheme;
-  if (!themeId) return;
+async function prewarmPreviewThemeBackends(projectRoot) {
+  if (process.env.REACTPRESS_SKIP_PREVIEW_BUILD === '1') return;
+  if (!isIntegratedDesktopDev()) return;
 
   const { activeTheme } = readActiveThemeManifest(projectRoot);
-  if (themeId === activeTheme) {
-    previewRunningSignature = null;
-    stopAllPreviewPool(projectRoot);
-    if (onClose) onClose(0);
-    return;
-  }
+  const themeIds = listAvailableThemeIds(projectRoot).filter((id) => id !== activeTheme);
+  if (themeIds.length === 0) return;
 
-  if (signature === previewRunningSignature) {
-    const { previewPool } = require('./theme-preview-pool');
-    const entry = previewPool.get(themeId);
-    const port = entry?.port ?? parseInt(getPreviewThemePort(), 10);
-    const childAlive =
-      entry?.child && !entry.child.killed && entry.child.exitCode == null && entry.child.signalCode == null;
-    if (childAlive && isPortListening(port)) {
-      const ready = await isPreviewHomepageReady(projectRoot, port);
-      if (ready) return;
-    }
-    if (entry) {
-      stopPreviewPoolTheme(themeId);
-    }
-    previewRunningSignature = null;
-  }
+  console.log(
+    `[reactpress] ${t('dev.previewPrewarmStarting')} (${themeIds.length} backend(s) on :${getPreviewProxyPort()}+)`,
+  );
 
+  await ensurePreviewProxyRunning(getPreviewProxyPort());
   const serverApiUrl = buildThemeServerApiUrl(projectRoot);
   const publicApiUrl = buildThemePublicApiUrl(projectRoot);
 
-  const result = await ensurePreviewThemeRunning(projectRoot, themeId, {
-    serverApiUrl,
-    publicApiUrl,
-  });
-
-  if (!result) {
-    previewRunningSignature = null;
-    if (onClose) onClose(1);
-    return;
+  for (const themeId of themeIds) {
+    try {
+      const result = await ensurePreviewThemeRunning(projectRoot, themeId, {
+        serverApiUrl,
+        publicApiUrl,
+      });
+      if (result?.reused) {
+        console.log(`[reactpress] Preview backend reused for "${themeId}" (:${result.backendPort})`);
+      } else if (result) {
+        console.log(`[reactpress] Preview backend ready for "${themeId}" (:${result.backendPort})`);
+      }
+    } catch (err) {
+      console.warn(
+        `[reactpress] Preview backend prewarm failed for "${themeId}": ${err.message || err}`,
+      );
+    }
   }
-
-  previewRunningSignature = signature;
-  if (result.reused) {
-    console.log(`[reactpress] Preview ready (reused): ${result.url} (theme: ${themeId})`);
-  }
-  if (onClose) onClose(0);
 }
 
 function watchActiveThemeManifest(projectRoot, onChange) {
@@ -741,6 +794,8 @@ async function prepareThemeDevBoot(projectRoot) {
   runningSignature = null;
   trackedThemePid = null;
 
+  await ensurePreviewProxyRunning(getPreviewProxyPort());
+
   const visitorPort = assertThemePort(getClientPort(projectRoot));
   await releaseThemePortIfBusy(projectRoot, visitorPort);
 }
@@ -766,6 +821,10 @@ async function startThemeSiteWithWatch(projectRoot, { onClose } = {}) {
     stopActiveWatch();
     stopPreviewWatch();
   };
+
+  if (isIntegratedDesktopDev()) {
+    void prewarmPreviewThemeBackends(projectRoot);
+  }
 
   return Boolean(runningSignature && themeChild && !themeChild.killed);
 }

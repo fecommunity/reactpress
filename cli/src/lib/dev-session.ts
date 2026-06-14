@@ -46,13 +46,17 @@ async function acquireDevSession(projectRoot) {
       );
       try {
         process.kill(existing.pid, 'SIGTERM');
-        await sleep(1200);
-        if (isPidAlive(existing.pid)) {
-          process.kill(existing.pid, 'SIGKILL');
-          await sleep(200);
-        }
       } catch {
         // prior session may have exited during signal
+      }
+      await sleep(400);
+      if (isPidAlive(existing.pid)) {
+        try {
+          process.kill(existing.pid, 'SIGKILL');
+        } catch {
+          // ignore
+        }
+        await sleep(200);
       }
       // Do not run `docker compose down` here — DB/nginx containers must survive dev restarts.
     }

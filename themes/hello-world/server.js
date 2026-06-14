@@ -1,7 +1,7 @@
 const { config } = require('@fecommunity/reactpress-toolkit');
-const cliProd = require('next/dist/cli/next-start');
 const cliDev = require('next/dist/cli/next-dev');
 const path = require('path');
+const { spawn } = require('child_process');
 const dotenv = require('dotenv');
 
 const projectRoot = process.env.REACTPRESS_ORIGINAL_CWD || process.cwd();
@@ -16,7 +16,12 @@ const port = Number(
 
 try {
   if (process.env.NODE_ENV === 'production') {
-    cliProd.nextStart(['-p', String(port)]);
+    const nextBin = path.join(__dirname, 'node_modules', 'next', 'dist', 'bin', 'next');
+    spawn(process.execPath, [nextBin, 'start', '-p', String(port)], {
+      cwd: __dirname,
+      env: process.env,
+      stdio: 'inherit',
+    });
   } else {
     cliDev.nextDev(['-p', String(port)]);
   }

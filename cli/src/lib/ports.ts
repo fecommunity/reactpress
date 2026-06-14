@@ -305,15 +305,19 @@ async function releaseStaleDevStackPorts(projectRoot) {
   }
 
   const { getHealthUrl, checkHealth } = require('./http');
-  const apiPort = readEnvPort(projectRoot, 'SERVER_PORT', DEV_PORTS.API);
 
-  if (isPortListening(apiPort)) {
-    const health = await checkHealth(getHealthUrl(projectRoot), 2000);
-    if (health.ok) {
-      const { logDevDetail } = require('./dev-log');
-      logDevDetail('dev.apiKept', { port: apiPort });
-    } else {
-      await forceReleaseApiPort(projectRoot);
+  // Embedded desktop SQLite API (:13102) is managed by local-server — not SERVER_PORT (:3002).
+  if (process.env.REACTPRESS_DESKTOP_LOCAL !== '1') {
+    const apiPort = readEnvPort(projectRoot, 'SERVER_PORT', DEV_PORTS.API);
+
+    if (isPortListening(apiPort)) {
+      const health = await checkHealth(getHealthUrl(projectRoot), 2000);
+      if (health.ok) {
+        const { logDevDetail } = require('./dev-log');
+        logDevDetail('dev.apiKept', { port: apiPort });
+      } else {
+        await forceReleaseApiPort(projectRoot);
+      }
     }
   }
 
@@ -348,6 +352,25 @@ async function ensurePortFree(port, { label = 'service', maxWaitMs = 8000 } = {}
       console.warn(`[reactpress] Port ${n} (${label}) is protected — leaving existing listener`);
     }
     return true;
+  }
+
+  if (process.env.REACTPRESS_DESKTOP_LOCAL === '1') {
+    const desktopApi = process.env.REACTPRESS_DESKTOP_LOCAL_API?.trim();
+    if (desktopApi) {
+      try {
+        const desktopPort = parseInt(new URL(desktopApi).port || '13102', 10);
+        if (Number.isInteger(desktopPort) && desktopPort === n) {
+          if (isPortListening(n)) {
+            console.warn(
+              `[reactpress] Port ${n} (${label}) is the embedded local API — leaving listener`,
+            );
+          }
+          return true;
+        }
+      } catch {
+        // ignore malformed REACTPRESS_DESKTOP_LOCAL_API
+      }
+    }
   }
 
   if (!isPortListening(n)) return true;

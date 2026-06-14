@@ -101,17 +101,23 @@ let webChild;
 let desktopChild;
 let shuttingDown = false;
 let nginxEnabled = false;
+/** When false, admin/API child exit during startup must not tear down the stack. */
+let devServicesReady = false;
 
 function shutdown(signal = 'SIGINT') {
   if (shuttingDown) return;
   shuttingDown = true;
   stopThemeSite();
   if (nginxEnabled) stopDevNginx(ensureOriginalCwd());
-  try {
-    const { stopLocalServer } = require(path.join(ensureOriginalCwd(), 'desktop/out/main/local-server.js'));
-    stopLocalServer();
-  } catch {
-    // desktop local API not running
+  const stopEmbeddedApi =
+    signal === 'SIGINT' || devServicesReady || !isDesktopLocalMode();
+  if (stopEmbeddedApi) {
+    try {
+      const { stopLocalServer } = require(path.join(ensureOriginalCwd(), 'desktop/out/main/local-server.js'));
+      stopLocalServer();
+    } catch {
+      // desktop local API not running
+    }
   }
   if (desktopChild && !desktopChild.killed) desktopChild.kill(signal);
   if (webChild && !webChild.killed) webChild.kill(signal);
@@ -237,6 +243,24 @@ async function waitForApiReady(
   process.exit(1);
 }
 
+function handlePrimaryDevChildClose(code, label = 'dev', projectRoot = ensureOriginalCwd()) {
+  if (!devServicesReady) {
+    console.warn(
+      `[reactpress] ${label} process exited during startup (code ${code ?? 'unknown'}) — waiting for services…`,
+    );
+    return;
+  }
+  const adminPort = readEnvPort(projectRoot, 'WEB_ADMIN_PORT', DEV_PORTS.ADMIN_WEB);
+  if (isDesktopLocalMode() && label === 'Admin dev') {
+    return;
+  }
+  if (label === 'Admin dev' && isPortListening(adminPort)) {
+    return;
+  }
+  if (!shuttingDown) shutdown('SIGINT');
+  process.exit(code ?? 0);
+}
+
 async function spawnAdminWeb(
   projectRoot,
   {
@@ -282,15 +306,21 @@ async function spawnAdminWeb(
     }
   }
 
-  webChild = spawnDevChild('pnpm', ['run', '--dir', './web', 'dev'], {
-    shell: true,
-    cwd: projectRoot,
-    env: adminEnv,
-  });
+  webChild = isDesktopLocalMode()
+    ? spawn(process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm', ['exec', 'vp', 'dev'], {
+        cwd: path.join(projectRoot, 'web'),
+        env: adminEnv,
+        stdio: 'inherit',
+        shell: process.platform === 'win32',
+      })
+    : spawnDevChild('pnpm', ['run', '--dir', './web', 'dev'], {
+        shell: true,
+        cwd: projectRoot,
+        env: adminEnv,
+      });
 
   webChild.on('close', (code) => {
-    if (!shuttingDown) shutdown('SIGINT');
-    process.exit(code ?? 0);
+    handlePrimaryDevChildClose(code, 'Admin dev', projectRoot);
   });
 
   if (!waitForReady) return Promise.resolve(true);
@@ -635,6 +665,8 @@ async function startDevStack(
   logDevTimingSummary({
     apiReused: Boolean(apiSpawn?.reused),
   });
+
+  devServicesReady = true;
 }
 
 async function runDevStartup(
@@ -644,6 +676,7 @@ async function runDevStartup(
     themeOnly = false,
     desktopMode = false,
     localWebMode = false,
+    skipPrepareInfra = false,
     apiOrigins = { admin: null, client: null, needsLocalApi: true },
   } = {},
 ) {
@@ -662,10 +695,13 @@ async function runDevStartup(
 
   logDevPhase(2, 3, desktopPhaseKey('dev.phaseInfra'));
   try {
-    await Promise.all([
-      prepareDevInfrastructure(projectRoot, { needsLocalApi: apiOrigins.needsLocalApi }),
-      buildToolkit(projectRoot),
-    ]);
+    const infraTasks = [buildToolkit(projectRoot)];
+    if (!skipPrepareInfra) {
+      infraTasks.unshift(
+        prepareDevInfrastructure(projectRoot, { needsLocalApi: apiOrigins.needsLocalApi }),
+      );
+    }
+    await Promise.all(infraTasks);
     markDevPhase('infra');
   } catch (err) {
     console.error(t('dev.dbEnsureFailed', { message: err.message || err }));
@@ -701,7 +737,7 @@ function ensureDesktopBuilt(projectRoot) {
   }
 }
 
-async function startDesktopLocalApi(projectRoot) {
+async function startDesktopLocalApi(projectRoot, { forceRestart = false } = {}) {
   const desktopDir = path.join(projectRoot, 'desktop');
   if (!fs.existsSync(path.join(desktopDir, 'package.json'))) {
     console.error(`[reactpress] ${t('dev.desktopMissing')}`);
@@ -710,16 +746,37 @@ async function startDesktopLocalApi(projectRoot) {
 
   ensureDesktopBuilt(projectRoot);
 
+  const localServerPath = path.join(projectRoot, 'desktop/out/main/local-server.js');
   const {
     startLocalServer,
     resolveDevSiteRoot,
     getLocalApiBaseUrl,
-  } = require(path.join(projectRoot, 'desktop/out/main/local-server.js'));
+    stopLocalServer,
+    DEFAULT_LOCAL_API_PORT,
+  } = require(localServerPath);
+
+  if (forceRestart) {
+    try {
+      stopLocalServer();
+    } catch {
+      // ignore
+    }
+    const { killPortListeners, isPortListening } = require('./ports');
+    const localApiPort = DEFAULT_LOCAL_API_PORT || 13102;
+    if (isPortListening(localApiPort)) {
+      killPortListeners(localApiPort, 'TERM');
+      await new Promise((r) => setTimeout(r, 400));
+      if (isPortListening(localApiPort)) {
+        killPortListeners(localApiPort, 'KILL');
+        await new Promise((r) => setTimeout(r, 200));
+      }
+    }
+  }
 
   console.log('');
   logDevStatus('dev.desktopLocalApiStarting');
   const siteRoot = resolveDevSiteRoot(projectRoot);
-  await startLocalServer({ siteRoot, monorepoRoot: projectRoot });
+  await startLocalServer({ siteRoot, monorepoRoot: projectRoot, forceRestart });
   const localApiBase = getLocalApiBaseUrl();
   process.env.REACTPRESS_DESKTOP_LOCAL_API = localApiBase;
   process.env.REACTPRESS_DESKTOP_SITE_ROOT = siteRoot;
@@ -731,15 +788,72 @@ async function startDesktopLocalApi(projectRoot) {
   return { siteRoot, localApiBase };
 }
 
+async function ensureDesktopLocalApiHealthy(projectRoot, { forceRestart = false } = {}) {
+  if (!isDesktopLocalMode()) return true;
+  const base = process.env.REACTPRESS_DESKTOP_LOCAL_API?.trim();
+  if (!base) return false;
+  const healthUrl = `${base.replace(/\/api\/?$/, '')}/api/health`;
+  const health = await checkHealth(healthUrl, 2500);
+  if (health.ok && !forceRestart) return true;
+  console.warn('[reactpress] Local API unreachable — restarting embedded SQLite API…');
+  await startDesktopLocalApi(projectRoot, { forceRestart: true });
+  const retry = await checkHealth(healthUrl, 5000);
+  if (!retry.ok) {
+    console.warn(`[reactpress] Local API still unhealthy after restart (${healthUrl})`);
+  }
+  return retry.ok;
+}
+
 function registerDevShutdownHandlers(projectRoot) {
   process.on('SIGINT', () => shutdown('SIGINT'));
-  process.on('SIGTERM', () => shutdown('SIGTERM'));
+  process.on('SIGTERM', () => {
+    // Stray SIGTERM during local web boot must not tear down the embedded API (Vite still starting).
+    if (!devServicesReady && isDesktopLocalMode()) return;
+    shutdown('SIGTERM');
+  });
   process.on('exit', () => {
     try {
       releaseDevSession(projectRoot);
     } catch {
       // ignore
     }
+  });
+}
+
+/** Block until the primary dev child exits (admin Vite, Electron shell, or Nest API). */
+function waitUntilDevChildExit(projectRoot = ensureOriginalCwd()) {
+  return new Promise((resolve) => {
+    const adminPort = readEnvPort(projectRoot, 'WEB_ADMIN_PORT', DEV_PORTS.ADMIN_WEB);
+
+    const waitForShutdownSignal = () => {
+      const onSignal = () => resolve(0);
+      process.once('SIGINT', onSignal);
+      process.once('SIGTERM', onSignal);
+    };
+
+    const child = webChild || desktopChild || apiChild;
+    if (!child) {
+      waitForShutdownSignal();
+      return;
+    }
+
+    const finish = (code) => {
+      if (child === webChild && isPortListening(adminPort)) {
+        waitForShutdownSignal();
+        return;
+      }
+      resolve(code ?? 0);
+    };
+
+    if (child.exitCode != null) {
+      finish(child.exitCode);
+      return;
+    }
+    if (child.killed) {
+      finish(1);
+      return;
+    }
+    child.once('close', (code) => finish(code));
   });
 }
 
@@ -779,8 +893,7 @@ async function spawnDesktopApp(projectRoot) {
   );
 
   desktopChild.on('close', (code) => {
-    if (!shuttingDown) shutdown('SIGINT');
-    process.exit(code ?? 0);
+    handlePrimaryDevChildClose(code, 'Desktop shell');
   });
 }
 
@@ -797,14 +910,18 @@ async function runDesktopDev(projectRoot = ensureOriginalCwd()) {
   console.log('');
   logDevLine('dev.desktopIntro');
 
-  await startDesktopLocalApi(projectRoot);
+  await prepareDevInfrastructure(projectRoot, { needsLocalApi: false });
+  await startDesktopLocalApi(projectRoot, { forceRestart: true });
 
   await runDevStartup(projectRoot, {
     webOnly: true,
     desktopMode: true,
+    skipPrepareInfra: true,
     apiOrigins: { admin: null, client: null, needsLocalApi: false },
   });
   await spawnDesktopApp(projectRoot);
+  const exitCode = await waitUntilDevChildExit(projectRoot);
+  process.exit(exitCode);
 }
 
 async function runLocalWebDev(
@@ -826,14 +943,30 @@ async function runLocalWebDev(
     console.log('');
     logDevLine('dev.localWebIntro');
 
-    await startDesktopLocalApi(projectRoot);
+    await prepareDevInfrastructure(projectRoot, { needsLocalApi: false });
+    await startDesktopLocalApi(projectRoot, { forceRestart: true });
 
     await runDevStartup(projectRoot, {
       webOnly: true,
       desktopMode: true,
       localWebMode: true,
+      skipPrepareInfra: true,
       apiOrigins: { admin: null, client: null, needsLocalApi: false },
     });
+    await ensureDesktopLocalApiHealthy(projectRoot);
+    await new Promise((resolve) => {
+      const interval = setInterval(() => {
+        void ensureDesktopLocalApiHealthy(projectRoot).catch(() => {});
+      }, 20_000);
+      const onStop = (signal) => {
+        clearInterval(interval);
+        shutdown(signal);
+        resolve(0);
+      };
+      process.once('SIGINT', () => onStop('SIGINT'));
+      process.once('SIGTERM', () => onStop('SIGTERM'));
+    });
+    process.exit(0);
     return;
   }
 

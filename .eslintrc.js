@@ -47,6 +47,13 @@ module.exports = {
         tsconfigRootDir: __dirname,
       },
     },
+    {
+      // Next.js regenerates next-env.d.ts with /// <reference path="…" /> for route types.
+      files: ['**/next-env.d.ts'],
+      rules: {
+        '@typescript-eslint/triple-slash-reference': 'off',
+      },
+    },
   ],
   settings: {
     react: {
