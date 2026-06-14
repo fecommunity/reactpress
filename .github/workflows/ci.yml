@@ -33,14 +33,15 @@ jobs:
     runs-on: ubuntu-latest
     services:
       mysql:
-        image: mysql:8.0
+        # Docker Hub is often slow/unreachable on GHA; use AWS ECR public mirror of official mysql image.
+        image: public.ecr.aws/docker/library/mysql:8.0
         env:
           MYSQL_ROOT_PASSWORD: reactpress
           MYSQL_DATABASE: reactpress
         ports:
           - 3306:3306
         options: >-
-          --health-cmd="mysqladmin ping -h localhost"
+          --health-cmd="mysqladmin ping -h localhost -uroot -preactpress"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
