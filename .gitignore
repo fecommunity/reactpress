@@ -29,6 +29,12 @@ tsconfig.tsbuildinfo
 # Production (root output only; do not use bare `build` — toolkit/src/theme/build is source)
 /build
 
+# Build outputs (cli/desktop compiles, electron packaging, theme preview, etc.)
+out
+desktop/release/
+.next-preview/
+playwright-report/
+
 # Generated files
 .docusaurus
 .cache-loader
