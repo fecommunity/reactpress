@@ -105,9 +105,14 @@ const config: Config = {
         docs: {
           path: './tutorial',
           sidebarPath: './sidebars.ts',
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl: 'https://github.com/fecommunity/reactpress',
+          editUrl: ({docPath, locale}) => {
+            const branch = 'master';
+            const base = `https://github.com/fecommunity/reactpress/edit/${branch}`;
+            if (locale === 'en') {
+              return `${base}/docs/i18n/en/docusaurus-plugin-content-docs/current/${docPath}`;
+            }
+            return `${base}/docs/tutorial/${docPath}`;
+          },
         },
         blog: {
           showReadingTime: true,
@@ -115,9 +120,14 @@ const config: Config = {
             type: ['rss', 'atom'],
             xslt: true,
           },
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl: 'https://github.com/fecommunity/reactpress',
+          editUrl: ({blogPath, locale}) => {
+            const branch = 'master';
+            const base = `https://github.com/fecommunity/reactpress/edit/${branch}`;
+            if (locale === 'zh') {
+              return `${base}/docs/i18n/zh/docusaurus-plugin-content-blog/${blogPath}`;
+            }
+            return `${base}/docs/blog/${blogPath}`;
+          },
           // Useful options to enforce blogging best practices
           onInlineTags: 'warn',
           onInlineAuthors: 'warn',
