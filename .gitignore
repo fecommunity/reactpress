@@ -38,6 +38,7 @@ playwright-report/
 # Generated files
 .docusaurus
 docs/build
+.vercel
 .cache-loader
 
 # Misc

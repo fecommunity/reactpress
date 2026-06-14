@@ -26,6 +26,8 @@ jobs:
 
       - name: Build docs
         run: pnpm run build:docs
+        env:
+          DOCS_SITE_URL: ${{ vars.DOCS_SITE_URL || 'https://reactpress.surge.sh' }}
 
   build-and-smoke:
     runs-on: ubuntu-latest
