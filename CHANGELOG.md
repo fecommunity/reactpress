@@ -1,3 +1,43 @@
+# [3.6.0](https://github.com/fecommunity/reactpress/compare/v3.5.0...v3.6.0) (2026-06-14)
+
+### Docs CI/CD & Deployment
+
+* **Docs deployment**: GitHub Actions CI/CD pipeline for documentation site deployment
+* **Vercel**: configuration migrated to repository root; documentation links updated to new deployment URL
+* **CI**: removed deprecated deploy workflow; MySQL service image switched to AWS ECR public mirror for faster GHA builds
+* **Config**: improved `DOCS_SITE_URL` handling in deployment configuration
+
+# [3.5.0](https://github.com/fecommunity/reactpress/compare/v3.4.0...v3.5.0) (2026-06-14)
+
+### Theme Catalog
+
+* **npm theme catalog**: added `theme.catalog.schema.json` and `themes/package.json` for theme discovery and management
+
+# [3.4.0](https://github.com/fecommunity/reactpress/compare/v3.3.0...v3.4.0) (2026-06-12)
+
+### Community
+
+* **Issue templates**: updated bug report, feature request, and config templates for improved clarity and usability
+
+# [3.3.0](https://github.com/fecommunity/reactpress/compare/v3.2.0...v3.3.0) (2026-06-07)
+
+### Community & Security
+
+* **Code of Conduct**: added `CODE_OF_CONDUCT.md`
+* **Security Policy**: added `SECURITY.md` with vulnerability reporting guidelines
+
+# [3.2.0](https://github.com/fecommunity/reactpress/compare/v3.1.1...v3.2.0) (2026-06-07)
+
+### Theme Development
+
+* **Next.js config**: added Next.js configuration and node helpers for theme development workflow
+
+# [3.1.1](https://github.com/fecommunity/reactpress/compare/v3.1.0...v3.1.1) (2026-06-07)
+
+### Bug Fixes
+
+* **Theme schema**: corrected `theme.manifest.schema.json` `$id` URL for accuracy
+
 # [3.1.0](https://github.com/fecommunity/reactpress/compare/v3.0.0...v3.1.0) (2026-06-07)
 
 ### Toolkit Theme Refactor
