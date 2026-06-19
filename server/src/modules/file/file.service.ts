@@ -5,6 +5,7 @@ import * as path from 'path';
 import { Repository } from 'typeorm';
 
 import { dateFormat } from '../../utils/date.util';
+import { filterByWhitelist } from '../../utils/query-whitelist.util';
 import { Oss } from '../../utils/oss.util';
 import { uniqueid } from '../../utils/uniqueid.util';
 import { LocalUpload } from '../../utils/upload.util';
@@ -46,7 +47,8 @@ export class FileService {
       url = await this.localUpload.putFile(filename, buffer);
       // 上传的路径
       const uploadUrl =
-        this.configService.get('SERVER_PUBLIC_UPLOAD_URL') || `${this.configService.get('SERVER_SITE_URL')}/public/uploads`;
+        this.configService.get('SERVER_PUBLIC_UPLOAD_URL') ||
+        `${this.configService.get('SERVER_SITE_URL')}/public/uploads`;
       // 最终的地址
       url = `${uploadUrl}/${filename}`;
     }
@@ -72,11 +74,10 @@ export class FileService {
       query.skip((+page - 1) * +pageSize);
       query.take(+pageSize);
 
-      if (otherParams) {
-        Object.keys(otherParams).forEach((key) => {
-          query.andWhere(`file.${key} LIKE :${key}`).setParameter(`${key}`, `%${otherParams[key]}%`);
-        });
-      }
+      const filtered = filterByWhitelist('file', queryParams);
+      Object.keys(filtered).forEach((key) => {
+        query.andWhere(`file.${key} LIKE :${key}`).setParameter(`${key}`, `%${filtered[key]}%`);
+      });
     }
 
     return query.getManyAndCount();

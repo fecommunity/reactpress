@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { dateFormat } from '../../utils/date.util';
+import { filterByWhitelist } from '../../utils/query-whitelist.util';
 import { Knowledge } from './knowledge.entity';
 
 @Injectable()
@@ -134,11 +135,10 @@ export class KnowledgeService {
     if (status) {
       query.andWhere('knowledge.status=:status').setParameter('status', status);
     }
-    if (otherParams) {
-      Object.keys(otherParams).forEach((key) => {
-        query.andWhere(`knowledge.${key} LIKE :${key}`).setParameter(`${key}`, `%${otherParams[key]}%`);
-      });
-    }
+    const filtered = filterByWhitelist('knowledge', queryParams);
+    Object.keys(filtered).forEach((key) => {
+      query.andWhere(`knowledge.${key} LIKE :${key}`).setParameter(`${key}`, `%${filtered[key]}%`);
+    });
     const [data, total] = await query.getManyAndCount();
     return [data, total];
   }
