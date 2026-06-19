@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { dateFormat } from '../../utils/date.util';
+import { filterByWhitelist } from '../../utils/query-whitelist.util';
 import { CategoryService } from '../category/category.service';
 import { TagService } from '../tag/tag.service';
 import { WebhookService } from '../webhook/webhook.service';
@@ -103,11 +104,10 @@ export class ArticleService {
       query.andWhere('article.status=:status').setParameter('status', status);
     }
 
-    if (otherParams) {
-      Object.keys(otherParams).forEach((key) => {
-        query.andWhere(`article.${key} LIKE :${key}`).setParameter(`${key}`, `%${otherParams[key]}%`);
-      });
-    }
+    const filtered = filterByWhitelist('article', queryParams);
+    Object.keys(filtered).forEach((key) => {
+      query.andWhere(`article.${key} LIKE :${key}`).setParameter(`${key}`, `%${filtered[key]}%`);
+    });
 
     const [data, total] = await query.getManyAndCount();
 
@@ -304,8 +304,7 @@ export class ArticleService {
       category: existCategory,
       needPassword: !!article.password,
       publishAt: becomingPublish ? dateFormat() : oldArticle.publishAt,
-      scheduledPublishAt:
-        status === 'publish' ? null : article.scheduledPublishAt ?? oldArticle.scheduledPublishAt,
+      scheduledPublishAt: status === 'publish' ? null : article.scheduledPublishAt ?? oldArticle.scheduledPublishAt,
     };
 
     if (tags) {

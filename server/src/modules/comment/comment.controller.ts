@@ -18,6 +18,7 @@ export class CommentController {
    */
   @ApiResponse({ status: 200, description: '创建评论', type: [Comment] })
   @Post()
+  @UseGuards(JwtAuthGuard)
   create(@Request() req, @Body() comment) {
     const userAgent = req.headers['user-agent'];
     return this.commentService.create(userAgent, comment);
