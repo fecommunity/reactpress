@@ -1,3 +1,11 @@
+# [3.7.0](https://github.com/fecommunity/reactpress/compare/v3.6.0...v3.7.0) (2026-06-23)
+
+### Security
+
+* **SQL injection**: whitelist filter column names in public list API `findAll()` handlers ([GHSA-wmw4-mw6x-6vfm](https://github.com/fecommunity/reactpress/security/advisories/GHSA-wmw4-mw6x-6vfm))
+* **Stored XSS**: sanitize comment HTML after markdown parsing; require JWT for `POST /comment`; add CSP headers via Helmet
+* Credit: reported by [lsr365400](https://github.com/lsr365400)
+
 # [3.6.0](https://github.com/fecommunity/reactpress/compare/v3.5.0...v3.6.0) (2026-06-14)
 
 ### Docs CI/CD & Deployment
