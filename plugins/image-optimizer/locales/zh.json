@@ -1,0 +1,53 @@
+{
+  "meta": {
+    "name": "图片资源优化",
+    "description": "分析历史图片素材并批量压缩为 WebP 多尺寸变体，可选回写文章与页面中的图片 URL。"
+  },
+  "settings": {
+    "batchSize": {
+      "title": "每批处理数量",
+      "description": "单次任务最多处理的图片数量（1–200）。"
+    },
+    "skipGif": {
+      "title": "跳过 GIF",
+      "description": "GIF 转 WebP 后会失去动画，默认跳过。"
+    },
+    "rewriteContent": {
+      "title": "优化后回写内容 URL",
+      "description": "批量优化完成后，自动替换文章/页面中引用的旧图片地址。"
+    },
+    "cleanupOriginals": {
+      "title": "优化后删除原文件",
+      "description": "确认无误后再开启；删除后无法通过旧 URL 访问原图。"
+    }
+  },
+  "dashboard": {
+    "title": "资源分析",
+    "analyze": "分析现状",
+    "dryRun": "试运行（不写入）",
+    "dryRunDone": "试运行完成（未写入数据库）",
+    "run": "开始批量优化",
+    "refresh": "刷新",
+    "total": "素材总数",
+    "optimized": "已优化",
+    "pending": "待优化",
+    "estimatedSaved": "预估可节省",
+    "contentRefs": "内容引用",
+    "articles": "文章",
+    "pages": "页面",
+    "skipped": "已跳过",
+    "jobRunning": "优化任务进行中…",
+    "jobScanning": "正在扫描待优化素材…",
+    "jobEmpty": "没有待优化的图片（可能已全部优化，或原文件已不存在）。",
+    "jobDone": "任务已完成",
+    "jobFailed": "任务失败",
+    "processed": "已处理",
+    "succeeded": "成功",
+    "failed": "失败",
+    "savedBytes": "已节省空间",
+    "inactiveHint": "请先在插件列表中启用本插件，才能执行分析与优化。",
+    "analyzeFailed": "分析失败",
+    "runFailed": "启动任务失败",
+    "jobPollFailed": "获取任务进度失败，请重试"
+  }
+}

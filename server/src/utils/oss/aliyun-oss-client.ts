@@ -20,6 +20,12 @@ export class AliyunOssClient extends OssClient {
     return url;
   }
 
+  async getFile(filepath: string): Promise<Buffer> {
+    const client = await this.buildClient();
+    const result = await client.get(filepath);
+    return result.content as Buffer;
+  }
+
   async deleteFile(url: string) {
     const client = await this.buildClient();
     await client.delete(url);

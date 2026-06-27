@@ -5,9 +5,16 @@ export interface PluginAdminContext {
   config: Record<string, unknown>;
 }
 
+export interface PluginSettingsPanelProps {
+  pluginId: string;
+  config: Record<string, unknown>;
+  pluginActive: boolean;
+}
+
 /** Plugin admin entry — called once per active plugin when admin shell loads. */
 export interface PluginAdminModule {
-  registerAdmin(registry: PluginAdminRegistry, ctx: PluginAdminContext): void | Promise<void>;
+  registerAdmin?(registry: PluginAdminRegistry, ctx: PluginAdminContext): void | Promise<void>;
+  SettingsPanel?: (props: PluginSettingsPanelProps) => unknown;
 }
 
 /** Opaque component type — React `ComponentType` lives in `@fecommunity/reactpress-toolkit/plugin/react`. */

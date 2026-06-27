@@ -53,6 +53,11 @@ export class Oss {
     return url;
   }
 
+  async getFile(filepath: string): Promise<Buffer> {
+    const client = await this.getOssClient();
+    return client.getFile(filepath);
+  }
+
   async deleteFile(url: string) {
     const client = await this.getOssClient();
     await client.deleteFile(url);

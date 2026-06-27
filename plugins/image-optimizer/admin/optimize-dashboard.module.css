@@ -1,0 +1,80 @@
+.optimizeDashboard {
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--ant-color-border-secondary);
+}
+
+.sectionTitle {
+  margin: 0 0 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ant-color-text);
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.statCard {
+  padding: 12px 14px;
+  border: 1px solid var(--ant-color-border-secondary);
+  border-radius: 8px;
+  background: var(--ant-color-fill-quaternary);
+}
+
+.statLabel {
+  margin: 0 0 4px;
+  font-size: 12px;
+  color: var(--ant-color-text-secondary);
+}
+
+.statValue {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--ant-color-text);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.progressBlock {
+  margin-top: 12px;
+}
+
+.hint {
+  margin: 8px 0 0;
+  font-size: 13px;
+  color: var(--ant-color-text-secondary);
+}
+
+.emptyJob {
+  margin: 8px 0 0;
+  font-size: 13px;
+  color: var(--ant-color-text-tertiary);
+}
+
+.warn {
+  margin: 0 0 16px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--ant-color-warning-bg);
+  border: 1px solid var(--ant-color-warning-border);
+  color: var(--ant-color-text);
+  font-size: 13px;
+}
+
+.errorList {
+  margin: 8px 0 0;
+  padding-left: 18px;
+  font-size: 13px;
+  color: var(--ant-color-error);
+}

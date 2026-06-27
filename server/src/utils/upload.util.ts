@@ -34,6 +34,14 @@ export class LocalUpload {
     return saveFile;
   }
 
+  public getFile(filename: string): Buffer {
+    const filePath = path.join(this.uploadRoot, filename);
+    if (!fs.existsSync(filePath)) {
+      throw new Error(`File not found: ${filename}`);
+    }
+    return fs.readFileSync(filePath);
+  }
+
   public deleteFile(filename: string) {
     const filePath = path.join(this.uploadRoot, filename);
     if (fs.existsSync(filePath)) {

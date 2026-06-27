@@ -21,6 +21,16 @@ export type MediaFileRow = {
   type: string;
   size: number;
   createAt: string;
+  variants?: Record<
+    string,
+    {
+      url: string;
+      filename: string;
+      width: number;
+      height: number;
+      size: number;
+    }
+  >;
 };
 
 export type SelectOption = { value: string; label: string };

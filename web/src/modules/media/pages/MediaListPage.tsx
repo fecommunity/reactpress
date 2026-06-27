@@ -161,7 +161,7 @@ export function MediaListPage({ search, routePath }: MediaListPageProps) {
               <div className={styles.fileThumb}>
                 {isImage ? (
                   <Image
-                    src={resolveImageUrl(file.url, "thumb")}
+                    src={file.variants?.thumb?.url ?? resolveImageUrl(file.url, "thumb")}
                     alt={file.originalname}
                     width={60}
                     height={60}

@@ -1,8 +1,9 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
+import type { PluginSettingsPanelProps } from "@fecommunity/reactpress-toolkit/plugin/admin";
 import { App, Button, Form, Input, InputNumber, Spin, Switch, Tag, Typography } from "antd";
 import { ChevronLeft } from "lucide-react";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState, type ComponentType } from "react";
 import { useTranslation } from "react-i18next";
 
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
@@ -24,6 +25,7 @@ import { localizePluginSettingsSchema } from "@/modules/plugins/utils/resolvePlu
 import { fetchPlugin } from "@/shared/api/plugins";
 import { getApiErrorMessage } from "@/shared/api/getApiErrorMessage";
 import { ModulePlaceholder } from "@/shared/components/ModulePlaceholder";
+import { loadPluginAdminModule, pluginHasBundledAdminModule } from "@/shared/pluginAdmin/loaders";
 
 type PluginSettingsPageProps = {
   pluginId: string;
@@ -61,6 +63,34 @@ function PluginSettingsPageInner({ pluginId }: PluginSettingsPageProps) {
   const [form] = Form.useForm();
   const { updateConfigMutation } = usePluginMutations();
   const { messages } = usePluginAdminLocaleText();
+  const [SettingsPanel, setSettingsPanel] =
+    useState<ComponentType<PluginSettingsPanelProps> | null>(null);
+
+  useEffect(() => {
+    if (!pluginHasBundledAdminModule(pluginId)) {
+      setSettingsPanel(null);
+      return;
+    }
+    let cancelled = false;
+    void loadPluginAdminModule(pluginId)
+      .then((mod) => {
+        const Panel =
+          mod.SettingsPanel ??
+          (mod as { default?: { SettingsPanel?: ComponentType<PluginSettingsPanelProps> } }).default
+            ?.SettingsPanel;
+        if (!cancelled && Panel) {
+          setSettingsPanel(() => Panel);
+        } else if (!cancelled) {
+          setSettingsPanel(null);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setSettingsPanel(null);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [pluginId]);
 
   const {
     data: plugin,
@@ -191,6 +221,14 @@ function PluginSettingsPageInner({ pluginId }: PluginSettingsPageProps) {
 
       <div className={`admin-panel ${styles.panel}`}>
         <div className={`admin-panel__body ${styles.panelBody}`}>
+          {SettingsPanel ? (
+            <SettingsPanel
+              pluginId={pluginId}
+              config={plugin.config ?? {}}
+              pluginActive={Boolean(plugin.active)}
+            />
+          ) : null}
+
           <h2 className={styles.sectionTitle}>{t("plugins.settingsSection")}</h2>
 
           <Form form={form} layout="vertical" className={styles.form} onFinish={onFinish}>

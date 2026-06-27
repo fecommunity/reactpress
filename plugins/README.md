@@ -372,6 +372,7 @@ pnpm --filter @reactpress/plugin-hello-world run typecheck
 | :--- | :--- | :--- |
 | [`hello-world`](./hello-world/) | 自动摘要 | 发布时 summary 为空则从正文/标题生成 |
 | [`seo`](./seo/) | SEO 增强 | 文章别名、关键词、meta 描述与自动补全 |
+| [`image-optimizer`](./image-optimizer/) | 图片资源优化 | 分析历史素材并批量压缩为 WebP 多尺寸变体 |
 
 ## 相关代码
 
