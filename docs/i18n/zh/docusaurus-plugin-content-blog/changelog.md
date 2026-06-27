@@ -1,7 +1,7 @@
 ---
 slug: changelog
 title: 更新日志
-date: 2026-06-07
+date: 2026-06-14
 authors: [fecommunity]
 tags: [reactpress, release]
 ---
@@ -21,6 +21,79 @@ tags: [reactpress, release]
 
 ---
 
+## [3.7.0](https://github.com/fecommunity/reactpress/compare/v3.6.0...v3.7.0) (2026-06-23)
+
+**安全修复** — SQL 注入与存储型 XSS 修复。
+
+### 新特性
+
+- **SQL 注入**：公开列表 API `findAll()` 中过滤字段名白名单校验
+- **存储型 XSS**：Markdown 解析后 HTML 消毒；`POST /comment` 需 JWT；Helmet CSP 响应头
+- 致谢：[lsr365400](https://github.com/lsr365400)
+
+---
+
+## [3.6.0](https://github.com/fecommunity/reactpress/compare/v3.5.0...v3.6.0) (2026-06-14)
+
+**文档 CI/CD 与部署** — 自动化文档流水线，Vercel 配置迁移。
+
+### 新特性
+
+- **文档部署**：GitHub Actions CI/CD 自动部署文档站点
+- **Vercel**：配置迁移至仓库根目录；文档链接更新为新部署地址
+- **CI**：移除已弃用的 deploy workflow；MySQL 镜像改用 AWS ECR 公共镜像，加速 GHA 构建
+- **配置**：改进部署配置中 `DOCS_SITE_URL` 的处理
+
+---
+
+## [3.5.0](https://github.com/fecommunity/reactpress/compare/v3.4.0...v3.5.0) (2026-06-14)
+
+**主题目录** — 基于 npm 的主题发现与管理。
+
+### 新特性
+
+- 新增 `theme.catalog.schema.json` 与 `themes/package.json`
+
+---
+
+## [3.4.0](https://github.com/fecommunity/reactpress/compare/v3.3.0...v3.4.0) (2026-06-12)
+
+**社区** — 更清晰的 Issue 反馈体验。
+
+### 新特性
+
+- 优化 Bug 报告、功能请求与配置类 Issue 模板
+
+---
+
+## [3.3.0](https://github.com/fecommunity/reactpress/compare/v3.2.0...v3.3.0) (2026-06-07)
+
+**社区与安全** — 行为准则与漏洞报告机制。
+
+### 新特性
+
+- 新增 `CODE_OF_CONDUCT.md` 与 `SECURITY.md`
+
+---
+
+## [3.2.0](https://github.com/fecommunity/reactpress/compare/v3.1.1...v3.2.0) (2026-06-07)
+
+**主题开发** — 面向主题作者的 Next.js 工具链。
+
+### 新特性
+
+- 新增 Next.js 配置与 node helpers，完善主题开发工作流
+
+---
+
+## [3.1.1](https://github.com/fecommunity/reactpress/compare/v3.1.0...v3.1.1) (2026-06-07)
+
+### Bug Fixes
+
+- 修正 `theme.manifest.schema.json` 的 `$id` URL
+
+---
+
 ## [3.1.0](https://github.com/fecommunity/reactpress/compare/v3.0.0...v3.1.0) (2026-06-07)
 
 **Toolkit 主题化重构** — 模块化导出，主题开发一等公民。
@@ -34,7 +107,7 @@ tags: [reactpress, release]
 
 ### Bug Fixes
 
-- 增强 monorepo 根目录检测；主题 manifest schema URL 更新为 `reactpress.surge.sh`
+- 增强 monorepo 根目录检测；主题 manifest schema URL 更新为 `reactpress-docs.vercel.app`
 
 ---
 

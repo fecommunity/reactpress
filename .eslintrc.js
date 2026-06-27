@@ -89,7 +89,6 @@ module.exports = {
     'react-hooks/rules-of-hooks': 2,
     'react-hooks/exhaustive-deps': 1,
     'react/prop-types': 0,
-    'testing-library/no-unnecessary-act': 0,
     'react/react-in-jsx-scope': 0,
     // Prettier 2.x cannot parse modern TS (`import type`, inline `type` imports).
     // web uses `vp fmt` (Oxfmt); keep formatting out of ESLint to avoid false IDE errors.

@@ -75,6 +75,11 @@
     "to-ico": "^1.1.5",
     "typescript": "~5.9.3"
   },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx,mjs,json,md}": "prettier --write",
+    "web/**/*.{ts,tsx,js,jsx}": "eslint --fix",
+    "server/**/*.ts": "eslint --fix"
+  },
   "pnpm": {
     "overrides": {
       "react": "18.3.1",

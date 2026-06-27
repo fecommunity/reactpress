@@ -38,7 +38,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "pnpm run build && node --test tests",
     "prepare": "node scripts/sync-bundled-core.mjs && pnpm run build",
-    "prepack": "node scripts/sync-bundled-core.mjs && pnpm run build"
+    "prepack": "node scripts/sync-bundled-core.mjs && node scripts/sync-monorepo-server.mjs && pnpm run build"
   },
   "publishConfig": {
     "access": "public",

@@ -9,7 +9,7 @@
   </p>
 
   <a href="https://reactpress-theme-starter.vercel.app">
-    <img src="./public/home-dark.png" alt="ReactPress official theme — dark mode preview" width="100%" />
+    <img src="./public/demo.gif" alt="ReactPress official theme — live demo" width="100%" />
   </a>
 
   <p>
@@ -31,7 +31,7 @@
     ·
     <a href="https://github.com/fecommunity/reactpress/issues">Request Feature</a>
     ·
-    <a href="https://reactpress.surge.sh/">Documentation</a>
+    <a href="https://reactpress-docs.vercel.app/">Documentation</a>
     ·
     <a href="./README-zh_CN.md">中文文档</a>
   </p>
@@ -157,7 +157,7 @@ Port **3001** is the active theme (visitor site), not the admin SPA. Theme previ
 
 Run `reactpress` anytime for the interactive menu. Use `reactpress doctor` if startup fails.
 
-> In a new project directory, `reactpress dev` starts the API first. Connect the [official theme](#3-connect-the-public-site) for the visitor-facing site, or see the [docs](https://reactpress.surge.sh/) for a full-stack setup with the admin console.
+> In a new project directory, `reactpress dev` starts the API first. Connect the [official theme](#3-connect-the-public-site) for the visitor-facing site, or see the [docs](https://reactpress-docs.vercel.app/) for a full-stack setup with the admin console.
 
 ### 2. Preview the official theme (no backend)
 
@@ -217,7 +217,7 @@ Full guide: [theme starter README](https://github.com/fecommunity/reactpress-the
 | `reactpress doctor` | Diagnose setup issues |
 | `reactpress status` | See what is running |
 
-More options: [documentation](https://reactpress.surge.sh/)
+More options: [documentation](https://reactpress-docs.vercel.app/)
 
 ### 6. Deploy to production
 
@@ -227,7 +227,7 @@ reactpress build
 reactpress start
 ```
 
-For Docker, PM2, backups, and advanced setup, see the [full documentation](https://reactpress.surge.sh/).
+For Docker, PM2, backups, and advanced setup, see the [full documentation](https://reactpress-docs.vercel.app/).
 
 To deploy only the public theme, use [reactpress-theme-starter](https://github.com/fecommunity/reactpress-theme-starter) and point it at your ReactPress API.
 
@@ -257,6 +257,7 @@ To deploy only the public theme, use [reactpress-theme-starter](https://github.c
       <td align="center" width="12.5%"><a href="https://github.com/Xiaonan2020"><img src="https://github.com/Xiaonan2020.png?s=72" width="72" height="72" style="border-radius:50%" alt="Xiaonan2020"/><br/><sub><b>Xiaonan2020</b></sub></a></td>
       <td align="center" width="12.5%"><a href="https://github.com/gaoredu"><img src="https://avatars.githubusercontent.com/u/190012690?s=72" width="72" height="72" style="border-radius:50%" alt="gaoredu"/><br/><sub><b>redtea</b></sub></a></td>
       <td align="center" width="12.5%"><a href="https://github.com/fecommunity"><img src="https://avatars.githubusercontent.com/u/55874467?s=72" width="72" height="72" style="border-radius:50%" alt="m0_37981569"/><br/><sub><b>m0_37981569</b></sub></a></td>
+      <td align="center" width="12.5%"><a href="https://github.com/lsr365400"><img src="https://github.com/lsr365400.png?s=72" width="72" height="72" style="border-radius:50%" alt="lsr365400"/><br/><sub><b>lsr365400</b></sub></a></td>
     </tr>
   </tbody>
 </table>

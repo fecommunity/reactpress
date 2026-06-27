@@ -7,18 +7,41 @@ on:
     branches: [main, master, develop]
 
 jobs:
+  build-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build docs
+        run: pnpm run build:docs
+        env:
+          DOCS_SITE_URL: ${{ vars.DOCS_SITE_URL || 'https://reactpress-docs.vercel.app' }}
+
   build-and-smoke:
     runs-on: ubuntu-latest
     services:
       mysql:
-        image: mysql:8.0
+        # Docker Hub is often slow/unreachable on GHA; use AWS ECR public mirror of official mysql image.
+        image: public.ecr.aws/docker/library/mysql:8.0
         env:
           MYSQL_ROOT_PASSWORD: reactpress
           MYSQL_DATABASE: reactpress
         ports:
           - 3306:3306
         options: >-
-          --health-cmd="mysqladmin ping -h localhost"
+          --health-cmd="mysqladmin ping -h localhost -uroot -preactpress"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5

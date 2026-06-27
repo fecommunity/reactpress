@@ -9,7 +9,7 @@
   </p>
 
   <a href="https://reactpress-theme-starter.vercel.app">
-    <img src="./public/home-dark.png" alt="ReactPress 官方主题 — 深色模式预览" width="100%" />
+    <img src="./public/demo.gif" alt="ReactPress 官方主题 — 在线演示" width="100%" />
   </a>
 
   <p>
@@ -31,7 +31,7 @@
     ·
     <a href="https://github.com/fecommunity/reactpress/issues">请求功能</a>
     ·
-    <a href="https://reactpress.surge.sh/">文档</a>
+    <a href="https://reactpress-docs.vercel.app/">文档</a>
     ·
     <a href="./README.md">English Documentation</a>
   </p>
@@ -159,7 +159,7 @@ CLI 会启动 **CMS API**，并在就绪后打印访问地址：
 
 随时运行 `reactpress` 可打开交互菜单。启动失败时请使用 `reactpress doctor`。
 
-> 在新项目目录中，`reactpress dev` 会先启动 API。访客站请接入[官方主题](#3-接入访客站)；含管理后台的全栈部署见[文档](https://reactpress.surge.sh/)。
+> 在新项目目录中，`reactpress dev` 会先启动 API。访客站请接入[官方主题](#3-接入访客站)；含管理后台的全栈部署见[文档](https://reactpress-docs.vercel.app/)。
 
 ### 2. 预览官方主题（无需后端）
 
@@ -236,7 +236,7 @@ pnpm dev:desktop
 | `pnpm dev:desktop` | 桌面客户端开发（SQLite + Electron） |
 | `pnpm build:desktop` | 打包桌面安装程序 |
 
-更多选项见 [官方文档](https://reactpress.surge.sh/) 与 [4.0 扩展版说明](./docs/tutorial/tutorial-extras/reactpress-4-0.md)。
+更多选项见 [官方文档](https://reactpress-docs.vercel.app/) 与 [4.0 扩展版说明](./docs/tutorial/tutorial-extras/reactpress-4-0.md)。
 
 ### 8. 部署上线
 
@@ -246,7 +246,7 @@ reactpress build
 reactpress start
 ```
 
-Docker、PM2、备份等进阶部署，见 [完整文档](https://reactpress.surge.sh/)。
+Docker、PM2、备份等进阶部署，见 [完整文档](https://reactpress-docs.vercel.app/)。
 
 若只需部署访客站，可使用 [reactpress-theme-starter](https://github.com/fecommunity/reactpress-theme-starter) 并指向你的 ReactPress API。
 
@@ -276,6 +276,7 @@ Docker、PM2、备份等进阶部署，见 [完整文档](https://reactpress.sur
       <td align="center" width="12.5%"><a href="https://github.com/Xiaonan2020"><img src="https://github.com/Xiaonan2020.png?s=72" width="72" height="72" style="border-radius:50%" alt="Xiaonan2020"/><br/><sub><b>Xiaonan2020</b></sub></a></td>
       <td align="center" width="12.5%"><a href="https://github.com/gaoredu"><img src="https://avatars.githubusercontent.com/u/190012690?s=72" width="72" height="72" style="border-radius:50%" alt="gaoredu"/><br/><sub><b>redtea</b></sub></a></td>
       <td align="center" width="12.5%"><a href="https://github.com/fecommunity"><img src="https://avatars.githubusercontent.com/u/55874467?s=72" width="72" height="72" style="border-radius:50%" alt="m0_37981569"/><br/><sub><b>m0_37981569</b></sub></a></td>
+      <td align="center" width="12.5%"><a href="https://github.com/lsr365400"><img src="https://github.com/lsr365400.png?s=72" width="72" height="72" style="border-radius:50%" alt="lsr365400"/><br/><sub><b>lsr365400</b></sub></a></td>
     </tr>
   </tbody>
 </table>

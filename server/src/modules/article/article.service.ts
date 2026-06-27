@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 
 import { ApiMsg } from '../../common/api-messages';
 import { dateFormat } from '../../utils/date.util';
+import { filterByWhitelist } from '../../utils/query-whitelist.util';
 import { CategoryService } from '../category/category.service';
 import { HookService } from '../hook/hook.service';
 import { TagService } from '../tag/tag.service';
@@ -165,11 +166,10 @@ export class ArticleService {
       query.andWhere('article.status=:status').setParameter('status', status);
     }
 
-    if (otherParams) {
-      Object.keys(otherParams).forEach((key) => {
-        query.andWhere(`article.${key} LIKE :${key}`).setParameter(`${key}`, `%${otherParams[key]}%`);
-      });
-    }
+    const filtered = filterByWhitelist('article', queryParams);
+    Object.keys(filtered).forEach((key) => {
+      query.andWhere(`article.${key} LIKE :${key}`).setParameter(`${key}`, `%${filtered[key]}%`);
+    });
 
     const [data, total] = await query.getManyAndCount();
 

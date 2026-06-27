@@ -4,7 +4,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { ApiMsg } from '../../common/api-messages';
+import { sanitizeHtml } from '../../utils/html-sanitize.util';
 import { marked } from '../../utils/markdown.util';
+import { filterByWhitelist } from '../../utils/query-whitelist.util';
 import { parseUserAgent } from '../../utils/ua.util';
 import { ArticleService } from '../article/article.service';
 import { HookService } from '../hook/hook.service';
@@ -62,7 +64,7 @@ export class CommentService {
     comment.pass = false;
     const { text: uaText } = parseUserAgent(userAgent);
     comment.userAgent = uaText;
-    comment.html = marked(comment.content ?? content).html;
+    comment.html = sanitizeHtml(marked(comment.content ?? content).html);
     const newComment = await this.commentRepository.create(comment);
     await this.commentRepository.save(comment);
 
@@ -125,11 +127,10 @@ export class CommentService {
         query.andWhere('comment.pass=:pass').setParameter('pass', pass);
       }
 
-      if (otherParams) {
-        Object.keys(otherParams).forEach((key) => {
-          query.andWhere(`comment.${key} LIKE :${key}`).setParameter(`${key}`, `%${otherParams[key]}%`);
-        });
-      }
+      const filtered = filterByWhitelist('comment', queryParams);
+      Object.keys(filtered).forEach((key) => {
+        query.andWhere(`comment.${key} LIKE :${key}`).setParameter(`${key}`, `%${filtered[key]}%`);
+      });
     }
 
     return query.getManyAndCount();

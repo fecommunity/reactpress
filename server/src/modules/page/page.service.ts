@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 
 import { ApiMsg } from '../../common/api-messages';
 import { dateFormat } from '../../utils/date.util';
+import { filterByWhitelist } from '../../utils/query-whitelist.util';
 import { Page } from './page.entity';
 
 @Injectable()
@@ -46,11 +47,10 @@ export class PageService {
       if (status) {
         query.andWhere('page.status=:status').setParameter('status', status);
       }
-      if (otherParams) {
-        Object.keys(otherParams).forEach((key) => {
-          query.andWhere(`page.${key} LIKE :${key}`).setParameter(`${key}`, `%${otherParams[key]}%`);
-        });
-      }
+      const filtered = filterByWhitelist('page', queryParams);
+      Object.keys(filtered).forEach((key) => {
+        query.andWhere(`page.${key} LIKE :${key}`).setParameter(`${key}`, `%${filtered[key]}%`);
+      });
     }
 
     return query.getManyAndCount();

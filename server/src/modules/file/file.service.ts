@@ -15,6 +15,7 @@ import {
   processImageVariants,
   variantsForScene,
 } from '../../utils/image-processor.util';
+import { filterByWhitelist } from '../../utils/query-whitelist.util';
 import { Oss } from '../../utils/oss.util';
 import { uniqueid } from '../../utils/uniqueid.util';
 import { LocalUpload } from '../../utils/upload.util';
@@ -70,7 +71,6 @@ export class FileService {
     const dataFolder = dateFormat(new Date(), 'yyyy-MM-dd');
     const ext = path.extname(originalname);
     const hasOssConfig = await this.oss.hasOssConfig();
-
     if (isProcessableImage(mimetype)) {
       const baseName = +unique === 1 ? path.basename(originalname, ext) : uniqueid();
       const baseFilename = `${dataFolder}/${baseName}.webp`;
@@ -130,11 +130,10 @@ export class FileService {
       query.skip((+page - 1) * +pageSize);
       query.take(+pageSize);
 
-      if (otherParams) {
-        Object.keys(otherParams).forEach((key) => {
-          query.andWhere(`file.${key} LIKE :${key}`).setParameter(`${key}`, `%${otherParams[key]}%`);
-        });
-      }
+      const filtered = filterByWhitelist('file', queryParams);
+      Object.keys(filtered).forEach((key) => {
+        query.andWhere(`file.${key} LIKE :${key}`).setParameter(`${key}`, `%${filtered[key]}%`);
+      });
     }
 
     return query.getManyAndCount();

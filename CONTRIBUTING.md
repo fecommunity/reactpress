@@ -9,10 +9,22 @@ agree to abide by our [Code of Conduct](./CODE_OF_CONDUCT.md).
 
 | Type | How |
 | :--- | :-- |
-| **Bug reports** | [Open an issue](https://github.com/fecommunity/reactpress/issues/new?template=bug_report.md) with reproduction steps, versions, and logs |
-| **Feature ideas** | [Open a feature request](https://github.com/fecommunity/reactpress/issues/new?template=feature_request.md) describing the problem and proposed solution |
+| **Bug reports** | [Bug report](https://github.com/fecommunity/reactpress/issues/new?template=bug_report.md) — steps, component, versions, logs |
+| **Feature ideas** | [Feature request](https://github.com/fecommunity/reactpress/issues/new?template=feature_request.md) — problem, solution, area |
+| **Community tasks** | [Help wanted](https://github.com/fecommunity/reactpress/issues/new?template=help_wanted.md) — claim a scoped item from [proposed issues](./docs/proposed-reactpress-upstream-issues.md) |
+| **Product feedback** | [Feedback & suggestions](https://github.com/fecommunity/reactpress/issues/new?template=feedback.md) — UX and operator ideas (not security) |
 | **Code & docs** | Fork, branch, submit a PR (see below) |
 | **Security issues** | Follow [SECURITY.md](./SECURITY.md) — do **not** use public issues |
+
+## Security Contributors
+
+We thank researchers who practice responsible disclosure and help keep ReactPress
+secure. Valid reports are credited in [CHANGELOG.md](./CHANGELOG.md) and GitHub
+Security Advisories when applicable.
+
+| Contributor | Contribution |
+| :---------- | :----------- |
+| [lsr365400](https://github.com/lsr365400) | Reported SQL injection and stored XSS ([GHSA-wmw4-mw6x-6vfm](https://github.com/fecommunity/reactpress/security/advisories/GHSA-wmw4-mw6x-6vfm)); contributed fixes in [PR #83](https://github.com/fecommunity/reactpress/pull/83) |
 
 ## Development Setup
 
