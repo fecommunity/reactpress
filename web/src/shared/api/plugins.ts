@@ -1,4 +1,7 @@
-import type { SitePluginState } from "@fecommunity/reactpress-toolkit/plugin/extension";
+import type {
+  PluginAdminManifest,
+  SitePluginState,
+} from "@fecommunity/reactpress-toolkit/plugin/extension";
 import { resolveApiBaseUrl } from "@fecommunity/reactpress-toolkit/plugin/react";
 
 import { clearInvalidServerSession } from "@/shared/auth/session";
@@ -23,10 +26,7 @@ export interface PluginListItem {
     module: string;
     hooks?: { subscribe?: string[]; provide?: string[] };
   };
-  admin?: {
-    slots?: { subscribe?: string[] };
-    menu?: { title: string; path: string; permission?: string; sort?: number };
-  };
+  admin?: PluginAdminManifest;
   permissions?: string[];
 }
 

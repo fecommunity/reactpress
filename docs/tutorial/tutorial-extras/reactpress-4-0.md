@@ -65,6 +65,7 @@ pnpm dev:desktop
 |----|------|
 | `hello-world` | 发布时自动生成摘要 |
 | `seo` | 别名、关键词、meta 描述；文章编辑器 Admin 插槽 |
+| `image-optimizer` | 历史图片素材分析与批量 WebP 优化 |
 
 开发插件见 [plugins/README.md](https://github.com/fecommunity/reactpress/blob/master/plugins/README.md)。
 

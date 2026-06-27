@@ -1,6 +1,6 @@
 {
   "name": "reactpress",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "private": true,
   "packageManager": "pnpm@9.15.9",
   "description": "ReactPress CMS & Blog site",
@@ -85,8 +85,8 @@
     "overrides": {
       "react": "18.3.1",
       "react-dom": "18.3.1",
-      "@types/react": "18.3.20",
-      "@types/react-dom": "18.3.6",
+      "@types/react": "19.2.7",
+      "@types/react-dom": "19.2.3",
       "@typescript-eslint/eslint-plugin": "^7.18.0",
       "@typescript-eslint/parser": "^7.18.0",
       "eslint": "^8.57.0",

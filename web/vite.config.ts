@@ -101,6 +101,7 @@ export default defineConfig(({ mode: viteMode }) => {
         { find: "@", replacement: path.resolve(__dirname, "src") },
         { find: "react", replacement: path.join(webNodeModules, "react") },
         { find: "react-dom", replacement: path.join(webNodeModules, "react-dom") },
+        { find: "antd", replacement: path.join(webNodeModules, "antd") },
         ...toolkitAliases,
       ],
     },

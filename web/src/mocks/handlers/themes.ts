@@ -12,11 +12,46 @@ import { buildThemePlaceholderCoverSvg } from "../../../../cli/out/lib/theme-pla
 import { successResponse, withDelay } from "../createHandler";
 import { getMockGlobalSetting, patchMockGlobalSettingTheme, setMockGlobalSetting } from "./page";
 
+type ThemeManifestArg = NonNullable<Parameters<typeof getConfigurationSchemaFromManifest>[0]>;
+
 const THEME_ADMIN_LOCALES: Record<string, Record<string, Record<string, unknown>>> = {
   "hello-world": { en: helloWorldAdminEn },
 };
 
-const MOCK_THEMES = [
+type MockThemeAppearance = {
+  sections?: Array<{
+    id: string;
+    title?: string;
+    settings?: Array<{ id: string; type?: string; label?: string; default?: string }>;
+  }>;
+};
+
+type MockTheme = {
+  id: string;
+  name: string;
+  version: string;
+  description: string;
+  author: string;
+  tags: string[];
+  source: "local" | "npm" | "installed";
+  installed: boolean;
+  active: boolean;
+  official: boolean;
+  coverUrl: string;
+  appearance?: MockThemeAppearance;
+  options?: Record<string, unknown>;
+  catalog?: {
+    npm: string;
+    featured: boolean;
+    themeUri: string;
+  };
+  npm?: {
+    spec: string;
+    resolvedVersion?: string;
+  };
+};
+
+const MOCK_THEMES: MockTheme[] = [
   {
     id: "hello-world",
     name: "Hello World",
@@ -59,7 +94,7 @@ const MOCK_THEMES = [
   },
 ];
 
-const MOCK_CATALOG_THEME = {
+const MOCK_CATALOG_THEME: MockTheme = {
   id: "reactpress-theme-starter",
   name: "ReactPress Theme Starter",
   version: "1.0.0-beta.0",
@@ -78,7 +113,7 @@ const MOCK_CATALOG_THEME = {
   },
 };
 
-function mockThemeList() {
+function mockThemeList(): MockTheme[] {
   const bundled = MOCK_THEMES.map((t) => ({
     ...t,
     active: t.id === themeState.activeTheme,
@@ -93,7 +128,7 @@ function mockThemeList() {
         installed: true,
         active: MOCK_CATALOG_THEME.id === themeState.activeTheme,
         npm: {
-          spec: MOCK_CATALOG_THEME.catalog.npm,
+          spec: MOCK_CATALOG_THEME.catalog!.npm,
           resolvedVersion: "1.0.0-beta.0",
         },
       },
@@ -110,7 +145,7 @@ let themeState: typeof defaultSiteThemeState = {
   previewThemeId: defaultSiteThemeState.activeTheme,
 };
 
-function themeManifest(themeId: string) {
+function themeManifest(themeId: string): MockTheme | null {
   return mockThemeList().find((t) => t.id === themeId) ?? null;
 }
 
@@ -165,9 +200,9 @@ export const themeHandlers = [
         name: MOCK_CATALOG_THEME.name,
         version: MOCK_CATALOG_THEME.version,
         description: MOCK_CATALOG_THEME.description,
-        npm: MOCK_CATALOG_THEME.catalog.npm,
+        npm: MOCK_CATALOG_THEME.catalog!.npm,
         featured: true,
-        themeUri: MOCK_CATALOG_THEME.catalog.themeUri,
+        themeUri: MOCK_CATALOG_THEME.catalog!.themeUri,
         tags: MOCK_CATALOG_THEME.tags,
       },
     ]);
@@ -201,7 +236,7 @@ export const themeHandlers = [
     const manifest = themeManifest(id);
     if (!manifest)
       return HttpResponse.json({ success: false, message: "Not found" }, { status: 404 });
-    const schema = getConfigurationSchemaFromManifest(manifest, id);
+    const schema = getConfigurationSchemaFromManifest(manifest as ThemeManifestArg, id);
     return successResponse({ themeId: id, schema });
   }),
 
@@ -211,7 +246,9 @@ export const themeHandlers = [
     const manifest = themeManifest(id);
     if (!manifest)
       return HttpResponse.json({ success: false, message: "Not found" }, { status: 404 });
-    const configuration = getMergedThemeConfiguration(getMockGlobalSetting(), id, { manifest });
+    const configuration = getMergedThemeConfiguration(getMockGlobalSetting(), id, {
+      manifest: manifest as ThemeManifestArg,
+    });
     return successResponse({ themeId: id, configuration });
   }),
 
@@ -230,13 +267,13 @@ export const themeHandlers = [
     if (body.replace === true) {
       storedConfig =
         getThemeConfigurationSeed(id, "zh") ??
-        getMergedThemeConfiguration(global, id, { manifest });
+        getMergedThemeConfiguration(global, id, { manifest: manifest as ThemeManifestArg });
     } else {
       const result = validateAndMergeThemeConfiguration(
         id,
         global,
         body.configuration ?? {},
-        manifest,
+        manifest as ThemeManifestArg,
       );
       if (!result.ok) {
         return HttpResponse.json({ success: false, message: result.message }, { status: 400 });
@@ -245,7 +282,9 @@ export const themeHandlers = [
     }
     const next = { ...global, config: { ...(global.config as object), [id]: storedConfig } };
     setMockGlobalSetting(next);
-    const configuration = getMergedThemeConfiguration(next, id, { manifest });
+    const configuration = getMergedThemeConfiguration(next, id, {
+      manifest: manifest as ThemeManifestArg,
+    });
     return successResponse({ themeId: id, configuration });
   }),
 

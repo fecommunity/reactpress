@@ -127,7 +127,7 @@ pnpm login
 pnpm run publish:packages
 ```
 
-Published packages: root meta, **server**, **client**, **web**, **toolkit**, **themes/***, **templates**.
+Published packages: root meta, **server**, **web**, **toolkit**, **themes/***, **templates**.
 `@fecommunity/reactpress` is the CLI entry (`init`, `dev`, Docker database helpers).
 
 ## Architecture & Documentation

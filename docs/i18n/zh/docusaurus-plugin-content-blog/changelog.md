@@ -8,13 +8,13 @@ tags: [reactpress, release]
 
 <!--truncate-->
 
-## [4.0.0](https://github.com/fecommunity/reactpress/compare/v3.1.0...v4.0.0)（待发布）
+## [4.0.0](https://github.com/fecommunity/reactpress/compare/v3.7.0...v4.0.0)（2026-06-27）
 
 **ReactPress 4.0 扩展版** — 插件、桌面客户端、主题 catalog。
 
 ### 新特性
 
-- **插件系统**：Hook + `plugin.json` manifest + Admin 插槽；内置 `hello-world`（自动摘要）、`seo`（SEO 增强）
+- **插件系统**：Hook + `plugin.json` manifest + Admin 插槽；内置 `hello-world`（自动摘要）、`seo`（SEO 增强）、`image-optimizer`（历史图片 WebP 批量优化）
 - **桌面客户端**：Electron + SQLite 本地模式；远程 API 与内容同步
 - **主题**：npm catalog（`theme-starter`）；hello-world 文档与结构对齐
 - **迁移指南**：[3.x → 4.0](/docs/tutorial-extras/migration-3-to-4)

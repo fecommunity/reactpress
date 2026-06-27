@@ -77,7 +77,9 @@ export async function syncLocalToRemote(options: {
   options.onProgress?.({ phase: "settings", current: 0, total: 1 });
   try {
     const settings = await localClient.setting.findAll();
-    await remoteClient.setting.update({ body: settings as Record<string, unknown> });
+    await remoteClient.setting.update({
+      body: settings as Record<string, unknown>,
+    } as Parameters<typeof remoteClient.setting.update>[0]);
     result.settings = true;
   } catch {
     result.settings = false;
@@ -99,9 +101,13 @@ export async function syncLocalToRemote(options: {
       delete body.createAt;
       delete body.updateAt;
       if (id) {
-        await remoteClient.article.updateById(id, { body: body as never });
+        await remoteClient.article.updateById(id, { body: body as never } as Parameters<
+          typeof remoteClient.article.updateById
+        >[1]);
       } else {
-        await remoteClient.article.create({ body: body as never });
+        await remoteClient.article.create({ body: body as never } as Parameters<
+          typeof remoteClient.article.create
+        >[0]);
       }
       result.articles.pushed += 1;
     } catch {
@@ -126,9 +132,13 @@ export async function syncLocalToRemote(options: {
       delete body.createAt;
       delete body.updateAt;
       if (id) {
-        await remoteClient.page.updateById(id, { body: body as never });
+        await remoteClient.page.updateById(id, { body: body as never } as Parameters<
+          typeof remoteClient.page.updateById
+        >[1]);
       } else {
-        await remoteClient.page.create({ body: body as never });
+        await remoteClient.page.create({ body: body as never } as Parameters<
+          typeof remoteClient.page.create
+        >[0]);
       }
       result.pages.pushed += 1;
     } catch {

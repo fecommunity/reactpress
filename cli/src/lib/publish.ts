@@ -36,11 +36,6 @@ function getPackages() {
     description: 'Admin SPA static assets and Node static server helpers'
   },
   {
-    name: '@fecommunity/reactpress-client',
-    path: 'client',
-    description: 'Frontend application package'
-  },
-  {
     name: '@fecommunity/reactpress-server',
     path: 'server',
     description: t('publish.pkg.server'),
@@ -403,8 +398,6 @@ function buildPackage(pkg) {
         }
       } else if (pkg.path === 'server') {
         execSync('pnpm run build', { cwd: pkgDir, stdio: 'inherit' });
-      } else if (pkg.path === 'client') {
-        execSync('pnpm run prebuild && pnpm run build', { cwd: pkgDir, stdio: 'inherit' });
       } else if (pkg.path === 'toolkit') {
         execSync('pnpm run build', { cwd: pkgDir, stdio: 'inherit' });
       } else if (pkg.path === 'web') {

@@ -152,9 +152,9 @@ export const pluginHandlers = [
       : [...state.installedPlugins, id];
     const entries = { ...state.entries };
     entries[id] = {
-      version: "1.2.0",
-      source: "local",
       ...entries[id],
+      version: entries[id]?.version ?? "1.2.0",
+      source: entries[id]?.source ?? "local",
     };
     const merged = mergePluginStateIntoGlobalSetting(getMockGlobalSetting(), {
       installedPlugins,

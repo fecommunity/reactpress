@@ -1,16 +1,16 @@
 import type { PluginSettingsPanelProps } from "@fecommunity/reactpress-toolkit/plugin/admin";
 import { App, Button, Progress, Spin } from "antd";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import {
   fetchOptimizeJob,
   fetchOptimizeReport,
+  readApiErrorMessage,
   startOptimizeJob,
   type ImageOptimizeReport,
   type OptimizeJob,
-} from "@/shared/api/fileOptimize";
-import { getApiErrorMessage } from "@/shared/api/getApiErrorMessage";
-import { usePluginAdminLocaleTextOptional } from "@/modules/plugins/context/PluginAdminLocaleContext";
+} from "./api";
+import { usePluginDashboardText } from "./locale";
 
 import styles from "./optimize-dashboard.module.css";
 
@@ -30,13 +30,9 @@ function resolveConfig(config: Record<string, unknown>) {
   };
 }
 
-export function OptimizeDashboard({ pluginActive, config }: PluginSettingsPanelProps) {
+export function OptimizeDashboard({ pluginId, pluginActive, config }: PluginSettingsPanelProps) {
   const { message } = App.useApp();
-  const localeCtx = usePluginAdminLocaleTextOptional();
-  const t = useCallback(
-    (key: string, fallback: string) => localeCtx?.text(`dashboard.${key}`, fallback) ?? fallback,
-    [localeCtx],
-  );
+  const t = usePluginDashboardText(pluginId);
 
   const [report, setReport] = useState<ImageOptimizeReport | null>(null);
   const [job, setJob] = useState<OptimizeJob | null>(null);
@@ -57,7 +53,7 @@ export function OptimizeDashboard({ pluginActive, config }: PluginSettingsPanelP
       const data = await fetchOptimizeReport();
       setReport(data);
     } catch (err) {
-      message.error(getApiErrorMessage(err, undefined, t("analyzeFailed", "分析失败")));
+      message.error(readApiErrorMessage(err, t("analyzeFailed", "分析失败")));
     } finally {
       setLoadingReport(false);
     }
@@ -78,7 +74,7 @@ export function OptimizeDashboard({ pluginActive, config }: PluginSettingsPanelP
           })
           .catch((err) => {
             stopPolling();
-            message.error(getApiErrorMessage(err, undefined, t("jobPollFailed", "获取任务进度失败")));
+            message.error(readApiErrorMessage(err, t("jobPollFailed", "获取任务进度失败")));
           });
       };
 
@@ -124,7 +120,7 @@ export function OptimizeDashboard({ pluginActive, config }: PluginSettingsPanelP
         }
       }
     } catch (err) {
-      message.error(getApiErrorMessage(err, undefined, t("runFailed", "启动任务失败")));
+      message.error(readApiErrorMessage(err, t("runFailed", "启动任务失败")));
     } finally {
       setStartingJob(false);
     }

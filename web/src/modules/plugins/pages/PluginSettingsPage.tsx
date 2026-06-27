@@ -79,7 +79,7 @@ function PluginSettingsPageInner({ pluginId }: PluginSettingsPageProps) {
           (mod as { default?: { SettingsPanel?: ComponentType<PluginSettingsPanelProps> } }).default
             ?.SettingsPanel;
         if (!cancelled && Panel) {
-          setSettingsPanel(() => Panel);
+          setSettingsPanel(Panel as ComponentType<PluginSettingsPanelProps>);
         } else if (!cancelled) {
           setSettingsPanel(null);
         }

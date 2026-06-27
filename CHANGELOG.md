@@ -1,10 +1,10 @@
-# [4.0.0](https://github.com/fecommunity/reactpress/compare/v3.1.0...v4.0.0) (Unreleased)
+# [4.0.0](https://github.com/fecommunity/reactpress/compare/v3.7.0...v4.0.0) (2026-06-27)
 
 ### Plugin System
 
 * **Hook + manifest**: `plugin.json` lifecycle (install / activate / config / hot reload); `HookService` with filters and actions
 * **Admin slots**: `AdminSlot` + `PluginAdminProvider`; SEO plugin integrates article editor
-* **Built-in plugins**: `hello-world` (auto summary), `seo` (slug, keywords, meta description)
+* **Built-in plugins**: `hello-world` (auto summary), `seo` (slug, keywords, meta description), `image-optimizer` (legacy media WebP batch optimization)
 * **CLI**: `reactpress plugin list` / `install`; `pnpm build:plugins` in full build pipeline
 * **Security**: manifest JSON Schema validation, module path constraints, Ajv config validation
 
