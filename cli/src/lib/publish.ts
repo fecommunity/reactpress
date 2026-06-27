@@ -31,6 +31,11 @@ function getPackages() {
     description: 'API client and utilities toolkit'
   },
   {
+    name: '@fecommunity/reactpress-web',
+    path: 'web',
+    description: 'Admin SPA static assets and Node static server helpers'
+  },
+  {
     name: '@fecommunity/reactpress-client',
     path: 'client',
     description: 'Frontend application package'
@@ -401,6 +406,9 @@ function buildPackage(pkg) {
       } else if (pkg.path === 'client') {
         execSync('pnpm run prebuild && pnpm run build', { cwd: pkgDir, stdio: 'inherit' });
       } else if (pkg.path === 'toolkit') {
+        execSync('pnpm run build', { cwd: pkgDir, stdio: 'inherit' });
+      } else if (pkg.path === 'web') {
+        execSync('pnpm run build', { cwd: path.join(getWorkspaceRoot(), 'toolkit'), stdio: 'inherit' });
         execSync('pnpm run build', { cwd: pkgDir, stdio: 'inherit' });
       } else if (pkg.path === 'themes/hello-world') {
         console.log(chalk.gray('  Templates do not require building, skipping...'));

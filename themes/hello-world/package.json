@@ -8,12 +8,14 @@
   },
   "scripts": {
     "dev": "node server.js",
+    "prebuild": "reactpress-web sync-public ./public/admin",
     "build": "next build",
     "start": "cross-env NODE_ENV=production node server.js",
     "lint": "next lint"
   },
   "dependencies": {
     "@fecommunity/reactpress-toolkit": "workspace:*",
+    "@fecommunity/reactpress-web": "workspace:*",
     "dotenv": "^17.2.3",
     "next": "15.5.12",
     "react": "19.2.4",

@@ -430,6 +430,9 @@ importers:
       '@fecommunity/reactpress-toolkit':
         specifier: workspace:*
         version: link:../../toolkit
+      '@fecommunity/reactpress-web':
+        specifier: workspace:*
+        version: link:../../web
       dotenv:
         specifier: ^17.2.3
         version: 17.4.2
@@ -531,9 +534,6 @@ importers:
 
   web:
     dependencies:
-      '@fecommunity/reactpress-toolkit':
-        specifier: workspace:*
-        version: link:../toolkit
       '@formily/antd-v5':
         specifier: ^1.2.4
         version: 1.2.4(@types/react-dom@18.3.6(@types/react@18.3.20))(@types/react@18.3.20)(antd@6.4.3(date-fns@2.30.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1)(typescript@5.9.3)
@@ -598,6 +598,9 @@ importers:
         specifier: ^5.0.12
         version: 5.0.13(@types/react@18.3.20)(immer@9.0.21)(react@18.3.1)(use-sync-external-store@1.6.0(react@18.3.1))
     devDependencies:
+      '@fecommunity/reactpress-toolkit':
+        specifier: workspace:*
+        version: link:../toolkit
       '@playwright/test':
         specifier: ^1.58.2
         version: 1.60.0

@@ -1,10 +1,52 @@
 {
   "name": "@fecommunity/reactpress-web",
-  "version": "3.0.0",
-  "private": true,
-  "description": "ReactPress Admin SPA (Vite + TanStack Router)",
+  "version": "3.7.0",
+  "description": "ReactPress Admin SPA — prebuilt static assets with Node static server helpers",
+  "keywords": [
+    "admin",
+    "cms",
+    "reactpress",
+    "spa",
+    "static"
+  ],
+  "license": "MIT",
+  "author": "fecommunity",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fecommunity/reactpress.git",
+    "directory": "web"
+  },
+  "bin": {
+    "reactpress-web": "./bin/reactpress-web.js"
+  },
+  "files": [
+    "bin",
+    "dist",
+    "node",
+    "README.md"
+  ],
   "type": "module",
+  "main": "./node/index.mjs",
+  "types": "./node/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./node/index.d.ts",
+      "import": "./node/index.mjs"
+    },
+    "./dist": "./dist/index.html",
+    "./dist/*": "./dist/*",
+    "./next": {
+      "types": "./node/next.d.ts",
+      "import": "./node/next.mjs",
+      "require": "./node/next.cjs"
+    }
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "scripts": {
+    "prepack": "node scripts/prepack.mjs",
     "dev": "vp dev",
     "dev:themes": "VITE_ENABLE_MOCK=true VITE_AUTH_MODE=mock vp dev",
     "test:e2e:themes": "playwright test e2e/themes.spec.ts",
@@ -23,7 +65,6 @@
     "test:e2e:ui": "playwright test --ui"
   },
   "dependencies": {
-    "@fecommunity/reactpress-toolkit": "workspace:*",
     "@formily/antd-v5": "^1.2.4",
     "@formily/core": "^2.3.7",
     "@formily/json-schema": "^2.3.7",
@@ -47,6 +88,7 @@
     "zustand": "^5.0.12"
   },
   "devDependencies": {
+    "@fecommunity/reactpress-toolkit": "workspace:*",
     "@playwright/test": "^1.58.2",
     "@tanstack/router-plugin": "^1.166.13",
     "@types/react": "^18.3.20",
@@ -56,6 +98,9 @@
     "typescript": "~5.9.3",
     "vite": "npm:@voidzero-dev/vite-plus-core@latest",
     "vite-plus": "latest"
+  },
+  "engines": {
+    "node": ">=18"
   },
   "msw": {
     "workerDirectory": [
