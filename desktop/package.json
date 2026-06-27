@@ -1,6 +1,6 @@
 {
   "name": "@fecommunity/reactpress-desktop",
-  "version": "4.0.0",
+  "version": "4.0.0-beta.0",
   "private": true,
   "description": "ReactPress Admin desktop shell (Electron)",
   "main": "out/main/index.js",
@@ -44,12 +44,16 @@
       {
         "from": ".cache/app-resources",
         "to": ".",
-        "filter": ["**/*"]
+        "filter": [
+          "**/*"
+        ]
       },
       {
         "from": "../web/dist",
         "to": "renderer",
-        "filter": ["**/*"]
+        "filter": [
+          "**/*"
+        ]
       },
       {
         "from": "resources/icon.png",
@@ -57,16 +61,22 @@
       }
     ],
     "mac": {
-      "target": ["dmg"],
+      "target": [
+        "dmg"
+      ],
       "icon": "resources/icon.png",
       "category": "public.app-category.productivity"
     },
     "win": {
-      "target": ["nsis"],
+      "target": [
+        "nsis"
+      ],
       "icon": "resources/icon.png"
     },
     "linux": {
-      "target": ["AppImage"],
+      "target": [
+        "AppImage"
+      ],
       "icon": "resources/icon.png",
       "category": "Office"
     }

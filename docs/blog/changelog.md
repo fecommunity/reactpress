@@ -8,9 +8,9 @@ tags: [reactpress, release]
 
 <!--truncate-->
 
-## [4.0.0](https://github.com/fecommunity/reactpress/compare/v3.7.0...v4.0.0) (2026-06-27)
+## [4.0.0-beta.0](https://github.com/fecommunity/reactpress/compare/v3.7.0...v4.0.0-beta.0) (2026-06-27)
 
-**ReactPress 4.0 Extend** — plugins, desktop client, theme catalog.
+**ReactPress 4.0 Extend (beta)** — plugins, desktop client, theme catalog. Install: `npm i -g @fecommunity/reactpress@beta`.
 
 - **Plugins**: Hook system, `plugin.json` manifest, Admin slots; built-in `hello-world`, `seo`, `image-optimizer`
 - **Desktop**: Electron + SQLite local mode; remote API + sync to server

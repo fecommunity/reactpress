@@ -429,6 +429,11 @@ program
   .description(t('cli.publish.description'))
   .option('--build', t('cli.publish.build'))
   .option('--publish', t('cli.publish.publish'))
+  .option('--tag <tag>', 'npm dist-tag: beta or latest')
+  .option('--version <version>', 'semver for all core packages')
+  .option('--yes', 'skip confirmation prompt')
+  .option('--no-build', 'skip build before publish')
+  .option('--otp <code>', 'npm 2FA one-time password')
   .action(async (options) => {
     try {
       const publish = require('../lib/publish');
@@ -436,7 +441,17 @@ program
         await publish.buildPackages();
         return;
       }
-      await publish.publishPackages();
+      if (options.publish) {
+        await publish.publishPackages({
+          tag: options.tag,
+          version: options.version,
+          yes: Boolean(options.yes),
+          noBuild: Boolean(options.noBuild),
+          otp: options.otp || process.env.NPM_OTP,
+        });
+        return;
+      }
+      await publish.main();
     } catch (err) {
       console.error(chalk.red('[reactpress]'), err.message || err);
       process.exit(1);

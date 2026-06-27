@@ -1,6 +1,6 @@
 {
   "name": "@fecommunity/reactpress-server",
-  "version": "4.0.0",
+  "version": "4.0.0-beta.0",
   "deprecated": "请使用 @fecommunity/reactpress-cli 内置 API，3.1 起停止发布",
   "description": "ReactPress Server - NestJS-based backend API for ReactPress CMS",
   "author": "fecommunity",

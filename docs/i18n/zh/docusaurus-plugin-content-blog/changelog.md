@@ -8,9 +8,9 @@ tags: [reactpress, release]
 
 <!--truncate-->
 
-## [4.0.0](https://github.com/fecommunity/reactpress/compare/v3.7.0...v4.0.0)（2026-06-27）
+## [4.0.0-beta.0](https://github.com/fecommunity/reactpress/compare/v3.7.0...v4.0.0-beta.0)（2026-06-27）
 
-**ReactPress 4.0 扩展版** — 插件、桌面客户端、主题 catalog。
+**ReactPress 4.0 扩展版（beta）** — 插件、桌面客户端、主题 catalog。安装：`npm i -g @fecommunity/reactpress@beta`。
 
 ### 新特性
 

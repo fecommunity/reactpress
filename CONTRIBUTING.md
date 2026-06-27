@@ -123,12 +123,22 @@ sh scripts/deploy.sh
 Maintainers only:
 
 ```bash
-pnpm login
+pnpm login --registry https://registry.npmjs.org
+
+# Interactive (choose beta/stable + version)
 pnpm run publish:packages
+
+# Beta prerelease (uses package.json versions, npm tag: beta)
+NPM_OTP=123456 pnpm run publish:packages -- --tag beta --yes
+
+# Explicit version
+NPM_OTP=123456 pnpm run publish:packages -- --tag beta --version 4.0.0-beta.0 --yes
+
+# Build artifacts only (no npm publish)
+pnpm run publish:build
 ```
 
-Published packages: root meta, **server**, **web**, **toolkit**, **themes/***, **templates**.
-`@fecommunity/reactpress` is the CLI entry (`init`, `dev`, Docker database helpers).
+Published packages: **toolkit**, **web**, **server** (deprecated), **cli** (`@fecommunity/reactpress`).
 
 ## Architecture & Documentation
 

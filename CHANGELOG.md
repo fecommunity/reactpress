@@ -1,4 +1,6 @@
-# [4.0.0](https://github.com/fecommunity/reactpress/compare/v3.7.0...v4.0.0) (2026-06-27)
+# [4.0.0-beta.0](https://github.com/fecommunity/reactpress/compare/v3.7.0...v4.0.0-beta.0) (2026-06-27)
+
+> **Pre-release** — install with `npm i -g @fecommunity/reactpress@beta` for testing. Final 4.0.0 follows after validation.
 
 ### Plugin System
 
