@@ -17,4 +17,10 @@ describe('lib/i18n', () => {
     setLocale('en');
     assert.match(t('menu.opening', { url: 'http://x' }), /http:\/\/x/);
   });
+
+  it('does not throw when key or vars are missing', () => {
+    setLocale('en');
+    assert.equal(t(undefined), '');
+    assert.equal(t('dev.timingReady', { summary: undefined }), 'Ready in ');
+  });
 });

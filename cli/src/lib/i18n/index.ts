@@ -15,8 +15,12 @@ let locale = resolveLocale();
 function t(key, vars = {}) {
   const table = STRINGS[locale] || STRINGS.en;
   let text = table[key] ?? STRINGS.en[key] ?? key;
+  if (text == null) {
+    text = key == null ? '' : String(key);
+  }
+  text = String(text);
   for (const [name, value] of Object.entries(vars)) {
-    text = text.replace(new RegExp(`\\{${name}\\}`, 'g'), String(value));
+    text = text.replace(new RegExp(`\\{${name}\\}`, 'g'), String(value ?? ''));
   }
   return text;
 }

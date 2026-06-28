@@ -64,10 +64,12 @@ function readDevNginxPorts(projectRoot) {
 }
 
 function resolveRemoteUpstreamHost(remoteApiOrigin) {
+  const raw = typeof remoteApiOrigin === 'string' ? remoteApiOrigin.trim() : '';
+  if (!raw) return '';
   try {
-    return new URL(remoteApiOrigin).host;
+    return new URL(raw).host;
   } catch {
-    return remoteApiOrigin.replace(/^https?:\/\//i, '').split('/')[0];
+    return raw.replace(/^https?:\/\//i, '').split('/')[0];
   }
 }
 

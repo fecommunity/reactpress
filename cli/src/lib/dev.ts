@@ -633,7 +633,7 @@ async function startDevStack(
     } else {
       themeWait.then((ready) => {
         if (ready) logDevDetail('dev.themeReadyQuiet', { url: loadClientSiteUrl(projectRoot) });
-      });
+      }).catch(() => {});
     }
   }
 

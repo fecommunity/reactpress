@@ -1,22 +1,21 @@
 // @ts-nocheck
-const fs = require('fs');
-const path = require('path');
 const inquirer = require('inquirer');
 const ora = require('ora');
 const open = require('open');
-const { printBanner } = require('./banner');
+const { printBanner, deriveSystemState } = require('./banner');
 const {
   brand,
-  icon,
   label,
   ok,
   fail,
-  sectionHeader,
-  statusPill,
   padRight,
+  visibleLength,
+  pulseBar,
+  statusProgressLine,
 } = require('./theme');
 const { ensureOriginalCwd } = require('../lib/root');
 const { describeProject } = require('../lib/project-type');
+const { fetchContextStatus } = require('../lib/context-status');
 const { hasResolvableActiveTheme } = require('../lib/theme-runtime');
 const { ensureProjectEnvironment, initMonorepoProject } = require('../lib/bootstrap');
 const { runDev, runThemeDev, runWebDev, runLocalWebDev, runDesktopDev } = require('../lib/dev');
@@ -28,34 +27,19 @@ const { printUnifiedStatus } = require('../lib/status');
 const { runDoctor } = require('../lib/doctor');
 const { runDbBackup } = require('../lib/db-backup');
 const { runBuild, TARGETS } = require('../lib/build');
-const { loadClientSiteUrl, loadServerSiteUrl, isHttpResponding } = require('../lib/http');
-const { isDockerRunning } = require('../lib/docker');
+const { loadClientSiteUrl } = require('../lib/http');
 const { t } = require('../lib/i18n');
 
+const GROUP_PREFIX = '__group:';
+
 function menuSection(title) {
-  return new inquirer.Separator(sectionHeader(title));
+  return new inquirer.Separator(`  ${brand.border('──')} ${brand.dim(String(title).toUpperCase())}`);
 }
 
 function formatChoice(key, text, hint) {
-  const keyCol = key ? brand.primary(padRight(key, 2)) : '   ';
+  const keyCol = key ? brand.primary(`${key}.`) : '   ';
   const hintPart = hint ? brand.dim(`  ${hint}`) : '';
-  return `${keyCol}  ${text}${hintPart}`;
-}
-
-function assignShortcuts(items) {
-  let n = 0;
-  return items.map((item) => {
-    if (item instanceof inquirer.Separator || item.type === 'separator') {
-      return item;
-    }
-    n += 1;
-    const key = n <= 9 ? String(n) : '';
-    return {
-      ...item,
-      name: formatChoice(key, item._label || item.name, item._hint),
-      short: item.value,
-    };
-  });
+  return `${keyCol} ${text}${hintPart}`;
 }
 
 function choice(labelKey, value, hintKey) {
@@ -66,18 +50,55 @@ function choice(labelKey, value, hintKey) {
   };
 }
 
-function getMenuActions(project) {
+function toInquirerChoices(items, { start = 1, alignHints = true } = {}) {
+  const actionable = items.filter((item) => item._label);
+  const labelWidth = alignHints
+    ? Math.min(Math.max(...actionable.map((item) => visibleLength(item._label)), 0), 34)
+    : 0;
+
+  let n = start - 1;
+  return items.map((item) => {
+    if (item instanceof inquirer.Separator) {
+      return item;
+    }
+    const shortLabel = item._short || stripAnsi(item._label || item.name || item.value);
+    if (item.noShortcut) {
+      return {
+        name: item._label,
+        value: item.value,
+        short: shortLabel,
+      };
+    }
+    n += 1;
+    const key = n <= 9 ? String(n) : '';
+    const labelText = labelWidth ? padRight(item._label, labelWidth) : item._label;
+    return {
+      name: formatChoice(key, labelText, item._hint),
+      value: item.value,
+      short: shortLabel,
+    };
+  });
+}
+
+function stripAnsi(text) {
+  return String(text || '').replace(/\u001b\[[0-9;]*m/g, '');
+}
+
+function buildMenuGroups(project) {
   const standalone = project.type === 'standalone';
   const monorepo = project.type === 'monorepo';
   const showTheme = hasResolvableActiveTheme(project.root);
 
-  const items = [
-    menuSection(t('menu.section.run')),
-    choice('menu.dev', 'dev', 'menu.hint.dev'),
-    choice('menu.init', 'init', 'menu.hint.init'),
-    choice('menu.status', 'status', 'menu.hint.status'),
-    choice('menu.doctor', 'doctor', 'menu.hint.doctor'),
-  ];
+  const run = {
+    key: 'run',
+    title: t('menu.section.run'),
+    items: [
+      choice('menu.dev', 'dev', 'menu.hint.dev'),
+      choice('menu.init', 'init', 'menu.hint.init'),
+      choice('menu.status', 'status', 'menu.hint.status'),
+      choice('menu.doctor', 'doctor', 'menu.hint.doctor'),
+    ],
+  };
 
   const extendItems = [];
   if (project.hasDesktop) {
@@ -92,141 +113,271 @@ function getMenuActions(project) {
   if (monorepo && project.hasPluginsWorkspace) {
     extendItems.push(choice('menu.pluginList', 'plugin:list', 'menu.hint.pluginList'));
   }
-  if (extendItems.length > 0) {
-    items.push(menuSection(t('menu.section.extend')), ...extendItems);
-  }
 
-  items.push(
-    menuSection(t('menu.section.lifecycle')),
-    choice('menu.devApi', 'dev:api', 'menu.hint.devApi'),
-  );
-
+  const lifecycleItems = [choice('menu.devApi', 'dev:api', 'menu.hint.devApi')];
   if (showTheme) {
-    items.push(choice('menu.devClient', 'dev:client', 'menu.hint.devClient'));
+    lifecycleItems.push(choice('menu.devClient', 'dev:client', 'menu.hint.devClient'));
   }
-
-  items.push(
+  lifecycleItems.push(
     choice('menu.serverStart', 'server:start', 'menu.hint.serverStart'),
     choice('menu.serverStop', 'server:stop', 'menu.hint.serverStop'),
-    choice('menu.serverRestart', 'server:restart', 'menu.hint.serverRestart'),
-    menuSection(t('menu.section.build')),
-    choice('menu.build', 'build', 'menu.hint.build')
+    choice('menu.serverRestart', 'server:restart', 'menu.hint.serverRestart')
   );
 
+  const buildItems = [choice('menu.build', 'build', 'menu.hint.build')];
   if (monorepo) {
-    items.push(
+    buildItems.push(
       choice('menu.dockerStart', 'docker:start', 'menu.hint.dockerStart'),
       choice('menu.dockerUp', 'docker:up', 'menu.hint.dockerUp'),
       choice('menu.dockerStop', 'docker:stop', 'menu.hint.dockerStop')
     );
   } else if (standalone) {
-    items.push(
+    buildItems.push(
       choice('menu.dockerUp', 'docker:up', 'menu.hint.dockerUp'),
       choice('menu.dockerStop', 'docker:stop', 'menu.hint.dockerStop')
     );
   }
+  if (monorepo) {
+    buildItems.push(choice('menu.publish', 'publish', 'menu.hint.publish'));
+  }
 
-  items.push(
-    menuSection(t('menu.section.tools')),
+  const toolItems = [
     choice('menu.nginxUp', 'nginx:up', 'menu.hint.nginxUp'),
     choice('menu.nginxOpen', 'nginx:open', 'menu.hint.nginxOpen'),
     choice('menu.nginxReload', 'nginx:reload', 'menu.hint.nginxReload'),
     choice('menu.dbBackup', 'db:backup', 'menu.hint.dbBackup'),
     choice('menu.openAdmin', 'open:admin', 'menu.hint.openAdmin'),
-  );
+  ];
 
-  if (monorepo) {
-    items.push(choice('menu.publish', 'publish', 'menu.hint.publish'));
+  const groups = [run];
+  if (extendItems.length > 0) {
+    groups.push({ key: 'extend', title: t('menu.section.extend'), items: extendItems });
+  }
+  groups.push(
+    { key: 'lifecycle', title: t('menu.section.lifecycle'), items: lifecycleItems },
+    { key: 'build', title: t('menu.section.build'), items: buildItems },
+    { key: 'tools', title: t('menu.section.tools'), items: toolItems }
+  );
+  return groups;
+}
+
+function getTopLevelMenu(project) {
+  const groups = buildMenuGroups(project);
+  const runGroup = groups[0];
+  const subGroups = groups.slice(1);
+
+  const items = [menuSection(t('menu.section.quick')), ...runGroup.items];
+
+  if (subGroups.length > 0) {
+    items.push(menuSection(t('menu.section.explore')));
+    for (const group of subGroups) {
+      items.push({
+        _label: t(`menu.group.${group.key}`),
+        _hint: t(`menu.groupHint.${group.key}`),
+        value: `${GROUP_PREFIX}${group.key}`,
+      });
+    }
   }
 
   items.push(
     new inquirer.Separator(),
-    choice('menu.exit', 'exit', 'menu.hint.exit')
+    { _label: brand.dim(t('menu.exit')), value: 'exit', noShortcut: true }
   );
-
-  return assignShortcuts(items);
+  return toInquirerChoices(items, { alignHints: false });
 }
 
-function parseEnvFile(projectRoot) {
-  const envPath = path.join(projectRoot, '.env');
-  const env = {};
-  try {
-    if (!fs.existsSync(envPath)) return env;
-    for (const line of fs.readFileSync(envPath, 'utf8').split('\n')) {
-      const m = line.match(/^([A-Z_]+)=(.*)$/);
-      if (m) env[m[1]] = m[2].trim().replace(/^['"]|['"]$/g, '');
-    }
-  } catch {
-    // ignore
-  }
-  return env;
-}
-
-async function probeDatabase(projectRoot) {
-  try {
-    const mysql = require('mysql2/promise');
-    const env = parseEnvFile(projectRoot);
-    const conn = await mysql.createConnection({
-      host: env.DB_HOST || '127.0.0.1',
-      port: Number(env.DB_PORT || 3306),
-      user: env.DB_USER || 'reactpress',
-      password: env.DB_PASSWD || env.DB_PASSWORD || 'reactpress',
-      database: env.DB_DATABASE || 'reactpress',
-      connectTimeout: 2000,
-    });
-    await conn.ping();
-    await conn.end();
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-async function fetchContextStatus(projectRoot) {
-  const apiUrl = loadServerSiteUrl(projectRoot);
-  const [apiOk, dockerOk, dbOk] = await Promise.all([
-    isHttpResponding(apiUrl, 1500),
-    Promise.resolve(isDockerRunning()),
-    probeDatabase(projectRoot),
-  ]);
-  return { apiOk, dbOk, dockerOk };
-}
-
-function printStatusPanel(status) {
-  const on = { on: t('menu.statusOn'), off: t('menu.statusOff') };
-  const db = {
-    on: t('menu.statusReady'),
-    off: t('menu.statusNotReady'),
-    pending: t('menu.statusChecking'),
-  };
-  const docker = { on: t('menu.statusYes'), off: t('menu.statusNo') };
-
-  console.log(sectionHeader(t('menu.statusHeader')));
-  const rows = [
-    [t('menu.statusLabelApi'), statusPill(status.apiOk, on)],
-    [t('menu.statusLabelDb'), statusPill(status.dbOk, db)],
-    [t('menu.statusLabelDocker'), statusPill(status.dockerOk, docker)],
+function getSubMenu(group) {
+  const items = [
+    menuSection(group.title),
+    ...group.items,
+    new inquirer.Separator(),
+    { _label: brand.dim(`← ${t('menu.backToMain')}`), value: '__back', noShortcut: true },
   ];
-  for (const [name, pill] of rows) {
-    console.log(`  ${brand.muted(padRight(name, 10))}  ${pill}`);
-  }
-  console.log('');
+  return toInquirerChoices(items);
 }
 
-async function printContextStatus(projectRoot) {
-  const spinner = ora({
-    text: brand.dim(t('menu.statusChecking')),
-    color: 'magenta',
-    spinner: 'dots',
-  }).start();
-  const status = await fetchContextStatus(projectRoot);
-  spinner.stop();
-  printStatusPanel(status);
+function getMenuActions(project) {
+  const groups = buildMenuGroups(project);
+  const items = [];
+  for (const group of groups) {
+    items.push(menuSection(group.title), ...group.items);
+  }
+  items.push(new inquirer.Separator(), choice('menu.exit', 'exit'));
+  return toInquirerChoices(items);
+}
+
+async function pickMenuAction(project) {
+  const groups = buildMenuGroups(project);
+  const groupMap = Object.fromEntries(groups.map((group) => [group.key, group]));
+
+  while (true) {
+    const { action } = await inquirer.prompt([
+      {
+        type: 'list',
+        name: 'action',
+        message: `${brand.primary('›')} ${t('menu.prompt')}`,
+        pageSize: 14,
+        loop: false,
+        choices: getTopLevelMenu(project),
+      },
+    ]);
+
+    if (!action || typeof action !== 'string') {
+      continue;
+    }
+
+    if (!action.startsWith(GROUP_PREFIX)) {
+      return action;
+    }
+
+    const groupKey = action.slice(GROUP_PREFIX.length);
+    const group = groupMap[groupKey];
+    if (!group) {
+      continue;
+    }
+
+    const { subAction } = await inquirer.prompt([
+      {
+        type: 'list',
+        name: 'subAction',
+        message: `${brand.primary('›')} ${t('menu.subPrompt', { section: group.title })}`,
+        pageSize: 14,
+        loop: false,
+        choices: getSubMenu(group),
+      },
+    ]);
+
+    if (subAction !== '__back') {
+      return subAction;
+    }
+  }
+}
+
+function createStatusProgress() {
+  const barWidth = 24;
+  const isTTY = Boolean(process.stdout.isTTY && process.env.TERM !== 'dumb');
+  let timer = null;
+  let frame = 0;
+  let total = 0;
+  let completed = 0;
+  let inFlight = 0;
+  let currentId = null;
+
+  function serviceLabel(id) {
+    if (!id || String(id).startsWith('__')) return '';
+    return t(`banner.service.${id}`).trim();
+  }
+
+  function visualCompleted() {
+    if (total <= 0) return 0;
+    const partial = completed + inFlight * 0.4;
+    return Math.min(total, partial);
+  }
+
+  function clearLine() {
+    if (!isTTY) return;
+    process.stdout.write('\r\x1b[2K');
+  }
+
+  function renderLine() {
+    const label = serviceLabel(currentId);
+    if (total > 0) {
+      const visual = visualCompleted();
+      let filled = Math.round((visual / total) * barWidth);
+      if (completed < total) {
+        filled = Math.min(barWidth, filled + (frame % 2));
+      }
+      return `  ${brand.dim(t('menu.statusChecking'))}  ${statusProgressLine({
+        completed: visual,
+        total,
+        label,
+        barWidth,
+        filled,
+      })}`;
+    }
+    const indeterminate = 4 + (frame % Math.max(1, barWidth - 4));
+    return `  ${brand.dim(t('menu.statusChecking'))}  ${pulseBar(barWidth, indeterminate)}  ${brand.muted('…')}`;
+  }
+
+  function paint() {
+    if (!isTTY) return;
+    process.stdout.write(`\r\x1b[2K${renderLine()}`);
+  }
+
+  return {
+    start() {
+      if (!isTTY) return;
+      frame = 0;
+      timer = setInterval(() => {
+        frame += 1;
+        paint();
+      }, 90);
+      paint();
+    },
+    setTotal(nextTotal) {
+      total = nextTotal;
+      paint();
+    },
+    tickStart(id) {
+      inFlight += 1;
+      currentId = id;
+      paint();
+    },
+    tickDone(id) {
+      inFlight = Math.max(0, inFlight - 1);
+      completed += 1;
+      currentId = id;
+      paint();
+    },
+    async finish() {
+      if (timer) {
+        clearInterval(timer);
+        timer = null;
+      }
+      if (isTTY && total > 0) {
+        completed = total;
+        inFlight = 0;
+        paint();
+        await new Promise((resolve) => setTimeout(resolve, 100));
+      }
+      clearLine();
+    },
+    stop() {
+      if (timer) {
+        clearInterval(timer);
+        timer = null;
+      }
+      clearLine();
+    },
+  };
+}
+
+async function refreshInteractiveBanner(projectRoot, project, { spinner = false } = {}) {
+  let status;
+  if (spinner) {
+    const progress = createStatusProgress();
+    progress.start();
+    try {
+      status = await fetchContextStatus(projectRoot, {
+        onProgress({ phase, total, id }) {
+          if (phase === 'ready') progress.setTotal(total);
+          if (phase === 'start') progress.tickStart(id);
+          if (phase === 'done') progress.tickDone(id);
+        },
+      });
+    } finally {
+      await progress.finish();
+    }
+  } else {
+    status = await fetchContextStatus(projectRoot);
+  }
+  const systemState = deriveSystemState(project, status);
+  printBanner({ projectRoot, project, systemState, status });
   return status;
 }
 
 async function withSpinner(text, fn) {
-  const spinner = ora({ text, color: 'magenta', spinner: 'dots' }).start();
+  const spinner = ora({ text, color: 'gray', spinner: 'dots' }).start();
   try {
     const result = await fn();
     spinner.succeed();
@@ -383,23 +534,13 @@ async function runInteractiveLoop() {
   const projectRoot = ensureOriginalCwd();
   const project = describeProject(projectRoot);
 
-  printBanner({ projectRoot, project });
-  await printContextStatus(projectRoot);
+  await refreshInteractiveBanner(projectRoot, project, { spinner: true });
   console.log(`  ${brand.dim(t('menu.shortcuts'))}`);
   console.log('');
 
   let loop = true;
   while (loop) {
-    const { action } = await inquirer.prompt([
-      {
-        type: 'list',
-        name: 'action',
-        message: `${brand.primary(t('menu.actionPrefix'))}  ${brand.dim('›')}`,
-        pageSize: 20,
-        loop: false,
-        choices: getMenuActions(project),
-      },
-    ]);
+    const action = await pickMenuAction(project);
 
     if (action === 'exit') {
       console.log(brand.muted(t('menu.goodbye')));
@@ -412,7 +553,7 @@ async function runInteractiveLoop() {
 
       if (action !== 'status' && action !== 'doctor') {
         console.log('');
-        await printContextStatus(projectRoot);
+        await refreshInteractiveBanner(projectRoot, project, { spinner: true });
       }
     } catch (err) {
       console.error(fail(err.message || err));
@@ -427,10 +568,16 @@ async function runInteractiveLoop() {
       loop = retry;
       if (loop) {
         console.log('');
-        await printContextStatus(projectRoot);
+        await refreshInteractiveBanner(projectRoot, project, { spinner: true });
       }
     }
   }
 }
 
-module.exports = { runInteractiveLoop, runMenuAction, getMenuActions };
+module.exports = {
+  runInteractiveLoop,
+  runMenuAction,
+  getMenuActions,
+  buildMenuGroups,
+  pickMenuAction,
+};

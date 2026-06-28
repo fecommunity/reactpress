@@ -88,7 +88,7 @@ function walkPages(pagesDir, currentDir, files = []) {
 
 function fetchRoute(baseUrl, routePath) {
   return new Promise((resolve) => {
-    const normalizedBase = baseUrl.replace(/\/$/, '');
+    const normalizedBase = String(baseUrl || 'http://127.0.0.1:3001').replace(/\/$/, '');
     const url = `${normalizedBase}${routePath.startsWith('/') ? routePath : `/${routePath}`}`;
     const req = http.get(url, { timeout: 120_000 }, (res) => {
       res.resume();

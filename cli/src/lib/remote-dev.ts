@@ -155,7 +155,10 @@ function applyDevRemoteOrigin(cliValue) {
 
 /** Nest client base URL (includes /api when origin is host-only). */
 function resolveRemoteThemeApiBase(origin) {
-  const base = origin.replace(/\/$/, '');
+  const base = String(origin || '')
+    .trim()
+    .replace(/\/$/, '');
+  if (!base) return '/api';
   if (/\/api$/i.test(base)) return base;
   return `${base}/api`;
 }

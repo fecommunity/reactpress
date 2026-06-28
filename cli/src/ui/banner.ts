@@ -5,12 +5,12 @@ const {
   brand,
   icon,
   palette,
-  badge,
   visibleLength,
   padRight,
   gradientText,
-  pulseBar,
-  statusLights,
+  macTrafficLights,
+  systemStatusBadge,
+  statusPill,
 } = require('./theme');
 const { t } = require('../lib/i18n');
 const { getCliVersion } = require('../lib/paths');
@@ -25,7 +25,7 @@ const TECH_LOGO = [
   '╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝ ╚═════╝   ╚═╝   ╚═╝     ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝',
 ];
 
-const LOGO_WIDTH = 81;
+const LOGO_WIDTH = TECH_LOGO[0].length;
 const LOGO_GRADIENTS = [
   [palette.pink, palette.primary],
   [palette.pink, palette.primary],
@@ -37,9 +37,8 @@ const LOGO_GRADIENTS = [
 
 const REPO_URL = 'https://github.com/fecommunity/reactpress';
 const REPO_DISPLAY = 'github.com/fecommunity/reactpress';
-
-const LABEL_WIDTH = 6;
-const FEAT_COLORS = [palette.accent, palette.primary, palette.pink, palette.accent];
+const CARD_MIN = 68;
+const ASCII_CARD_PAD = 8;
 
 function hyperlink(url, label) {
   if (!process.stdout.isTTY) return label;
@@ -74,24 +73,97 @@ function bannerColumns() {
   return raw >= 48 ? raw : 80;
 }
 
-function bannerReadyState(options) {
-  const type = options && options.project && options.project.type;
-  if (type === 'monorepo' || type === 'standalone') {
-    return { ratio: 1, ready: true };
+/** Core dev stack — Docker/Nginx are shown but do not affect the SYSTEM badge. */
+const CORE_SYSTEM_SERVICES = new Set(['sqlite', 'mysql', 'server', 'web']);
+
+function deriveSystemState(project, status) {
+  const type = project && project.type;
+  if (type !== 'monorepo' && type !== 'standalone') {
+    return 'pending';
   }
-  return { ratio: 0.4, ready: false };
+  if (!status || !Array.isArray(status.components) || status.components.length === 0) {
+    return 'pending';
+  }
+  const core = status.components.filter((c) => CORE_SYSTEM_SERVICES.has(c.id));
+  if (core.length === 0) return 'pending';
+  const okCount = core.filter((c) => c.ok).length;
+  if (okCount === core.length) return 'online';
+  if (okCount === 0) return 'error';
+  return 'partial';
+}
+
+function resolveSystemState(options) {
+  if (options && options.systemState) return options.systemState;
+  if (options && options.status) {
+    return deriveSystemState(options.project, options.status);
+  }
+  const type = options && options.project && options.project.type;
+  if (type === 'monorepo' || type === 'standalone') return 'pending';
+  return 'pending';
+}
+
+function componentLabel(component) {
+  return t(`banner.service.${component.id}`).trim();
+}
+
+function computeLabelWidth(components) {
+  const labels = [
+    t('banner.label.mode').trim(),
+    t('banner.label.path').trim(),
+    ...(components || []).map((c) => componentLabel(c)),
+  ];
+  return Math.max(...labels.map((label) => visibleLength(label)), 4);
+}
+
+function componentStatusPill(component) {
+  if (component.id === 'sqlite' || component.id === 'mysql') {
+    return statusPill(component.ok, {
+      on: t('menu.statusReady'),
+      off: t('menu.statusNotReady'),
+    });
+  }
+  if (component.id === 'docker') {
+    return statusPill(component.ok, {
+      on: t('menu.statusYes'),
+      off: t('menu.statusNo'),
+    });
+  }
+  if (component.id === 'nginx') {
+    return statusPill(component.ok, {
+      on: t('banner.nginxRunning'),
+      off: t('banner.nginxStopped'),
+    });
+  }
+  return statusPill(component.ok, {
+    on: t('menu.statusOn'),
+    off: t('menu.statusOff'),
+  });
+}
+
+function appendComponentStatusRows(lines, innerWidth, status, lw) {
+  if (!status || !Array.isArray(status.components)) return;
+  for (const component of status.components) {
+    lines.push(
+      cardRow(infoRow(componentLabel(component), componentStatusPill(component), lw), innerWidth),
+    );
+  }
+}
+
+function resolveLayout(cols) {
+  const showAscii = cols >= LOGO_WIDTH + ASCII_CARD_PAD;
+  const width = showAscii
+    ? Math.min(cols - 2, Math.max(LOGO_WIDTH + ASCII_CARD_PAD, 88))
+    : Math.min(Math.max(CARD_MIN, cols - 4), 88);
+  return { showAscii, width };
+}
+
+function centerLine(content, innerWidth) {
+  const pad = Math.max(0, Math.floor((innerWidth - visibleLength(content)) / 2));
+  return ' '.repeat(pad) + content;
 }
 
 function renderLogoLines() {
   return TECH_LOGO.map((line, i) => gradientText(line, LOGO_GRADIENTS[i]));
-}
-
-function renderWordmarkHero() {
-  const bar = brand.border('── ');
-  const word = gradientText('REACTPRESS', [palette.pink, palette.primary, palette.accent], {
-    bold: true,
-  });
-  return bar + word + brand.border(' ──');
 }
 
 function cardTop(width) {
@@ -111,216 +183,169 @@ function cardGap(innerWidth) {
   return cardRow('', innerWidth);
 }
 
-function centerLine(content, innerWidth) {
-  const pad = Math.max(0, Math.floor((innerWidth - visibleLength(content)) / 2));
-  return ' '.repeat(pad) + content;
+function titleBarRow(innerWidth, version, systemState) {
+  const lights = macTrafficLights() + brand.dim('  ');
+  const lightsW = visibleLength(lights);
+  const title = brand.dim(`reactpress · v${version}`);
+  const titleW = visibleLength(title);
+  const status = systemStatusBadge(systemState);
+  const statusW = visibleLength(status);
+
+  const titleStart = Math.max(lightsW + 1, Math.floor((innerWidth - titleW) / 2));
+  const padBeforeTitle = Math.max(0, titleStart - lightsW);
+
+  let line = lights + ' '.repeat(padBeforeTitle) + title;
+  const gap = innerWidth - visibleLength(line) - statusW;
+  if (gap >= 2) {
+    line += ' '.repeat(gap) + status;
+  } else if (gap >= 0) {
+    line += ' '.repeat(gap);
+  }
+  return padRight(line, innerWidth);
 }
 
-function spacer(left, right, innerWidth) {
-  const used = visibleLength(left) + visibleLength(right);
-  const gap = Math.max(2, innerWidth - used);
-  return ' '.repeat(gap);
-}
-
-function titleLine(version, innerWidth) {
-  const text =
-    gradientText('REACTPRESS', [palette.primary, palette.accent], { bold: true }) +
-    brand.dim('  ·  ') +
-    brand.accent(`v${version}`);
-  return centerLine(text, innerWidth);
-}
-
-function repoLine(innerWidth) {
-  const link = brand.dim('↗ ') + hyperlink(REPO_URL, brand.dim.underline(REPO_DISPLAY));
+function repoRow(innerWidth) {
+  const link =
+    brand.dim(icon.link + ' ') +
+    hyperlink(REPO_URL, brand.dim.underline(REPO_DISPLAY));
   return centerLine(link, innerWidth);
 }
 
-function featureBadges(innerWidth) {
-  const keys = [
-    'banner.feat.sqlite',
-    'banner.feat.plugins',
-    'banner.feat.desktop',
-    'banner.feat.themes',
-  ];
-  const items = keys.map((key, i) => badge(t(key).trim(), FEAT_COLORS[i % FEAT_COLORS.length]));
-  const joined = items.join(brand.dim('  '));
-  if (visibleLength(joined) <= innerWidth) {
-    return centerLine(joined, innerWidth);
-  }
-  // Narrow: drop to simple dot-separated labels
-  const plain = keys
-    .map((key) => brand.accent(t(key).trim()))
-    .join(brand.dim(' · '));
-  return centerLine(plain, innerWidth);
+function headerRows(innerWidth, version, systemState) {
+  return [titleBarRow(innerWidth, version, systemState), repoRow(innerWidth)];
 }
 
-function taglineRow(ready, innerWidth) {
-  const left = brand.dim(t('banner.subtitle').trim());
-  const status = ready.ready
-    ? brand.success(t('banner.pulseReady').trim())
-    : brand.warn(t('banner.pulsePending').trim());
-  const right = `${statusLights(ready.ready ? 'online' : 'pending')}  ${status}`;
-  return left + spacer(left, right, innerWidth) + right;
+function wordmarkHero() {
+  const bars = brand.border('═══');
+  const word = gradientText('REACTPRESS', [palette.pink, palette.primary, palette.accent], {
+    bold: true,
+  });
+  return `${bars} ${word} ${bars}`;
+}
+
+function taglineRow() {
+  return `${brand.accent('◇')} ${brand.accent(t('banner.tagline').trim())}`;
 }
 
 function softRule(innerWidth) {
-  const w = Math.min(innerWidth - 4, Math.max(24, innerWidth - 12));
-  const rule = brand.border('─'.repeat(w));
-  return centerLine(rule, innerWidth);
+  const w = Math.min(innerWidth - 4, Math.max(28, innerWidth - 16));
+  return centerLine(brand.border('─'.repeat(w)), innerWidth);
 }
 
 function modeChip(type) {
   if (type === 'monorepo') {
-    return chalk.bgHex(palette.primary).hex('#0B1220').bold(` ${t('banner.mode.monorepo')} `);
+    return chalk.bgHex(palette.primary).hex('#0B1220').bold(` ${t('banner.mode.monorepo').trim()} `);
   }
   if (type === 'standalone') {
-    return chalk.bgHex(palette.accent).hex('#0B1220').bold(` ${t('banner.mode.standalone')} `);
+    return chalk.bgHex(palette.accent).hex('#0B1220').bold(` ${t('banner.mode.standalone').trim()} `);
   }
-  return chalk.bgHex(palette.gray).hex('#0B1220').bold(` ${t('banner.mode.uninitialized')} `);
+  return chalk.bgHex(palette.gray).hex('#0B1220').bold(` ${t('banner.mode.uninitialized').trim()} `);
 }
 
-function infoRow(label, value) {
-  return (
-    brand.dim('  ') +
-    brand.muted(padRight(label, LABEL_WIDTH)) +
-    brand.dim('│ ') +
-    brand.dim(value)
-  );
-}
-
-function setupRow(ready, innerWidth, pulseMax) {
-  if (ready.ready) return null;
-  const pulseWidth = Math.min(pulseMax, innerWidth - LABEL_WIDTH - 12);
-  if (pulseWidth <= 8) return null;
-  const filled = Math.max(1, Math.round(pulseWidth * ready.ratio));
-  const pulse = pulseBar(pulseWidth, filled);
-  const status = brand.warn(t('banner.pulsePending').trim());
-  return (
-    brand.dim('  ') +
-    brand.muted(padRight(t('banner.pulseLabel').trim(), LABEL_WIDTH)) +
-    brand.dim('│ ') +
-    pulse +
-    '  ' +
-    status
-  );
+function infoRow(label, value, lw) {
+  return brand.muted(padRight(label, lw)) + brand.border('│ ') + value;
 }
 
 function commandRail() {
   const items = ['init', 'dev', 'build', 'deploy', 'publish'];
   return items
-    .map((name) => brand.primary('› ') + gradientText(name, [palette.primary, palette.accent]))
+    .map((name) => brand.primary('》 ') + gradientText(name, [palette.primary, palette.accent]))
     .join(brand.dim('   '));
 }
 
-function appendMetaBlock(lines, innerWidth, options, ready, pulseMax) {
-  lines.push(cardRow(taglineRow(ready, innerWidth), innerWidth));
-  lines.push(cardRow(featureBadges(innerWidth), innerWidth));
-  lines.push(cardRow(softRule(innerWidth), innerWidth));
-
+function appendInfoRows(lines, innerWidth, options, lw) {
   if (options.project) {
-    const modeLine =
-      brand.dim('  ') +
-      brand.muted(padRight(t('banner.label.mode').trim(), LABEL_WIDTH)) +
-      brand.dim('│ ') +
-      modeChip(options.project.type);
-    lines.push(cardRow(modeLine, innerWidth));
+    lines.push(
+      cardRow(infoRow(t('banner.label.mode').trim(), modeChip(options.project.type), lw), innerWidth),
+    );
   }
   if (options.projectRoot) {
-    const pathValue = truncateText(homify(options.projectRoot), innerWidth - LABEL_WIDTH - 6);
-    lines.push(cardRow(infoRow(t('banner.label.path').trim(), pathValue), innerWidth));
+    const pathValue =
+      brand.primary('▶') +
+      brand.dim(' ') +
+      brand.dim(truncateText(homify(options.projectRoot), innerWidth - lw - 8));
+    lines.push(cardRow(infoRow(t('banner.label.path').trim(), pathValue, lw), innerWidth));
   }
-
-  const setup = setupRow(ready, innerWidth, pulseMax);
-  if (setup) {
-    lines.push(cardRow(setup, innerWidth));
-  }
+  appendComponentStatusRows(lines, innerWidth, options.status, lw);
 }
 
-function printCardBanner(version, options, { logoLines, cardWidth, pulseMax }) {
-  const innerWidth = cardWidth - 4;
-  const ready = bannerReadyState(options);
+function printCardBanner(version, options, { showAscii, width }) {
+  const innerWidth = width - 4;
+  const systemState = resolveSystemState(options);
+  const components = (options.status && options.status.components) || [];
+  const lw = computeLabelWidth(components);
   const lines = [];
 
   lines.push('');
-  lines.push(cardTop(cardWidth));
-  lines.push(cardRow(titleLine(version, innerWidth), innerWidth));
-  lines.push(cardRow(repoLine(innerWidth), innerWidth));
+  lines.push(cardTop(width));
+  for (const row of headerRows(innerWidth, version, systemState)) {
+    lines.push(cardRow(row, innerWidth));
+  }
   lines.push(cardGap(innerWidth));
 
-  const logoWidth = logoLines.reduce(
-    (max, line) => Math.max(max, visibleLength(line)),
-    0,
-  );
-  const logoIndent = Math.max(0, Math.floor((innerWidth - logoWidth) / 2));
-  const indent = ' '.repeat(logoIndent);
-  for (const logoLine of logoLines) {
-    lines.push(cardRow(indent + logoLine, innerWidth));
+  if (showAscii) {
+    for (const logoLine of renderLogoLines()) {
+      lines.push(cardRow(centerLine(logoLine, innerWidth), innerWidth));
+    }
+    lines.push(cardGap(innerWidth));
+    lines.push(cardRow(centerLine(taglineRow(), innerWidth), innerWidth));
+  } else {
+    lines.push(cardRow(centerLine(wordmarkHero(), innerWidth), innerWidth));
+    lines.push(cardRow(centerLine(taglineRow(), innerWidth), innerWidth));
   }
 
-  lines.push(cardGap(innerWidth));
-  appendMetaBlock(lines, innerWidth, options, ready, pulseMax);
-  lines.push(cardGap(innerWidth));
-  lines.push(cardBottom(cardWidth));
-  lines.push('     ' + commandRail());
+  lines.push(cardRow(softRule(innerWidth), innerWidth));
+  appendInfoRows(lines, innerWidth, options, lw);
+  lines.push(cardBottom(width));
+  lines.push(`     ${commandRail()}`);
   lines.push('');
 
   for (const line of lines) console.log(line);
 }
 
-function printWideBanner(version, options) {
-  const cols = bannerColumns();
-  const cardWidth = Math.min(Math.max(LOGO_WIDTH + 8, 88), cols - 2);
-  printCardBanner(version, options, {
-    logoLines: renderLogoLines(),
-    cardWidth,
-    pulseMax: 24,
-  });
+function printCompactServiceStatus(status) {
+  if (!status || !Array.isArray(status.components)) return;
+  const lw = computeLabelWidth(status.components);
+  for (const component of status.components) {
+    console.log(
+      `  ${brand.muted(padRight(componentLabel(component), lw))}${brand.border('│ ')}${componentStatusPill(component)}`,
+    );
+  }
 }
 
 function printCompactBanner(version, options) {
-  const cols = bannerColumns();
-  const cardWidth = Math.min(Math.max(cols - 2, 72), 88);
-  printCardBanner(version, options, {
-    logoLines: [renderWordmarkHero()],
-    cardWidth,
-    pulseMax: 18,
-  });
-}
+  const systemState = resolveSystemState(options);
 
-function printMinimalBanner(version, options) {
-  const ready = bannerReadyState(options);
-  const wordmark = gradientText('REACTPRESS', [palette.pink, palette.primary, palette.accent], {
-    bold: true,
-  });
   console.log('');
   console.log(
-    `  ${wordmark} ${brand.dim('·')} ${brand.accent(`v${version}`)}  ${statusLights(ready.ready ? 'online' : 'pending')}`,
+    `  ${macTrafficLights()}  ${brand.dim(`reactpress · v${version}`)}  ${systemStatusBadge(systemState)}`,
   );
-  console.log(`  ${brand.dim(t('banner.subtitle').trim())}`);
-  console.log(`  ${featureBadges(64)}`);
+  console.log(`  ${brand.muted(icon.link)} ${hyperlink(REPO_URL, brand.dim.underline(REPO_DISPLAY))}`);
+  console.log('');
+  for (const logoLine of renderLogoLines()) {
+    console.log(`  ${logoLine}`);
+  }
+  console.log(`  ${centerLine(taglineRow(), bannerColumns() - 4)}`);
   if (options.project) console.log(`  ${modeChip(options.project.type)}`);
   if (options.projectRoot) {
-    console.log(`  ${icon.bullet} ${brand.dim(homify(options.projectRoot))}`);
+    console.log(`  ${brand.primary('▶')} ${brand.dim(homify(options.projectRoot))}`);
   }
-  console.log(`  ${brand.muted('↗')} ${hyperlink(REPO_URL, brand.accent.underline(REPO_DISPLAY))}`);
+  printCompactServiceStatus(options.status);
+  console.log(`     ${commandRail()}`);
   console.log('');
 }
 
 function printBanner(options = {}) {
   const version = getCliVersion();
   const cols = bannerColumns();
+  const { showAscii, width } = resolveLayout(cols);
 
-  if (cols < 60) {
-    printMinimalBanner(version, options);
-    return;
-  }
-
-  if (cols < LOGO_WIDTH + 10) {
+  if (cols < CARD_MIN) {
     printCompactBanner(version, options);
     return;
   }
 
-  printWideBanner(version, options);
+  printCardBanner(version, options, { showAscii, width });
 }
 
 function box(lines, { width } = {}) {
@@ -338,4 +363,20 @@ function box(lines, { width } = {}) {
   return [top, ...body, bottom];
 }
 
-module.exports = { printBanner, visibleLength, padRight, box };
+module.exports = {
+  printBanner,
+  visibleLength,
+  padRight,
+  TECH_LOGO,
+  LOGO_GRADIENTS,
+  LOGO_WIDTH,
+  box,
+  commandRail,
+  renderLogoLines,
+  resolveLayout,
+  titleBarRow,
+  macTrafficLights,
+  deriveSystemState,
+  resolveSystemState,
+  CORE_SYSTEM_SERVICES,
+};

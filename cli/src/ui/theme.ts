@@ -16,6 +16,10 @@ const palette = {
   dim: '#9CA3AF',
   border: '#4A4580',
   surface: '#12152A',
+  macRed: '#FF5F57',
+  macYellow: '#FEBC2E',
+  macGreen: '#28C840',
+  macGray: '#5C5C5C',
 };
 
 const brand = {
@@ -125,9 +129,56 @@ function pulseBar(width = 24, filled = Math.ceil(width * 0.7)) {
   return `${head}${tail}`;
 }
 
+/** Single-line status probe progress: bar + percent + optional service label. */
+function statusProgressLine({ completed, total, label, barWidth = 24, filled } = {}) {
+  const safeTotal = Math.max(1, total || 1);
+  const barFilled =
+    filled !== undefined ? filled : Math.round((completed / safeTotal) * barWidth);
+  const pct = Math.min(100, Math.round((completed / safeTotal) * 100));
+  const bar = pulseBar(barWidth, barFilled);
+  const labelPart = label ? brand.dim(`  ${label}`) : '';
+  return `${bar}  ${brand.muted(`${pct}%`)}${labelPart}`;
+}
+
 /**
- * Three-light status indicator used in the top-right of the banner.
- * Mimics the running-light cluster you'd see on a server rack.
+ * macOS Terminal-style traffic-light window controls (red · yellow · green).
+ */
+function macTrafficLights() {
+  return (
+    chalk.hex(palette.macRed)('●') +
+    brand.dim(' ') +
+    chalk.hex(palette.macYellow)('●') +
+    brand.dim(' ') +
+    chalk.hex(palette.macGreen)('●')
+  );
+}
+
+/**
+ * Unified SYSTEM status badge — same weight, color encodes health.
+ * @param {'online'|'partial'|'error'|'pending'} state
+ */
+function systemStatusBadge(state = 'pending') {
+  const { t } = require('../lib/i18n');
+  const words = {
+    online: 'banner.systemOnline',
+    partial: 'banner.systemPartial',
+    error: 'banner.systemError',
+    pending: 'banner.systemPending',
+  };
+  const painters = {
+    online: brand.success,
+    partial: brand.warn,
+    error: brand.error,
+    pending: brand.muted,
+  };
+  const key = words[state] || words.pending;
+  const paint = painters[state] || painters.pending;
+  const text = `${t('banner.systemLabel').trim()} ${t(key).trim()}`;
+  return paint(text);
+}
+
+/**
+ * Three-light status indicator used in status panels.
  */
 function statusLights(state = 'online') {
   if (state === 'offline') {
@@ -143,7 +194,7 @@ function statusLights(state = 'online') {
 }
 
 function hex2rgb(h) {
-  const s = h.replace('#', '');
+  const s = String(h || '#000000').replace('#', '');
   return {
     r: parseInt(s.substring(0, 2), 16),
     g: parseInt(s.substring(2, 4), 16),
@@ -245,12 +296,9 @@ function statusPill(state, labels = {}) {
  */
 function sectionHeader(title, { width } = {}) {
   const w = width ?? terminalWidth();
-  const prefix = brand.muted('── ');
-  const t = brand.bold(brand.primary(title));
-  const usedLen = visibleLength(prefix) + visibleLength(t) + 2;
-  const fillLen = Math.max(3, w - usedLen - 2);
-  const fill = brand.muted('─'.repeat(fillLen));
-  return ` ${prefix}${t} ${fill}`;
+  const ruleLen = Math.min(40, Math.max(12, w - visibleLength(title) - 6));
+  const rule = brand.dim('─'.repeat(ruleLen));
+  return `  ${brand.dim(title)}  ${rule}`;
 }
 
 module.exports = {
@@ -274,5 +322,8 @@ module.exports = {
   divider,
   gradientText,
   pulseBar,
+  statusProgressLine,
   statusLights,
+  macTrafficLights,
+  systemStatusBadge,
 };

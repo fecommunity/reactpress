@@ -22,12 +22,17 @@ const { hasWeb } = require('./project-type');
 const { nginxEntryUrl } = require('./nginx');
 const { t } = require('./i18n');
 
+function normalizeUrl(value, fallback) {
+  const raw = String(value || fallback || '').trim();
+  return raw.replace(/\/$/, '');
+}
+
 function getDevUrls(projectRoot) {
-  const client = loadClientSiteUrl(projectRoot).replace(/\/$/, '');
-  const server = loadServerSiteUrl(projectRoot).replace(/\/$/, '');
-  const prefix = getApiPrefix(projectRoot).replace(/\/$/, '') || '/api';
+  const client = normalizeUrl(loadClientSiteUrl(projectRoot), 'http://localhost:3001');
+  const server = normalizeUrl(loadServerSiteUrl(projectRoot), 'http://localhost:3002');
+  const prefix = normalizeUrl(getApiPrefix(projectRoot), '/api') || '/api';
   const admin = hasWeb(projectRoot)
-    ? loadWebAdminUrl(projectRoot).replace(/\/$/, '')
+    ? normalizeUrl(loadWebAdminUrl(projectRoot), 'http://localhost:3000')
     : `${client}/admin`;
   return {
     site: client,
@@ -92,7 +97,8 @@ function printDevReadyBanner(
     if (hasThemeSite) {
       console.log(urlLine(t('devBanner.site'), urls.site));
     }
-    const healthUrl = localApiUrl.replace(/\/api\/?$/, '') + '/api/health';
+    const healthUrl = String(localApiUrl || '')
+      .replace(/\/api\/?$/, '') + '/api/health';
     console.log(urlLine(t('devBanner.health'), healthUrl, { underline: false }));
     console.log(
       `  ${brand.muted('  ')}${brand.dim(t(localWeb ? 'devBanner.localWebHint' : 'devBanner.desktopLocalHint'))}`
