@@ -11,6 +11,7 @@ const {
   macTrafficLights,
   systemStatusBadge,
   statusPill,
+  pulseBar,
 } = require('./theme');
 const { t } = require('../lib/i18n');
 const { getCliVersion } = require('../lib/paths');
@@ -116,6 +117,9 @@ function computeLabelWidth(components) {
 }
 
 function componentStatusPill(component) {
+  if (component.ok === 'pending') {
+    return statusPill('pending', { pending: t('banner.pulsePending') });
+  }
   if (component.id === 'sqlite' || component.id === 'mysql') {
     return statusPill(component.ok, {
       on: t('menu.statusReady'),
@@ -164,6 +168,108 @@ function centerLine(content, innerWidth) {
 
 function renderLogoLines() {
   return TECH_LOGO.map((line, i) => gradientText(line, LOGO_GRADIENTS[i]));
+}
+
+function mixHexLocal(a, b, t) {
+  const parse = (h) => {
+    const s = String(h || '#000000').replace('#', '');
+    return {
+      r: parseInt(s.substring(0, 2), 16),
+      g: parseInt(s.substring(2, 4), 16),
+      b: parseInt(s.substring(4, 6), 16),
+    };
+  };
+  const pa = parse(a);
+  const pb = parse(b);
+  const r = Math.round(pa.r + (pb.r - pa.r) * t);
+  const g = Math.round(pa.g + (pb.g - pa.g) * t);
+  const bl = Math.round(pa.b + (pb.b - pa.b) * t);
+  const pad = (n) => n.toString(16).padStart(2, '0');
+  return `#${pad(r)}${pad(g)}${pad(bl)}`;
+}
+
+/** Animated logo — horizontal light streak sweeps across ASCII art. */
+function renderAnimatedLogoLines(frame = 0, revealRatio = 1) {
+  const beamSpeed = 3.6;
+  const beamGlow = 16;
+  const cycleLen = LOGO_WIDTH + beamGlow * 2;
+  const head = (frame * beamSpeed) % cycleLen;
+  const trail = (head - beamGlow * 0.75 + cycleLen) % cycleLen;
+  const streamHot = '#FFFFFF';
+  const streamCore = palette.accent;
+  const streamTrail = palette.pink;
+
+  function beamIntensity(col, rowIndex, beamHead) {
+    const pos = col + rowIndex * 2.2;
+    const raw = Math.abs(pos - beamHead);
+    const wrapped = Math.min(raw, cycleLen - raw);
+    if (wrapped >= beamGlow) return 0;
+    const t = 1 - wrapped / beamGlow;
+    return t * t;
+  }
+
+  function paintChar(ch, ci, rowIndex, colors, lineLen) {
+    if (ch === ' ') return ch;
+
+    const n = Math.max(lineLen - 1, 1);
+    const ratio = ci / n;
+    const base = mixHexLocal(colors[0], colors[1] || colors[0], ratio);
+    const dimBase = mixHexLocal(base, palette.surface, 0.85);
+
+    const primary = beamIntensity(ci, rowIndex, head);
+    const secondary = beamIntensity(ci, rowIndex, trail) * 0.55;
+    const glow = Math.min(1, primary + secondary);
+
+    if (glow <= 0.03) {
+      return chalk.hex(dimBase)(ch);
+    }
+
+    let lit = dimBase;
+    if (primary > 0.65) {
+      lit = mixHexLocal(streamHot, streamCore, 1 - primary);
+    } else if (glow > 0.3) {
+      lit = mixHexLocal(mixHexLocal(dimBase, streamTrail, 0.15), streamCore, glow);
+    } else {
+      lit = mixHexLocal(dimBase, streamTrail, glow * 0.9);
+    }
+
+    const c = chalk.hex(lit);
+    return glow > 0.45 ? c.bold(ch) : c(ch);
+  }
+
+  return TECH_LOGO.map((line, rowIndex) => {
+    const rowThreshold = (rowIndex + 1) / TECH_LOGO.length;
+    if (revealRatio < rowThreshold - 0.06) {
+      const ghost = mixHexLocal(palette.border, palette.surface, 0.5);
+      return chalk.hex(ghost)(
+        [...line]
+          .map((ch) => (ch === ' ' ? ch : '░'))
+          .join(''),
+      );
+    }
+
+    const colors = LOGO_GRADIENTS[rowIndex];
+    return [...line]
+      .map((ch, ci) => paintChar(ch, ci, rowIndex, colors, line.length))
+      .join('');
+  });
+}
+
+function startupPulseRow(innerWidth, { completed = 0, total = 0, ready = false, frame = 0 } = {}) {
+  const barWidth = Math.min(24, Math.max(8, innerWidth - 22));
+  let filled = 0;
+  if (total > 0) {
+    filled = Math.round((completed / total) * barWidth);
+    if (!ready) filled = Math.min(barWidth, filled + (frame % 2));
+  } else {
+    filled = 4 + (frame % Math.max(1, barWidth - 4));
+  }
+  const label = brand.muted(padRight(t('banner.pulseLabel').trim(), 6));
+  const bar = pulseBar(barWidth, filled);
+  const status = ready
+    ? brand.success(t('banner.pulseReady'))
+    : brand.warn(t('banner.pulsePending'));
+  return centerLine(`${label}${bar}  ${status}`, innerWidth);
 }
 
 function cardTop(width) {
@@ -223,6 +329,35 @@ function wordmarkHero() {
   return `${bars} ${word} ${bars}`;
 }
 
+/** Compact wordmark with the same streaming-light sweep. */
+function renderAnimatedWordmark(frame = 0) {
+  const text = 'REACTPRESS';
+  const beamSpeed = 3.2;
+  const beamGlow = 6;
+  const cycleLen = text.length + beamGlow * 2;
+  const head = (frame * beamSpeed) % cycleLen;
+  const streamHot = '#F0FDFF';
+
+  const bars = brand.border('═══');
+  const painted = [...text]
+    .map((ch, ci) => {
+      const raw = Math.abs(ci + 0.5 - head);
+      const wrapped = Math.min(raw, cycleLen - raw);
+      const glow = wrapped >= beamGlow ? 0 : Math.pow(1 - wrapped / beamGlow, 2);
+      const base = mixHexLocal(palette.pink, palette.accent, ci / Math.max(text.length - 1, 1));
+      const dimBase = mixHexLocal(base, palette.surface, 0.65);
+      if (glow <= 0.05) return chalk.hex(dimBase).bold(ch);
+      const lit =
+        glow > 0.75
+          ? mixHexLocal(streamHot, palette.accent, 1 - glow)
+          : mixHexLocal(dimBase, palette.accent, glow);
+      const c = chalk.hex(lit);
+      return glow > 0.5 ? c.bold(ch) : c(ch);
+    })
+    .join('');
+  return `${bars} ${painted} ${bars}`;
+}
+
 function taglineRow() {
   return `${brand.accent('◇')} ${brand.accent(t('banner.tagline').trim())}`;
 }
@@ -269,9 +404,9 @@ function appendInfoRows(lines, innerWidth, options, lw) {
   appendComponentStatusRows(lines, innerWidth, options.status, lw);
 }
 
-function printCardBanner(version, options, { showAscii, width }) {
+function composeBannerLines(version, options, { showAscii, width, startup } = {}) {
   const innerWidth = width - 4;
-  const systemState = resolveSystemState(options);
+  const systemState = startup && !startup.ready ? 'pending' : resolveSystemState(options);
   const components = (options.status && options.status.components) || [];
   const lw = computeLabelWidth(components);
   const lines = [];
@@ -284,14 +419,44 @@ function printCardBanner(version, options, { showAscii, width }) {
   lines.push(cardGap(innerWidth));
 
   if (showAscii) {
-    for (const logoLine of renderLogoLines()) {
+    const logoLines = startup
+      ? renderAnimatedLogoLines(startup.frame || 0, 1)
+      : renderLogoLines();
+    for (const logoLine of logoLines) {
       lines.push(cardRow(centerLine(logoLine, innerWidth), innerWidth));
     }
     lines.push(cardGap(innerWidth));
     lines.push(cardRow(centerLine(taglineRow(), innerWidth), innerWidth));
+    if (startup && !startup.ready) {
+      lines.push(
+        cardRow(
+          startupPulseRow(innerWidth, {
+            completed: startup.completed,
+            total: startup.total,
+            ready: startup.ready,
+            frame: startup.frame || 0,
+          }),
+          innerWidth,
+        ),
+      );
+    }
   } else {
-    lines.push(cardRow(centerLine(wordmarkHero(), innerWidth), innerWidth));
+    const wordmark = startup ? renderAnimatedWordmark(startup.frame || 0) : wordmarkHero();
+    lines.push(cardRow(centerLine(wordmark, innerWidth), innerWidth));
     lines.push(cardRow(centerLine(taglineRow(), innerWidth), innerWidth));
+    if (startup && !startup.ready) {
+      lines.push(
+        cardRow(
+          startupPulseRow(innerWidth, {
+            completed: startup.completed,
+            total: startup.total,
+            ready: startup.ready,
+            frame: startup.frame || 0,
+          }),
+          innerWidth,
+        ),
+      );
+    }
   }
 
   lines.push(cardRow(softRule(innerWidth), innerWidth));
@@ -299,7 +464,11 @@ function printCardBanner(version, options, { showAscii, width }) {
   lines.push(cardBottom(width));
   lines.push(`     ${commandRail()}`);
   lines.push('');
+  return lines;
+}
 
+function printCardBanner(version, options, { showAscii, width, startup } = {}) {
+  const lines = composeBannerLines(version, options, { showAscii, width, startup });
   for (const line of lines) console.log(line);
 }
 
@@ -373,7 +542,12 @@ module.exports = {
   box,
   commandRail,
   renderLogoLines,
+  renderAnimatedLogoLines,
+  renderAnimatedWordmark,
+  composeBannerLines,
+  startupPulseRow,
   resolveLayout,
+  bannerColumns,
   titleBarRow,
   macTrafficLights,
   deriveSystemState,

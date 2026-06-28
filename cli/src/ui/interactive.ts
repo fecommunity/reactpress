@@ -2,7 +2,7 @@
 const inquirer = require('inquirer');
 const ora = require('ora');
 const open = require('open');
-const { printBanner, deriveSystemState } = require('./banner');
+const { refreshBannerWithStartup } = require('./banner-startup');
 const {
   brand,
   label,
@@ -10,12 +10,9 @@ const {
   fail,
   padRight,
   visibleLength,
-  pulseBar,
-  statusProgressLine,
 } = require('./theme');
 const { ensureOriginalCwd } = require('../lib/root');
 const { describeProject } = require('../lib/project-type');
-const { fetchContextStatus } = require('../lib/context-status');
 const { hasResolvableActiveTheme } = require('../lib/theme-runtime');
 const { ensureProjectEnvironment, initMonorepoProject } = require('../lib/bootstrap');
 const { runDev, runThemeDev, runWebDev, runLocalWebDev, runDesktopDev } = require('../lib/dev');
@@ -253,127 +250,8 @@ async function pickMenuAction(project) {
   }
 }
 
-function createStatusProgress() {
-  const barWidth = 24;
-  const isTTY = Boolean(process.stdout.isTTY && process.env.TERM !== 'dumb');
-  let timer = null;
-  let frame = 0;
-  let total = 0;
-  let completed = 0;
-  let inFlight = 0;
-  let currentId = null;
-
-  function serviceLabel(id) {
-    if (!id || String(id).startsWith('__')) return '';
-    return t(`banner.service.${id}`).trim();
-  }
-
-  function visualCompleted() {
-    if (total <= 0) return 0;
-    const partial = completed + inFlight * 0.4;
-    return Math.min(total, partial);
-  }
-
-  function clearLine() {
-    if (!isTTY) return;
-    process.stdout.write('\r\x1b[2K');
-  }
-
-  function renderLine() {
-    const label = serviceLabel(currentId);
-    if (total > 0) {
-      const visual = visualCompleted();
-      let filled = Math.round((visual / total) * barWidth);
-      if (completed < total) {
-        filled = Math.min(barWidth, filled + (frame % 2));
-      }
-      return `  ${brand.dim(t('menu.statusChecking'))}  ${statusProgressLine({
-        completed: visual,
-        total,
-        label,
-        barWidth,
-        filled,
-      })}`;
-    }
-    const indeterminate = 4 + (frame % Math.max(1, barWidth - 4));
-    return `  ${brand.dim(t('menu.statusChecking'))}  ${pulseBar(barWidth, indeterminate)}  ${brand.muted('…')}`;
-  }
-
-  function paint() {
-    if (!isTTY) return;
-    process.stdout.write(`\r\x1b[2K${renderLine()}`);
-  }
-
-  return {
-    start() {
-      if (!isTTY) return;
-      frame = 0;
-      timer = setInterval(() => {
-        frame += 1;
-        paint();
-      }, 90);
-      paint();
-    },
-    setTotal(nextTotal) {
-      total = nextTotal;
-      paint();
-    },
-    tickStart(id) {
-      inFlight += 1;
-      currentId = id;
-      paint();
-    },
-    tickDone(id) {
-      inFlight = Math.max(0, inFlight - 1);
-      completed += 1;
-      currentId = id;
-      paint();
-    },
-    async finish() {
-      if (timer) {
-        clearInterval(timer);
-        timer = null;
-      }
-      if (isTTY && total > 0) {
-        completed = total;
-        inFlight = 0;
-        paint();
-        await new Promise((resolve) => setTimeout(resolve, 100));
-      }
-      clearLine();
-    },
-    stop() {
-      if (timer) {
-        clearInterval(timer);
-        timer = null;
-      }
-      clearLine();
-    },
-  };
-}
-
-async function refreshInteractiveBanner(projectRoot, project, { spinner = false } = {}) {
-  let status;
-  if (spinner) {
-    const progress = createStatusProgress();
-    progress.start();
-    try {
-      status = await fetchContextStatus(projectRoot, {
-        onProgress({ phase, total, id }) {
-          if (phase === 'ready') progress.setTotal(total);
-          if (phase === 'start') progress.tickStart(id);
-          if (phase === 'done') progress.tickDone(id);
-        },
-      });
-    } finally {
-      await progress.finish();
-    }
-  } else {
-    status = await fetchContextStatus(projectRoot);
-  }
-  const systemState = deriveSystemState(project, status);
-  printBanner({ projectRoot, project, systemState, status });
-  return status;
+async function refreshInteractiveBanner(projectRoot, project, { animated = true } = {}) {
+  return refreshBannerWithStartup(projectRoot, project, { animated });
 }
 
 async function withSpinner(text, fn) {
@@ -534,7 +412,7 @@ async function runInteractiveLoop() {
   const projectRoot = ensureOriginalCwd();
   const project = describeProject(projectRoot);
 
-  await refreshInteractiveBanner(projectRoot, project, { spinner: true });
+  await refreshInteractiveBanner(projectRoot, project, { animated: true });
   console.log(`  ${brand.dim(t('menu.shortcuts'))}`);
   console.log('');
 
@@ -553,7 +431,7 @@ async function runInteractiveLoop() {
 
       if (action !== 'status' && action !== 'doctor') {
         console.log('');
-        await refreshInteractiveBanner(projectRoot, project, { spinner: true });
+        await refreshInteractiveBanner(projectRoot, project, { animated: false });
       }
     } catch (err) {
       console.error(fail(err.message || err));
@@ -568,7 +446,7 @@ async function runInteractiveLoop() {
       loop = retry;
       if (loop) {
         console.log('');
-        await refreshInteractiveBanner(projectRoot, project, { spinner: true });
+        await refreshInteractiveBanner(projectRoot, project, { animated: false });
       }
     }
   }

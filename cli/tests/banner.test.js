@@ -9,10 +9,13 @@ const {
   LOGO_WIDTH,
   commandRail,
   renderLogoLines,
+  renderAnimatedLogoLines,
+  composeBannerLines,
   deriveSystemState,
   resolveSystemState,
   resolveLayout,
 } = require('../out/ui/banner');
+const { mergeStartupComponents } = require('../out/ui/banner-startup');
 const { systemStatusBadge } = require('../out/ui/theme');
 
 const sampleComponents = [
@@ -125,5 +128,40 @@ describe('banner', () => {
     const rail = commandRail();
     assert.match(rail, /init/);
     assert.match(rail, /publish/);
+  });
+
+  it('renderAnimatedLogoLines applies streaming highlight across logo', () => {
+    const full = renderAnimatedLogoLines(30, 1);
+    assert.equal(full.length, TECH_LOGO.length);
+    assert.match(full[0].replace(/\u001b\[[0-9;]*m/g, ''), /^██████╗/);
+    assert.match(full[TECH_LOGO.length - 1].replace(/\u001b\[[0-9;]*m/g, ''), /╚═╝/);
+  });
+
+  it('composeBannerLines includes startup pulse row while probing', () => {
+    const { showAscii, width } = resolveLayout(100);
+    const lines = composeBannerLines(
+      '4.0.0',
+      {
+        projectRoot: '/tmp/demo',
+        project: { type: 'monorepo' },
+        status: {
+          components: mergeStartupComponents(['mysql', 'server'], []),
+        },
+      },
+      {
+        showAscii,
+        width,
+        startup: { frame: 2, completed: 1, total: 3, ready: false },
+      },
+    );
+    const output = lines.join('\n');
+    assert.match(output, /INIT|初始化/);
+    assert.match(output, /▰/);
+  });
+
+  it('mergeStartupComponents marks unchecked services as pending', () => {
+    const merged = mergeStartupComponents(['mysql', 'server'], [{ id: 'mysql', ok: true }]);
+    assert.equal(merged[0].ok, true);
+    assert.equal(merged[1].ok, 'pending');
   });
 });
