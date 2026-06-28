@@ -1,3 +1,4 @@
+import './node-polyfills';
 import * as bodyParser from 'body-parser';
 import * as express from 'express';
 import * as fs from 'fs';

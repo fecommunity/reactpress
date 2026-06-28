@@ -1,3 +1,4 @@
+import './node-polyfills';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { existsSync, unlinkSync, writeFileSync } from 'fs';
