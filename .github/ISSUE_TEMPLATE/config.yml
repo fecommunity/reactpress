@@ -5,7 +5,7 @@ contact_links:
     url: https://github.com/fecommunity/reactpress/discussions/categories/q-a
     about: Ask setup questions or share tips — prefer Discussions over Issues
   - name: ReactPress Docs
-    url: https://reactpress-docs.vercel.app/
+    url: https://docs.gaoredu.com/
     about: Official ReactPress documentation
   - name: Theme starter Q&A
     url: https://github.com/fecommunity/reactpress-theme-starter/discussions/categories/q-a
