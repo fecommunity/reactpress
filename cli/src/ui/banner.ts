@@ -419,9 +419,10 @@ function composeBannerLines(version, options, { showAscii, width, startup } = {}
   lines.push(cardGap(innerWidth));
 
   if (showAscii) {
-    const logoLines = startup
-      ? renderAnimatedLogoLines(startup.frame || 0, 1)
-      : renderLogoLines();
+    const logoLines =
+      startup && !startup.ready
+        ? renderAnimatedLogoLines(startup.frame || 0, 1)
+        : renderLogoLines();
     for (const logoLine of logoLines) {
       lines.push(cardRow(centerLine(logoLine, innerWidth), innerWidth));
     }
@@ -441,7 +442,8 @@ function composeBannerLines(version, options, { showAscii, width, startup } = {}
       );
     }
   } else {
-    const wordmark = startup ? renderAnimatedWordmark(startup.frame || 0) : wordmarkHero();
+    const wordmark =
+      startup && !startup.ready ? renderAnimatedWordmark(startup.frame || 0) : wordmarkHero();
     lines.push(cardRow(centerLine(wordmark, innerWidth), innerWidth));
     lines.push(cardRow(centerLine(taglineRow(), innerWidth), innerWidth));
     if (startup && !startup.ready) {

@@ -154,7 +154,7 @@ function macTrafficLights() {
 }
 
 /**
- * Unified SYSTEM status badge — same weight, color encodes health.
+ * Unified status badge — color encodes health (online / partial / error / pending).
  * @param {'online'|'partial'|'error'|'pending'} state
  */
 function systemStatusBadge(state = 'pending') {
@@ -173,8 +173,7 @@ function systemStatusBadge(state = 'pending') {
   };
   const key = words[state] || words.pending;
   const paint = painters[state] || painters.pending;
-  const text = `${t('banner.systemLabel').trim()} ${t(key).trim()}`;
-  return paint(text);
+  return paint(t(key).trim());
 }
 
 /**

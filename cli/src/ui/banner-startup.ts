@@ -110,19 +110,15 @@ async function runAnimatedStartupBanner(projectRoot, project) {
   }
 
   completed = total;
-  paint(true);
-  await new Promise((resolve) => setTimeout(resolve, 120));
-
-  if (prevLineCount > 0) {
-    process.stdout.write(`\x1b[${prevLineCount}A`);
-    for (let i = 0; i < prevLineCount; i += 1) {
-      process.stdout.write('\x1b[2K\n');
-    }
-    process.stdout.write(`\x1b[${prevLineCount}A`);
-  }
 
   const systemState = deriveSystemState(project, status);
-  printBanner({ projectRoot, project, status, systemState });
+  const finalLines = composeBannerLines(
+    version,
+    { projectRoot, project, status, systemState },
+    { showAscii, width },
+  );
+  paintLines(finalLines, prevLineCount);
+
   return statusResult || status;
 }
 

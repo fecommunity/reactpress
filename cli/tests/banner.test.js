@@ -159,6 +159,13 @@ describe('banner', () => {
     assert.match(output, /▰/);
   });
 
+  it('systemStatusBadge shows status text only', () => {
+    const plain = (value) => String(value).replace(/\u001b\[[0-9;]*m/g, '');
+    assert.equal(plain(systemStatusBadge('online')), 'ONLINE');
+    assert.equal(plain(systemStatusBadge('pending')), 'PENDING');
+    assert.doesNotMatch(plain(systemStatusBadge('online')), /SYSTEM/);
+  });
+
   it('mergeStartupComponents marks unchecked services as pending', () => {
     const merged = mergeStartupComponents(['mysql', 'server'], [{ id: 'mysql', ok: true }]);
     assert.equal(merged[0].ok, true);
