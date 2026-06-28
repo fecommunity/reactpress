@@ -1,6 +1,6 @@
 {
   "name": "reactpress",
-  "version": "4.0.0-beta.2",
+  "version": "4.0.0-beta.3",
   "private": true,
   "packageManager": "pnpm@9.15.9",
   "description": "ReactPress CMS & Blog site",
