@@ -57,4 +57,4 @@ reactpress theme add @fecommunity/reactpress-theme-starter@1.0.0-beta.0
 - [ReactPress 4.0 扩展版](./reactpress-4-0.md)
 - [ReactPress 3.0 平台版](./reactpress-3-0.md)
 - [2.x → 3.0 迁移](./migration-2-to-3.md)
-- 仓库根目录 [migration-3-to-4.md](../../migration-3-to-4.md)
+- 仓库根目录 [migration-3-to-4.md](https://github.com/fecommunity/reactpress/blob/master/docs/migration-3-to-4.md)

@@ -7,7 +7,7 @@ title: ReactPress 4.0 扩展版
 
 > **3.x 的平台能力 + 插件生态 + 桌面写作 — 仍是一条 CLI，一套 Admin。**
 
-4.0（代号 **Extend**）在 [3.0 平台版](./reactpress-3-0.md) 与 [3.1 Toolkit 主题重构](../blog/changelog) 之上，交付三件大事：
+4.0（代号 **Extend**）在 [3.0 平台版](./reactpress-3-0.md) 与 [3.1 Toolkit 主题重构](/blog/changelog) 之上，交付三件大事：
 
 | 重点 | 用户感知 | 4.0 交付 |
 |------|----------|----------|
