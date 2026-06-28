@@ -32,7 +32,7 @@
     "build:server": "pnpm run --dir ./server build",
     "build:web": "pnpm run --dir ./toolkit build && pnpm run --dir ./web build",
     "build:web:electron": "pnpm run --dir ./toolkit build && pnpm run --dir ./web build:electron",
-    "dev:desktop": "node ./cli/bin/reactpress.js desktop dev",
+    "dev:desktop": "node ./desktop/scripts/dev-full.mjs",
     "build:desktop": "node ./desktop/scripts/build-desktop.mjs",
     "build:desktop:dir": "node ./desktop/scripts/build-desktop.mjs --dir",
     "build:desktop:force": "node ./desktop/scripts/build-desktop.mjs --force",

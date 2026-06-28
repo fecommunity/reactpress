@@ -729,22 +729,8 @@ async function runDevStartup(
   });
 }
 
-function ensureDesktopBuilt(projectRoot) {
-  const localServerJs = path.join(projectRoot, 'desktop/out/main/local-server.js');
-  if (fs.existsSync(localServerJs)) return;
-
-  const buildResult = spawnSync('pnpm', ['run', '--dir', './desktop', 'build'], {
-    cwd: projectRoot,
-    shell: true,
-    stdio: 'inherit',
-    env: {
-      ...process.env,
-      REACTPRESS_ORIGINAL_CWD: projectRoot,
-    },
-  });
-  if (buildResult.status !== 0) {
-    process.exit(buildResult.status ?? 1);
-  }
+function loadDesktopBootstrap(projectRoot) {
+  return require(path.join(projectRoot, 'desktop/scripts/bootstrap-local-api.cjs'));
 }
 
 async function startDesktopLocalApi(projectRoot, { forceRestart = false } = {}) {
@@ -754,40 +740,10 @@ async function startDesktopLocalApi(projectRoot, { forceRestart = false } = {}) 
     process.exit(1);
   }
 
-  ensureDesktopBuilt(projectRoot);
-
-  const localServerPath = path.join(projectRoot, 'desktop/out/main/local-server.js');
-  const {
-    startLocalServer,
-    resolveDevSiteRoot,
-    getLocalApiBaseUrl,
-    stopLocalServer,
-    DEFAULT_LOCAL_API_PORT,
-  } = require(localServerPath);
-
-  if (forceRestart) {
-    try {
-      stopLocalServer();
-    } catch {
-      // ignore
-    }
-    const { killPortListeners, isPortListening } = require('./ports');
-    const localApiPort = DEFAULT_LOCAL_API_PORT || 13102;
-    if (isPortListening(localApiPort)) {
-      killPortListeners(localApiPort, 'TERM');
-      await new Promise((r) => setTimeout(r, 400));
-      if (isPortListening(localApiPort)) {
-        killPortListeners(localApiPort, 'KILL');
-        await new Promise((r) => setTimeout(r, 200));
-      }
-    }
-  }
-
+  const boot = await loadDesktopBootstrap(projectRoot);
   console.log('');
   logDevStatus('dev.desktopLocalApiStarting');
-  const siteRoot = resolveDevSiteRoot(projectRoot);
-  await startLocalServer({ siteRoot, monorepoRoot: projectRoot, forceRestart });
-  const localApiBase = getLocalApiBaseUrl();
+  const { siteRoot, localApiBase } = await boot.startDesktopLocalApi(projectRoot, { forceRestart });
   process.env.REACTPRESS_DESKTOP_LOCAL_API = localApiBase;
   process.env.REACTPRESS_DESKTOP_SITE_ROOT = siteRoot;
   process.env.REACTPRESS_THEME_API_URL = localApiBase;
@@ -885,7 +841,8 @@ async function spawnDesktopApp(projectRoot) {
   const adminUrl = loadWebAdminUrl(projectRoot).replace(/\/$/, '');
   logDevStatus('dev.desktopStarting', { url: adminUrl });
 
-  ensureDesktopBuilt(projectRoot);
+  const boot = await loadDesktopBootstrap(projectRoot);
+  boot.ensureDesktopBuilt(projectRoot);
 
   desktopChild = spawnDevChild(
     'pnpm',

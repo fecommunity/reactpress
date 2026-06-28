@@ -59,7 +59,9 @@ export function createMainWindow(): BrowserWindow {
 
   if (isDev) {
     void win.loadURL(DEV_SERVER_URL);
-    win.webContents.openDevTools({ mode: "detach" });
+    if (isDesktopDebugVerbose()) {
+      win.webContents.openDevTools({ mode: "detach" });
+    }
   } else {
     // Hash routes — renderer uses createHashHistory() under file://
     void win.loadFile(rendererIndexPath(), { hash: "/login" });

@@ -12,7 +12,7 @@ const chalk = require('chalk');
 const { brand, divider } = require('../ui/theme');
 const { ensureOriginalCwd } = require('../lib/root');
 const { ensureProjectEnvironment, initMonorepoProject } = require('../lib/bootstrap');
-const { runDev, runWebDev, runLocalWebDev, runLocalMonorepoDev, runThemeDev, runDesktopDev } = require('../lib/dev');
+const { runDev, runWebDev, runLocalWebDev, runLocalMonorepoDev, runThemeDev } = require('../lib/dev');
 const { resolveDevApiOrigins, applyDevApiOriginsToEnv } = require('../lib/remote-dev');
 const { runApiDev } = require('../lib/api-dev');
 const { runLifecycleCommand } = require('../lib/lifecycle');
@@ -154,8 +154,27 @@ desktopCmd
   .description(t('cli.desktopDev.description'))
   .action(async () => {
     const projectRoot = ensureOriginalCwd();
+    const script = path.join(projectRoot, 'desktop/scripts/dev-full.mjs');
     try {
-      await runDesktopDev(projectRoot);
+      const { spawn } = require('child_process');
+      await new Promise((resolve, reject) => {
+        const child = spawn(process.execPath, [script], {
+          cwd: projectRoot,
+          stdio: 'inherit',
+          env: {
+            ...process.env,
+            REACTPRESS_ORIGINAL_CWD: projectRoot,
+          },
+        });
+        child.on('close', (code) => {
+          if (code && code !== 0) {
+            reject(Object.assign(new Error(`desktop dev exited with code ${code}`), { exitCode: code }));
+            return;
+          }
+          resolve();
+        });
+        child.on('error', reject);
+      });
     } catch (err) {
       console.error(chalk.red('[reactpress]'), err.message || err);
       process.exit(err.exitCode ?? 1);

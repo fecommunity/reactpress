@@ -51,15 +51,68 @@ export async function saveDesktopApiBaseUrl(url: string): Promise<string> {
   return saveRemoteApiBaseUrl(url);
 }
 
-export async function testApiConnection(apiBaseUrl?: string): Promise<boolean> {
-  const base = (apiBaseUrl ?? (await getConfiguredApiBaseUrl())).replace(/\/$/, "");
-  try {
-    const res = await fetch(`${base}/health`, { method: "GET" });
-    if (!res.ok) return false;
-    const json = (await res.json()) as { status?: string; data?: { status?: string } };
-    const status = json.status ?? json.data?.status;
-    return status === "ok" || status === "degraded" || res.ok;
-  } catch {
-    return false;
+function normalizeApiBaseUrl(url: string): string {
+  return url.trim().replace(/\/+$/, "");
+}
+
+function isHealthPayloadOk(json: unknown): boolean {
+  if (!json || typeof json !== "object") return false;
+  const body = json as Record<string, unknown>;
+  const nested = body.data;
+  const payload =
+    nested && typeof nested === "object" && ("status" in nested || "database" in (nested as object))
+      ? (nested as Record<string, unknown>)
+      : body;
+  const status = payload.status;
+  if (typeof status === "string") {
+    return status === "ok" || status === "OK" || status === "degraded";
   }
+  return false;
+}
+
+function isLegacyApiPayloadOk(json: unknown): boolean {
+  if (!json || typeof json !== "object") return false;
+  const body = json as { success?: boolean; statusCode?: number };
+  if (body.success === false) return false;
+  if (typeof body.statusCode === "number") {
+    return body.statusCode >= 200 && body.statusCode < 300;
+  }
+  return body.success === true;
+}
+
+async function probeApiUrl(
+  url: string,
+): Promise<{ reachable: boolean; healthOk: boolean; legacyOk: boolean }> {
+  try {
+    const res = await fetch(url, { method: "GET" });
+    const contentType = res.headers.get("content-type") ?? "";
+    if (!contentType.includes("application/json")) {
+      return { reachable: res.ok, healthOk: false, legacyOk: res.ok };
+    }
+    const json = (await res.json()) as unknown;
+    return {
+      reachable: res.ok,
+      healthOk: res.ok && isHealthPayloadOk(json),
+      legacyOk: res.ok && isLegacyApiPayloadOk(json),
+    };
+  } catch {
+    return { reachable: false, healthOk: false, legacyOk: false };
+  }
+}
+
+/** Probe paths for ReactPress 4.x (/health) and legacy 3.x APIs (no health route). */
+const LEGACY_API_PROBE_PATHS = ["/tag", "/article", "/file", "/"];
+
+export async function testApiConnection(apiBaseUrl?: string): Promise<boolean> {
+  const base = normalizeApiBaseUrl(apiBaseUrl ?? (await getConfiguredApiBaseUrl()));
+
+  const health = await probeApiUrl(`${base}/health`);
+  if (health.healthOk) return true;
+
+  for (const suffix of LEGACY_API_PROBE_PATHS) {
+    const probe = await probeApiUrl(`${base}${suffix}`);
+    if (probe.legacyOk || (probe.reachable && suffix === "/")) return true;
+  }
+
+  return false;
 }

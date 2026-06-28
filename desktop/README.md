@@ -36,6 +36,9 @@ One-command start from monorepo root (embedded SQLite API + Vite Admin + Electro
 
 ```bash
 pnpm dev:desktop
+# entry: desktop/scripts/dev-full.mjs
+# API subprocess: desktop/out/main/local-server.js (same as packaged Electron main)
+# Vite + theme previews: CLI dev stack (HMR)
 ```
 
 Debug the web Admin in a browser (SQLite API + Vite, **no Electron**):
