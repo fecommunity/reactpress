@@ -2,7 +2,7 @@
 
 > 目标：对标 WordPress 的「简单易用」——作者能 drop-in 主题，管理员能一键换肤，文档与实现一致。
 >
-> 梳理日期：2026-06-12 · **文档状态（2026-06-13）**：`hello-world/README.md` 已重写；`ARCHITECTURE.md` / `design.md` 已同步 4.0（插件、桌面）；阶段 A 部分项仍待实现（见 §6）。
+> 梳理日期：2026-06-12 · **文档状态（2026-06-13）**：`hello-world/README.md` 已重写；`ARCHITECTURE.md` 已合并原 `design.md` 并同步 4.0（插件、桌面）；阶段 A 部分项仍待实现（见 §6）。
 
 ---
 
@@ -140,7 +140,7 @@ WordPress 在主题列表里通常 **启用即生效**；ReactPress 多一层 ru
 
 #### ② 启用主题需等待 Next 进程重启
 
-设计文档（`design.md` §4.5）明确 MVP 为「改配置 + 重启主题进程」。后台 `useThemeActivation` 最长轮询 120s。
+架构文档（`ARCHITECTURE.md` §8）明确 MVP 为「改配置 + 重启主题进程」。后台 `useThemeActivation` 最长轮询 120s。
 
 体验上远弱于 WordPress 的秒级切换。虽为架构取舍，但应在 UI 上设为预期（进度条、预估时间），并探索 dev 环境 symlink 热重载 manifest 的优化空间。
 
@@ -151,11 +151,11 @@ WordPress 在主题列表里通常 **启用即生效**；ReactPress 多一层 ru
 | `themes/hello-world/README.md` | Next.js **14**、**App Router**、`app/page.tsx` | Next **12**、**Pages Router**、`pages/index.tsx` |
 | 同上 | `ThemeProvider` from `@fecommunity/reactpress-components` | 使用 `createThemeApp` + `ReactPressProvider` |
 | 同上 | `npx @fecommunity/reactpress-template-hello-world` 独立建站 | 主题是 monorepo 内 `themes/hello-world/` |
-| `design.md` §4.2 theme.json 示例 | 嵌套 `reactpress.templates` | 实际 flat 结构：`templates` 在根级 |
+| 旧 `design.md` theme.json 示例（已合并入 ARCHITECTURE） | 嵌套 `reactpress.templates` | 实际 flat 结构：`templates` 在根级 |
 
 作者按 README 操作会直接失败，严重损害「简单易用」。
 
-**建议**：重写 `hello-world/README.md`，以 `themes/README.md` 为单一事实来源；`design.md` 示例与 schema 对齐。
+**建议**：重写 `hello-world/README.md`，以 `themes/README.md` 为单一事实来源；`ARCHITECTURE.md` 示例与 schema 对齐。
 
 #### ④ 三个「入门」概念易混淆
 
@@ -305,7 +305,7 @@ get_header()/get_footer()    SiteDocument / ThemeLayout
 ### 阶段 A — 快速止血（1–2 周）
 
 1. ~~**重写 `themes/hello-world/README.md`**~~ ✅ 已完成（2026-06-13）
-2. **修正 `design.md` theme.json 示例**，与 `theme.manifest.schema.json` 一致
+2. **修正 `ARCHITECTURE.md` theme.json 示例**，与 `theme.manifest.schema.json` 一致
 3. **统一默认 themeId** 为 `hello-world`
 4. 后台增加 **「安装并启用」** 按钮（至少对 local 主题）
 
@@ -371,7 +371,7 @@ reactpress theme add reactpress-theme-starter
 | [toolkit/src/theme/ssr/templates.ts](../toolkit/src/theme/ssr/templates.ts) | WP 风格模板 slug |
 | [server/src/modules/extension/theme.service.ts](../server/src/modules/extension/theme.service.ts) | 安装 / 激活 / 预览 |
 | [cli/lib/theme-dev.js](../cli/lib/theme-dev.js) | 监听 active-theme.json |
-| [design.md](../design.md) §4.5 | 主题切换策略说明 |
+| [ARCHITECTURE.md](../ARCHITECTURE.md) §8 | 主题切换策略说明 |
 
 ---
 

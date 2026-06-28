@@ -247,7 +247,7 @@ pnpm dev:web          # Admin + API
 pnpm build:web        # toolkit + web/dist
 ```
 
-Directory conventions: root [`design.md`](../design.md). Environment variables: [`.env.example`](./.env.example).
+Directory conventions: root [ARCHITECTURE.md](../ARCHITECTURE.md). Environment variables: [`.env.example`](./.env.example).
 
 ## Publishing
 

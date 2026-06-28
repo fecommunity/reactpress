@@ -396,5 +396,5 @@ Full `pnpm build` includes plugins after toolkit, before server.
 ## References
 
 - [WordPress Plugin Handbook](https://developer.wordpress.org/plugins/)
-- Root [`design.md`](../design.md) — CMS extensibility overview
+- Root [ARCHITECTURE.md](../ARCHITECTURE.md) — system architecture and extensibility
 - [`themes/README.md`](../themes/README.md) — theme registry and three-layer model
