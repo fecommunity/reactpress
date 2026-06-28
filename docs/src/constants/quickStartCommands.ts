@@ -1,5 +1,5 @@
-/** ReactPress 3.0 quick-start commands (homepage + docs) */
-export const QUICK_START_INSTALL_COMMAND = 'npm i -g @fecommunity/reactpress@3';
+/** ReactPress 4.0 quick-start commands (homepage + docs) */
+export const QUICK_START_INSTALL_COMMAND = 'npm i -g @fecommunity/reactpress@4';
 
 export const QUICK_START_COMMANDS = [
   QUICK_START_INSTALL_COMMAND,

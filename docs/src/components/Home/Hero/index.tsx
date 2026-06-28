@@ -39,7 +39,7 @@ function Hero() {
           <Logo className={styles.logo} />
           <div className={styles.titleRow}>
             <h1 className={styles.title}>{siteConfig.title}</h1>
-            <span className={styles.badge}>3.0</span>
+            <span className={styles.badge}>4.0</span>
             <span className={styles.githubWrap}>
               <GitHubButton
                 href="https://github.com/fecommunity/reactpress"
@@ -52,7 +52,9 @@ function Hero() {
             </span>
           </div>
           <p className={styles.subtitle}>
-            <Translate id="home.hero.subTitle">One package, one minute to your own CMS.</Translate>
+            <Translate id="home.hero.subTitle">
+              Plugins, desktop app, and npm themes — one package, one minute to your CMS.
+            </Translate>
           </p>
 
           <div className={styles.actions}>
@@ -60,8 +62,8 @@ function Hero() {
               <Link className={styles.primaryButton} to="/docs/intro">
                 <Translate id="home.hero.intro">Get Started</Translate>
               </Link>
-              <Link className={styles.secondaryButton} to="/docs/tutorial-extras/reactpress-3-0">
-                <Translate id="home.hero.whatsNew">What&apos;s New in 3.0</Translate>
+              <Link className={styles.secondaryButton} to="/docs/tutorial-extras/reactpress-4-0">
+                <Translate id="home.hero.whatsNew">What&apos;s New in 4.0</Translate>
               </Link>
               <a
                 href="https://blog.gaoredu.com"

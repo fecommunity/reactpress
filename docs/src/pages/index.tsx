@@ -17,7 +17,7 @@ const Index = () => {
   const title = `${siteConfig.title} · ${siteConfig.tagline}`;
   const description = translate({
     message:
-      'ReactPress 3.0: one package, one minute to your own CMS. Zero-config install for blogs and content publishing.',
+      'ReactPress 4.0: plugins, desktop client, and npm themes on a zero-config CMS. One package, your site in about a minute.',
     id: 'home.meta.description',
   });
 
