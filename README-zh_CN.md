@@ -8,6 +8,10 @@
     一条 CLI · 插件系统 · 桌面客户端 · Headless 主题 · MySQL & SQLite · 面向生产环境部署
   </p>
 
+  <a href="./desktop/README.md">
+    <img src="./public/desktop.gif" alt="ReactPress 桌面客户端 — 登录界面" width="100%" />
+  </a>
+
   <a href="https://reactpress-theme-starter.vercel.app">
     <img src="./public/demo.gif" alt="ReactPress 官方主题 — 在线演示" width="100%" />
   </a>

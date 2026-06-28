@@ -8,6 +8,10 @@
     One CLI · Plugins · Desktop app · Headless themes · MySQL & SQLite · Built for production.
   </p>
 
+  <a href="./desktop/README.md">
+    <img src="./public/desktop.gif" alt="ReactPress desktop client — sign in" width="100%" />
+  </a>
+
   <a href="https://reactpress-theme-starter.vercel.app">
     <img src="./public/demo.gif" alt="ReactPress official theme — live demo" width="100%" />
   </a>
