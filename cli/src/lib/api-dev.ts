@@ -2,6 +2,7 @@
 const { spawn } = require('child_process');
 const path = require('path');
 const { ensureProjectEnvironment } = require('./bootstrap');
+const { applyAutoLocalDevFallback } = require('./dev');
 const {
   getServerBin,
   getServerDir,
@@ -66,11 +67,13 @@ async function runApiDev(projectRoot = ensureOriginalCwd()) {
 
   if (!skipEnvBootstrap) {
     try {
-      await ensureProjectEnvironment(projectRoot);
+      await ensureProjectEnvironment(projectRoot, { skipDatabase: true });
     } catch (err) {
       console.error(t('dev.envFailed'), err.message || err);
       process.exit(1);
     }
+
+    await applyAutoLocalDevFallback(projectRoot, { needsLocalApi: true });
 
     try {
       await ensureDevDatabase(projectRoot);

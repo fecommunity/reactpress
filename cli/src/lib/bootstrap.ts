@@ -53,7 +53,6 @@ export async function initMonorepoProject(
     await syncEnvFromConfig(projectRoot, config);
   }
 
-  await ensureDatabaseHostPort(projectRoot, undefined, config);
   const dbResult = await ensureDatabase(projectRoot, config);
 
   if (!dbResult.ok) {

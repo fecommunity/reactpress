@@ -151,6 +151,19 @@ async function startDockerServices(projectRoot) {
 }
 
 async function ensureDevDatabase(projectRoot, { quiet = false } = {}) {
+  const { isLocalSqliteMode } = require('./database-mode');
+  if (isLocalSqliteMode(projectRoot)) {
+    const { ensureSqliteDatabase } = require('../core/services/database/sqlite');
+    const { syncEnvFromConfig, loadConfig } = require('../core/services/config');
+    const config = await loadConfig(projectRoot);
+    await syncEnvFromConfig(projectRoot, config);
+    const result = await ensureSqliteDatabase(projectRoot);
+    if (!result.ok) {
+      throw new Error(result.message || 'SQLite 数据库未就绪');
+    }
+    return;
+  }
+
   const dbPort = parseDbPort(projectRoot);
   const ctx = resolveComposeContext(projectRoot);
   const container = resolveDbContainerName(ctx, projectRoot);

@@ -48,6 +48,7 @@ const {
   logDevTimingSummary,
 } = require('./dev-log');
 const { t } = require('./i18n');
+const { isDesktopLocalMode, isLocalSqliteMode } = require('./database-mode');
 const {
   resolveRemoteThemeApiBase,
   readDevClientApiOrigin,
@@ -69,17 +70,12 @@ function logDevPhase(step, total, messageKey, vars = {}) {
   console.log(`[reactpress] [${step}/${total}] ${t(messageKey, vars)}`);
 }
 
-function isDesktopLocalMode() {
-  return process.env.REACTPRESS_DESKTOP_LOCAL === '1';
-}
-
-function isLocalSqliteMode() {
-  return process.env.REACTPRESS_LOCAL_MODE === '1' || isDesktopLocalMode();
-}
-
 async function applyAutoLocalDevFallback(projectRoot, { needsLocalApi = true } = {}) {
   if (!needsLocalApi) return false;
-  if (isLocalSqliteMode()) return false;
+  if (isLocalSqliteMode(projectRoot)) {
+    process.env.REACTPRESS_SKIP_NGINX = '1';
+    return false;
+  }
   if (process.env.REACTPRESS_FORCE_MYSQL === '1') return false;
 
   const docker = checkDocker();
@@ -390,17 +386,21 @@ function assertDevPrerequisites() {
 
 async function prepareDevInfrastructure(projectRoot, { needsLocalApi = true } = {}) {
   await acquireDevSession(projectRoot);
-  if (isLocalSqliteMode()) {
+  if (isLocalSqliteMode(projectRoot)) {
+    const { ensureLocalSite } = require('../core/services/local-site');
+    const { ensureSqliteDatabase } = require('../core/services/database/sqlite');
+    const { syncEnvFromConfig, loadConfig } = require('../core/services/config');
+    const { getMonorepoRoot } = require('./root');
+    const port = readEnvPort(projectRoot, 'SERVER_PORT', DEV_PORTS.API);
     if (process.env.REACTPRESS_LOCAL_MODE === '1') {
-      const { ensureLocalSite } = require('../core/services/local-site');
-      const { ensureSqliteDatabase } = require('../core/services/database/sqlite');
-      const { getMonorepoRoot } = require('./root');
-      const port = readEnvPort(projectRoot, 'SERVER_PORT', DEV_PORTS.API);
       ensureLocalSite(projectRoot, port, { monorepoRoot: getMonorepoRoot() });
-      const sqliteResult = await ensureSqliteDatabase(projectRoot);
-      if (!sqliteResult.ok) {
-        throw new Error(sqliteResult.message || 'SQLite 数据库未就绪');
-      }
+    } else {
+      const config = await loadConfig(projectRoot);
+      await syncEnvFromConfig(projectRoot, config);
+    }
+    const sqliteResult = await ensureSqliteDatabase(projectRoot);
+    if (!sqliteResult.ok) {
+      throw new Error(sqliteResult.message || 'SQLite 数据库未就绪');
     }
     nginxEnabled = false;
     delete process.env.REACTPRESS_NGINX_ENTRY_URL;
@@ -456,7 +456,11 @@ async function startDevStack(
       console.error(formatDevFailureHint());
       process.exit(1);
     }
-  } else if (needsLocalApi && !isLocalSqliteMode() && !(await probeMysqlHost(projectRoot))) {
+  } else if (
+    needsLocalApi &&
+    !isLocalSqliteMode(projectRoot) &&
+    !(await probeMysqlHost(projectRoot))
+  ) {
     console.error(
       t('dev.dbEnsureFailed', {
         message: t('docker.devStartBlocked', {
@@ -661,12 +665,16 @@ async function startDevStack(
     });
   }
 
-  const dbOk = isDesktopLocalMode()
-    ? true
-    : needsLocalApi
-      ? await probeMysqlHost(projectRoot)
-      : true;
-  if (needsLocalApi && !dbOk && !isDesktopLocalMode()) {
+  let dbOk = true;
+  if (needsLocalApi) {
+    if (isDesktopLocalMode() || isLocalSqliteMode(projectRoot)) {
+      const { probeSqliteDatabase } = require('../core/services/database/sqlite');
+      dbOk = (await probeSqliteDatabase(projectRoot)).ok;
+    } else {
+      dbOk = await probeMysqlHost(projectRoot);
+    }
+  }
+  if (needsLocalApi && !dbOk && !isDesktopLocalMode() && !isLocalSqliteMode(projectRoot)) {
     console.warn(t('dev.mysqlUnreachable'));
   }
 
@@ -685,7 +693,12 @@ async function startDevStack(
     adminApiOrigin,
     clientApiOrigin,
     localApiUrl: isDesktopLocalMode() ? process.env.REACTPRESS_DESKTOP_LOCAL_API || null : null,
-    dbType: isDesktopLocalMode() ? 'sqlite' : needsLocalApi ? 'mysql' : null,
+    dbType:
+      isDesktopLocalMode() || isLocalSqliteMode(projectRoot)
+        ? 'sqlite'
+        : needsLocalApi
+          ? 'mysql'
+          : null,
   });
 
   logDevTimingSummary({

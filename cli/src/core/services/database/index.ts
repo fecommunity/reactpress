@@ -9,7 +9,13 @@ import { getDockerComposeCommand } from '../../utils/platform';
 import { getProjectPaths } from '../../utils/paths';
 import { findAvailablePort, isDockerPortBindError, isPortAvailable } from '../../utils/port';
 import { isDockerAvailable, runSync, sleep } from '../exec';
-import { isSqliteMode, loadConfig, loadEnvFile, saveConfig, syncEnvFromConfig } from '../config';
+import {
+  isSqliteMode,
+  loadConfig,
+  loadEnvFile,
+  saveConfig,
+  syncEnvFromConfig,
+} from '../config';
 import {
   getDatabaseCredentials,
   testMysqlConnection,
@@ -197,22 +203,32 @@ function runDockerCompose(
   });
 }
 
+export async function promoteToSqliteMode(
+  projectRoot: string,
+  config: ReactPressConfig,
+): Promise<DatabaseEnsureResult> {
+  const { sqlitePath } = getProjectPaths(projectRoot);
+  const next: ReactPressConfig = structuredClone(config);
+  next.database.mode = 'embedded-sqlite';
+  next.database.sqlitePath = config.database.sqlitePath ?? sqlitePath;
+  await saveConfig(projectRoot, next);
+  await syncEnvFromConfig(projectRoot, next);
+  return ensureSqliteDatabase(projectRoot);
+}
+
 export async function startEmbeddedDatabase(
   projectRoot: string,
   config: ReactPressConfig,
 ): Promise<DatabaseEnsureResult> {
   if (isSqliteMode(config)) {
+    await syncEnvFromConfig(projectRoot, config);
     return ensureSqliteDatabase(projectRoot);
   }
   if (config.database.mode !== 'embedded-docker') {
     return { ok: true };
   }
   if (!isDockerAvailable()) {
-    return {
-      ok: false,
-      message:
-        '未检测到 Docker。请安装并启动 Docker，或将 database.mode 设为 external / embedded-sqlite。',
-    };
+    return promoteToSqliteMode(projectRoot, config);
   }
 
   const { dockerComposePath, reactpressDir } = getProjectPaths(projectRoot);
@@ -267,6 +283,7 @@ export async function ensureDatabase(
   config: ReactPressConfig,
 ): Promise<DatabaseEnsureResult> {
   if (isSqliteMode(config)) {
+    await syncEnvFromConfig(projectRoot, config);
     return ensureSqliteDatabase(projectRoot);
   }
 
@@ -275,6 +292,9 @@ export async function ensureDatabase(
     return { ok: true };
   }
   if (config.database.mode === 'embedded-docker') {
+    if (!isDockerAvailable()) {
+      return promoteToSqliteMode(projectRoot, config);
+    }
     return startEmbeddedDatabase(projectRoot, config);
   }
   return {
