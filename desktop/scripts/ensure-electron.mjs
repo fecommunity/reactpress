@@ -2,15 +2,30 @@
  * Ensures the Electron binary is downloaded after pnpm install.
  * pnpm may skip electron's postinstall when onlyBuiltDependencies is misconfigured
  * or on a lockfile-only install — run install.js explicitly if path.txt is missing.
+ *
+ * Skipped in CI: server/web builds do not need the Electron binary. Node 24.16+ also
+ * has a known regression where electron/install.js exits 0 without writing path.txt.
  */
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { createRequire } from "node:module";
-import { fileURLToPath } from "node:url";
+
+function shouldSkipInstall() {
+  return (
+    process.env.CI === "true" ||
+    process.env.CI === "1" ||
+    process.env.SKIP_ELECTRON_BINARY === "1" ||
+    process.env.ELECTRON_SKIP_BINARY_DOWNLOAD === "1"
+  );
+}
+
+if (shouldSkipInstall()) {
+  console.log("[desktop] Skipping Electron binary install (CI or skip flag).");
+  process.exit(0);
+}
 
 const require = createRequire(import.meta.url);
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 let electronDir;
 try {
