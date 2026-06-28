@@ -4,8 +4,8 @@
   </a>
 
   <p align="center">
-    <strong>Fast, smooth, and effortless publishing — live in about a minute.</strong><br />
-    One CLI · Full-stack CMS · Headless themes · Built for production deployment.
+    <strong>ReactPress 4.0 — fast, smooth, effortless publishing, live in about a minute.</strong><br />
+    One CLI · Plugins · Desktop app · Headless themes · MySQL & SQLite · Built for production.
   </p>
 
   <a href="https://reactpress-theme-starter.vercel.app">
@@ -44,6 +44,7 @@
 ## Table of contents
 
 - [What is ReactPress?](#what-is-reactpress)
+- [What's new in 4.0](#whats-new-in-40)
 - [Why ReactPress?](#why-reactpress)
 - [How to use](#how-to-use)
 - [Contributing](#contributing)
@@ -52,19 +53,23 @@
 
 ## What is ReactPress?
 
-**ReactPress is a publishing platform built around a CMS backend, an admin console, and optional frontends** — install one CLI package to run the API, manage content in the admin, and connect a public theme when you are ready.
+**ReactPress 4.0 is a publishing platform built around a CMS backend, an admin console, optional frontends, plugins, and a desktop client** — install one CLI package to run the API, manage content in the admin, extend with plugins, write locally on desktop, and connect a public theme when you are ready.
 
 | Component | Role |
 | :-------- | :--- |
-| **CMS backend (API)** | Stores and serves posts, pages, media, categories, and settings |
+| **CMS backend (API)** | Stores and serves posts, pages, media, categories, and settings (MySQL or SQLite) |
 | **Admin console** | Web UI for writing and managing content (included in full-stack setups) |
+| **Plugin system** | Hook-based extensions with Admin slots — SEO, auto-summary, image optimization |
+| **Desktop client** | Electron app with embedded SQLite — write offline, sync to remote |
 | **[Official theme](https://github.com/fecommunity/reactpress-theme-starter)** | Recommended public site — search, knowledge base, comments, dark mode |
-| **CLI (`reactpress`)** | Initialize, run locally, build, and deploy |
+| **CLI (`reactpress`)** | Initialize, run locally, build, deploy, manage themes and plugins |
 
 ### What you can do
 
 - **Publish** — posts, pages, scheduled publishing, categories, and tags
 - **Manage media** — upload images and files, reuse across content
+- **Extend with plugins** — install built-in or custom plugins from Admin or CLI
+- **Write on desktop** — local SQLite mode, no Docker required; sync to production
 - **Customize the site** — title, logo, navigation, and appearance from the admin
 - **Choose your frontend** — use the official theme or connect a custom one via the API
 - **Preview the theme instantly** — sample-data mode in the theme repo, no backend required
@@ -79,6 +84,25 @@
 
 ---
 
+## What's new in 4.0
+
+4.0 (codename **Extend**) builds on the 3.x platform with three major additions — still **one CLI, one Admin**:
+
+| Focus | What you get |
+| :---- | :----------- |
+| **Plugins** | Hook system + `plugin.json` manifest + Admin UI slots. Built-in: SEO panel, auto-summary, batch WebP optimization |
+| **Desktop** | Electron shell + SQLite local API. Write and manage without Docker; connect remote API or sync content upstream |
+| **Themes** | npm theme catalog — install `@fecommunity/reactpress-theme-starter` with one command |
+
+```bash
+npm i -g @fecommunity/reactpress@4
+reactpress init && reactpress dev
+```
+
+Full guide: [ReactPress 4.0 docs](./docs/tutorial/tutorial-extras/reactpress-4-0.md) · Upgrade from 3.x: [migration guide](./docs/tutorial/tutorial-extras/migration-3-to-4.md)
+
+---
+
 ## Why ReactPress?
 
 ### Why use it?
@@ -90,8 +114,9 @@ Most publishing tools force a trade-off: either **an easy CMS with a slow or tig
 | **Start quickly** | One global install; `init` + `dev` brings up the CMS backend in about a minute¹ |
 | **Write in a familiar way** | Web admin for posts, pages, media, and categories |
 | **A site visitors enjoy** | Official theme: fast pages, search, comments, knowledge base, dark mode |
-| **Room to grow** | Headless API — swap or customize the public frontend without migrating content |
-| **Fewer moving parts** | Core publishing features without assembling plugins; official theme demo scores Lighthouse **95 / 100 / 100 / 100**² |
+| **Room to grow** | Headless API + plugin hooks — swap the frontend or extend behavior without migrating content |
+| **Write anywhere** | Web admin, or **Electron desktop** with SQLite when you do not want Docker locally |
+| **Fewer moving parts** | Core publishing built-in; official theme demo scores Lighthouse **95 / 100 / 100 / 100**² |
 
 **In one line:** WordPress-style content workflow + a modern public site — with a clearer path to performance and frontend flexibility.
 
@@ -114,6 +139,8 @@ Most publishing tools force a trade-off: either **an easy CMS with a slow or tig
 | **Content editing** | **Web admin** | Web admin | Web admin | Markdown or MDX in Git |
 | **Public site speed & SEO** | **Lighthouse 95/100/100/100** (official theme demo)² | Varies widely by theme and plugins | Generally strong | Excellent, but no built-in CMS |
 | **Frontend flexibility** | **Headless — connect or replace the theme** | Strong theme/plugin ecosystem, often coupled | Theme system tied to Ghost | Fixed at build time |
+| **Headless extensions** | **Plugin hooks + Admin slots** (SEO, auto-summary, etc.) | Plugin ecosystem | Limited | Build yourself |
+| **Local writing** | **Electron desktop client** (SQLite, no Docker) | — | Desktop app available | — |
 | **Built-in publishing extras** | **Search, comments, knowledge base** (official theme + API) | Often via plugins | Membership/newsletter focus | Build yourself |
 | **Best for** | **Blogs, content sites, custom publishing** | General-purpose websites | Newsletters and publishing businesses | Docs and developer blogs |
 
@@ -137,7 +164,7 @@ Most publishing tools force a trade-off: either **an easy CMS with a slow or tig
 **Requirements:** Node.js 18+ · Docker recommended (for the bundled MySQL)
 
 ```bash
-npm i -g @fecommunity/reactpress@3
+npm i -g @fecommunity/reactpress@4
 mkdir my-blog && cd my-blog
 reactpress init
 reactpress dev
@@ -191,7 +218,29 @@ Package: [@fecommunity/reactpress-theme-starter](https://www.npmjs.com/package/@
 
 Full guide: [theme starter README](https://github.com/fecommunity/reactpress-theme-starter#readme).
 
-### 4. See it in action
+### 4. Desktop client (4.0)
+
+Write and manage locally with SQLite — no Docker required:
+
+```bash
+# at monorepo root
+pnpm dev:desktop
+```
+
+Build installer: `pnpm build:desktop`. Default local account `admin` / `admin`. Switch to remote API or sync content to your production site in Settings. See [desktop/README.md](./desktop/README.md).
+
+### 5. Plugins (4.0)
+
+Admin → **Plugins** → install and enable built-in plugins (SEO, auto-summary, image optimizer). Or use CLI:
+
+```bash
+reactpress plugin list
+reactpress plugin install seo
+```
+
+Plugin development: [plugins/README.md](./plugins/README.md).
+
+### 6. See it in action
 
 <div align="center">
 
@@ -205,24 +254,28 @@ Full guide: [theme starter README](https://github.com/fecommunity/reactpress-the
 
 [Full stack demo](https://blog.gaoredu.com) · [Theme demo](https://reactpress-theme-starter.vercel.app)
 
-### 5. Everyday commands
+### 7. Everyday commands
 
 | Command | What it does |
 | :------ | :----------- |
 | `reactpress` | Open the interactive menu |
 | `reactpress init` | Set up a new site |
-| `reactpress dev` | Run the CMS API locally (add a theme for the public site) |
+| `reactpress dev` | Run API, admin, and active theme locally |
 | `reactpress build` | Prepare for production |
 | `reactpress start` | Run in production |
 | `reactpress doctor` | Diagnose setup issues |
 | `reactpress status` | See what is running |
+| `reactpress theme add <pkg>` | Install a theme from npm |
+| `reactpress plugin install <id>` | Install a plugin |
+| `pnpm dev:desktop` | Desktop client dev (SQLite + Electron) |
+| `pnpm build:desktop` | Build desktop installer |
 
-More options: [documentation](https://reactpress-docs.vercel.app/)
+More options: [documentation](https://reactpress-docs.vercel.app/) · [4.0 guide](./docs/tutorial/tutorial-extras/reactpress-4-0.md)
 
-### 6. Deploy to production
+### 8. Deploy to production
 
 ```bash
-npm i -g @fecommunity/reactpress@3
+npm i -g @fecommunity/reactpress@4
 reactpress build
 reactpress start
 ```

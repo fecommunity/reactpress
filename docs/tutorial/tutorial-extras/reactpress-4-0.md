@@ -1,11 +1,11 @@
 ---
-sidebar_position: 5
+sidebar_position: 3
 title: ReactPress 4.0 扩展版
 ---
 
 # ReactPress 4.0 扩展版
 
-> **3.x 的平台能力 + 插件生态 + 桌面写作 — 仍是一条 CLI，一套 Admin。**
+> **当前推荐版本。** 3.x 的平台能力 + 插件生态 + 桌面写作 — 仍是一条 CLI，一套 Admin。
 
 4.0（代号 **Extend**）在 [3.0 平台版](./reactpress-3-0.md) 与 [3.1 Toolkit 主题重构](/blog/changelog) 之上，交付三件大事：
 
@@ -19,6 +19,7 @@ title: ReactPress 4.0 扩展版
 
 ```bash
 npm i -g @fecommunity/reactpress@4
+# 当前 beta 阶段也可：npm i -g @fecommunity/reactpress@beta
 mkdir my-blog && cd my-blog
 reactpress init
 reactpress dev

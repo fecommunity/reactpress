@@ -5,6 +5,8 @@ title: ReactPress 3.0 平台版
 
 # ReactPress 3.0 平台版
 
+> **历史版本说明。** 新用户请直接使用 [ReactPress 4.0 扩展版](./reactpress-4-0.md)。本文档保留给仍在使用 3.x 的用户参考。
+
 > **装一个包，敲一条命令，一分钟拥有自己的 CMS。**
 
 3.0「平台版」（代号 **Platform**）围绕三件事交付：**零配置**、**唯一入口**、**极致开发体验**。技术栈仍为 React 17 + Next.js 12 + NestJS 6（Next 14 / React 18 归入后续 **3.1 现代栈版**）。

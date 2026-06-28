@@ -1,11 +1,11 @@
 ---
-sidebar_position: 5
+sidebar_position: 3
 title: ReactPress 4.0 Extend
 ---
 
 # ReactPress 4.0 Extend
 
-> **3.x platform capabilities + plugin ecosystem + desktop writing — still one CLI, one Admin.**
+> **Current recommended version.** 3.x platform capabilities + plugin ecosystem + desktop writing — still one CLI, one Admin.
 
 4.0 (codename **Extend**) builds on the [3.0 Platform](./reactpress-3-0.md) and [3.1 Toolkit theme refactor](/blog/changelog) with three major additions:
 
@@ -19,6 +19,7 @@ title: ReactPress 4.0 Extend
 
 ```bash
 npm i -g @fecommunity/reactpress@4
+# During beta you can also: npm i -g @fecommunity/reactpress@beta
 mkdir my-blog && cd my-blog
 reactpress init
 reactpress dev

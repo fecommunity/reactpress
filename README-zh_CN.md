@@ -4,8 +4,8 @@
   </a>
 
   <p align="center">
-    <strong>快速、流畅、轻松 — 约一分钟即可上线的全栈发布平台。</strong><br />
-    一条 CLI · 全栈 CMS · Headless 主题 · 面向生产环境部署
+    <strong>ReactPress 4.0 — 快速、流畅、轻松，约一分钟即可上线的全栈发布平台。</strong><br />
+    一条 CLI · 插件系统 · 桌面客户端 · Headless 主题 · MySQL & SQLite · 面向生产环境部署
   </p>
 
   <a href="https://reactpress-theme-starter.vercel.app">
@@ -44,6 +44,7 @@
 ## 目录
 
 - [ReactPress 是什么？](#reactpress-是什么)
+- [4.0 新特性](#40-新特性)
 - [为什么选 ReactPress？](#为什么选-reactpress)
 - [怎么用？](#怎么用)
 - [贡献](#贡献)
@@ -52,19 +53,23 @@
 
 ## ReactPress 是什么？
 
-**ReactPress 是以 CMS 后端、管理后台和可选前台为核心的发布平台** — 安装 CLI 即可运行 API、在后台管理内容，并按需接入访客站主题。
+**ReactPress 4.0 是以 CMS 后端、管理后台、可选前台、插件与桌面客户端为核心的发布平台** — 安装 CLI 即可运行 API、在后台管理内容、用插件扩展能力、在桌面本地写作，并按需接入访客站主题。
 
 | 组件 | 作用 |
 | :--- | :--- |
-| **CMS 后端（API）** | 存储并提供文章、页面、媒体、分类与站点设置 |
+| **CMS 后端（API）** | 存储并提供文章、页面、媒体、分类与站点设置（MySQL 或 SQLite） |
 | **管理后台** | 写作与内容管理的 Web 界面（全栈部署中包含） |
+| **插件系统** | 基于 Hook 的扩展 + Admin 插槽 — SEO、自动摘要、图片批量优化 |
+| **桌面客户端** | Electron + 内嵌 SQLite — 本地写作，可同步到远程站点 |
 | **[官方主题](https://github.com/fecommunity/reactpress-theme-starter)** | 推荐访客站 — 搜索、知识库、评论、深色模式 |
-| **CLI（`reactpress`）** | 初始化、本地运行、构建与部署 |
+| **CLI（`reactpress`）** | 初始化、本地运行、构建部署、主题与插件管理 |
 
 ### 能做什么
 
 - **发布内容** — 文章、页面、定时发布、分类与标签
 - **管理媒体** — 上传图片与文件，在内容中复用
+- **插件扩展** — 后台或 CLI 安装内置/自定义插件
+- **桌面写作** — SQLite 本地模式，无需 Docker；内容可同步到线上
 - **定制站点** — 标题、Logo、导航、外观，均在后台完成
 - **选择前台** — 使用官方主题，或通过 API 接入自定义前端
 - **即时预览主题** — 在主题仓库以示例数据预览，无需启动后端
@@ -76,6 +81,25 @@
 <img src="./public/cli.png" alt="ReactPress CLI 交互式菜单" width="100%" />
 
 </div>
+
+---
+
+## 4.0 新特性
+
+4.0（代号 **Extend**）在 3.x 平台能力之上新增三大能力 — 仍是**一条 CLI、一套 Admin**：
+
+| 重点 | 你能得到什么 |
+| :--- | :--- |
+| **插件** | Hook 系统 + `plugin.json` 契约 + Admin 插槽。内置 SEO 面板、自动摘要、历史图片 WebP 批量优化 |
+| **桌面** | Electron 壳 + SQLite 本地 API。不开 Docker 也能写作管理；可连远程 API 或将内容同步到线上 |
+| **主题** | npm 主题 catalog — 一条命令安装 `@fecommunity/reactpress-theme-starter` |
+
+```bash
+npm i -g @fecommunity/reactpress@4
+reactpress init && reactpress dev
+```
+
+完整说明：[ReactPress 4.0 扩展版](./docs/tutorial/tutorial-extras/reactpress-4-0.md) · 从 3.x 升级：[迁移指南](./docs/tutorial/tutorial-extras/migration-3-to-4.md)
 
 ---
 
@@ -139,7 +163,7 @@
 **环境要求：** Node.js 18+ · 推荐 Docker（用于内置 MySQL）
 
 ```bash
-npm i -g @fecommunity/reactpress@3
+npm i -g @fecommunity/reactpress@4
 mkdir my-blog && cd my-blog
 reactpress init
 reactpress dev
@@ -206,7 +230,14 @@ pnpm dev:desktop
 
 ### 5. 插件（4.0）
 
-管理后台 → **插件** → 安装/启用内置插件（如 SEO 增强、自动摘要）。开发说明见 [plugins/README.md](./plugins/README.md)。
+管理后台 → **插件** → 安装/启用内置插件（如 SEO 增强、自动摘要、图片优化）。或使用 CLI：
+
+```bash
+reactpress plugin list
+reactpress plugin install seo
+```
+
+开发说明见 [plugins/README.md](./plugins/README.md)。
 
 ### 6. 演示
 
@@ -228,11 +259,13 @@ pnpm dev:desktop
 | :--- | :--- |
 | `reactpress` | 打开交互式菜单 |
 | `reactpress init` | 初始化新站点 |
-| `reactpress dev` | 本地运行 CMS API（访客站需接入主题） |
+| `reactpress dev` | 本地运行 API、后台与已启用主题 |
 | `reactpress build` | 生产环境构建 |
 | `reactpress start` | 生产环境启动 |
 | `reactpress doctor` | 诊断环境问题 |
 | `reactpress status` | 查看运行状态 |
+| `reactpress theme add <pkg>` | 从 npm 安装主题 |
+| `reactpress plugin install <id>` | 安装插件 |
 | `pnpm dev:desktop` | 桌面客户端开发（SQLite + Electron） |
 | `pnpm build:desktop` | 打包桌面安装程序 |
 
