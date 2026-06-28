@@ -31,7 +31,7 @@
     ·
     <a href="https://github.com/fecommunity/reactpress/issues">Request Feature</a>
     ·
-    <a href="https://reactpress-docs.vercel.app/">Documentation</a>
+    <a href="https://docs.gaoredu.com/">Documentation</a>
     ·
     <a href="./README-zh_CN.md">中文文档</a>
   </p>
@@ -153,7 +153,7 @@ The CLI starts the **CMS API** and prints the URLs when ready:
 
 Run `reactpress` anytime for the interactive menu. Use `reactpress doctor` if startup fails.
 
-> In a new project directory, `reactpress dev` starts the API first. Connect the [official theme](#3-connect-the-public-site) for the visitor-facing site, or see the [docs](https://reactpress-docs.vercel.app/) for a full-stack setup with the admin console.
+> In a new project directory, `reactpress dev` starts the API first. Connect the [official theme](#3-connect-the-public-site) for the visitor-facing site, or see the [docs](https://docs.gaoredu.com/) for a full-stack setup with the admin console.
 
 ### 2. Preview the official theme (no backend)
 
@@ -207,7 +207,7 @@ Full guide: [theme starter README](https://github.com/fecommunity/reactpress-the
 | `reactpress doctor` | Diagnose setup issues |
 | `reactpress status` | See what is running |
 
-More options: [documentation](https://reactpress-docs.vercel.app/)
+More options: [documentation](https://docs.gaoredu.com/)
 
 ### 6. Deploy to production
 
@@ -217,7 +217,7 @@ reactpress build
 reactpress start
 ```
 
-For Docker, PM2, backups, and advanced setup, see the [full documentation](https://reactpress-docs.vercel.app/).
+For Docker, PM2, backups, and advanced setup, see the [full documentation](https://docs.gaoredu.com/).
 
 To deploy only the public theme, use [reactpress-theme-starter](https://github.com/fecommunity/reactpress-theme-starter) and point it at your ReactPress API.
 

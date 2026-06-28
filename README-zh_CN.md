@@ -31,7 +31,7 @@
     ·
     <a href="https://github.com/fecommunity/reactpress/issues">请求功能</a>
     ·
-    <a href="https://reactpress-docs.vercel.app/">文档</a>
+    <a href="https://docs.gaoredu.com/">文档</a>
     ·
     <a href="./README.md">English Documentation</a>
   </p>
@@ -153,7 +153,7 @@ CLI 会启动 **CMS API**，并在就绪后打印访问地址：
 
 随时运行 `reactpress` 可打开交互菜单。启动失败时请使用 `reactpress doctor`。
 
-> 在新项目目录中，`reactpress dev` 会先启动 API。访客站请接入[官方主题](#3-接入访客站)；含管理后台的全栈部署见[文档](https://reactpress-docs.vercel.app/)。
+> 在新项目目录中，`reactpress dev` 会先启动 API。访客站请接入[官方主题](#3-接入访客站)；含管理后台的全栈部署见[文档](https://docs.gaoredu.com/)。
 
 ### 2. 预览官方主题（无需后端）
 
@@ -207,7 +207,7 @@ pnpm dev:mock
 | `reactpress doctor` | 诊断环境问题 |
 | `reactpress status` | 查看运行状态 |
 
-更多选项见 [官方文档](https://reactpress-docs.vercel.app/)。
+更多选项见 [官方文档](https://docs.gaoredu.com/)。
 
 ### 6. 部署上线
 
@@ -217,7 +217,7 @@ reactpress build
 reactpress start
 ```
 
-Docker、PM2、备份等进阶部署，见 [完整文档](https://reactpress-docs.vercel.app/)。
+Docker、PM2、备份等进阶部署，见 [完整文档](https://docs.gaoredu.com/)。
 
 若只需部署访客站，可使用 [reactpress-theme-starter](https://github.com/fecommunity/reactpress-theme-starter) 并指向你的 ReactPress API。
 
