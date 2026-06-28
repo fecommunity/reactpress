@@ -15,7 +15,7 @@ import {
 import styles from "./login-cli-snippet.module.css";
 
 const QUICK_START_LINES = [
-  "npm i -g @fecommunity/reactpress@3",
+  "npm i -g @fecommunity/reactpress@4",
   "reactpress init",
   "reactpress dev",
 ] as const;

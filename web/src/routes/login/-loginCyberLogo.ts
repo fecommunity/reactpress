@@ -19,4 +19,4 @@ export const LOGIN_CYBER_LOGO_GRADIENTS = [
 
 export const LOGIN_CYBER_COMMANDS = ["init", "dev", "build", "deploy", "publish"] as const;
 
-export const REACTPRESS_CLI_VERSION = "3.0.3";
+export const REACTPRESS_CLI_VERSION = "4.0.0-beta.0";

@@ -101,9 +101,9 @@
     "authFooterDocs": "文档",
     "authFooterSuffix": "了解安装与部署。",
     "heroTitle": "ReactPress",
-    "heroTagline": "面向 React 生态的现代化内容发布与管理平台。",
+    "heroTagline": "插件生态、桌面客户端与 npm 主题 — 装一个包，一分钟拥有自己的 CMS。",
     "docsHome": {
-      "highlightsTitle": "3.0 亮点",
+      "highlightsTitle": "4.0 亮点",
       "featuresTitle": "平台能力",
       "featuresSubtitle": "从个人博客到团队内容站，开箱即用的发布、管理与协作能力。"
     },
@@ -118,9 +118,9 @@
       "aria": "ReactPress 产品介绍",
       "mobileAria": "ReactPress 快速开始与相关链接",
       "linksAria": "ReactPress 相关链接",
-      "tagline": "装一个包、一分钟拥有自己的 CMS。",
+      "tagline": "插件生态、桌面客户端与 npm 主题 — 装一个包，一分钟拥有自己的 CMS。",
       "getStarted": "快速开始",
-      "whatsNew": "3.0 新特性",
+      "whatsNew": "4.0 新特性",
       "liveDemo": "在线演示",
       "github": "GitHub",
       "featuresTitle": "平台能力",
@@ -149,6 +149,18 @@
       "railAria": "ReactPress CLI 命令"
     },
     "heroSlides": {
+      "plugins": {
+        "title": "插件生态",
+        "description": "像 WordPress 一样装插件扩展能力；Hook + plugin.json + Admin 插槽，内置 SEO 与自动摘要。"
+      },
+      "desktop": {
+        "title": "桌面客户端",
+        "description": "不开浏览器也能写作管理；Electron 壳 + SQLite 本地模式，可同步到远程站点。"
+      },
+      "themes": {
+        "title": "npm 主题 catalog",
+        "description": "官方主题从 npm 一键安装；theme-starter catalog 与 hello-world 入门模板。"
+      },
       "zeroConfig": {
         "title": "零配置安装",
         "description": "两条命令即可完成站点与数据库初始化，无需手动配置环境。"

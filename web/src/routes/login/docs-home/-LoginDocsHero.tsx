@@ -9,7 +9,7 @@ import Logo from "./hero/Logo";
 import styles from "./hero/styles.module.css";
 
 type LoginDocsHeroProps = {
-  /** 与 3.0 highlights 同屏时压缩底部留白 */
+  /** 与 4.0 highlights 同屏时压缩底部留白 */
   merged?: boolean;
 };
 
@@ -26,7 +26,7 @@ function HeroCtaNav({ locale }: { locale: string }) {
       </a>
       <a
         className={styles.secondaryButton}
-        href={reactpressDocsPath(locale, "/docs/tutorial-extras/reactpress-3-0")}
+        href={reactpressDocsPath(locale, "/docs/tutorial-extras/reactpress-4-0")}
       >
         {t("login.showcase.whatsNew")}
       </a>
@@ -78,7 +78,7 @@ export function LoginDocsHero({ merged = false }: LoginDocsHeroProps) {
                   <div className={styles.mergedBrandText}>
                     <div className={styles.titleRow}>
                       <h2 className={styles.title}>{t("login.heroTitle")}</h2>
-                      <span className={styles.badge}>3.0</span>
+                      <span className={styles.badge}>4.0</span>
                     </div>
                     <p className={styles.subtitle}>{t("login.heroTagline")}</p>
                   </div>
@@ -94,7 +94,7 @@ export function LoginDocsHero({ merged = false }: LoginDocsHeroProps) {
               <Logo className={styles.logo} />
               <div className={styles.titleRow}>
                 <h2 className={styles.title}>{t("login.heroTitle")}</h2>
-                <span className={styles.badge}>3.0</span>
+                <span className={styles.badge}>4.0</span>
               </div>
               <p className={styles.subtitle}>{t("login.heroTagline")}</p>
               <div className={styles.actions}>

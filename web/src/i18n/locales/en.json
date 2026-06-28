@@ -101,9 +101,9 @@
     "authFooterDocs": "documentation",
     "authFooterSuffix": "for setup and deployment.",
     "heroTitle": "ReactPress",
-    "heroTagline": "Modern content management for React-powered publishing.",
+    "heroTagline": "Plugins, desktop app, and npm themes — one package, one minute to your CMS.",
     "docsHome": {
-      "highlightsTitle": "3.0 highlights",
+      "highlightsTitle": "4.0 highlights",
       "featuresTitle": "Platform capabilities",
       "featuresSubtitle": "From personal blogs to team content sites — publish, manage, and collaborate out of the box."
     },
@@ -118,9 +118,9 @@
       "aria": "ReactPress product overview",
       "mobileAria": "ReactPress quick start and links",
       "linksAria": "ReactPress links",
-      "tagline": "One package, one minute to your own CMS.",
+      "tagline": "Plugins, desktop app, and npm themes — one package, one minute to your CMS.",
       "getStarted": "Get Started",
-      "whatsNew": "What's New in 3.0",
+      "whatsNew": "What's New in 4.0",
       "liveDemo": "Live Demo",
       "github": "GitHub",
       "featuresTitle": "Platform capabilities",
@@ -149,6 +149,18 @@
       "railAria": "ReactPress CLI commands"
     },
     "heroSlides": {
+      "plugins": {
+        "title": "Plugin ecosystem",
+        "description": "Extend your site like WordPress — Hook + plugin.json + Admin slots; SEO and auto-summary built in."
+      },
+      "desktop": {
+        "title": "Desktop client",
+        "description": "Write and manage without a browser — Electron shell with SQLite local mode and remote sync."
+      },
+      "themes": {
+        "title": "npm theme catalog",
+        "description": "Install official themes from npm — theme-starter catalog and hello-world starter template."
+      },
       "zeroConfig": {
         "title": "Zero-config setup",
         "description": "Two commands set up your site and database — no manual environment configuration."

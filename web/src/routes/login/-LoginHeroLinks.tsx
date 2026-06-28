@@ -14,7 +14,7 @@ export function LoginHeroLinks({ className, mutedLinkClassName }: LoginHeroLinks
       <a href={reactpressDocsPath(locale, "/docs/tutorial-basics/start")}>
         {t("login.showcase.getStarted")}
       </a>
-      <a href={reactpressDocsPath(locale, "/docs/tutorial-extras/reactpress-3-0")}>
+      <a href={reactpressDocsPath(locale, "/docs/tutorial-extras/reactpress-4-0")}>
         {t("login.showcase.whatsNew")}
       </a>
       <a href={REACTPRESS_DEMO_URL} target="_blank" rel="noopener noreferrer">

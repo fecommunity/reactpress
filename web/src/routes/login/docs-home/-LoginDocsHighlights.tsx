@@ -1,13 +1,12 @@
 import classNames from "classnames";
-import type { LucideIcon } from "lucide-react";
-import { HeartPulse, Package, Zap } from "lucide-react";
+import { Monitor, Palette, Plug } from "lucide-react";
 
 import { useAppLocale } from "@/hooks/useAppLocale";
 
 import styles from "./login-docs-highlights.module.css";
 
-const HIGHLIGHT_IDS = ["zeroConfig", "cli", "gettingStarted"] as const;
-const HIGHLIGHT_ICONS: LucideIcon[] = [Zap, Package, HeartPulse];
+const HIGHLIGHT_IDS = ["plugins", "desktop", "themes"] as const;
+const HIGHLIGHT_ICONS = [Plug, Monitor, Palette];
 
 type LoginDocsHighlightsProps = {
   embedded?: boolean;
