@@ -5,7 +5,7 @@ title: 如何创建第一篇博客
 
 ## 访问站点
 
-本地启动并启用主题后，访客站地址为 http://localhost:3001。
+本地启动并启用主题后，访客站地址为 `http://localhost:3001`。
 
 ![QQ_1730649142941.png](https://api.gaoredu.com/public/uploads/2024-11-03/QQ_1730649142941.png)
 
@@ -19,7 +19,7 @@ title: 如何创建第一篇博客
 
 ## 进入后台
 
-管理后台地址为 http://localhost:3000（4.0 起 Admin 为独立 Vite SPA，不在 `:3001/admin`）。
+管理后台地址为 `http://localhost:3000`（4.0 起 Admin 为独立 Vite SPA，不在 `:3001/admin`）。
 
 ![QQ_1730649254076.png](https://api.gaoredu.com/public/uploads/2024-11-03/QQ_1730649254076.png)
 
