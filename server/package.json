@@ -1,6 +1,6 @@
 {
   "name": "@fecommunity/reactpress-server",
-  "version": "4.0.0-beta.0",
+  "version": "4.0.0-beta.2",
   "deprecated": "Use the built-in API in @fecommunity/reactpress (CLI). Standalone server publishing stopped from 3.1.",
   "description": "ReactPress Server - NestJS-based backend API for ReactPress CMS",
   "author": "fecommunity",

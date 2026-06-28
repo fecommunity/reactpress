@@ -34,6 +34,16 @@ function getCliPackageRoot() {
   }
 }
 
+function getCliVersion() {
+  try {
+    const pkgPath = path.join(getCliPackageRoot(), 'package.json');
+    const pkg = require(pkgPath);
+    return typeof pkg.version === 'string' ? pkg.version : 'dev';
+  } catch {
+    return 'dev';
+  }
+}
+
 function getBundledServerDir() {
   return path.join(getCliPackageRoot(), 'server');
 }
@@ -117,6 +127,7 @@ module.exports = {
   isUsingMonorepoServer,
   canStartLocalApi,
   getCliPackageRoot,
+  getCliVersion,
   getBundledServerDir,
   getServerDir,
   getServerBin,

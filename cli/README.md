@@ -1,85 +1,47 @@
-# @fecommunity/reactpress
+# @fecommunity/reactpress-cli
 
-ReactPress **4.0** main package — zero-config CMS CLI with built-in NestJS API, plugin system, theme catalog, and desktop client orchestration.
+零配置一键初始化与管理 ReactPress CMS & 博客服务器。内置 NestJS 服务端，无需单独克隆 [fecommunity/reactpress](https://github.com/fecommunity/reactpress)。
 
-Global command: `reactpress` (`reactpress-cli` is a compatibility shim and deprecated).
+完整文档与贡献指南见：[github.com/fecommunity/reactpress-cli](https://github.com/fecommunity/reactpress-cli)
 
-## Install
+## 安装
 
 ```bash
-npm i -g @fecommunity/reactpress@4
-# beta
-npm i -g @fecommunity/reactpress@beta
+npm install -g @fecommunity/reactpress-cli
 ```
 
-**Requirements:** Node.js ≥ 18 · macOS / Linux / Windows · Docker recommended for full-stack mode (MySQL)
+全局命令为 `reactpress-cli`（与 npm 包名无关）。
 
-## Quick start
+> npm 上的无作用域包名 `reactpress-cli` 已被占用，本包发布为 `@fecommunity/reactpress-cli`。
+
+## 快速开始
 
 ```bash
 mkdir my-blog && cd my-blog
-reactpress init          # MySQL + Docker (default)
-reactpress dev           # API + Admin + active theme
+reactpress-cli init
+reactpress-cli start
 ```
 
-Local writing without Docker:
+浏览器访问 `http://localhost:3002`（API 文档：`/api`）。
 
-```bash
-reactpress init --local  # SQLite
-reactpress dev --local   # or reactpress dev --web-only --local
-```
+## 常用命令
 
-Run `reactpress` with no arguments to open the interactive menu.
-
-## Core commands
-
-| Command | Description |
+| 命令 | 说明 |
 |------|------|
-| `reactpress init [dir]` | Initialize project (`--force` overwrite; `--local` SQLite) |
-| `reactpress dev` | Full-stack dev (API 3002 · Admin 3000 · Theme 3001) |
-| `reactpress dev --api-only` | API only (headless) |
-| `reactpress dev --web-only` | Admin + API |
-| `reactpress dev --client-only` | Visitor theme only |
-| `reactpress dev --local` | SQLite mode (no Docker/nginx) |
-| `reactpress build [-t target]` | Production build (`toolkit` \| `plugins` \| `server` \| `web` \| `theme` \| `docs` \| `all`) |
-| `reactpress start` | Start API + visitor theme in production mode |
-| `reactpress server start` | Start API (`--bg` / `--pm2`) |
-| `reactpress client start` | Start visitor theme (`--pm2`) |
-| `reactpress status` | Combined runtime status |
-| `reactpress doctor` | Environment diagnostics |
-| `reactpress db backup` | MySQL backup |
+| `reactpress-cli init [dir]` | 初始化项目 |
+| `reactpress-cli start` | 启动服务（自动准备数据库） |
+| `reactpress-cli stop` | 停止服务 |
+| `reactpress-cli restart` | 重启服务 |
+| `reactpress-cli status` | 查看状态 |
+| `reactpress-cli config [key] [value]` | 查看/修改配置 |
+| `reactpress-cli config server.port 3003 --apply` | 改端口并重启 |
 
-## 4.0 extensions
+## 要求
 
-| Command | Description |
-|------|------|
-| `reactpress desktop dev` | Electron desktop dev (SQLite + Admin, monorepo) |
-| `reactpress plugin list` | List plugin registry |
-| `reactpress plugin install <id>` | Install plugin to `.reactpress/plugins` |
-| `reactpress theme list` | List available themes |
-| `reactpress theme add <spec>` | Install theme from npm |
+- Node.js 18+
+- macOS / Linux / Windows
+- 默认使用 Docker 运行嵌入式 MySQL；也可在 `.reactpress/config.json` 中配置外部数据库
 
-## Docker & Nginx
-
-| Command | Description |
-|------|------|
-| `reactpress docker start` | Docker + full-stack dev |
-| `reactpress docker up/down` | MySQL container only |
-| `reactpress nginx up` | Unified entry on `:80` reverse proxy |
-
-## Maintainers
-
-```bash
-reactpress publish --build    # Build publish artifacts only
-reactpress publish --publish  # Publish core npm packages
-```
-
-## Documentation
-
-- [ReactPress 4.0 extended guide](https://github.com/fecommunity/reactpress/blob/master/docs/tutorial/tutorial-extras/reactpress-4-0.md)
-- [ARCHITECTURE.md](https://github.com/fecommunity/reactpress/blob/master/ARCHITECTURE.md)
-- [中文文档](../README-zh_CN.md)
-
-## License
+## 许可证
 
 MIT © FECommunity

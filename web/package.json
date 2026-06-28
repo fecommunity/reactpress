@@ -1,6 +1,6 @@
 {
   "name": "@fecommunity/reactpress-web",
-  "version": "4.0.0-beta.0",
+  "version": "4.0.0-beta.2",
   "description": "ReactPress Admin SPA — prebuilt static assets with Node static server helpers",
   "keywords": [
     "admin",

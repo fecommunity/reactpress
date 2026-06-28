@@ -77,6 +77,22 @@ function isLocalSqliteMode() {
   return process.env.REACTPRESS_LOCAL_MODE === '1' || isDesktopLocalMode();
 }
 
+async function applyAutoLocalDevFallback(projectRoot, { needsLocalApi = true } = {}) {
+  if (!needsLocalApi) return false;
+  if (isLocalSqliteMode()) return false;
+  if (process.env.REACTPRESS_FORCE_MYSQL === '1') return false;
+
+  const docker = checkDocker();
+  const mysqlOk = docker.ok ? await probeMysqlHost(projectRoot) : false;
+  if (docker.ok && mysqlOk) return false;
+
+  process.env.REACTPRESS_LOCAL_MODE = '1';
+  process.env.REACTPRESS_SKIP_NGINX = '1';
+  console.log('');
+  console.log(`[reactpress] ${t(docker.ok ? 'dev.autoLocalNoMysql' : 'dev.autoLocalNoDocker')}`);
+  return true;
+}
+
 function desktopPhaseKey(defaultKey) {
   if (isLocalSqliteMode()) {
     const localMap = {
@@ -700,6 +716,8 @@ async function runDevStartup(
     process.exit(1);
   }
 
+  await applyAutoLocalDevFallback(projectRoot, { needsLocalApi: apiOrigins.needsLocalApi });
+
   logDevPhase(1, 3, desktopPhaseKey('dev.phasePrerequisites'));
   assertDevPrerequisites();
 
@@ -1055,6 +1073,7 @@ module.exports = {
   runDevStartup,
   buildToolkit,
   assertDevPrerequisites,
+  applyAutoLocalDevFallback,
   prepareDevInfrastructure,
   startDevStack,
   detectProjectType,

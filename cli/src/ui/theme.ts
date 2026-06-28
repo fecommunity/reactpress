@@ -14,6 +14,8 @@ const palette = {
   red: '#EF4444',
   gray: '#6B7280',
   dim: '#9CA3AF',
+  border: '#4A4580',
+  surface: '#12152A',
 };
 
 const brand = {
@@ -25,6 +27,7 @@ const brand = {
   error: chalk.hex(palette.red),
   muted: chalk.hex(palette.gray),
   dim: chalk.hex(palette.dim),
+  border: chalk.hex(palette.border),
   bold: chalk.bold,
 };
 
@@ -209,7 +212,12 @@ function info(text) {
 }
 
 function chip(text, color = brand.primary) {
-  return color(`[ ${text} ]`);
+  return color(` ${text} `);
+}
+
+/** Compact pill badge for banner feature highlights. */
+function badge(text, color = palette.accent) {
+  return chalk.bgHex(palette.surface).hex(color).bold(` ${text} `);
 }
 
 function kv(key, value, { keyWidth = 10, valueColor = (s) => s } = {}) {
@@ -255,6 +263,7 @@ module.exports = {
   warn,
   info,
   chip,
+  badge,
   kv,
   statusPill,
   sectionHeader,

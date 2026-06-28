@@ -28,14 +28,14 @@ const { getThemeBin } = require('../lib/paths');
 const { runInteractiveLoop } = require('../ui/interactive');
 const { t } = require('../lib/i18n');
 
-const rootPkg = require(path.join(__dirname, '..', '..', 'package.json'));
+const { getCliVersion } = require('../lib/paths');
 
 const program = new Command();
 
 program
   .name('reactpress')
   .description(t('cli.description'))
-  .version(rootPkg.version);
+  .version(getCliVersion());
 
 program
   .command('init')
