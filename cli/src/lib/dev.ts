@@ -78,6 +78,14 @@ function isLocalSqliteMode() {
 }
 
 function desktopPhaseKey(defaultKey) {
+  if (isLocalSqliteMode()) {
+    const localMap = {
+      'dev.phasePrerequisites': 'dev.phasePrerequisitesDesktop',
+      'dev.phaseInfra': 'dev.phaseInfraDesktop',
+      'dev.phaseServices': 'dev.phaseServicesLocalWeb',
+    };
+    if (localMap[defaultKey]) return localMap[defaultKey];
+  }
   if (!isDesktopLocalMode()) return defaultKey;
   const map = {
     'dev.phasePrerequisites': 'dev.phasePrerequisitesDesktop',
@@ -357,7 +365,9 @@ function assertDevPrerequisites() {
     }
   }
   logDevStatus(
-    isDesktopLocalMode() ? 'dev.prerequisitesOkDesktop' : 'dev.prerequisitesOk',
+    isDesktopLocalMode() || process.env.REACTPRESS_LOCAL_MODE === '1'
+      ? 'dev.prerequisitesOkDesktop'
+      : 'dev.prerequisitesOk',
     { version: process.version },
   );
 }
@@ -430,7 +440,7 @@ async function startDevStack(
       console.error(formatDevFailureHint());
       process.exit(1);
     }
-  } else if (needsLocalApi && !(await probeMysqlHost(projectRoot))) {
+  } else if (needsLocalApi && !isLocalSqliteMode() && !(await probeMysqlHost(projectRoot))) {
     console.error(
       t('dev.dbEnsureFailed', {
         message: t('docker.devStartBlocked', {
@@ -897,6 +907,42 @@ async function spawnDesktopApp(projectRoot) {
   });
 }
 
+async function runLocalMonorepoDev(projectRoot = ensureOriginalCwd()) {
+  if (!hasWeb(projectRoot)) {
+    console.error(t('dev.noWeb'));
+    process.exit(1);
+  }
+
+  process.env.REACTPRESS_SKIP_NGINX = '1';
+  process.env.REACTPRESS_DESKTOP_LOCAL = '1';
+  registerDevShutdownHandlers(projectRoot);
+
+  console.log('');
+  logDevLine('dev.localFullIntro');
+
+  await prepareDevInfrastructure(projectRoot, { needsLocalApi: false });
+  await startDesktopLocalApi(projectRoot, { forceRestart: true });
+
+  await runDevStartup(projectRoot, {
+    skipPrepareInfra: true,
+    apiOrigins: { admin: null, client: null, needsLocalApi: false },
+  });
+  await ensureDesktopLocalApiHealthy(projectRoot);
+  await new Promise((resolve) => {
+    const interval = setInterval(() => {
+      void ensureDesktopLocalApiHealthy(projectRoot).catch(() => {});
+    }, 20_000);
+    const onStop = (signal) => {
+      clearInterval(interval);
+      shutdown(signal);
+      resolve(0);
+    };
+    process.once('SIGINT', () => onStop('SIGINT'));
+    process.once('SIGTERM', () => onStop('SIGTERM'));
+  });
+  process.exit(0);
+}
+
 async function runDesktopDev(projectRoot = ensureOriginalCwd()) {
   if (!hasWeb(projectRoot)) {
     console.error(t('dev.noWeb'));
@@ -1046,6 +1092,7 @@ module.exports = {
   runDev,
   runWebDev,
   runLocalWebDev,
+  runLocalMonorepoDev,
   runThemeDev,
   runDesktopDev,
   runDevStartup,

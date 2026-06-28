@@ -12,7 +12,7 @@ const chalk = require('chalk');
 const { brand, divider } = require('../ui/theme');
 const { ensureOriginalCwd } = require('../lib/root');
 const { ensureProjectEnvironment, initMonorepoProject } = require('../lib/bootstrap');
-const { runDev, runWebDev, runLocalWebDev, runThemeDev, runDesktopDev } = require('../lib/dev');
+const { runDev, runWebDev, runLocalWebDev, runLocalMonorepoDev, runThemeDev, runDesktopDev } = require('../lib/dev');
 const { resolveDevApiOrigins, applyDevApiOriginsToEnv } = require('../lib/remote-dev');
 const { runApiDev } = require('../lib/api-dev');
 const { runLifecycleCommand } = require('../lib/lifecycle');
@@ -131,6 +131,14 @@ program
         }
         await runApiDev(projectRoot);
         return;
+      }
+      if (options.local) {
+        const { isMonorepoCheckout } = require('../lib/root');
+        const { hasWeb } = require('../lib/project-type');
+        if (isMonorepoCheckout(projectRoot) && hasWeb(projectRoot)) {
+          await runLocalMonorepoDev(projectRoot);
+          return;
+        }
       }
       await runDev(projectRoot, { apiOrigins });
     } catch (err) {
@@ -486,12 +494,12 @@ themeCmd.command('list').description(t('cli.theme.list.description')).action(() 
   require('../lib/theme-cli').runThemeList(ensureOriginalCwd());
 });
 
-const pluginCmd = program.command('plugin').description('Manage ReactPress plugins');
+const pluginCmd = program.command('plugin').description(t('cli.plugin.description'));
 
 pluginCmd
   .command('install')
-  .description('Install a local plugin into .reactpress/plugins')
-  .argument('<id>', 'Plugin id from plugins/ registry')
+  .description(t('cli.plugin.install.description'))
+  .argument('<id>', t('cli.plugin.install.id'))
   .action((id) => {
     try {
       require('../lib/plugin-cli').runPluginInstall(ensureOriginalCwd(), id);
@@ -501,7 +509,7 @@ pluginCmd
     }
   });
 
-pluginCmd.command('list').description('List registered plugins').action(() => {
+pluginCmd.command('list').description(t('cli.plugin.list.description')).action(() => {
   require('../lib/plugin-cli').runPluginList(ensureOriginalCwd());
 });
 
@@ -536,15 +544,20 @@ program.on('--help', () => {
   const lines = [
     t('cli.help.interactive'),
     t('cli.help.dev'),
-    t('cli.help.init'),
+    t('cli.help.devLocal'),
+    t('cli.help.initLocal'),
+    t('cli.help.desktop'),
     t('cli.help.server'),
     t('cli.help.status'),
     t('cli.help.doctor'),
     t('cli.help.docker'),
     t('cli.help.nginx'),
     t('cli.help.build'),
-    t('cli.help.publish'),
     t('cli.help.theme'),
+    t('cli.help.themeList'),
+    t('cli.help.plugin'),
+    t('cli.help.dbBackup'),
+    t('cli.help.publish'),
   ];
   for (const line of lines) {
     console.log(brand.dim(line));

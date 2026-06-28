@@ -18,14 +18,15 @@ const {
 const { ensureOriginalCwd } = require('../lib/root');
 const { describeProject } = require('../lib/project-type');
 const { hasResolvableActiveTheme } = require('../lib/theme-runtime');
-const { ensureProjectEnvironment } = require('../lib/bootstrap');
-const { runDev, runThemeDev } = require('../lib/dev');
+const { ensureProjectEnvironment, initMonorepoProject } = require('../lib/bootstrap');
+const { runDev, runThemeDev, runWebDev, runLocalWebDev, runDesktopDev } = require('../lib/dev');
 const { runApiDev } = require('../lib/api-dev');
 const { runLifecycleCommand } = require('../lib/lifecycle');
 const { runDockerCommand } = require('../lib/docker');
 const { runNginxCommand } = require('../lib/nginx');
 const { printUnifiedStatus } = require('../lib/status');
 const { runDoctor } = require('../lib/doctor');
+const { runDbBackup } = require('../lib/db-backup');
 const { runBuild, TARGETS } = require('../lib/build');
 const { loadClientSiteUrl, loadServerSiteUrl, isHttpResponding } = require('../lib/http');
 const { isDockerRunning } = require('../lib/docker');
@@ -76,9 +77,29 @@ function getMenuActions(project) {
     choice('menu.init', 'init', 'menu.hint.init'),
     choice('menu.status', 'status', 'menu.hint.status'),
     choice('menu.doctor', 'doctor', 'menu.hint.doctor'),
+  ];
+
+  const extendItems = [];
+  if (project.hasDesktop) {
+    extendItems.push(choice('menu.devDesktop', 'dev:desktop', 'menu.hint.devDesktop'));
+  }
+  if (project.hasWeb) {
+    extendItems.push(choice('menu.devWeb', 'dev:web', 'menu.hint.devWeb'));
+    extendItems.push(choice('menu.devLocalWeb', 'dev:local-web', 'menu.hint.devLocalWeb'));
+  }
+  extendItems.push(choice('menu.initLocal', 'init:local', 'menu.hint.initLocal'));
+  extendItems.push(choice('menu.themeList', 'theme:list', 'menu.hint.themeList'));
+  if (monorepo && project.hasPluginsWorkspace) {
+    extendItems.push(choice('menu.pluginList', 'plugin:list', 'menu.hint.pluginList'));
+  }
+  if (extendItems.length > 0) {
+    items.push(menuSection(t('menu.section.extend')), ...extendItems);
+  }
+
+  items.push(
     menuSection(t('menu.section.lifecycle')),
     choice('menu.devApi', 'dev:api', 'menu.hint.devApi'),
-  ];
+  );
 
   if (showTheme) {
     items.push(choice('menu.devClient', 'dev:client', 'menu.hint.devClient'));
@@ -110,7 +131,8 @@ function getMenuActions(project) {
     choice('menu.nginxUp', 'nginx:up', 'menu.hint.nginxUp'),
     choice('menu.nginxOpen', 'nginx:open', 'menu.hint.nginxOpen'),
     choice('menu.nginxReload', 'nginx:reload', 'menu.hint.nginxReload'),
-    choice('menu.openAdmin', 'open:admin', 'menu.hint.openAdmin')
+    choice('menu.dbBackup', 'db:backup', 'menu.hint.dbBackup'),
+    choice('menu.openAdmin', 'open:admin', 'menu.hint.openAdmin'),
   );
 
   if (monorepo) {
@@ -242,6 +264,40 @@ async function runMenuAction(action, projectRoot, project) {
     case 'dev:client':
       await runThemeDev(projectRoot);
       return false;
+    case 'dev:desktop':
+      await runDesktopDev(projectRoot);
+      return false;
+    case 'dev:web':
+      await runWebDev(projectRoot);
+      return false;
+    case 'dev:local-web':
+      process.env.REACTPRESS_LOCAL_MODE = '1';
+      process.env.REACTPRESS_SKIP_NGINX = '1';
+      await runLocalWebDev(projectRoot);
+      return false;
+    case 'init:local': {
+      const { isMonorepoCheckout } = require('../lib/root');
+      const { initProject } = require('../core/services/init');
+      const result = await withSpinner(t('menu.initProject'), async () => {
+        if (isMonorepoCheckout(projectRoot)) {
+          return initMonorepoProject(projectRoot, { local: true });
+        }
+        return initProject({ directory: projectRoot, force: false, local: true });
+      });
+      console.log(ok(result.message || t('menu.done')));
+      return true;
+    }
+    case 'theme:list':
+      require('../lib/theme-cli').runThemeList(projectRoot);
+      return true;
+    case 'plugin:list':
+      require('../lib/plugin-cli').runPluginList(projectRoot);
+      return true;
+    case 'db:backup':
+      await withSpinner(t('cli.db.backup'), async () => {
+        await runDbBackup(projectRoot);
+      });
+      return true;
     case 'server:start': {
       const code = await withSpinner(t('menu.startingApi'), () =>
         runLifecycleCommand('start', projectRoot)

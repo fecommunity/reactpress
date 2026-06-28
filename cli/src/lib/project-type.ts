@@ -59,6 +59,22 @@ function hasToolkit(root) {
 }
 
 /**
+ * Electron desktop client (`desktop/`).
+ * @param {string} root
+ */
+function hasDesktop(root) {
+  return fs.existsSync(path.join(root, 'desktop', 'package.json'));
+}
+
+/**
+ * Official plugins workspace (`plugins/`).
+ * @param {string} root
+ */
+function hasPluginsWorkspace(root) {
+  return fs.existsSync(path.join(root, 'plugins', 'package.json'));
+}
+
+/**
  * @param {string} root
  */
 function describeProject(root) {
@@ -70,6 +86,8 @@ function describeProject(root) {
     hasWeb: hasWeb(root),
     hasServerSource: hasServerSource(root),
     hasToolkit: hasToolkit(root),
+    hasDesktop: hasDesktop(root),
+    hasPluginsWorkspace: hasPluginsWorkspace(root),
   };
 }
 
@@ -80,4 +98,6 @@ module.exports = {
   hasWeb,
   hasServerSource,
   hasToolkit,
+  hasDesktop,
+  hasPluginsWorkspace,
 };
