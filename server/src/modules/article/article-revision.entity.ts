@@ -22,7 +22,7 @@ export class ArticleRevision {
   @Column({ type: 'text', nullable: true })
   html: string;
 
-  @Column({ type: 'varchar', enum: ['draft', 'publish'] })
+  @Column({ type: 'simple-enum', enum: ['draft', 'publish'] })
   status: string;
 
   @CreateDateColumn({ name: 'create_at' })

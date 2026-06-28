@@ -40,7 +40,7 @@ export class Knowledge {
   toc: string; // 格式化内容索引，自动生成
 
   @ApiProperty()
-  @Column({ type: 'varchar', enum: ['draft', 'publish'], default: 'draft' })
+  @Column({ type: 'simple-enum', enum: ['draft', 'publish'], default: 'draft' })
   status: string; // 文章状态
 
   @ApiProperty()

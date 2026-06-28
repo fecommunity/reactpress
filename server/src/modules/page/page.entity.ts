@@ -36,7 +36,7 @@ export class Page {
   toc: string; // 格式化内容索引，自动生成
 
   @ApiProperty()
-  @Column({ type: 'varchar', enum: ['draft', 'publish'] })
+  @Column({ type: 'simple-enum', enum: ['draft', 'publish'] })
   status: string; // 页面状态
 
   @ApiProperty()

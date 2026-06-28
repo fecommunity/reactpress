@@ -74,7 +74,7 @@ export class Article {
   tags: Array<Tag>;
 
   @ApiProperty()
-  @Column({ type: 'varchar', enum: ['draft', 'publish'] })
+  @Column({ type: 'simple-enum', enum: ['draft', 'publish'] })
   status: string; // 文章状态
 
   @ApiProperty()
