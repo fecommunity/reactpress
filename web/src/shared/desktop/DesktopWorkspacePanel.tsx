@@ -11,7 +11,9 @@ import {
   type DesktopApiMode,
 } from "@/shared/desktop/apiConfig";
 import { DesktopModeSwitch } from "@/shared/desktop/DesktopModeSwitch";
+import { applyDesktopApiContextChange } from "@/shared/desktop/refreshApiContext";
 import { syncLocalToRemote } from "@/shared/desktop/syncToRemote";
+import { useAuthStore } from "@/stores/auth";
 import { useDesktopStore } from "@/stores/desktop";
 
 import styles from "./desktop-api-setup.module.css";
@@ -83,10 +85,15 @@ export function DesktopWorkspacePanel({ gateLogin = false, onReady }: DesktopWor
     };
   }, [gateLogin, localReady, mode, onReady]);
 
-  const applyMode = async (next: DesktopApiMode) => {
+  const applyMode = async (next: DesktopApiMode, options?: { restartApp?: boolean }) => {
+    const previousMode = (await getDesktopApiMode()) ?? "local";
     await setDesktopApiMode(next);
     setStoreMode(next);
     await refreshDesktopMode();
+    const modeChanged = previousMode !== next;
+    const restartApp =
+      options?.restartApp ?? (modeChanged && useAuthStore.getState().isAuthenticated);
+    await applyDesktopApiContextChange({ restartApp });
   };
 
   if (gateLogin && ((mode === "local" && localReady) || (mode === "remote" && remoteReady))) {
@@ -98,8 +105,8 @@ export function DesktopWorkspacePanel({ gateLogin = false, onReady }: DesktopWor
       layout="vertical"
       initialValues={{ remoteUrl }}
       onFinish={async (values) => {
-        await applyMode("remote");
         const saved = await saveRemoteApiBaseUrl(values.remoteUrl.trim());
+        await applyMode("remote", { restartApp: useAuthStore.getState().isAuthenticated });
         const ok = await testApiConnection(saved);
         setRemoteReady(ok);
         if (!ok) {

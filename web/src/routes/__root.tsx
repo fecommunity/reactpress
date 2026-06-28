@@ -2,7 +2,7 @@ import "@/index.css";
 import "@/shared/styles/editor-theme.css";
 import "@/shared/styles/markdown.css";
 
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { createRootRoute, Outlet } from "@tanstack/react-router";
 import { App, ConfigProvider } from "antd";
 import enUS from "antd/locale/en_US";
@@ -11,13 +11,9 @@ import { useEffect, useLayoutEffect } from "react";
 
 import { NotFound } from "@/components/NotFound";
 import { useAppTheme } from "@/hooks/useAppTheme";
+import { DesktopLocalQueryPolicy } from "@/shared/desktop/DesktopLocalQueryPolicy";
+import { queryClient } from "@/shared/queryClient";
 import { useSettingsStore } from "@/stores/settings";
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: { retry: 1, refetchOnWindowFocus: false },
-  },
-});
 
 function RootComponent() {
   const darkMode = useSettingsStore((s) => s.darkMode);
@@ -35,6 +31,7 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <DesktopLocalQueryPolicy />
       <ConfigProvider {...configProviderProps} locale={antdLocale}>
         <App>
           <Outlet />
