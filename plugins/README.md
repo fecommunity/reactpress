@@ -1,60 +1,61 @@
-# 插件系统
+# Plugin system
 
-ReactPress 插件扩展 **Server 侧业务逻辑**（Hook、内容规则、集成等），与主题解耦：**主题管呈现，插件管逻辑**。
+ReactPress plugins extend **server-side business logic** (hooks, content rules, integrations, etc.), decoupled from themes: **themes handle presentation; plugins handle logic**.
 
-对标 WordPress 插件生态：不改核心代码即可扩展；管理员可安装/启停/配置；作者通过 `plugin.json` + `register()` 接入。
+Modeled after the WordPress plugin ecosystem: extend without changing core; admins install/enable/configure; authors integrate via `plugin.json` + `register()`.
 
-## 核心模型
+## Core model
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│  两种来源（如何安装到 runtime）                               │
+│  Two sources (how packages land in runtime)                  │
 │    local  plugins/{id}/     →  .reactpress/plugins/{id}/    │
-│    npm    npm pack spec     →  .reactpress/plugins/{id}/    │  （二期）
+│    npm    npm pack spec     →  .reactpress/plugins/{id}/    │  (phase 2)
 └─────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────┐
-│  三层目录                                                    │
-│    plugins/               注册表 — 有哪些插件「可安装」        │
-│    .reactpress/plugins/   物化层 — 已安装、含 dist 构建产物    │
-│    DB globalSetting       激活态 — 已启用列表 + 各插件配置     │
+│  Three layers                                                │
+│    plugins/               Registry — what can be installed   │
+│    .reactpress/plugins/   Materialized — installed + dist    │
+│    DB globalSetting       Active — enabled list + per-plugin │
+│                            config                            │
 └─────────────────────────────────────────────────────────────┘
                               ↓ activate
 ┌─────────────────────────────────────────────────────────────┐
-│  运行时  HookService                                         │
+│  Runtime  HookService                                        │
 │    require(server.module) → register(hooks, ctx)             │
 └─────────────────────────────────────────────────────────────┘
 ```
 
-对齐 [`themes/README.md`](../themes/README.md) 的三层目录模型，降低主题/插件作者认知成本。
+Aligns with the three-layer directory model in [`themes/README.md`](../themes/README.md) to reduce cognitive load for theme/plugin authors.
 
-## 与主题、Webhook 的区别
+## vs themes and webhooks
 
-| 类型 | 扩展什么 | 运行进程 | 典型例子 |
+| Type | Extends | Process | Examples |
 | :--- | :--- | :--- | :--- |
-| **主题** | 访客站 UI、SSR | Next.js (:3001) | 换肤、文章模板 |
-| **插件** | 业务规则、Hook | NestJS API (:3002) | 自动摘要、SEO |
-| **Webhook** | 跨系统异步通知 | Server 出站 HTTP | Slack、CI 触发 |
+| **Theme** | Visitor UI, SSR | Next.js (:3001) | Skins, article templates |
+| **Plugin** | Business rules, hooks | NestJS API (:3002) | Auto summary, SEO |
+| **Webhook** | Cross-system async notify | Server outbound HTTP | Slack, CI triggers |
 
-**边界**
+**Boundaries**
 
-- 插件**不得**注入主题路由或修改 Next 构建配置。
-- 主题**不得**直接写数据库，只经 toolkit 访问 API。
-- **Hook**（入站、同进程、可改写字段）与 **Webhook**（出站 HTTP）不混用。
+- Plugins **must not** inject theme routes or modify Next build config.
+- Themes **must not** write to the database directly — only via toolkit → API.
+- **Hooks** (in-process, inbound, can mutate fields) vs **Webhooks** (outbound HTTP) are separate concepts.
 
-Hook 与 Webhook 在文章发布时的协作：
+Hook + webhook flow on article publish:
 
 ```
 article.service
-  ├─ applyFilters('article.beforePublish')   ← 插件同步改写 summary 等
-  ├─ 持久化
-  ├─ doAction('article.afterPublish')        ← 插件同步副作用
-  └─ webhookService.dispatch('article.published')  ← 外部系统通知
+  ├─ applyFilters('article.beforePublish')   ← plugin sync rewrite summary, etc.
+  ├─ persist
+  ├─ doAction('article.afterPublish')        ← plugin sync side effects
+  └─ webhookService.dispatch('article.published')  ← external systems
 ```
 
-## 注册表
+## Registry
 
-[`plugins/package.json`](./package.json)：
+[`plugins/package.json`](./package.json):
 
 ```json
 {
@@ -64,22 +65,22 @@ article.service
 }
 ```
 
-| 来源 | 元数据 | 注册位置 |
+| Source | Metadata | Registry location |
 | :--- | :--- | :--- |
-| **local** | `plugins/{id}/plugin.json` | `reactpress.local` 列表 |
-| **npm** | 包内 `plugin.json` | catalog 锚点（二期，规则同主题 npm） |
+| **local** | `plugins/{id}/plugin.json` | `reactpress.local` array |
+| **npm** | `plugin.json` inside package | catalog anchor (phase 2, same rules as theme npm) |
 
-新增本地插件：id 与目录名、`plugin.json` 的 `id` 一致，加入 `local` 数组。
+To add a local plugin: id matches directory name and `plugin.json` `id`; add to `local` array.
 
-## Manifest：`plugin.json`
+## Manifest: `plugin.json`
 
-Schema：[`plugin.manifest.schema.json`](./plugin.manifest.schema.json)。解析：`toolkit/src/plugin/extension/plugin.ts`。
+Schema: [`plugin.manifest.schema.json`](./plugin.manifest.schema.json). Parser: `toolkit/src/plugin/extension/plugin.ts`.
 
 ```json
 {
   "$schema": "../plugin.manifest.schema.json",
   "id": "my-plugin",
-  "name": "我的插件",
+  "name": "My Plugin",
   "version": "1.0.0",
   "description": "…",
   "requires": ">=3.5.0",
@@ -102,24 +103,24 @@ Schema：[`plugin.manifest.schema.json`](./plugin.manifest.schema.json)。解析
 }
 ```
 
-| 字段 | 必填 | 说明 |
+| Field | Required | Description |
 | :--- | :---: | :--- |
-| `id` | ✓ | kebab-case，与目录名一致 |
-| `name` / `version` | ✓ | 展示名与 semver |
-| `requires` | | 最低 ReactPress 版本 |
-| `requiresPlugins` | | 依赖的其他插件 id |
-| `server.module` | ✓* | Server 入口（编译后的 JS） |
-| `server.hooks.subscribe` | | 声明订阅的 Hook 名 |
-| `admin.slots.subscribe` | | 声明挂载的内置 Admin 插槽 id（枚举） |
-| `admin.menu` | | 插件独立设置页菜单 |
-| `settings.schema` | | JSON Schema，驱动配置表单 |
-| `locales/{locale}.json` | | 管理端文案（与主题相同目录约定） |
-| `permissions` | | Admin 能力声明 |
-| `capabilities` | | 安全能力（见下文） |
+| `id` | ✓ | kebab-case, matches directory name |
+| `name` / `version` | ✓ | Display name and semver |
+| `requires` | | Minimum ReactPress version |
+| `requiresPlugins` | | Other plugin ids this depends on |
+| `server.module` | ✓* | Server entry (compiled JS) |
+| `server.hooks.subscribe` | | Declared hook names |
+| `admin.slots.subscribe` | | Built-in Admin slot ids (enum) |
+| `admin.menu` | | Standalone plugin settings page menu |
+| `settings.schema` | | JSON Schema for config form |
+| `locales/{locale}.json` | | Admin strings (same convention as themes) |
+| `permissions` | | Admin capability declarations |
+| `capabilities` | | Security capabilities (see below) |
 
-\* 至少存在 `server.module`，或 `admin.slots` / `admin.menu` 之一（Admin 代码约定在 `admin/index.ts`）。
+\* At least `server.module`, or one of `admin.slots` / `admin.menu` (Admin code convention: `admin/index.ts`).
 
-| WordPress 插件头 | ReactPress |
+| WordPress plugin header | ReactPress |
 | :--- | :--- |
 | Plugin Name | `name` |
 | Version | `version` |
@@ -127,9 +128,9 @@ Schema：[`plugin.manifest.schema.json`](./plugin.manifest.schema.json)。解析
 | Requires at least | `requires` |
 | Requires Plugins | `requiresPlugins` |
 
-## 插件包结构
+## Plugin package structure
 
-TypeScript 插件采用 **扁平 `src/` → `dist/`**：
+TypeScript plugins use **flat `src/` → `dist/`**:
 
 ```
 plugins/my-plugin/
@@ -149,28 +150,28 @@ plugins/my-plugin/
     └── index.js         # plugin.json → server.module
 ```
 
-管理端国际化与主题一致：包根目录 `locales/{locale}.json`，API `GET /extension/plugins/:id/locales/:locale`（对应主题的 `…/themes/:id/locales/:locale`）。
+Admin i18n matches themes: `locales/{locale}.json` at package root; API `GET /extension/plugins/:id/locales/:locale` (parallel to themes `…/themes/:id/locales/:locale`).
 
-**依赖规则**
+**Dependency rules**
 
 ```
-plugins/{id}/src   →  仅 @fecommunity/reactpress-toolkit/plugin/server
+plugins/{id}/src   →  @fecommunity/reactpress-toolkit/plugin/server only
 plugins/{id}/admin →  toolkit/plugin/admin + toolkit/plugin/react
-server 核心        →  只依赖 HookService，不 import 具体插件
-web / themes       →  通过 Admin 插槽加载插件 admin（约定路径 `admin/index.ts`）
+server core        →  HookService only, no direct plugin imports
+web / themes       →  load plugin admin via Admin slots (convention: admin/index.ts)
 ```
 
-### Admin UI 插槽
+### Admin UI slots
 
-与 `server.hooks.subscribe` 对称：**manifest 声明插槽枚举**，**代码约定入口路径**。
+Symmetric with `server.hooks.subscribe`: **manifest declares slot enum**, **code convention defines entry path**.
 
-| 层级 | 声明方式 | 说明 |
+| Layer | Declaration | Notes |
 | :--- | :--- | :--- |
-| `plugin.json` | `admin.slots.subscribe: ["article.editor.meta.afterSummary"]` | 内置插槽 id 枚举，驱动是否加载 Admin |
-| 插件包 | 固定 `admin/index.ts` → `registerAdmin()` | 无需在 manifest 写路径 |
-| 核心页面 | `<AdminSlot slot={AdminSlotIds.…} />` | 宿主挂载点 |
+| `plugin.json` | `admin.slots.subscribe: ["article.editor.meta.afterSummary"]` | Built-in slot id enum drives Admin load |
+| Plugin package | Fixed `admin/index.ts` → `registerAdmin()` | No path in manifest |
+| Core pages | `<AdminSlot slot={AdminSlotIds.…} />` | Host mount point |
 
-**manifest 示例：**
+**Manifest example:**
 
 ```json
 "admin": {
@@ -178,21 +179,21 @@ web / themes       →  通过 Admin 插槽加载插件 admin（约定路径 `ad
     "subscribe": ["article.editor.meta.afterSummary"]
   },
   "menu": {
-    "title": "SEO 增强",
+    "title": "SEO Enhancement",
     "path": "/plugins/seo/settings",
     "permission": "extension:manage"
   }
 }
 ```
 
-**内置插槽**（`AdminSlotIds` / JSON Schema `enum`）：
+**Built-in slots** (`AdminSlotIds` / JSON Schema `enum`):
 
-| 插槽 id | 位置 |
+| Slot id | Location |
 | :--- | :--- |
-| `article.editor.meta.afterSummary` | 文章编辑器 · 摘要下方 |
-| `article.editor.sidebar.afterPublish` | 文章编辑器 · 右侧发布框下方 |
+| `article.editor.meta.afterSummary` | Article editor · below summary |
+| `article.editor.sidebar.afterPublish` | Article editor · below publish box |
 
-**核心页面挂载：**
+**Core page mount:**
 
 ```tsx
 import { AdminSlot, AdminSlotIds } from '@fecommunity/reactpress-toolkit/plugin/react';
@@ -200,7 +201,7 @@ import { AdminSlot, AdminSlotIds } from '@fecommunity/reactpress-toolkit/plugin/
 <AdminSlot slot={AdminSlotIds.ARTICLE_EDITOR_META_AFTER_SUMMARY} context={slotContext} />
 ```
 
-**插件 admin 入口**（`plugins/{id}/admin/index.ts`）：
+**Plugin admin entry** (`plugins/{id}/admin/index.ts`):
 
 ```typescript
 import {
@@ -219,17 +220,17 @@ export function registerAdmin(registry: PluginAdminRegistry, ctx: PluginAdminCon
 export default { registerAdmin } satisfies PluginAdminModule;
 ```
 
-插槽组件 props：`{ context, pluginId, config }`。`context` 由宿主页面定义（如 `ArticleEditorAdminSlotContext` 含 `draft` / `patch` / `translate`）。
+Slot component props: `{ context, pluginId, config }`. `context` is defined by the host page (e.g. `ArticleEditorAdminSlotContext` with `draft` / `patch` / `translate`).
 
-已启用且 manifest 含 `admin.slots` 或 `admin.menu` 时，`PluginAdminProvider` 按约定加载 `plugins/{id}/admin/index`；启停插件后自动重新 bootstrap。
+When enabled and manifest includes `admin.slots` or `admin.menu`, `PluginAdminProvider` loads `plugins/{id}/admin/index` by convention; enable/disable triggers re-bootstrap.
 
-**依赖规则（admin）**
+**Admin dependency rules**
 
 ```
 plugins/{id}/admin →  @fecommunity/reactpress-toolkit/plugin/admin + plugin/react + react/antd
 ```
 
-入口契约（Server）：
+Server entry contract:
 
 ```typescript
 import type { HookService, PluginContext } from '@fecommunity/reactpress-toolkit/plugin/server';
@@ -240,27 +241,27 @@ export function register(hooks: HookService, ctx: PluginContext): void {
   }, { priority: 10, pluginId: ctx.id });
 }
 
-// 可选：停用时清理定时任务等
+// optional: cleanup timers on deactivate
 export function deactivate(): void {}
 ```
 
-## 生命周期
+## Lifecycle
 
-| 操作 | 副作用 |
+| Action | Effect |
 | :--- | :--- |
-| **安装** | 物化到 `.reactpress/plugins/`；写 `installedPlugins[]` |
-| **启用** | 写 `activePlugins[]`；Server **热加载** `server.module` |
-| **停用** | 移除 Hook；可选调用 `deactivate()` |
-| **卸载** | 需先停用；删除 runtime 目录 |
+| **Install** | Materialize to `.reactpress/plugins/`; write `installedPlugins[]` |
+| **Enable** | Write `activePlugins[]`; Server **hot-loads** `server.module` |
+| **Disable** | Remove hooks; optionally call `deactivate()` |
+| **Uninstall** | Must disable first; delete runtime directory |
 
-与主题的差异：插件启停**无需重启 API**；主题启用需重启 Next (:3001)。
+Unlike themes: plugin enable/disable **does not require API restart**; theme enable requires Next restart (:3001).
 
-持久化（`Setting.globalSetting.plugins`）：
+Persistence (`Setting.globalSetting.plugins`):
 
 ```typescript
 {
   installedPlugins: string[];
-  activePlugins: string[];              // 有序，影响加载顺序
+  activePlugins: string[];              // ordered — affects load order
   entries: Record<string, {
     version: string;
     source: 'local' | 'npm';
@@ -271,92 +272,92 @@ export function deactivate(): void {}
 }
 ```
 
-## Hook 系统
+## Hook system
 
-| Hook | 类型 | 时机 | 说明 |
+| Hook | Type | Timing | Payload |
 | :--- | :--- | :--- | :--- |
-| `article.beforeCreate` | filter | 创建前 | `Partial<Article>` |
-| `article.beforePublish` | filter | 发布前 | 改写字段（如 summary） |
-| `article.afterPublish` | action | 发布后 | `{ article, isNew }` |
-| `comment.beforeCreate` | filter | 评论前 | 可 `__hookReject` 拒绝 |
-| `comment.afterCreate` | action | 评论后 | `{ comment, createByAdmin }` |
+| `article.beforeCreate` | filter | Before create | `Partial<Article>` |
+| `article.beforePublish` | filter | Before publish | Mutate fields (e.g. summary) |
+| `article.afterPublish` | action | After publish | `{ article, isNew }` |
+| `comment.beforeCreate` | filter | Before comment | Can `__hookReject` |
+| `comment.afterCreate` | action | After comment | `{ comment, createByAdmin }` |
 
-Filter 拒绝请求（toolkit `createHookRejectValue` / `getHookReject`）：
+Reject a filter (toolkit `createHookRejectValue` / `getHookReject`):
 
 ```typescript
 import { createHookRejectValue } from '@fecommunity/reactpress-toolkit/plugin/server';
 
-return createHookRejectValue(comment, { message: '评论被拒绝', statusCode: 400 });
+return createHookRejectValue(comment, { message: 'Comment rejected', statusCode: 400 });
 ```
 
-同 Hook 名按 `priority`（默认 10）排序；失败插件写 `loadError`，不影响其他插件。
+Same hook name sorted by `priority` (default 10); failed plugins write `loadError` without affecting others.
 
-## 开发新插件
+## Build a new plugin
 
-1. 复制 [`hello-world/`](./hello-world/) → `plugins/my-plugin/`
-2. 修改 `plugin.json`、`src/index.ts`
-3. 加入 [`plugins/package.json`](./package.json) → `local`
-4. 构建并启用：
+1. Copy [`hello-world/`](./hello-world/) → `plugins/my-plugin/`
+2. Edit `plugin.json`, `src/index.ts`
+3. Add to [`plugins/package.json`](./package.json) → `local`
+4. Build and enable:
 
 ```bash
 pnpm --filter @reactpress/plugin-my-plugin run build
-# 或
+# or
 pnpm run build:plugins
-pnpm dev   # 启动前按需编译 local 插件
+pnpm dev   # compiles local plugins on demand before start
 ```
 
-5. 管理后台 **插件** → 安装 → **启用**
+5. Admin **Plugins** → Install → **Enable**
 
-## 安装与 API
+## Install & API
 
-| 方法 | HTTP |
+| Action | HTTP |
 | :--- | :--- |
-| 列表 | `GET /api/extension/plugins` |
-| 状态 | `GET /api/extension/plugins/state` |
-| 安装 | `POST /api/extension/plugins/:id/install` |
-| 启用 | `POST /api/extension/plugins/:id/activate` |
-| 停用 | `POST /api/extension/plugins/:id/deactivate` |
-| 卸载 | `DELETE /api/extension/plugins/:id` |
-| 配置 | `PUT /api/extension/plugins/:id/config`（保存后自动 reload） |
-| 管理端文案 | `GET /api/extension/plugins/:id/locales/:locale` |
+| List | `GET /api/extension/plugins` |
+| State | `GET /api/extension/plugins/state` |
+| Install | `POST /api/extension/plugins/:id/install` |
+| Enable | `POST /api/extension/plugins/:id/activate` |
+| Disable | `POST /api/extension/plugins/:id/deactivate` |
+| Uninstall | `DELETE /api/extension/plugins/:id` |
+| Config | `PUT /api/extension/plugins/:id/config` (auto reload after save) |
+| Admin locales | `GET /api/extension/plugins/:id/locales/:locale` |
 
-已启用且 manifest 含 `settings.schema` 的插件，在插件列表显示 **设置** 链接，打开 WordPress 风格配置页（`/plugins/{id}/settings`）。
+Plugins with `settings.schema` show a **Settings** link opening a WordPress-style config page (`/plugins/{id}/settings`).
 
 ```bash
 reactpress plugin list
 reactpress plugin install hello-world
 ```
 
-## 权限与安全
+## Permissions & security
 
-- 安装/启停/改配置需 **admin JWT** + `extension:manage`（Web 路由层）。
-- **已启用插件 = 受信任代码**：在 Node 进程内 `require()` 执行，与 WordPress 插件模型相同；仅 admin 可安装/启用。
-- **`server.module` 路径约束**：仅允许插件目录内的相对路径（禁止 `..`、绝对路径），且扩展名限 `.js`/`.cjs`/`.mjs`。
-- **配置写入**：服务端按 manifest `settings.schema` 做 JSON Schema 校验（Ajv），拒绝 `__proto__` 等危险键。
-- **物化复制**：生产环境复制插件文件时跳过 symlink，避免链出插件目录。
-- **插件 id**：全局 kebab-case 校验；`globalSetting.plugins` 中的非法 id 会被忽略。
+- Install/enable/config requires **admin JWT** + `extension:manage` (web route layer).
+- **Enabled plugins = trusted code**: `require()` in Node process, same model as WordPress; only admins can install/enable.
+- **`server.module` path constraint**: relative paths inside plugin dir only (no `..`, no absolute paths); extensions limited to `.js`/`.cjs`/`.mjs`.
+- **Config writes**: server validates against manifest `settings.schema` (Ajv); rejects dangerous keys like `__proto__`.
+- **Materialize copy**: production skips symlinks when copying plugin files.
+- **Plugin id**: global kebab-case validation; invalid ids in `globalSetting.plugins` are ignored.
 
-| capability | 含义 | 运行时 enforcement |
+| capability | Meaning | Runtime enforcement |
 | :--- | :--- | :--- |
-| `headless` | 仅 Server，无 Admin UI | 文档约定 |
-| `network` | 出站 HTTP | 二期 |
-| `filesystem` | 读写项目外路径 | 二期 |
-| `database` | 注册 entity | 二期 |
+| `headless` | Server only, no Admin UI | Documented convention |
+| `network` | Outbound HTTP | Phase 2 |
+| `filesystem` | Read/write outside project | Phase 2 |
+| `database` | Register entities | Phase 2 |
 
-manifest `permissions[]` 为 Admin UI 能力声明，Server API 侧目前以 **admin 角色** 为边界。
+Manifest `permissions[]` declares Admin UI capabilities; server API boundary is currently **admin role**.
 
-## 典型场景
+## Typical use cases
 
-| 场景 | 挂载方式 |
+| Scenario | Mount |
 | :--- | :--- |
-| 发布前改写字段 | `article.beforePublish` filter |
-| 评论过滤 | `comment.beforeCreate` filter |
-| 发布后统计 | `article.afterPublish` action |
-| 纯 Server、无 UI | 仅 `server.module` + `headless: true` |
+| Mutate fields before publish | `article.beforePublish` filter |
+| Comment filtering | `comment.beforeCreate` filter |
+| Post-publish analytics | `article.afterPublish` action |
+| Server-only, no UI | `server.module` + `headless: true` |
 
-**不适合做插件的**：访客页组件（做主题）、数据库 schema 大改（做 core 迁移 PR）。
+**Not suitable for plugins**: visitor page components (use themes), large DB schema changes (core migration PR).
 
-## 构建命令
+## Build commands
 
 ```bash
 pnpm run build:plugins
@@ -364,36 +365,36 @@ pnpm --filter @reactpress/plugin-hello-world run build
 pnpm --filter @reactpress/plugin-hello-world run typecheck
 ```
 
-全量 `pnpm build` 已在 toolkit 之后、server 之前包含 plugins 步骤。
+Full `pnpm build` includes plugins after toolkit, before server.
 
-## 内置插件
+## Built-in plugins
 
-| id | 名称 | 说明 |
+| id | Name | Description |
 | :--- | :--- | :--- |
-| [`hello-world`](./hello-world/) | 自动摘要 | 发布时 summary 为空则从正文/标题生成 |
-| [`seo`](./seo/) | SEO 增强 | 文章别名、关键词、meta 描述与自动补全 |
-| [`image-optimizer`](./image-optimizer/) | 图片资源优化 | 分析历史素材并批量压缩为 WebP 多尺寸变体 |
+| [`hello-world`](./hello-world/) | Auto Summary | Generate summary from body/title when empty on publish |
+| [`seo`](./seo/) | SEO Enhancement | Slug, keywords, meta description with auto-fill |
+| [`image-optimizer`](./image-optimizer/) | Image Optimization | Analyze legacy assets, batch WebP variants |
 
-## 相关代码
+## Related code
 
-| 模块 | 职责 |
+| Module | Role |
 | :--- | :--- |
-| `server/src/modules/extension/plugin.service.ts` | 安装、启停、配置 |
-| `server/src/modules/extension/plugin-loader.service.ts` | 动态加载 + `register()` |
-| `server/src/modules/hook/hook.service.ts` | Hook 注册表 |
-| `toolkit/src/plugin/server/` | 插件 SDK |
-| `toolkit/src/plugin/extension/plugin.ts` | manifest 解析与状态类型 |
-| `cli/out/lib/plugin-build.js` | dev 按需编译 |
-| `web/src/modules/plugins/` | 后台插件列表 |
+| `server/src/modules/extension/plugin.service.ts` | Install, enable, config |
+| `server/src/modules/extension/plugin-loader.service.ts` | Dynamic load + `register()` |
+| `server/src/modules/hook/hook.service.ts` | Hook registry |
+| `toolkit/src/plugin/server/` | Plugin SDK |
+| `toolkit/src/plugin/extension/plugin.ts` | Manifest parsing and state types |
+| `cli/out/lib/plugin-build.js` | Dev on-demand compile |
+| `web/src/modules/plugins/` | Admin plugin list |
 
-## 路线图（未实现）
+## Roadmap (not implemented)
 
-- npm catalog 与 `reactpress plugin add`
-- 插件 Admin `admin.entry` 动态加载（自定义 React 设置 UI）
-- `reactpress plugin create` 脚手架、插件市场
+- npm catalog and `reactpress plugin add`
+- Dynamic plugin Admin `admin.entry` loading (custom React settings UI)
+- `reactpress plugin create` scaffold, plugin marketplace
 
-## 参考
+## References
 
 - [WordPress Plugin Handbook](https://developer.wordpress.org/plugins/)
-- 仓库根目录 [`design.md`](../design.md) — CMS 扩展性总纲
-- [`themes/README.md`](../themes/README.md) — 主题注册与三层目录
+- Root [`design.md`](../design.md) — CMS extensibility overview
+- [`themes/README.md`](../themes/README.md) — theme registry and three-layer model

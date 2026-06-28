@@ -1,84 +1,85 @@
 # @fecommunity/reactpress
 
-ReactPress **4.0** 主包 — 零配置 CMS CLI，内置 NestJS API、插件系统、主题 catalog 与桌面客户端编排。
+ReactPress **4.0** main package — zero-config CMS CLI with built-in NestJS API, plugin system, theme catalog, and desktop client orchestration.
 
-全局命令：`reactpress`（`reactpress-cli` 为兼容 shim，已废弃）。
+Global command: `reactpress` (`reactpress-cli` is a compatibility shim and deprecated).
 
-## 安装
+## Install
 
 ```bash
 npm i -g @fecommunity/reactpress@4
-# beta 阶段
+# beta
 npm i -g @fecommunity/reactpress@beta
 ```
 
-**要求：** Node.js ≥ 18 · macOS / Linux / Windows · 全栈模式推荐 Docker（MySQL）
+**Requirements:** Node.js ≥ 18 · macOS / Linux / Windows · Docker recommended for full-stack mode (MySQL)
 
-## 快速开始
+## Quick start
 
 ```bash
 mkdir my-blog && cd my-blog
-reactpress init          # MySQL + Docker（默认）
-reactpress dev           # API + 管理后台 + 激活主题
+reactpress init          # MySQL + Docker (default)
+reactpress dev           # API + Admin + active theme
 ```
 
-无 Docker 本地写作：
+Local writing without Docker:
 
 ```bash
 reactpress init --local  # SQLite
-reactpress dev --local   # 或 reactpress dev --web-only --local
+reactpress dev --local   # or reactpress dev --web-only --local
 ```
 
-运行 `reactpress` 无参数可打开交互式菜单。
+Run `reactpress` with no arguments to open the interactive menu.
 
-## 核心命令
+## Core commands
 
-| 命令 | 说明 |
+| Command | Description |
 |------|------|
-| `reactpress init [dir]` | 初始化项目（`--force` 覆盖；`--local` SQLite） |
-| `reactpress dev` | 全栈开发（API 3002 · Admin 3000 · 主题 3001） |
-| `reactpress dev --api-only` | 仅 API（Headless） |
-| `reactpress dev --web-only` | 管理后台 + API |
-| `reactpress dev --client-only` | 仅访客主题 |
-| `reactpress dev --local` | SQLite 模式（无 Docker/nginx） |
-| `reactpress build [-t target]` | 生产构建（`toolkit` \| `plugins` \| `server` \| `web` \| `theme` \| `docs` \| `all`） |
-| `reactpress start` | 生产模式启动 API + 访客主题 |
-| `reactpress server start` | 启动 API（`--bg` / `--pm2`） |
-| `reactpress client start` | 启动访客主题（`--pm2`） |
-| `reactpress status` | 综合运行状态 |
-| `reactpress doctor` | 环境诊断 |
-| `reactpress db backup` | MySQL 备份 |
+| `reactpress init [dir]` | Initialize project (`--force` overwrite; `--local` SQLite) |
+| `reactpress dev` | Full-stack dev (API 3002 · Admin 3000 · Theme 3001) |
+| `reactpress dev --api-only` | API only (headless) |
+| `reactpress dev --web-only` | Admin + API |
+| `reactpress dev --client-only` | Visitor theme only |
+| `reactpress dev --local` | SQLite mode (no Docker/nginx) |
+| `reactpress build [-t target]` | Production build (`toolkit` \| `plugins` \| `server` \| `web` \| `theme` \| `docs` \| `all`) |
+| `reactpress start` | Start API + visitor theme in production mode |
+| `reactpress server start` | Start API (`--bg` / `--pm2`) |
+| `reactpress client start` | Start visitor theme (`--pm2`) |
+| `reactpress status` | Combined runtime status |
+| `reactpress doctor` | Environment diagnostics |
+| `reactpress db backup` | MySQL backup |
 
-## 4.0 扩展
+## 4.0 extensions
 
-| 命令 | 说明 |
+| Command | Description |
 |------|------|
-| `reactpress desktop dev` | Electron 桌面开发（SQLite + Admin，monorepo） |
-| `reactpress plugin list` | 列出插件注册表 |
-| `reactpress plugin install <id>` | 安装插件到 `.reactpress/plugins` |
-| `reactpress theme list` | 列出可用主题 |
-| `reactpress theme add <spec>` | 从 npm 安装主题 |
+| `reactpress desktop dev` | Electron desktop dev (SQLite + Admin, monorepo) |
+| `reactpress plugin list` | List plugin registry |
+| `reactpress plugin install <id>` | Install plugin to `.reactpress/plugins` |
+| `reactpress theme list` | List available themes |
+| `reactpress theme add <spec>` | Install theme from npm |
 
-## Docker 与 Nginx
+## Docker & Nginx
 
-| 命令 | 说明 |
+| Command | Description |
 |------|------|
-| `reactpress docker start` | Docker + 全栈开发 |
-| `reactpress docker up/down` | 仅 MySQL 容器 |
-| `reactpress nginx up` | 统一入口 `:80` 反向代理 |
+| `reactpress docker start` | Docker + full-stack dev |
+| `reactpress docker up/down` | MySQL container only |
+| `reactpress nginx up` | Unified entry on `:80` reverse proxy |
 
-## 维护者
+## Maintainers
 
 ```bash
-reactpress publish --build    # 仅构建发布产物
-reactpress publish --publish  # 发布核心 npm 包
+reactpress publish --build    # Build publish artifacts only
+reactpress publish --publish  # Publish core npm packages
 ```
 
-## 文档
+## Documentation
 
-- [ReactPress 4.0 扩展版](https://github.com/fecommunity/reactpress/blob/master/docs/tutorial/tutorial-extras/reactpress-4-0.md)
+- [ReactPress 4.0 extended guide](https://github.com/fecommunity/reactpress/blob/master/docs/tutorial/tutorial-extras/reactpress-4-0.md)
 - [ARCHITECTURE.md](https://github.com/fecommunity/reactpress/blob/master/ARCHITECTURE.md)
+- [中文文档](../README-zh_CN.md)
 
-## 许可证
+## License
 
 MIT © FECommunity

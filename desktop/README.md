@@ -1,151 +1,151 @@
 # ReactPress Desktop
 
-Electron 壳层，加载与 Web 版相同的 Admin SPA（`web/dist`），不重复实现业务 UI。
+Electron shell that loads the same Admin SPA as the web version (`web/dist`) — no duplicate business UI.
 
-## 定位
+## Role
 
-| 层级 | 职责 |
+| Layer | Responsibility |
 |------|------|
-| **desktop/** | 窗口、Preload/IPC、本地 API 进程、配置持久化 |
-| **web/** | Admin 界面、路由、表单（通过 `getRuntime() === 'electron'` 做少量适配） |
-| **server/** | REST API（本地模式由 Main 进程 spawn，远程模式连已有服务） |
+| **desktop/** | Window, preload/IPC, local API process, config persistence |
+| **web/** | Admin UI, routing, forms (minor adaptation via `getRuntime() === 'electron'`) |
+| **server/** | REST API (spawned by main process in local mode, or connect to remote) |
 
-## 工作模式
+## Modes
 
-### 本地模式（默认）
+### Local mode (default)
 
-- 启动时自动 spawn 内嵌 API（SQLite，默认端口 `13102`）
-- 无需 Docker / MySQL，开箱写作与管理
-- 默认账号：`admin` / `admin`
-- 数据目录：
-  - **开发**：仓库内 `.reactpress/desktop-dev-site/`
-  - **生产**：`~/Library/Application Support/ReactPress/site/`（macOS，其他平台见 Electron `userData`）
+- Auto-spawns embedded API on startup (SQLite, default port `13102`)
+- No Docker / MySQL required — write and manage out of the box
+- Default credentials: `admin` / `admin`
+- Data directory:
+  - **Development**: `.reactpress/desktop-dev-site/` in the repo
+  - **Production**: `~/Library/Application Support/ReactPress/site/` (macOS; other platforms use Electron `userData`)
 
-### 远程模式
+### Remote mode
 
-- 在 **设置 → 桌面客户端** 或登录页工作区面板配置远程 API 地址
-- 与 Web Admin 共用同一套后端
+- Configure remote API URL in **Settings → Desktop client** or the login workspace panel
+- Shares the same backend as web Admin
 
-### 同步到远程
+### Sync to remote
 
-本地模式下可将文章、页面、设置推送到远程站点（需远程管理员账号）。
+In local mode, push articles, pages, and settings to a remote site (requires remote admin credentials).
 
-## 开发
+## Development
 
-在 monorepo 根目录一键启动（内嵌 SQLite API + Vite Admin + Electron，**不需要 Docker**）：
+One-command start from monorepo root (embedded SQLite API + Vite Admin + Electron, **no Docker**):
 
 ```bash
 pnpm dev:desktop
 ```
 
-在浏览器中调试本地 Web 管理端（SQLite API + Vite，**不启动 Electron**）：
+Debug the web Admin in a browser (SQLite API + Vite, **no Electron**):
 
 ```bash
 pnpm dev:web:local
 ```
 
-等效命令：`reactpress dev --web-only --local`
+Equivalent: `reactpress dev --web-only --local`
 
-仅启动 Electron 壳（需自行保证 Admin 与 API 已就绪）：
+Electron shell only (ensure Admin and API are already running):
 
 ```bash
 pnpm run --dir desktop dev
 ```
 
-## 构建与打包
+## Build & package
 
 ```bash
-# 并行构建 + 打安装包（发版用）
+# Parallel build + installer (release)
 pnpm build:desktop
 
-# 仅输出未打包目录（跳过 dmg/zip，日常验证生产行为首选）
+# Unpacked output only (skip dmg/zip — preferred for daily prod verification)
 pnpm build:desktop:dir
 
-# 启动未打包的 .app（与 DMG 安装后走同一套 isPackaged 代码路径）
+# Launch unpacked .app (same isPackaged code path as DMG install)
 pnpm open:desktop
 
-# 忽略增量缓存，全量重编（怀疑产物不一致时用）
+# Ignore incremental cache, full rebuild (when suspecting stale artifacts)
 pnpm build:desktop:force
 ```
 
-`build:desktop` 会并行编译 toolkit / cli / desktop 壳（**electron-vite**），再并行构建 server 与 web，最后并行 deploy 组装 Resources 并打包。
+`build:desktop` compiles toolkit / cli / desktop shell (**electron-vite**) in parallel, then builds server and web, then stages Resources and packages.
 
-**推荐调试流程（兼顾速度与 dev/prod 一致性）：**
+**Recommended debug workflow (speed vs dev/prod parity):**
 
-| 阶段 | 命令 | 说明 |
+| Stage | Command | Notes |
 |------|------|------|
-| 日常 UI / API 逻辑 | `pnpm dev:desktop` | Vite 热更新，走 monorepo 源码路径，最快 |
-| 验证打包行为 | `pnpm build:desktop:dir && pnpm open:desktop` | 与安装包相同的 `process.resourcesPath`、NODE_PATH、主题启动逻辑 |
-| 发版 | `pnpm build:desktop` | 在 dir 验证通过后再打 DMG |
+| Daily UI / API logic | `pnpm dev:desktop` | Vite HMR, monorepo source paths — fastest |
+| Verify packaged behavior | `pnpm build:desktop:dir && pnpm open:desktop` | Same `process.resourcesPath`, NODE_PATH, theme startup as installer |
+| Release | `pnpm build:desktop` | Run after dir verification passes |
 
-增量优化：未改动的 workspace 编译（toolkit/cli/server/web/desktop）与 staging（`pnpm deploy` + 共享 Next 安装）会自动跳过；仅改 desktop 主进程时，二次 `build:desktop:dir` 通常只需数十秒 + electron-builder。
+Incremental optimization: unchanged workspace builds (toolkit/cli/server/web/desktop) and staging (`pnpm deploy` + shared Next install) are skipped; when only desktop main process changes, a second `build:desktop:dir` often finishes in tens of seconds + electron-builder.
 
-`dev:desktop` 与打包版的核心差异见下表：
+`dev:desktop` vs packaged build:
 
-| 维度 | `dev:desktop` | 打包版 (`open:desktop` / DMG) |
+| Dimension | `dev:desktop` | Packaged (`open:desktop` / DMG) |
 |------|---------------|-------------------------------|
-| Admin UI | Vite dev server (`localhost`) | 静态 `web/dist`（`file://`） |
-| API / 主题路径 | monorepo 源码 + workspace `node_modules` | `Resources/` 下 hoisted deploy |
-| 主题依赖 | 可 `pnpm install` | 共享 `runtime-deps`，`REACTPRESS_SKIP_THEME_INSTALL` |
-| 判定 | `ELECTRON_IS_DEV=1` | `app.isPackaged` |
+| Admin UI | Vite dev server (`localhost`) | Static `web/dist` (`file://`) |
+| API / theme paths | Monorepo source + workspace `node_modules` | Hoisted deploy under `Resources/` |
+| Theme deps | Can `pnpm install` | Shared `runtime-deps`, `REACTPRESS_SKIP_THEME_INSTALL` |
+| Detection | `ELECTRON_IS_DEV=1` | `app.isPackaged` |
 
-日常调试可优先用 `build:desktop:dir` + `open:desktop`，避免每次等 DMG。
+Prefer `build:desktop:dir` + `open:desktop` for daily debugging to avoid waiting for DMG each time.
 
-打包前会校验源码与 `desktop/out`、`server/dist` 的时间戳；staging 后与最终 `.app` 会与 workspace 产物逐文件比对。若源码比编译产物新，或安装包内容不一致，构建会直接失败，避免误用旧的 `release/*.dmg`。每次成功打包会在 `Resources/build-manifest.json` 写入 `builtAt` 时间戳。
+Before packaging, source timestamps are validated against `desktop/out` and `server/dist`; staging and final `.app` are compared file-by-file with workspace artifacts. Build fails if source is newer than compiled output or package contents diverge. Each successful build writes `builtAt` to `Resources/build-manifest.json`.
 
-产物目录：`desktop/release/`（已在根 `.gitignore` 忽略）。
+Output: `desktop/release/` (ignored in root `.gitignore`).
 
-体积优化说明见 [docs/size-optimization.md](./docs/size-optimization.md)。
+Size optimization notes: [docs/size-optimization.md](./docs/size-optimization.md).
 
-## 系统执行日志
+## System execution logs
 
-打包后默认将主进程、内嵌 API、主题子进程的输出写入日志文件（不再只过滤 `Error` 行）。
+Packaged builds write main process, embedded API, and theme subprocess output to log files (not just `Error` lines).
 
-| 项 | 路径 / 说明 |
+| Item | Path / notes |
 |----|-------------|
-| 日志目录 | `~/Library/Application Support/ReactPress/logs/`（macOS） |
-| 日志文件 | `system-YYYY-MM-DD.log`（按日切分，单文件超过 5MB 自动轮转） |
-| 内容 | 启动参数、API / 主题进程 stdout/stderr、未捕获异常 |
+| Log directory | `~/Library/Application Support/ReactPress/logs/` (macOS) |
+| Log file | `system-YYYY-MM-DD.log` (daily rotation, 5MB max per file) |
+| Contents | Startup args, API / theme stdout/stderr, uncaught exceptions |
 
-**详细调试**（同时镜像到终端 / 打开 DevTools、API 完整 Nest 日志）：
+**Verbose debugging** (mirror to terminal / open DevTools, full Nest API logs):
 
 ```bash
 REACTPRESS_DESKTOP_DEBUG=1 /path/to/ReactPress.app/Contents/MacOS/ReactPress
 ```
 
-在 Admin 中可通过 `window.reactpressDesktop.getSystemLogPath()` 获取当前日志路径，`openSystemLogDirectory()` 在 Finder 中打开日志目录（需 Preload 已暴露）。
+In Admin: `window.reactpressDesktop.getSystemLogPath()` returns the current log path; `openSystemLogDirectory()` opens the folder in Finder (requires preload exposure).
 
-## 目录结构
+## Directory structure
 
 ```
 desktop/
-├── .cache/             # 构建/开发缓存目录（git 忽略）
+├── .cache/             # Build/dev cache (gitignored)
 ├── electron.vite.config.ts
 ├── src/
-│   ├── main/           # Main 进程：窗口、IPC、local-server、local-site、config
+│   ├── main/           # Main process: window, IPC, local-server, local-site, config
 │   ├── preload/        # contextBridge → window.reactpressDesktop
-│   └── shared/         # 常量与类型
-├── resources/          # 应用图标等
-├── scripts/            # postinstall 等
+│   └── shared/         # Constants and types
+├── resources/          # App icons, etc.
+├── scripts/            # postinstall, etc.
 ├── electron-builder.yml
 └── package.json
 ```
 
-## 相关脚本（仓库根）
+## Root scripts
 
-| 命令 | 说明 |
+| Command | Description |
 |------|------|
-| `pnpm dev:desktop` | 本地 SQLite + Admin + Electron |
-| `pnpm dev:web:local` | 本地 SQLite + Admin（浏览器调试，无 Electron） |
-| `pnpm build:web:electron` | 构建 Admin（Vite `electron` mode，`base: './'`） |
-| `pnpm build:desktop` | 上述 + electron-builder 打包 |
-| `pnpm build:desktop:dir` | 未打包 `.app`（更快，验证生产路径） |
-| `pnpm open:desktop` | 启动 `build:desktop:dir` 产物 |
+| `pnpm dev:desktop` | Local SQLite + Admin + Electron |
+| `pnpm dev:web:local` | Local SQLite + Admin (browser, no Electron) |
+| `pnpm build:web:electron` | Build Admin (Vite `electron` mode, `base: './'`) |
+| `pnpm build:desktop` | Above + electron-builder package |
+| `pnpm build:desktop:dir` | Unpacked `.app` (faster, verify prod paths) |
+| `pnpm open:desktop` | Launch `build:desktop:dir` output |
 
-## Web 侧适配要点
+## Web-side adaptation
 
-- `web/.env.electron` — 相对路径与默认 API
-- `web/src/shared/desktop/` — 工作区面板、API 配置、同步
-- `toolkit` — `getRuntime()`、`DesktopApi`（`getApiMode`、`setApiMode` 等）
+- `web/.env.electron` — relative paths and default API
+- `web/src/shared/desktop/` — workspace panel, API config, sync
+- `toolkit` — `getRuntime()`, `DesktopApi` (`getApiMode`, `setApiMode`, etc.)
 
-更完整的仓库架构说明见根目录 [ARCHITECTURE.md](../ARCHITECTURE.md)。
+Full architecture: root [ARCHITECTURE.md](../ARCHITECTURE.md).

@@ -1,58 +1,58 @@
-# seo（SEO 增强）
+# seo (SEO Enhancement)
 
-官方 SEO 插件：为文章提供 **URL 别名（slug）**、**SEO 关键词** 与 **meta 描述**，并可在发布时自动补全。
+Official SEO plugin: provides **URL slug**, **SEO keywords**, and **meta description** for articles, with optional auto-fill on publish.
 
-- **插件 id**：`seo`
-- **版本**：见 [`plugin.json`](./plugin.json)
+- **Plugin id**: `seo`
+- **Version**: see [`plugin.json`](./plugin.json)
 
-## 功能
+## Features
 
-| 字段 | 说明 |
+| Field | Description |
 | :--- | :--- |
-| `slug` | URL 别名，访问 `/article/{slug}` |
-| `seoKeywords` | meta keywords，逗号分隔 |
+| `slug` | URL alias, accessible at `/article/{slug}` |
+| `seoKeywords` | meta keywords, comma-separated |
 | `seoDescription` | meta description |
 
-| 场景 | 行为（插件启用且对应开关打开） |
+| Scenario | Behavior (when plugin enabled and option on) |
 | :--- | :--- |
-| 别名为空 | 从标题生成 slug |
-| SEO 描述为空 | 优先用摘要，否则从正文截取 |
-| SEO 关键词为空 | 使用标题 + 标签名称 |
+| Slug empty | Generate slug from title |
+| SEO description empty | Prefer summary, else truncate body |
+| SEO keywords empty | Use title + tag names |
 
-## Hook
+## Hooks
 
-| Hook | 类型 | 说明 |
+| Hook | Type | Description |
 | :--- | :--- | :--- |
-| `article.beforeCreate` | filter | 创建时补全 SEO 字段 |
-| `article.beforePublish` | filter | 发布时补全 SEO 字段 |
+| `article.beforeCreate` | filter | Fill SEO fields on create |
+| `article.beforePublish` | filter | Fill SEO fields on publish |
 
-## 配置
+## Configuration
 
-| 字段 | 类型 | 默认 | 说明 |
+| Field | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
-| `enabled` | boolean | `true` | 总开关 |
-| `autoSlug` | boolean | `true` | 自动生成别名 |
-| `autoDescription` | boolean | `true` | 自动生成描述 |
-| `autoKeywords` | boolean | `true` | 自动生成关键词 |
-| `descriptionMaxLength` | number | `160` | 描述最大长度 |
-| `descriptionSuffix` | string | `…` | 截断后缀 |
+| `enabled` | boolean | `true` | Master switch |
+| `autoSlug` | boolean | `true` | Auto-generate slug |
+| `autoDescription` | boolean | `true` | Auto-generate description |
+| `autoKeywords` | boolean | `true` | Auto-generate keywords |
+| `descriptionMaxLength` | number | `160` | Max description length |
+| `descriptionSuffix` | string | `…` | Truncation suffix |
 
-## 使用
+## Usage
 
-1. `pnpm dev`（会自动编译插件）
-2. 管理后台 → **插件** → 安装 **SEO 增强** → **启用**
-3. 写文章时在 **SEO 设置** 面板填写别名、关键词、描述（可留空由插件补全）
-4. 发布后在主题文章页查看 `<meta name="description">` 与 `<meta name="keywords">`
+1. `pnpm dev` (plugins are compiled automatically)
+2. Admin → **Plugins** → install **SEO Enhancement** → **Enable**
+3. Fill slug, keywords, and description in the **SEO Settings** panel (leave empty for auto-fill)
+4. After publish, check `<meta name="description">` and `<meta name="keywords">` on the theme article page
 
 ## Admin UI
 
-文章编辑器的 **SEO 设置** 面板通过 Admin 插槽 `article.editor.meta.afterSummary` 注入（见 [`admin/`](./admin/)）。插件停用后插槽自动卸载，面板不再显示。
+The **SEO Settings** panel in the article editor is injected via Admin slot `article.editor.meta.afterSummary` (see [`admin/`](./admin/)). The panel unmounts automatically when the plugin is deactivated.
 
-## 开发
+## Development
 
 ```bash
 pnpm --filter @fecommunity/reactpress-plugin-seo run build
 pnpm --filter @fecommunity/reactpress-plugin-seo run typecheck
 ```
 
-插件系统说明见 [`../README.md`](../README.md)。
+See [`../README.md`](../README.md) for the plugin system overview.

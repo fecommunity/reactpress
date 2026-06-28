@@ -1,46 +1,44 @@
 # @fecommunity/reactpress-web
 
-ReactPress **管理后台** SPA（Vite + TanStack Router）。Monorepo 内为 `web/` 工作区；也可作为独立 npm 包接入，提供预构建静态资源与 Node 静态服务工具。
+ReactPress **Admin** SPA (Vite + TanStack Router). In the monorepo this is the `web/` workspace; also published as a standalone npm package with prebuilt static assets and Node static-server helpers.
 
-## 通过 npm 接入
-
-安装：
+## Install via npm
 
 ```bash
 npm install @fecommunity/reactpress-web
-# 或
+# or
 pnpm add @fecommunity/reactpress-web
 ```
 
-### 快速启动（静态服务）
+### Quick start (static server)
 
-默认监听 `3000`，挂载路径 `/admin/`（与生产 nginx 一致）：
+Listens on `3000` by default, mounted at `/admin/` (matches production nginx):
 
 ```bash
 npx @fecommunity/reactpress-web
-# 等价
+# equivalent
 npx reactpress-web start --port 3000 --base /admin/
 ```
 
-需配合 API（同源 `/api` 或 nginx 反代）。本地联调示例：
+Requires an API (same-origin `/api` or nginx reverse proxy). Local dev example:
 
 ```bash
-# 终端 1：API
+# Terminal 1: API
 reactpress dev --api-only
 
-# 终端 2：Admin 静态包
+# Terminal 2: Admin static package
 npx @fecommunity/reactpress-web --port 3000
-# 打开 http://localhost:3000/admin/
+# open http://localhost:3000/admin/
 ```
 
-### 获取 dist 路径（nginx / Docker）
+### Get dist path (nginx / Docker)
 
 ```bash
 npx @fecommunity/reactpress-web path
 # → .../node_modules/@fecommunity/reactpress-web/dist
 ```
 
-nginx 示例（与仓库 `docker-compose.prod.yml` 一致）：
+nginx example (matches repo `docker-compose.prod.yml`):
 
 ```nginx
 location /admin/ {
@@ -52,14 +50,14 @@ location = /admin {
 }
 ```
 
-Docker volume：
+Docker volume:
 
 ```yaml
 volumes:
   - ./node_modules/@fecommunity/reactpress-web/dist:/usr/share/reactpress-admin:ro
 ```
 
-### 程序化接入（Express / Connect / 自定义 Node 服务）
+### Programmatic integration (Express / Connect / custom Node)
 
 ```javascript
 import express from "express";
@@ -67,16 +65,16 @@ import { createAdminStaticMiddleware, resolveDistDir } from "@fecommunity/reactp
 
 const app = express();
 
-// 挂载在 /admin/（默认 basePath）
+// Mount at /admin/ (default basePath)
 app.use(createAdminStaticMiddleware({ basePath: "/admin/" }));
 
-// 或仅取 dist 目录自行托管
+// Or resolve dist dir and host yourself
 console.log(resolveDistDir()); // .../node_modules/@fecommunity/reactpress-web/dist
 
 app.listen(3000);
 ```
 
-也可直接使用内置 HTTP 服务：
+Built-in HTTP server:
 
 ```javascript
 import { serveAdmin } from "@fecommunity/reactpress-web";
@@ -84,32 +82,32 @@ import { serveAdmin } from "@fecommunity/reactpress-web";
 serveAdmin({ port: 3000, basePath: "/admin/" });
 ```
 
-### 导出 API
+### Exported API
 
-| 导出                            | 说明                                     |
-| ------------------------------- | ---------------------------------------- |
-| `resolveDistDir()`              | 解析包内 `dist/` 绝对路径                |
-| `createAdminStaticMiddleware()` | Connect/Express 中间件，含 SPA fallback  |
-| `createAdminStaticHandler()`    | 原生 `http` 请求处理器                   |
-| `serveAdmin()`                  | 启动独立静态服务器                       |
-| `syncAdminDistToPublic()`       | 复制 dist 到 Next.js `public/`（Vercel） |
-| `createAdminVercelRedirects()`  | Next.js：`/admin` → `/admin/`            |
-| `createAdminVercelRewrites()`   | Next.js：Admin SPA fallback              |
-| `DEFAULT_ADMIN_BASE`            | 默认 `/admin/`                           |
+| Export                          | Description                                  |
+| ------------------------------- | -------------------------------------------- |
+| `resolveDistDir()`              | Resolve absolute path to package `dist/`     |
+| `createAdminStaticMiddleware()` | Connect/Express middleware with SPA fallback |
+| `createAdminStaticHandler()`    | Native `http` request handler                |
+| `serveAdmin()`                  | Start standalone static server               |
+| `syncAdminDistToPublic()`       | Copy dist to Next.js `public/` (Vercel)      |
+| `createAdminVercelRedirects()`  | Next.js: `/admin` → `/admin/`                |
+| `createAdminVercelRewrites()`   | Next.js: Admin SPA fallback                  |
+| `DEFAULT_ADMIN_BASE`            | Default `/admin/`                            |
 
-## Next.js 应用接入
+## Next.js integration
 
-Admin 是独立 Vite SPA（`base: /admin/`），**不能**只复制到 Next.js `public/`（缺少 SPA fallback，客户端路由会 404）。推荐三种方式：
+Admin is a standalone Vite SPA (`base: /admin/`). **Do not** copy it into Next.js `public/` alone — client routes will 404 without SPA fallback. Three recommended patterns:
 
-### 方式 A：Custom Server（同域，推荐生产）
+### Option A: Custom server (same origin, recommended for production)
 
-访客站与 `/admin/` 共用一个 Node 进程、同一端口（与 ReactPress 官方 nginx 统一入口效果一致）：
+Visitor site and `/admin/` share one Node process and port (same effect as ReactPress nginx unified entry):
 
 ```bash
 pnpm add @fecommunity/reactpress-web next
 ```
 
-`server.mjs`（在 `package.json` 中 `"start": "node server.mjs"`）：
+`server.mjs` (set `"start": "node server.mjs"` in `package.json`):
 
 ```javascript
 import { createServer } from "node:http";
@@ -129,11 +127,11 @@ createServer(
     handle(req, res, parse(req.url, true));
   }),
 ).listen(port, () => {
-  console.log(`> http://localhost:${port}  (访客站 + /admin/)`);
+  console.log(`> http://localhost:${port}  (visitor site + /admin/)`);
 });
 ```
 
-`next.config.mjs` 中把 API 反代到 ReactPress 后端（Admin 默认同源请求 `/api`）：
+Proxy API in `next.config.mjs` (Admin defaults to same-origin `/api`):
 
 ```javascript
 const apiOrigin = (process.env.SERVER_API_URL ?? "http://localhost:3002").replace(/\/api\/?$/, "");
@@ -149,52 +147,52 @@ export default {
 };
 ```
 
-访问：`http://localhost:3001/`（主题） · `http://localhost:3001/admin/`（后台）。
+Visit: `http://localhost:3001/` (theme) · `http://localhost:3001/admin/` (admin).
 
-### 方式 B：Next rewrites 反代（开发 / 进程拆分）
+### Option B: Next rewrites proxy (dev / split processes)
 
-Admin 单独跑在 `:3000`，Next 只做反代（适合 `next dev` 不想写 custom server 时）：
+Admin runs on `:3000`, Next proxies only (handy when avoiding custom server during `next dev`):
 
 ```bash
-# 终端 1
+# Terminal 1
 npx @fecommunity/reactpress-web --port 3000
 
-# 终端 2 — next.config.mjs
+# Terminal 2 — next.config.mjs
 import { createAdminRewrites } from "@fecommunity/reactpress-web/next";
 
 export default {
   async rewrites() {
     return [
       ...createAdminRewrites({ adminOrigin: "http://localhost:3000" }),
-      // 再加上 /api 反代，见方式 A
+      // add /api proxy — see Option A
     ];
   },
 };
 ```
 
-环境变量：`REACTPRESS_ADMIN_ORIGIN=http://localhost:3000`。
+Env: `REACTPRESS_ADMIN_ORIGIN=http://localhost:3000`.
 
-### 方式 C：nginx 统一入口（与 Monorepo 部署一致）
+### Option C: nginx unified entry (matches monorepo deploy)
 
-Next.js（`:3001`）、Admin（`:3000` 或静态目录）、API（`:3002`）分进程，由 nginx 路由：
+Next.js (`:3001`), Admin (`:3000` or static dir), API (`:3002`) as separate processes, routed by nginx:
 
-| 路径      | 上游                                   |
-| --------- | -------------------------------------- |
-| `/`       | Next.js 访客站                         |
-| `/admin/` | `@fecommunity/reactpress-web` 静态目录 |
-| `/api`    | ReactPress API                         |
+| Path      | Upstream                                 |
+| --------- | ---------------------------------------- |
+| `/`       | Next.js visitor site                     |
+| `/admin/` | `@fecommunity/reactpress-web` static dir |
+| `/api`    | ReactPress API                           |
 
-静态目录：`npx @fecommunity/reactpress-web path`。
+Static dir: `npx @fecommunity/reactpress-web path`.
 
-### 方式 D：Vercel 同域静态托管（无 custom server）
+### Option D: Vercel same-origin static (no custom server)
 
-Vercel 无法跑 custom server，需把 Admin 构建产物放进 Next.js `public/admin/`，并用 rewrites 做 SPA fallback：
+Vercel cannot run a custom server. Put Admin build output in Next.js `public/admin/` and use rewrites for SPA fallback:
 
 ```bash
 pnpm add @fecommunity/reactpress-web
 ```
 
-`package.json`：
+`package.json`:
 
 ```json
 {
@@ -204,7 +202,7 @@ pnpm add @fecommunity/reactpress-web
 }
 ```
 
-`next.config.js`（`themes/hello-world/next.config.js` 已内置，独立项目可复制）：
+`next.config.js` (built into `themes/hello-world/next.config.js`; copy for standalone projects):
 
 ```javascript
 const { createAdminVercelRewrites } = require("@fecommunity/reactpress-web/next");
@@ -213,7 +211,7 @@ module.exports = {
   async rewrites() {
     return {
       beforeFiles: [
-        // /api 等反代规则放这里
+        // /api and other proxy rules here
       ],
       afterFiles: createAdminVercelRewrites().afterFiles,
     };
@@ -221,27 +219,27 @@ module.exports = {
 };
 ```
 
-Monorepo 内构建主题前需先 `pnpm build:web`（或发布 npm 包自带 dist）。Vercel 构建示例：
+In monorepo, run `pnpm build:web` before theme build (or use published npm package with bundled dist). Vercel build example:
 
 ```bash
-# installCommand（仓库根）
+# installCommand (repo root)
 pnpm install --frozen-lockfile && pnpm run build:web
 
-# buildCommand（主题目录）
+# buildCommand (theme directory)
 pnpm run build
 ```
 
-访问：`https://your-site.vercel.app/admin/`。
+Visit: `https://your-site.vercel.app/admin/`.
 
-### 注意
+### Notes
 
-- Admin 生产构建默认 `VITE_API_BASE_URL=/api`，需保证浏览器能访问同源 `/api`（Next rewrites 或 nginx）。
-- **Vercel / 纯 Serverless** 无法跑 custom server；请用[方式 D](#方式-dvercel-同域静态托管无-custom-server)（`sync-public` + `createAdminVercelRewrites`），或单独部署 Admin 后再 rewrite（方式 B/C）。
-- 使用 `@fecommunity/reactpress-toolkit/theme/next-config` 的主题可参考 `themes/hello-world/next.config.js` 的 API rewrites 写法。
+- Admin production build defaults to `VITE_API_BASE_URL=/api`; ensure the browser can reach same-origin `/api` (Next rewrites or nginx).
+- **Vercel / pure Serverless** cannot run a custom server; use [Option D](#option-d-vercel-same-origin-static-no-custom-server) (`sync-public` + `createAdminVercelRewrites`), or deploy Admin separately and rewrite (Options B/C).
+- Themes using `@fecommunity/reactpress-toolkit/theme/next-config` can reference `themes/hello-world/next.config.js` for API rewrite patterns.
 
-## 在 Monorepo 内开发
+## Monorepo development
 
-依赖与锁文件在仓库根目录统一管理。
+Dependencies and lockfile are managed at repository root.
 
 ```bash
 pnpm install
@@ -249,16 +247,16 @@ pnpm dev:web          # Admin + API
 pnpm build:web        # toolkit + web/dist
 ```
 
-目录约定见根目录 [`design.md`](../design.md)。环境变量见 [`.env.example`](./.env.example)。
+Directory conventions: root [`design.md`](../design.md). Environment variables: [`.env.example`](./.env.example).
 
-## 发布
+## Publishing
 
-在仓库根目录：
+From repository root:
 
 ```bash
 pnpm publish:packages
-# 或
+# or
 reactpress publish --publish
 ```
 
-选择 `@fecommunity/reactpress-web` 时会先构建 `toolkit` 与 `web/dist`，再发布到 npm。
+Selecting `@fecommunity/reactpress-web` builds `toolkit` and `web/dist` first, then publishes to npm.

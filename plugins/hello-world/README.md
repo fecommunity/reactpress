@@ -1,41 +1,41 @@
-# hello-world（自动摘要）
+# hello-world (Auto Summary)
 
-官方示例插件：**发布文章时，若 `summary` 为空，从 Markdown 正文（或标题）自动生成摘要**。
+Official example plugin: **when publishing an article, if `summary` is empty, generate a summary from Markdown body (or title).**
 
-- **插件 id**：`hello-world`（历史 id，保持不变）
-- **显示名称**：自动摘要
-- **版本**：见 [`plugin.json`](./plugin.json)
+- **Plugin id**: `hello-world` (historical id, unchanged)
+- **Display name**: Auto Summary
+- **Version**: see [`plugin.json`](./plugin.json)
 
-## 功能
+## Features
 
-| 场景 | 行为 |
+| Scenario | Behavior |
 | :--- | :--- |
-| 发布时已有摘要 | 不修改 |
-| 摘要为空、正文有内容 | 去 Markdown 格式后截断写入 `summary` |
-| 摘要与正文均为空 | 若开启 `fallbackToTitle`，使用标题 |
+| Summary already set on publish | No change |
+| Summary empty, body has content | Strip Markdown, truncate, write `summary` |
+| Summary and body both empty | Use title if `fallbackToTitle` is enabled |
 
-## Hook
+## Hooks
 
-仅订阅一个 Hook，职责单一：
+Subscribes to a single hook with a focused responsibility:
 
-| Hook | 类型 | 说明 |
+| Hook | Type | Description |
 | :--- | :--- | :--- |
-| `article.beforePublish` | filter | 发布前补全 `summary` |
+| `article.beforePublish` | filter | Fill in `summary` before publish |
 
-## 配置
+## Configuration
 
-通过 `plugin.json` → `settings.schema` 声明，写入 `globalSetting.plugins.entries.hello-world.config`：
+Declared via `plugin.json` → `settings.schema`, stored in `globalSetting.plugins.entries.hello-world.config`.
 
-管理端展示文案（插件名、描述、各设置项标题）放在 [`locales/`](./locales/)（与主题相同：`locales/{locale}.json`），随后台中/英文切换；`plugin.json` 内中文为缺省回退。
+Admin UI strings (plugin name, descriptions, field labels) live in [`locales/`](./locales/) (`locales/{locale}.json`), following the same convention as themes; Chinese strings in `plugin.json` serve as fallback.
 
-| 字段 | 类型 | 默认 | 说明 |
+| Field | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
-| `enabled` | boolean | `true` | 是否启用自动摘要 |
-| `maxLength` | number | `160` | 最大长度（40–500） |
-| `suffix` | string | `…` | 超出长度时的后缀 |
-| `fallbackToTitle` | boolean | `true` | 正文为空时是否用标题 |
+| `enabled` | boolean | `true` | Enable auto summary |
+| `maxLength` | number | `160` | Max length (40–500) |
+| `suffix` | string | `…` | Suffix when truncated |
+| `fallbackToTitle` | boolean | `true` | Use title when body is empty |
 
-更新配置（需管理员登录）：
+Update config (admin login required):
 
 ```bash
 curl -X PUT http://localhost:3002/api/extension/plugins/hello-world/config \
@@ -44,23 +44,23 @@ curl -X PUT http://localhost:3002/api/extension/plugins/hello-world/config \
   -d '{"config":{"enabled":true,"maxLength":120}}'
 ```
 
-保存后 Server 会自动 reload 插件，无需重启。
+Config save triggers an automatic plugin reload — no server restart needed.
 
-## 使用
+## Usage
 
-1. `pnpm dev`（会自动编译插件）
-2. 管理后台 → **插件** → 安装 **hello-world** → **启用**
-3. 点击插件行的 **设置**（或访问 `/admin/plugins/hello-world/settings`）配置摘要长度等选项
-4. 写文章时**留空摘要** → 发布 → 摘要框应出现自动生成内容
+1. `pnpm dev` (plugins are compiled automatically)
+2. Admin → **Plugins** → install **hello-world** → **Enable**
+3. Click **Settings** on the plugin row (or visit `/admin/plugins/hello-world/settings`)
+4. Leave summary empty when writing → publish → summary field should be auto-filled
 
-Server 日志示例：
+Example server logs:
 
 ```text
 [PluginService] [hello-world] registered (enabled=true, maxLength=160)
 [PluginLoaderService] Loaded plugin "hello-world" v1.2.0
 ```
 
-## 目录结构
+## Directory structure
 
 ```
 hello-world/
@@ -69,34 +69,34 @@ hello-world/
 ├── tsconfig.json
 ├── README.md
 └── src/
-    ├── index.ts      # register() 入口
-    ├── config.ts     # 默认配置与 merge
-    ├── summary.ts    # Markdown  strip + 截断
+    ├── index.ts      # register() entry
+    ├── config.ts     # defaults and merge
+    ├── summary.ts    # Markdown strip + truncate
     └── types.ts
         ↓ tsc
     dist/
-    └── index.js      # runtime 加载此文件
+    └── index.js      # runtime loads this file
 ```
 
-## 开发
+## Development
 
 ```bash
-# 在 monorepo 根目录
+# from monorepo root
 pnpm --filter @reactpress/plugin-hello-world run build
 pnpm --filter @reactpress/plugin-hello-world run typecheck
 
-# 修改 src 后重新 build，并在后台停用 → 启用插件
+# after editing src, rebuild and deactivate → reactivate in admin
 ```
 
-依赖：
+Dependencies:
 
-- `@fecommunity/reactpress-toolkit/plugin/server` — `HookService`、`PluginContext` 类型
+- `@fecommunity/reactpress-toolkit/plugin/server` — `HookService`, `PluginContext` types
 
-## 作为新插件模板
+## Use as a new plugin template
 
-1. 复制本目录为 `plugins/my-plugin/`
-2. 修改 `plugin.json` 的 `id`、`name`、`hooks.subscribe`
-3. 重写 `src/index.ts` 与业务模块
-4. 将 id 加入 [`plugins/package.json`](../package.json) 的 `local` 列表
+1. Copy this directory to `plugins/my-plugin/`
+2. Update `plugin.json` `id`, `name`, `hooks.subscribe`
+3. Rewrite `src/index.ts` and business modules
+4. Add the id to [`plugins/package.json`](../package.json) → `local` list
 
-插件系统说明见 [`../README.md`](../README.md)。
+See [`../README.md`](../README.md) for the plugin system overview.

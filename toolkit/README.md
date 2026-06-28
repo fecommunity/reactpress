@@ -1,89 +1,89 @@
 # @fecommunity/reactpress-toolkit
 
-ReactPress 的 TypeScript 工具包：从 OpenAPI/Swagger 生成的 API 客户端、站点配置类型、Next.js 主题 SSR 辅助，以及管理后台插件注册。
+TypeScript toolkit for ReactPress: OpenAPI/Swagger-generated API clients, site config types, Next.js theme SSR helpers, and admin plugin registry.
 
-## 包导出（`package.json` → `exports`）
+## Package exports (`package.json` → `exports`)
 
-| 子路径 | 用途 |
+| Subpath | Purpose |
 |--------|------|
-| `.` | 根入口：`api`、`config`、`theme`、`ui`、`plugin` 命名空间及常用 re-export |
-| `./api` | 各资源 HTTP 客户端类 |
-| `./api/instance` | 默认 `api` 实例与 `createApiInstance` |
-| `./types` | Swagger 生成的请求/响应类型 |
-| `./utils` | 与业务无关的纯工具（见下方模块表） |
-| `./config` | 环境变量、全局默认、`i18n` 文案（`config/locales/*.json`） |
-| `./theme` | 访客主题：SSR 拉数、运行时、扩展配置类型，并 re-export `./ui` |
+| `.` | Root entry: `api`, `config`, `theme`, `ui`, `plugin` namespaces and common re-exports |
+| `./api` | HTTP client classes per resource |
+| `./api/instance` | Default `api` instance and `createApiInstance` |
+| `./types` | Swagger-generated request/response types |
+| `./utils` | Framework-agnostic utilities (see module table below) |
+| `./config` | Env vars, global defaults, `i18n` strings (`config/locales/*.json`) |
+| `./theme` | Visitor themes: SSR data fetch, runtime, extension config types; re-exports `./ui` |
 | `./theme/next-config` | `createReactPressNextConfig()` |
-| `./theme/node` | Node 专用（如读取主题管理端 locale 文件） |
-| `./ui` | 无样式主题组件与 hooks |
-| `./plugin` | 管理端插件聚合入口 |
-| `./plugin/admin` | 菜单注册、权限常量 |
-| `./plugin/client` | Web/Electron API 客户端工厂（推荐） |
-| `./plugin/react` | 与 `./plugin/client` 相同（兼容旧路径） |
-| `./plugin/dev` | Vite 开发端口重定向等 |
+| `./theme/node` | Node-only helpers (e.g. read theme admin locale files) |
+| `./ui` | Unstyled theme components and hooks |
+| `./plugin` | Admin plugin aggregate entry |
+| `./plugin/admin` | Menu registration, permission constants |
+| `./plugin/client` | Web/Electron API client factory (recommended) |
+| `./plugin/react` | Same as `./plugin/client` (legacy path) |
+| `./plugin/dev` | Vite dev port redirect, etc. |
 
-**约定：** `src/` 下仅保留与上述导出对应的一级目录；实现细节放在子目录中，根目录用薄 shim 保持对外路径稳定（例如 `theme/node.ts` → `theme/build/node.ts`）。
+**Convention:** Only top-level directories under `src/` match the exports above; implementation details live in subdirectories with thin shims at the root (e.g. `theme/node.ts` → `theme/build/node.ts`).
 
-## 源码结构
+## Source layout
 
 ```
 src/
-├── api/              # OpenAPI 生成（勿手改业务逻辑）
-├── config/           # env、global、i18n + locales/
-├── types/            # Swagger 生成类型
-├── utils/            # 纯函数工具（theme/plugin 共用）
+├── api/              # OpenAPI generated (do not hand-edit business logic)
+├── config/           # env, global, i18n + locales/
+├── types/            # Swagger generated types
+├── utils/            # Pure utilities (shared by theme/plugin)
 │   ├── api-envelope.ts   # unpackList / unpackOne / unpackPaginated
 │   ├── cookie.ts         # readRequestCookie
-│   ├── date.ts           # formatDate、formatPublishDate*
-│   ├── email.ts          # 评论邮箱校验
-│   ├── error.ts          # ApiError、isApiError
+│   ├── date.ts           # formatDate, formatPublishDate*
+│   ├── email.ts          # Comment email validation
+│   ├── error.ts          # ApiError, isApiError
 │   ├── json.ts           # safeJsonParse
-│   ├── jsonp.ts          # 浏览器 JSONP
-│   ├── object.ts         # deepMerge、getByPath、deepClone
+│   ├── jsonp.ts          # Browser JSONP
+│   ├── object.ts         # deepMerge, getByPath, deepClone
 │   ├── setting.ts        # pickSiteSettings
-│   └── string.ts         # stripHtml、truncateWords
+│   └── string.ts         # stripHtml, truncateWords
 ├── plugin/
-│   ├── admin/        # AdminModule、菜单注册、权限
-│   ├── client/       # createClient、resolveApiBaseUrl
-│   ├── dev/          # devPortRedirectPlugin 等
-│   └── react/        # 仅 re-export client（兼容）
+│   ├── admin/        # AdminModule, menu registration, permissions
+│   ├── client/       # createClient, resolveApiBaseUrl
+│   ├── dev/          # devPortRedirectPlugin, etc.
+│   └── react/        # Re-export client only (compat)
 ├── theme/
-│   ├── api/          # themeApi、axios 封装（JSON/解包 re-export utils）
-│   ├── ssr/          # fetch、static props、站点 meta
-│   ├── visitor/      # 语言、会话、配色、运行时 mods
-│   ├── content/      # SEO、导航路径、摘要、静态资源 URL
-│   ├── preview/      # 预览 token / mods / config 查询参数
-│   ├── createCatalogApp.js  # 完整主题 _app 工厂（无 UI 框架依赖）
-│   ├── createApp.js  # Next `_app` 工厂（allowJs，随 tsc 输出到 dist）
-│   ├── extension/    # theme.json  schema、站点配置、与服务端共享的类型
+│   ├── api/          # themeApi, axios wrapper
+│   ├── ssr/          # fetch, static props, site meta
+│   ├── visitor/      # Language, session, colors, runtime mods
+│   ├── content/      # SEO, nav paths, excerpts, static asset URLs
+│   ├── preview/      # Preview token / mods / config query params
+│   ├── createCatalogApp.js  # Full theme _app factory (no UI framework)
+│   ├── createApp.js  # Next `_app` factory (allowJs, emitted to dist)
+│   ├── extension/    # theme.json schema, site config, shared server types
 │   ├── node.ts       # → build/node
 │   ├── next-config.ts
-│   └── index.ts      # 对外 barrel
+│   └── index.ts      # Public barrel
 └── ui/
-    ├── components/   # 无样式 React 组件
-    ├── context/      # ReactPressProvider、locale、runtime
-    └── hooks/        # 通用 React hooks（与具体页面无关）
+    ├── components/   # Unstyled React components
+    ├── context/      # ReactPressProvider, locale, runtime
+    └── hooks/        # Generic React hooks
 ```
 
-## 安装
+## Install
 
 ```bash
 pnpm add @fecommunity/reactpress-toolkit
 ```
 
-## 快速开始
+## Quick start
 
-### API 客户端
+### API client
 
 ```typescript
 import { api } from '@fecommunity/reactpress-toolkit';
-// 或
+// or
 import { api, createApiInstance } from '@fecommunity/reactpress-toolkit/api/instance';
 
 const articles = await api.article.findAll();
 ```
 
-自定义 baseURL：
+Custom baseURL:
 
 ```typescript
 import { createApiInstance } from '@fecommunity/reactpress-toolkit/api/instance';
@@ -91,9 +91,9 @@ import { createApiInstance } from '@fecommunity/reactpress-toolkit/api/instance'
 const customApi = createApiInstance({ baseURL: 'https://api.example.com/api' });
 ```
 
-### 通用工具（`./utils`）
+### Utilities (`./utils`)
 
-与 Next/主题无关的逻辑应放在 `utils`，`theme` 仅 re-export 以保持 `@fecommunity/reactpress-toolkit/theme` 路径兼容：
+Framework-agnostic logic belongs in `utils`; `theme` re-exports for `@fecommunity/reactpress-toolkit/theme` compatibility:
 
 ```typescript
 import {
@@ -107,49 +107,49 @@ import {
 } from '@fecommunity/reactpress-toolkit/utils';
 ```
 
-| 模块 | 典型用途 |
+| Module | Typical use |
 |------|----------|
-| `json` | 解析 setting 里的 JSON 字符串 |
-| `api-envelope` | 解包 Nest `TransformInterceptor` 的 `{ data }` |
-| `date` | 文章发布日期展示 |
-| `string` | 归档摘要 HTML 剥离、截断 |
-| `object` | theme.json 配置合并、点路径读写 |
-| `setting` | 把 settings 行映射为 props |
-| `cookie` | SSR 读取 `Cookie` 头 |
-| `email` | 访客评论邮箱格式 |
+| `json` | Parse JSON strings in settings |
+| `api-envelope` | Unwrap Nest `TransformInterceptor` `{ data }` |
+| `date` | Article publish date display |
+| `string` | Strip HTML for archive excerpts, truncate |
+| `object` | Merge theme.json config, dot-path read/write |
+| `setting` | Map settings rows to props |
+| `cookie` | Read `Cookie` header in SSR |
+| `email` | Visitor comment email format |
 
-### 管理后台插件
+### Admin plugins
 
 ```typescript
 import type { AdminModule } from '@fecommunity/reactpress-toolkit/plugin/admin';
 import { permissionsForRole } from '@fecommunity/reactpress-toolkit/plugin/admin';
 ```
 
-### Web / Electron 客户端
+### Web / Electron client
 
 ```typescript
 import { createClient, resolveApiBaseUrl } from '@fecommunity/reactpress-toolkit/plugin/client';
 ```
 
-## App 工厂（`./app`）
+## App factories (`./app`)
 
-主题 `_app.tsx` 的入口工厂，与 UI 框架无关：
+Entry factories for theme `_app.tsx`, UI-framework agnostic:
 
-| 工厂 | 用途 |
+| Factory | Purpose |
 |------|------|
-| `createThemeApp` | 极简主题（hello-world）：`ReactPressProvider` + `ThemeCssVars` |
-| `createReactPressApp` | 完整主题：SSR catalog、i18n、统计、PV；通过 `wrapContent` 注入 Ant Design 等 |
+| `createThemeApp` | Minimal theme (hello-world): `ReactPressProvider` + `ThemeCssVars` |
+| `createReactPressApp` | Full theme: SSR catalog, i18n, analytics, PV; inject Ant Design etc. via `wrapContent` |
 
 ```typescript
 import { createThemeApp } from '@fecommunity/reactpress-toolkit/app';
 import { createReactPressApp } from '@fecommunity/reactpress-toolkit/app';
 ```
 
-也可从 `./theme`  re-export 导入（兼容旧路径）。
+Also re-exported from `./theme` (legacy paths).
 
-## 主题开发（`./theme`）
+## Theme development (`./theme`)
 
-Next.js 访客主题应使用 toolkit 提供的 API 与 SSR 辅助，避免在每个主题里复制 `lib/api.ts`。
+Next.js visitor themes should use toolkit API and SSR helpers instead of copying `lib/api.ts` per theme.
 
 ```typescript
 import {
@@ -175,7 +175,7 @@ import themeManifest from '../theme.json';
 export default createThemeApp(themeManifest);
 ```
 
-**完整功能主题** — 使用 `createReactPressApp`（UI 框架无关），Ant Design 等重型依赖留在主题内：
+**Full-featured themes** — use `createReactPressApp` (UI-framework agnostic); keep Ant Design and heavy deps in the theme:
 
 ```typescript
 import { createReactPressApp } from '@fecommunity/reactpress-toolkit/app';
@@ -193,9 +193,9 @@ export default createReactPressApp(themeManifest, {
 });
 ```
 
-`createReactPressApp` 内置：SSR 站点数据、预览 mods、SiteCatalogProvider、路由进度条、统计脚本、PV 上报。**不含** Ant Design / cssinjs。
+`createReactPressApp` includes: SSR site data, preview mods, SiteCatalogProvider, route progress, analytics scripts, PV reporting. **Does not** include Ant Design / cssinjs.
 
-**REST Provider** — 无需在每个主题复制 14 个 Provider 文件：
+**REST providers** — avoid copying 14 provider files per theme:
 
 ```typescript
 import { createThemeAxiosClient, createThemeProviders } from '@fecommunity/reactpress-toolkit/theme';
@@ -204,68 +204,68 @@ export const httpProvider = createThemeAxiosClient({ onError, onUnauthorized });
 export const { ArticleProvider, CategoryProvider, TagProvider } = createThemeProviders(httpProvider);
 ```
 
-环境变量：`REACTPRESS_API_URL`（SSR）、`NEXT_PUBLIC_REACTPRESS_API_URL`（浏览器），由 `reactpress theme dev` 注入。
+Env: `REACTPRESS_API_URL` (SSR), `NEXT_PUBLIC_REACTPRESS_API_URL` (browser), injected by `reactpress theme dev`.
 
-### 无样式 UI（`./ui`）
+### Headless UI (`./ui`)
 
-也可从 `./theme` 一并导入：
+Also importable from `./theme`:
 
 ```typescript
 import { NavMenu, ArticleList, ReactPressProvider, useLocale } from '@fecommunity/reactpress-toolkit/ui';
 ```
 
-| 符号 | 说明 |
+| Symbol | Description |
 |------|------|
-| `ReactPressProvider` | 在 `_app` 注入站点上下文 |
-| `useLocale` / `useThemeRuntime` / `useThemeMod` | 语言与主题 mods |
-| `useToggle` / `useAsyncLoading` | 布尔切换、防抖 loading（评论/搜索等） |
-| `usePagination` | `[items, total]` 分页列表 |
-| `useReportArticleView` / `useReportPageView` | 文章阅读数、全站 PV 上报 |
-| `useRouteParam` / `useNavActive` | 动态路由参数、导航高亮 |
-| `useWarningOnExit` | 离开页面前确认（Next Router） |
-| `NavMenu` | 配置驱动导航，通过 `renderLink` 接 Next `Link` |
-| `ArticleList` | 列表渲染，通过 `renderArticle` 自定义卡片 |
-| `SiteCatalogProvider` / `useSiteSetting` / `useSiteUser` | 全站 catalog + 用户会话 |
-| `SiteSeo` / `RouteProgress` / `SiteAnalytics` | SEO meta、路由进度条、GA/百度统计 |
-| `ArticleReader` / `HtmlContent` / `ArticleToc` | 文章阅读、HTML 渲染、目录 |
-| `ImageViewer` / `LocaleTime` | 图片预览、本地化时间 |
-| `createReactPressApp` | 完整主题 `_app` 工厂（`@fecommunity/reactpress-toolkit/app`） |
-| `fetchAppBootstrap` | `_app.getInitialProps` SSR 数据（setting / taxonomy / preview） |
+| `ReactPressProvider` | Inject site context in `_app` |
+| `useLocale` / `useThemeRuntime` / `useThemeMod` | Language and theme mods |
+| `useToggle` / `useAsyncLoading` | Boolean toggle, debounced loading |
+| `usePagination` | `[items, total]` paginated lists |
+| `useReportArticleView` / `useReportPageView` | Article views, site PV |
+| `useRouteParam` / `useNavActive` | Dynamic route params, nav highlight |
+| `useWarningOnExit` | Confirm before leaving page (Next Router) |
+| `NavMenu` | Config-driven nav via `renderLink` + Next `Link` |
+| `ArticleList` | List renderer via `renderArticle` |
+| `SiteCatalogProvider` / `useSiteSetting` / `useSiteUser` | Site catalog + user session |
+| `SiteSeo` / `RouteProgress` / `SiteAnalytics` | SEO meta, progress bar, GA/Baidu |
+| `ArticleReader` / `HtmlContent` / `ArticleToc` | Article reading, HTML, TOC |
+| `ImageViewer` / `LocaleTime` | Image preview, localized time |
+| `createReactPressApp` | Full theme `_app` factory |
+| `fetchAppBootstrap` | `_app.getInitialProps` SSR data |
 
-### 扩展配置类型
+### Extension config types
 
-`theme/extension` 中的类型与校验逻辑与 **server**、**web 外观设置** 共用，例如 `ThemeConfigurationSchema`、`resolveSiteConfig`、`PUBLIC_SETTING_KEYS`。服务端可：
+Types and validation in `theme/extension` are shared with **server** and **web appearance settings**, e.g. `ThemeConfigurationSchema`, `resolveSiteConfig`, `PUBLIC_SETTING_KEYS`. Server example:
 
 ```typescript
 import { PUBLIC_SETTING_KEYS, systemGlobalSettingDefaults } from '@fecommunity/reactpress-toolkit/theme';
 import { readThemeAdminLocaleFile } from '@fecommunity/reactpress-toolkit/theme/node';
 ```
 
-## 从 Swagger 重新生成 API
+## Regenerate API from Swagger
 
-在 monorepo 根目录确保 server 可构建后：
+From monorepo root, ensure server builds:
 
 ```bash
 cd toolkit && pnpm run generate
 ```
 
-将更新 `src/api/*` 与 `src/types/*`。
+Updates `src/api/*` and `src/types/*`.
 
-## 构建
+## Build
 
 ```bash
 cd toolkit && pnpm run build
 ```
 
-输出到 `dist/`；`createApp.js` 随 `tsc`（`allowJs`）写入 `dist/theme/createApp.js`。
+Output in `dist/`; `createApp.js` is emitted via `tsc` (`allowJs`) to `dist/theme/createApp.js`.
 
-## 开发脚本
+## Scripts
 
-| 命令 | 说明 |
+| Command | Description |
 |------|------|
-| `pnpm run generate` | 从 server Swagger 生成 API |
-| `pnpm run build` | `tsc` + 复制 locales |
-| `pnpm run typecheck` | 仅类型检查 |
+| `pnpm run generate` | Generate API from server Swagger |
+| `pnpm run build` | `tsc` + copy locales |
+| `pnpm run typecheck` | Type check only |
 
 ## License
 
