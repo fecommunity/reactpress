@@ -234,6 +234,10 @@ const config: Config = {
       },
       {name: 'robots', content: 'index, follow, max-image-preview:large'},
       {name: 'googlebot', content: 'index, follow'},
+      {
+        name: 'google-site-verification',
+        content: '8t6NmKz1PcYI6YSo4N390MXzZSy-Hg-RLa12p7d5cmM',
+      },
       {name: 'twitter:card', content: 'summary_large_image'},
     ],
   } satisfies Preset.ThemeConfig,
