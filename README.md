@@ -123,6 +123,9 @@ reactpress init && reactpress dev
 
 ## Contents
 
+- [See it in action](#see-it-in-action)
+- [30-second start](#30-second-start)
+- [Contents](#contents)
 - [The problem](#the-problem)
 - [What is ReactPress?](#what-is-reactpress)
 - [What you can build](#what-you-can-build)
@@ -134,6 +137,7 @@ reactpress init && reactpress dev
 - [What's new in 4.0](#whats-new-in-40)
 - [For developers](#for-developers)
 - [Deploy](#deploy)
+- [Roadmap (4.x)](#roadmap-4x)
 - [FAQ](#faq)
 - [Contributing](#contributing)
 

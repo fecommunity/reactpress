@@ -11,7 +11,7 @@ const config: Config = {
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here (override via DOCS_SITE_URL in CI/Vercel)
-  url: process.env.DOCS_SITE_URL?.trim() || 'https://reactpress-docs.vercel.app',
+  url: process.env.DOCS_SITE_URL?.trim() || 'https://docs.gaoredu.com',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
@@ -217,6 +217,10 @@ const config: Config = {
       },
       {name: 'robots', content: 'index, follow, max-image-preview:large'},
       {name: 'googlebot', content: 'index, follow'},
+      {
+        name: 'google-site-verification',
+        content: '8t6NmKz1PcYI6YSo4N390MXzZSy-Hg-RLa12p7d5cmM',
+      },
       {name: 'twitter:card', content: 'summary_large_image'},
     ],
   } satisfies Preset.ThemeConfig,

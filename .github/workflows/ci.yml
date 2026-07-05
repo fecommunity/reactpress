@@ -25,7 +25,7 @@ jobs:
       - name: Build docs
         run: pnpm run build:docs
         env:
-          DOCS_SITE_URL: ${{ vars.DOCS_SITE_URL || 'https://reactpress-docs.vercel.app' }}
+          DOCS_SITE_URL: ${{ vars.DOCS_SITE_URL || 'https://docs.gaoredu.com' }}
 
   build-and-smoke:
     runs-on: ubuntu-latest
