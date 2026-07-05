@@ -1,7 +1,7 @@
 {
   "name": "@fecommunity/reactpress",
   "version": "4.0.0-beta.3",
-  "description": "ReactPress 4.0 — zero-config CMS: CLI, plugins, desktop, MySQL & SQLite",
+  "description": "ReactPress 4.0 CLI — full publishing platform bootstrap: CMS, Admin, API, themes, plugins, desktop",
   "author": "fecommunity",
   "license": "MIT",
   "repository": {

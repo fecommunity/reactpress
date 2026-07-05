@@ -2,13 +2,15 @@
 sidebar_position: 1
 id: intro
 title: Introduction
+description: Official ReactPress docs — self-hosted publishing platform with WordPress-style editing, headless REST, Next.js themes, plugins, and desktop client. One CLI, ~60 seconds to live.
+keywords: [reactpress, publishing platform, wordpress alternative, headless cms, blog, next.js, react, nestjs, plugin, desktop, self-hosted]
 ---
 
 ## Introduction
 
-`ReactPress` is an open-source publishing platform built with React. Users can run blogs and websites on servers with React and MySQL, or use it as a CMS.
+**ReactPress** is an open-source **publishing platform** for the React era — not another headless backend to wire up. One CLI ships CMS API, Web Admin, swappable Next.js themes, plugins, and an Electron desktop client.
 
-**ReactPress 4.0** (codename **Extend**) adds a **plugin system**, **Electron desktop client**, and **npm theme catalog** on top of the 3.x platform. New users should install `@fecommunity/reactpress@4` (beta: `@beta`). See [ReactPress 4.0 Extend](./tutorial-extras/reactpress-4-0.md). Still on 3.x? See [ReactPress 3.0 Platform](./tutorial-extras/reactpress-3-0.md).
+**ReactPress 4.0** (codename **Extend**) adds a **plugin system**, **desktop client**, and **npm theme catalog** on top of 3.x. New users: `npm i -g @fecommunity/reactpress@4`. See [ReactPress 4.0 Extend](./tutorial-extras/reactpress-4-0.md). Still on 3.x? See [ReactPress 3.0 Platform](./tutorial-extras/reactpress-3-0.md).
 
 ## 🆚 Comparison
 

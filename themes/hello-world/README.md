@@ -1,8 +1,8 @@
 # Hello World Theme
 
-Official **starter theme** for ReactPress: Hello Elementor–inspired layout with home, articles, categories, tags, search, and custom pages. Copy and customize for your own theme.
+Official **starter theme** — Hello Elementor–inspired layout with home, articles, categories, tags, search, and custom pages. Copy and customize for your own theme.
 
-> Theme system overview: [`themes/README.md`](../README.md). Full-featured demo: npm theme [@fecommunity/reactpress-theme-starter](https://github.com/fecommunity/reactpress-theme-starter).
+> Local theme template · Production demo: [@fecommunity/reactpress-theme-starter](https://github.com/fecommunity/reactpress-theme-starter) · [theme system](../README.md)
 
 ## Stack
 

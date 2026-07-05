@@ -17,7 +17,7 @@ const Index = () => {
   const title = `${siteConfig.title} · ${siteConfig.tagline}`;
   const description = translate({
     message:
-      'ReactPress 4.0: plugins, desktop client, and npm themes on a zero-config CMS. One package, your site in about a minute.',
+      'Official ReactPress docs — publishing platform with plugins, desktop, npm themes, and headless Next.js. WordPress-style editing, one CLI, ~60 seconds to live.',
     id: 'home.meta.description',
   });
 

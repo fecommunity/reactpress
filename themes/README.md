@@ -1,6 +1,10 @@
 # Theme system
 
-The ReactPress visitor site is rendered by **themes**. The theme system uses **two sources and three directories**; local and remote npm themes follow **separate registration rules**.
+Visitor-facing sites in ReactPress 4.0 are **swappable Next.js themes** — npm-installable frontends that fetch from the headless API. Themes own presentation; [plugins](../plugins/) own server-side logic.
+
+> Official starter: [@fecommunity/reactpress-theme-starter](https://github.com/fecommunity/reactpress-theme-starter) · Lighthouse 95 · [live demo](https://reactpress-theme-starter.vercel.app)
+
+The theme system uses **two sources and three directories**; local and npm themes follow separate registration rules.
 
 ## Core model
 

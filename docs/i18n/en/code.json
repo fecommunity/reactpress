@@ -310,11 +310,14 @@
     "message": "Tags",
     "description": "The title of the tag list page"
   },
+  "theme.tagline": {
+    "message": "Not a CMS — a publishing platform. Live in ~60 seconds."
+  },
   "home.meta.description": {
-    "message": "ReactPress 4.0: plugins, desktop client, and npm themes on a zero-config CMS. One package, your site in about a minute."
+    "message": "Official ReactPress docs — self-hosted publishing platform with WordPress-style editing, headless REST, Next.js themes, plugins, and desktop. One CLI, ~60 seconds to live."
   },
   "home.hero.subTitle": {
-    "message": "Plugins, desktop app, and npm themes — one package, one minute to your CMS."
+    "message": "WordPress-style editing · Next.js delivery · one CLI — CMS, Admin, API, themes, plugins, and desktop, no assembly required."
   },
   "home.hero.intro": {
     "message": "Get Started"
@@ -452,7 +455,7 @@
     "message": "Platform capabilities"
   },
   "home.call.subtitle": {
-    "message": "From personal blogs to team content sites — publish, manage, and collaborate out of the box."
+    "message": "From personal blogs to team content sites — publish, manage, and ship with one CLI out of the box."
   },
   "home.call.cta": {
     "message": "Read full documentation"
@@ -560,10 +563,10 @@
     "message": "Read full documentation"
   },
   "装一个包，一分钟拥有自己的 CMS。": {
-    "message": "One package, one minute to your own CMS."
+    "message": "Not a CMS — a publishing platform. Live in ~60 seconds."
   },
   "装一个包，一分钟拥有自己的 CMS — 基于 React、Next.js 与 NestJS 的全栈发布平台。": {
-    "message": "One package, one minute to your own CMS."
+    "message": "WordPress-style editing · Next.js delivery · one CLI to ship."
   },
   "快速开始": {
     "message": "Get Started"
@@ -635,19 +638,19 @@
     "message": "Chinese/English UI, comfortable on desktop, tablet, and mobile."
   },
   "ReactPress 4.0：装一个包、一分钟拥有自己的 CMS。插件生态、桌面写作与 npm 主题，零配置开箱即用。": {
-    "message": "ReactPress 4.0: plugins, desktop client, and npm themes on a zero-config CMS. One package, your site in about a minute."
+    "message": "ReactPress 4.0: publishing platform with plugins, desktop, and npm themes. One CLI, ~60 seconds to live."
   },
   "ReactPress 4.0：插件生态、桌面写作与 npm 主题 catalog，零配置一分钟拥有自己的 CMS。": {
-    "message": "ReactPress 4.0: plugins, desktop client, and npm themes on a zero-config CMS. One package, your site in about a minute."
+    "message": "ReactPress 4.0: publishing platform with plugins, desktop, and npm themes. One CLI, ~60 seconds to live."
   },
   "ReactPress 3.0：装一个包、一分钟拥有自己的 CMS。零配置安装，开箱即用的博客与内容发布平台。": {
-    "message": "ReactPress 4.0: plugins, desktop client, and npm themes on a zero-config CMS. One package, your site in about a minute."
+    "message": "ReactPress: self-hosted publishing platform — WordPress-style editing, headless REST, Next.js themes."
   },
   "ReactPress 3.0：装一个包、一分钟拥有自己的 CMS。基于 React、Next.js 与 NestJS 的全栈发布平台，零配置 init + dev。": {
-    "message": "ReactPress 4.0: plugins, desktop client, and npm themes on a zero-config CMS. One package, your site in about a minute."
+    "message": "ReactPress: self-hosted publishing platform — WordPress-style editing, headless REST, Next.js themes."
   },
   "插件生态、桌面客户端与 npm 主题 — 装一个包，一分钟拥有自己的 CMS。": {
-    "message": "Plugins, desktop app, and npm themes — one package, one minute to your CMS."
+    "message": "WordPress-style editing · Next.js delivery · one CLI — plugins, desktop, npm themes."
   },
   "全局安装后，在空目录初始化，约 1 分钟即可零配置起站": {
     "message": "After global install, initialize in an empty folder — your site is ready in about a minute"

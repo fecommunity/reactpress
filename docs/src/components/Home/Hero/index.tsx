@@ -53,7 +53,7 @@ function Hero() {
           </div>
           <p className={styles.subtitle}>
             <Translate id="home.hero.subTitle">
-              Plugins, desktop app, and npm themes — one package, one minute to your CMS.
+              WordPress-style editing · Next.js delivery · one CLI — CMS, Admin, API, themes, plugins, and desktop, no assembly required.
             </Translate>
           </p>
 

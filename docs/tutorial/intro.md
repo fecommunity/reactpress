@@ -2,15 +2,15 @@
 sidebar_position: 1
 id: intro
 title: 介绍
-description: ReactPress 开源发布平台与 CMS：基于 React、Next.js、NestJS，一条命令零配置起站。
-keywords: [reactpress, cms, 博客, next.js, react]
+description: ReactPress 官方文档 — 自托管发布平台：WordPress 式编辑、Headless REST、Next.js 主题、插件与桌面客户端。一条 CLI，约 60 秒上线。
+keywords: [reactpress, 发布平台, wordpress 替代, headless cms, 博客, next.js, react, nestjs, 插件, 桌面客户端, 自托管]
 ---
 
 ## 项目简介
 
-`ReactPress` 是使用 React 开发的开源发布平台，用户可以在支持 React 和 MySQL 的服务器上架设属于自己的博客、网站，也可以把 `ReactPress` 当作内容管理系统（CMS）来使用。
+**ReactPress** 是为 React 时代打造的开源**发布平台**（不是又一个 Headless 后端拼装件）。一条 CLI 即可运行 CMS API、Web 管理后台、可替换的 Next.js 主题、插件扩展与 Electron 桌面客户端。
 
-**ReactPress 4.0**（代号 Extend）在 3.x 平台能力之上新增**插件系统**、**Electron 桌面客户端**与 **npm 主题 catalog**。新用户推荐全局安装 `@fecommunity/reactpress@4`（当前 beta 可用 `@beta`），详见 [ReactPress 4.0 扩展版](./tutorial-extras/reactpress-4-0.md)。仍使用 3.x 见 [3.0 平台版](./tutorial-extras/reactpress-3-0.md)。
+**ReactPress 4.0**（代号 **Extend**）在 3.x 之上新增**插件系统**、**桌面客户端**与 **npm 主题 catalog**。新用户推荐 `npm i -g @fecommunity/reactpress@4`，详见 [ReactPress 4.0 扩展版](./tutorial-extras/reactpress-4-0.md)。仍使用 3.x 见 [3.0 平台版](./tutorial-extras/reactpress-3-0.md)。
 
 ## 🆚 框架对比
 

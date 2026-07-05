@@ -1,6 +1,12 @@
 # @fecommunity/reactpress-web
 
-ReactPress **Admin** SPA (Vite + TanStack Router). In the monorepo this is the `web/` workspace; also published as a standalone npm package with prebuilt static assets and Node static-server helpers.
+ReactPress **Admin** SPA — the writing console for the publishing platform: posts, media, plugins, and themes. Built with Vite and TanStack Router; published as standalone npm static assets with Node server helpers.
+
+> Mount at `/admin/` in production · same UI in browser and [Desktop](../desktop/README.md).
+
+- **npm**: [@fecommunity/reactpress-web](https://www.npmjs.com/package/@fecommunity/reactpress-web)
+- **Docs**: [reactpress-docs.vercel.app](https://reactpress-docs.vercel.app/)
+- **Monorepo workspace**: `web/`
 
 ## Install via npm
 

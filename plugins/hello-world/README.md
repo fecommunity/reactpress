@@ -1,6 +1,8 @@
 # hello-world (Auto Summary)
 
-Official example plugin: **when publishing an article, if `summary` is empty, generate a summary from Markdown body (or title).**
+Official example plugin — **auto-fill article summary on publish** when empty. Template for custom ReactPress plugins.
+
+> Part of the ReactPress publishing platform · [plugin system docs](../README.md)
 
 - **Plugin id**: `hello-world` (historical id, unchanged)
 - **Display name**: Auto Summary

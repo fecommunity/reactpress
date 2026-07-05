@@ -1,6 +1,12 @@
 # ReactPress Desktop
 
-Electron shell that loads the same Admin SPA as the web version (`web/dist`) — no duplicate business UI.
+Electron desktop client for ReactPress 4.0 — offline-first writing with embedded SQLite, optional sync to production. Part of the ReactPress publishing platform; loads the same Admin SPA as the web version (`web/dist`).
+
+> **Local mode:** no Docker · **Remote mode:** connect to your live API.
+
+- **Local mode**: SQLite API, no Docker required (default `admin` / `admin`)
+- **Remote mode**: Connect to your production API
+- **Docs**: [reactpress-docs.vercel.app](https://reactpress-docs.vercel.app/)
 
 ## Role
 

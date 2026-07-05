@@ -155,7 +155,7 @@
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
-  "description": "ReactPress TypeScript toolkit: OpenAPI clients, theme SSR helpers, headless UI, and admin plugin registry.",
+  "description": "ReactPress TypeScript SDK — API clients, theme SSR, plugin hooks, headless UI",
   "dependencies": {
     "ajv": "^8.17.1",
     "axios": "^1.12.2",

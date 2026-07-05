@@ -2,7 +2,7 @@
 const STRINGS = {
   en: {
     'cli.description':
-      'ReactPress 4.0 CLI — init, dev, plugins, desktop, themes, build, and publish',
+      'ReactPress 4.0 CLI — publishing platform: init, dev, plugins, desktop, themes, build, publish',
     'cli.init.description': 'Initialize project (.reactpress/config.json + .env + Docker MySQL)',
     'cli.init.directory': 'Project directory',
     'cli.init.force': 'Overwrite existing config',
@@ -114,8 +114,8 @@ const STRINGS = {
     'themeInstall.listEmpty': 'No theme packages found under themes/ or .reactpress/runtime/',
     'cli.build.target': 'Build target: toolkit | plugins | server | web | theme | docs | all',
     'cli.build.lowMem': 'Cap Node heap for builds and skip unchanged steps (2GB VPS)',
-    'banner.subtitle': '· Zero-config CMS · v4.0',
-    'banner.tagline': 'Full-stack publishing CLI',
+    'banner.subtitle': '· Publishing platform · v4.0',
+    'banner.tagline': 'Not a CMS — ship in ~60s',
     /** Left label for the decorative pulse bar (not a URL — the repo link
      * lives directly under the title bar at the top of the card). */
     'banner.pulseLabel': 'Setup',
@@ -746,8 +746,8 @@ const STRINGS = {
     'themeInstall.listEmpty': '在 themes/ 或 .reactpress/runtime/ 下未找到主题包',
     'cli.build.target': '构建目标: toolkit | plugins | server | web | theme | docs | all',
     'cli.build.lowMem': '低内存模式：限制构建堆内存并跳过未变化步骤（2G 小机）',
-    'banner.subtitle': '· 零配置 CMS · v4.0',
-    'banner.tagline': '全栈发布平台 CLI',
+    'banner.subtitle': '· 发布平台 · v4.0',
+    'banner.tagline': '不是 CMS — 约 60 秒上线',
     /** 左侧装饰性进度条标签（不是网址；仓库地址放在卡片顶部 Title 正下方）。 */
     'banner.pulseLabel': '准备',
     'banner.pulseReady': '就绪',

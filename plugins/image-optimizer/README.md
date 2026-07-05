@@ -1,6 +1,8 @@
 # image-optimizer (Image Asset Optimization)
 
-Official plugin for **analyzing legacy image assets and batch-compressing them into WebP multi-size variants**, with optional URL rewrite in articles and pages.
+Official plugin — **analyze legacy uploads and batch-compress to WebP multi-size variants**, with optional content URL rewrite.
+
+> Improve Lighthouse and page weight without leaving Admin
 
 - **Plugin id**: `image-optimizer`
 - **Version**: see [`plugin.json`](./plugin.json)

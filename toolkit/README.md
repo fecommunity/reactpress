@@ -1,6 +1,8 @@
 # @fecommunity/reactpress-toolkit
 
-TypeScript toolkit for ReactPress: OpenAPI/Swagger-generated API clients, site config types, Next.js theme SSR helpers, and admin plugin registry.
+TypeScript SDK for the ReactPress publishing platform — OpenAPI clients, Next.js theme SSR, plugin hooks, and headless UI components.
+
+Use in **themes**, **plugins**, **Admin extensions**, and **custom frontends** instead of duplicating API or SSR logic.
 
 ## Package exports (`package.json` → `exports`)
 

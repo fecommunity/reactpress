@@ -2,7 +2,7 @@
   "name": "@fecommunity/reactpress-desktop",
   "version": "4.0.0-beta.3",
   "private": true,
-  "description": "ReactPress Admin desktop shell (Electron)",
+  "description": "ReactPress desktop client — offline writing with SQLite, sync to production API",
   "main": "out/main/index.js",
   "author": "fecommunity",
   "license": "ISC",

@@ -1,6 +1,8 @@
 # seo (SEO Enhancement)
 
-Official SEO plugin: provides **URL slug**, **SEO keywords**, and **meta description** for articles, with optional auto-fill on publish.
+Official plugin — **URL slug**, **SEO keywords**, and **meta description** with optional auto-fill and an Admin editor panel.
+
+> WordPress-style SEO fields · Headless-friendly meta for Next.js themes
 
 - **Plugin id**: `seo`
 - **Version**: see [`plugin.json`](./plugin.json)

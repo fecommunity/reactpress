@@ -1,6 +1,8 @@
 # ReactPress Theme Starter (npm theme anchor)
 
-This directory is the **standard npm theme catalog anchor** example: metadata lives in [`package.json`](./package.json) under `reactpress.theme`; theme source is distributed via npm and **does not** include `theme.json`.
+Official npm theme catalog anchor — metadata in [`package.json`](./package.json) under `reactpress.theme`; theme source ships via npm (no `theme.json` here).
+
+**Live demo**: [reactpress-theme-starter.vercel.app](https://reactpress-theme-starter.vercel.app) · Lighthouse 95/100/100/100 · WordPress-style CMS, Next.js delivery
 
 Schema: [`../npm-catalog.schema.json`](../npm-catalog.schema.json).
 

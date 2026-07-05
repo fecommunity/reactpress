@@ -101,7 +101,7 @@
     "authFooterDocs": "documentation",
     "authFooterSuffix": "for setup and deployment.",
     "heroTitle": "ReactPress",
-    "heroTagline": "Plugins, desktop app, and npm themes — one package, one minute to your CMS.",
+    "heroTagline": "WordPress-style editing · Next.js delivery · one CLI — plugins, desktop, npm themes, no assembly.",
     "docsHome": {
       "highlightsTitle": "4.0 highlights",
       "featuresTitle": "Platform capabilities",
@@ -118,7 +118,7 @@
       "aria": "ReactPress product overview",
       "mobileAria": "ReactPress quick start and links",
       "linksAria": "ReactPress links",
-      "tagline": "Plugins, desktop app, and npm themes — one package, one minute to your CMS.",
+      "tagline": "WordPress-style editing · Next.js delivery · one CLI — plugins, desktop, npm themes, no assembly.",
       "getStarted": "Get Started",
       "whatsNew": "What's New in 4.0",
       "liveDemo": "Live Demo",

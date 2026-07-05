@@ -1,8 +1,10 @@
 # Plugin system
 
-ReactPress plugins extend **server-side business logic** (hooks, content rules, integrations, etc.), decoupled from themes: **themes handle presentation; plugins handle logic**.
+ReactPress 4.0 plugins extend **server-side business logic** (hooks, content rules, integrations) — WordPress-style extensibility without touching core. **Themes = presentation; plugins = logic.**
 
-Modeled after the WordPress plugin ecosystem: extend without changing core; admins install/enable/configure; authors integrate via `plugin.json` + `register()`.
+> Built-in: SEO · auto-summary · batch WebP optimization · [install from Admin or CLI](../README.md#plugins)
+
+Modeled after WordPress: install/enable from Admin, configure via `plugin.json`, integrate with `register()` and hook subscriptions.
 
 ## Core model
 
