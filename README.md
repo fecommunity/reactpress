@@ -160,36 +160,16 @@ Most publishing tools force a trade-off: **easy CMS with a slow or tightly coupl
 
 ## Features
 
-<table>
-  <tr>
-    <td width="50%" valign="top">
-
-**Content & CMS**  
-✍️ Posts, pages, media, categories, tags  
-📅 Scheduled publishing  
-🌐 Chinese & English admin
-
-**Developer experience**  
-🛠️ Interactive CLI · `doctor` · `status`  
-📦 One package — CLI + API + templates  
-🐳 Embedded Docker MySQL
-
-    </td>
-    <td width="50%" valign="top">
-
-**Frontend & performance**  
-🎨 Official Next.js theme — SSR, dark mode  
-🔍 Search, comments, knowledge base  
-📊 Lighthouse **95 / 100 / 100 / 100** on live demo
-
-**Headless & integration**  
-🔌 REST API, Swagger, API keys, webhooks  
-📘 TypeScript SDK (`@fecommunity/reactpress-toolkit`)  
-🔄 Swap or build any frontend
-
-    </td>
-  </tr>
-</table>
+| | Feature | What you get |
+| :---: | :------ | :----------- |
+| ⚡ | **~60s cold start** | `init` + `dev` — zero config, embedded Docker MySQL |
+| ✍️ | **Familiar CMS** | Posts, pages, media, categories, tags, scheduled publishing |
+| 🎨 | **Modern frontend** | Official Next.js theme — search, comments, knowledge base, dark mode |
+| 🔌 | **Headless-ready** | REST API, Swagger, API keys, webhooks — swap or build your own frontend |
+| 📊 | **Production scores** | Official theme demo: Lighthouse **95 / 100 / 100 / 100** |
+| 🛠️ | **Developer UX** | Interactive CLI menu, `doctor`, `status`, `db backup` |
+| 🌐 | **i18n** | Chinese & English admin and docs |
+| 📦 | **One package** | `@fecommunity/reactpress@3` — CLI + API + templates, no assembly required |
 
 ---
 
@@ -211,19 +191,24 @@ ReactPress separates **content management** from **presentation** — write in t
 
 ```mermaid
 flowchart LR
-  subgraph Author
-    A[Admin console]
+  subgraph Author["Authoring · :3001/admin"]
+    A["Admin console<br/>React · Ant Design"]
   end
-  subgraph Core
-    B[ReactPress API<br/>NestJS + MySQL]
+
+  subgraph Core["Content platform · :3002"]
+    B["NestJS REST API<br/>Swagger · Headless · Webhooks"]
+    DB[(MySQL)]
+    B --- DB
   end
-  subgraph Visitors
-    C[Official theme<br/>Next.js SSR]
-    D[Your custom app<br/>via Toolkit / API]
+
+  subgraph Delivery["Public delivery"]
+    C["Official theme<br/>Next.js SSR"]
+    D["Custom frontend<br/>Toolkit · REST · API Key"]
   end
-  A --> B
-  B --> C
-  B --> D
+
+  A -->|write & publish| B
+  B -->|SSR fetch| C
+  B -->|headless API| D
 ```
 
 | Component | Role |
