@@ -107,8 +107,20 @@ function deleteMocks(db) {
 async function main() {
   const { site, count, clean } = parseArgs(process.argv);
   const uploadsDir = path.join(site, 'uploads');
-  const dbPath = path.join(site, 'data', 'reactpress.db');
   const envPath = path.join(site, '.env');
+  let dbPath = path.join(site, '.reactpress', 'reactpress.db');
+  if (fs.existsSync(envPath)) {
+    const env = fs.readFileSync(envPath, 'utf8');
+    const dbMatch = env.match(/^DB_DATABASE=(.+)$/m);
+    if (dbMatch) {
+      const raw = dbMatch[1].trim().replace(/^['"]|['"]$/g, '');
+      dbPath = path.isAbsolute(raw) ? raw : path.join(site, raw);
+    }
+  }
+  if (!fs.existsSync(dbPath)) {
+    const legacy = path.join(site, 'data', 'reactpress.db');
+    if (fs.existsSync(legacy)) dbPath = legacy;
+  }
 
   if (!fs.existsSync(dbPath)) {
     console.error(`Database not found: ${dbPath}`);
@@ -116,10 +128,10 @@ async function main() {
     process.exit(1);
   }
 
-  let apiBase = 'http://127.0.0.1:13102/public/uploads';
+  let apiBase = 'http://127.0.0.1:3002/public/uploads';
   if (fs.existsSync(envPath)) {
     const env = fs.readFileSync(envPath, 'utf8');
-    const port = env.match(/^SERVER_PORT=(\d+)/m)?.[1] ?? '13102';
+    const port = env.match(/^SERVER_PORT=(\d+)/m)?.[1] ?? '3002';
     apiBase = `http://127.0.0.1:${port}/public/uploads`;
   }
 

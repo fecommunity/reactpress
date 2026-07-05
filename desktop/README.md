@@ -14,7 +14,7 @@ Electron shell that loads the same Admin SPA as the web version (`web/dist`) —
 
 ### Local mode (default)
 
-- Auto-spawns embedded API on startup (SQLite, default port `13102`)
+- Auto-spawns embedded API on startup (SQLite, default port `3002`, same as `SERVER_PORT`)
 - No Docker / MySQL required — write and manage out of the box
 - Default credentials: `admin` / `admin`
 - Data directory:

@@ -2,20 +2,50 @@ import fs from 'fs-extra';
 import path from 'node:path';
 
 import type { DatabaseEnsureResult, SqliteCredentials } from '../../../types/config';
-import { getProjectPaths } from '../../utils/paths';
+import { getProjectPaths, SQLITE_REL_PATH } from '../../utils/paths';
 import { loadEnvFile } from '../config';
+
+const LEGACY_SQLITE_REL_PATH = path.join('data', 'reactpress.db');
+
+async function maybeMigrateLegacySqlite(projectRoot: string, targetPath: string): Promise<void> {
+  const legacyPath = path.join(projectRoot, LEGACY_SQLITE_REL_PATH);
+  const normalizedTarget = path.resolve(projectRoot, targetPath);
+  const normalizedLegacy = path.resolve(legacyPath);
+
+  if (normalizedLegacy === normalizedTarget) return;
+  if (!(await fs.pathExists(legacyPath))) return;
+  if (await fs.pathExists(normalizedTarget)) return;
+
+  await fs.ensureDir(path.dirname(normalizedTarget));
+  await fs.copyFile(legacyPath, normalizedTarget);
+  console.log(
+    `[reactpress] Migrated SQLite database: ${LEGACY_SQLITE_REL_PATH} → ${path.relative(projectRoot, normalizedTarget) || SQLITE_REL_PATH}`,
+  );
+}
 
 export async function resolveSqlitePath(
   projectRoot: string,
   override?: string,
 ): Promise<string> {
   const paths = getProjectPaths(projectRoot);
-  if (override) return path.resolve(projectRoot, override);
+  if (override) {
+    const resolved = path.resolve(projectRoot, override);
+    await maybeMigrateLegacySqlite(projectRoot, resolved);
+    return resolved;
+  }
+
   if (await fs.pathExists(paths.envPath)) {
     const env = await loadEnvFile(paths.envPath);
-    if (env.DB_DATABASE) return path.resolve(projectRoot, env.DB_DATABASE);
+    if (env.DB_DATABASE) {
+      const resolved = path.resolve(projectRoot, env.DB_DATABASE);
+      await maybeMigrateLegacySqlite(projectRoot, resolved);
+      return resolved;
+    }
   }
-  return paths.sqlitePath;
+
+  const target = paths.sqlitePath;
+  await maybeMigrateLegacySqlite(projectRoot, target);
+  return target;
 }
 
 export async function getSqliteCredentials(projectRoot: string): Promise<SqliteCredentials> {

@@ -316,7 +316,7 @@ async function spawnAdminWeb(
       // Vite proxies `/api` → `${target}/api/...`; target is host-only origin.
       adminEnv.VITE_DEV_API_PROXY_TARGET = normalizeRemoteOrigin(adminApiOrigin) || adminApiOrigin;
     } else if (isDesktopLocalMode() && process.env.REACTPRESS_DESKTOP_LOCAL_API) {
-      // Desktop dev embeds SQLite API on a dedicated port (default :13102), not :3002.
+      // Local SQLite API uses the same port as SERVER_PORT (default :3002).
       adminEnv.VITE_DEV_API_PROXY_TARGET = process.env.REACTPRESS_DESKTOP_LOCAL_API.replace(
         /\/api\/?$/,
         '',
@@ -771,10 +771,28 @@ async function startDesktopLocalApi(projectRoot, { forceRestart = false } = {}) 
     process.exit(1);
   }
 
+  const {
+    resolveDevStackPorts,
+    applyDevStackPortsToEnv,
+    resolveApiPortForBind,
+  } = require('./ports');
+  let stack = resolveDevStackPorts(projectRoot);
+  applyDevStackPortsToEnv(stack);
+
   const boot = await loadDesktopBootstrap(projectRoot);
   console.log('');
   logDevStatus('dev.desktopLocalApiStarting');
-  const { siteRoot, localApiBase } = await boot.startDesktopLocalApi(projectRoot, { forceRestart });
+
+  const resolved = await resolveApiPortForBind(projectRoot, { preferred: stack.api });
+  if (resolved.shifted || resolved.port !== stack.api) {
+    stack = { ...stack, api: resolved.port };
+    applyDevStackPortsToEnv(stack);
+  }
+
+  const { siteRoot, localApiBase } = await boot.startDesktopLocalApi(projectRoot, {
+    forceRestart,
+    port: resolved.port,
+  });
   process.env.REACTPRESS_DESKTOP_LOCAL_API = localApiBase;
   process.env.REACTPRESS_DESKTOP_SITE_ROOT = siteRoot;
   process.env.REACTPRESS_THEME_API_URL = localApiBase;

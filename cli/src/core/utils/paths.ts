@@ -4,6 +4,8 @@ export const CONFIG_DIR = '.reactpress';
 export const CONFIG_FILE = 'config.json';
 export const PID_FILE = 'server.pid';
 export const ENV_FILE = '.env';
+/** Relative SQLite file under project root (runtime data lives in `.reactpress/`). */
+export const SQLITE_REL_PATH = join(CONFIG_DIR, 'reactpress.db');
 
 /** CLI 包根目录（编译后位于 out/core/utils → ../../../） */
 export function getPackageRoot(): string {
@@ -28,7 +30,6 @@ export interface ProjectPaths {
 
 export function getProjectPaths(projectRoot: string): ProjectPaths {
   const reactpressDir = join(projectRoot, CONFIG_DIR);
-  const dataDir = join(projectRoot, 'data');
   return {
     projectRoot,
     reactpressDir,
@@ -36,8 +37,8 @@ export function getProjectPaths(projectRoot: string): ProjectPaths {
     pidPath: join(reactpressDir, PID_FILE),
     envPath: join(projectRoot, ENV_FILE),
     dockerComposePath: join(reactpressDir, 'docker-compose.yml'),
-    dbDataDir: join(reactpressDir, 'data'),
-    sqlitePath: join(dataDir, 'reactpress.db'),
+    dbDataDir: reactpressDir,
+    sqlitePath: join(reactpressDir, 'reactpress.db'),
     uploadsDir: join(projectRoot, 'uploads'),
   };
 }

@@ -2,7 +2,7 @@
   "version": 1,
   "database": {
     "mode": "embedded-sqlite",
-    "sqlitePath": "data/reactpress.db"
+    "sqlitePath": ".reactpress/reactpress.db"
   },
   "server": {
     "port": 3002,

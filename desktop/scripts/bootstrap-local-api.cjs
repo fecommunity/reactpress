@@ -42,7 +42,7 @@ async function killStaleLocalApiPort(monorepoRoot, port) {
   }
 }
 
-async function startDesktopLocalApi(monorepoRoot, { forceRestart = false } = {}) {
+async function startDesktopLocalApi(monorepoRoot, { forceRestart = false, port } = {}) {
   if (!fs.existsSync(path.join(desktopRoot, "package.json"))) {
     throw new Error("desktop/package.json not found — run from monorepo root");
   }
@@ -58,21 +58,32 @@ async function startDesktopLocalApi(monorepoRoot, { forceRestart = false } = {})
     DEFAULT_LOCAL_API_PORT,
   } = require(localServerPath);
 
+  const fromEnv = parseInt(
+    process.env.REACTPRESS_LOCAL_API_PORT || process.env.SERVER_PORT || "",
+    10,
+  );
+  const localApiPort =
+    port ?? (Number.isInteger(fromEnv) && fromEnv > 0 ? fromEnv : DEFAULT_LOCAL_API_PORT);
+
   if (forceRestart) {
     try {
       stopLocalServer();
     } catch {
       // ignore
     }
-    const localApiPort = DEFAULT_LOCAL_API_PORT || 13102;
     await killStaleLocalApiPort(monorepoRoot, localApiPort);
   }
 
   const siteRoot = resolveDevSiteRoot(monorepoRoot);
-  await startLocalServer({ siteRoot, monorepoRoot, forceRestart });
-  const localApiBase = getLocalApiBaseUrl();
+  await startLocalServer({
+    siteRoot,
+    monorepoRoot,
+    port: localApiPort,
+    forceRestart,
+  });
+  const localApiBase = getLocalApiBaseUrl(localApiPort);
 
-  return { siteRoot, localApiBase };
+  return { siteRoot, localApiBase, port: localApiPort };
 }
 
 module.exports = { ensureDesktopBuilt, startDesktopLocalApi };

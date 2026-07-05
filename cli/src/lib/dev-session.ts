@@ -3,7 +3,8 @@ const fs = require('fs');
 const path = require('path');
 
 function lockFilePath(projectRoot) {
-  return path.join(projectRoot, '.reactpress', 'dev-session.json');
+  const { devSessionSuffix } = require('./ports');
+  return path.join(projectRoot, '.reactpress', `dev-session${devSessionSuffix()}.json`);
 }
 
 function isPidAlive(pid) {
@@ -62,7 +63,20 @@ async function acquireDevSession(projectRoot) {
     }
   }
 
-  const { releaseStaleDevStackPorts } = require('./ports');
+  const {
+    releaseStaleDevStackPorts,
+    resolveDevStackPorts,
+    applyDevStackPortsToEnv,
+    readInstanceIndex,
+  } = require('./ports');
+  const stack = resolveDevStackPorts(resolvedRoot);
+  applyDevStackPortsToEnv(stack);
+  const instance = stack.admin !== 3000 || stack.api !== 3002 ? readInstanceIndex() : 0;
+  if (instance > 0) {
+    console.log(
+      `[reactpress] Dev instance ${instance} — admin :${stack.admin}, api :${stack.api}, visitor :${stack.visitor}, preview :${stack.preview}`,
+    );
+  }
   await releaseStaleDevStackPorts(resolvedRoot);
 
   fs.mkdirSync(path.dirname(lockPath), { recursive: true });

@@ -1,6 +1,7 @@
 // @ts-nocheck
 const fs = require('fs');
 const path = require('path');
+const net = require('net');
 const { spawnSync } = require('child_process');
 
 /**
@@ -22,6 +23,90 @@ const DEV_PORTS = {
   MYSQL: 3306,
 };
 
+/** Offset applied per `REACTPRESS_INSTANCE` (instance 1 → admin :3010, api :3012, …). */
+const INSTANCE_PORT_STEP = 10;
+
+function readProcessEnvPort(key) {
+  const raw = process.env[key]?.trim();
+  if (!raw) return null;
+  const n = parseInt(raw.replace(/^['"]|['"]$/g, ''), 10);
+  return Number.isInteger(n) && n > 0 ? n : null;
+}
+
+function readInstanceIndex() {
+  const raw = process.env.REACTPRESS_INSTANCE ?? process.env.REACTPRESS_DEV_INSTANCE ?? '0';
+  const n = parseInt(String(raw).trim(), 10);
+  if (!Number.isInteger(n) || n < 0 || n > 99) return 0;
+  return n;
+}
+
+function instancePortOffset() {
+  return readInstanceIndex() * INSTANCE_PORT_STEP;
+}
+
+/**
+ * Resolve a dev-stack port: process.env override → `.env` (instance 0 only) → default + instance offset.
+ */
+function resolveStackPort(projectRoot, envKey, defaultBase) {
+  const fromProcess = readProcessEnvPort(envKey);
+  if (fromProcess) return fromProcess;
+
+  const instance = readInstanceIndex();
+  const shiftedDefault = defaultBase + instance * INSTANCE_PORT_STEP;
+
+  if (instance === 0) {
+    try {
+      const content = fs.readFileSync(path.join(projectRoot, '.env'), 'utf8');
+      const match = content.match(new RegExp(`^${envKey}=(.+)$`, 'm'));
+      if (match) {
+        const n = parseInt(match[1].trim().replace(/^['"]|['"]$/g, ''), 10);
+        if (Number.isInteger(n) && n > 0) return n;
+      }
+    } catch {
+      // ignore
+    }
+  }
+
+  return shiftedDefault;
+}
+
+function resolveDevStackPorts(projectRoot) {
+  const offset = instancePortOffset();
+  const visitorFromProcess = readProcessEnvPort('CLIENT_PORT');
+  let visitor = DEV_PORTS.VISITOR + offset;
+  if (visitorFromProcess) {
+    visitor = visitorFromProcess;
+  } else if (readInstanceIndex() === 0) {
+    visitor = readVisitorPort(projectRoot);
+  }
+
+  return {
+    admin: resolveStackPort(projectRoot, 'WEB_ADMIN_PORT', DEV_PORTS.ADMIN_WEB),
+    visitor,
+    api: resolveStackPort(projectRoot, 'SERVER_PORT', DEV_PORTS.API),
+    preview: resolveStackPort(projectRoot, 'REACTPRESS_PREVIEW_PORT', DEV_PORTS.THEME_PREVIEW),
+  };
+}
+
+/** Push resolved ports into `process.env` so child processes share one port map. */
+function applyDevStackPortsToEnv(ports) {
+  process.env.WEB_ADMIN_PORT = String(ports.admin);
+  process.env.SERVER_PORT = String(ports.api);
+  process.env.REACTPRESS_LOCAL_API_PORT = String(ports.api);
+  process.env.CLIENT_PORT = String(ports.visitor);
+  process.env.REACTPRESS_PREVIEW_PORT = String(ports.preview);
+  process.env.CLIENT_SITE_URL = `http://localhost:${ports.visitor}`;
+  process.env.SERVER_SITE_URL = `http://127.0.0.1:${ports.api}`;
+  if (!process.env.VITE_DEV_API_PROXY_TARGET?.trim()) {
+    process.env.VITE_DEV_API_PROXY_TARGET = `http://127.0.0.1:${ports.api}`;
+  }
+}
+
+function devSessionSuffix() {
+  const instance = readInstanceIndex();
+  return instance > 0 ? `-instance-${instance}` : '';
+}
+
 /** Ports theme `next dev` must not bind to (reserved for other services). 3003 is allowed — preview theme. */
 /** Never kill listeners on DB / infra ports during dev port cleanup. */
 const PROTECTED_KILL_PORTS = new Set([3306, 3307, 5432, 6379]);
@@ -42,6 +127,8 @@ const BLOCKED_THEME_DEV_PORTS = new Set([
 ]);
 
 function readEnvPort(projectRoot, key, fallback) {
+  const fromProcess = readProcessEnvPort(key);
+  if (fromProcess) return fromProcess;
   try {
     const content = fs.readFileSync(path.join(projectRoot, '.env'), 'utf8');
     const match = content.match(new RegExp(`^${key}=(.+)$`, 'm'));
@@ -305,19 +392,16 @@ async function releaseStaleDevStackPorts(projectRoot) {
   }
 
   const { getHealthUrl, checkHealth } = require('./http');
+  const apiPort = resolveStackPort(projectRoot, 'SERVER_PORT', DEV_PORTS.API);
 
-  // Embedded desktop SQLite API (:13102) is managed by local-server — not SERVER_PORT (:3002).
-  if (process.env.REACTPRESS_DESKTOP_LOCAL !== '1') {
-    const apiPort = readEnvPort(projectRoot, 'SERVER_PORT', DEV_PORTS.API);
-
-    if (isPortListening(apiPort)) {
-      const health = await checkHealth(getHealthUrl(projectRoot), 2000);
-      if (health.ok) {
-        const { logDevDetail } = require('./dev-log');
-        logDevDetail('dev.apiKept', { port: apiPort });
-      } else {
-        await forceReleaseApiPort(projectRoot);
-      }
+  if (isPortListening(apiPort)) {
+    const healthUrl = `http://127.0.0.1:${apiPort}/api/health`;
+    const health = await checkHealth(healthUrl, 2000);
+    if (health.ok) {
+      const { logDevDetail } = require('./dev-log');
+      logDevDetail('dev.apiKept', { port: apiPort });
+    } else {
+      await stopApiPortListeners(projectRoot, apiPort);
     }
   }
 
@@ -358,7 +442,7 @@ async function ensurePortFree(port, { label = 'service', maxWaitMs = 8000 } = {}
     const desktopApi = process.env.REACTPRESS_DESKTOP_LOCAL_API?.trim();
     if (desktopApi) {
       try {
-        const desktopPort = parseInt(new URL(desktopApi).port || '13102', 10);
+        const desktopPort = parseInt(new URL(desktopApi).port || String(DEV_PORTS.API), 10);
         if (Number.isInteger(desktopPort) && desktopPort === n) {
           if (isPortListening(n)) {
             console.warn(
@@ -395,6 +479,45 @@ async function ensurePortFree(port, { label = 'service', maxWaitMs = 8000 } = {}
   return true;
 }
 
+function isPortBindable(port) {
+  return new Promise((resolve) => {
+    const server = net.createServer();
+    server.once('error', () => resolve(false));
+    server.once('listening', () => {
+      server.close(() => resolve(true));
+    });
+    server.listen(port, '127.0.0.1');
+  });
+}
+
+/**
+ * Pick an API port: reuse healthy listener, else preferred, else next free slot in range.
+ * @returns {{ port: number, reused: boolean, shifted?: boolean }}
+ */
+async function resolveApiPortForBind(projectRoot, { preferred } = {}) {
+  const start = preferred ?? resolveStackPort(projectRoot, 'SERVER_PORT', DEV_PORTS.API);
+  const healthUrl = `http://127.0.0.1:${start}/api/health`;
+  const { checkHealth } = require('./http');
+
+  const health = await checkHealth(healthUrl, 1500);
+  if (health.ok) {
+    return { port: start, reused: true };
+  }
+
+  if (!isPortListening(start)) {
+    return { port: start, reused: false };
+  }
+
+  for (let port = start; port < start + 20; port += 1) {
+    if (!isPortListening(port) && (await isPortBindable(port))) {
+      console.warn(`[reactpress] API port ${start} is busy — using :${port}`);
+      return { port, reused: false, shifted: true };
+    }
+  }
+
+  throw new Error(`No available API port near ${start} (set SERVER_PORT or REACTPRESS_INSTANCE)`);
+}
+
 /** Free theme/admin ports (API handled in {@link forceReleaseDevStackPorts} / {@link spawnApi}). */
 async function ensureDevStackPorts(projectRoot) {
   const previewPort = readEnvPort(
@@ -416,9 +539,17 @@ async function ensureDevStackPorts(projectRoot) {
 
 module.exports = {
   DEV_PORTS,
+  INSTANCE_PORT_STEP,
   BLOCKED_THEME_DEV_PORTS,
   readEnvPort,
   readVisitorPort,
+  readInstanceIndex,
+  instancePortOffset,
+  resolveStackPort,
+  resolveDevStackPorts,
+  applyDevStackPortsToEnv,
+  resolveApiPortForBind,
+  devSessionSuffix,
   isPortListening,
   killPortListeners,
   ensurePortFree,

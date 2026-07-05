@@ -37,7 +37,11 @@ function buildLocalApiBaseUrl(port: number): string {
 
 function migrateConfig(raw: Partial<DesktopConfig>): DesktopConfig {
   const apiMode: ApiMode = raw.apiMode === "remote" ? "remote" : "local";
-  const localApiPort = raw.localApiPort ?? DEFAULT_LOCAL_API_PORT;
+  let localApiPort = raw.localApiPort ?? DEFAULT_LOCAL_API_PORT;
+  // Legacy desktop builds used a separate embedded port — align with standard API port.
+  if (localApiPort === 13102) {
+    localApiPort = DEFAULT_LOCAL_API_PORT;
+  }
   const legacyRemote = raw.remoteApiBaseUrl ?? raw.apiBaseUrl;
   let remoteApiBaseUrl: string | undefined;
   if (legacyRemote?.trim()) {

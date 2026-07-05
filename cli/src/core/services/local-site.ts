@@ -2,7 +2,7 @@ import fs from 'fs-extra';
 import path from 'node:path';
 
 import type { ReactPressConfig } from '../../types/config';
-import { getProjectPaths } from '../utils/paths';
+import { CONFIG_DIR, getProjectPaths, SQLITE_REL_PATH } from '../utils/paths';
 import { saveConfig, syncEnvFromConfig } from '../services/config';
 
 export interface LocalSitePaths {
@@ -15,14 +15,14 @@ export interface LocalSitePaths {
 }
 
 export function getLocalSitePaths(siteRoot: string): LocalSitePaths {
-  const dataDir = path.join(siteRoot, 'data');
+  const reactpressDir = path.join(siteRoot, CONFIG_DIR);
   return {
     siteRoot,
-    dataDir,
+    dataDir: reactpressDir,
     uploadsDir: path.join(siteRoot, 'uploads'),
-    dbPath: path.join(dataDir, 'reactpress.db'),
+    dbPath: path.join(reactpressDir, 'reactpress.db'),
     envPath: path.join(siteRoot, '.env'),
-    reactpressDir: path.join(siteRoot, '.reactpress'),
+    reactpressDir,
   };
 }
 
@@ -38,15 +38,14 @@ export function ensureLocalSite(
   options: EnsureLocalSiteOptions = {},
 ): LocalSitePaths {
   const paths = getLocalSitePaths(siteRoot);
-  fs.mkdirSync(paths.dataDir, { recursive: true });
-  fs.mkdirSync(paths.uploadsDir, { recursive: true });
   fs.mkdirSync(paths.reactpressDir, { recursive: true });
+  fs.mkdirSync(paths.uploadsDir, { recursive: true });
 
   const siteUrl = `http://127.0.0.1:${port}`;
   const clientSiteUrl = 'http://localhost:3001';
   const envLines = [
     'DB_TYPE=sqlite',
-    `DB_DATABASE=${paths.dbPath}`,
+    `DB_DATABASE=${SQLITE_REL_PATH}`,
     `SERVER_PORT=${port}`,
     `SERVER_SITE_URL=${siteUrl}`,
     `CLIENT_SITE_URL=${clientSiteUrl}`,
@@ -67,7 +66,7 @@ export function ensureLocalSite(
   if (!fs.existsSync(configPath)) {
     const config: ReactPressConfig = {
       version: 1,
-      database: { mode: 'embedded-sqlite', sqlitePath: paths.dbPath },
+      database: { mode: 'embedded-sqlite', sqlitePath: SQLITE_REL_PATH },
       server: {
         port,
         apiPrefix: '/api',

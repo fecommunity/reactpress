@@ -1,7 +1,7 @@
 import fs from 'fs-extra';
 
 import type { EnvMap, ReactPressConfig } from '../../types/config';
-import { getProjectPaths } from '../utils/paths';
+import { getProjectPaths, SQLITE_REL_PATH } from '../utils/paths';
 
 export async function loadConfig(projectRoot: string): Promise<ReactPressConfig> {
   const { configPath } = getProjectPaths(projectRoot);
@@ -51,7 +51,11 @@ export async function syncEnvFromConfig(
   const existing = (await fs.pathExists(envPath)) ? await loadEnvFile(envPath) : {};
 
   if (isSqliteMode(config)) {
-    const dbFile = config.database.sqlitePath ?? sqlitePath;
+    const rawDbFile = config.database.sqlitePath ?? sqlitePath;
+    const dbFile =
+      rawDbFile === 'data/reactpress.db' || rawDbFile.endsWith('/data/reactpress.db')
+        ? SQLITE_REL_PATH
+        : rawDbFile;
     const port = config.server.port;
     const siteUrl =
       config.server.serverUrl ?? config.server.siteUrl ?? `http://127.0.0.1:${port}`;

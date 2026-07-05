@@ -8,7 +8,11 @@ import { setTimeout as sleep } from 'node:timers/promises';
 
 const ROOT = new URL('..', import.meta.url).pathname.replace(/\/$/, '');
 const ROUNDS = parseInt(process.argv.find((a) => a.startsWith('--rounds='))?.split('=')[1] || '3', 10);
-const PORTS = [3000, 3001, 3003, 3004, 13102];
+const API_PORT = parseInt(process.env.SERVER_PORT || '3002', 10);
+const ADMIN_PORT = parseInt(process.env.WEB_ADMIN_PORT || '3000', 10);
+const VISITOR_PORT = parseInt(process.env.CLIENT_PORT || '3001', 10);
+const PREVIEW_PORT = parseInt(process.env.REACTPRESS_PREVIEW_PORT || '3003', 10);
+const PORTS = [ADMIN_PORT, VISITOR_PORT, PREVIEW_PORT, 3004, API_PORT];
 const STARTUP_TIMEOUT_MS = 120_000;
 const POLL_MS = 500;
 
@@ -40,10 +44,10 @@ async function waitForReady(label) {
   const deadline = Date.now() + STARTUP_TIMEOUT_MS;
   while (Date.now() < deadline) {
     const [health, admin, preview, site] = await Promise.all([
-      fetchStatus('http://127.0.0.1:13102/api/health'),
-      fetchStatus('http://127.0.0.1:3000/'),
-      fetchStatus('http://127.0.0.1:3003/'),
-      fetchStatus('http://127.0.0.1:3001/'),
+      fetchStatus(`http://127.0.0.1:${API_PORT}/api/health`),
+      fetchStatus(`http://127.0.0.1:${ADMIN_PORT}/`),
+      fetchStatus(`http://127.0.0.1:${PREVIEW_PORT}/`),
+      fetchStatus(`http://127.0.0.1:${VISITOR_PORT}/`),
     ]);
     if (health.ok && admin.ok && preview.ok && site.ok) {
       return { health, admin, preview, site };
@@ -54,7 +58,7 @@ async function waitForReady(label) {
 }
 
 async function testApiLogin() {
-  const res = await fetch('http://127.0.0.1:13102/api/auth/login', {
+  const res = await fetch(`http://127.0.0.1:${API_PORT}/api/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ name: 'admin', password: 'admin' }),
@@ -67,7 +71,7 @@ async function testApiLogin() {
 }
 
 async function testSettingGet(token) {
-  const res = await fetch('http://127.0.0.1:13102/api/setting/get', {
+  const res = await fetch(`http://127.0.0.1:${API_PORT}/api/setting/get`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -128,14 +132,14 @@ async function runRound(round) {
     if (s.includes('Received SIGTERM') && !stdout.includes('LOCAL MODE READY')) {
       sawSigtermDuringBoot = true;
     }
-    if (s.includes('ECONNREFUSED 127.0.0.1:13102')) {
+    if (s.includes(`ECONNREFUSED 127.0.0.1:${API_PORT}`)) {
       sawEconnrefused = true;
     }
   });
   child.stderr.on('data', (buf) => {
     const s = buf.toString();
     stdout += s;
-    if (s.includes('ECONNREFUSED 127.0.0.1:13102')) {
+    if (s.includes(`ECONNREFUSED 127.0.0.1:${API_PORT}`)) {
       sawEconnrefused = true;
     }
   });
@@ -149,21 +153,21 @@ async function runRound(round) {
     throw new Error(`round ${round}: API received SIGTERM during startup`);
   }
   if (sawEconnrefused) {
-    throw new Error(`round ${round}: Vite proxy ECONNREFUSED on :13102 after ready`);
+    throw new Error(`round ${round}: Vite proxy ECONNREFUSED on :${API_PORT} after ready`);
   }
 
   const token = await testApiLogin();
   await testSettingGet(token);
   log(`round ${round}: API login + setting/get OK`);
 
-  const previewHtml = await fetch('http://127.0.0.1:3003/').then((r) => r.text());
+  const previewHtml = await fetch(`http://127.0.0.1:${PREVIEW_PORT}/`).then((r) => r.text());
   if (!previewHtml || previewHtml.length < 100) {
     throw new Error(`round ${round}: preview :3003 returned empty/short body`);
   }
   log(`round ${round}: preview proxy body OK (${previewHtml.length} bytes)`);
 
   // Mid-run health check (API should stay up while dev parent runs)
-  const midHealth = await fetchStatus('http://127.0.0.1:13102/api/health');
+  const midHealth = await fetchStatus(`http://127.0.0.1:${API_PORT}/api/health`);
   if (!midHealth.ok) {
     throw new Error(`round ${round}: API unhealthy mid-run`);
   }
@@ -174,7 +178,7 @@ async function runRound(round) {
 
   // After graceful stop, ports should be mostly free (allow brief drain)
   await sleep(1000);
-  const postHealth = await fetchStatus('http://127.0.0.1:13102/api/health', 2000);
+  const postHealth = await fetchStatus(`http://127.0.0.1:${API_PORT}/api/health`, 2000);
   if (postHealth.ok) {
     log(`round ${round}: warning — API still up after SIGINT (will clean ports)`);
   }

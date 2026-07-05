@@ -3,6 +3,10 @@ import fs from "node:fs";
 import path from "node:path";
 
 import { DEFAULT_LOCAL_API_PORT } from "../shared/constants";
+import {
+  findAvailablePort,
+  resolvePreferredLocalApiPort,
+} from "../shared/resolve-port";
 import { ensureLocalSite } from "./local-site";
 import {
   bundledResourcesRoot,
@@ -107,7 +111,8 @@ export async function startLocalServer(options: {
   /** Skip health reuse and spawn a process this session owns (CLI dev restart). */
   forceRestart?: boolean;
 }): Promise<{ port: number; apiBaseUrl: string }> {
-  const port = options.port ?? DEFAULT_LOCAL_API_PORT;
+  const preferred = options.port ?? resolvePreferredLocalApiPort();
+  let port = preferred;
 
   if (serverProcess && !serverProcess.killed) {
     return { port: activePort, apiBaseUrl: getLocalApiBaseUrl(activePort) };
@@ -119,6 +124,22 @@ export async function startLocalServer(options: {
     activePort = port;
     activeSiteRoot = options.siteRoot;
     return { port, apiBaseUrl: getLocalApiBaseUrl(port) };
+  }
+
+  if (!options.forceRestart) {
+    const listening =
+      spawnSync("lsof", [`-tiTCP:${port}`, "-sTCP:LISTEN"], { encoding: "utf8" }).stdout?.trim();
+    if (listening) {
+      try {
+        port = await findAvailablePort(preferred);
+        if (port !== preferred) {
+          logInfo("api", `port :${preferred} busy — using :${port}`);
+        }
+      } catch (err) {
+        const message = err instanceof Error ? err.message : String(err);
+        throw new Error(`Local API port :${preferred} is in use and no fallback found (${message})`);
+      }
+    }
   }
 
   const monorepoRoot = resolveMonorepoRootForServer(options);

@@ -3,6 +3,7 @@ import { app, BrowserWindow, dialog, ipcMain, shell } from "electron";
 import {
   getApiBaseUrl,
   getApiMode,
+  getLocalApiPort,
   getRemoteApiBaseUrl,
   getWindowBounds,
   saveWindowBounds,
@@ -33,6 +34,7 @@ export function registerIpcHandlers(): void {
       const monorepoRoot = process.env.REACTPRESS_ORIGINAL_CWD?.trim();
       const { port } = await startLocalServer({
         siteRoot,
+        port: getLocalApiPort(),
         monorepoRoot: monorepoRoot || undefined,
       });
       await startLocalThemeSite({
