@@ -1,6 +1,6 @@
 {
   "name": "@fecommunity/reactpress",
-  "version": "4.0.0-beta.12",
+  "version": "4.0.0-beta.13",
   "description": "ReactPress 4 — zero-dependency publishing platform. Commands: reactpress init, reactpress doctor",
   "author": "fecommunity",
   "license": "MIT",
@@ -29,6 +29,7 @@
     "dist",
     "server",
     "toolkit",
+    "admin-dist",
     "templates",
     "scripts/install-bundled-runtime.mjs",
     "README.md",
@@ -39,7 +40,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "pnpm run build && node --test tests",
     "prepare": "node scripts/prepare.mjs",
-    "prepack": "node scripts/sync-bundled-core.mjs && node scripts/sync-monorepo-server.mjs && node scripts/sync-bundled-toolkit.mjs && node scripts/patch-bundled-dist.mjs && pnpm run build && node scripts/prune-bundled-pack.mjs",
+    "prepack": "node scripts/sync-bundled-core.mjs && node scripts/sync-monorepo-server.mjs && node scripts/sync-bundled-toolkit.mjs && node scripts/sync-bundled-admin.mjs && node scripts/patch-bundled-dist.mjs && pnpm run build && node scripts/prune-bundled-pack.mjs",
     "postinstall": "node scripts/install-bundled-runtime.mjs"
   },
   "publishConfig": {

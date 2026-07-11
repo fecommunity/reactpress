@@ -2,3 +2,4 @@ lib
 dist
 .next
 node_modules
+web/src/routeTree.gen.ts

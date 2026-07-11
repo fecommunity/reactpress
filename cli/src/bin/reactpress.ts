@@ -3,7 +3,7 @@
 
 /**
  * ReactPress 4 — zero-dependency publishing platform.
- * Commands: `reactpress init` (default), `reactpress doctor`.
+ * Commands: `reactpress init`, `reactpress doctor`. Run `reactpress` or `reactpress --help` for usage.
  */
 
 const { Command } = require('commander');
@@ -126,7 +126,7 @@ async function runInit(directory = '.', options = { force: false }) {
 }
 
 program
-  .command('init [directory]', { isDefault: true })
+  .command('init [directory]')
   .description(t('cli.init.description'))
   .option('-f, --force', t('cli.init.force'))
   .action(async (directory, options) => {
@@ -177,6 +177,12 @@ program.on('--help', () => {
   console.log('');
 });
 
+async function showHelpBanner() {
+  const projectRoot = path.resolve(process.env.REACTPRESS_ORIGINAL_CWD || '.');
+  const project = describeProject(projectRoot);
+  await refreshBannerWithStartup(projectRoot, project, { animated: false });
+}
+
 async function main() {
   const argv = process.argv.slice(2);
 
@@ -186,9 +192,15 @@ async function main() {
     process.exit(1);
   }
 
-  if (argv.length === 0) {
-    await runInit('.', { force: false });
-    return;
+  const wantsHelp =
+    argv.length === 0 || argv.includes('-h') || argv.includes('--help');
+
+  if (wantsHelp) {
+    await showHelpBanner();
+    if (argv.length === 0) {
+      program.outputHelp();
+      return;
+    }
   }
 
   program.parse(process.argv);

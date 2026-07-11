@@ -75,6 +75,9 @@ export default defineConfig(({ mode: viteMode }) => {
         routesDirectory: "./src/routes",
         generatedRouteTree: "./src/routeTree.gen.ts",
         routeFileIgnorePattern: "Login.*|loginHeroSlides",
+        // Match root .prettierrc so build/dev regenerate the same format (no publish noise).
+        quoteStyle: "single",
+        semicolons: true,
       }),
       react(),
       ...(process.env.REACTPRESS_NGINX_ENTRY_URL?.trim() ? [devPortRedirectPlugin(adminPort)] : []),

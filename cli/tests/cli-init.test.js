@@ -25,9 +25,19 @@ function runCliFail(args, { env } = {}) {
 }
 
 describe('reactpress init-only CLI', () => {
+  it('bare reactpress shows help', () => {
+    const out = runCli([]);
+    assert.match(out, /reactpress/i);
+    assert.match(out, /Zero deps/i);
+    assert.match(out, /init/i);
+    assert.match(out, /doctor/i);
+    assert.match(out, /Usage:/i);
+  });
+
   it('--help documents init and doctor commands', () => {
     const out = runCli(['--help']);
     assert.match(out, /reactpress/i);
+    assert.match(out, /Zero deps/i);
     assert.match(out, /init/i);
     assert.match(out, /doctor/i);
     assert.doesNotMatch(out, /reactpress docker/i);

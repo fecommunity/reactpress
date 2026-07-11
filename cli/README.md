@@ -27,7 +27,7 @@ reactpress init
 
 | Command | Description |
 |---------|-------------|
-| `reactpress init [dir]` | Initialize project (default command) |
+| `reactpress init [dir]` | Initialize project |
 | `reactpress doctor [dir]` | Diagnose Node.js, ports, database, and services |
 | `reactpress doctor logs [dir]` | Tail API logs (error / request / response) for debugging |
 
