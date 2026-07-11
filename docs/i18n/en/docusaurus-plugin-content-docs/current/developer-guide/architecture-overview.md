@@ -39,7 +39,9 @@ flowchart TB
   Toolkit -->|HTTP /api| Server
   Server -->|Hook| PluginSrv["plugins/*/dist"]
   Server --> DB
-  CLI --> Web & Theme & Server
+  CLI --> Web
+  CLI --> Theme
+  CLI --> Server
 ```
 
 ## Package responsibility matrix
