@@ -68,7 +68,7 @@
     "pretypecheck": "pnpm --dir ../toolkit run build",
     "typecheck": "tsc --noEmit",
     "preview": "vp preview",
-    "prepare": "vp config",
+    "prepare": "vp config --no-agent",
     "fmt": "vp fmt",
     "lint": "vp lint",
     "check": "vp check --no-fmt",
