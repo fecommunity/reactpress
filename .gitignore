@@ -27,6 +27,8 @@ lib
 !themes/hello-world/**/lib/
 !themes/theme-starter/**/lib/
 cli/out/
+cli/toolkit/
+cli/server/node_modules/
 dist
 dist-ssr
 coverage

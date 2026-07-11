@@ -45,7 +45,19 @@ function main() {
   replaceDir(path.join(monorepoServer, 'public'), path.join(bundledServer, 'public'));
   replaceDir(path.join(monorepoServer, 'bin'), path.join(bundledServer, 'bin'));
 
-  console.log('[sync-monorepo-server] server/dist|public|bin -> cli/server/');
+  const serverPkg = path.join(monorepoServer, 'package.json');
+  if (fs.existsSync(serverPkg)) {
+    const pkg = JSON.parse(fs.readFileSync(serverPkg, 'utf8'));
+    if (pkg.dependencies?.['@fecommunity/reactpress-toolkit']?.startsWith('workspace:')) {
+      pkg.dependencies['@fecommunity/reactpress-toolkit'] = 'file:../toolkit';
+    }
+    fs.writeFileSync(
+      path.join(bundledServer, 'package.json'),
+      `${JSON.stringify(pkg, null, 2)}\n`,
+    );
+  }
+
+  console.log('[sync-monorepo-server] server/dist|public|bin|package.json -> cli/server/');
 }
 
 main();

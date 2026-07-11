@@ -207,6 +207,9 @@ function buildAllForPublish() {
   run('pnpm run build', path.join(root, 'web'));
   run('node scripts/sync-bundled-core.mjs', path.join(root, 'cli'));
   run('node scripts/sync-monorepo-server.mjs', path.join(root, 'cli'));
+  run('node scripts/sync-bundled-toolkit.mjs', path.join(root, 'cli'));
+  run('node scripts/patch-bundled-dist.mjs', path.join(root, 'cli'));
+  run('node scripts/install-bundled-runtime.mjs', path.join(root, 'cli'));
   run('pnpm run build', path.join(root, 'cli'));
   console.log(chalk.green('\n✅ Build complete\n'));
 }

@@ -631,8 +631,10 @@ const STRINGS = {
     'bundle.service.database.connectionTimeout': 'Database container started but connection timed out. Run: docker logs {container}',
     'bundle.service.database.cannotConnect': 'Cannot connect to database {host}:{port}. Check DB_* in .env.',
     'bundle.serverBundle.missing': 'Bundled server is missing. Reinstall reactpress-cli.',
+    'bundle.serverBundle.installing': 'Installing bundled server runtime dependencies…',
     'bundle.serverBundle.installFailed': 'Bundled server dependency install failed. In the reactpress-cli install dir run: cd server && npm install --omit=dev --no-bin-links',
     'bundle.serverBundle.notBuilt': 'Bundled server is not built or dependencies are incomplete. Run npm run build:server (dev) or reinstall reactpress-cli.',
+    'bundle.serverBundle.toolkitMissing': 'Bundled toolkit is missing. Reinstall @fecommunity/reactpress.',
     'bundle.port.notFound': 'No available port in range {start}-{end}',
   },
   zh: {
@@ -1261,8 +1263,10 @@ const STRINGS = {
     'bundle.service.database.connectionTimeout': '数据库容器已启动，但连接超时。请执行 docker logs {container} 查看详情。',
     'bundle.service.database.cannotConnect': '无法连接数据库 {host}:{port}，请检查 .env 中的 DB_* 配置。',
     'bundle.serverBundle.missing': '内置服务端缺失，请重新安装 reactpress-cli。',
+    'bundle.serverBundle.installing': '正在安装内置服务端运行时依赖…',
     'bundle.serverBundle.installFailed': '内置服务端依赖安装失败。请在 reactpress-cli 安装目录下手动执行: cd server && npm install --omit=dev --no-bin-links',
     'bundle.serverBundle.notBuilt': '内置服务端未构建或依赖不完整。请运行 npm run build:server（开发）或重新安装 reactpress-cli。',
+    'bundle.serverBundle.toolkitMissing': '内置 toolkit 缺失，请重新安装 @fecommunity/reactpress。',
     'bundle.port.notFound': '在 {start}-{end} 范围内未找到可用端口',
   },
 };

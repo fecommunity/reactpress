@@ -39,5 +39,6 @@ describe('publish/local file parity', () => {
         `package.json files[] missing "${top}" (needed for ${required})`,
       );
     }
+    assert.ok(declared.has('toolkit'), 'package.json files[] must ship bundled toolkit');
   });
 });
