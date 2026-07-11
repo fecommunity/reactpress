@@ -1,0 +1,72 @@
+name: Star History
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: star-history
+  cancel-in-progress: false
+
+jobs:
+  star-history:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: narayann7/star-history-action@v1
+        id: star-history
+        with:
+          repos: fecommunity/reactpress
+          update-readme: false
+          commit: false
+
+      - name: Update README star history blocks
+        if: steps.star-history.outputs.changed == 'true'
+        run: |
+          LIGHT="${{ steps.star-history.outputs.light }}"
+          DARK="${{ steps.star-history.outputs.dark }}"
+          python3 <<'PY'
+          import os
+          import re
+          from pathlib import Path
+
+          light = os.environ["LIGHT"]
+          dark = os.environ["DARK"]
+          block = (
+              "<!-- star-history:start -->\n"
+              "<picture>\n"
+              f'  <source media="(prefers-color-scheme: dark)" srcset="{dark}">\n'
+              f'  <img alt="Star History Chart" src="{light}">\n'
+              "</picture>\n"
+              "<!-- star-history:end -->"
+          )
+
+          marker = re.compile(
+              r"<!-- star-history:start -->.*?<!-- star-history:end -->",
+              re.DOTALL,
+          )
+
+          for path in ("README.md", "README-zh_CN.md"):
+              readme = Path(path)
+              content = readme.read_text(encoding="utf-8")
+              if not marker.search(content):
+                  raise SystemExit(f"missing star-history markers in {path}")
+              readme.write_text(marker.sub(block, content), encoding="utf-8")
+          PY
+        env:
+          LIGHT: ${{ steps.star-history.outputs.light }}
+          DARK: ${{ steps.star-history.outputs.dark }}
+
+      - name: Commit and push
+        if: steps.star-history.outputs.changed == 'true'
+        run: |
+          git config user.name "FECommunity"
+          git config user.email "admin@gaoredu.com"
+          git add assets/star-history README.md README-zh_CN.md
+          git commit -m "docs: update README star history charts"
+          git push

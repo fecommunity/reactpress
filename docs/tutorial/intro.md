@@ -105,6 +105,3 @@ pnpm run dev
 
 Email: admin@gaoredu.com
 
-## ✨ Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=fecommunity/reactpress&type=Date)](https://star-history.com/#fecommunity/reactpress&Date)

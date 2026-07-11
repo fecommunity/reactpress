@@ -124,6 +124,3 @@ The ReactPress project has been greatly inspired and assisted by the following o
 
 We extend our heartfelt gratitude to the authors and contributors of these projects!
 
-## ✨ Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=fecommunity/reactpress&type=Date)](https://star-history.com/#fecommunity/reactpress&Date)

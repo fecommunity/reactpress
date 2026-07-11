@@ -344,6 +344,7 @@ After Node.js and Docker are installed, a second cold start (`reactpress init` +
 
 MIT License · © ReactPress / FECommunity
 
-[![Star History Chart](https://api.star-history.com/svg?repos=fecommunity/reactpress&type=Date)](https://star-history.com/#fecommunity/reactpress&Date)
+<!-- star-history:start -->
+<!-- star-history:end -->
 
 </div>
