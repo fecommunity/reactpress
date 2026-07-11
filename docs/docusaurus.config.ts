@@ -11,6 +11,7 @@ const algoliaConfig = resolveAlgoliaConfig();
 
 const config: Config = {
   title: 'ReactPress',
+  titleDelimiter: '-',
   tagline: 'Open-source React publishing platform. One CLI, live in ~60 seconds.',
   // Default meta description for non-home pages (home overrides in src/pages/index.tsx)
   favicon: 'img/favicon.ico',
