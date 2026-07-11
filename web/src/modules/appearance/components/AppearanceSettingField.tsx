@@ -1,5 +1,5 @@
 import type { ThemeAppearanceSetting } from "@fecommunity/reactpress-toolkit/theme";
-import { resolvePublicAssetUrl } from "@fecommunity/reactpress-toolkit/theme";
+import { resolveSettingAssetPreviewUrl } from "@/shared/assets/resolveSettingAssetPreviewUrl";
 import { App, Button, ColorPicker, Form, Input, Select, Switch, Typography } from "antd";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -132,7 +132,7 @@ function ImageUrlControl({
 }: ImageUrlControlProps) {
   const { t } = useTranslation();
   const url = String(value ?? "").trim();
-  const previewSrc = resolvePublicAssetUrl(url);
+  const previewSrc = resolveSettingAssetPreviewUrl(url);
 
   return (
     <div className={styles.imageSetting}>

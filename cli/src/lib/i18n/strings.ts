@@ -126,6 +126,7 @@ const STRINGS = {
     'init.alreadyInitialized': 'Project already initialized — ensuring services are running',
     'init.apiOnlyHint':
       'API is running. Install a theme in Admin → Appearance to enable the public site.',
+    'init.pluginsSeeded': 'Seeded bundled plugins (hello-world, seo, image-optimizer).',
     'init.unknownCommand': 'Unknown command: {cmd}',
     'init.useInitOnly': 'ReactPress 4: reactpress init · doctor · logs · stop',
     'banner.subtitle': '· Publishing platform · v4.0',
@@ -444,6 +445,7 @@ const STRINGS = {
     'doctor.logs.noMatchingLines': 'No matching log lines.',
     'doctor.logs.badPattern': 'Invalid grep pattern: {pattern}',
     'doctor.logs.noPid': 'No API pid file at {path}',
+    'doctor.logs.activePid': 'API listening on port {port} (pid {pid})',
     'doctor.logs.pidRunning': 'API pid {pid} (recorded in {path})',
     'doctor.logs.pidStale': 'Stale pid {pid} in {path} — process not running',
     'doctor.logs.moreHint':
@@ -813,6 +815,7 @@ const STRINGS = {
     'init.hint': '账号 admin / admin · 服务已在后台运行 · 停止：reactpress stop · 日志：reactpress logs',
     'init.alreadyInitialized': '项目已初始化 — 正在确保服务运行',
     'init.apiOnlyHint': 'API 已运行。请在管理后台「外观 → 主题」安装主题以启用访客站。',
+    'init.pluginsSeeded': '已写入内置插件（hello-world、seo、image-optimizer）。',
     'init.unknownCommand': '未知命令：{cmd}',
     'init.useInitOnly': 'ReactPress 4 支持：reactpress init · doctor · logs · stop',
     'banner.subtitle': '· 发布平台 · v4.0',
@@ -1128,6 +1131,7 @@ const STRINGS = {
     'doctor.logs.noMatchingLines': '没有匹配的日志行。',
     'doctor.logs.badPattern': 'grep 正则无效：{pattern}',
     'doctor.logs.noPid': '未找到 API pid 文件：{path}',
+    'doctor.logs.activePid': 'API 正在监听端口 {port}（pid {pid}）',
     'doctor.logs.pidRunning': 'API 进程 pid {pid}（记录在 {path}）',
     'doctor.logs.pidStale': 'pid 文件 {path} 中的 {pid} 已失效（进程未运行）',
     'doctor.logs.moreHint':

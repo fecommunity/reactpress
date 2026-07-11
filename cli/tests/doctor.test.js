@@ -13,6 +13,7 @@ const {
   listLogFiles,
   readTailLines,
   filterLines,
+  measureLogDir,
 } = require('../out/lib/project-logs');
 const { createStandaloneProject, rmDir } = require('./helpers/tmp-project');
 
@@ -85,6 +86,34 @@ describe('lib/doctor', () => {
       assert.equal(files.length, 1);
       assert.equal(readTailLines(logFile, 2).join('|'), '[ERROR] boom|line-three');
       assert.deepEqual(filterLines(readTailLines(logFile, 10), 'ERROR'), ['[ERROR] boom']);
+    } finally {
+      rmDir(root);
+    }
+  });
+
+  it('prefers non-empty bundled server logs when project log dir is empty', () => {
+    const root = createStandaloneProject();
+    try {
+      fs.mkdirSync(path.join(root, 'server', 'src'), { recursive: true });
+      fs.writeFileSync(path.join(root, 'server', 'src', 'main.ts'), '// stub');
+
+      const emptyDir = path.join(root, '.reactpress', 'logs', 'server', 'error');
+      fs.mkdirSync(emptyDir, { recursive: true });
+      fs.writeFileSync(path.join(emptyDir, 'error.log.-2026-07-11.log'), '', 'utf8');
+
+      const bundledDir = path.join(root, 'server', 'logs', 'error');
+      fs.mkdirSync(bundledDir, { recursive: true });
+      fs.writeFileSync(
+        path.join(bundledDir, 'error.log.-2026-07-11.log'),
+        '[ERROR] bundled\n',
+        'utf8'
+      );
+
+      assert.equal(getProjectServerLogDir(root), path.join(root, 'server', 'logs'));
+      assert.equal(measureLogDir(path.join(root, '.reactpress', 'logs', 'server')), 0);
+      const files = listLogFiles(getProjectServerLogDir(root), 'error');
+      assert.equal(files.length, 1);
+      assert.equal(readTailLines(files[0].path, 5).join('|'), '[ERROR] bundled');
     } finally {
       rmDir(root);
     }

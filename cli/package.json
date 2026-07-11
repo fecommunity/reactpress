@@ -1,6 +1,6 @@
 {
   "name": "@fecommunity/reactpress",
-  "version": "4.0.0-beta.15",
+  "version": "4.0.0-beta.17",
   "description": "ReactPress CLI — publishing platform for modern developers. CMS, Admin, API, and Next.js themes in one command. Self-hosted, MIT. `npx @fecommunity/reactpress init`",
   "author": "fecommunity",
   "license": "MIT",
@@ -45,6 +45,7 @@
     "server",
     "toolkit",
     "admin-dist",
+    "plugins",
     "templates",
     "scripts/install-bundled-runtime.mjs",
     "README.md",
@@ -55,7 +56,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "pnpm run build && node --test tests",
     "prepare": "node scripts/prepare.mjs",
-    "prepack": "node scripts/sync-bundled-core.mjs && node scripts/sync-monorepo-server.mjs && node scripts/sync-bundled-toolkit.mjs && node scripts/sync-bundled-admin.mjs && node scripts/patch-bundled-dist.mjs && pnpm run build && node scripts/prune-bundled-pack.mjs",
+    "prepack": "node scripts/sync-bundled-core.mjs && node scripts/sync-monorepo-server.mjs && node scripts/sync-bundled-toolkit.mjs && node scripts/sync-bundled-admin.mjs && node scripts/sync-bundled-plugins.mjs && node scripts/patch-bundled-dist.mjs && pnpm run build && node scripts/prune-bundled-pack.mjs",
     "postinstall": "node scripts/install-bundled-runtime.mjs"
   },
   "publishConfig": {

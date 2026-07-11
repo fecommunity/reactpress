@@ -46,3 +46,24 @@ export function getBundledServerMain() {`,
 
 fs.writeFileSync(target, patched);
 console.log('[patch-bundled-dist] dist/utils/server-bundle.js toolkit check');
+
+const bootstrapPath = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'out', 'lib', 'bootstrap.js');
+if (fs.existsSync(bootstrapPath)) {
+  let bootstrap = fs.readFileSync(bootstrapPath, 'utf8');
+  const marker = 'ensureBundledPlugins(root)';
+  if (!bootstrap.includes(marker)) {
+    bootstrap = bootstrap.replace(
+      '(0, cli_context_1.setProjectCwd)(root);',
+      `(0, cli_context_1.setProjectCwd)(root);
+    try {
+        const { ensureBundledPlugins } = require('../core/services/local-site');
+        ensureBundledPlugins(root);
+    }
+    catch {
+        // ignore
+    }`,
+    );
+    fs.writeFileSync(bootstrapPath, bootstrap);
+    console.log('[patch-bundled-dist] bootstrap.js ensureBundledPlugins hook');
+  }
+}

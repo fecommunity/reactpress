@@ -40,5 +40,6 @@ describe('publish/local file parity', () => {
       );
     }
     assert.ok(declared.has('toolkit'), 'package.json files[] must ship bundled toolkit');
+    assert.ok(declared.has('plugins'), 'package.json files[] must ship bundled plugins');
   });
 });

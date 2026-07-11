@@ -1,4 +1,4 @@
-import { resolvePublicAssetUrl } from "@fecommunity/reactpress-toolkit/theme";
+import { resolveSettingAssetPreviewUrl } from "@/shared/assets/resolveSettingAssetPreviewUrl";
 import { App, Button, Form, Input, Spin } from "antd";
 import { type ReactNode, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -131,7 +131,7 @@ function SiteFaviconField({ siteTitle, value, description, onChange }: SiteFavic
   const [mediaOpen, setMediaOpen] = useState(false);
   const faviconUrl = (value ?? "").trim();
   const displayTitle = siteTitle.trim() || t("settings.fields.systemTitle");
-  const previewSrc = faviconUrl ? resolvePublicAssetUrl(faviconUrl) : "";
+  const previewSrc = faviconUrl ? resolveSettingAssetPreviewUrl(faviconUrl) : "";
 
   return (
     <div className={styles.faviconField}>

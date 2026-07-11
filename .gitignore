@@ -39,6 +39,7 @@ lib
 cli/out/
 cli/toolkit/
 cli/admin-dist/
+cli/plugins/
 cli/server/node_modules/
 dist
 dist-ssr
