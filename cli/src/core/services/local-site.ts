@@ -159,10 +159,11 @@ export async function initLocalProject(
   const port = options.port ?? 3002;
 
   if ((await fs.pathExists(paths.configPath)) && !options.force) {
+    const { t } = require('../../lib/i18n');
     return {
-      ok: false,
+      ok: true,
       projectRoot,
-      message: '目录已是 ReactPress 项目。使用 --force 覆盖配置。',
+      message: t('init.alreadyInitialized'),
     };
   }
 

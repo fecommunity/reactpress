@@ -13,8 +13,8 @@ const { brand, divider } = require('../ui/theme');
 const { initMonorepoProject, isMonorepoCheckout } = require('../lib/bootstrap');
 const { initProject } = require('../core/services/init');
 const { runLifecycleCommand } = require('../lib/lifecycle');
-const { runNodeScript } = require('../lib/spawn');
-const { getThemeBin, getCliVersion } = require('../lib/paths');
+const { startClientInBackground } = require('../lib/client-lifecycle');
+const { getCliVersion } = require('../lib/paths');
 const {
   loadServerSiteUrl,
   loadAdminConsoleUrl,
@@ -42,6 +42,23 @@ const LEGACY_COMMANDS = new Set([
   'desktop',
   'client',
 ]);
+
+function attachLogsOptions(cmd) {
+  return cmd
+    .option('--tail <n>', t('cli.logs.tailOption'), '50')
+    .option('--source <name>', t('cli.logs.sourceOption'), 'error')
+    .option('--grep <pattern>', t('cli.logs.grepOption'))
+    .option('--list', t('cli.logs.listOption'));
+}
+
+function createLogsAction() {
+  return async (directory, options) => {
+    const projectRoot = path.resolve(directory || '.');
+    process.env.REACTPRESS_ORIGINAL_CWD = projectRoot;
+    const code = await runDoctorLogs(projectRoot, options);
+    process.exit(code);
+  };
+}
 
 if (!process.env.REACTPRESS_LOCAL_MODE) {
   process.env.REACTPRESS_LOCAL_MODE = '1';
@@ -81,28 +98,23 @@ async function startServices(projectRoot) {
   const { ensureDefaultTheme } = require('../core/services/theme-bootstrap');
   await ensureDefaultTheme(projectRoot);
 
-  printRunningPanel(projectRoot);
-
   try {
-    const themeBin = getThemeBin(projectRoot);
-    const { resolveThemeDirectory, readActiveThemeManifest } = require('../lib/theme-runtime');
-    const { activeTheme } = readActiveThemeManifest(projectRoot);
-    const themeDir = resolveThemeDirectory(projectRoot, activeTheme);
-    await runNodeScript(themeBin, [], {
-      cwd: projectRoot,
-      env: themeDir ? { REACTPRESS_THEME_DIR: themeDir } : undefined,
-    });
+    const clientCode = await startClientInBackground(projectRoot);
+    if (clientCode !== 0) process.exit(clientCode);
   } catch (err) {
     if (
       err.code === 'REACTPRESS_THEME_NOT_FOUND' ||
       err.code === 'REACTPRESS_THEME_BIN_NOT_FOUND'
     ) {
+      printRunningPanel(projectRoot);
       console.log(brand.dim(t('init.apiOnlyHint')));
       return;
     }
     console.error(chalk.red('[reactpress]'), err.message || err);
     process.exit(err.exitCode ?? 1);
   }
+
+  printRunningPanel(projectRoot);
 }
 
 async function runInit(directory = '.', options = { force: false }) {
@@ -133,23 +145,29 @@ program
     await runInit(directory || '.', options);
   });
 
+attachLogsOptions(
+  program.command('logs [directory]').description(t('cli.logs.description')),
+).action(createLogsAction());
+
+program
+  .command('stop [directory]')
+  .description(t('cli.stop.description'))
+  .action(async (directory) => {
+    const projectRoot = path.resolve(directory || '.');
+    process.env.REACTPRESS_ORIGINAL_CWD = projectRoot;
+    await runLifecycleCommand('stop', projectRoot);
+    process.exit(0);
+  });
+
 const doctorCommand = program
   .command('doctor')
   .description(t('cli.doctor.description'));
 
-doctorCommand
-  .command('logs [directory]')
-  .description(t('cli.doctor.logs.description'))
-  .option('--tail <n>', t('cli.doctor.logs.tailOption'), '50')
-  .option('--source <name>', t('cli.doctor.logs.sourceOption'), 'error')
-  .option('--grep <pattern>', t('cli.doctor.logs.grepOption'))
-  .option('--list', t('cli.doctor.logs.listOption'))
-  .action(async (directory, options) => {
-    const projectRoot = path.resolve(directory || '.');
-    process.env.REACTPRESS_ORIGINAL_CWD = projectRoot;
-    const code = await runDoctorLogs(projectRoot, options);
-    process.exit(code);
-  });
+attachLogsOptions(
+  doctorCommand
+    .command('logs [directory]')
+    .description(t('cli.logs.descriptionAlias')),
+).action(createLogsAction());
 
 doctorCommand
   .command('check [directory]', { isDefault: true })
@@ -169,7 +187,8 @@ program.on('--help', () => {
   for (const line of [
     t('cli.help.init'),
     t('cli.help.doctor'),
-    t('cli.help.doctorLogs'),
+    t('cli.help.logs'),
+    t('cli.help.stop'),
     t('cli.help.zeroDep'),
   ]) {
     console.log(brand.dim(line));

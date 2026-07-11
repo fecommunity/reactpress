@@ -1,10 +1,9 @@
 // @ts-nocheck
 const fs = require('fs');
 const path = require('path');
-const { getPidFile } = require('./paths');
+const { getPidFile, getClientPidFile } = require('./paths');
 
-function readPid(projectRoot) {
-  const pidFile = getPidFile(projectRoot);
+function readPidFromFile(pidFile) {
   try {
     const raw = fs.readFileSync(pidFile, 'utf8').trim();
     const pid = Number.parseInt(raw, 10);
@@ -12,6 +11,14 @@ function readPid(projectRoot) {
   } catch {
     return null;
   }
+}
+
+function readPid(projectRoot) {
+  return readPidFromFile(getPidFile(projectRoot));
+}
+
+function readClientPid(projectRoot) {
+  return readPidFromFile(getClientPidFile(projectRoot));
 }
 
 function isProcessRunning(pid) {
@@ -31,16 +38,34 @@ function clearPidFile(projectRoot) {
   }
 }
 
-function writePid(projectRoot, pid) {
-  const pidFile = getPidFile(projectRoot);
+function clearClientPidFile(projectRoot) {
+  const pidFile = getClientPidFile(projectRoot);
+  if (fs.existsSync(pidFile)) {
+    fs.unlinkSync(pidFile);
+  }
+}
+
+function writePidToFile(pidFile, pid) {
   fs.mkdirSync(path.dirname(pidFile), { recursive: true });
   fs.writeFileSync(pidFile, String(pid));
 }
 
+function writePid(projectRoot, pid) {
+  writePidToFile(getPidFile(projectRoot), pid);
+}
+
+function writeClientPid(projectRoot, pid) {
+  writePidToFile(getClientPidFile(projectRoot), pid);
+}
+
 module.exports = {
   readPid,
+  readClientPid,
   isProcessRunning,
   clearPidFile,
+  clearClientPidFile,
   writePid,
+  writeClientPid,
   getPidFile,
+  getClientPidFile,
 };
