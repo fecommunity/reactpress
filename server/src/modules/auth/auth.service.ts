@@ -1,9 +1,9 @@
-import { ApiMsg } from '../../common/api-messages';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import axios from 'axios';
 
+import { ApiMsg } from '../../common/api-messages';
 import { uniqueid } from '../../utils/uniqueid.util';
 import { SettingService } from '../setting/setting.service';
 import { SMTPService } from '../smtp/smtp.service';

@@ -1,0 +1,74 @@
+.panel {
+  border: 1px solid var(--editor-border, #dcdcde);
+  border-radius: 2px;
+  background: var(--editor-surface, #fff);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 12px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--editor-text, #1d2327);
+}
+
+.toggle {
+  display: inline-flex;
+  color: var(--editor-text-secondary, #646970);
+}
+
+.body {
+  padding: 0 12px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.label {
+  display: block;
+  margin-top: 8px;
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--editor-text, #1d2327);
+}
+
+.hint {
+  margin: 6px 0 0;
+  font-size: 12px;
+  color: var(--editor-text-secondary, #646970);
+  line-height: 1.5;
+}
+
+.input,
+.textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px 12px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--editor-text, #1d2327);
+  background: var(--editor-surface, #fff);
+  border: 1px solid var(--editor-border-secondary, #dcdcde);
+  border-radius: 2px;
+}
+
+.input:focus,
+.textarea:focus {
+  outline: none;
+  border-color: var(--editor-accent, #2271b1);
+  box-shadow: 0 0 0 1px var(--editor-accent, #2271b1);
+}
+
+.textarea {
+  min-height: 96px;
+  resize: vertical;
+}

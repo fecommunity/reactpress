@@ -1,0 +1,24 @@
+{
+  "meta": {
+    "name": "Auto Summary",
+    "description": "When publishing, if the summary is empty, generate one from the body or title."
+  },
+  "settings": {
+    "enabled": {
+      "title": "Enable auto summary",
+      "description": "When disabled, summary is not auto-filled on publish."
+    },
+    "maxLength": {
+      "title": "Maximum length",
+      "description": "Max characters taken from the body (40–500)."
+    },
+    "suffix": {
+      "title": "Truncation suffix",
+      "description": "Appended when content exceeds max length, e.g. …"
+    },
+    "fallbackToTitle": {
+      "title": "Use title when body is empty",
+      "description": "When stripped Markdown body is empty, use the article title as summary."
+    }
+  }
+}

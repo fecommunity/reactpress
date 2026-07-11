@@ -3,10 +3,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { ArticleModule } from '../article/article.module';
 import { AuthModule } from '../auth/auth.module';
-import { WebhookModule } from '../webhook/webhook.module';
 import { SettingModule } from '../setting/setting.module';
 import { SMTPModule } from '../smtp/smtp.module';
 import { UserModule } from '../user/user.module';
+import { WebhookModule } from '../webhook/webhook.module';
 import { CommentController } from './comment.controller';
 import { Comment } from './comment.entity';
 import { CommentService } from './comment.service';

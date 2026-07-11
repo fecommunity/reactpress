@@ -5,14 +5,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, {useState, useEffect} from 'react';
+import React, { useEffect, useState } from 'react';
 
-function ThemeImage({lightSrc, darkSrc, className, alt}) {
+function ThemeImage({ lightSrc, darkSrc, className, alt }) {
   const [theme, setTheme] = useState('light');
 
   useEffect(() => {
-    const themeObserver = new MutationObserver(mutations => {
-      mutations.forEach(mutation => {
+    const themeObserver = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
         if (
           mutation.type === 'attributes' &&
           mutation.attributeName === 'data-theme' &&
@@ -31,13 +31,7 @@ function ThemeImage({lightSrc, darkSrc, className, alt}) {
     return () => themeObserver.disconnect();
   }, []);
 
-  return (
-    <img
-      src={theme === 'dark' ? darkSrc : lightSrc}
-      alt={alt}
-      className={className}
-    />
-  );
+  return <img src={theme === 'dark' ? darkSrc : lightSrc} alt={alt} className={className} />;
 }
 
 export default ThemeImage;

@@ -1,12 +1,6 @@
 import { dateFormat } from '../../utils/date.util';
 
-export const getNewCommentHTML = ({
-  systemTitle,
-  systemUrl,
-  adminSystemUrl,
-  adminName,
-  comment,
-}) => {
+export const getNewCommentHTML = ({ systemTitle, systemUrl, adminSystemUrl, adminName, comment }) => {
   return `
   <table
   id="table-parent"

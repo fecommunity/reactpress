@@ -1,13 +1,11 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import clsx from 'clsx';
-import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Translate, { translate } from '@docusaurus/Translate';
-import {
-  QUICK_START_COMMANDS,
-  QUICK_START_COPY_COMMAND,
-} from '@site/src/constants/quickStartCommands';
-import { useCliTypewriter } from './useCliTypewriter';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
+import { QUICK_START_COMMANDS, QUICK_START_COPY_COMMAND } from '@site/src/constants/quickStartCommands';
+import clsx from 'clsx';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+
 import styles from './styles.module.css';
+import { useCliTypewriter } from './useCliTypewriter';
 
 type Variant = 'hero' | 'section';
 
@@ -52,11 +50,7 @@ function CopyIcon() {
         stroke="currentColor"
         strokeWidth="1.8"
       />
-      <path
-        d="M6 8H5a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-1"
-        stroke="currentColor"
-        strokeWidth="1.8"
-      />
+      <path d="M6 8H5a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-1" stroke="currentColor" strokeWidth="1.8" />
     </svg>
   );
 }
@@ -90,15 +84,13 @@ export default function CliCommandBlock({
   const { i18n } = useDocusaurusContext();
   const locale = i18n.currentLocale === 'zh' ? 'zh' : 'en';
   const [copied, setCopied] = useState(false);
-  const lines =
-    commands.length > 0 ? commands : [...QUICK_START_COMMANDS];
+  const lines = commands.length > 0 ? commands : [...QUICK_START_COMMANDS];
 
-  const { history, activeInput, isTyping, animate: isAnimating } =
-    useCliTypewriter({
-      enabled: animate,
-      locale,
-      commands: lines,
-    });
+  const { history, activeInput, isTyping, animate: isAnimating } = useCliTypewriter({
+    enabled: animate,
+    locale,
+    commands: lines,
+  });
 
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -118,16 +110,14 @@ export default function CliCommandBlock({
   }, [copyCommand]);
 
   const showLiveInput = isAnimating && isTyping;
-  const isReady =
-    isAnimating &&
-    history.some((line) => line.kind === 'success') &&
-    !showLiveInput;
+  const isReady = isAnimating && history.some((line) => line.kind === 'success') && !showLiveInput;
 
   return (
     <div
       className={clsx(styles.wrapper, styles[variant], className)}
       data-variant={variant}
-      data-ready={isReady || undefined}>
+      data-ready={isReady || undefined}
+    >
       <div className={styles.glow} aria-hidden />
       <div className={styles.panel}>
         <div className={styles.toolbar}>
@@ -151,7 +141,8 @@ export default function CliCommandBlock({
             aria-label={translate({
               message: 'Copy quick start commands',
               id: 'home.cli.copyAll.aria',
-            })}>
+            })}
+          >
             {copied ? <CheckIcon /> : <CopyIcon />}
             <span>
               {copied ? (
@@ -169,7 +160,8 @@ export default function CliCommandBlock({
           aria-label={translate({
             message: 'ReactPress quick start command demo',
             id: 'home.cli.terminal.aria',
-          })}>
+          })}
+        >
           <div ref={scrollRef} className={styles.terminalScroll}>
             {history.map((line, index) => (
               <div
@@ -177,8 +169,9 @@ export default function CliCommandBlock({
                 className={clsx(
                   line.kind === 'input' && styles.commandRow,
                   line.kind === 'output' && styles.outputRow,
-                  line.kind === 'success' && styles.successRow,
-                )}>
+                  line.kind === 'success' && styles.successRow
+                )}
+              >
                 {line.kind === 'input' ? (
                   <>
                     <span className={styles.prompt} aria-hidden>
@@ -190,8 +183,9 @@ export default function CliCommandBlock({
                   <span
                     className={clsx(
                       line.kind === 'output' && styles.outputText,
-                      line.kind === 'success' && styles.successText,
-                    )}>
+                      line.kind === 'success' && styles.successText
+                    )}
+                  >
                     {line.text}
                   </span>
                 )}
@@ -209,15 +203,12 @@ export default function CliCommandBlock({
                 </code>
               </div>
             )}
-
           </div>
         </div>
 
         {showHint && (
           <p className={styles.hint}>
-            <Translate id="home.cli.hint">
-              Copy all commands and paste into your terminal to get started
-            </Translate>
+            <Translate id="home.cli.hint">Copy all commands and paste into your terminal to get started</Translate>
           </p>
         )}
       </div>

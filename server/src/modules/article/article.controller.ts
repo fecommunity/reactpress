@@ -1,4 +1,3 @@
-import { ApiMsg } from '../../common/api-messages';
 import {
   Body,
   Controller,
@@ -17,6 +16,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
+import { ApiMsg } from '../../common/api-messages';
 import { ApiKeyGuard } from '../api-key/api-key.guard';
 import { ApiKeyService } from '../api-key/api-key.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -126,8 +126,9 @@ export class ArticleController {
    */
   @Get('/recommend')
   @HttpCode(HttpStatus.OK)
-  recommend(@Query('articleId') articleId) {
-    return this.articleService.recommend(articleId);
+  recommend(@Query('articleId') articleId, @Query('pageSize') pageSize?: string) {
+    const size = Math.min(Math.max(parseInt(pageSize ?? '6', 10) || 6, 1), 30);
+    return this.articleService.recommend(articleId, size);
   }
 
   /**

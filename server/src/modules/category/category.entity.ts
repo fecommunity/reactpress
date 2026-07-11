@@ -17,7 +17,7 @@ export class Category {
   @Column()
   value: string;
 
-  @ApiProperty()
+  @ApiProperty({ type: () => Article, isArray: true })
   @OneToMany(
     () => Article,
     (article) => article.category

@@ -5,8 +5,22 @@ const PUBLIC_PATH_ALIASES: Record<string, string> = {
   '/favicon.ico': '/public/favicon.ico',
 };
 
+/** Theme Next rewrites serve alias keys (e.g. `/logo.png`), not `/public/*` API paths. */
+const THEME_LOCAL_PUBLIC_PATHS: Record<string, string> = Object.fromEntries(
+  Object.entries(PUBLIC_PATH_ALIASES).map(([themePath, apiPath]) => [apiPath, themePath]),
+);
+
 function normalizePublicAssetPath(path: string): string {
   return PUBLIC_PATH_ALIASES[path] ?? path;
+}
+
+function toThemeServablePath(apiPath: string): string {
+  return THEME_LOCAL_PUBLIC_PATHS[apiPath] ?? apiPath;
+}
+
+/** Paths proxied by theme `next.config` rewrites — keep relative, never bake absolute API URLs. */
+function isThemeRewritePath(path: string): boolean {
+  return path in THEME_LOCAL_PUBLIC_PATHS || path.startsWith('/public/') || path.startsWith('/uploads/');
 }
 
 /** Whether a configured asset path is likely to resolve (skip broken defaults like `/logo.png`). */
@@ -44,6 +58,26 @@ function resolvePublicSiteOrigin(): string {
   return serverApi.replace(/\/api\/?$/, '').replace(/\/$/, '');
 }
 
+/** Visitor site origin — differs from API origin during SSR (theme :3001 vs API :3002). */
+function resolveThemeSiteOrigin(): string {
+  if (typeof window !== 'undefined') {
+    return window.location.origin;
+  }
+  const clientSite = process.env.CLIENT_SITE_URL?.trim();
+  if (clientSite) {
+    try {
+      return new URL(clientSite).origin;
+    } catch {
+      return clientSite.replace(/\/$/, '');
+    }
+  }
+  const clientPort = process.env.CLIENT_PORT?.trim() || process.env.PORT?.trim();
+  if (clientPort) {
+    return `http://127.0.0.1:${clientPort}`;
+  }
+  return resolvePublicSiteOrigin();
+}
+
 /** Resolve media / logo URLs for theme pages. */
 export function resolvePublicAssetUrl(url: string | undefined | null): string {
   const trimmed = (url ?? '').trim();
@@ -55,8 +89,11 @@ export function resolvePublicAssetUrl(url: string | undefined | null): string {
   }
   if (trimmed.startsWith('/')) {
     const normalized = normalizePublicAssetPath(trimmed);
+    if (isThemeRewritePath(normalized)) {
+      return toThemeServablePath(normalized);
+    }
     const origin = resolvePublicSiteOrigin();
-    const themeOrigin = typeof window !== 'undefined' ? window.location.origin : origin;
+    const themeOrigin = resolveThemeSiteOrigin();
     if (origin === themeOrigin) {
       return normalized;
     }

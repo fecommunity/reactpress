@@ -1,8 +1,7 @@
-import React from 'react';
-
-import Features from '@site/src/components/Features';
-import Translate from '@docusaurus/Translate';
 import Link from '@docusaurus/Link';
+import Translate from '@docusaurus/Translate';
+import Features from '@site/src/components/Features';
+import React from 'react';
 
 import styles from './styles.module.css';
 

@@ -22,13 +22,13 @@ export class FileController {
   @UseInterceptors(
     FileInterceptor('file', {
       limits: {
-        fieldSize: 5 * 1024 * 1024, // 5MB
+        fileSize: 20 * 1024 * 1024, // 20MB，服务端会自动压缩图片
       },
     })
   )
   @UseGuards(JwtAuthGuard)
-  uploadFile(@UploadedFile() file, @Query('unique') unique) {
-    return this.fileService.uploadFile(file, unique);
+  uploadFile(@UploadedFile() file, @Query('unique') unique, @Query('scene') scene) {
+    return this.fileService.uploadFile(file, unique, scene || 'default');
   }
 
   /**

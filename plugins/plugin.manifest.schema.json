@@ -1,0 +1,110 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/fecommunity/reactpress/blob/master/plugins/plugin.manifest.schema.json",
+  "title": "Plugin Manifest",
+  "description": "Portable plugin manifest for ReactPress. Stored at plugins/{id}/plugin.json.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "name", "version"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "description": "Plugin slug, kebab-case."
+    },
+    "name": { "type": "string", "minLength": 1 },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+    },
+    "description": { "type": "string" },
+    "author": { "type": "string" },
+    "requires": { "type": "string" },
+    "requiresPlugins": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "server": {
+      "type": "object",
+      "required": ["module"],
+      "properties": {
+        "module": { "type": "string", "minLength": 1 },
+        "hooks": {
+          "type": "object",
+          "properties": {
+            "subscribe": {
+              "type": "array",
+              "items": { "type": "string", "minLength": 1 }
+            },
+            "provide": {
+              "type": "array",
+              "items": { "type": "string", "minLength": 1 }
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "admin": {
+      "type": "object",
+      "properties": {
+        "slots": {
+          "type": "object",
+          "properties": {
+            "subscribe": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "article.editor.meta.afterSummary",
+                  "article.editor.sidebar.afterPublish"
+                ]
+              },
+              "uniqueItems": true,
+              "minItems": 1
+            }
+          },
+          "additionalProperties": false
+        },
+        "menu": {
+          "type": "object",
+          "required": ["title", "path"],
+          "properties": {
+            "parent": { "type": "string" },
+            "title": { "type": "string" },
+            "path": { "type": "string" },
+            "permission": { "type": "string" },
+            "sort": { "type": "number" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "settings": {
+      "type": "object",
+      "properties": {
+        "schema": { "type": "object" }
+      },
+      "additionalProperties": false
+    },
+    "permissions": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "capabilities": {
+      "type": "object",
+      "properties": {
+        "headless": { "type": "boolean" },
+        "network": { "type": "boolean" },
+        "filesystem": { "type": "boolean" },
+        "database": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,18 @@
+.editorArea {
+  display: flex;
+  flex-direction: column;
+  min-height: 480px;
+  height: calc(100vh - 320px);
+  max-height: 900px;
+}
+
+.editorLoading {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  min-height: 480px;
+  background: var(--editor-surface);
+  border: 1px solid var(--editor-border);
+  border-radius: 2px;
+}

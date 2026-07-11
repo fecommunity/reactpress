@@ -27,6 +27,19 @@ export class File {
   @Column()
   url: string;
 
+  @ApiProperty({ required: false })
+  @Column({ type: 'simple-json', nullable: true })
+  variants?: Record<
+    string,
+    {
+      url: string;
+      filename: string;
+      width: number;
+      height: number;
+      size: number;
+    }
+  >;
+
   @ApiProperty()
   @CreateDateColumn({
     type: 'datetime',

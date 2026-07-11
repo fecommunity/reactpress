@@ -1,0 +1,32 @@
+{
+  "meta": {
+    "name": "SEO",
+    "description": "Per-article slug, keywords, and meta description with optional auto-fill on publish."
+  },
+  "settings": {
+    "enabled": {
+      "title": "Enable SEO auto-fill",
+      "description": "When off, slug, keywords, and description are not auto-generated on publish."
+    },
+    "autoSlug": {
+      "title": "Auto-generate URL slug",
+      "description": "Create a slug from the title when slug is empty."
+    },
+    "autoDescription": {
+      "title": "Auto-generate meta description",
+      "description": "Use summary first, otherwise excerpt from body when description is empty."
+    },
+    "autoKeywords": {
+      "title": "Auto-generate keywords",
+      "description": "Use title and tag names when keywords are empty."
+    },
+    "descriptionMaxLength": {
+      "title": "Description max length",
+      "description": "Max characters when excerpting from body (80–320)."
+    },
+    "descriptionSuffix": {
+      "title": "Description truncation suffix",
+      "description": "Appended when text exceeds max length, e.g. …"
+    }
+  }
+}

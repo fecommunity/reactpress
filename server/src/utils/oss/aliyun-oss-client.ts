@@ -14,10 +14,16 @@ export class AliyunOssClient extends OssClient {
     });
   }
 
-  async putFile(filepath: string, buffer: ReadableStream) {
+  async putFile(filepath: string, buffer: Buffer) {
     const client = await this.buildClient();
     const { url } = await client.put(filepath, buffer);
     return url;
+  }
+
+  async getFile(filepath: string): Promise<Buffer> {
+    const client = await this.buildClient();
+    const result = await client.get(filepath);
+    return result.content as Buffer;
   }
 
   async deleteFile(url: string) {

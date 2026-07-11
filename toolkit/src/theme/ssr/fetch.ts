@@ -248,7 +248,10 @@ export async function fetchTagArchive(api: ThemeApi, tag: string) {
 export type ThemeArticlePage = {
   id: string;
   title: string;
+  slug?: string;
   summary?: string;
+  seoDescription?: string;
+  seoKeywords?: string;
   html?: string;
   cover?: string;
   publishAt?: string;

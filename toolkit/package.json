@@ -1,6 +1,6 @@
 {
   "name": "@fecommunity/reactpress-toolkit",
-  "version": "3.7.0",
+  "version": "4.0.0-beta.3",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
@@ -79,6 +79,18 @@
     "./plugin/dev": {
       "types": "./dist/plugin/dev/index.d.ts",
       "default": "./dist/plugin/dev/index.js"
+    },
+    "./plugin/extension": {
+      "types": "./dist/plugin/extension/index.d.ts",
+      "default": "./dist/plugin/extension/index.js"
+    },
+    "./plugin/server": {
+      "types": "./dist/plugin/server/index.d.ts",
+      "default": "./dist/plugin/server/index.js"
+    },
+    "./plugin/node": {
+      "types": "./dist/plugin/node.d.ts",
+      "default": "./dist/plugin/node.js"
     }
   },
   "peerDependencies": {
@@ -92,14 +104,30 @@
     "viewerjs": ">=1"
   },
   "peerDependenciesMeta": {
-    "@tanstack/react-query": { "optional": true },
-    "@ant-design/cssinjs": { "optional": true },
-    "highlight.js": { "optional": true },
-    "next": { "optional": true },
-    "nprogress": { "optional": true },
-    "react": { "optional": true },
-    "react-dom": { "optional": true },
-    "viewerjs": { "optional": true }
+    "@tanstack/react-query": {
+      "optional": true
+    },
+    "@ant-design/cssinjs": {
+      "optional": true
+    },
+    "highlight.js": {
+      "optional": true
+    },
+    "next": {
+      "optional": true
+    },
+    "nprogress": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    },
+    "viewerjs": {
+      "optional": true
+    }
   },
   "scripts": {
     "generate": "node scripts/generate-swagger.js",
@@ -127,7 +155,7 @@
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
-  "description": "ReactPress TypeScript toolkit: OpenAPI clients, theme SSR helpers, headless UI, and admin plugin registry.",
+  "description": "ReactPress TypeScript SDK — API clients, theme SSR, plugin hooks, headless UI",
   "dependencies": {
     "ajv": "^8.17.1",
     "axios": "^1.12.2",

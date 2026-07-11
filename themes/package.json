@@ -2,7 +2,7 @@
   "name": "@fecommunity/reactpress-themes",
   "version": "1.0.0",
   "private": true,
-  "description": "ReactPress theme registry — local sources and npm catalog anchors",
+  "description": "ReactPress theme registry — local themes and npm catalog anchors for Next.js frontends",
   "license": "MIT",
   "scripts": {
     "add:starter": "node ../cli/bin/reactpress.js theme add reactpress-theme-starter",

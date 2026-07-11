@@ -1,0 +1,51 @@
+{
+  "meta": {
+    "name": "Image Optimizer",
+    "description": "Analyze legacy media and batch-compress to WebP variants; optionally rewrite URLs in articles and pages."
+  },
+  "settings": {
+    "batchSize": {
+      "title": "Batch size",
+      "description": "Maximum images processed per job (1–200)."
+    },
+    "skipGif": {
+      "title": "Skip GIF",
+      "description": "GIF to WebP loses animation; skipped by default."
+    },
+    "rewriteContent": {
+      "title": "Rewrite content URLs after optimize",
+      "description": "Replace old image URLs in articles and pages when the job completes."
+    },
+    "cleanupOriginals": {
+      "title": "Delete originals after optimize",
+      "description": "Enable only after verification; old URLs will stop working."
+    }
+  },
+  "dashboard": {
+    "title": "Asset analysis",
+    "analyze": "Analyze",
+    "dryRun": "Dry run",
+    "run": "Start batch optimize",
+    "refresh": "Refresh",
+    "total": "Total assets",
+    "optimized": "Optimized",
+    "pending": "Pending",
+    "estimatedSaved": "Est. savings",
+    "contentRefs": "Content references",
+    "articles": "Articles",
+    "pages": "Pages",
+    "skipped": "Skipped",
+    "jobRunning": "Optimization in progress…",
+    "jobScanning": "Scanning for optimizable assets…",
+    "jobEmpty": "No images to optimize (already optimized or source files missing).",
+    "jobDone": "Job completed",
+    "jobFailed": "Job failed",
+    "processed": "Processed",
+    "succeeded": "Succeeded",
+    "failed": "Failed",
+    "savedBytes": "Space saved",
+    "inactiveHint": "Activate this plugin from the plugin list before running analysis or optimization.",
+    "analyzeFailed": "Analysis failed",
+    "runFailed": "Failed to start job"
+  }
+}

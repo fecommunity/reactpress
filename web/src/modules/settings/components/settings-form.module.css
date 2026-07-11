@@ -1,0 +1,177 @@
+.wrap {
+  width: 100%;
+}
+
+.fieldJson:global(.ant-input) {
+  max-width: 520px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.linkButtonDanger:global(.ant-btn-link) {
+  padding: 0;
+  height: auto;
+  font-size: 13px;
+  color: #b32d2e !important;
+}
+
+.linkButtonDanger:global(.ant-btn-link:hover) {
+  color: #8a2424 !important;
+}
+
+/* Site icon row: label vertically centered against preview + controls block */
+.faviconRow th {
+  vertical-align: middle;
+}
+
+.faviconField {
+  width: 100%;
+  max-width: 520px;
+}
+
+.faviconMain {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.faviconPreviewCol {
+  display: flex;
+  flex-shrink: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  width: 220px;
+}
+
+.faviconTabMock {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 10px 10px;
+  border: 1px solid var(--settings-border, #c3c4c7);
+  border-radius: 6px 6px 0 0;
+  background: #fff;
+  font-size: 12px;
+  line-height: 1.3;
+  color: var(--settings-text, #1d2327);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.faviconTabMock img,
+.faviconTabMockFallback {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
+.faviconTabMockFallback {
+  display: block;
+  background: #dcdcde;
+  border-radius: 2px;
+}
+
+.faviconTabMockTitle {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.faviconLarge {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  border: 1px solid var(--settings-border, #c3c4c7);
+  background: #fff;
+}
+
+.faviconPlaceholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border: 1px dashed var(--settings-border, #c3c4c7);
+  background: var(--settings-surface, #f0f0f1);
+  font-size: 11px;
+  color: var(--settings-muted, #646970);
+  text-align: center;
+  padding: 4px;
+}
+
+.faviconControlCol {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  min-width: 0;
+  padding-top: 2px;
+}
+
+.faviconActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.faviconInput:global(.ant-input) {
+  width: 100%;
+  max-width: 400px;
+}
+
+.faviconHint {
+  margin-top: 12px;
+}
+
+.emailTestTitle {
+  margin: 28px 0 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--settings-text, #1d2327);
+}
+
+.apiKeyList {
+  margin: 0;
+  padding-left: 20px;
+}
+
+@media (max-width: 782px) {
+  .faviconRow th {
+    vertical-align: top;
+  }
+
+  .faviconMain {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .faviconPreviewCol {
+    width: auto;
+  }
+
+  .faviconInput:global(.ant-input) {
+    max-width: 100%;
+  }
+}
+
+:root[data-theme="dark"] .faviconTabMock,
+:root[data-theme="dark"] .faviconLarge {
+  background: #141414;
+  border-color: #303030;
+}
+
+:root[data-theme="dark"] .faviconPlaceholder {
+  --settings-surface: #1f1f1f;
+}
+
+:root[data-theme="dark"] .faviconTabMock {
+  --settings-text: rgba(255, 255, 255, 0.88);
+}
+
+:root[data-theme="dark"] .faviconTabMockFallback {
+  background: #434343;
+}

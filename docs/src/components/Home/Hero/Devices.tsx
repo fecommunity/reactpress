@@ -17,7 +17,8 @@ function Devices() {
       width={1107}
       height={288}
       fill="none"
-      className={styles.svgContent}>
+      className={styles.svgContent}
+    >
       <g filter="url(#a)" className={styles.largeFormatDevices}>
         <path
           fill="var(--home-hero-devices-background)"
@@ -87,14 +88,7 @@ function Devices() {
           rx={5.833}
         />
         <g filter="url(#b)">
-          <rect
-            width={60}
-            height={60}
-            x={833.416}
-            y={220.526}
-            fill="var(--home-hero-devices-background)"
-            rx={15}
-          />
+          <rect width={60} height={60} x={833.416} y={220.526} fill="var(--home-hero-devices-background)" rx={15} />
           <rect
             width={59.5}
             height={59.5}
@@ -114,10 +108,7 @@ function Devices() {
             fill="url(#d)"
             d="M863.416 241.621h15.421a17.797 17.797 0 0 0-15.422-8.905 17.808 17.808 0 0 0-15.422 8.907l7.711 13.356.007-.002a8.901 8.901 0 0 1-.01-8.906 8.888 8.888 0 0 1 7.715-4.45Z"
           />
-          <path
-            fill="#1A73E8"
-            d="M863.416 257.576a7.05 7.05 0 1 0 0-14.1 7.05 7.05 0 0 0 0 14.1Z"
-          />
+          <path fill="#1A73E8" d="M863.416 257.576a7.05 7.05 0 1 0 0-14.1 7.05 7.05 0 0 0 0 14.1Z" />
           <path
             fill="url(#e)"
             d="m871.127 254.981-7.711 13.355a17.8 17.8 0 0 0 15.423-8.904 17.807 17.807 0 0 0-.003-17.808h-15.422l-.001.006a8.898 8.898 0 0 1 8.911 8.898 8.902 8.902 0 0 1-1.197 4.453Z"
@@ -129,14 +120,7 @@ function Devices() {
         </g>
       </g>
       <g filter="url(#g)" className={styles.largeFormatDevices}>
-        <rect
-          width={60}
-          height={60}
-          x={901.416}
-          y={220.526}
-          fill="var(--home-hero-devices-background)"
-          rx={15}
-        />
+        <rect width={60} height={60} x={901.416} y={220.526} fill="var(--home-hero-devices-background)" rx={15} />
         <rect
           width={59.5}
           height={59.5}
@@ -196,14 +180,7 @@ function Devices() {
         />
       </g>
       <g filter="url(#t)" className={styles.largeFormatDevices}>
-        <rect
-          width={60}
-          height={60}
-          x={969.416}
-          y={220.526}
-          fill="var(--home-hero-devices-background)"
-          rx={15}
-        />
+        <rect width={60} height={60} x={969.416} y={220.526} fill="var(--home-hero-devices-background)" rx={15} />
         <rect
           width={59.5}
           height={59.5}
@@ -283,14 +260,7 @@ function Devices() {
         />
       </g>
       <g filter="url(#w)">
-        <rect
-          width={60}
-          height={60}
-          x={635.5}
-          y={221.051}
-          fill="var(--home-hero-devices-background)"
-          rx={15}
-        />
+        <rect width={60} height={60} x={635.5} y={221.051} fill="var(--home-hero-devices-background)" rx={15} />
         <rect
           width={59.5}
           height={59.5}
@@ -350,14 +320,7 @@ function Devices() {
         />
       </g>
       <g filter="url(#y)">
-        <rect
-          width={60}
-          height={60}
-          x={457.862}
-          y={222.083}
-          fill="var(--home-hero-devices-background)"
-          rx={15}
-        />
+        <rect width={60} height={60} x={457.862} y={222.083} fill="var(--home-hero-devices-background)" rx={15} />
         <rect
           width={59.5}
           height={59.5}
@@ -376,20 +339,13 @@ function Devices() {
           d="m496.982 241.807 3.098-5.379a.631.631 0 0 0-.702-.925.623.623 0 0 0-.38.293l-3.138 5.449c-2.394-1.097-5.089-1.708-7.988-1.708s-5.594.611-7.989 1.708l-3.138-5.449a.628.628 0 1 0-1.084.632l3.097 5.379c-5.342 2.902-8.959 8.322-9.557 14.667h37.346c-.6-6.345-4.219-11.765-9.565-14.667Zm-17.683 9.41a1.57 1.57 0 1 1 .599-3.019 1.57 1.57 0 0 1-.6 3.019h.001Zm17.144 0a1.565 1.565 0 0 1-1.536-1.876 1.574 1.574 0 0 1 1.231-1.233 1.564 1.564 0 0 1 1.607.668 1.573 1.573 0 0 1-1.303 2.441h.001Z"
         />
       </g>
-      <g
-        stroke="var(--home-hero-devices-border)"
-        filter="url(#z)"
-        className={styles.largeFormatDevices}>
+      <g stroke="var(--home-hero-devices-border)" filter="url(#z)" className={styles.largeFormatDevices}>
         <path
           fill="var(--home-hero-devices-background)"
           strokeWidth={6.918}
           d="M72.117 11.34h255.95c6.112 0 11.068 4.955 11.068 11.068v167.405H61.049V22.408c0-6.113 4.955-11.068 11.068-11.068Z"
         />
-        <path
-          fill="url(#A)"
-          strokeWidth={0.692}
-          d="m17.814 233.048 40.122-40.122h284.658l40.121 40.122H17.814Z"
-        />
+        <path fill="url(#A)" strokeWidth={0.692} d="m17.814 233.048 40.122-40.122h284.658l40.121 40.122H17.814Z" />
         <path
           fill="var(--home-hero-devices-border)"
           strokeWidth={0.692}
@@ -416,14 +372,7 @@ function Devices() {
           rx={6}
         />
         <g filter="url(#B)">
-          <rect
-            width={60}
-            height={60}
-            x={209.521}
-            y={222.826}
-            fill="var(--home-hero-devices-background)"
-            rx={15}
-          />
+          <rect width={60} height={60} x={209.521} y={222.826} fill="var(--home-hero-devices-background)" rx={15} />
           <rect
             width={59.5}
             height={59.5}
@@ -468,31 +417,17 @@ function Devices() {
           x={756.117}
           y={6.112}
           colorInterpolationFilters="sRGB"
-          filterUnits="userSpaceOnUse">
+          filterUnits="userSpaceOnUse"
+        >
           <feFlood floodOpacity={0} result="BackgroundImageFix" />
-          <feColorMatrix
-            in="SourceAlpha"
-            result="hardAlpha"
-            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-          />
-          <feMorphology
-            in="SourceAlpha"
-            radius={16}
-            result="effect1_dropShadow_490_198"
-          />
+          <feColorMatrix in="SourceAlpha" result="hardAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" />
+          <feMorphology in="SourceAlpha" radius={16} result="effect1_dropShadow_490_198" />
           <feOffset dy={16} />
           <feGaussianBlur stdDeviation={16} />
           <feComposite in2="hardAlpha" operator="out" />
           <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.1 0" />
-          <feBlend
-            in2="BackgroundImageFix"
-            result="effect1_dropShadow_490_198"
-          />
-          <feBlend
-            in="SourceGraphic"
-            in2="effect1_dropShadow_490_198"
-            result="shape"
-          />
+          <feBlend in2="BackgroundImageFix" result="effect1_dropShadow_490_198" />
+          <feBlend in="SourceGraphic" in2="effect1_dropShadow_490_198" result="shape" />
         </filter>
         <filter
           id="b"
@@ -501,39 +436,22 @@ function Devices() {
           x={830.416}
           y={218.526}
           colorInterpolationFilters="sRGB"
-          filterUnits="userSpaceOnUse">
+          filterUnits="userSpaceOnUse"
+        >
           <feFlood floodOpacity={0} result="BackgroundImageFix" />
-          <feColorMatrix
-            in="SourceAlpha"
-            result="hardAlpha"
-            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-          />
+          <feColorMatrix in="SourceAlpha" result="hardAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" />
           <feOffset dy={1} />
           <feGaussianBlur stdDeviation={1.5} />
           <feComposite in2="hardAlpha" operator="out" />
           <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.025 0" />
-          <feBlend
-            in2="BackgroundImageFix"
-            result="effect1_dropShadow_490_198"
-          />
-          <feColorMatrix
-            in="SourceAlpha"
-            result="hardAlpha"
-            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-          />
+          <feBlend in2="BackgroundImageFix" result="effect1_dropShadow_490_198" />
+          <feColorMatrix in="SourceAlpha" result="hardAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" />
           <feOffset dy={1} />
           <feGaussianBlur stdDeviation={1} />
           <feComposite in2="hardAlpha" operator="out" />
           <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.05 0" />
-          <feBlend
-            in2="effect1_dropShadow_490_198"
-            result="effect2_dropShadow_490_198"
-          />
-          <feBlend
-            in="SourceGraphic"
-            in2="effect2_dropShadow_490_198"
-            result="shape"
-          />
+          <feBlend in2="effect1_dropShadow_490_198" result="effect2_dropShadow_490_198" />
+          <feBlend in="SourceGraphic" in2="effect2_dropShadow_490_198" result="shape" />
         </filter>
         <filter
           id="g"
@@ -542,39 +460,22 @@ function Devices() {
           x={898.416}
           y={218.526}
           colorInterpolationFilters="sRGB"
-          filterUnits="userSpaceOnUse">
+          filterUnits="userSpaceOnUse"
+        >
           <feFlood floodOpacity={0} result="BackgroundImageFix" />
-          <feColorMatrix
-            in="SourceAlpha"
-            result="hardAlpha"
-            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-          />
+          <feColorMatrix in="SourceAlpha" result="hardAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" />
           <feOffset dy={1} />
           <feGaussianBlur stdDeviation={1.5} />
           <feComposite in2="hardAlpha" operator="out" />
           <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.025 0" />
-          <feBlend
-            in2="BackgroundImageFix"
-            result="effect1_dropShadow_490_198"
-          />
-          <feColorMatrix
-            in="SourceAlpha"
-            result="hardAlpha"
-            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-          />
+          <feBlend in2="BackgroundImageFix" result="effect1_dropShadow_490_198" />
+          <feColorMatrix in="SourceAlpha" result="hardAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" />
           <feOffset dy={1} />
           <feGaussianBlur stdDeviation={1} />
           <feComposite in2="hardAlpha" operator="out" />
           <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.05 0" />
-          <feBlend
-            in2="effect1_dropShadow_490_198"
-            result="effect2_dropShadow_490_198"
-          />
-          <feBlend
-            in="SourceGraphic"
-            in2="effect2_dropShadow_490_198"
-            result="shape"
-          />
+          <feBlend in2="effect1_dropShadow_490_198" result="effect2_dropShadow_490_198" />
+          <feBlend in="SourceGraphic" in2="effect2_dropShadow_490_198" result="shape" />
         </filter>
         <filter
           id="t"
@@ -583,39 +484,22 @@ function Devices() {
           x={966.416}
           y={218.526}
           colorInterpolationFilters="sRGB"
-          filterUnits="userSpaceOnUse">
+          filterUnits="userSpaceOnUse"
+        >
           <feFlood floodOpacity={0} result="BackgroundImageFix" />
-          <feColorMatrix
-            in="SourceAlpha"
-            result="hardAlpha"
-            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-          />
+          <feColorMatrix in="SourceAlpha" result="hardAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" />
           <feOffset dy={1} />
           <feGaussianBlur stdDeviation={1.5} />
           <feComposite in2="hardAlpha" operator="out" />
           <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.025 0" />
-          <feBlend
-            in2="BackgroundImageFix"
-            result="effect1_dropShadow_490_198"
-          />
-          <feColorMatrix
-            in="SourceAlpha"
-            result="hardAlpha"
-            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-          />
+          <feBlend in2="BackgroundImageFix" result="effect1_dropShadow_490_198" />
+          <feColorMatrix in="SourceAlpha" result="hardAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" />
           <feOffset dy={1} />
           <feGaussianBlur stdDeviation={1} />
           <feComposite in2="hardAlpha" operator="out" />
           <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.05 0" />
-          <feBlend
-            in2="effect1_dropShadow_490_198"
-            result="effect2_dropShadow_490_198"
-          />
-          <feBlend
-            in="SourceGraphic"
-            in2="effect2_dropShadow_490_198"
-            result="shape"
-          />
+          <feBlend in2="effect1_dropShadow_490_198" result="effect2_dropShadow_490_198" />
+          <feBlend in="SourceGraphic" in2="effect2_dropShadow_490_198" result="shape" />
         </filter>
         <filter
           id="v"
@@ -624,31 +508,17 @@ function Devices() {
           x={588.41}
           y={0.713}
           colorInterpolationFilters="sRGB"
-          filterUnits="userSpaceOnUse">
+          filterUnits="userSpaceOnUse"
+        >
           <feFlood floodOpacity={0} result="BackgroundImageFix" />
-          <feColorMatrix
-            in="SourceAlpha"
-            result="hardAlpha"
-            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-          />
-          <feMorphology
-            in="SourceAlpha"
-            radius={16}
-            result="effect1_dropShadow_490_198"
-          />
+          <feColorMatrix in="SourceAlpha" result="hardAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" />
+          <feMorphology in="SourceAlpha" radius={16} result="effect1_dropShadow_490_198" />
           <feOffset dy={16} />
           <feGaussianBlur stdDeviation={16} />
           <feComposite in2="hardAlpha" operator="out" />
           <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.1 0" />
-          <feBlend
-            in2="BackgroundImageFix"
-            result="effect1_dropShadow_490_198"
-          />
-          <feBlend
-            in="SourceGraphic"
-            in2="effect1_dropShadow_490_198"
-            result="shape"
-          />
+          <feBlend in2="BackgroundImageFix" result="effect1_dropShadow_490_198" />
+          <feBlend in="SourceGraphic" in2="effect1_dropShadow_490_198" result="shape" />
         </filter>
         <filter
           id="w"
@@ -657,39 +527,22 @@ function Devices() {
           x={632.5}
           y={219.051}
           colorInterpolationFilters="sRGB"
-          filterUnits="userSpaceOnUse">
+          filterUnits="userSpaceOnUse"
+        >
           <feFlood floodOpacity={0} result="BackgroundImageFix" />
-          <feColorMatrix
-            in="SourceAlpha"
-            result="hardAlpha"
-            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-          />
+          <feColorMatrix in="SourceAlpha" result="hardAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" />
           <feOffset dy={1} />
           <feGaussianBlur stdDeviation={1.5} />
           <feComposite in2="hardAlpha" operator="out" />
           <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.025 0" />
-          <feBlend
-            in2="BackgroundImageFix"
-            result="effect1_dropShadow_490_198"
-          />
-          <feColorMatrix
-            in="SourceAlpha"
-            result="hardAlpha"
-            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-          />
+          <feBlend in2="BackgroundImageFix" result="effect1_dropShadow_490_198" />
+          <feColorMatrix in="SourceAlpha" result="hardAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" />
           <feOffset dy={1} />
           <feGaussianBlur stdDeviation={1} />
           <feComposite in2="hardAlpha" operator="out" />
           <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.05 0" />
-          <feBlend
-            in2="effect1_dropShadow_490_198"
-            result="effect2_dropShadow_490_198"
-          />
-          <feBlend
-            in="SourceGraphic"
-            in2="effect2_dropShadow_490_198"
-            result="shape"
-          />
+          <feBlend in2="effect1_dropShadow_490_198" result="effect2_dropShadow_490_198" />
+          <feBlend in="SourceGraphic" in2="effect2_dropShadow_490_198" result="shape" />
         </filter>
         <filter
           id="x"
@@ -698,31 +551,17 @@ function Devices() {
           x={405.887}
           y={1.645}
           colorInterpolationFilters="sRGB"
-          filterUnits="userSpaceOnUse">
+          filterUnits="userSpaceOnUse"
+        >
           <feFlood floodOpacity={0} result="BackgroundImageFix" />
-          <feColorMatrix
-            in="SourceAlpha"
-            result="hardAlpha"
-            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-          />
-          <feMorphology
-            in="SourceAlpha"
-            radius={16}
-            result="effect1_dropShadow_490_198"
-          />
+          <feColorMatrix in="SourceAlpha" result="hardAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" />
+          <feMorphology in="SourceAlpha" radius={16} result="effect1_dropShadow_490_198" />
           <feOffset dy={16} />
           <feGaussianBlur stdDeviation={16} />
           <feComposite in2="hardAlpha" operator="out" />
           <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.1 0" />
-          <feBlend
-            in2="BackgroundImageFix"
-            result="effect1_dropShadow_490_198"
-          />
-          <feBlend
-            in="SourceGraphic"
-            in2="effect1_dropShadow_490_198"
-            result="shape"
-          />
+          <feBlend in2="BackgroundImageFix" result="effect1_dropShadow_490_198" />
+          <feBlend in="SourceGraphic" in2="effect1_dropShadow_490_198" result="shape" />
         </filter>
         <filter
           id="y"
@@ -731,39 +570,22 @@ function Devices() {
           x={454.862}
           y={220.083}
           colorInterpolationFilters="sRGB"
-          filterUnits="userSpaceOnUse">
+          filterUnits="userSpaceOnUse"
+        >
           <feFlood floodOpacity={0} result="BackgroundImageFix" />
-          <feColorMatrix
-            in="SourceAlpha"
-            result="hardAlpha"
-            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-          />
+          <feColorMatrix in="SourceAlpha" result="hardAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" />
           <feOffset dy={1} />
           <feGaussianBlur stdDeviation={1.5} />
           <feComposite in2="hardAlpha" operator="out" />
           <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.025 0" />
-          <feBlend
-            in2="BackgroundImageFix"
-            result="effect1_dropShadow_490_198"
-          />
-          <feColorMatrix
-            in="SourceAlpha"
-            result="hardAlpha"
-            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-          />
+          <feBlend in2="BackgroundImageFix" result="effect1_dropShadow_490_198" />
+          <feColorMatrix in="SourceAlpha" result="hardAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" />
           <feOffset dy={1} />
           <feGaussianBlur stdDeviation={1} />
           <feComposite in2="hardAlpha" operator="out" />
           <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.05 0" />
-          <feBlend
-            in2="effect1_dropShadow_490_198"
-            result="effect2_dropShadow_490_198"
-          />
-          <feBlend
-            in="SourceGraphic"
-            in2="effect2_dropShadow_490_198"
-            result="shape"
-          />
+          <feBlend in2="effect1_dropShadow_490_198" result="effect2_dropShadow_490_198" />
+          <feBlend in="SourceGraphic" in2="effect2_dropShadow_490_198" result="shape" />
         </filter>
         <filter
           id="z"
@@ -772,31 +594,17 @@ function Devices() {
           x={0.979}
           y={7.881}
           colorInterpolationFilters="sRGB"
-          filterUnits="userSpaceOnUse">
+          filterUnits="userSpaceOnUse"
+        >
           <feFlood floodOpacity={0} result="BackgroundImageFix" />
-          <feColorMatrix
-            in="SourceAlpha"
-            result="hardAlpha"
-            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-          />
-          <feMorphology
-            in="SourceAlpha"
-            radius={16}
-            result="effect1_dropShadow_490_198"
-          />
+          <feColorMatrix in="SourceAlpha" result="hardAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" />
+          <feMorphology in="SourceAlpha" radius={16} result="effect1_dropShadow_490_198" />
           <feOffset dy={16} />
           <feGaussianBlur stdDeviation={16} />
           <feComposite in2="hardAlpha" operator="out" />
           <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.1 0" />
-          <feBlend
-            in2="BackgroundImageFix"
-            result="effect1_dropShadow_490_198"
-          />
-          <feBlend
-            in="SourceGraphic"
-            in2="effect1_dropShadow_490_198"
-            result="shape"
-          />
+          <feBlend in2="BackgroundImageFix" result="effect1_dropShadow_490_198" />
+          <feBlend in="SourceGraphic" in2="effect1_dropShadow_490_198" result="shape" />
         </filter>
         <filter
           id="B"
@@ -805,39 +613,22 @@ function Devices() {
           x={206.521}
           y={220.826}
           colorInterpolationFilters="sRGB"
-          filterUnits="userSpaceOnUse">
+          filterUnits="userSpaceOnUse"
+        >
           <feFlood floodOpacity={0} result="BackgroundImageFix" />
-          <feColorMatrix
-            in="SourceAlpha"
-            result="hardAlpha"
-            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-          />
+          <feColorMatrix in="SourceAlpha" result="hardAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" />
           <feOffset dy={1} />
           <feGaussianBlur stdDeviation={1.5} />
           <feComposite in2="hardAlpha" operator="out" />
           <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.025 0" />
-          <feBlend
-            in2="BackgroundImageFix"
-            result="effect1_dropShadow_490_198"
-          />
-          <feColorMatrix
-            in="SourceAlpha"
-            result="hardAlpha"
-            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-          />
+          <feBlend in2="BackgroundImageFix" result="effect1_dropShadow_490_198" />
+          <feColorMatrix in="SourceAlpha" result="hardAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" />
           <feOffset dy={1} />
           <feGaussianBlur stdDeviation={1} />
           <feComposite in2="hardAlpha" operator="out" />
           <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.05 0" />
-          <feBlend
-            in2="effect1_dropShadow_490_198"
-            result="effect2_dropShadow_490_198"
-          />
-          <feBlend
-            in="SourceGraphic"
-            in2="effect2_dropShadow_490_198"
-            result="shape"
-          />
+          <feBlend in2="effect1_dropShadow_490_198" result="effect2_dropShadow_490_198" />
+          <feBlend in="SourceGraphic" in2="effect2_dropShadow_490_198" result="shape" />
         </filter>
         <filter
           id="C"
@@ -846,39 +637,22 @@ function Devices() {
           x={138.008}
           y={220.826}
           colorInterpolationFilters="sRGB"
-          filterUnits="userSpaceOnUse">
+          filterUnits="userSpaceOnUse"
+        >
           <feFlood floodOpacity={0} result="BackgroundImageFix" />
-          <feColorMatrix
-            in="SourceAlpha"
-            result="hardAlpha"
-            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-          />
+          <feColorMatrix in="SourceAlpha" result="hardAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" />
           <feOffset dy={1} />
           <feGaussianBlur stdDeviation={1.5} />
           <feComposite in2="hardAlpha" operator="out" />
           <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.025 0" />
-          <feBlend
-            in2="BackgroundImageFix"
-            result="effect1_dropShadow_490_198"
-          />
-          <feColorMatrix
-            in="SourceAlpha"
-            result="hardAlpha"
-            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-          />
+          <feBlend in2="BackgroundImageFix" result="effect1_dropShadow_490_198" />
+          <feColorMatrix in="SourceAlpha" result="hardAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" />
           <feOffset dy={1} />
           <feGaussianBlur stdDeviation={1} />
           <feComposite in2="hardAlpha" operator="out" />
           <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.05 0" />
-          <feBlend
-            in2="effect1_dropShadow_490_198"
-            result="effect2_dropShadow_490_198"
-          />
-          <feBlend
-            in="SourceGraphic"
-            in2="effect2_dropShadow_490_198"
-            result="shape"
-          />
+          <feBlend in2="effect1_dropShadow_490_198" result="effect2_dropShadow_490_198" />
+          <feBlend in="SourceGraphic" in2="effect2_dropShadow_490_198" result="shape" />
         </filter>
         <radialGradient
           id="i"
@@ -886,7 +660,8 @@ function Devices() {
           cy={0}
           r={1}
           gradientTransform="matrix(39.0656 0 0 39.066 944.864 234.478)"
-          gradientUnits="userSpaceOnUse">
+          gradientUnits="userSpaceOnUse"
+        >
           <stop offset={0.129} stopColor="#FFBD4F" />
           <stop offset={0.186} stopColor="#FFAC31" />
           <stop offset={0.247} stopColor="#FF9D17" />
@@ -903,7 +678,8 @@ function Devices() {
           cy={0}
           r={1}
           gradientTransform="matrix(39.0656 0 0 39.066 930.589 250.449)"
-          gradientUnits="userSpaceOnUse">
+          gradientUnits="userSpaceOnUse"
+        >
           <stop offset={0.3} stopColor="#960E18" />
           <stop offset={0.351} stopColor="#B11927" stopOpacity={0.74} />
           <stop offset={0.435} stopColor="#DB293D" stopOpacity={0.343} />
@@ -916,7 +692,8 @@ function Devices() {
           cy={0}
           r={1}
           gradientTransform="translate(935.299 225.613) scale(28.3015)"
-          gradientUnits="userSpaceOnUse">
+          gradientUnits="userSpaceOnUse"
+        >
           <stop offset={0.132} stopColor="#FFF44F" />
           <stop offset={0.252} stopColor="#FFDC3E" />
           <stop offset={0.506} stopColor="#FF9D12" />
@@ -928,7 +705,8 @@ function Devices() {
           cy={0}
           r={1}
           gradientTransform="translate(926.268 260.653) scale(18.6011)"
-          gradientUnits="userSpaceOnUse">
+          gradientUnits="userSpaceOnUse"
+        >
           <stop offset={0.353} stopColor="#3A8EE6" />
           <stop offset={0.472} stopColor="#5C79F0" />
           <stop offset={0.669} stopColor="#9059FF" />
@@ -940,7 +718,8 @@ function Devices() {
           cy={0}
           r={1}
           gradientTransform="matrix(9.58605 -2.3177 2.7134 11.22274 932.724 247.248)"
-          gradientUnits="userSpaceOnUse">
+          gradientUnits="userSpaceOnUse"
+        >
           <stop offset={0.206} stopColor="#9059FF" stopOpacity={0} />
           <stop offset={0.278} stopColor="#8C4FF3" stopOpacity={0.064} />
           <stop offset={0.747} stopColor="#7716A8" stopOpacity={0.45} />
@@ -952,7 +731,8 @@ function Devices() {
           cy={0}
           r={1}
           gradientTransform="translate(930.096 232.88) scale(13.3813)"
-          gradientUnits="userSpaceOnUse">
+          gradientUnits="userSpaceOnUse"
+        >
           <stop stopColor="#FFE226" />
           <stop offset={0.121} stopColor="#FFDB27" />
           <stop offset={0.295} stopColor="#FFC82A" />
@@ -966,7 +746,8 @@ function Devices() {
           cy={0}
           r={1}
           gradientTransform="translate(940.614 224.392) scale(57.0915)"
-          gradientUnits="userSpaceOnUse">
+          gradientUnits="userSpaceOnUse"
+        >
           <stop offset={0.113} stopColor="#FFF44F" />
           <stop offset={0.456} stopColor="#FF980E" />
           <stop offset={0.622} stopColor="#FF5634" />
@@ -979,7 +760,8 @@ function Devices() {
           cy={0}
           r={1}
           gradientTransform="rotate(83.976 341.478 633.66) scale(41.8447 27.4623)"
-          gradientUnits="userSpaceOnUse">
+          gradientUnits="userSpaceOnUse"
+        >
           <stop stopColor="#FFF44F" />
           <stop offset={0.06} stopColor="#FFE847" />
           <stop offset={0.168} stopColor="#FFC830" />
@@ -995,7 +777,8 @@ function Devices() {
           cy={0}
           r={1}
           gradientTransform="translate(929.781 237.836) scale(35.644)"
-          gradientUnits="userSpaceOnUse">
+          gradientUnits="userSpaceOnUse"
+        >
           <stop offset={0.137} stopColor="#FFF44F" />
           <stop offset={0.48} stopColor="#FF980E" />
           <stop offset={0.592} stopColor="#FF5634" />
@@ -1008,49 +791,26 @@ function Devices() {
           cy={0}
           r={1}
           gradientTransform="translate(939.19 239.922) scale(39.0122)"
-          gradientUnits="userSpaceOnUse">
+          gradientUnits="userSpaceOnUse"
+        >
           <stop offset={0.094} stopColor="#FFF44F" />
           <stop offset={0.231} stopColor="#FFE141" />
           <stop offset={0.509} stopColor="#FFAF1E" />
           <stop offset={0.626} stopColor="#FF980E" />
         </radialGradient>
-        <linearGradient
-          id="d"
-          x1={847.993}
-          x2={878.837}
-          y1={243.847}
-          y2={243.847}
-          gradientUnits="userSpaceOnUse">
+        <linearGradient id="d" x1={847.993} x2={878.837} y1={243.847} y2={243.847} gradientUnits="userSpaceOnUse">
           <stop stopColor="#D93025" />
           <stop offset={1} stopColor="#EA4335" />
         </linearGradient>
-        <linearGradient
-          id="e"
-          x1={860.983}
-          x2={876.405}
-          y1={268.098}
-          y2={241.387}
-          gradientUnits="userSpaceOnUse">
+        <linearGradient id="e" x1={860.983} x2={876.405} y1={268.098} y2={241.387} gradientUnits="userSpaceOnUse">
           <stop stopColor="#FCC934" />
           <stop offset={1} stopColor="#FBBC04" />
         </linearGradient>
-        <linearGradient
-          id="f"
-          x1={865.344}
-          x2={849.922}
-          y1={267.223}
-          y2={240.513}
-          gradientUnits="userSpaceOnUse">
+        <linearGradient id="f" x1={865.344} x2={849.922} y1={267.223} y2={240.513} gradientUnits="userSpaceOnUse">
           <stop stopColor="#1E8E3E" />
           <stop offset={1} stopColor="#34A853" />
         </linearGradient>
-        <linearGradient
-          id="h"
-          x1={946.302}
-          x2={915.194}
-          y1={236.177}
-          y2={266.191}
-          gradientUnits="userSpaceOnUse">
+        <linearGradient id="h" x1={946.302} x2={915.194} y1={236.177} y2={266.191} gradientUnits="userSpaceOnUse">
           <stop offset={0.048} stopColor="#FFF44F" />
           <stop offset={0.111} stopColor="#FFE847" />
           <stop offset={0.225} stopColor="#FFC830" />
@@ -1060,43 +820,21 @@ function Devices() {
           <stop offset={0.534} stopColor="#FF3647" />
           <stop offset={0.705} stopColor="#E31587" />
         </linearGradient>
-        <linearGradient
-          id="s"
-          x1={945.928}
-          x2={919.458}
-          y1={236.017}
-          y2={262.486}
-          gradientUnits="userSpaceOnUse">
+        <linearGradient id="s" x1={945.928} x2={919.458} y1={236.017} y2={262.486} gradientUnits="userSpaceOnUse">
           <stop offset={0.167} stopColor="#FFF44F" stopOpacity={0.8} />
           <stop offset={0.266} stopColor="#FFF44F" stopOpacity={0.634} />
           <stop offset={0.489} stopColor="#FFF44F" stopOpacity={0.217} />
           <stop offset={0.6} stopColor="#FFF44F" stopOpacity={0} />
         </linearGradient>
-        <linearGradient
-          id="u"
-          x1={999.416}
-          x2={999.416}
-          y1={268.079}
-          y2={232.975}
-          gradientUnits="userSpaceOnUse">
+        <linearGradient id="u" x1={999.416} x2={999.416} y1={268.079} y2={232.975} gradientUnits="userSpaceOnUse">
           <stop stopColor="#1E6FF1" />
           <stop offset={1} stopColor="#28CEFB" />
         </linearGradient>
-        <linearGradient
-          id="A"
-          x1={200.265}
-          x2={200.265}
-          y1={192.926}
-          y2={233.048}
-          gradientUnits="userSpaceOnUse">
+        <linearGradient id="A" x1={200.265} x2={200.265} y1={192.926} y2={233.048} gradientUnits="userSpaceOnUse">
           <stop stopColor="var(--home-hero-devices-border)" />
           <stop offset={1} stopColor="var(--home-hero-devices-stop)" />
         </linearGradient>
-        <pattern
-          id="D"
-          width={1}
-          height={1}
-          patternContentUnits="objectBoundingBox">
+        <pattern id="D" width={1} height={1} patternContentUnits="objectBoundingBox">
           <use xlinkHref="#E" transform="scale(.00172)" />
         </pattern>
         <image

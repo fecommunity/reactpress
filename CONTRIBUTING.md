@@ -31,7 +31,7 @@ Security Advisories when applicable.
 ### Prerequisites
 
 - Node.js >= 18.0.0
-- pnpm >= 8.0.0
+- pnpm 9.x（与根目录 `packageManager` 一致，推荐 `corepack enable` 后使用）
 - MySQL 5.7+ (or Docker via `pnpm run init` / `pnpm docker:dev`)
 
 ### First run
@@ -52,9 +52,10 @@ Run `pnpm test` and `pnpm test:smoke` before submitting changes that touch the C
 reactpress/
 ├── cli/             # @fecommunity/reactpress — init, dev, build, doctor
 ├── server/          # NestJS API (primary backend)
-├── client/          # Next.js admin & public frontend
+├── web/             # Admin SPA (Vite)
+├── client/          # Next.js legacy admin & public frontend
+├── themes/          # Visitor theme templates (Next.js)
 ├── toolkit/         # OpenAPI-generated API SDK + theme utilities
-├── themes/          # Classic theme manifests & reference themes
 ├── templates/       # Starter project templates
 ├── docs/            # Docusaurus documentation site
 ├── scripts/         # Dev, deploy, and lifecycle scripts
@@ -71,7 +72,7 @@ reactpress/
 | Docker MySQL + proxy | `pnpm docker:dev` |
 | Regenerate API types | `pnpm run build:toolkit` |
 | Swagger spec | `pnpm run generate:swagger` |
-| API lifecycle | `pnpm run start:api` / `stop` / `restart` / `status` |
+| API lifecycle | `pnpm run start` / `stop` / `restart` / `status` |
 
 `pnpm dev` builds toolkit first, waits for API health, then starts the client.
 
@@ -80,8 +81,9 @@ After API changes: `pnpm run generate:swagger` → `pnpm run build:toolkit`.
 ## Building
 
 ```bash
-pnpm run build              # toolkit + server + client
+pnpm run build              # toolkit + server + web + active theme
 pnpm run build:server       # Nest only
+pnpm run build:web          # Admin SPA only
 pnpm run build:client       # Next.js only
 pnpm run build:docs         # Docusaurus site
 ```
@@ -121,12 +123,22 @@ sh scripts/deploy.sh
 Maintainers only:
 
 ```bash
-pnpm login
+pnpm login --registry https://registry.npmjs.org
+
+# Interactive (choose beta/stable + version)
 pnpm run publish:packages
+
+# Beta prerelease (uses package.json versions, npm tag: beta)
+NPM_OTP=123456 pnpm run publish:packages -- --tag beta --yes
+
+# Explicit version
+NPM_OTP=123456 pnpm run publish:packages -- --tag beta --version 4.0.0-beta.0 --yes
+
+# Build artifacts only (no npm publish)
+pnpm run publish:build
 ```
 
-Published packages: root meta, **server**, **client**, **toolkit**, **templates**.
-`@fecommunity/reactpress` is the CLI entry (`init`, `dev`, Docker database helpers).
+Published packages: **toolkit**, **web**, **server** (deprecated), **cli** (`@fecommunity/reactpress`).
 
 ## Architecture & Documentation
 

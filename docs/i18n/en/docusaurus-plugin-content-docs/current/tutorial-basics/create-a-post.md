@@ -4,7 +4,8 @@ title: Create Blog Post
 ---
 
 ## Visit the website
-After local startup, you can directly access: http://localhost:3001
+
+After local startup with an active theme, the visitor site is at `http://localhost:3001`.
 
 ![QQ_1730649142941.png]( https://api.gaoredu.com/public/uploads/2024-11-03/QQ_1730649142941.png )
 ## Login page
@@ -17,7 +18,7 @@ Before logging in, you need to register an account first. After successful regis
 
 ## Enter the backend
 
-You can directly access: http://localhost:3001/admin
+Admin console: `http://localhost:3000` (since 4.0, Admin is a separate Vite SPA, not `:3001/admin`).
 ![QQ_1730649254076.png]( https://api.gaoredu.com/public/uploads/2024-11-03/QQ_1730649254076.png )
 
 ## New Article

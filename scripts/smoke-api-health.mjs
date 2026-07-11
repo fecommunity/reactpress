@@ -9,18 +9,24 @@ const base = (process.env.SERVER_SITE_URL || 'http://127.0.0.1:3002').replace(/\
 const prefix = (process.env.SERVER_API_PREFIX || '/api').replace(/\/$/, '');
 const url = `${base}${prefix}/health`;
 
-const body = await new Promise((resolve, reject) => {
-  const req = http.get(url, (res) => {
-    let data = '';
-    res.on('data', (c) => (data += c));
-    res.on('end', () => resolve({ statusCode: res.statusCode, data }));
+let body;
+try {
+  body = await new Promise((resolve, reject) => {
+    const req = http.get(url, (res) => {
+      let data = '';
+      res.on('data', (c) => (data += c));
+      res.on('end', () => resolve({ statusCode: res.statusCode, data }));
+    });
+    req.on('error', reject);
+    req.setTimeout(5000, () => {
+      req.destroy();
+      reject(new Error('timeout'));
+    });
   });
-  req.on('error', reject);
-  req.setTimeout(5000, () => {
-    req.destroy();
-    reject(new Error('timeout'));
-  });
-});
+} catch (err) {
+  console.error(`[smoke] request failed for ${url}: ${err.message}`);
+  process.exit(1);
+}
 
 if (body.statusCode !== 200) {
   console.error(`[smoke] HTTP ${body.statusCode} from ${url}`);

@@ -1,0 +1,110 @@
+{
+  "name": "@fecommunity/reactpress-web",
+  "version": "4.0.0-beta.3",
+  "description": "ReactPress Admin SPA — writing console for the publishing platform (static + Node helpers)",
+  "keywords": [
+    "admin",
+    "cms",
+    "reactpress",
+    "spa",
+    "static"
+  ],
+  "license": "MIT",
+  "author": "fecommunity",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fecommunity/reactpress.git",
+    "directory": "web"
+  },
+  "bin": {
+    "reactpress-web": "./bin/reactpress-web.js"
+  },
+  "files": [
+    "bin",
+    "dist",
+    "node",
+    "README.md"
+  ],
+  "type": "module",
+  "main": "./node/index.mjs",
+  "types": "./node/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./node/index.d.ts",
+      "import": "./node/index.mjs"
+    },
+    "./dist": "./dist/index.html",
+    "./dist/*": "./dist/*",
+    "./next": {
+      "types": "./node/next.d.ts",
+      "import": "./node/next.mjs",
+      "require": "./node/next.cjs"
+    }
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "scripts": {
+    "prepack": "node scripts/prepack.mjs",
+    "dev": "vp dev",
+    "dev:themes": "VITE_ENABLE_MOCK=true VITE_AUTH_MODE=mock vp dev",
+    "test:e2e:themes": "playwright test e2e/themes.spec.ts",
+    "test:e2e:preview-starter": "playwright test e2e/theme-preview-starter.spec.ts",
+    "build": "vp build",
+    "build:electron": "vp build --mode electron",
+    "pretypecheck": "pnpm --dir ../toolkit run build",
+    "typecheck": "tsc --noEmit",
+    "preview": "vp preview",
+    "prepare": "vp config",
+    "fmt": "vp fmt",
+    "lint": "vp lint",
+    "check": "vp check --no-fmt",
+    "test:e2e": "playwright test",
+    "test:e2e:core": "playwright test e2e/login.spec.ts e2e/users.spec.ts",
+    "test:e2e:ui": "playwright test --ui"
+  },
+  "dependencies": {
+    "@formily/antd-v5": "^1.2.4",
+    "@formily/core": "^2.3.7",
+    "@formily/json-schema": "^2.3.7",
+    "@formily/react": "^2.3.7",
+    "@formily/reactive": "^2.3.7",
+    "@monaco-editor/react": "^4.6.0",
+    "@tanstack/react-query": "~5.90.21",
+    "@tanstack/react-router": "^1.167.4",
+    "antd": "^6.3.3",
+    "classnames": "^2.3.1",
+    "dashicons": "0.0.2",
+    "highlight.js": "^11.11.1",
+    "i18next": "^26.2.0",
+    "lucide-react": "^1.7.0",
+    "monaco-editor": "^0.52.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-i18next": "^17.0.8",
+    "showdown": "^1.9.1",
+    "zod": "^4.3.6",
+    "zustand": "^5.0.12"
+  },
+  "devDependencies": {
+    "@fecommunity/reactpress-toolkit": "workspace:*",
+    "@playwright/test": "^1.58.2",
+    "@tanstack/router-plugin": "^1.166.13",
+    "@types/react": "19.2.7",
+    "@types/react-dom": "19.2.3",
+    "@vitejs/plugin-react-swc": "^4.3.0",
+    "msw": "^2.12.12",
+    "typescript": "~5.9.3",
+    "vite": "npm:@voidzero-dev/vite-plus-core@latest",
+    "vite-plus": "latest"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
+  }
+}

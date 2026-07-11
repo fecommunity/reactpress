@@ -1,15 +1,17 @@
-import { ApiMsg } from '../../common/api-messages';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
+import { ApiMsg } from '../../common/api-messages';
 import { dateFormat } from '../../utils/date.util';
 import { filterByWhitelist } from '../../utils/query-whitelist.util';
 import { CategoryService } from '../category/category.service';
+import { HookService } from '../hook/hook.service';
 import { TagService } from '../tag/tag.service';
 import { WebhookService } from '../webhook/webhook.service';
-import { ArticleRevision } from './article-revision.entity';
 import { Article } from './article.entity';
+import { ArticleRevision } from './article-revision.entity';
+import { normalizeArticleSlug } from './article-slug.util';
 import { extractProtectedArticle } from './article.util';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -26,7 +28,8 @@ export class ArticleService {
     private readonly revisionRepository: Repository<ArticleRevision>,
     private readonly tagService: TagService,
     private readonly categoryService: CategoryService,
-    private readonly webhookService: WebhookService
+    private readonly webhookService: WebhookService,
+    private readonly hookService: HookService,
   ) {}
 
   private async saveRevision(article: Article) {
@@ -52,22 +55,75 @@ export class ArticleService {
     });
   }
 
+  private async applyPublishFilters(article: Partial<Article>): Promise<Partial<Article>> {
+    return this.hookService.applyFilters('article.beforePublish', { ...article });
+  }
+
+  private normalizeSeoPayload(payload: Partial<Article>): Partial<Article> {
+    const next = { ...payload };
+    if ('slug' in next) {
+      next.slug = normalizeArticleSlug(next.slug);
+    }
+    if (typeof next.seoKeywords === 'string') {
+      next.seoKeywords = next.seoKeywords.trim() || null;
+    }
+    if (typeof next.seoDescription === 'string') {
+      next.seoDescription = next.seoDescription.trim() || null;
+    }
+    return next;
+  }
+
+  private applyPublishFilterPatch(
+    patch: Partial<Article>,
+    filtered: Partial<Article>,
+  ): Partial<Article> {
+    const next = { ...patch };
+    for (const key of ['summary', 'slug', 'seoKeywords', 'seoDescription'] as const) {
+      if (filtered[key] !== undefined && filtered[key] !== null) {
+        next[key] = filtered[key] as never;
+      }
+    }
+    return next;
+  }
+
+  private async assertSlugAvailable(slug: string | null | undefined, excludeId?: string): Promise<void> {
+    if (!slug) return;
+    const query = this.articleRepository
+      .createQueryBuilder('article')
+      .where('article.slug = :slug', { slug })
+      .take(1);
+    if (excludeId) {
+      query.andWhere('article.id != :excludeId', { excludeId });
+    }
+    const exist = await query.getOne();
+    if (exist) {
+      throw new HttpException(ApiMsg.ARTICLE_SLUG_EXISTS, HttpStatus.BAD_REQUEST);
+    }
+  }
+
   /**
    * 创建文章
    * @param article
    */
   async create(article: Partial<Article>): Promise<Article> {
-    const { title } = article;
+    let payload = this.normalizeSeoPayload(
+      await this.hookService.applyFilters('article.beforeCreate', { ...article }),
+    );
+    const { title } = payload;
     const exist = await this.articleRepository.findOne({ where: { title } });
 
     if (exist) {
       throw new HttpException(ApiMsg.ARTICLE_TITLE_EXISTS, HttpStatus.BAD_REQUEST);
     }
 
-    let { tags, category, status } = article; // eslint-disable-line prefer-const
+    await this.assertSlugAvailable(payload.slug);
+
+    let { tags, category, status } = payload; // eslint-disable-line prefer-const
 
     if (status === 'publish') {
-      Object.assign(article, {
+      payload = this.normalizeSeoPayload(await this.applyPublishFilters(payload));
+      await this.assertSlugAvailable(payload.slug);
+      Object.assign(payload, {
         publishAt: dateFormat(),
       });
     }
@@ -75,12 +131,18 @@ export class ArticleService {
     tags = await this.tagService.findByIds(('' + tags).split(','));
     const existCategory = await this.categoryService.findById(category);
     const newArticle = await this.articleRepository.create({
-      ...article,
+      ...payload,
       category: existCategory,
       tags,
-      needPassword: !!article.password,
+      needPassword: !!payload.password,
     });
     await this.articleRepository.save(newArticle);
+    if (newArticle.status === 'publish') {
+      await this.hookService.doAction('article.afterPublish', {
+        article: newArticle,
+        isNew: true,
+      });
+    }
     await this.notifyPublished(newArticle);
     return newArticle;
   }
@@ -265,8 +327,10 @@ export class ArticleService {
       .leftJoinAndSelect('article.tags', 'tags')
       .where('article.id=:id')
       .orWhere('article.title=:title')
+      .orWhere('article.slug=:slug')
       .setParameter('id', id)
-      .setParameter('title', id);
+      .setParameter('title', id)
+      .setParameter('slug', id);
 
     if (status) {
       query.andWhere('article.status=:status').setParameter('status', status);
@@ -291,6 +355,14 @@ export class ArticleService {
     await this.saveRevision(oldArticle);
     let { tags, category, status } = article; // eslint-disable-line prefer-const
 
+    let patch: Partial<Article> = this.normalizeSeoPayload({
+      ...article,
+      views: oldArticle.views,
+      needPassword: !!article.password,
+    });
+
+    await this.assertSlugAvailable(patch.slug, id);
+
     if (tags) {
       tags = await this.tagService.findByIds(('' + tags).split(','));
     }
@@ -298,22 +370,36 @@ export class ArticleService {
     const existCategory = await this.categoryService.findById(category);
 
     const becomingPublish = oldArticle.status === 'draft' && status === 'publish';
-    const newArticle = {
-      ...article,
-      views: oldArticle.views,
+    patch = {
+      ...patch,
       category: existCategory,
-      needPassword: !!article.password,
-      publishAt: becomingPublish ? dateFormat() : oldArticle.publishAt,
+      publishAt: becomingPublish ? (dateFormat() as unknown as Date) : oldArticle.publishAt,
       scheduledPublishAt: status === 'publish' ? null : article.scheduledPublishAt ?? oldArticle.scheduledPublishAt,
     };
 
     if (tags) {
-      Object.assign(newArticle, { tags });
+      Object.assign(patch, { tags });
     }
 
-    const updatedArticle = await this.articleRepository.merge(oldArticle, newArticle);
+    if (status === 'publish' || becomingPublish) {
+      const filtered = this.normalizeSeoPayload(
+        await this.applyPublishFilters({
+          ...oldArticle,
+          ...patch,
+        }),
+      );
+      patch = this.applyPublishFilterPatch(patch, filtered);
+      await this.assertSlugAvailable(patch.slug, id);
+      patch.publishAt = becomingPublish ? (dateFormat() as unknown as Date) : oldArticle.publishAt;
+    }
+
+    const updatedArticle = await this.articleRepository.merge(oldArticle, patch);
     const saved = await this.articleRepository.save(updatedArticle);
     if (becomingPublish) {
+      await this.hookService.doAction('article.afterPublish', {
+        article: saved,
+        isNew: false,
+      });
       await this.notifyPublished(saved);
     }
     return saved;
@@ -396,7 +482,7 @@ export class ArticleService {
    * 推荐文章
    * @param articleId
    */
-  async recommend(articleId = null) {
+  async recommend(articleId = null, pageSize = 6) {
     const query = this.articleRepository
       .createQueryBuilder('article')
       .orderBy('article.publishAt', 'DESC')
@@ -405,7 +491,7 @@ export class ArticleService {
 
     if (!articleId) {
       query.where('article.status=:status').setParameter('status', 'publish');
-      return query.take(6).getMany();
+      return query.take(pageSize).getMany();
     }
     const sub = this.articleRepository
       .createQueryBuilder('article')
@@ -417,7 +503,7 @@ export class ArticleService {
     const exist = await sub.getOne();
 
     if (!exist) {
-      return query.take(6).getMany();
+      return query.take(pageSize).getMany();
     }
 
     const { title, summary } = exist;
@@ -454,6 +540,6 @@ export class ArticleService {
     } catch (e) {} // eslint-disable-line no-empty
 
     const data = await query.getMany();
-    return data.filter((d) => d.id !== articleId && d.status === 'publish');
+    return data.filter((d) => d.id !== articleId && d.status === 'publish').slice(0, pageSize);
   }
 }

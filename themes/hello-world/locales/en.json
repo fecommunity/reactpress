@@ -1,0 +1,45 @@
+{
+  "meta": {
+    "description": "Starter theme in the Hello Elementor style with posts, categories, tags, and search templates.",
+    "tags": ["Starter", "Blog", "Hello"]
+  },
+  "sections": {
+    "identity": {
+      "title": "Site identity"
+    },
+    "colors": {
+      "title": "Colors & dark mode"
+    },
+    "background": {
+      "title": "Background image"
+    }
+  },
+  "settings": {
+    "siteLogo": {
+      "label": "Site logo",
+      "description": "Leave empty to use the site logo from admin (systemLogo)"
+    },
+    "displayTitle": {
+      "label": "Site title",
+      "description": "Leave empty to use the site title from admin (systemTitle)"
+    },
+    "displayTagline": {
+      "label": "Site tagline",
+      "description": "Leave empty to use the site tagline from admin (systemSubTitle)"
+    },
+    "primaryColor": {
+      "label": "Primary color"
+    },
+    "backgroundColor": {
+      "label": "Background color"
+    },
+    "darkMode": {
+      "label": "Enable dark mode",
+      "description": "Uses dark background and light text when enabled"
+    },
+    "backgroundImage": {
+      "label": "Background image",
+      "description": "Overrides solid background when set (visible on wide screens)"
+    }
+  }
+}

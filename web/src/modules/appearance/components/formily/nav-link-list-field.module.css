@@ -1,0 +1,75 @@
+.wrap {
+  width: 100%;
+  min-width: 0;
+}
+
+.callout {
+  margin-bottom: 10px;
+  padding: 8px 10px 8px 12px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--vscode-descriptionForeground, var(--ant-color-text-secondary));
+  background: var(--ant-color-fill-quaternary);
+  border-left: 3px solid var(--vscode-focusBorder, #0078d4);
+}
+
+.calloutTitle {
+  font-weight: 600;
+  color: var(--ant-color-text);
+  margin-bottom: 4px;
+}
+
+.i18nList {
+  margin: 0;
+  padding-left: 1.1em;
+}
+
+.i18nList li + li {
+  margin-top: 2px;
+}
+
+.table {
+  width: 100% !important;
+}
+
+.table :global(.ant-table) {
+  width: 100% !important;
+  font-size: 12px;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.hint {
+  flex: 1;
+  font-size: 12px;
+}
+
+.table :global(.ant-table-cell) {
+  padding: 6px 8px !important;
+  vertical-align: middle;
+}
+
+.table :global(.ant-input) {
+  font-size: 12px;
+}
+
+.localeCell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.localePreview {
+  font-size: 11px;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

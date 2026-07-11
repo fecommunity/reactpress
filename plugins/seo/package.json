@@ -1,0 +1,20 @@
+{
+  "name": "@fecommunity/reactpress-plugin-seo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SEO plugin for ReactPress — slug, keywords, meta description",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@fecommunity/reactpress-toolkit": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "~5.9.3"
+  }
+}

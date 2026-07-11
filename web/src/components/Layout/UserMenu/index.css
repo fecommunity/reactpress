@@ -1,0 +1,7 @@
+.user-menu-trigger {
+  transition: background-color 0.2s ease;
+}
+
+.user-menu-trigger:hover {
+  background-color: var(--user-menu-hover-bg);
+}

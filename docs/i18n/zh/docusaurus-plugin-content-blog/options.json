@@ -4,7 +4,7 @@
     "description": "The title for the blog used in SEO"
   },
   "description": {
-    "message": "ReactPress 版本更新记录",
+    "message": "ReactPress 版本更新与发布说明：插件、桌面客户端、主题与发布平台能力变更记录。",
     "description": "The description for the blog used in SEO"
   },
   "sidebar.title": {

@@ -24,6 +24,17 @@ export class SMTPController {
   }
 
   /**
+   * 发送测试邮件（验证 SMTP 配置）
+   */
+  @ApiResponse({ status: 200, description: '发送测试邮件' })
+  @Post('test')
+  @Roles('admin')
+  @UseGuards(JwtAuthGuard)
+  testSend(@Body() data) {
+    return this.smtpService.testSend(data);
+  }
+
+  /**
    * 获取所有邮件记录
    */
   @Get()

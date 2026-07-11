@@ -2,15 +2,15 @@
 sidebar_position: 1
 id: intro
 title: 介绍
-description: ReactPress 开源发布平台与 CMS：基于 React、Next.js、NestJS，一条命令零配置起站。
-keywords: [reactpress, cms, 博客, next.js, react]
+description: ReactPress 官方文档 — 自托管发布平台：WordPress 式编辑、Headless REST、Next.js 主题、插件与桌面客户端。一条 CLI，约 60 秒上线。
+keywords: [reactpress, 发布平台, wordpress 替代, headless cms, 博客, next.js, react, nestjs, 插件, 桌面客户端, 自托管]
 ---
 
 ## 项目简介
 
-`ReactPress` 是使用 React 开发的开源发布平台，用户可以在支持 React 和 MySQL 的服务器上架设属于自己的博客、网站，也可以把 `ReactPress` 当作内容管理系统（CMS）来使用。
+**ReactPress** 是为 React 时代打造的开源**发布平台**（不是又一个 Headless 后端拼装件）。一条 CLI 即可运行 CMS API、Web 管理后台、可替换的 Next.js 主题、插件扩展与 Electron 桌面客户端。
 
-**ReactPress 3.0** 以「装一个包、敲一条命令」为产品目标：全局安装 `@fecommunity/reactpress@3`，在任意空目录执行 `reactpress init` 与 `reactpress dev` 即可零配置起站。详见 [ReactPress 3.0 平台版](./tutorial-extras/reactpress-3-0.md)。
+**ReactPress 4.0**（代号 **Extend**）在 3.x 之上新增**插件系统**、**桌面客户端**与 **npm 主题 catalog**。新用户推荐 `npm i -g @fecommunity/reactpress@4`，详见 [ReactPress 4.0 扩展版](./tutorial-extras/reactpress-4-0.md)。仍使用 3.x 见 [3.0 平台版](./tutorial-extras/reactpress-3-0.md)。
 
 ## 🆚 框架对比
 
@@ -25,7 +25,7 @@ keywords: [reactpress, cms, 博客, next.js, react]
 | **性能优化** | 虚拟DOM、代码分割、懒加载 | 依赖插件优化 | 静态页面生成，性能优越 |
 | **SEO性能** | 出色（SSR支持） | 良好 | 优秀（静态页面） |
 | **定制性** | 高（完全自定义主题和样式） | 高（通过插件和主题） | 中等（主题和组件定制） |
-| **扩展性** | 强（API接口、前后端独立扩展） | 强（插件扩展） | 中等（插件和主题扩展） |
+| **扩展性** | 强（API、插件 Hook、前后端独立扩展） | 强（插件扩展） | 中等（插件和主题扩展） |
 | **用户界面** | 现代化，基于React的组件化设计 | 用户友好的后台界面 | 简约，为技术文档优化 |
 | **安全性** | 依赖框架和数据库的安全性 | 依赖插件和主题的更新与维护 | 静态网站，安全性较高 |
 | **适用场景** | 复杂功能、高并发访问、SEO优化需求 | 快速搭建网站、内容发布和管理 | 技术文档、静态博客 |
@@ -34,7 +34,15 @@ keywords: [reactpress, cms, 博客, next.js, react]
 
 ## ✨ 特性
 
-- 📦 **3.0 唯一入口**：`@fecommunity/reactpress` 一条命令管理 init / dev / doctor / status
+### 4.0 扩展（Extend）
+
+- 🔌 **插件系统**：Hook + `plugin.json` + Admin 插槽；内置 SEO、自动摘要、图片 WebP 批量优化
+- 🖥️ **桌面客户端**：Electron + SQLite 本地模式，可连接远程 API 并同步内容
+- 🎨 **主题 catalog**：`reactpress theme add` 从 npm 一键安装官方主题
+
+### 平台能力（3.x 起）
+
+- 📦 **唯一入口**：`@fecommunity/reactpress` 一条命令管理 init / dev / doctor / status
 - ⚡ **零配置起站**：自动生成 `.reactpress/config.json`、`.env` 与嵌入式 MySQL
 - 🩺 **可诊断**：`reactpress doctor` 与 `reactpress status` 快速排错
 - 🌈 组件化：基于 `antd 5.20` 的交互与视觉
@@ -43,26 +51,39 @@ keywords: [reactpress, cms, 博客, next.js, react]
 - 🖌️ 创作管理：内置 Markdown 编辑器，文章、分类、标签
 - 📃 页面管理、💬 评论管理、📷 媒体管理（本地上传与 OSS）
 - 🔌 **Headless**：API Key、Webhook、健康检查、toolkit SDK
-- ...
 
 ## 🔥 在线示例
 
-[ReactPress Demo](https://blog.gaoredu.com/)
+[ReactPress Demo](https://blog.gaoredu.com/) · [官方主题演示](https://reactpress-theme-starter.vercel.app)
 
-## ⌨️ 快速开始（3.0 推荐）
+## ⌨️ 快速开始（4.0 推荐）
 
 ### 终端用户 — 一个全局包
 
 ```bash
-npm i -g @fecommunity/reactpress@3
+npm i -g @fecommunity/reactpress@4
 mkdir my-blog && cd my-blog
 reactpress init
 reactpress dev
 ```
 
-浏览器访问 `http://localhost:3001`（管理端 `/admin`，API 健康检查 `/api/health`）。
+| 服务 | 端口 | 地址 |
+|------|------|------|
+| 管理后台 | 3000 | http://localhost:3000 |
+| 访客主题 | 3001 | http://localhost:3001 |
+| API | 3002 | http://localhost:3002/api/health |
+| 主题预览 | 3003 | http://localhost:3003 |
 
-无子命令时运行 `reactpress` 进入交互菜单。从 2.x 升级见 [迁移指南](./tutorial-extras/migration-2-to-3.md)。
+无子命令时运行 `reactpress` 进入交互菜单。从 3.x 升级见 [迁移指南](./tutorial-extras/migration-3-to-4.md)；从 2.x 见 [2.x → 3.0](./tutorial-extras/migration-2-to-3.md)。
+
+### 桌面客户端（4.0，无需 Docker）
+
+```bash
+# 在 monorepo 根目录
+pnpm dev:desktop
+```
+
+本地 SQLite 模式，默认账号 `admin` / `admin`。详见 [ReactPress 4.0 扩展版](./tutorial-extras/reactpress-4-0.md)。
 
 ### 本仓库贡献者 — Monorepo
 
@@ -74,13 +95,15 @@ pnpm install
 pnpm run dev
 ```
 
-需要 Node.js ≥ 18 与 Docker（默认嵌入式 MySQL）。`pnpm run init` 可仅准备环境而不启动服务。
+需要 Node.js ≥ 18 与 Docker（默认嵌入式 MySQL）。`pnpm run init` 可仅准备环境而不启动服务。开发插件前先执行 `pnpm run build:plugins`。
 
 ## 📦 包与文档
 
 | 包 | 说明 |
 |----|------|
-| [**@fecommunity/reactpress**](./tutorial-extras/reactpress-3-0.md) | **3.0 主包**（CLI + 内置 API） |
+| [**@fecommunity/reactpress**](./tutorial-extras/reactpress-4-0.md) | **4.0 主包**（CLI + 内置 API + 插件 + 桌面） |
+| [ReactPress 4.0 扩展版](./tutorial-extras/reactpress-4-0.md) | 4.0 能力总览 |
+| [ReactPress 3.0 平台版](./tutorial-extras/reactpress-3-0.md) | 3.0 历史说明 |
 | [@fecommunity/reactpress-client](./tutorial-extras/client-package) | 进阶：仅部署前台 |
 | [@fecommunity/reactpress-server](./tutorial-extras/server-package) | **Deprecated**，请用主包内置 API |
 | [@fecommunity/reactpress-toolkit](./tutorial-extras/toolkit-package) | TypeScript API SDK（Headless） |
@@ -88,8 +111,11 @@ pnpm run dev
 ## 🔗 链接
 
 - [首页](https://github.com/fecommunity/reactpress)
+- [4.0 扩展版说明](./tutorial-extras/reactpress-4-0.md)
+- [3.x → 4.0 迁移](./tutorial-extras/migration-3-to-4.md)
 - [3.0 平台版说明](./tutorial-extras/reactpress-3-0.md)
 - [2.x → 3.0 迁移](./tutorial-extras/migration-2-to-3.md)
+- [系统架构（ARCHITECTURE.md）](https://github.com/fecommunity/reactpress/blob/master/ARCHITECTURE.md)
 - [报告问题](https://github.com/fecommunity/reactpress/issues)
 - [参与共建](https://github.com/fecommunity/reactpress/pulls)
 

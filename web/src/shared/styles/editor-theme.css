@@ -1,0 +1,34 @@
+/* Article editor & Markdown editor surfaces — follow data-theme on <html> */
+:root {
+  --editor-surface: #ffffff;
+  --editor-surface-muted: #f6f7f7;
+  --editor-border: #c3c4c7;
+  --editor-border-secondary: #dcdcde;
+  --editor-text: #1d2327;
+  --editor-text-secondary: #646970;
+  --editor-text-muted: #50575e;
+  --editor-accent: #2271b1;
+  --editor-hover-bg: #f0f0f1;
+  --editor-active-bg: #ffffff;
+  --editor-success: #00a32a;
+  --editor-preview-bg: #ffffff;
+  --editor-code-bg: #f0f0f1;
+  --editor-blockquote-bg: #f6f7f7;
+}
+
+:root[data-theme="dark"] {
+  --editor-surface: #141414;
+  --editor-surface-muted: #1f1f1f;
+  --editor-border: #303030;
+  --editor-border-secondary: #424242;
+  --editor-text: rgba(255, 255, 255, 0.85);
+  --editor-text-secondary: rgba(255, 255, 255, 0.65);
+  --editor-text-muted: rgba(255, 255, 255, 0.55);
+  --editor-accent: #72aee6;
+  --editor-hover-bg: rgba(255, 255, 255, 0.08);
+  --editor-active-bg: rgba(255, 255, 255, 0.12);
+  --editor-success: #68de7c;
+  --editor-preview-bg: #141414;
+  --editor-code-bg: #262626;
+  --editor-blockquote-bg: #1f1f1f;
+}

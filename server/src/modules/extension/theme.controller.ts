@@ -1,0 +1,203 @@
+import { Body, Controller, Get, Param, Post, Query, Res, UseGuards } from '@nestjs/common';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Response } from 'express';
+
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { Roles, RolesGuard } from '../auth/roles.guard';
+import { ThemeService } from './theme.service';
+@ApiTags('Extension')
+@Controller('extension/themes')
+export class ThemeController {
+  constructor(private readonly themeService: ThemeService) {}
+
+  @Get('active/public')
+  @ApiResponse({ status: 200, description: 'Current active theme for local dev / public site' })
+  getActivePublic() {
+    return this.themeService.getActiveThemePublic();
+  }
+
+  @Get()
+  @Roles('admin')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiResponse({ status: 200, description: 'List installed and bundled themes' })
+  list() {
+    return this.themeService.listThemes();
+  }
+
+  @Get('catalog')
+  @Roles('admin')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiResponse({ status: 200, description: 'Official npm theme catalog' })
+  catalog() {
+    return this.themeService.getThemeCatalog();
+  }
+
+  @Post('install-npm')
+  @Roles('admin')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiResponse({ status: 200, description: 'Install a theme from an npm package spec' })
+  installFromNpm(
+    @Body()
+    body: {
+      spec?: string;
+      skipDependencies?: boolean;
+    },
+  ) {
+    return this.themeService.installThemeFromNpm(body?.spec ?? '', {
+      skipDependencies: body?.skipDependencies === true,
+    });
+  }
+
+  @Post('preview-draft')
+  @Roles('admin')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiResponse({
+    status: 200,
+    description: 'Store customizer preview payload; returns short token for iframe URL',
+  })
+  createPreviewDraft(
+    @Body()
+    body: {
+      themeId?: string;
+      mods?: Record<string, string>;
+      configuration?: Record<string, unknown>;
+    }
+  ) {
+    return this.themeService.createPreviewDraft({
+      themeId: body?.themeId,
+      mods: body?.mods,
+      configuration: body?.configuration,
+    });
+  }
+
+  @Get('preview-draft/:token')
+  @ApiResponse({ status: 200, description: 'Public read of short-lived preview draft by token' })
+  getPreviewDraft(@Param('token') token: string) {
+    const draft = this.themeService.resolvePreviewDraft(token);
+    if (!draft) {
+      return { mods: {}, configuration: {} };
+    }
+    return draft;
+  }
+
+  @Post('preview-session/end')
+  @Roles('admin')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiResponse({ status: 200, description: 'Restore local dev theme to DB active theme' })
+  endPreviewSession() {
+    return this.themeService.endPreviewSession();
+  }
+
+  @Post(':id/preview-session')
+  @Roles('admin')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiResponse({
+    status: 200,
+    description: 'Run local theme dev for preview without activating in DB',
+  })
+  beginPreviewSession(@Param('id') id: string) {
+    return this.themeService.beginPreviewSession(id);
+  }
+
+  @Get(':id/cover')
+  cover(@Param('id') id: string, @Res() res: Response) {
+    const filePath = this.themeService.getCoverPath(id);
+    if (filePath) {
+      res.sendFile(filePath);
+      return;
+    }
+    const svg = this.themeService.buildPlaceholderCoverSvg(id);
+    res.setHeader('Content-Type', 'image/svg+xml; charset=utf-8');
+    res.setHeader('Cache-Control', 'public, max-age=300');
+    res.send(svg);
+  }
+
+  @Get(':id/preview')
+  async preview(
+    @Param('id') id: string,
+    @Query('token') previewToken: string | undefined,
+    @Query('mods') modsQuery: string | undefined,
+    @Res() res: Response
+  ) {
+    let overrideMods: Record<string, string> = {};
+    if (previewToken?.trim()) {
+      const draft = this.themeService.resolvePreviewDraft(previewToken.trim());
+      overrideMods = (draft?.mods ?? {}) as Record<string, string>;
+    } else if (modsQuery) {
+      try {
+        overrideMods = JSON.parse(decodeURIComponent(modsQuery)) as Record<string, string>;
+      } catch {
+        overrideMods = {};
+      }
+    }
+    const mods = await this.themeService.getPreviewMods(id, overrideMods);
+    const html = this.themeService.buildPreviewHtml(id, mods);
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    res.send(html);
+  }
+
+  @Get(':id/locales/:locale')
+  @Roles('admin')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiResponse({ status: 200, description: 'Customizer locale strings bundled with the theme' })
+  getLocale(@Param('id') id: string, @Param('locale') locale: string) {
+    return this.themeService.getThemeAdminLocale(id, locale);
+  }
+
+  @Get(':id/configuration-schema')
+  @Roles('admin')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiResponse({ status: 200, description: 'JSON Schema for theme site configuration' })
+  getConfigurationSchema(@Param('id') id: string) {
+    return this.themeService.getThemeConfigurationSchema(id);
+  }
+
+  @Get(':id/configuration')
+  @Roles('admin')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiResponse({ status: 200, description: 'Merged theme configuration (defaults + saved)' })
+  getConfiguration(@Param('id') id: string) {
+    return this.themeService.getThemeConfiguration(id);
+  }
+
+  @Post(':id/configuration')
+  @Roles('admin')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiResponse({ status: 200, description: 'Patch theme configuration (validated against schema)' })
+  updateConfiguration(
+    @Param('id') id: string,
+    @Body() body: { configuration?: Record<string, unknown>; replace?: boolean }
+  ) {
+    return this.themeService.updateThemeConfiguration(id, body?.configuration ?? {}, {
+      replace: body?.replace === true,
+    });
+  }
+
+  @Get(':id')
+  @Roles('admin')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  getOne(@Param('id') id: string) {
+    return this.themeService.getTheme(id);
+  }
+
+  @Post(':id/install')
+  @Roles('admin')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  install(@Param('id') id: string) {
+    return this.themeService.installTheme(id);
+  }
+
+  @Post(':id/activate')
+  @Roles('admin')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  activate(@Param('id') id: string) {
+    return this.themeService.activateTheme(id);
+  }
+
+  @Post(':id/mods')
+  @Roles('admin')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  updateMods(@Param('id') id: string, @Body() body: { mods?: Record<string, string> }) {
+    return this.themeService.updateThemeMods(id, body?.mods ?? {});
+  }
+}

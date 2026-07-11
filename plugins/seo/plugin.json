@@ -1,0 +1,76 @@
+{
+  "$schema": "../plugin.manifest.schema.json",
+  "id": "seo",
+  "name": "SEO 增强",
+  "version": "1.0.0",
+  "description": "为文章提供 URL 别名、SEO 关键词与 meta 描述，发布时可自动补全。",
+  "author": "ReactPress",
+  "requires": ">=3.5.0",
+  "server": {
+    "module": "./dist/index.js",
+    "hooks": {
+      "subscribe": ["article.beforeCreate", "article.beforePublish"]
+    }
+  },
+  "admin": {
+    "slots": {
+      "subscribe": ["article.editor.meta.afterSummary"]
+    },
+    "menu": {
+      "title": "SEO 增强",
+      "path": "/plugins/seo/settings",
+      "permission": "extension:manage",
+      "sort": 20
+    }
+  },
+  "settings": {
+    "schema": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "title": "启用 SEO 自动补全",
+          "description": "关闭后，发布时不再自动写入别名、关键词或描述。",
+          "default": true
+        },
+        "autoSlug": {
+          "type": "boolean",
+          "title": "自动生成 URL 别名",
+          "description": "别名为空时，从文章标题生成 slug。",
+          "default": true
+        },
+        "autoDescription": {
+          "type": "boolean",
+          "title": "自动生成 SEO 描述",
+          "description": "SEO 描述为空时，优先使用摘要，否则从正文截取。",
+          "default": true
+        },
+        "autoKeywords": {
+          "type": "boolean",
+          "title": "自动生成 SEO 关键词",
+          "description": "关键词为空时，使用文章标题与标签名称。",
+          "default": true
+        },
+        "descriptionMaxLength": {
+          "type": "integer",
+          "title": "描述最大长度",
+          "description": "从正文截取 SEO 描述的最大字符数（80–320）。",
+          "minimum": 80,
+          "maximum": 320,
+          "default": 160
+        },
+        "descriptionSuffix": {
+          "type": "string",
+          "title": "描述截断后缀",
+          "description": "超出最大长度时追加在末尾，例如 …",
+          "default": "…"
+        }
+      }
+    }
+  },
+  "permissions": ["article:read"],
+  "capabilities": {
+    "headless": true
+  }
+}

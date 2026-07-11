@@ -1,0 +1,124 @@
+.markdown {
+  word-break: break-word;
+  line-height: 1.75;
+  font-size: 15px;
+  color: var(--editor-text);
+}
+
+.markdown h1,
+.markdown h2,
+.markdown h3,
+.markdown h4 {
+  line-height: 1.4;
+  margin: 1.2em 0 0.5em;
+  font-weight: 600;
+  color: var(--editor-text);
+}
+
+.markdown h2 {
+  padding-bottom: 0.35em;
+  border-bottom: 1px solid var(--editor-border-secondary);
+}
+
+.markdown p {
+  margin: 0.75em 0;
+}
+
+.markdown img {
+  max-width: 100%;
+  height: auto;
+}
+
+.markdown a {
+  color: var(--editor-accent);
+}
+
+.markdown blockquote {
+  margin: 1em 0;
+  padding: 0.25em 1em;
+  border-left: 4px solid var(--editor-border);
+  color: var(--editor-text-secondary);
+  background: var(--editor-blockquote-bg);
+}
+
+.markdown ul,
+.markdown ol {
+  padding-left: 1.5em;
+}
+
+.markdown code {
+  padding: 0.15em 0.35em;
+  border-radius: 3px;
+  background: var(--editor-code-bg);
+  color: var(--editor-text);
+  font-family: ui-monospace, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.92em;
+}
+
+.markdown pre {
+  position: relative;
+  margin: 1em 0;
+  padding: 2.25em 0.75em 0.75em;
+  border-radius: 4px;
+  background: var(--editor-code-bg);
+  overflow: auto;
+}
+
+.markdown pre code {
+  display: block;
+  padding: 0;
+  background: transparent;
+  white-space: pre-wrap;
+}
+
+.markdown table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1em 0;
+}
+
+.markdown th,
+.markdown td {
+  border: 1px solid var(--editor-border-secondary);
+  padding: 6px 10px;
+}
+
+.markdown .hljsln {
+  display: block;
+  padding-left: 3em !important;
+}
+
+.markdown .hljsln .ln-bg {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  width: 2.2em;
+  height: 100%;
+}
+
+.markdown .hljsln .ln-num {
+  position: relative;
+  display: inline-block;
+  height: 1em;
+  user-select: none;
+}
+
+.markdown .hljsln .ln-num::before {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  right: 0;
+  margin-right: 1em;
+  color: var(--editor-text-muted);
+  font-style: normal;
+  font-weight: normal;
+  content: attr(data-num);
+  width: max-content;
+}
+
+/* Dark preview: use a darker highlight.js theme when in dark mode */
+:root[data-theme="dark"] .markdown pre code.hljs {
+  background: #1e1e1e;
+  color: #d4d4d4;
+}

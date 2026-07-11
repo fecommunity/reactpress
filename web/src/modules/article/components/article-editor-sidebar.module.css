@@ -1,0 +1,265 @@
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.box {
+  background: var(--editor-surface);
+  border: 1px solid var(--editor-border);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+}
+
+:root[data-theme="dark"] .box {
+  box-shadow: none;
+}
+
+.boxHeader {
+  padding: 10px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--editor-text);
+  border-bottom: 1px solid var(--editor-border-secondary);
+}
+
+.boxBody {
+  padding: 12px;
+  color: var(--editor-text);
+}
+
+.metaList {
+  margin: 0 0 16px;
+  font-size: 13px;
+}
+
+.metaList > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 4px 0;
+}
+
+.metaList dt {
+  margin: 0;
+  color: var(--editor-text-secondary);
+}
+
+.metaList dd {
+  margin: 0;
+  color: var(--editor-text);
+}
+
+.publishRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 6px;
+  padding-top: 12px;
+  border-top: 1px solid var(--editor-border-secondary);
+}
+
+.publishRow :global(.ant-btn) {
+  flex: 1 1 calc(33.333% - 4px);
+  min-width: 72px;
+  padding-inline: 8px;
+  font-size: 12px;
+  white-space: normal;
+  height: auto;
+  min-height: 32px;
+}
+
+.deleteLink {
+  margin-top: 8px;
+  padding: 0;
+  height: auto;
+}
+
+.fieldLabel {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--editor-text);
+}
+
+.visibilityBlock {
+  margin-bottom: 16px;
+}
+
+.visibilitySelect {
+  width: 100%;
+}
+
+.passwordBlock {
+  margin-top: 12px;
+}
+
+.passwordBlock .passwordInput {
+  width: 100%;
+}
+
+.passwordInput {
+  margin-bottom: 0;
+}
+
+.checkList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 160px;
+  overflow: auto;
+}
+
+.checkItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--editor-text);
+  cursor: pointer;
+}
+
+.switchRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 0;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--editor-text);
+}
+
+.switchRow > span {
+  flex: 1;
+  min-width: 0;
+}
+
+.switchRow :global(.ant-switch) {
+  flex-shrink: 0;
+}
+
+.coverPreviewWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 120px;
+  margin-bottom: 8px;
+  padding: 0;
+  background: var(--editor-surface-muted);
+  border: 1px dashed var(--editor-border-secondary);
+  border-radius: 2px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.coverPreviewWrap:hover {
+  border-color: var(--editor-accent);
+}
+
+.coverPlaceholder {
+  font-size: 13px;
+  color: var(--editor-text-secondary);
+}
+
+.coverPreview {
+  display: block;
+  width: 100%;
+  max-height: 160px;
+  object-fit: contain;
+}
+
+.coverInput {
+  margin-bottom: 4px;
+}
+
+.coverRemove {
+  padding: 0;
+  height: auto;
+  font-size: 13px;
+}
+
+.metaLoading {
+  display: flex;
+  justify-content: center;
+  padding: 16px 0;
+}
+
+.emptyHint {
+  margin: 0;
+  font-size: 13px;
+  color: var(--editor-text-secondary);
+}
+
+.addMetaBlock {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--editor-border-secondary);
+}
+
+.addMetaLink {
+  padding: 0;
+  height: auto;
+  font-size: 13px;
+}
+
+.addMetaForm {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.addMetaActions {
+  display: flex;
+  gap: 8px;
+}
+
+.selectedTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.tagInputRow {
+  display: flex;
+  gap: 8px;
+}
+
+.tagInputRow :global(.ant-input) {
+  flex: 1;
+}
+
+.tagHint {
+  margin: 6px 0 10px;
+  font-size: 12px;
+  color: var(--editor-text-secondary);
+}
+
+.mostUsedTags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.mostUsedLabel {
+  font-size: 12px;
+  color: var(--editor-text-secondary);
+}
+
+.tagChoice {
+  padding: 2px 8px;
+  border: none;
+  border-radius: 2px;
+  background: var(--editor-surface-muted);
+  color: var(--editor-accent);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.tagChoice:hover {
+  background: var(--editor-border-secondary);
+}

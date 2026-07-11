@@ -5,7 +5,9 @@ title: ReactPress 3.0 平台版
 
 # ReactPress 3.0 平台版
 
-> **装一个包，敲一条命令，一分钟拥有自己的 CMS。**
+> **历史版本说明。** 新用户请直接使用 [ReactPress 4.0 扩展版](./reactpress-4-0.md)。本文档保留给仍在使用 3.x 的用户参考。
+
+> **一条 CLI，约 60 秒 — 全栈发布平台，不是又一个 CMS 拼装件。**
 
 3.0「平台版」（代号 **Platform**）围绕三件事交付：**零配置**、**唯一入口**、**极致开发体验**。技术栈仍为 React 17 + Next.js 12 + NestJS 6（Next 14 / React 18 归入后续 **3.1 现代栈版**）。
 
@@ -120,10 +122,11 @@ pnpm dev
 
 ## 从 2.x 升级
 
-见 [2.x → 3.0 迁移指南](./migration-2-to-3.md)。
+见 [2.x → 3.0 迁移指南](./migration-2-to-3.md)。升级至 4.0 见 [3.x → 4.0 迁移指南](./migration-3-to-4.md) 与 [ReactPress 4.0 扩展版](./reactpress-4-0.md)。
 
 ## 相关文档
 
+- [ReactPress 4.0 扩展版](./reactpress-4-0.md)
 - [项目配置项](./config-intro.md) — `.env` 与 `.reactpress/config.json`
 - [ReactPress 2.0 架构](./reactpress-2-0.md) — 历史架构说明（多包时代）
 - [Server / Client 包指南](./server-package.md) — 独立包进阶场景

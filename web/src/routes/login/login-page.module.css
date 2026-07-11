@@ -1,0 +1,408 @@
+/* Login — 首屏登录 + 下方 docs 首页式多段滚动 */
+
+.page {
+  --rp-bg: #eef2f5;
+  --rp-bg-auth: #f8fafb;
+  --rp-card: #ffffff;
+  --rp-border: #d0d7de;
+  --rp-text: #0f1720;
+  --rp-text-secondary: #4a5568;
+  --rp-text-tertiary: #718096;
+  --rp-brand: #087ea4;
+  --rp-brand-hover: #066a8a;
+  --rp-brand-soft: rgba(8, 126, 164, 0.12);
+  --rp-focus-ring: rgba(8, 126, 164, 0.22);
+  --rp-input-bg: #ffffff;
+  --rp-shadow-card: 0 8px 32px rgba(15, 23, 32, 0.08), 0 2px 6px rgba(15, 23, 32, 0.04);
+  --rp-radius: 10px;
+  --rp-autofill-bg: #e8f4fc;
+  --rp-autofill-text: #0f1720;
+  --rp-font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100dvh;
+  min-height: 100dvh;
+  font-family: var(--rp-font);
+  color: var(--rp-text);
+  background: #f8fafb;
+  overflow: hidden;
+}
+
+.snapScroller {
+  flex: 1;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  overscroll-behavior-y: contain;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .snapScroller {
+    scroll-behavior: auto;
+  }
+}
+
+.snapScreen {
+  position: relative;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  height: 100%;
+  min-height: 100%;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+.fixedToolbar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0.75rem clamp(1rem, 4vw, 1.5rem);
+  pointer-events: none;
+}
+
+.fixedToolbar > * {
+  pointer-events: auto;
+}
+
+.utilities {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(208, 215, 222, 0.75);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 12px rgba(15, 23, 32, 0.06);
+}
+
+.utilities .rp-toolbar-btn {
+  color: var(--rp-text-secondary);
+}
+
+.utilities .rp-toolbar-btn:hover,
+.utilities .rp-toolbar-btn:focus-visible {
+  color: var(--rp-text);
+  background: rgba(0, 0, 0, 0.04);
+  opacity: 1;
+}
+
+.screenAuth {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #f8fafb;
+  color: var(--rp-text);
+}
+
+.authMain {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  min-height: 0;
+}
+
+.authStack {
+  width: 100%;
+  max-width: 22.5rem;
+  margin: 0 auto;
+  padding: clamp(2.75rem, 8vh, 3.5rem) clamp(1.25rem, 4vw, 2rem) 0;
+}
+
+.authCard {
+  position: relative;
+  padding: 1.375rem 1.25rem 1.5rem;
+  overflow: visible;
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(208, 215, 222, 0.85);
+  border-radius: var(--rp-radius);
+  box-shadow:
+    0 4px 24px rgba(15, 23, 32, 0.06),
+    0 1px 3px rgba(15, 23, 32, 0.04);
+  backdrop-filter: blur(12px);
+}
+
+.authCard::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 0;
+  height: 2px;
+  border-radius: var(--rp-radius) var(--rp-radius) 0 0;
+  background: linear-gradient(90deg, var(--rp-brand) 0%, rgba(88, 196, 220, 0.45) 100%);
+  pointer-events: none;
+}
+
+.authForm {
+  position: relative;
+  z-index: 1;
+}
+
+.authForm :global(.ant-form-item-label > label) {
+  font-size: 0.8125rem !important;
+  font-weight: 500 !important;
+  color: var(--rp-text) !important;
+}
+
+.authForm :global(.ant-form-item) {
+  margin-bottom: 1.125rem;
+  overflow: visible;
+}
+
+.authForm :global(.ant-form-item-control-input) {
+  overflow: visible;
+}
+
+.authSubmitItem {
+  margin-bottom: 0 !important;
+  margin-top: 0.5rem !important;
+}
+
+.authSubmitItem :global(.ant-form-item-control-input-content) {
+  display: block;
+}
+
+.authForm :global(.ant-input) {
+  height: 2.5rem !important;
+  border-radius: var(--rp-radius) !important;
+  background: var(--rp-input-bg) !important;
+  border-color: var(--rp-border) !important;
+  color: var(--rp-text) !important;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    background 0.15s ease !important;
+}
+
+/* 用户名 / 密码：统一覆盖浏览器 autofill 默认浅色块 */
+.authForm :global(.ant-input:-webkit-autofill),
+.authForm :global(.ant-input:autofill),
+.authForm :global(#login-username:-webkit-autofill),
+.authForm :global(#login-username:autofill),
+.authForm :global(#login-password:-webkit-autofill),
+.authForm :global(#login-password:autofill),
+.authForm :global(#register-username:-webkit-autofill),
+.authForm :global(#register-username:autofill),
+.authForm :global(#register-password:-webkit-autofill),
+.authForm :global(#register-password:autofill),
+.authForm :global(#register-confirm-password:-webkit-autofill),
+.authForm :global(#register-confirm-password:autofill) {
+  background-color: var(--rp-autofill-bg) !important;
+  background-image: none !important;
+  -webkit-box-shadow: 0 0 0 1000px var(--rp-autofill-bg) inset !important;
+  box-shadow: 0 0 0 1000px var(--rp-autofill-bg) inset !important;
+  -webkit-text-fill-color: var(--rp-autofill-text) !important;
+  caret-color: var(--rp-autofill-text);
+  transition:
+    background-color 99999s ease-out,
+    color 99999s ease-out !important;
+}
+
+.authForm :global(.ant-input:-webkit-autofill:hover),
+.authForm :global(.ant-input:autofill:hover),
+.authForm :global(.ant-input:-webkit-autofill:focus),
+.authForm :global(.ant-input:autofill:focus),
+.authForm :global(#login-username:-webkit-autofill:hover),
+.authForm :global(#login-username:-webkit-autofill:focus),
+.authForm :global(#login-password:-webkit-autofill:hover),
+.authForm :global(#login-password:-webkit-autofill:focus),
+.authForm :global(#register-username:-webkit-autofill:hover),
+.authForm :global(#register-username:-webkit-autofill:focus),
+.authForm :global(#register-password:-webkit-autofill:hover),
+.authForm :global(#register-password:-webkit-autofill:focus),
+.authForm :global(#register-confirm-password:-webkit-autofill:hover),
+.authForm :global(#register-confirm-password:-webkit-autofill:focus) {
+  border-color: var(--rp-brand) !important;
+  background-color: var(--rp-autofill-bg) !important;
+  -webkit-box-shadow:
+    0 0 0 1000px var(--rp-autofill-bg) inset,
+    0 0 0 1px var(--rp-brand),
+    0 0 0 3px var(--rp-focus-ring) !important;
+  box-shadow:
+    0 0 0 1000px var(--rp-autofill-bg) inset,
+    0 0 0 1px var(--rp-brand),
+    0 0 0 3px var(--rp-focus-ring) !important;
+}
+
+.authForm :global(.ant-input::placeholder) {
+  color: var(--rp-text-tertiary) !important;
+}
+
+.authForm :global(.ant-input:hover:not(:-webkit-autofill):not(:autofill)) {
+  border-color: #a8b4c0 !important;
+}
+
+.authForm :global(.ant-input:focus:not(:-webkit-autofill):not(:autofill)) {
+  border-color: var(--rp-brand) !important;
+  box-shadow:
+    0 0 0 1px var(--rp-brand),
+    0 0 0 3px var(--rp-focus-ring) !important;
+}
+
+.authForm :global(.ant-btn-primary) {
+  width: 100%;
+  height: 2.875rem !important;
+  border: none !important;
+  border-radius: var(--rp-radius) !important;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+  background: linear-gradient(180deg, #0a8fbb 0%, var(--rp-brand) 100%) !important;
+  box-shadow: 0 2px 10px rgba(8, 126, 164, 0.32) !important;
+  transition:
+    background 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.1s ease !important;
+}
+
+.authForm :global(.ant-btn-primary:not(:disabled):hover) {
+  background: linear-gradient(180deg, #0b9dcc 0%, var(--rp-brand-hover) 100%) !important;
+  box-shadow: 0 4px 16px rgba(8, 126, 164, 0.38) !important;
+}
+
+.authForm :global(.ant-btn-primary:not(:disabled):active) {
+  transform: translateY(1px);
+}
+
+.authMeta {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.authMeta .authFooter + .authFooter {
+  margin-top: 0.5rem;
+}
+
+.authFooter {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: var(--rp-text-tertiary);
+}
+
+.authFooter a {
+  color: var(--rp-brand);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.authFooter a:hover {
+  text-decoration: underline;
+}
+
+.pageFooter {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+  padding: 0.75rem clamp(1.25rem, 4vw, 2rem) clamp(3rem, 6vh, 3.25rem);
+  text-align: center;
+}
+
+.poweredBy {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--rp-text-tertiary);
+}
+
+.poweredBy a {
+  color: var(--rp-text-secondary);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.15s ease;
+}
+
+.poweredBy a:hover {
+  color: var(--rp-brand);
+}
+
+@media (min-width: 900px) {
+  .authStack {
+    max-width: 24rem;
+  }
+}
+
+@media (min-width: 1200px) {
+  .authStack {
+    max-width: 26rem;
+  }
+}
+
+/* Dark theme */
+:root[data-theme="dark"] .page {
+  --rp-autofill-bg: #1e2a38;
+  --rp-autofill-text: #eceef2;
+  --rp-bg: #0a0c10;
+  --rp-bg-auth: #10141c;
+  --rp-card: #1a1f28;
+  --rp-border: rgba(255, 255, 255, 0.1);
+  --rp-text: #eceef2;
+  --rp-text-secondary: #9aa3b2;
+  --rp-text-tertiary: #8b93a3;
+  --rp-brand: #58c4dc;
+  --rp-brand-hover: #7ad4e8;
+  --rp-brand-soft: rgba(88, 196, 220, 0.14);
+  --rp-focus-ring: rgba(88, 196, 220, 0.28);
+  --rp-input-bg: #141820;
+  --rp-shadow-card: 0 8px 32px rgba(0, 0, 0, 0.4);
+  background: #0c1218;
+}
+
+:root[data-theme="dark"] .utilities {
+  background: rgba(22, 28, 36, 0.88);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+}
+
+:root[data-theme="dark"] .utilities .rp-toolbar-btn:hover,
+:root[data-theme="dark"] .utilities .rp-toolbar-btn:focus-visible {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+:root[data-theme="dark"] .screenAuth {
+  background: #0c1218;
+}
+
+:root[data-theme="dark"] .authCard {
+  background: rgba(22, 28, 36, 0.72);
+  backdrop-filter: blur(16px);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+:root[data-theme="dark"] .authCard::before {
+  background: linear-gradient(90deg, rgba(88, 196, 220, 0.55) 0%, rgba(88, 196, 220, 0.12) 100%);
+}
+
+:root[data-theme="dark"] .authForm :global(.ant-btn-primary) {
+  background: linear-gradient(180deg, #6dd4ea 0%, #087ea4 100%) !important;
+  color: #041820 !important;
+}
+
+:root[data-theme="dark"] .authForm :global(.ant-btn-primary:not(:disabled):hover) {
+  background: linear-gradient(180deg, #8ee0f2 0%, #0a8fbb 100%) !important;
+}
+
+@media (max-width: 480px) {
+  .authCard {
+    padding: 1.125rem 1rem 1.25rem;
+  }
+}

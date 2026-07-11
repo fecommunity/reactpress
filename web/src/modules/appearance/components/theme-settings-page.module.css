@@ -1,0 +1,83 @@
+/* Theme settings — align with admin-page-header + admin-panel layout */
+
+:global(.main-layout-main:has([data-testid="theme-settings-page"])) {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.wrap {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  height: 100%;
+  max-height: 100%;
+  width: calc(100% + 40px);
+  max-width: none;
+  margin: 0 -20px;
+  padding: 0 12px 12px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.pageHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin-bottom: 0;
+}
+
+.pageHeaderMain {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.backBtn:global(.ant-btn) {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  color: var(--ant-color-text-secondary);
+}
+
+.backBtn:global(.ant-btn:hover) {
+  color: var(--ant-color-text);
+  background: var(--ant-color-fill-tertiary);
+}
+
+.pageIntro {
+  margin: 4px 0 12px !important;
+  max-width: none !important;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.panel {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.panelBody {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+}
+
+.panelBody :global([data-testid="theme-settings-editor"]) {
+  flex: 1;
+  min-height: 0;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}

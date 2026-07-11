@@ -4,7 +4,7 @@ const {
   detectProjectType,
   describeProject,
   hasClient,
-} = require('../lib/project-type');
+} = require('../out/lib/project-type');
 const { createStandaloneProject, createMonorepoFixture, rmDir } = require('./helpers/tmp-project');
 
 describe('lib/project-type', () => {

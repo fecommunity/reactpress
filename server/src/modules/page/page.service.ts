@@ -1,8 +1,8 @@
-import { ApiMsg } from '../../common/api-messages';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
+import { ApiMsg } from '../../common/api-messages';
 import { dateFormat } from '../../utils/date.util';
 import { filterByWhitelist } from '../../utils/query-whitelist.util';
 import { Page } from './page.entity';
@@ -26,11 +26,11 @@ export class PageService {
       throw new HttpException(ApiMsg.PAGE_EXISTS, HttpStatus.BAD_REQUEST);
     }
 
-    const newPage = await this.pageRepository.create({
+    const newPage = this.pageRepository.create({
       ...page,
+      publishAt: page.status === 'publish' ? dateFormat() : page.publishAt,
     });
-    await this.pageRepository.save(newPage);
-    return newPage;
+    return this.pageRepository.save(newPage);
   }
 
   /**

@@ -5,6 +5,16 @@ import * as path from 'path';
 import { Repository } from 'typeorm';
 
 import { dateFormat } from '../../utils/date.util';
+import {
+  buildVariantFilename,
+  ImageScene,
+  ImageVariantMeta,
+  isProcessableImage,
+  listVariantFilenames,
+  primaryVariantForScene,
+  processImageVariants,
+  variantsForScene,
+} from '../../utils/image-processor.util';
 import { filterByWhitelist } from '../../utils/query-whitelist.util';
 import { Oss } from '../../utils/oss.util';
 import { uniqueid } from '../../utils/uniqueid.util';
@@ -27,31 +37,77 @@ export class FileService {
     this.localUpload = new LocalUpload();
   }
 
+  private getUploadBaseUrl(): string {
+    return (
+      this.configService.get('SERVER_PUBLIC_UPLOAD_URL') ||
+      `${this.configService.get('SERVER_SITE_URL')}/public/uploads`
+    );
+  }
+
+  private async persistBuffer(filename: string, buffer: Buffer, hasOssConfig: boolean): Promise<string> {
+    if (hasOssConfig) {
+      return this.oss.putFile(filename, buffer);
+    }
+
+    await this.localUpload.putFile(filename, buffer);
+    return `${this.getUploadBaseUrl()}/${filename}`;
+  }
+
+  private async removeStoredFile(filename: string, hasOssConfig: boolean): Promise<void> {
+    if (hasOssConfig) {
+      await this.oss.deleteFile(filename);
+      return;
+    }
+
+    await this.localUpload.deleteFile(filename);
+  }
+
   /**
    * 上传文件
    * @param file
    */
-  async uploadFile(file, unique): Promise<File> {
-    const { originalname, mimetype, size, buffer } = file;
+  async uploadFile(file, unique, scene: ImageScene = 'default'): Promise<File> {
+    let { originalname, mimetype, size, buffer } = file;
     const dataFolder = dateFormat(new Date(), 'yyyy-MM-dd');
     const ext = path.extname(originalname);
-    const filename = +unique === 1 ? `${dataFolder}/${originalname}` : `${dataFolder}/${uniqueid()}.${ext}`;
-    // 获取oss的配置
     const hasOssConfig = await this.oss.hasOssConfig();
-    let url;
-    if (hasOssConfig) {
-      // 上传到OSS
-      url = await this.oss.putFile(filename, buffer);
-    } else {
-      // 本地上传
-      url = await this.localUpload.putFile(filename, buffer);
-      // 上传的路径
-      const uploadUrl =
-        this.configService.get('SERVER_PUBLIC_UPLOAD_URL') ||
-        `${this.configService.get('SERVER_SITE_URL')}/public/uploads`;
-      // 最终的地址
-      url = `${uploadUrl}/${filename}`;
+    if (isProcessableImage(mimetype)) {
+      const baseName = +unique === 1 ? path.basename(originalname, ext) : uniqueid();
+      const baseFilename = `${dataFolder}/${baseName}.webp`;
+      const variantList = variantsForScene(scene);
+      const processedVariants = await processImageVariants(buffer, variantList);
+      const variantsMeta: Record<string, ImageVariantMeta> = {};
+
+      for (const [variant, processed] of processedVariants.entries()) {
+        const variantFilename = buildVariantFilename(baseFilename, variant);
+        const variantUrl = await this.persistBuffer(variantFilename, processed.buffer, hasOssConfig);
+
+        variantsMeta[variant] = {
+          url: variantUrl,
+          filename: variantFilename,
+          width: processed.width,
+          height: processed.height,
+          size: processed.size,
+        };
+      }
+
+      const primaryVariant = primaryVariantForScene(scene);
+      const primary = variantsMeta[primaryVariant];
+
+      const newFile = await this.fileRepository.create({
+        originalname: `${path.basename(originalname, ext)}.webp`,
+        filename: primary.filename,
+        url: primary.url,
+        type: 'image/webp',
+        size: primary.size,
+        variants: variantsMeta,
+      });
+      await this.fileRepository.save(newFile);
+      return newFile;
     }
+
+    const filename = +unique === 1 ? `${dataFolder}/${originalname}` : `${dataFolder}/${uniqueid()}.${ext}`;
+    const url = await this.persistBuffer(filename, buffer, hasOssConfig);
     const newFile = await this.fileRepository.create({
       originalname,
       filename,
@@ -101,14 +157,21 @@ export class FileService {
    */
   async deleteById(id) {
     const target = await this.fileRepository.findOne(id);
-    const hasOssConfig = await this.oss.hasOssConfig();
-    if (hasOssConfig) {
-      // 先删除oss的配置
-      await this.oss.deleteFile(target.filename);
-    } else {
-      // 删除本地的文件
-      await this.localUpload.deleteFile(target.filename);
+    if (!target) {
+      throw new HttpException('File not found', 404);
     }
+
+    const hasOssConfig = await this.oss.hasOssConfig();
+    const filenames = target.variants
+      ? Object.values(target.variants).map((variant) => variant.filename)
+      : isProcessableImage(target.type)
+        ? listVariantFilenames(target.filename)
+        : [target.filename];
+
+    for (const filename of filenames) {
+      await this.removeStoredFile(filename, hasOssConfig);
+    }
+
     return this.fileRepository.remove(target);
   }
 }

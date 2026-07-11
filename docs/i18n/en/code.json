@@ -310,17 +310,20 @@
     "message": "Tags",
     "description": "The title of the tag list page"
   },
+  "theme.tagline": {
+    "message": "Not a CMS — a publishing platform. Live in ~60 seconds."
+  },
   "home.meta.description": {
-    "message": "ReactPress 3.0: one package, one minute to your own CMS. Zero-config install for blogs and content publishing."
+    "message": "Official ReactPress docs — self-hosted publishing platform with WordPress-style editing, headless REST, Next.js themes, plugins, and desktop. One CLI, ~60 seconds to live."
   },
   "home.hero.subTitle": {
-    "message": "One package, one minute to your own CMS."
+    "message": "WordPress-style editing · Next.js delivery · one CLI — CMS, Admin, API, themes, plugins, and desktop, no assembly required."
   },
   "home.hero.intro": {
     "message": "Get Started"
   },
   "home.hero.whatsNew": {
-    "message": "What's New in 3.0"
+    "message": "What's New in 4.0"
   },
   "home.hero.try": {
     "message": "Live Demo"
@@ -353,7 +356,25 @@
     "message": "ReactPress quick start command demo"
   },
   "home.highlights.title": {
-    "message": "3.0 highlights"
+    "message": "4.0 highlights"
+  },
+  "home.highlight.plugins.title": {
+    "message": "Plugin ecosystem"
+  },
+  "home.highlight.plugins.desc": {
+    "message": "Extend your site like WordPress — Hook + plugin.json + Admin slots; SEO and auto-summary built in."
+  },
+  "home.highlight.desktop.title": {
+    "message": "Desktop client"
+  },
+  "home.highlight.desktop.desc": {
+    "message": "Write and manage without a browser — Electron shell with SQLite local mode and remote sync."
+  },
+  "home.highlight.themes.title": {
+    "message": "npm theme catalog"
+  },
+  "home.highlight.themes.desc": {
+    "message": "Install official themes from npm — theme-starter catalog and hello-world starter template."
   },
   "复制命令，立即开始": {
     "message": "Copy commands to get started"
@@ -385,8 +406,11 @@
   "全局安装后执行 reactpress init，约 1 分钟零配置起站": {
     "message": "After global install, run reactpress init — zero-config site in about a minute"
   },
+  "4.0 核心亮点": {
+    "message": "4.0 highlights"
+  },
   "3.0 核心亮点": {
-    "message": "3.0 highlights"
+    "message": "4.0 highlights"
   },
   "复制": {
     "message": "Copy"
@@ -416,7 +440,10 @@
     "message": "Run these commands in an empty folder to start the blog and admin with zero manual setup."
   },
   "home.quickstart.link30": {
-    "message": "ReactPress 3.0 guide"
+    "message": "ReactPress 4.0 guide"
+  },
+  "home.quickstart.link40": {
+    "message": "ReactPress 4.0 guide"
   },
   "home.quickstart.linkMigrate": {
     "message": "Migrate from 2.x"
@@ -428,7 +455,7 @@
     "message": "Platform capabilities"
   },
   "home.call.subtitle": {
-    "message": "From personal blogs to team content sites — publish, manage, and collaborate out of the box."
+    "message": "From personal blogs to team content sites — publish, manage, and ship with one CLI out of the box."
   },
   "home.call.cta": {
     "message": "Read full documentation"
@@ -487,6 +514,9 @@
   "全局安装后，初始化、开发、自检与状态查看都在命令行里完成。": {
     "message": "After a global install, initialize, develop, self-check, and view status from the terminal."
   },
+  "全局安装 @fecommunity/reactpress@4，init / dev / doctor / status 一条命令搞定。": {
+    "message": "After a global install, initialize, develop, self-check, and view status from the terminal."
+  },
   "全局安装 @fecommunity/reactpress@3，init / dev / doctor / status 一条命令搞定。": {
     "message": "After a global install, initialize, develop, self-check, and view status from the terminal."
   },
@@ -508,8 +538,11 @@
   "在空目录执行以下命令，即可零配置启动博客与管理后台。": {
     "message": "Run these commands in an empty folder to start the blog and admin with zero manual setup."
   },
+  "ReactPress 4.0 说明": {
+    "message": "ReactPress 4.0 guide"
+  },
   "ReactPress 3.0 说明": {
-    "message": "ReactPress 3.0 guide"
+    "message": "ReactPress 4.0 guide"
   },
   "从 2.x 迁移": {
     "message": "Migrate from 2.x"
@@ -530,16 +563,19 @@
     "message": "Read full documentation"
   },
   "装一个包，一分钟拥有自己的 CMS。": {
-    "message": "One package, one minute to your own CMS."
+    "message": "Not a CMS — a publishing platform. Live in ~60 seconds."
   },
   "装一个包，一分钟拥有自己的 CMS — 基于 React、Next.js 与 NestJS 的全栈发布平台。": {
-    "message": "One package, one minute to your own CMS."
+    "message": "WordPress-style editing · Next.js delivery · one CLI to ship."
   },
   "快速开始": {
     "message": "Get Started"
   },
+  "4.0 新特性": {
+    "message": "What's New in 4.0"
+  },
   "3.0 新特性": {
-    "message": "What's New in 3.0"
+    "message": "What's New in 4.0"
   },
   "在线演示": {
     "message": "Live Demo"
@@ -601,11 +637,20 @@
   "中英文界面切换，在电脑、平板与手机上均可舒适使用。": {
     "message": "Chinese/English UI, comfortable on desktop, tablet, and mobile."
   },
+  "ReactPress 4.0：装一个包、一分钟拥有自己的 CMS。插件生态、桌面写作与 npm 主题，零配置开箱即用。": {
+    "message": "ReactPress 4.0: publishing platform with plugins, desktop, and npm themes. One CLI, ~60 seconds to live."
+  },
+  "ReactPress 4.0：插件生态、桌面写作与 npm 主题 catalog，零配置一分钟拥有自己的 CMS。": {
+    "message": "ReactPress 4.0: publishing platform with plugins, desktop, and npm themes. One CLI, ~60 seconds to live."
+  },
   "ReactPress 3.0：装一个包、一分钟拥有自己的 CMS。零配置安装，开箱即用的博客与内容发布平台。": {
-    "message": "ReactPress 3.0: one package, one minute to your own CMS. Zero-config install for blogs and content publishing."
+    "message": "ReactPress: self-hosted publishing platform — WordPress-style editing, headless REST, Next.js themes."
   },
   "ReactPress 3.0：装一个包、一分钟拥有自己的 CMS。基于 React、Next.js 与 NestJS 的全栈发布平台，零配置 init + dev。": {
-    "message": "ReactPress 3.0: one package, one minute to your own CMS. Zero-config install for blogs and content publishing."
+    "message": "ReactPress: self-hosted publishing platform — WordPress-style editing, headless REST, Next.js themes."
+  },
+  "插件生态、桌面客户端与 npm 主题 — 装一个包，一分钟拥有自己的 CMS。": {
+    "message": "WordPress-style editing · Next.js delivery · one CLI — plugins, desktop, npm themes."
   },
   "全局安装后，在空目录初始化，约 1 分钟即可零配置起站": {
     "message": "After global install, initialize in an empty folder — your site is ready in about a minute"

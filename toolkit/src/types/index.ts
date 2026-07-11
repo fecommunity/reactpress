@@ -112,6 +112,9 @@ export interface IArticle {
   title: string;
   cover: string;
   summary: string;
+  slug?: string | null;
+  seoKeywords?: string | null;
+  seoDescription?: string | null;
   content: string;
   html: string;
   toc: string;

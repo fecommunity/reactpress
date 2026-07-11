@@ -3,7 +3,9 @@ sidebar_position: 1
 title: 项目配置项
 ---
 
-ReactPress 3.0 以 **`.reactpress/config.json`** 为配置源；`.env` 由 CLI 在 `init` / `config --apply` 时自动同步，多数用户无需手写。
+ReactPress 以 **`.reactpress/config.json`** 为配置源；`.env` 由 CLI 在 `init` / `config --apply` 时自动同步，多数用户无需手写。
+
+> **4.0 桌面本地模式**使用独立站点目录（如 `.reactpress/desktop-dev-site/`），内含 SQLite 专用 `.env`（`DB_TYPE=sqlite`），与全栈 MySQL 站点配置分离。详见 [desktop/README.md](https://github.com/fecommunity/reactpress/blob/master/desktop/README.md)。
 
 ## `.reactpress/config.json`（推荐）
 
@@ -65,4 +67,4 @@ GITHUB_CLIENT_SECRET=0
 2. 执行 `reactpress config --apply`
 3. 运行 `reactpress doctor` 确认连接
 
-详见 [ReactPress 3.0 平台版](./reactpress-3-0.md)。
+详见 [ReactPress 4.0 扩展版](./reactpress-4-0.md) 与 [ReactPress 3.0 平台版](./reactpress-3-0.md)。

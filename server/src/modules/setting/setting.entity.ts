@@ -49,6 +49,18 @@ export class Setting {
 
   @ApiProperty()
   @Column({ type: 'text', default: null })
+  aboutUsGithubUrl: string; // 关于我们 - GitHub 链接
+
+  @ApiProperty()
+  @Column({ type: 'text', default: null })
+  aboutUsCommentQr: string; // 关于我们 - 评论/社群二维码
+
+  @ApiProperty()
+  @Column({ type: 'text', default: null })
+  aboutUsWechatQr: string; // 关于我们 - 微信二维码
+
+  @ApiProperty()
+  @Column({ type: 'text', default: null })
   adminSystemUrl: string; // 后台系统地址
 
   @ApiProperty()

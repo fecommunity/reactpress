@@ -1,0 +1,24 @@
+# Optional overlay for 2GB VPS — use:
+#   docker compose -f docker-compose.prod.yml -f docker-compose.prod.low-mem.yml up -d
+version: '3.8'
+
+services:
+  db:
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-authentication-plugin=mysql_native_password
+      - --innodb-buffer-pool-size=128M
+      - --innodb-log-file-size=32M
+      - --max-connections=80
+      - --performance-schema=OFF
+    deploy:
+      resources:
+        limits:
+          memory: 384M
+
+  nginx:
+    deploy:
+      resources:
+        limits:
+          memory: 128M

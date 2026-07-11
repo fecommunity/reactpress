@@ -1,40 +1,13 @@
-import { themes as prismThemes } from 'prism-react-renderer';
-import type { Config, Plugin } from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
+import type { Config } from '@docusaurus/types';
+import { themes as prismThemes } from 'prism-react-renderer';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
-/**
- * Docusaurus 3.7 builds client/server in parallel; CleanWebpackPlugin may delete
- * `build/__server/server.bundle.js` before SSG. Disable stale-asset cleanup on client.
- * See https://github.com/facebook/docusaurus/pull/11037 (removed in newer versions).
- */
-function preserveServerBundlePlugin(): Plugin {
-  return {
-    name: 'preserve-server-bundle-on-clean',
-    configureWebpack(config, isServer) {
-      if (isServer) {
-        return undefined;
-      }
-      for (const plugin of config.plugins ?? []) {
-        if (
-          plugin &&
-          typeof plugin === 'object' &&
-          plugin.constructor.name === 'CleanWebpackPlugin' &&
-          'cleanStaleWebpackAssets' in plugin
-        ) {
-          (plugin as {cleanStaleWebpackAssets: boolean}).cleanStaleWebpackAssets =
-            false;
-        }
-      }
-      return undefined;
-    },
-  };
-}
-
 const config: Config = {
   title: 'ReactPress',
-  tagline: 'One package. Your CMS in about a minute.',
+  tagline: 'Not a CMS — a publishing platform. Live in ~60 seconds.',
+  // Default meta description for non-home pages (home overrides in src/pages/index.tsx)
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here (override via DOCS_SITE_URL in CI/Vercel)
@@ -49,7 +22,12 @@ const config: Config = {
   projectName: 'reactpress', // Usually your repo name.
 
   onBrokenLinks: 'throw',
-  onBrokenMarkdownLinks: 'warn',
+
+  markdown: {
+    hooks: {
+      onBrokenMarkdownLinks: 'warn',
+    },
+  },
 
   headTags: [
     {tagName: 'meta', attributes: {property: 'og:type', content: 'website'}},
@@ -147,7 +125,7 @@ const config: Config = {
       } satisfies Preset.Options,
     ],
   ],
-  plugins: ['docusaurus-plugin-sass', preserveServerBundlePlugin],
+  plugins: ['docusaurus-plugin-sass'],
   themeConfig: {
     // Replace with your project's social card
     image: 'img/docusaurus-social-card.jpg',
@@ -228,9 +206,14 @@ const config: Config = {
     },
     metadata: [
       {
+        name: 'description',
+        content:
+          'Official ReactPress docs — self-hosted publishing platform with WordPress-style editing, headless REST, Next.js themes, plugins, and desktop client. One CLI, ~60 seconds to live.',
+      },
+      {
         name: 'keywords',
         content:
-          'reactpress, blog, cms, next.js, react, nest.js, headless cms, content management, 博客, 内容管理',
+          'reactpress, publishing platform, wordpress alternative, headless cms, next.js blog, cms, blog, react, nestjs, electron, plugin, self-hosted, 博客, 内容管理, 发布平台, 插件, 桌面客户端',
       },
       {name: 'robots', content: 'index, follow, max-image-preview:large'},
       {name: 'googlebot', content: 'index, follow'},

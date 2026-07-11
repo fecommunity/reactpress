@@ -1,0 +1,110 @@
+# Build on GitHub → upload release tarball → SSH deploy on ECS.
+#
+# Required GitHub Secrets (Settings → Secrets and variables → Actions):
+#   ECS_HOST          ECS public IP or domain
+#   ECS_USER          SSH user, e.g. root or deploy
+#   ECS_SSH_KEY       Private key (PEM), full content including BEGIN/END lines
+#   ECS_APP_DIR       App root on server, e.g. /opt/reactpress
+#
+# Optional Secrets:
+#   ECS_SSH_PORT      Default 22
+#   NGINX_ENTRY_URL   Public site URL written into deploy env, e.g. https://blog.example.com
+#
+# One-time ECS setup:
+#   1. Clone repo to ECS_APP_DIR, create .env (DB, ports, domain — never commit)
+#   2. Install Node 24, pnpm, PM2, Docker; run `pnpm run deploy` once manually
+#   3. Add GitHub Actions deploy key / user SSH public key to ECS ~/.ssh/authorized_keys
+#
+name: Deploy ECS
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, master]
+
+concurrency:
+  group: deploy-ecs-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Production build + pack
+        run: pnpm run build
+
+      - name: Locate release tarball
+        id: pack
+        run: |
+          TAR="$(ls -1 dist/reactpress-release-*.tar.gz | tail -1)"
+          echo "path=$TAR" >> "$GITHUB_OUTPUT"
+          echo "name=$(basename "$TAR")" >> "$GITHUB_OUTPUT"
+
+      - name: Upload release artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: reactpress-release
+          path: ${{ steps.pack.outputs.path }}
+          retention-days: 7
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request'
+    environment: production
+    steps:
+      - name: Download release artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: reactpress-release
+          path: dist
+
+      - name: Resolve tarball name
+        id: tar
+        run: |
+          TAR="$(ls -1 dist/reactpress-release-*.tar.gz | tail -1)"
+          echo "path=$TAR" >> "$GITHUB_OUTPUT"
+          echo "name=$(basename "$TAR")" >> "$GITHUB_OUTPUT"
+
+      - name: Prepare upload directory
+        run: |
+          mkdir -p upload
+          cp "${{ steps.tar.outputs.path }}" "upload/${{ steps.tar.outputs.name }}"
+
+      - name: Copy release to ECS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.ECS_HOST }}
+          username: ${{ secrets.ECS_USER }}
+          key: ${{ secrets.ECS_SSH_KEY }}
+          port: ${{ secrets.ECS_SSH_PORT || 22 }}
+          source: upload/${{ steps.tar.outputs.name }}
+          target: ${{ secrets.ECS_APP_DIR }}/dist/
+
+      - name: Deploy on ECS
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.ECS_HOST }}
+          username: ${{ secrets.ECS_USER }}
+          key: ${{ secrets.ECS_SSH_KEY }}
+          port: ${{ secrets.ECS_SSH_PORT || 22 }}
+          command_timeout: 30m
+          script: |
+            set -e
+            cd "${{ secrets.ECS_APP_DIR }}"
+            git fetch origin "${{ github.ref_name }}" --depth=1
+            git checkout "${{ github.sha }}"
+            export NGINX_ENTRY_URL="${{ secrets.NGINX_ENTRY_URL }}"
+            pnpm run deploy -- "dist/${{ steps.tar.outputs.name }}"
