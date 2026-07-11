@@ -2,6 +2,8 @@
 sidebar_position: 5
 id: docker-deployment
 title: Docker 部署指南
+description: ReactPress Docker 部署 — 容器化架构、docker-compose 配置、生产环境镜像构建与运维。
+keywords: [reactpress, docker, deployment, container, compose]
 ---
 
 # Docker 部署指南

@@ -1,6 +1,8 @@
 ---
 sidebar_position: 5
 title: Deploy Your Site
+description: ReactPress production deployment — global CLI start/build, Nginx reverse proxy, environment variables, and Monorepo source deployment.
+keywords: [reactpress, production, deploy, nginx, start, build]
 ---
 
 ## 4.0 recommended: global CLI

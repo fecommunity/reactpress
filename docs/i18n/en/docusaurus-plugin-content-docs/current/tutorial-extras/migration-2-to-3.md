@@ -1,6 +1,8 @@
 ---
 sidebar_position: 6
 title: 2.x → 3.0 Migration
+description: Migrate ReactPress 2.x to 3.0 — global CLI, embedded MySQL, standalone Admin, and configuration changes.
+keywords: [reactpress, migration, 2.x, 3.0, upgrade]
 ---
 
 # ReactPress 2.x → 3.0 Migration

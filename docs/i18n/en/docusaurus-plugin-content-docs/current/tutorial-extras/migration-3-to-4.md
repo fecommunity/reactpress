@@ -1,6 +1,8 @@
 ---
 sidebar_position: 7
 title: 3.x → 4.0 Migration
+description: Migrate ReactPress 3.x to 4.0 — plugins, desktop client, theme catalog. Compatibility-focused with no forced breaking changes.
+keywords: [reactpress, migration, 3.x, 4.0, upgrade]
 ---
 
 # 3.x → 4.0 Migration Guide

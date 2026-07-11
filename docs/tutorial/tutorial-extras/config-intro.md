@@ -1,6 +1,8 @@
 ---
 sidebar_position: 1
 title: 项目配置项
+description: ReactPress 配置参考 — .reactpress/config.json、.env 同步、端口、数据库与生产环境变量说明。
+keywords: [reactpress, config, env, config.json, settings]
 ---
 
 ReactPress 以 **`.reactpress/config.json`** 为配置源；`.env` 由 CLI 在 `init` / `config --apply` 时自动同步，多数用户无需手写。

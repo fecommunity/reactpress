@@ -1,6 +1,8 @@
 ---
 sidebar_position: 4
 title: 如何创建第一篇博客
+description: ReactPress 创建第一篇文章 — 登录 Admin、Markdown 编辑器、发布文章与分类标签设置。
+keywords: [reactpress, create post, blog, markdown, admin]
 ---
 
 ## 访问站点

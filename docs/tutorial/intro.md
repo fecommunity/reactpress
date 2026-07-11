@@ -12,7 +12,7 @@ keywords: [reactpress, 发布平台, wordpress 替代, headless cms, 博客, nex
 
 | 阶段 | 你是谁 | 从这里开始 |
 |------|--------|------------|
-| **0→1** | 第一次听说 ReactPress | [5 分钟创建第一个站点](./getting-started/first-site.md) |
+| **0→1** | 第一次听说 ReactPress | [5 分钟创建第一个站点](./getting-started/first-site.md) · [对比 WordPress](./getting-started/reactpress-vs-wordpress.md) |
 | **1→10** | 站长 / 博主 | [使用指南](./user-guide/admin-overview.md) → [SEO 设置](./user-guide/site-settings-seo.md) |
 | **10→50** | 前端开发者 | [主题开发](./developer-guide/theme-development.md) → [Headless API](./developer-guide/headless-api.md) |
 | **50→100** | 全栈 / 贡献者 | [Monorepo 开发](./developer-guide/local-development.md) → [插件开发](./developer-guide/plugin-development.md) |
@@ -147,3 +147,34 @@ pnpm run dev
 
 Email: admin@gaoredu.com
 
+## 常见问题 FAQ
+
+<details>
+<summary><strong>ReactPress 是什么？</strong></summary>
+
+面向 React 开发者的开源**发布平台** — 一条 CLI 包含 CMS API、Web Admin、Next.js 主题、插件与桌面客户端，不是单纯的 Headless 后端拼装件。
+
+</details>
+
+<details>
+<summary><strong>ReactPress 免费吗？</strong></summary>
+
+是，MIT 开源。安装：`npm i -g @fecommunity/reactpress@4`。
+
+</details>
+
+<details>
+<summary><strong>ReactPress 和 WordPress 怎么选？</strong></summary>
+
+详见 [ReactPress vs WordPress (2026)](./getting-started/reactpress-vs-wordpress.md)。简要：WordPress 插件生态与非技术编辑者更强；ReactPress 在 React/Next.js 技术栈、SSR SEO 与 Headless 架构上更对口。
+
+</details>
+
+<details>
+<summary><strong>能从 WordPress 迁移吗？</strong></summary>
+
+内容可通过导出脚本或 Headless API 对接迁移；主题需在 Next.js 中重建。见 [FAQ](./reference/faq.md) 与 [Headless API](./developer-guide/headless-api.md)。
+
+</details>
+
+更多问题：[完整 FAQ](./reference/faq.md) · [关于我们](/zh/about) · [联系我们](/zh/contact)

@@ -1,6 +1,8 @@
 ---
 sidebar_position: 4
 title: Toolkit Package 使用指南
+description: '@fecommunity/reactpress-toolkit 使用指南 — TypeScript Headless API SDK，从 OpenAPI 自动生成，对接 ReactPress REST。'
+keywords: [reactpress, toolkit, headless, api sdk, typescript, openapi]
 ---
 
 # @fecommunity/reactpress-toolkit 使用指南

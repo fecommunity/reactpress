@@ -1,6 +1,8 @@
 ---
 sidebar_position: 3
 title: ReactPress 4.0 Extend
+description: ReactPress 4.0 Extend — plugin system, Electron desktop client, and npm theme catalog. The current recommended release on top of 3.x platform capabilities.
+keywords: [reactpress 4.0, extend, plugin, desktop, theme catalog, wordpress alternative]
 ---
 
 # ReactPress 4.0 Extend

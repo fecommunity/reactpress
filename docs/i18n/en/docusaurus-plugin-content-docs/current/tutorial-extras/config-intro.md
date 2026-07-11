@@ -1,6 +1,8 @@
 ---
 sidebar_position: 1
 title: Project Configurations
+description: ReactPress configuration reference — .reactpress/config.json, .env sync, ports, database, and production environment variables.
+keywords: [reactpress, config, env, config.json, settings]
 ---
 
 After the project is launched, the '. env' file will be loaded by default, and the main supported configuration items are as follows:

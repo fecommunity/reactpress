@@ -1,6 +1,8 @@
 ---
 sidebar_position: 3
 title: ReactPress 4.0 扩展版
+description: ReactPress 4.0 扩展版 — 插件系统、Electron 桌面客户端、npm 主题 catalog。在 3.x 平台能力之上的当前推荐版本。
+keywords: [reactpress 4.0, extend, plugin, desktop, theme catalog, wordpress alternative]
 ---
 
 # ReactPress 4.0 扩展版

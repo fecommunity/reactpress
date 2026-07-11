@@ -22,6 +22,7 @@ const sidebars: SidebarsConfig = {
         'getting-started/installation',
         'getting-started/first-site',
         'getting-started/core-concepts',
+        'getting-started/reactpress-vs-wordpress',
       ],
     },
     {

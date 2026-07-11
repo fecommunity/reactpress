@@ -71,6 +71,20 @@ Personal blogs, team knowledge bases, developer doc sites, marketing sites with 
 
 </details>
 
+<details>
+<summary><strong>Can I migrate from WordPress?</strong></summary>
+
+Content can be exported and re-imported via scripts or integrated through the Headless REST API. PHP themes are not portable — rebuild the visitor frontend in Next.js or use [reactpress-theme-starter](https://github.com/fecommunity/reactpress-theme-starter). See [Headless API guide](../developer-guide/headless-api.md) and [ReactPress vs WordPress](../getting-started/reactpress-vs-wordpress.md).
+
+</details>
+
+<details>
+<summary><strong>Is ReactPress free?</strong></summary>
+
+Yes. ReactPress is open source under the MIT license. Install globally: `npm i -g @fecommunity/reactpress@4`.
+
+</details>
+
 ## Versions & upgrades
 
 <details>

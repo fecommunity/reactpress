@@ -1,6 +1,8 @@
 ---
 sidebar_position: 5
 title: 生产环境部署
+description: ReactPress 生产部署指南 — 全局 CLI start/build、Nginx 反向代理、环境变量与 Monorepo 源码部署。
+keywords: [reactpress, production, deploy, nginx, start, build]
 ---
 
 ## 4.0 推荐：全局 CLI

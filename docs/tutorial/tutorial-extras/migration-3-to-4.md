@@ -1,6 +1,8 @@
 ---
 sidebar_position: 7
 title: 3.x → 4.0 迁移
+description: ReactPress 3.x 升级到 4.0 迁移指南 — 插件、桌面客户端、主题 catalog，兼容为主无强制 Breaking Change。
+keywords: [reactpress, migration, 3.x, 4.0, upgrade]
 ---
 
 # 3.x → 4.0 迁移指南
