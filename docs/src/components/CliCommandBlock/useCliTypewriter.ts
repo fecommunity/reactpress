@@ -2,12 +2,13 @@ import {
   getQuickStartDemoOutputs,
   getQuickStartDevReadyLines,
   QUICK_START_COMMANDS,
+  QUICK_START_READY_DIVIDER,
   type QuickStartLocale,
 } from '@site/src/constants/quickStartCommands';
 import { useEffect, useMemo, useState } from 'react';
 
 export type TerminalLine = {
-  kind: 'input' | 'output' | 'success';
+  kind: 'input' | 'output' | 'success' | 'divider';
   text: string;
 };
 
@@ -42,6 +43,7 @@ function buildStaticTerminal(
       lines.push({ kind: 'output', text: out });
     }
   }
+  lines.push({ kind: 'divider', text: QUICK_START_READY_DIVIDER });
   for (const line of readyLines) {
     lines.push({ kind: 'success', text: line });
   }
@@ -53,10 +55,10 @@ export function useCliTypewriter({
   locale = 'en',
   commands = QUICK_START_COMMANDS,
   loop = true,
-  charDelayMs = 42,
+  charDelayMs = 40,
   linePauseMs = 380,
-  outputDelayMs = 140,
-  holdMs = 4200,
+  outputDelayMs = 120,
+  holdMs = 4500,
 }: Options) {
   const demoOutputs = useMemo(
     () => getQuickStartDemoOutputs(locale),
@@ -144,6 +146,12 @@ export function useCliTypewriter({
           }
         }
 
+        if (cancelled) {
+          return;
+        }
+        await wait(outputDelayMs);
+        setHistory((prev) => [...prev, { kind: 'divider', text: QUICK_START_READY_DIVIDER }]);
+
         for (const line of readyLines) {
           if (cancelled) {
             return;
@@ -181,6 +189,5 @@ export function useCliTypewriter({
     history: animate ? history : staticLines,
     activeInput: animate ? activeInput : '',
     isTyping: animate && isTyping,
-    showCursor: animate && isTyping,
   };
 }

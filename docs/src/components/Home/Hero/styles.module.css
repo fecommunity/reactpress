@@ -161,11 +161,18 @@
   margin-bottom: 0.65rem;
   transition: transform 0.25s ease, filter 0.25s ease;
   filter: drop-shadow(0 0 16px rgba(65, 209, 255, 0.3));
+  will-change: transform;
 }
 
 .logo:hover {
   transform: scale(1.05);
   filter: drop-shadow(0 0 24px rgba(189, 52, 254, 0.4));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo {
+    will-change: auto;
+  }
 }
 
 .titleRow {
@@ -213,13 +220,13 @@
   box-shadow: 0 3px 14px rgba(65, 209, 255, 0.35);
 }
 
-.subtitle {
+.slogan {
   font-weight: 400;
   color: var(--home-secondary-text);
   font-size: clamp(0.92rem, 2.2vw, 1.08rem);
   line-height: 1.55;
   max-width: 36rem;
-  margin: 0.65rem auto 0;
+  margin: 0.5rem auto 0;
 }
 
 .actions {
@@ -300,7 +307,7 @@ html[data-theme='light'] .secondaryButton {
 
 .cliWrap {
   width: 100%;
-  max-width: 560px;
+  max-width: 600px;
   animation: cliEnter 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.12s both;
 }
 

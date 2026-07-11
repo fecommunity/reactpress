@@ -2,7 +2,7 @@ import Translate, { translate } from '@docusaurus/Translate';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import { QUICK_START_COMMANDS, QUICK_START_COPY_COMMAND } from '@site/src/constants/quickStartCommands';
 import clsx from 'clsx';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import styles from './styles.module.css';
 import { useCliTypewriter } from './useCliTypewriter';
@@ -13,13 +13,13 @@ type Props = {
   variant?: Variant;
   className?: string;
   showHint?: boolean;
-  /** 首页 hero 默认开启打字机动画 */
   animate?: boolean;
-  /** 展示的命令行；默认完整快速开始流程 */
   commands?: readonly string[];
-  /** 复制到剪贴板的内容；默认与展示命令一致（多行脚本） */
   copyCommand?: string;
 };
+
+const SERVICE_ROW_PATTERN = /^(\S+)\s{2,}(https?:\/\/\S+)$/;
+const NPM_INSTALL_PATTERN = /^(npm\s+i\s+-g)\s+(.+)$/;
 
 async function copyText(text: string): Promise<boolean> {
   try {
@@ -73,6 +73,96 @@ function TerminalCursor() {
   return <span className={styles.cursor} aria-hidden />;
 }
 
+function CommandLine({ text }: { text: string }) {
+  const npmMatch = text.match(NPM_INSTALL_PATTERN);
+  if (npmMatch) {
+    return (
+      <>
+        <span className={styles.cmdKeyword}>{npmMatch[1]}</span>{' '}
+        <span className={styles.cmdPackage}>{npmMatch[2]}</span>
+      </>
+    );
+  }
+
+  if (text.startsWith('reactpress ')) {
+    const [, subcommand] = text.split(' ');
+    return (
+      <>
+        <span className={styles.cmdBin}>reactpress</span>{' '}
+        <span className={styles.cmdArg}>{subcommand}</span>
+      </>
+    );
+  }
+
+  if (text.includes('mkdir') && text.includes('cd')) {
+    return (
+      <>
+        <span className={styles.cmdKeyword}>mkdir</span>{' '}
+        <span className={styles.cmdPath}>my-blog</span>{' '}
+        <span className={styles.cmdOperator}>&&</span>{' '}
+        <span className={styles.cmdKeyword}>cd</span>{' '}
+        <span className={styles.cmdPath}>my-blog</span>
+      </>
+    );
+  }
+
+  return <>{text}</>;
+}
+
+function OutputLine({ text }: { text: string }) {
+  const tagged = text.match(/^(\[reactpress\])\s*(.*)$/);
+  if (tagged) {
+    return (
+      <span className={styles.outputText}>
+        <span className={styles.outputTag}>{tagged[1]}</span>
+        <span className={styles.outputMessage}>{tagged[2]}</span>
+      </span>
+    );
+  }
+
+  if (text.startsWith('@fecommunity/')) {
+    return <span className={clsx(styles.outputText, styles.outputPackage)}>{text}</span>;
+  }
+
+  if (text.startsWith('added ')) {
+    return <span className={clsx(styles.outputText, styles.outputMuted)}>{text}</span>;
+  }
+
+  return <span className={styles.outputText}>{text}</span>;
+}
+
+function SuccessLine({ text }: { text: string }) {
+  if (text.startsWith('✓')) {
+    return <span className={clsx(styles.successText, styles.successHeadline)}>{text}</span>;
+  }
+
+  const serviceMatch = text.match(SERVICE_ROW_PATTERN);
+  if (serviceMatch) {
+    return (
+      <span className={styles.serviceRow}>
+        <span className={styles.serviceLabel}>{serviceMatch[1]}</span>
+        <span className={styles.serviceUrl}>{serviceMatch[2]}</span>
+      </span>
+    );
+  }
+
+  return <span className={styles.successText}>{text}</span>;
+}
+
+function resolveToolbarCwd(
+  history: { kind: string; text: string }[],
+  activeInput: string,
+): string {
+  const entered = [
+    ...history.filter((line) => line.kind === 'input').map((line) => line.text),
+    activeInput,
+  ];
+  if (entered.some((line) => line.includes('cd my-blog') || line.trim() === 'reactpress init')) {
+    return '~/my-blog';
+  }
+  return '~';
+}
+
 export default function CliCommandBlock({
   variant = 'hero',
   className,
@@ -93,6 +183,8 @@ export default function CliCommandBlock({
   });
 
   const scrollRef = useRef<HTMLDivElement>(null);
+  const toolbarCwd = useMemo(() => resolveToolbarCwd(history, activeInput), [history, activeInput]);
+  const readyIndex = useMemo(() => history.findIndex((line) => line.kind === 'divider'), [history]);
 
   useEffect(() => {
     const el = scrollRef.current;
@@ -128,6 +220,8 @@ export default function CliCommandBlock({
           </div>
           <span className={styles.toolbarTitle}>
             <Translate id="home.cli.title">reactpress</Translate>
+            <span className={styles.toolbarSep}>-</span>
+            <span className={styles.toolbarCwd}>{toolbarCwd}</span>
             {isReady && (
               <span className={styles.toolbarStatus}>
                 <Translate id="home.cli.running">Running</Translate>
@@ -163,34 +257,39 @@ export default function CliCommandBlock({
           })}
         >
           <div ref={scrollRef} className={styles.terminalScroll}>
-            {history.map((line, index) => (
-              <div
-                key={`${line.kind}-${index}-${line.text}`}
-                className={clsx(
-                  line.kind === 'input' && styles.commandRow,
-                  line.kind === 'output' && styles.outputRow,
-                  line.kind === 'success' && styles.successRow
-                )}
-              >
-                {line.kind === 'input' ? (
-                  <>
-                    <span className={styles.prompt} aria-hidden>
-                      $
-                    </span>
-                    <code className={styles.commandText}>{line.text}</code>
-                  </>
-                ) : (
-                  <span
-                    className={clsx(
-                      line.kind === 'output' && styles.outputText,
-                      line.kind === 'success' && styles.successText
-                    )}
-                  >
-                    {line.text}
-                  </span>
-                )}
-              </div>
-            ))}
+            {history.map((line, index) => {
+              const inReadyBlock = readyIndex >= 0 && index >= readyIndex;
+              return (
+                <div
+                  key={`${line.kind}-${index}-${line.text}`}
+                  className={clsx(
+                    line.kind === 'input' && styles.commandRow,
+                    line.kind === 'output' && styles.outputRow,
+                    line.kind === 'success' && styles.successRow,
+                    line.kind === 'divider' && styles.dividerRow,
+                    inReadyBlock && styles.readyBlock,
+                    line.kind === 'success' && index === readyIndex + 1 && styles.readyHeadline,
+                  )}
+                >
+                  {line.kind === 'input' ? (
+                    <>
+                      <span className={styles.prompt} aria-hidden>
+                        $
+                      </span>
+                      <code className={styles.commandText}>
+                        <CommandLine text={line.text} />
+                      </code>
+                    </>
+                  ) : line.kind === 'output' ? (
+                    <OutputLine text={line.text} />
+                  ) : line.kind === 'divider' ? (
+                    <span className={styles.dividerText}>{line.text}</span>
+                  ) : (
+                    <SuccessLine text={line.text} />
+                  )}
+                </div>
+              );
+            })}
 
             {showLiveInput && (
               <div className={styles.commandRow}>
@@ -206,9 +305,13 @@ export default function CliCommandBlock({
           </div>
         </div>
 
-        {showHint && (
-          <p className={styles.hint}>
-            <Translate id="home.cli.hint">Copy all commands and paste into your terminal to get started</Translate>
+        {(showHint || variant === 'hero') && (
+          <p className={clsx(styles.hint, variant === 'hero' && styles.hintHero)}>
+            {showHint ? (
+              <Translate id="home.cli.hint">Copy all commands and paste into your terminal to get started</Translate>
+            ) : (
+              <Translate id="home.cli.footerHint">Copy the script above and paste into Terminal to get started</Translate>
+            )}
           </p>
         )}
       </div>

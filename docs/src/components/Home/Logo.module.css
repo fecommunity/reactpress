@@ -1,0 +1,26 @@
+.logo {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.rings {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: logoSpin 10s linear infinite;
+}
+
+@keyframes logoSpin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rings {
+    animation: none;
+  }
+}

@@ -311,13 +311,16 @@
     "description": "The title of the tag list page"
   },
   "theme.tagline": {
-    "message": "Not a CMS — a publishing platform. Live in ~60 seconds."
+    "message": "Open-source React publishing platform. One CLI, live in ~60 seconds."
+  },
+  "home.meta.title": {
+    "message": "ReactPress - Open-source React publishing platform. One CLI, live in ~60 seconds."
   },
   "home.meta.description": {
     "message": "Official ReactPress docs — self-hosted publishing platform with WordPress-style editing, headless REST, Next.js themes, plugins, and desktop. One CLI, ~60 seconds to live."
   },
   "home.hero.subTitle": {
-    "message": "WordPress-style editing · Next.js delivery · one CLI — CMS, Admin, API, themes, plugins, and desktop, no assembly required."
+    "message": "WordPress-style editing - Next.js delivery - one CLI - CMS, Admin, API, themes, plugins, and desktop, no assembly required."
   },
   "home.hero.intro": {
     "message": "Get Started"
@@ -354,6 +357,18 @@
   },
   "home.cli.running": {
     "message": "Running"
+  },
+  "home.cli.typing": {
+    "message": "Typing"
+  },
+  "home.cli.executing": {
+    "message": "Executing"
+  },
+  "home.cli.step": {
+    "message": "Step {current}/{total}"
+  },
+  "home.cli.footerHint": {
+    "message": "Copy the script above and paste into Terminal to get started"
   },
   "home.cli.terminal.aria": {
     "message": "ReactPress quick start command demo"

@@ -14,7 +14,10 @@ import Layout from '@theme/Layout';
 const Index = () => {
   const { siteConfig } = useDocusaurusContext();
   const canonicalUrl = `${siteConfig.url}${siteConfig.baseUrl}`.replace(/\/$/, '') + '/';
-  const title = `${siteConfig.title} · ${siteConfig.tagline}`;
+  const title = translate({
+    id: 'home.meta.title',
+    message: 'ReactPress - Open-source React publishing platform. One CLI, live in ~60 seconds.',
+  });
   const description = translate({
     message:
       'Official ReactPress docs — open-source React CMS and publishing platform. WordPress-style editing, Next.js SSR themes, Headless REST, plugins, desktop client. One CLI, live in ~60 seconds.',
