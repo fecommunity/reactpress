@@ -14,6 +14,7 @@ const {
   readTailLines,
   filterLines,
   measureLogDir,
+  resolveLogSource,
 } = require('../out/lib/project-logs');
 const { createStandaloneProject, rmDir } = require('./helpers/tmp-project');
 
@@ -114,6 +115,23 @@ describe('lib/doctor', () => {
       const files = listLogFiles(getProjectServerLogDir(root), 'error');
       assert.equal(files.length, 1);
       assert.equal(readTailLines(files[0].path, 5).join('|'), '[ERROR] bundled');
+    } finally {
+      rmDir(root);
+    }
+  });
+
+  it('lists pm2 process logs from the project log directory', () => {
+    const root = createStandaloneProject();
+    try {
+      const logDir = path.join(root, '.reactpress', 'logs', 'server');
+      fs.mkdirSync(logDir, { recursive: true });
+      fs.writeFileSync(path.join(logDir, 'pm2-out.log'), 'API ready on 3002\n', 'utf8');
+      fs.writeFileSync(path.join(logDir, 'pm2-error.log'), '[Nest] bootstrap failed\n', 'utf8');
+
+      const files = listLogFiles(logDir, 'process', root);
+      assert.equal(files.length, 2);
+      assert.equal(resolveLogSource(root, 'process'), 'process');
+      assert.equal(readTailLines(files.find((f) => f.source === 'pm2-out').path, 5)[0], 'API ready on 3002');
     } finally {
       rmDir(root);
     }

@@ -6,14 +6,36 @@ const { brand, divider, gradientText, palette, sectionHeader } = require('../ui/
 const { getServerDir, getPidFile } = require('./paths');
 const { readPid, isProcessRunning } = require('./process');
 const { loadServerSiteUrl } = require('./http');
-const { getPm2App, PM2_API_APP } = require('./pm2-runtime');
+const {
+  getPm2App,
+  PM2_API_APP,
+  isPm2AppOnline,
+  getPm2AppLogPaths,
+  resolvePm2Bin,
+} = require('./pm2-runtime');
 const { t } = require('./i18n');
 
 const LOG_SOURCES = ['error', 'request', 'response'];
+const PROCESS_LOG_SOURCES = ['pm2-out', 'pm2-error'];
+const PM2_LOG_FILES = {
+  'pm2-out': 'pm2-out.log',
+  'pm2-error': 'pm2-error.log',
+};
 
 function measureLogDir(logDir) {
   if (!fs.existsSync(logDir)) return -1;
-  return listLogFiles(logDir, 'all').reduce((sum, file) => sum + file.size, 0);
+  let total = listLogFiles(logDir, 'all').reduce((sum, file) => sum + file.size, 0);
+  for (const filename of Object.values(PM2_LOG_FILES)) {
+    const filePath = path.join(logDir, filename);
+    try {
+      if (fs.existsSync(filePath)) {
+        total += fs.statSync(filePath).size;
+      }
+    } catch {
+      // ignore
+    }
+  }
+  return total;
 }
 
 function getPm2ServerLogDir(projectRoot) {
@@ -124,16 +146,121 @@ function getProjectServerLogDir(projectRoot) {
 function normalizeSource(source) {
   const value = String(source || 'error').toLowerCase();
   if (value === 'all') return 'all';
+  if (value === 'process' || value === 'pm2') return 'process';
   if (LOG_SOURCES.includes(value)) return value;
   return 'error';
 }
 
-function listLogFiles(logDir, source = 'error') {
+function measureStructuredLogDir(logDir) {
+  if (!fs.existsSync(logDir)) return 0;
+  let total = 0;
+  for (const name of LOG_SOURCES) {
+    const dir = path.join(logDir, name);
+    if (!fs.existsSync(dir)) continue;
+    for (const entry of fs.readdirSync(dir)) {
+      if (!entry.endsWith('.log')) continue;
+      try {
+        total += fs.statSync(path.join(dir, entry)).size;
+      } catch {
+        // ignore
+      }
+    }
+  }
+  return total;
+}
+
+function resolveLogSource(projectRoot, sourceOption) {
+  if (sourceOption != null && String(sourceOption).trim() !== '') {
+    return normalizeSource(sourceOption);
+  }
+  const logDir = path.join(projectRoot, '.reactpress', 'logs', 'server');
+  if (measureStructuredLogDir(logDir) > 0) {
+    return 'error';
+  }
+  if (isPm2AppOnline(projectRoot, PM2_API_APP)) {
+    return 'process';
+  }
+  return 'error';
+}
+
+function listProcessLogFiles(projectRoot, logDir, source = 'process') {
   const normalized = normalizeSource(source);
-  const sources = normalized === 'all' ? LOG_SOURCES : [normalized];
+  const names =
+    normalized === 'all'
+      ? PROCESS_LOG_SOURCES
+      : normalized === 'process'
+        ? PROCESS_LOG_SOURCES
+        : PROCESS_LOG_SOURCES.includes(normalized)
+          ? [normalized]
+          : [];
+  if (!names.length) return [];
+
+  const pm2Paths = getPm2AppLogPaths(projectRoot, PM2_API_APP);
+  const pathBySource = {
+    'pm2-out': pm2Paths.out,
+    'pm2-error': pm2Paths.err,
+  };
   const files = [];
 
+  for (const name of names) {
+    const localPath = path.join(logDir, PM2_LOG_FILES[name]);
+    const candidates = [];
+    if (fs.existsSync(localPath)) {
+      candidates.push(localPath);
+    }
+    const remotePath = pathBySource[name];
+    if (
+      remotePath &&
+      path.resolve(remotePath) !== path.resolve(localPath) &&
+      fs.existsSync(remotePath)
+    ) {
+      candidates.push(remotePath);
+    }
+    const seen = new Set();
+    for (const fullPath of candidates) {
+      const resolved = path.resolve(fullPath);
+      if (seen.has(resolved)) continue;
+      seen.add(resolved);
+      let stat;
+      try {
+        stat = fs.statSync(resolved);
+      } catch {
+        continue;
+      }
+      if (!stat.isFile()) continue;
+      files.push({
+        source: name,
+        path: resolved,
+        name: path.basename(resolved),
+        mtimeMs: stat.mtimeMs,
+        size: stat.size,
+      });
+      break;
+    }
+  }
+
+  files.sort((a, b) => b.mtimeMs - a.mtimeMs);
+  return files;
+}
+
+function listLogFiles(logDir, source = 'error', projectRoot = null) {
+  const normalized = normalizeSource(source);
+  if (normalized === 'process' || PROCESS_LOG_SOURCES.includes(normalized)) {
+    return listProcessLogFiles(projectRoot || '', logDir, normalized);
+  }
+
+  const sources =
+    normalized === 'all'
+      ? [...PROCESS_LOG_SOURCES, ...LOG_SOURCES]
+      : [normalized];
+  const files = [];
+
+  if (normalized === 'all' && projectRoot) {
+    files.push(...listProcessLogFiles(projectRoot, logDir, 'process'));
+  }
+
   for (const name of sources) {
+    if (PROCESS_LOG_SOURCES.includes(name)) continue;
     const dir = path.join(logDir, name);
     if (!fs.existsSync(dir)) continue;
     for (const entry of fs.readdirSync(dir)) {
@@ -201,6 +328,14 @@ function formatTimestamp(ms) {
 }
 
 function printProcessHint(projectRoot) {
+  if (isPm2AppOnline(projectRoot, PM2_API_APP)) {
+    const pid = getPm2App(projectRoot, PM2_API_APP)?.pid;
+    console.log(
+      `  ${brand.dim(t('doctor.logs.pm2Supervised', { pid: pid ?? PM2_API_APP }))}`
+    );
+    return;
+  }
+
   const pid = readPid(projectRoot);
   const pidFile = getPidFile(projectRoot);
   if (!pid) {
@@ -225,11 +360,73 @@ function printProcessHint(projectRoot) {
   );
 }
 
+function pickPrimaryLogFile(files, source) {
+  if (!files.length) return null;
+  if (source === 'process') {
+    return (
+      files.find((file) => file.source === 'pm2-error') ||
+      files.find((file) => file.source === 'pm2-out') ||
+      files[0]
+    );
+  }
+  const grouped = new Map();
+  for (const file of files) {
+    if (!grouped.has(file.source)) grouped.set(file.source, file);
+  }
+  const order = source === 'all' ? [...PROCESS_LOG_SOURCES, ...LOG_SOURCES] : [source];
+  for (const name of order) {
+    const file = grouped.get(name);
+    if (file) return file;
+  }
+  return files[0];
+}
+
+async function runFollowLogs(projectRoot, { tail, source, logDir, files }) {
+  const usePm2Stream = source === 'process' && isPm2AppOnline(projectRoot, PM2_API_APP);
+  if (usePm2Stream) {
+    const bin = resolvePm2Bin(projectRoot);
+    if (!bin) {
+      console.error(`  ${brand.warn(t('doctor.logs.pm2Unavailable'))}`);
+      return 1;
+    }
+    const { spawn } = require('child_process');
+    await new Promise((resolve) => {
+      const child = spawn(bin, ['logs', PM2_API_APP, '--lines', String(tail)], {
+        stdio: 'inherit',
+      });
+      child.on('exit', (code) => resolve(code ?? 0));
+    });
+    return 0;
+  }
+
+  const primary = pickPrimaryLogFile(files, source);
+  if (!primary) {
+    console.log(`  ${brand.warn(t('doctor.logs.empty'))}`);
+    console.log('');
+    return 1;
+  }
+
+  if (process.platform === 'win32') {
+    console.log(`  ${brand.dim(t('doctor.logs.followWindows', { path: primary.path }))}`);
+    console.log('');
+    return 0;
+  }
+
+  const { spawn } = require('child_process');
+  await new Promise((resolve) => {
+    const child = spawn('tail', ['-n', String(tail), '-f', primary.path], {
+      stdio: 'inherit',
+    });
+    child.on('exit', (code) => resolve(code ?? 0));
+  });
+  return 0;
+}
+
 async function runDoctorLogs(projectRoot, options = {}) {
   const tail = Math.max(1, Math.min(parseInt(String(options.tail ?? '50'), 10) || 50, 5000));
-  const source = normalizeSource(options.source);
+  const source = resolveLogSource(projectRoot, options.source);
   const logDir = getProjectServerLogDir(projectRoot);
-  const files = listLogFiles(logDir, source);
+  const files = listLogFiles(logDir, source, projectRoot);
   const w = 56;
 
   console.log('');
@@ -240,6 +437,10 @@ async function runDoctorLogs(projectRoot, options = {}) {
   console.log(`  ${brand.dim(t('doctor.logs.dir', { path: logDir }))}`);
   printProcessHint(projectRoot);
   console.log(`  ${divider(w)}`);
+
+  if (options.follow) {
+    return runFollowLogs(projectRoot, { tail, source, logDir, files });
+  }
 
   if (options.list) {
     if (!files.length) {
@@ -271,8 +472,15 @@ async function runDoctorLogs(projectRoot, options = {}) {
     if (!grouped.has(file.source)) grouped.set(file.source, file);
   }
 
+  const displayOrder =
+    source === 'all'
+      ? [...PROCESS_LOG_SOURCES, ...LOG_SOURCES]
+      : source === 'process'
+        ? PROCESS_LOG_SOURCES
+        : [source];
+
   let printed = 0;
-  for (const name of source === 'all' ? LOG_SOURCES : [source]) {
+  for (const name of displayOrder) {
     const file = grouped.get(name);
     if (!file) continue;
     let lines = readTailLines(file.path, tail);
@@ -292,7 +500,8 @@ async function runDoctorLogs(projectRoot, options = {}) {
       continue;
     }
     for (const line of lines) {
-      const isError = /\[ERROR\]/i.test(line) || name === 'error';
+      const isError =
+        /\[ERROR\]/i.test(line) || name === 'error' || name === 'pm2-error';
       console.log(`    ${isError ? brand.warn(line) : brand.dim(line)}`);
     }
     printed += lines.length;
@@ -312,10 +521,12 @@ async function runDoctorLogs(projectRoot, options = {}) {
 
 module.exports = {
   LOG_SOURCES,
+  PROCESS_LOG_SOURCES,
   getProjectServerLogDir,
   collectLogDirCandidates,
   measureLogDir,
   resolveActiveServerLogDir,
+  resolveLogSource,
   listLogFiles,
   readTailLines,
   filterLines,
