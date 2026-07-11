@@ -1,0 +1,96 @@
+name: Release Desktop
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build (${{ matrix.platform }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-latest
+            platform: macos
+          - os: windows-latest
+            platform: windows
+          - os: ubuntu-latest
+            platform: linux
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install Linux build dependencies
+        if: matrix.platform == 'linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libgtk-3-dev libnotify-dev libnss3 libxss1 libxtst6 \
+            libatspi2.0-0 libdrm2 libgbm1 libasound2t64
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build desktop installer
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+        run: node ./desktop/scripts/build-desktop.mjs --force
+
+      - name: Collect release artifacts
+        shell: bash
+        run: |
+          mkdir -p desktop/release/upload
+          shopt -s nullglob
+          for pattern in \
+            "desktop/release/*.dmg" \
+            "desktop/release/*.zip" \
+            "desktop/release/*.exe" \
+            "desktop/release/*.AppImage" \
+            "desktop/release/*.deb" \
+            "desktop/release/*.rpm"
+          do
+            for file in $pattern; do
+              cp "$file" desktop/release/upload/
+            done
+          done
+          ls -la desktop/release/upload/
+
+      - name: Upload platform artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: reactpress-desktop-${{ matrix.platform }}
+          path: desktop/release/upload/*
+          if-no-files-found: error
+
+  publish:
+    name: Attach to GitHub Release
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all platform artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release-assets
+          merge-multiple: true
+
+      - name: List release assets
+        run: ls -la release-assets/
+
+      - name: Upload to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: release-assets/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

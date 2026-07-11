@@ -12,7 +12,7 @@
 | **Contract** | `theme.json` (manifest + appearance + templates) |
 | **SDK** | `@fecommunity/reactpress-toolkit/app`, `/theme`, `/ui` |
 
-[Theme demo (production)](https://github.com/fecommunity/reactpress-theme-starter) · [Theme system](../README.md) · [Documentation](https://reactpress-docs.vercel.app/)
+[Theme demo (production)](https://github.com/fecommunity/reactpress-theme-starter) · [Theme system](../README.md) · [Documentation](https://docs.gaoredu.com/)
 
 ## Directory structure
 

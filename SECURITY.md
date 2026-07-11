@@ -2,20 +2,22 @@
 
 ## Supported Versions
 
-We release security fixes for the actively maintained ReactPress 3.x line.
+We release security fixes for the actively maintained ReactPress **4.x** line.
+ReactPress 3.x receives critical fixes on a best-effort basis during the 4.x rollout.
 Older major versions (2.x and below) no longer receive security updates unless
 noted in a release announcement.
 
 | Version | Supported          |
 | :------ | :----------------- |
-| 3.x     | :white_check_mark: |
+| 4.x     | :white_check_mark: |
+| 3.x     | :warning: (transition) |
 | 2.x     | :x:                |
 | < 2.0   | :x:                |
 
-Install the latest stable release:
+Install the latest release:
 
 ```bash
-npm i -g @fecommunity/reactpress@latest
+npm i -g @fecommunity/reactpress@4
 ```
 
 ## Reporting a Vulnerability

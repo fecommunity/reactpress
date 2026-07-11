@@ -79,7 +79,7 @@ pm2 restart all       # 或 pnpm run pm2
 | 全栈 | `reactpress start` |
 | 仅 API | `reactpress dev --api-only` / `reactpress server start` |
 | 仅管理后台 | `reactpress dev --web-only` |
-| 仅访客主题 | `reactpress dev --client-only` 或 [@fecommunity/reactpress-client](../tutorial-extras/client-package) |
+| 仅访客主题 | `reactpress dev --client-only` |
 | 桌面客户端 | `pnpm build:desktop`（本地 SQLite，非服务器部署） |
 
 `@fecommunity/reactpress-server` 已 deprecated，请勿作为新项目的生产入口。

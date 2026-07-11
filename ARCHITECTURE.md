@@ -169,7 +169,7 @@ packages:
 ### Repository tree (core)
 
 ```
-easy-blog-publish/
+reactpress/
 ├── cli/                 # CLI with bundled server
 ├── server/              # NestJS API source
 ├── web/                 # Vite Admin SPA
@@ -214,7 +214,7 @@ CLI orchestrates independent processes in local development:
 | **server** | 3002 | NestJS | REST API (prefix `/api`) |
 | **preview theme** | 3003 | Next.js | Admin iframe preview of non-active theme |
 | **MySQL** | 3306 | MySQL 5.7 | Full-stack dev / default production persistence |
-| **desktop local API** | 13102 | NestJS + SQLite | Embedded API in `pnpm dev:desktop` |
+| **desktop local API** | 3002 | NestJS + SQLite | Embedded API in `pnpm dev:desktop` (same port as standard API) |
 | **nginx** (optional) | 80 / 8080 | nginx | Unified reverse proxy |
 
 Three core processes (Admin, theme, API) deploy and scale independently — traffic patterns differ, so separation beats a monolithic Next app.
@@ -982,7 +982,7 @@ flowchart TB
     Renderer[Renderer: web/dist]
   end
   Renderer --> Toolkit[toolkit]
-  Toolkit --> API[server :3002 or :13102 local]
+  Toolkit --> API[server :3002]
 ```
 
 | Layer | Responsibility |
@@ -996,7 +996,7 @@ flowchart TB
 
 | Mode | Description |
 |------|-------------|
-| **Local (default)** | Main spawns embedded API (SQLite, default `:13102`); default `admin` / `admin` |
+| **Local (default)** | Main spawns embedded API (SQLite, default `:3002`); default `admin` / `admin` |
 | **Remote** | Connect to existing ReactPress API; sync local content to remote site |
 
 ### Load modes

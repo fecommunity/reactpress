@@ -16,7 +16,7 @@ The shared foundation for **ReactPress themes, plugins, Admin extensions, and cu
 | **API integration** | `./api`, `./api/instance`, `./types` |
 | **Headless UI** | `./ui` — unstyled components and hooks |
 
-[Documentation](https://reactpress-docs.vercel.app/) · [ReactPress CLI](../cli/) · [GitHub](https://github.com/fecommunity/reactpress)
+[Documentation](https://docs.gaoredu.com/) · [ReactPress CLI](../cli/) · [GitHub](https://github.com/fecommunity/reactpress)
 
 ## Package exports (`package.json` → `exports`)
 

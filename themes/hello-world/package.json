@@ -2,7 +2,7 @@
   "name": "@fecommunity/reactpress-template-hello-world",
   "version": "3.0.4",
   "description": "Official ReactPress hello-world theme — Next.js 15 Pages Router starter for blogs, categories, tags, and search",
-  "homepage": "https://reactpress-docs.vercel.app/",
+  "homepage": "https://docs.gaoredu.com/",
   "bugs": {
     "url": "https://github.com/fecommunity/reactpress/issues"
   },

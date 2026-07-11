@@ -73,7 +73,7 @@ ls -lh desktop/release/*.dmg
 
 # 本地 API
 # 启动打包后的 app，或：
-curl -s http://127.0.0.1:13102/api/health
+curl -s http://127.0.0.1:3002/api/health
 
 # 登录 Admin
 # admin / admin

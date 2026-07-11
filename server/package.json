@@ -5,7 +5,7 @@
   "description": "ReactPress NestJS REST API (deprecated). Bundled in @fecommunity/reactpress CLI from v3.1. Headless CMS for articles, media, plugins, and themes",
   "author": "fecommunity",
   "license": "MIT",
-  "homepage": "https://reactpress-docs.vercel.app/",
+  "homepage": "https://docs.gaoredu.com/",
   "bugs": {
     "url": "https://github.com/fecommunity/reactpress/issues"
   },

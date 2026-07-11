@@ -79,7 +79,7 @@ pm2 restart all
 | Full stack | `reactpress start` |
 | API only | `reactpress server start` |
 | Admin only | `reactpress dev --web-only` |
-| Theme only | `reactpress dev --client-only` or [@fecommunity/reactpress-client](../tutorial-extras/client-package) |
+| Theme only | `reactpress dev --client-only` |
 | Desktop app | `pnpm build:desktop` (local SQLite, not server deployment) |
 
 `@fecommunity/reactpress-server` is deprecated — do not use it for new projects.

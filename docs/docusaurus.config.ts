@@ -128,7 +128,7 @@ const config: Config = {
   plugins: ['docusaurus-plugin-sass'],
   themeConfig: {
     // Replace with your project's social card
-    image: 'img/docusaurus-social-card.jpg',
+    image: 'img/reactpress-social-card.png',
     navbar: {
       title: 'ReactPress',
       logo: {
@@ -143,6 +143,7 @@ const config: Config = {
           label: 'Tutorial',
         },
         { to: '/blog', label: 'Blog', position: 'left' },
+        { to: '/docs/tutorial-extras/desktop-client', label: 'Download', position: 'left' },
         { href: 'https://blog.gaoredu.com', label: 'Demo', position: 'left' },
         {
           type: 'localeDropdown',
@@ -159,11 +160,19 @@ const config: Config = {
       style: 'dark',
       links: [
         {
-          title: 'Docs',
+          title: 'Product',
           items: [
             {
               label: 'Tutorial',
               to: '/docs/intro',
+            },
+            {
+              label: 'Download desktop',
+              to: '/docs/tutorial-extras/desktop-client',
+            },
+            {
+              label: 'Live demo',
+              href: 'https://blog.gaoredu.com/',
             },
           ],
         },
@@ -171,16 +180,12 @@ const config: Config = {
           title: 'Community',
           items: [
             {
-              label: 'Stack Overflow',
-              href: 'https://stackoverflow.com/questions/tagged/reactpress',
-            },
-            {
-              label: 'Github',
+              label: 'GitHub Issues',
               href: 'https://github.com/fecommunity/reactpress/issues',
             },
             {
-              label: 'Demo site',
-              href: 'https://blog.gaoredu.com/',
+              label: 'GitHub Releases',
+              href: 'https://github.com/fecommunity/reactpress/releases',
             },
           ],
         },

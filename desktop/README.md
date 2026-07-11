@@ -6,7 +6,8 @@ Electron desktop client for ReactPress 4.0 — offline-first writing with embedd
 
 - **Local mode**: SQLite API, no Docker required (default `admin` / `admin`)
 - **Remote mode**: Connect to your production API
-- **Docs**: [reactpress-docs.vercel.app](https://reactpress-docs.vercel.app/)
+- **Docs**: [docs.gaoredu.com](https://docs.gaoredu.com/)
+- **Download**: [Desktop client](https://docs.gaoredu.com/docs/tutorial-extras/desktop-client) · [GitHub Releases](https://github.com/fecommunity/reactpress/releases)
 
 ## Role
 
@@ -62,6 +63,8 @@ pnpm run --dir desktop dev
 ```
 
 ## Build & package
+
+Prebuilt installers are published on [GitHub Releases](https://github.com/fecommunity/reactpress/releases) when a release is published (see `.github/workflows/release-desktop.yml`).
 
 ```bash
 # Parallel build + installer (release)

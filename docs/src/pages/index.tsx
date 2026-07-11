@@ -31,6 +31,8 @@ const Index = () => {
         <meta property="og:url" content={canonicalUrl} />
         <meta property="twitter:title" content={title} />
         <meta property="twitter:description" content={description} />
+        <meta property="og:image" content={`${siteConfig.url}/img/reactpress-social-card.png`} />
+        <meta property="twitter:image" content={`${siteConfig.url}/img/reactpress-social-card.png`} />
         <meta name="description" content={description} />
       </Head>
       <Home />

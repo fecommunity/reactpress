@@ -19,14 +19,16 @@ export class UserService {
 
     this.createUser({ name, password, role: 'admin' }, true)
       .then(() => {
-        console.log(`[reactpress] 管理员账户创建成功，用户名：${name}，密码：${password}，请及时登录系统修改默认密码`);
+        console.log(
+          `[reactpress] Admin account created (username: ${name}). Change the default password after first login.`,
+        );
       })
       .catch(async (e) => {
         const existAdminUser = await this.userRepository.findOne({ where: { name } });
         const isDefaultPasswd = User.comparePassword(password, existAdminUser.password);
         if (isDefaultPasswd) {
           console.log(
-            `[reactpress] 管理员账户已经存在，用户名：${name}，密码：${password}，请及时登录系统修改默认密码`
+            `[reactpress] Admin account already exists (username: ${name}). Change the default password if you still use factory credentials.`,
           );
         }
       });

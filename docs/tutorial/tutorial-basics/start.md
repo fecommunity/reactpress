@@ -66,12 +66,14 @@ pnpm dev:desktop
 
 | 项 | 说明 |
 |----|------|
-| 内嵌 API | SQLite，默认 `http://127.0.0.1:13102/api` |
+| 内嵌 API | SQLite，默认 `http://127.0.0.1:3002/api` |
 | 默认账号 | `admin` / `admin` |
 | 远程模式 | 设置 → 桌面客户端，连接已有 API |
+| 同步 | 本地内容可推送到远程站点 |
+| 下载 | [桌面客户端文档](https://docs.gaoredu.com/docs/tutorial-extras/desktop-client) · [GitHub Releases](https://github.com/fecommunity/reactpress/releases) |
 | 打包 | `pnpm build:desktop` → `desktop/release/` |
 
-详见 [ReactPress 4.0 扩展版](../tutorial-extras/reactpress-4-0.md) 与仓库 [desktop/README.md](https://github.com/fecommunity/reactpress/blob/master/desktop/README.md)。
+详见 [桌面客户端](../tutorial-extras/desktop-client.md) 与 [ReactPress 4.0 扩展版](../tutorial-extras/reactpress-4-0.md)。
 
 ---
 

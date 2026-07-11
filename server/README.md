@@ -17,7 +17,7 @@ This package remains available for legacy deployments and direct API integration
 | **API** | Headless REST with JWT auth, rate limiting, Swagger/OpenAPI |
 | **Database** | MySQL (production) or SQLite (local / desktop) |
 
-[Documentation](https://reactpress-docs.vercel.app/) · [Migrate to CLI](../cli/) · [GitHub](https://github.com/fecommunity/reactpress)
+[Documentation](https://docs.gaoredu.com/) · [Migrate to CLI](../cli/) · [GitHub](https://github.com/fecommunity/reactpress)
 
 ## Quick start
 
@@ -94,7 +94,7 @@ OpenAPI spec from this server drives toolkit code generation (`pnpm run --dir to
 
 ## Docs & support
 
-- [Documentation](https://reactpress-docs.vercel.app/)
+- [Documentation](https://docs.gaoredu.com/)
 - [Issues](https://github.com/fecommunity/reactpress/issues)
 - [Contributing](../CONTRIBUTING.md)
 

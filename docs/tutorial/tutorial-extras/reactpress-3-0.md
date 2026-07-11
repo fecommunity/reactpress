@@ -127,6 +127,5 @@ pnpm dev
 ## 相关文档
 
 - [ReactPress 4.0 扩展版](./reactpress-4-0.md)
+- [桌面客户端](./desktop-client.md)
 - [项目配置项](./config-intro.md) — `.env` 与 `.reactpress/config.json`
-- [ReactPress 2.0 架构](./reactpress-2-0.md) — 历史架构说明（多包时代）
-- [Server / Client 包指南](./server-package.md) — 独立包进阶场景

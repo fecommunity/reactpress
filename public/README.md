@@ -1,6 +1,6 @@
 # Repository root static assets
 
-Marketing, demo, and brand assets for the ReactPress publishing platform — root [README](../README.md), [README-zh_CN](../README-zh_CN.md), and [docs site](https://reactpress-docs.vercel.app/).
+Marketing, demo, and brand assets for the ReactPress publishing platform — root [README](../README.md), [README-zh_CN](../README-zh_CN.md), and [docs site](https://docs.gaoredu.com/).
 
 ## Brand & icons
 

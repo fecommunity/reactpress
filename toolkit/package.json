@@ -164,7 +164,7 @@
   "engines": {
     "node": ">=18"
   },
-  "homepage": "https://reactpress-docs.vercel.app/",
+  "homepage": "https://docs.gaoredu.com/",
   "bugs": {
     "url": "https://github.com/fecommunity/reactpress/issues"
   },

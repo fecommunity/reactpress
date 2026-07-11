@@ -18,7 +18,7 @@ Same UI in the browser and [Desktop](../desktop/README.md). Production sites mou
 | **Deployment**  | Static `dist/` — nginx, Docker, Express, or Next.js        |
 | **Integration** | `createAdminStaticMiddleware`, `serveAdmin`, Next rewrites |
 
-[Documentation](https://reactpress-docs.vercel.app/) · [ReactPress CLI](../cli/) · [npm package](https://www.npmjs.com/package/@fecommunity/reactpress-web)
+[Documentation](https://docs.gaoredu.com/) · [ReactPress CLI](../cli/) · [npm package](https://www.npmjs.com/package/@fecommunity/reactpress-web)
 
 ## Install via npm
 

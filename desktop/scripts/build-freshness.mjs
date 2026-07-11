@@ -373,27 +373,47 @@ export function pruneStaleReleaseArtifacts(releaseDir = path.join(desktopDir, "r
   }
 }
 
+/** @returns {string} */
+export function resolvePackagedAppPath() {
+  const candidates = [
+    path.join(desktopDir, "release/mac-arm64/ReactPress.app"),
+    path.join(desktopDir, "release/mac/ReactPress.app"),
+    path.join(desktopDir, "release/win-unpacked"),
+    path.join(desktopDir, "release/linux-unpacked"),
+  ];
+  for (const candidate of candidates) {
+    if (fs.existsSync(candidate)) return candidate;
+  }
+  return path.join(desktopDir, "release/mac/ReactPress.app");
+}
+
+/** @param {string} appRoot */
+function packagedResourcePaths(appRoot) {
+  const resourcesDir = appRoot.endsWith(".app")
+    ? path.join(appRoot, "Contents/Resources")
+    : path.join(appRoot, "resources");
+  return {
+    resourcesDir,
+    asarPath: path.join(resourcesDir, "app.asar"),
+    stagedLogger: path.join(resourcesDir, "server/dist/logger/index.js"),
+    manifestPath: path.join(resourcesDir, "build-manifest.json"),
+  };
+}
+
 /**
  * @param {string} [appPath]
  * @returns {{ appPath: string, manifest: Record<string, unknown> | null }}
  */
 export function verifyPackagedApp(appPath) {
-  const resolved =
-    appPath ??
-    path.join(desktopDir, "release/mac/ReactPress.app");
+  const resolved = appPath ?? resolvePackagedAppPath();
 
   if (!fs.existsSync(resolved)) {
     throw new Error(
-      `[desktop] Packaged app missing (${resolved}). electron-builder did not emit ReactPress.app.`,
+      `[desktop] Packaged app missing (${resolved}). electron-builder did not emit a ReactPress bundle.`,
     );
   }
 
-  const asarPath = path.join(resolved, "Contents/Resources/app.asar");
-  const stagedLogger = path.join(
-    resolved,
-    "Contents/Resources/server/dist/logger/index.js",
-  );
-  const manifestPath = path.join(resolved, "Contents/Resources/build-manifest.json");
+  const { asarPath, stagedLogger, manifestPath } = packagedResourcePaths(resolved);
 
   if (!fs.existsSync(asarPath)) {
     throw new Error(`[desktop] Packaged app.asar missing (${asarPath})`);
@@ -543,12 +563,10 @@ export function writePackagingFingerprint(fingerprint) {
  * @param {string} [appPath]
  */
 export function isElectronPackagingFresh(fingerprint, appPath) {
-  const resolved =
-    appPath ?? path.join(desktopDir, "release/mac/ReactPress.app");
+  const resolved = appPath ?? resolvePackagedAppPath();
   if (readPackagingFingerprint() !== fingerprint) return false;
   if (!fs.existsSync(resolved)) return false;
 
-  const asarPath = path.join(resolved, "Contents/Resources/app.asar");
-  const stagedLogger = path.join(resolved, "Contents/Resources/server/dist/logger/index.js");
+  const { asarPath, stagedLogger } = packagedResourcePaths(resolved);
   return fs.existsSync(asarPath) && fs.existsSync(stagedLogger);
 }

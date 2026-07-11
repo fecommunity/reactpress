@@ -57,11 +57,14 @@ pnpm dev:desktop
 
 | Item | Description |
 |------|-------------|
-| Embedded API | SQLite, default `http://127.0.0.1:13102/api` |
+| Embedded API | SQLite, default `http://127.0.0.1:3002/api` |
 | Default account | `admin` / `admin` |
+| Remote mode | Settings → Desktop client, connect to existing API |
+| Sync | Push local content to remote site |
+| Download | [Desktop client docs](https://docs.gaoredu.com/docs/tutorial-extras/desktop-client) · [GitHub Releases](https://github.com/fecommunity/reactpress/releases) |
 | Build | `pnpm build:desktop` → `desktop/release/` |
 
-See [ReactPress 4.0 Extend](../tutorial-extras/reactpress-4-0.md).
+See [Desktop client](../tutorial-extras/desktop-client.md) and [ReactPress 4.0 Extend](../tutorial-extras/reactpress-4-0.md).
 
 ---
 
