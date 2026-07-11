@@ -1,11 +1,13 @@
 import type * as Preset from '@docusaurus/preset-classic';
 import type { Config } from '@docusaurus/types';
 import { themes as prismThemes } from 'prism-react-renderer';
+import { resolveAlgoliaConfig } from './src/seo/algolia';
 import { buildGlobalHeadTags, getSiteUrl } from './src/seo/headTags';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
 const siteUrl = getSiteUrl();
+const algoliaConfig = resolveAlgoliaConfig();
 
 const config: Config = {
   title: 'ReactPress',
@@ -33,7 +35,10 @@ const config: Config = {
     },
   },
 
-  themes: ['@docusaurus/theme-mermaid'],
+  themes: [
+    '@docusaurus/theme-mermaid',
+    ...(algoliaConfig ? ['@docusaurus/theme-search-algolia'] : []),
+  ],
 
   headTags: buildGlobalHeadTags(siteUrl),
 
@@ -263,6 +268,7 @@ const config: Config = {
     mermaid: {
       theme: {light: 'neutral', dark: 'dark'},
     },
+    ...(algoliaConfig ? {algolia: algoliaConfig} : {}),
     metadata: [
       {
         name: 'description',
