@@ -345,6 +345,10 @@ Docker、PM2、备份等：[完整文档](https://docs.gaoredu.com/)。
 MIT License · © ReactPress / FECommunity
 
 <!-- star-history:start -->
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/star-history/star-history-dark-20260711075805.svg">
+  <img alt="Star History Chart" src="assets/star-history/star-history-light-20260711075805.svg">
+</picture>
 <!-- star-history:end -->
 
 </div>
