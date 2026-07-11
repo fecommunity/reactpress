@@ -12,6 +12,10 @@ const { spawn, spawnSync } = require('child_process');
 const { hasUsableProductionBuild } = require('../lib/theme-prod');
 const { getPm2ClientMemoryRestart, resolveBuildNodeEnv } = require('../lib/prod-memory');
 const { readActiveThemeManifest } = require('../lib/theme-runtime');
+const {
+  ensureAdminStaticForTheme,
+  shouldRebuildThemeAfterAdminSync,
+} = require('../core/services/admin-static');
 
 const originalCwd = process.env.REACTPRESS_ORIGINAL_CWD || process.cwd();
 const args = process.argv.slice(2);
@@ -29,44 +33,6 @@ if (!clientDir || !fs.existsSync(path.join(clientDir, 'package.json'))) {
 const nextDir = path.join(clientDir, '.next');
 const startScript = fs.existsSync(path.join(clientDir, 'server.js')) ? 'server.js' : null;
 
-function resolveWebPackageRoot(projectRoot) {
-  const candidates = [
-    path.join(projectRoot, 'web'),
-    path.join(projectRoot, '..', 'web'),
-  ];
-  for (const candidate of candidates) {
-    if (fs.existsSync(path.join(candidate, 'package.json'))) return candidate;
-  }
-  return null;
-}
-
-function ensureAdminStaticForTheme(projectRoot, themeDir) {
-  const adminIndex = path.join(themeDir, 'public', 'admin', 'index.html');
-  if (fs.existsSync(adminIndex)) return;
-
-  const webRoot = resolveWebPackageRoot(projectRoot);
-  if (!webRoot) {
-    console.warn('[ReactPress Client] Admin static missing and web package not found');
-    return;
-  }
-
-  const webDist = path.join(webRoot, 'dist', 'index.html');
-  if (!fs.existsSync(webDist)) {
-    console.log('[ReactPress Client] Building admin SPA (web/)…');
-    const buildWeb = spawnSync('pnpm', ['run', 'build'], { cwd: webRoot, stdio: 'inherit' });
-    if (buildWeb.status !== 0) process.exit(buildWeb.status || 1);
-  }
-
-  const syncScript = path.join(webRoot, 'bin', 'reactpress-web.js');
-  const publicAdmin = path.join(themeDir, 'public', 'admin');
-  console.log('[ReactPress Client] Syncing admin static → theme public/admin…');
-  const sync = spawnSync(process.execPath, [syncScript, 'sync-public', publicAdmin], {
-    stdio: 'inherit',
-    cwd: webRoot,
-  });
-  if (sync.status !== 0) process.exit(sync.status || 1);
-}
-
 function runStartCommand() {
   if (startScript) {
     return ['node', [startScript]];
@@ -75,10 +41,12 @@ function runStartCommand() {
 }
 
 function ensureBuilt() {
-  ensureAdminStaticForTheme(originalCwd, clientDir);
+  const adminSynced = ensureAdminStaticForTheme(originalCwd, clientDir);
   const { activeTheme } = readActiveThemeManifest(originalCwd);
   const themeId = process.env.REACTPRESS_THEME_ID || activeTheme || path.basename(clientDir);
-  if (hasUsableProductionBuild(clientDir, themeId)) return;
+  const needsRebuild =
+    adminSynced || shouldRebuildThemeAfterAdminSync(clientDir) || !hasUsableProductionBuild(clientDir, themeId);
+  if (!needsRebuild) return;
   console.log('[ReactPress Client] Client not built yet. Building…');
   const build = spawnSync('pnpm', ['run', 'build'], {
     stdio: 'inherit',
