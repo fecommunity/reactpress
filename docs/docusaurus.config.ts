@@ -24,14 +24,56 @@ const config: Config = {
   onBrokenLinks: 'throw',
 
   markdown: {
+    mermaid: true,
     hooks: {
       onBrokenMarkdownLinks: 'warn',
     },
   },
 
+  themes: ['@docusaurus/theme-mermaid'],
+
   headTags: [
     {tagName: 'meta', attributes: {property: 'og:type', content: 'website'}},
     {tagName: 'meta', attributes: {property: 'og:site_name', content: 'ReactPress'}},
+    {tagName: 'meta', attributes: {property: 'og:locale', content: 'en_US'}},
+    {tagName: 'meta', attributes: {property: 'og:locale:alternate', content: 'zh_CN'}},
+    {tagName: 'link', attributes: {rel: 'alternate', hrefLang: 'en', href: 'https://docs.gaoredu.com/'}},
+    {tagName: 'link', attributes: {rel: 'alternate', hrefLang: 'zh', href: 'https://docs.gaoredu.com/zh/'}},
+    {tagName: 'link', attributes: {rel: 'alternate', hrefLang: 'x-default', href: 'https://docs.gaoredu.com/'}},
+    {
+      tagName: 'script',
+      attributes: {type: 'application/ld+json'},
+      innerHTML: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
+        name: 'ReactPress',
+        alternateName: 'ReactPress Official Documentation',
+        url: 'https://docs.gaoredu.com/',
+        description:
+          'Official ReactPress docs — self-hosted publishing platform with WordPress-style editing, headless REST, Next.js themes, plugins, and desktop client.',
+        inLanguage: ['en', 'zh-CN'],
+        publisher: {
+          '@type': 'Organization',
+          name: 'ReactPress',
+          url: 'https://github.com/fecommunity/reactpress',
+        },
+      }),
+    },
+    {
+      tagName: 'script',
+      attributes: {type: 'application/ld+json'},
+      innerHTML: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'SoftwareApplication',
+        name: 'ReactPress',
+        applicationCategory: 'DeveloperApplication',
+        operatingSystem: 'macOS, Windows, Linux',
+        offers: {'@type': 'Offer', price: '0', priceCurrency: 'USD'},
+        softwareVersion: '4.0',
+        url: 'https://docs.gaoredu.com/',
+        downloadUrl: 'https://www.npmjs.com/package/@fecommunity/reactpress',
+      }),
+    },
   ],
 
   // Even if you don't use internationalization, you can use this field to set
@@ -65,6 +107,15 @@ const config: Config = {
                 if (pathname.endsWith('/docs/intro')) {
                   return {...item, priority: 0.9};
                 }
+                if (
+                  pathname.includes('/docs/getting-started/first-site') ||
+                  pathname.includes('/docs/getting-started/installation')
+                ) {
+                  return {...item, priority: 0.85, changefreq: 'weekly' as const};
+                }
+                if (pathname.includes('/docs/developer-guide/headless-api')) {
+                  return {...item, priority: 0.75};
+                }
                 if (pathname.includes('/blog/changelog')) {
                   return {...item, priority: 0.8};
                 }
@@ -83,6 +134,8 @@ const config: Config = {
         docs: {
           path: './tutorial',
           sidebarPath: './sidebars.ts',
+          showLastUpdateAuthor: true,
+          showLastUpdateTime: true,
           editUrl: ({docPath, locale}) => {
             const branch = 'master';
             const base = `https://github.com/fecommunity/reactpress/edit/${branch}`;
@@ -140,9 +193,9 @@ const config: Config = {
           type: 'docSidebar',
           sidebarId: 'tutorialSidebar',
           position: 'left',
-          label: 'Tutorial',
+          label: 'Docs',
         },
-        { to: '/blog', label: 'Blog', position: 'left' },
+        { to: '/blog', label: 'Changelog', position: 'left' },
         { to: '/docs/tutorial-extras/desktop-client', label: 'Download', position: 'left' },
         { href: 'https://blog.gaoredu.com', label: 'Demo', position: 'left' },
         {
@@ -163,8 +216,12 @@ const config: Config = {
           title: 'Product',
           items: [
             {
-              label: 'Tutorial',
+              label: 'Documentation',
               to: '/docs/intro',
+            },
+            {
+              label: 'Quick start',
+              to: '/docs/getting-started/first-site',
             },
             {
               label: 'Download desktop',
@@ -208,6 +265,9 @@ const config: Config = {
     prism: {
       theme: prismThemes.github,
       darkTheme: prismThemes.dracula,
+    },
+    mermaid: {
+      theme: {light: 'neutral', dark: 'dark'},
     },
     metadata: [
       {

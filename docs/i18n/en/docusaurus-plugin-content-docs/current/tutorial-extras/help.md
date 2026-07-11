@@ -1,24 +1,26 @@
 ---
 sidebar_position: 3
-title: Questions
+title: FAQ (Archive)
+description: This page has been merged into the full FAQ. Visit the ReactPress official FAQ for the latest answers.
+keywords: [reactpress, faq, help]
 ---
 
-## Database unable to connect, startup exception?
+# FAQ (Archive)
 
-Usually, the database configuration information is incorrect. Please carefully check if the configuration information in the '. env' file is completely consistent.
+:::info Documentation updated
+The full FAQ has moved to **[FAQ](../reference/faq.md)** — 20+ answers on installation, deployment, themes, plugins, and version upgrades.
 
-## How to fill in the configuration of the production environment 'env'?
+For troubleshooting, see **[Troubleshooting](../reference/troubleshooting.md)**.
+:::
 
-Basic information can be consistent with the local environment, and the 'CLIENT_SITE-URL' client address needs to be updated to the corresponding page domain name address` SERVER _SITE-URL ` is updated to the corresponding server domain name address.
+## Quick links
 
-## More questions
+- [Database won't connect?](../reference/troubleshooting.md#database-issues)
+- [How to fill production env?](../reference/faq.md)
+- [Do I need Docker?](../reference/faq.md)
 
-Welcome everyone to use it. If you encounter any problems during use, you can directly raise an issue on Github or contact me directly.
+## Get more help
 
-We warmly invite contributions from everyone. Before you get started, please take a moment to review our [Contributing Guide](https://github.com/fecommunity/reactpress). Feel free to share your ideas through [Pull Requests](https://github.com/fecommunity/reactpress/pulls) or [GitHub Issues](https://github.com/fecommunity/reactpress/issues). If you're interested in enhancing our codebase, explore the [Development Instructions](https://github.com/fecommunity/reactpress/wiki/Development) and enjoy your coding journey!
-
-1. [GitHub Discussions](https://github.com/fecommunity/reactpress/discussions)
-2. [Stack Overflow](http://stackoverflow.com/questions/tagged/antd)（English）
-3. [Segment Fault](https://segmentfault.com/t/reactpress)（Chinese）
-
-You can also send me an email: admin@gaoredu.com
+1. `reactpress doctor` and `reactpress logs`
+2. [GitHub Issues](https://github.com/fecommunity/reactpress/issues)
+3. [GitHub Discussions](https://github.com/fecommunity/reactpress/discussions)

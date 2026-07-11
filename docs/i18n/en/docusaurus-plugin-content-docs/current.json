@@ -18,5 +18,69 @@
   "sidebar.tutorialSidebar.category.进阶教程.link.generated-index.description": {
     "message": "Advanced guides — plugins, desktop, themes, deployment, and migration for the ReactPress publishing platform.",
     "description": "The generated-index page description for category 进阶教程 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.快速入门": {
+    "message": "Getting Started",
+    "description": "The label for category 快速入门 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.快速入门.link.generated-index.title": {
+    "message": "Getting Started",
+    "description": "The generated-index page title for category 快速入门 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.快速入门.link.generated-index.description": {
+    "message": "From zero: install ReactPress, create your first site, and understand Admin / API / theme / plugin / desktop. Live in ~60 seconds.",
+    "description": "The generated-index page description for category 快速入门 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.使用指南": {
+    "message": "User Guide",
+    "description": "The label for category 使用指南 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.使用指南.link.generated-index.title": {
+    "message": "User Guide",
+    "description": "The generated-index page title for category 使用指南 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.使用指南.link.generated-index.description": {
+    "message": "For content creators and site administrators: admin UI, content, media, themes, plugins, and SEO.",
+    "description": "The generated-index page description for category 使用指南 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.开发者指南": {
+    "message": "Developer Guide",
+    "description": "The label for category 开发者指南 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.开发者指南.link.generated-index.title": {
+    "message": "Developer Guide",
+    "description": "The generated-index page title for category 开发者指南 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.开发者指南.link.generated-index.description": {
+    "message": "Architecture, CLI, Headless API, theme and plugin development, and Monorepo contribution.",
+    "description": "The generated-index page description for category 开发者指南 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.部署与配置": {
+    "message": "Deployment & Configuration",
+    "description": "The label for category 部署与配置 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.部署与配置.link.generated-index.title": {
+    "message": "Deployment & Configuration",
+    "description": "The generated-index page title for category 部署与配置 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.部署与配置.link.generated-index.description": {
+    "message": "Local development, production deployment, Docker, environment variables, and version migration.",
+    "description": "The generated-index page description for category 部署与配置 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.版本与迁移": {
+    "message": "Versions & Migration",
+    "description": "The label for category 版本与迁移 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.参考与排错": {
+    "message": "Reference & Troubleshooting",
+    "description": "The label for category 参考与排错 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.参考与排错.link.generated-index.title": {
+    "message": "Reference & Troubleshooting",
+    "description": "The generated-index page title for category 参考与排错 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.参考与排错.link.generated-index.description": {
+    "message": "FAQ, troubleshooting, and glossary.",
+    "description": "The generated-index page description for category 参考与排错 in sidebar tutorialSidebar"
   }
 }

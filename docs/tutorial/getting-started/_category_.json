@@ -1,0 +1,10 @@
+{
+  "label": "快速入门",
+  "position": 2,
+  "link": {
+    "type": "generated-index",
+    "slug": "getting-started",
+    "title": "快速入门",
+    "description": "从零开始：安装 ReactPress、创建第一个站点、理解 Admin / API / 主题 / 插件 / 桌面端五大组件。约 60 秒上线。"
+  }
+}

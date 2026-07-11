@@ -1,0 +1,10 @@
+{
+  "label": "开发者指南",
+  "position": 4,
+  "link": {
+    "type": "generated-index",
+    "slug": "developer-guide",
+    "title": "开发者指南",
+    "description": "面向前端与全栈开发者：系统架构、CLI 参考、Headless API、主题与插件开发、Monorepo 本地开发。"
+  }
+}

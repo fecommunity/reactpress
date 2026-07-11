@@ -1,87 +1,70 @@
 ---
 sidebar_position: 1
-title: Development
+title: Local Development
+description: ReactPress local development — global CLI init, Monorepo pnpm dev, desktop client, and per-process debugging.
+keywords: [reactpress, local development, dev, pnpm, monorepo]
 ---
 
-## Three ways to develop
+# Local Development
+
+ReactPress 4.0 offers three local paths — choose by scenario.
 
 | Scenario | Approach | Prerequisites |
 |----------|----------|-----------------|
-| **Try / new site (recommended)** | Global `reactpress` | Node ≥ 18, Docker |
-| **Local writing (4.0)** | `pnpm dev:desktop` | Node ≥ 18, pnpm (no Docker) |
-| **Contribute to monorepo** | `pnpm dev` in repo | Node ≥ 18, Docker, pnpm |
+| **Build / try a site (recommended)** | Global `reactpress init` | Node ≥ 20 |
+| **Offline writing** | Desktop client | See [Desktop client](../tutorial-extras/desktop-client.md) |
+| **Contribute to monorepo** | `pnpm dev` | Node ≥ 20, pnpm |
 
----
-
-## Option 1: Global CLI (4.0 recommended)
+## Option 1: Global CLI (recommended)
 
 ```bash
 npm i -g @fecommunity/reactpress@4
 mkdir my-blog && cd my-blog
 reactpress init
-reactpress dev
 ```
+
+`init` generates config, initializes SQLite, and **auto-starts** the full stack.
 
 | Service | Port | URL |
 |---------|------|-----|
 | Admin | 3000 | http://localhost:3000 |
-| Site theme | 3001 | http://localhost:3001 |
-| API | 3002 | http://localhost:3002/api |
-| Health check | 3002 | http://localhost:3002/api/health |
+| Visitor theme | 3001 | http://localhost:3001 |
+| API | 3002 | http://localhost:3002/api/health |
 | Theme preview | 3003 | http://localhost:3003 |
 
-> **Note:** Admin runs on **3000** (Vite SPA), not `:3001/admin`. Port 3001 is the Next.js visitor theme.
+### Common commands
 
 ```bash
-reactpress              # Interactive menu
-reactpress doctor
-reactpress status
-reactpress theme add @fecommunity/reactpress-theme-starter@1.0.0-beta.0
-reactpress plugin list
-reactpress dev --api-only
-reactpress dev --web-only
-reactpress dev --client-only
+reactpress doctor       # environment diagnostics
+reactpress logs -f      # live logs
+reactpress stop         # stop services
 ```
 
-See [ReactPress 4.0 Extend](../tutorial-extras/reactpress-4-0.md).
+Manage themes and plugins in **Admin**. Full CLI reference: [CLI command reference](../developer-guide/cli-reference.md).
 
----
-
-## Option 2: Desktop client (4.0)
+## Option 2: Desktop client
 
 No Docker — great for local writing:
 
 ```bash
+# monorepo root, or download Release installer
 pnpm dev:desktop
 ```
 
-| Item | Description |
-|------|-------------|
-| Embedded API | SQLite, default `http://127.0.0.1:3002/api` |
-| Default account | `admin` / `admin` |
-| Remote mode | Settings → Desktop client, connect to existing API |
-| Sync | Push local content to remote site |
-| Download | [Desktop client docs](https://docs.gaoredu.com/docs/tutorial-extras/desktop-client) · [GitHub Releases](https://github.com/fecommunity/reactpress/releases) |
-| Build | `pnpm build:desktop` → `desktop/release/` |
+See [Desktop client](../tutorial-extras/desktop-client.md).
 
-See [Desktop client](../tutorial-extras/desktop-client.md) and [ReactPress 4.0 Extend](../tutorial-extras/reactpress-4-0.md).
-
----
-
-## Option 3: Monorepo
+## Option 3: Monorepo development
 
 ```bash
 git clone --depth=1 https://github.com/fecommunity/reactpress.git
 cd reactpress
-npm i -g pnpm
-pnpm install
-pnpm run dev
+npm i -g pnpm && pnpm install
+pnpm run build:plugins
+pnpm dev
 ```
 
-Structure: `cli/`, `server/`, `web/`, `desktop/`, `toolkit/`, `themes/`, `plugins/`.
+Full guide: [Monorepo local development](../developer-guide/local-development.md).
 
-Optional: `pnpm run init`, `pnpm run dev:api`, `pnpm run dev:web`, `pnpm run build:plugins`, `pnpm run dev:desktop`.
+## Configuration
 
-Configuration: `.reactpress/config.json` (source of truth) and synced `.env`. See [configuration](../tutorial-extras/config-intro.md).
-
-Open admin at `http://127.0.0.1:3000`, visitor site at `http://127.0.0.1:3001` (requires an installed and active theme).
+`init` / `pnpm dev` generate `.reactpress/config.json` and `.env` by default. Advanced scenarios: [Configuration](../tutorial-extras/config-intro.md).

@@ -3,8 +3,21 @@ sidebar_position: 1
 id: intro
 title: 介绍
 description: ReactPress 官方文档 — 自托管发布平台：WordPress 式编辑、Headless REST、Next.js 主题、插件与桌面客户端。一条 CLI，约 60 秒上线。
-keywords: [reactpress, 发布平台, wordpress 替代, headless cms, 博客, next.js, react, nestjs, 插件, 桌面客户端, 自托管]
+keywords: [reactpress, 发布平台, wordpress 替代, headless cms, 博客, next.js, react, nestjs, 插件, 桌面客户端, 自托管, 官方文档]
 ---
+
+## 学习路径（0 → 100）
+
+按角色选择起点，每篇文档均含 SEO 摘要与下一步链接。
+
+| 阶段 | 你是谁 | 从这里开始 |
+|------|--------|------------|
+| **0→1** | 第一次听说 ReactPress | [5 分钟创建第一个站点](./getting-started/first-site.md) |
+| **1→10** | 站长 / 博主 | [使用指南](./user-guide/admin-overview.md) → [SEO 设置](./user-guide/site-settings-seo.md) |
+| **10→50** | 前端开发者 | [主题开发](./developer-guide/theme-development.md) → [Headless API](./developer-guide/headless-api.md) |
+| **50→100** | 全栈 / 贡献者 | [Monorepo 开发](./developer-guide/local-development.md) → [插件开发](./developer-guide/plugin-development.md) |
+| **上线** | 运维 | [生产部署](./tutorial-basics/deploy-your-site.md) → [Docker](./tutorial-extras/docker-deployment.md) |
+| **排错** | 遇到问题 | [FAQ](./reference/faq.md) → [故障排查](./reference/troubleshooting.md) |
 
 ## 项目简介
 
@@ -64,8 +77,11 @@ keywords: [reactpress, 发布平台, wordpress 替代, headless cms, 博客, nex
 npm i -g @fecommunity/reactpress@4
 mkdir my-blog && cd my-blog
 reactpress init
-reactpress dev
 ```
+
+:::info 4.0 说明
+`init` 会**自动启动** API、Admin 与主题，无需再执行 `reactpress dev`（该命令在全局 CLI 中已移除）。停止服务用 `reactpress stop`。
+:::
 
 | 服务 | 端口 | 地址 |
 |------|------|------|
