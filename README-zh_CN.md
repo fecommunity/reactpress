@@ -344,6 +344,7 @@ Docker、PM2、备份等：[完整文档](https://docs.gaoredu.com/)。
 
 MIT License · © ReactPress / FECommunity
 
-[![Star History Chart](https://api.star-history.com/svg?repos=fecommunity/reactpress&type=Date)](https://star-history.com/#fecommunity/reactpress&Date)
+<!-- star-history:start -->
+<!-- star-history:end -->
 
 </div>
