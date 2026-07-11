@@ -26,7 +26,7 @@ describe('bundled server sync', () => {
 
   it('keeps README in English and blocks legacy README sync', () => {
     const readme = fs.readFileSync(path.join(CLI_ROOT, 'README.md'), 'utf8');
-    assert.match(readme, /ReactPress 4 CLI/i);
+    assert.match(readme, /official \*\*ReactPress CLI\*\*/i);
     assert.doesNotMatch(readme, /[\u4e00-\u9fff]/, 'cli/README.md must stay in English');
 
     const syncSrc = fs.readFileSync(path.join(CLI_ROOT, 'scripts', 'sync-bundled-core.mjs'), 'utf8');

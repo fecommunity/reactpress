@@ -23,6 +23,12 @@
     "typescript",
     "publishing-platform"
   ],
+  "author": "fecommunity",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "main": "index.js",
   "bin": {
     "create-reactpress-hello-world": "./bin/create-hello-world.js"

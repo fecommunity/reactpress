@@ -2,9 +2,10 @@
 
 > **Official TypeScript SDK for the ReactPress publishing platform.**
 
-[![npm version](https://img.shields.io/npm/v/@fecommunity/reactpress-toolkit.svg)](https://www.npmjs.com/package/@fecommunity/reactpress-toolkit)
+[![npm version](https://img.shields.io/npm/v/@fecommunity/reactpress-toolkit/beta.svg?label=beta)](https://www.npmjs.com/package/@fecommunity/reactpress-toolkit/v/beta)
+[![npm latest](https://img.shields.io/npm/v/@fecommunity/reactpress-toolkit.svg?label=latest)](https://www.npmjs.com/package/@fecommunity/reactpress-toolkit)
 [![npm downloads](https://img.shields.io/npm/dm/@fecommunity/reactpress-toolkit.svg)](https://www.npmjs.com/package/@fecommunity/reactpress-toolkit)
-[![License: ISC](https://img.shields.io/npm/l/@fecommunity/reactpress-toolkit.svg)](https://github.com/fecommunity/reactpress/blob/master/toolkit/LICENSE)
+[![License: MIT](https://img.shields.io/npm/l/@fecommunity/reactpress-toolkit.svg)](https://github.com/fecommunity/reactpress/blob/master/LICENSE)
 
 The shared foundation for **ReactPress themes, plugins, Admin extensions, and custom frontends**. Auto-generated OpenAPI clients, Next.js theme SSR helpers, plugin admin hooks, and headless React UI — so you extend the platform instead of duplicating API or rendering logic.
 
@@ -284,6 +285,6 @@ Output in `dist/`; `createApp.js` is emitted via `tsc` (`allowJs`) to `dist/them
 
 ## License
 
-ISC
+MIT © [FECommunity](https://github.com/fecommunity)
 
 <p align="center"><sub>Part of <a href="https://github.com/fecommunity/reactpress">ReactPress</a> — the official SDK for themes, plugins, and custom frontends.</sub></p>
