@@ -25,6 +25,7 @@ const { t } = require('../lib/i18n');
 const { describeProject } = require('../lib/project-type');
 const { refreshBannerWithStartup } = require('../ui/banner-startup');
 const { runDoctor } = require('../lib/doctor');
+const { runDoctorLogs } = require('../lib/project-logs');
 
 const LEGACY_COMMANDS = new Set([
   'start',
@@ -76,6 +77,9 @@ function printRunningPanel(projectRoot) {
 async function startServices(projectRoot) {
   const code = await runLifecycleCommand('start', projectRoot);
   if (code !== 0) process.exit(code);
+
+  const { ensureDefaultTheme } = require('../core/services/theme-bootstrap');
+  await ensureDefaultTheme(projectRoot);
 
   printRunningPanel(projectRoot);
 
@@ -129,13 +133,32 @@ program
     await runInit(directory || '.', options);
   });
 
-program
-  .command('doctor [directory]')
-  .description(t('cli.doctor.description'))
-  .action(async (directory) => {
+const doctorCommand = program
+  .command('doctor')
+  .description(t('cli.doctor.description'));
+
+doctorCommand
+  .command('logs [directory]')
+  .description(t('cli.doctor.logs.description'))
+  .option('--tail <n>', t('cli.doctor.logs.tailOption'), '50')
+  .option('--source <name>', t('cli.doctor.logs.sourceOption'), 'error')
+  .option('--grep <pattern>', t('cli.doctor.logs.grepOption'))
+  .option('--list', t('cli.doctor.logs.listOption'))
+  .action(async (directory, options) => {
     const projectRoot = path.resolve(directory || '.');
     process.env.REACTPRESS_ORIGINAL_CWD = projectRoot;
-    const code = await runDoctor(projectRoot);
+    const code = await runDoctorLogs(projectRoot, options);
+    process.exit(code);
+  });
+
+doctorCommand
+  .command('check [directory]', { isDefault: true })
+  .description(t('cli.doctor.description'))
+  .option('--show-logs', t('cli.doctor.showLogs'))
+  .action(async (directory, options) => {
+    const projectRoot = path.resolve(directory || '.');
+    process.env.REACTPRESS_ORIGINAL_CWD = projectRoot;
+    const code = await runDoctor(projectRoot, options);
     process.exit(code);
   });
 
@@ -143,7 +166,12 @@ program.on('--help', () => {
   console.log('');
   console.log(brand.bold(t('cli.help.examples')));
   console.log(divider(40));
-  for (const line of [t('cli.help.init'), t('cli.help.doctor'), t('cli.help.zeroDep')]) {
+  for (const line of [
+    t('cli.help.init'),
+    t('cli.help.doctor'),
+    t('cli.help.doctorLogs'),
+    t('cli.help.zeroDep'),
+  ]) {
     console.log(brand.dim(line));
   }
   console.log('');

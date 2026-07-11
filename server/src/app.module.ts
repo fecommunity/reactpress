@@ -1,5 +1,5 @@
 // 配置文件
-import { config } from '@fecommunity/reactpress-toolkit';
+import { config } from '@fecommunity/reactpress-toolkit/config';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';

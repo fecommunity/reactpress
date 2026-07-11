@@ -52,7 +52,9 @@ function main() {
     console.log(`[sync-bundled-core] ${name}/ -> cli/${name}/`);
   }
 
-  for (const file of ['LICENSE', 'README.md']) {
+  // Copy LICENSE only. Do not sync README.md — legacy @fecommunity/reactpress-cli-core
+  // ships a Chinese README that would overwrite the v4 English package docs on every prepare/prepack.
+  for (const file of ['LICENSE']) {
     const src = path.join(legacyRoot, file);
     if (fs.existsSync(src)) {
       fs.copyFileSync(src, path.join(cliRoot, file));

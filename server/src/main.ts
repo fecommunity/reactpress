@@ -363,6 +363,8 @@ const startMainApplication = async (): Promise<void> => {
   }
 };
 
+export { main };
+
 if (require.main === module) {
   main();
 }

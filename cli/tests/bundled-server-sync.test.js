@@ -14,6 +14,29 @@ describe('bundled server sync', () => {
     assert.ok(fs.existsSync(path.join(CLI_ROOT, 'server', 'package.json')));
   });
 
+  it('bundled server entry exports main() for reactpress-server.js', () => {
+    const mainPath = path.join(CLI_ROOT, 'server', 'dist', 'main.js');
+    const source = fs.readFileSync(mainPath, 'utf8');
+    assert.match(
+      source,
+      /exports\.main\s*=|Object\.defineProperty\(exports,\s*["']main["']/,
+      'dist/main.js must export main()',
+    );
+  });
+
+  it('keeps README in English and blocks legacy README sync', () => {
+    const readme = fs.readFileSync(path.join(CLI_ROOT, 'README.md'), 'utf8');
+    assert.match(readme, /ReactPress 4 CLI/i);
+    assert.doesNotMatch(readme, /[\u4e00-\u9fff]/, 'cli/README.md must stay in English');
+
+    const syncSrc = fs.readFileSync(path.join(CLI_ROOT, 'scripts', 'sync-bundled-core.mjs'), 'utf8');
+    assert.match(
+      syncSrc,
+      /for \(const file of \['LICENSE'\]\)/,
+      'sync-bundled-core must only copy LICENSE, not README.md',
+    );
+  });
+
   it('declares prune and npmignore rules for heavyweight paths', () => {
     const npmignore = fs.readFileSync(path.join(CLI_ROOT, '.npmignore'), 'utf8');
     assert.match(npmignore, /server\/node_modules/);

@@ -153,6 +153,12 @@ Published packages: **toolkit**, **web**, **server** (deprecated), **cli** (`@fe
 
 Live docs: [blog.gaoredu.com](https://blog.gaoredu.com)
 
+## Documentation language
+
+- **English**: `README.md`, package READMEs (`cli/`, `toolkit/`, `server/`, `web/`, etc.), `CHANGELOG.md`, API docs
+- **Chinese**: `README-zh_CN.md`, `docs/i18n/zh/`, and other `*-zh*.md` locale files
+- `cli/scripts/sync-bundled-core.mjs` must not copy `README.md` from the legacy CLI package (it would revert `cli/README.md` to Chinese on every `prepare` / `prepack`)
+
 ## Questions?
 
 - [GitHub Discussions](https://github.com/fecommunity/reactpress/discussions) (if enabled) or Issues for questions
