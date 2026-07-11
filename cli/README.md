@@ -4,7 +4,8 @@
 >
 > WordPress-style editing · Next.js delivery · One CLI to ship.
 
-[![npm version](https://img.shields.io/npm/v/@fecommunity/reactpress.svg)](https://www.npmjs.com/package/@fecommunity/reactpress)
+[![npm version](https://img.shields.io/npm/v/@fecommunity/reactpress/beta.svg?label=beta)](https://www.npmjs.com/package/@fecommunity/reactpress/v/beta)
+[![npm latest](https://img.shields.io/npm/v/@fecommunity/reactpress.svg?label=latest)](https://www.npmjs.com/package/@fecommunity/reactpress)
 [![npm downloads](https://img.shields.io/npm/dm/@fecommunity/reactpress.svg)](https://www.npmjs.com/package/@fecommunity/reactpress)
 [![License: MIT](https://img.shields.io/npm/l/@fecommunity/reactpress.svg)](https://github.com/fecommunity/reactpress/blob/master/LICENSE)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D18-brightgreen?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org/)
@@ -20,12 +21,16 @@ The official **ReactPress CLI** — install a complete, self-hosted publishing s
 
 Built for frontend teams who want WordPress-grade editing without wiring five repos together.
 
-[Documentation](https://reactpress-docs.vercel.app/) · [Live demo](https://blog.gaoredu.com) · [Theme demo](https://reactpress-theme-starter.vercel.app) · [GitHub](https://github.com/fecommunity/reactpress) · [中文](../README-zh_CN.md)
+[Documentation](https://reactpress-docs.vercel.app/) · [Live demo](https://blog.gaoredu.com) · [Theme demo](https://reactpress-theme-starter.vercel.app) · [GitHub](https://github.com/fecommunity/reactpress) · [Chinese overview](../README-zh_CN.md)
 
 ## Install
 
 ```bash
-npm install -g @fecommunity/reactpress
+# 4.x pre-release (recommended until 4.0.0 stable)
+npm install -g @fecommunity/reactpress@beta
+
+# stable (3.x — legacy)
+# npm install -g @fecommunity/reactpress
 ```
 
 Requires Node.js 18+. On first install, `postinstall` downloads bundled server runtime dependencies (~1–2 minutes).

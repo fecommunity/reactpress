@@ -34,7 +34,8 @@
     "bin",
     "dist",
     "node",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
   "type": "module",
   "main": "./node/index.mjs",

@@ -2,7 +2,8 @@
 
 > **ReactPress headless REST API — NestJS backend for the publishing platform.**
 
-[![npm version](https://img.shields.io/npm/v/@fecommunity/reactpress-server.svg)](https://www.npmjs.com/package/@fecommunity/reactpress-server)
+[![npm version](https://img.shields.io/npm/v/@fecommunity/reactpress-server/beta.svg?label=beta)](https://www.npmjs.com/package/@fecommunity/reactpress-server/v/beta)
+[![npm latest](https://img.shields.io/npm/v/@fecommunity/reactpress-server.svg?label=latest)](https://www.npmjs.com/package/@fecommunity/reactpress-server)
 [![License: MIT](https://img.shields.io/npm/l/@fecommunity/reactpress-server.svg)](https://github.com/fecommunity/reactpress/blob/master/server/LICENSE)
 
 > **Deprecated** — from ReactPress 3.1 onward, the API ships inside [`@fecommunity/reactpress`](https://www.npmjs.com/package/@fecommunity/reactpress) (CLI). New projects should run `npx @fecommunity/reactpress init` instead of installing this package standalone.

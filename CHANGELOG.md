@@ -1,3 +1,23 @@
+# Changelog
+
+## [4.0.0](https://github.com/fecommunity/reactpress/compare/v4.0.0-beta.13...v4.0.0) (unreleased)
+
+> **Stable release** — promotes 4.x from `beta` to `latest` on npm. Install with `npm i -g @fecommunity/reactpress`.
+
+### Publishing & packaging
+
+* npm metadata: brand-aligned descriptions, keywords, homepage, and README for CLI, toolkit, web, and server
+* toolkit: ship `README.md` and `LICENSE` in npm tarball; license unified to MIT
+* web: ship `LICENSE` in npm tarball
+* server: remove invalid `types` entry; add `publishConfig`; align `engines` to Node 18+
+
+### Upgrade from 3.x
+
+* Run `npm i -g @fecommunity/reactpress@4` (or `@latest` after stable publish)
+* Use `reactpress init` in a new directory; see [migration guide](./docs/migration-3-to-4.md)
+
+---
+
 # [4.0.0-beta.0](https://github.com/fecommunity/reactpress/compare/v3.7.0...v4.0.0-beta.0) (2026-06-27)
 
 > **Pre-release** — install with `npm i -g @fecommunity/reactpress@beta` for testing. Final 4.0.0 follows after validation.

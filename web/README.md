@@ -2,7 +2,8 @@
 
 > **Official ReactPress Admin — WordPress-style writing UI for the publishing platform.**
 
-[![npm version](https://img.shields.io/npm/v/@fecommunity/reactpress-web.svg)](https://www.npmjs.com/package/@fecommunity/reactpress-web)
+[![npm version](https://img.shields.io/npm/v/@fecommunity/reactpress-web/beta.svg?label=beta)](https://www.npmjs.com/package/@fecommunity/reactpress-web/v/beta)
+[![npm latest](https://img.shields.io/npm/v/@fecommunity/reactpress-web.svg?label=latest)](https://www.npmjs.com/package/@fecommunity/reactpress-web)
 [![npm downloads](https://img.shields.io/npm/dm/@fecommunity/reactpress-web.svg)](https://www.npmjs.com/package/@fecommunity/reactpress-web)
 [![License: MIT](https://img.shields.io/npm/l/@fecommunity/reactpress-web.svg)](https://github.com/fecommunity/reactpress/blob/master/web/LICENSE)
 
