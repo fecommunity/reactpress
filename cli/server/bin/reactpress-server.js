@@ -154,22 +154,6 @@ function startWithPM2() {
   }
 }
 
-// Function to prepend bundled runtime paths so sibling toolkit/ can resolve server/node_modules.
-function prependNodePath(...dirs) {
-  const Module = require('module');
-  const sep = path.delimiter;
-  const parts = (process.env.NODE_PATH || '').split(sep).filter(Boolean);
-  for (const dir of dirs) {
-    if (fs.existsSync(dir) && !parts.includes(dir)) {
-      parts.unshift(dir);
-    }
-  }
-  if (parts.length) {
-    process.env.NODE_PATH = parts.join(sep);
-    Module._initPaths();
-  }
-}
-
 // Function to start with regular Node.js
 function startWithNode() {
   // Check if the server is built
@@ -196,43 +180,15 @@ function startWithNode() {
     console.log(`[ReactPress Server] Using existing REACTPRESS_ORIGINAL_CWD: ${process.env.REACTPRESS_ORIGINAL_CWD}`);
   }
 
-  const siteRoot = process.env.REACTPRESS_ORIGINAL_CWD;
-  for (const localSiteModule of [
-    path.join(serverDir, '..', 'cli', 'out', 'core', 'services', 'local-site.js'),
-    path.join(serverDir, '..', 'out', 'core', 'services', 'local-site.js'),
-  ]) {
-    if (!siteRoot || !fs.existsSync(localSiteModule)) continue;
-    try {
-      const { ensureBundledPlugins } = require(localSiteModule);
-      if (ensureBundledPlugins(siteRoot)) {
-        console.log('[ReactPress Server] Seeded bundled plugins into project');
-      }
-    } catch {
-      // ignore — plugins seeding is best-effort
-    }
-    break;
-  }
-
   // Change to the server directory
   process.chdir(serverDir);
 
   // Set environment variables
   process.env.NODE_ENV = process.env.NODE_ENV || 'production';
 
-  // Bundled CLI layout: toolkit/ is a sibling of server/; expose server deps to toolkit requires.
-  prependNodePath(path.join(serverDir, 'node_modules'));
-
-  // Import and run the server (require() alone does not invoke main — see dist/main.js)
+  // Import and run the server
   try {
-    const mainModule = require(distPath);
-    if (typeof mainModule.main !== 'function') {
-      console.error('[ReactPress Server] Server entry does not export main()');
-      process.exit(1);
-    }
-    mainModule.main().catch((error) => {
-      console.error('[ReactPress Server] Failed to start server:', error);
-      process.exit(1);
-    });
+    require(distPath);
   } catch (error) {
     console.error('[ReactPress Server] Failed to start server:', error);
     process.exit(1);

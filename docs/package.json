@@ -19,6 +19,7 @@
   "dependencies": {
     "@docusaurus/core": "3.10.1",
     "@docusaurus/preset-classic": "3.10.1",
+    "@docusaurus/theme-mermaid": "3.10.1",
     "@mdx-js/react": "^3.0.0",
     "@vercel/analytics": "^2.0.1",
     "clsx": "^2.0.0",
