@@ -2,6 +2,7 @@
   "label": "进阶教程",
   "position": 3,
   "link": {
-    "type": "generated-index"
+    "type": "generated-index",
+    "description": "进阶指南 — 插件、桌面端、主题、部署与迁移（ReactPress 发布平台）。"
   }
 }

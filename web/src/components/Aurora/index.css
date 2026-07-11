@@ -1,0 +1,88 @@
+.aurora__root {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+  --aurora: repeating-linear-gradient(
+    100deg,
+    #3b82f6 10%,
+    #a5b4fc 15%,
+    #93c5fd 20%,
+    #ddd6fe 25%,
+    #60a5fa 30%
+  );
+  --dark-gradient: repeating-linear-gradient(
+    100deg,
+    #000 0%,
+    #000 7%,
+    transparent 10%,
+    transparent 12%,
+    #000 16%
+  );
+  --white-gradient: repeating-linear-gradient(
+    100deg,
+    #fff 0%,
+    #fff 7%,
+    transparent 10%,
+    transparent 12%,
+    #fff 16%
+  );
+}
+
+.aurora__glow {
+  position: absolute;
+  inset: -10px;
+  background-image: var(--white-gradient), var(--aurora);
+  background-size: 300% 200%;
+  background-position:
+    50% 50%,
+    50% 50%;
+  opacity: 0.5;
+  filter: blur(10px) invert(1);
+  -webkit-mask-image: radial-gradient(ellipse at 100% 0%, #000 10%, transparent 70%);
+  mask-image: radial-gradient(ellipse at 100% 0%, #000 10%, transparent 70%);
+}
+
+html[data-theme="dark"] .aurora__glow {
+  background-image: var(--dark-gradient), var(--aurora);
+  filter: blur(10px);
+}
+
+.aurora__glow::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--white-gradient), var(--aurora);
+  background-size: 200% 100%;
+  background-position:
+    50% 50%,
+    50% 50%;
+  background-attachment: fixed;
+  mix-blend-mode: difference;
+}
+
+html[data-theme="dark"] .aurora__glow::after {
+  background-image: var(--dark-gradient), var(--aurora);
+}
+
+@keyframes aurora-keyframes {
+  0% {
+    background-position: 50%, 50%;
+  }
+  to {
+    background-position: 350%, 350%;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .aurora__glow::after {
+    animation: aurora-keyframes 60s linear infinite;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aurora__glow::after {
+    animation: none;
+  }
+}

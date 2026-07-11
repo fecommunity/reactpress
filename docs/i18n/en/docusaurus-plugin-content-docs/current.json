@@ -8,11 +8,15 @@
     "description": "The label for category 基础教程 in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.基础教程.link.generated-index.description": {
-    "message": "ReactPress Basic Tutorial",
+    "message": "Get started with ReactPress — install, dev workflow, and everyday publishing tasks in ~60 seconds.",
     "description": "The generated-index page description for category 基础教程 in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.进阶教程": {
     "message": "Advanced Tutorial",
     "description": "The label for category 进阶教程 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.进阶教程.link.generated-index.description": {
+    "message": "Advanced guides — plugins, desktop, themes, deployment, and migration for the ReactPress publishing platform.",
+    "description": "The generated-index page description for category 进阶教程 in sidebar tutorialSidebar"
   }
 }

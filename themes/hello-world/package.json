@@ -1,0 +1,38 @@
+{
+  "name": "@fecommunity/reactpress-template-hello-world",
+  "version": "3.0.4",
+  "description": "Lowest-cost hello-world starter theme for ReactPress (Pages Router, Next.js 15)",
+  "main": "index.js",
+  "bin": {
+    "create-reactpress-hello-world": "./bin/create-hello-world.js"
+  },
+  "scripts": {
+    "dev": "node server.js",
+    "prebuild": "reactpress-web sync-public ./public/admin",
+    "build": "next build",
+    "start": "cross-env NODE_ENV=production node server.js",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@fecommunity/reactpress-toolkit": "workspace:*",
+    "@fecommunity/reactpress-web": "workspace:*",
+    "dotenv": "^17.2.3",
+    "next": "15.5.12",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "fs-extra": "^10.0.0",
+    "typescript": "~5.9.3"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "@types/node": "17.0.22",
+    "@types/react": "19.2.7",
+    "@types/react-dom": "19.2.3"
+  },
+  "browserslist": [
+    "Chrome >= 90",
+    "Firefox >= 90",
+    "Safari >= 14",
+    "Edge >= 90"
+  ]
+}

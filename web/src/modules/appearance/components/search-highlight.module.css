@@ -1,0 +1,8 @@
+.mark {
+  background: var(--vscode-find-match-bg, rgba(234, 179, 8, 0.55));
+  color: inherit;
+  border-radius: 2px;
+  padding: 0 2px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}

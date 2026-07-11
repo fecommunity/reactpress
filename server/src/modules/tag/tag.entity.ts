@@ -16,7 +16,7 @@ export class Tag {
   @Column()
   value: string;
 
-  @ApiProperty()
+  @ApiProperty({ type: () => Article, isArray: true })
   @ManyToMany(
     () => Article,
     (article) => article.tags

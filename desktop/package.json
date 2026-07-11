@@ -1,0 +1,84 @@
+{
+  "name": "@fecommunity/reactpress-desktop",
+  "version": "4.0.0-beta.3",
+  "private": true,
+  "description": "ReactPress desktop client — offline writing with SQLite, sync to production API",
+  "main": "out/main/index.js",
+  "author": "fecommunity",
+  "license": "ISC",
+  "scripts": {
+    "build": "electron-vite build",
+    "postinstall": "node ./scripts/ensure-electron.mjs",
+    "dev": "node ./scripts/launch-dev.mjs",
+    "dev:shell": "cross-env ELECTRON_IS_DEV=1 node ./scripts/launch-dev.mjs",
+    "dist": "pnpm run build && electron-builder --config electron-builder.yml",
+    "dist:dir": "pnpm run build && electron-builder --config electron-builder.yml --dir",
+    "build:release": "node ./scripts/build-desktop.mjs",
+    "build:release:dir": "node ./scripts/build-desktop.mjs --dir",
+    "open:release": "node ./scripts/run-release-dir.mjs",
+    "prepare:resources": "node ./scripts/prepare-app-resources.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.10",
+    "cross-env": "^7.0.3",
+    "electron": "^35.0.3",
+    "electron-builder": "^25.1.8",
+    "electron-vite": "^3.1.0",
+    "typescript": "~5.9.3",
+    "vite": "^6.2.0"
+  },
+  "build": {
+    "appId": "com.reactpress.desktop",
+    "productName": "ReactPress",
+    "directories": {
+      "output": "release"
+    },
+    "asar": true,
+    "npmRebuild": false,
+    "files": [
+      "out/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": ".cache/app-resources",
+        "to": ".",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "../web/dist",
+        "to": "renderer",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "resources/icon.png",
+        "to": "icon.png"
+      }
+    ],
+    "mac": {
+      "target": [
+        "dmg"
+      ],
+      "icon": "resources/icon.png",
+      "category": "public.app-category.productivity"
+    },
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "resources/icon.png"
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "icon": "resources/icon.png",
+      "category": "Office"
+    }
+  }
+}

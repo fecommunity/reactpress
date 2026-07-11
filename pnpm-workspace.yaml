@@ -3,11 +3,17 @@ packages:
   - 'cli'
   # 后端 API
   - 'server'
-  # 客户端
-  - 'client'
+  # Admin SPA
+  - 'web'
+  # Desktop shell (Electron)
+  - 'desktop'
   # 文档
   - 'docs'
   # 工具包
   - 'toolkit'
-  # 模板
-  - 'templates/*'
+  # 官方主题包
+  - 'themes'
+  - 'themes/*'
+  # 官方插件包
+  - 'plugins'
+  - 'plugins/*'

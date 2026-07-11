@@ -1,6 +1,7 @@
-import { ApiMsg } from '../../common/api-messages';
 import { ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+
+import { ApiMsg } from '../../common/api-messages';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {

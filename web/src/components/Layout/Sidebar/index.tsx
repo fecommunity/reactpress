@@ -1,0 +1,293 @@
+import "./index.css";
+
+import { useLocation, useNavigate } from "@tanstack/react-router";
+import type { MenuProps } from "antd";
+import { Button, Drawer, Grid, Layout, Menu } from "antd";
+import { type ReactNode, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+
+import type { MenuItem as MenuItemType } from "@/api/schemas";
+import { usePendingCommentCount } from "@/hooks/usePendingCommentCount";
+import { Dashicon, renderDashicon } from "@/shared/components/Dashicon";
+import { useAuthStore } from "@/stores/auth";
+import { useSettingsStore } from "@/stores/settings";
+
+const { Sider } = Layout;
+
+type AntMenuItem = Required<MenuProps>["items"][number];
+type BuildMenuResult = {
+  items: AntMenuItem[];
+  keyToPath: Record<string, string>;
+  pathToKeyChain: Record<string, string[]>;
+};
+
+const COMMENTS_MENU_ID = "comments";
+
+function renderMenuIcon(icon: string | null) {
+  return renderDashicon(icon);
+}
+
+function menuContainsId(menus: MenuItemType[], id: string): boolean {
+  for (const menu of menus) {
+    if (menu.id === id) return true;
+    if (menu.children?.length && menuContainsId(menu.children, id)) return true;
+  }
+  return false;
+}
+
+function renderMenuLabel(text: string, badge?: number): ReactNode {
+  if (!badge) return text;
+  return (
+    <span className="admin-sidebar__menuLabel">
+      {text}
+      <span className="admin-sidebar__menuBadge">{badge}</span>
+    </span>
+  );
+}
+
+function registerPathMapping(
+  path: string,
+  keyChain: string[],
+  keyToPath: Record<string, string>,
+  pathToKeyChain: Record<string, string[]>,
+  key: string,
+) {
+  keyToPath[key] = path;
+  const existing = pathToKeyChain[path];
+  if (!existing || keyChain.length > existing.length) {
+    pathToKeyChain[path] = keyChain;
+  }
+}
+
+function buildMenuItems(
+  menus: MenuItemType[],
+  translate: (key: string, fallback: string) => string,
+  collapsed = false,
+  parentKeys: string[] = [],
+  isTopLevel = true,
+  menuBadges: Record<string, number> = {},
+): BuildMenuResult {
+  const sorted = menus.filter((m) => !m.hidden).sort((a, b) => a.sort - b.sort);
+  const keyToPath: Record<string, string> = {};
+  const pathToKeyChain: Record<string, string[]> = {};
+  const items: AntMenuItem[] = [];
+
+  for (const menu of sorted) {
+    const labelText = translate(`menu.${menu.id}`, menu.name);
+    const label = renderMenuLabel(labelText, menuBadges[menu.id]);
+    const key = menu.id;
+
+    if (menu.kind === "group") {
+      const built = buildMenuItems(
+        menu.children,
+        translate,
+        collapsed,
+        parentKeys,
+        isTopLevel,
+        menuBadges,
+      );
+      Object.assign(keyToPath, built.keyToPath);
+      Object.assign(pathToKeyChain, built.pathToKeyChain);
+      items.push(...built.items);
+      continue;
+    }
+
+    const nextParents = [...parentKeys, key];
+    const hasChildren = Boolean(menu.children?.length);
+
+    if (menu.path) {
+      registerPathMapping(menu.path, nextParents, keyToPath, pathToKeyChain, key);
+    }
+
+    let children: AntMenuItem[] | undefined;
+    if (hasChildren && menu.children) {
+      const built = buildMenuItems(
+        menu.children,
+        translate,
+        collapsed,
+        nextParents,
+        false,
+        menuBadges,
+      );
+      Object.assign(keyToPath, built.keyToPath);
+      Object.assign(pathToKeyChain, built.pathToKeyChain);
+      children = built.items.length ? built.items : undefined;
+    }
+
+    if (hasChildren && children?.length) {
+      items.push({
+        key,
+        label,
+        icon: isTopLevel ? renderMenuIcon(menu.icon) : undefined,
+        children,
+      });
+    } else {
+      items.push({
+        key,
+        label,
+        icon: isTopLevel ? renderMenuIcon(menu.icon) : undefined,
+      });
+    }
+  }
+
+  return { items, keyToPath, pathToKeyChain };
+}
+
+function resolveMenuKeyChain(pathname: string, pathToKeyChain: Record<string, string[]>): string[] {
+  const exact = pathToKeyChain[pathname];
+  if (exact?.length) return exact;
+
+  let best: string[] = [];
+  let bestLen = 0;
+  for (const [path, chain] of Object.entries(pathToKeyChain)) {
+    if (pathname === path || pathname.startsWith(`${path}/`)) {
+      if (path.length > bestLen) {
+        bestLen = path.length;
+        best = chain;
+      }
+    }
+  }
+  return best;
+}
+
+export function Sidebar() {
+  const { t } = useTranslation();
+  const menus = useAuthStore((s) => s.menus);
+  const collapsed = useSettingsStore((s) => s.sidebarCollapsed);
+  const toggleSidebar = useSettingsStore((s) => s.toggleSidebar);
+  const mobileSidebarOpen = useSettingsStore((s) => s.mobileSidebarOpen);
+  const setMobileSidebarOpen = useSettingsStore((s) => s.setMobileSidebarOpen);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const screens = Grid.useBreakpoint();
+  const isMobile = !screens.lg;
+
+  const showCommentBadge = menuContainsId(menus, COMMENTS_MENU_ID);
+  const { data: pendingCommentCount = 0 } = usePendingCommentCount(showCommentBadge);
+
+  const menuBadges = useMemo((): Record<string, number> => {
+    if (!pendingCommentCount) return {};
+    return { [COMMENTS_MENU_ID]: pendingCommentCount };
+  }, [pendingCommentCount]);
+
+  const builtMenu = useMemo(
+    () =>
+      buildMenuItems(
+        menus,
+        (key, fallback) => t(key, { defaultValue: fallback }),
+        !isMobile && collapsed,
+        [],
+        true,
+        menuBadges,
+      ),
+    [menus, isMobile, collapsed, t, menuBadges],
+  );
+
+  const { selectedKey, routeOpenKeys } = useMemo(() => {
+    const chain = resolveMenuKeyChain(location.pathname, builtMenu.pathToKeyChain);
+    return { selectedKey: chain[chain.length - 1], routeOpenKeys: chain.slice(0, -1) };
+  }, [builtMenu, location.pathname]);
+
+  const routeOpenKeysSig = routeOpenKeys.join("\0");
+  const [openKeys, setOpenKeys] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (isMobile) {
+      setMobileSidebarOpen(false);
+    }
+  }, [location.pathname, isMobile, setMobileSidebarOpen]);
+
+  useEffect(() => {
+    setOpenKeys((prev) => {
+      const next = new Set(prev);
+      for (const k of routeOpenKeys) next.add(k);
+      return [...next];
+    });
+  }, [location.pathname, routeOpenKeysSig]);
+
+  const collapseFooter = (isCollapsed: boolean) => (
+    <div className="admin-sidebar__collapse">
+      <Button
+        type="text"
+        className={`admin-sidebar__collapseBtn ${isCollapsed ? "admin-sidebar__collapseBtn--icon" : ""}`}
+        onClick={toggleSidebar}
+        icon={
+          <Dashicon
+            name={isCollapsed ? "arrow-right-alt2" : "arrow-left-alt2"}
+            className="admin-sidebar__dashicon"
+          />
+        }
+        aria-label={t("admin.collapseMenu")}
+      >
+        {isCollapsed ? null : t("admin.collapseMenu")}
+      </Button>
+    </div>
+  );
+
+  const sidebarMenu = (isCollapsed: boolean) => (
+    <>
+      <Menu
+        mode="inline"
+        theme="dark"
+        inlineCollapsed={isCollapsed}
+        selectedKeys={selectedKey ? [selectedKey] : []}
+        openKeys={openKeys}
+        onOpenChange={(keys) => setOpenKeys(keys as string[])}
+        items={builtMenu.items}
+        getPopupContainer={() => document.body}
+        onClick={({ key }) => {
+          const path = builtMenu.keyToPath[String(key)];
+          if (!path) return;
+          if (isMobile) {
+            setMobileSidebarOpen(false);
+          }
+          void navigate({ to: path });
+        }}
+        className="admin-sidebar__menu"
+      />
+      {!isMobile ? collapseFooter(isCollapsed) : null}
+    </>
+  );
+
+  if (isMobile) {
+    return (
+      <Drawer
+        open={mobileSidebarOpen}
+        placement="left"
+        onClose={() => setMobileSidebarOpen(false)}
+        size={200}
+        styles={{
+          body: {
+            padding: 0,
+            background: "var(--admin-sidebar-bg)",
+            overflow: "hidden",
+          },
+          header: { display: "none" },
+          mask: { opacity: 0.5 },
+        }}
+      >
+        {sidebarMenu(false)}
+      </Drawer>
+    );
+  }
+
+  return (
+    <Sider
+      theme="dark"
+      className="admin-sidebar"
+      collapsible
+      collapsed={collapsed}
+      trigger={null}
+      width={200}
+      collapsedWidth={36}
+      breakpoint="lg"
+      onBreakpoint={(broken) => {
+        if (broken) {
+          setMobileSidebarOpen(false);
+        }
+      }}
+    >
+      {sidebarMenu(collapsed)}
+    </Sider>
+  );
+}

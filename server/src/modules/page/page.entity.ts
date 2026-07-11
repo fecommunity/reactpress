@@ -24,23 +24,23 @@ export class Page {
   order: number; // 顺序
 
   @ApiProperty()
-  @Column({ type: 'mediumtext', default: null, charset: 'utf8mb4' })
+  @Column({ type: 'text', default: null })
   content: string; // 原始内容
 
   @ApiProperty()
-  @Column({ type: 'mediumtext', default: null, charset: 'utf8mb4' })
+  @Column({ type: 'text', default: null })
   html: string; // 格式化内容，自动生成
 
   @ApiProperty()
-  @Column({ type: 'mediumtext', default: null })
+  @Column({ type: 'text', default: null })
   toc: string; // 格式化内容索引，自动生成
 
   @ApiProperty()
-  @Column('simple-enum', { enum: ['draft', 'publish'] })
+  @Column({ type: 'simple-enum', enum: ['draft', 'publish'] })
   status: string; // 页面状态
 
   @ApiProperty()
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   publishAt: Date; // 发布日期
 
   @ApiProperty()

@@ -1,29 +1,11 @@
-import { config } from '@fecommunity/reactpress-toolkit';
+import { PUBLIC_SETTING_KEYS, systemGlobalSettingDefaults } from '@fecommunity/reactpress-toolkit/theme';
 
 /**
  * 国际化配置
  */
 export { messages as i18n } from '@fecommunity/reactpress-toolkit/config';
 
-/**
- * 全局配置
- */
-export const settings = config.globalSetting;
+/** DB `globalSetting` 默认值（仅主题运行时，不含主题个性化导航数据） */
+export const settings = systemGlobalSettingDefaults;
 
-export const UNPROTECTED_KEYS = [
-  'i18n',
-  'systemUrl',
-  'adminSystemUrl',
-  'systemTitle',
-  'systemSubTitle',
-  'systemBg',
-  'systemLogo',
-  'systemFavicon',
-  'systemNoticeInfo',
-  'systemFooterInfo',
-  'seoKeyword',
-  'seoDesc',
-  'baiduAnalyticsId',
-  'googleAnalyticsId',
-  'globalSetting',
-];
+export const UNPROTECTED_KEYS = [...PUBLIC_SETTING_KEYS];

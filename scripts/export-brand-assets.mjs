@@ -16,6 +16,7 @@ import {
   ROOT_PUBLIC_DIRS,
   ROOT_PUBLIC_LEGACY_BRAND_FILES,
   buildIconSvg,
+  buildSquareIconSvg,
   buildWordmarkSvg,
 } from "./brand-assets.mjs";
 import { REACT_PRESS_WORDMARK_VIEWBOX } from "./brand-wordmark-layout.mjs";
@@ -167,6 +168,17 @@ async function main() {
   console.log("\nICO");
   for (const rel of await writeFaviconIco()) {
     console.log(`  ${rel}`);
+  }
+
+  const { desktopAppIcon } = BRAND_EXPORT_MANIFEST;
+  if (desktopAppIcon) {
+    const squareSvg = buildSquareIconSvg(desktopAppIcon.size);
+    const squareSvgTmp = path.join(tmpDir, "icon-square.svg");
+    fs.writeFileSync(squareSvgTmp, squareSvg);
+    const dest = path.join(root, desktopAppIcon.path);
+    resvgPng(squareSvgTmp, dest, desktopAppIcon.size);
+    console.log(`\nPNG → desktop (${desktopAppIcon.size}px square)`);
+    console.log(`  ${desktopAppIcon.path}`);
   }
 
   removeLegacyRootPublicBrand();

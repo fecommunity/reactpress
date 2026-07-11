@@ -2,7 +2,7 @@
   "singleQuote": true,
   "quoteProps": "consistent",
   "bracketSpacing": true,
-  "jsxBracketSameLine": false,
+  "bracketSameLine": false,
   "arrowParens": "always",
   "trailingComma": "es5",
   "tabWidth": 2,

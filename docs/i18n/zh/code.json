@@ -1,15 +1,15 @@
 {
   "theme.tagline": {
-    "message": "装一个包，一分钟拥有自己的 CMS"
+    "message": "不是 CMS，是发布平台。约 60 秒上线。"
   },
   "home.hero.subTitle": {
-    "message": "装一个包，一分钟拥有自己的 CMS。"
+    "message": "WordPress 式编辑 · Next.js 交付 · 一条 CLI — CMS + 后台 + API + 主题 + 插件 + 桌面端，无需拼装。"
   },
   "home.hero.intro": {
     "message": "快速开始"
   },
   "home.hero.whatsNew": {
-    "message": "3.0 新特性"
+    "message": "4.0 新特性"
   },
   "home.hero.try": {
     "message": "在线演示"
@@ -30,31 +30,31 @@
     "message": "ReactPress 快速开始命令演示"
   },
   "home.highlights.title": {
-    "message": "3.0 核心亮点"
+    "message": "4.0 核心亮点"
   },
-  "home.highlight.zero.title": {
-    "message": "零配置起站"
+  "home.highlight.plugins.title": {
+    "message": "插件生态"
   },
-  "home.highlight.zero.desc": {
-    "message": "两条命令自动完成安装与数据库准备，无需手工配置环境。"
+  "home.highlight.plugins.desc": {
+    "message": "像 WordPress 一样装插件扩展能力；Hook + plugin.json + Admin 插槽，内置 SEO 与自动摘要。"
   },
-  "home.highlight.cli.title": {
-    "message": "一条命令搞定"
+  "home.highlight.desktop.title": {
+    "message": "桌面客户端"
   },
-  "home.highlight.cli.desc": {
-    "message": "全局安装后，初始化、开发、自检与状态查看都在命令行里完成。"
+  "home.highlight.desktop.desc": {
+    "message": "不开浏览器也能写作管理；Electron 壳 + SQLite 本地模式，可同步到远程站点。"
   },
-  "home.highlight.dx.title": {
-    "message": "上手更省心"
+  "home.highlight.themes.title": {
+    "message": "npm 主题 catalog"
   },
-  "home.highlight.dx.desc": {
-    "message": "交互式引导、环境自检与运行状态提示，启动成功即可打开前台与后台。"
+  "home.highlight.themes.desc": {
+    "message": "官方主题从 npm 一键安装；theme-starter catalog 与 hello-world 入门模板。"
   },
   "home.call.feature": {
     "message": "平台能力一览"
   },
   "home.call.subtitle": {
-    "message": "从个人博客到团队内容站，发布、管理与协作，开箱即用。"
+    "message": "从个人博客到团队内容站 — 发布、管理与协作，一条 CLI 开箱即用。"
   },
   "home.call.cta": {
     "message": "阅读完整文档"
@@ -96,7 +96,7 @@
     "message": "中英文界面切换，在电脑、平板与手机上均可舒适使用。"
   },
   "home.meta.description": {
-    "message": "ReactPress 3.0：装一个包、一分钟拥有自己的 CMS。零配置安装，开箱即用的博客与内容发布平台。"
+    "message": "ReactPress 官方文档 — 自托管发布平台：WordPress 式编辑、Headless REST、Next.js 主题、插件与桌面客户端。一条 CLI，约 60 秒上线。"
   },
   "home.cli.hint": {
     "message": "复制全部命令，粘贴到终端按序执行即可起站"

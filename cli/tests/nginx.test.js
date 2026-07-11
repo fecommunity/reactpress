@@ -6,7 +6,8 @@ const {
   resolveNginxConfigPath,
   resolveNginxComposeContext,
   ensureNginxConfig,
-} = require('../lib/nginx');
+  renderDevNginxConfig,
+} = require('../out/lib/nginx');
 const { createStandaloneProject, createMonorepoFixture, rmDir } = require('./helpers/tmp-project');
 
 describe('lib/nginx', () => {
@@ -39,7 +40,44 @@ describe('lib/nginx', () => {
       assert.equal(created, true);
       assert.equal(configPath, target);
       assert.ok(fs.existsSync(target));
-      assert.ok(fs.readFileSync(target, 'utf8').includes('host.docker.internal'));
+      const content = fs.readFileSync(target, 'utf8');
+      assert.ok(content.includes('host.docker.internal'));
+      assert.ok(content.includes('host.docker.internal:3000/admin/'));
+      assert.ok(!content.includes(':5173'));
+      assert.ok(!content.includes('expires 1y'));
+    } finally {
+      rmDir(root);
+    }
+  });
+
+  it('renderDevNginxConfig uses local API port by default', () => {
+    const content = renderDevNginxConfig({
+      adminPort: 3000,
+      visitorPort: 3001,
+      apiPort: 3002,
+    });
+    assert.ok(content.includes('host.docker.internal:3002'));
+  });
+
+  it('ensureNginxConfig refreshes stale prod nginx (13001 → env ports)', () => {
+    const root = createMonorepoFixture();
+    try {
+      const configPath = path.join(root, 'nginx.conf');
+      fs.writeFileSync(
+        configPath,
+        'location / { proxy_pass http://host.docker.internal:13001; }\nlocation /api { proxy_pass http://host.docker.internal:13002; }\n',
+      );
+      fs.writeFileSync(
+        path.join(root, '.env'),
+        'CLIENT_SITE_URL=http://localhost:3001\nSERVER_SITE_URL=http://localhost:3002\n',
+      );
+      const { changed } = ensureNginxConfig(root, { prod: true });
+      assert.equal(changed, true);
+      const content = fs.readFileSync(configPath, 'utf8');
+      assert.ok(content.includes('host.docker.internal:3001'));
+      assert.ok(content.includes('host.docker.internal:3002'));
+      assert.ok(!content.includes('13001'));
+      assert.ok(!content.includes('13002'));
     } finally {
       rmDir(root);
     }

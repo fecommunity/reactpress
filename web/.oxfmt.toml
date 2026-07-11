@@ -1,0 +1,25 @@
+# oxfmt configuration for antd-admin
+# Reference: https://oxc.rs/docs/guide/formatter
+
+# Line width for formatting
+line_width = 100
+
+# Indentation
+indent_width = 2
+use_tabs = false
+
+# Semicolons
+semi = true
+
+# Quotes
+single_quote = false
+
+# Trailing commas
+trailing_comma = "es5"
+
+# Arrows
+arrow_parens = "always"
+
+# Spaces
+bracket_spacing = true
+space_before_function_parentheses = false

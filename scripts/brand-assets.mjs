@@ -35,6 +35,24 @@ function orbitPaths(fill = BRAND_FILL) {
   );
 }
 
+/** Square canvas icon SVG — Electron / desktop app icon source. */
+export function buildSquareIconSvg(size = 512, fill = BRAND_FILL) {
+  const { width: iconW, height: iconH } = ICON_VIEWBOX;
+  const scale = size / iconW;
+  const scaledH = iconH * scale;
+  const padY = (size - scaledH) / 2;
+  const paths = orbitPaths(fill).join("\n      ");
+  const { fontSize, fontWeight, letterSpacing } = REACT_PRESS_ICON_P;
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" width="${size}" height="${size}" fill="none" role="img" aria-label="ReactPress">
+  <title>ReactPress</title>
+  <g transform="translate(0 ${padY}) scale(${scale})">
+    <g>${paths}</g>
+    <text x="56" y="52" text-anchor="middle" dominant-baseline="central" fill="${fill}" font-family="${REACT_PRESS_BRAND_FONT}" font-size="${fontSize}" font-weight="${fontWeight}" letter-spacing="${letterSpacing}">P</text>
+  </g>
+</svg>`;
+}
+
 /** Icon-only SVG (112×102) — favicon source. */
 export function buildIconSvg(fill = BRAND_FILL) {
   const paths = orbitPaths(fill).join("\n    ");
@@ -64,11 +82,9 @@ export function buildWordmarkSvg(fill = BRAND_FILL) {
 </svg>`;
 }
 
-/** Flat runtime dirs (web / server / theme — unchanged deploy paths). */
+/** Flat runtime dirs (web / server / cli — unchanged deploy paths). */
 const RUNTIME_PUBLIC_DIRS = [
   "web/public",
-  "themes/twentytwentyfive/public",
-  "themes/my-blog/public",
   "cli/server/public",
   "server/public",
 ];
@@ -94,8 +110,6 @@ export const BRAND_EXPORT_MANIFEST = {
     "web/public/logo.svg",
     `${ROOT_PUBLIC_DIRS.brand}/logo.svg`,
     "docs/static/img/logo.svg",
-    "themes/twentytwentyfive/public/logo.svg",
-    "themes/my-blog/public/logo.svg",
     "cli/server/public/logo.svg",
     "server/public/logo.svg",
   ],
@@ -134,9 +148,13 @@ export const BRAND_EXPORT_MANIFEST = {
     "web/public/favicon.ico",
     `${ROOT_PUBLIC_DIRS.favicon}/favicon.ico`,
     "docs/static/img/favicon.ico",
-    "themes/twentytwentyfive/public/favicon.ico",
-    "themes/my-blog/public/favicon.ico",
     "cli/server/public/favicon.ico",
     "server/public/favicon.ico",
   ],
+
+  /** electron-builder app icon (square PNG). */
+  desktopAppIcon: {
+    path: "desktop/resources/icon.png",
+    size: 512,
+  },
 };

@@ -1,13 +1,23 @@
-# 仓库根目录静态资源
+# Repository root static assets
 
-营销与演示素材保留在本目录根级（如 `usage.gif`、`poster.png`）。
+Marketing, demo, and brand assets for the ReactPress publishing platform — root [README](../README.md), [README-zh_CN](../README-zh_CN.md), and [docs site](https://reactpress-docs.vercel.app/).
 
-品牌与站点图标由 `pnpm export:brand` 生成，按类型分子目录：
+## Brand & icons
 
-| 目录 | 内容 |
+Generate or refresh brand files from source SVGs:
+
+```bash
+pnpm export:brand
+```
+
+| Directory | Contents |
 | :--- | :--- |
-| `brand/` | 字标与图标源：`logo.svg`、`wordmark.svg`、`logo.png` 等 |
-| `favicon/` | 浏览器 favicon：`favicon.ico`、`favicon-16/32/48.png` |
-| `icons/` | PWA / Apple Touch：`apple-touch-icon.png`、`icon-192/512.png` |
+| `brand/` | Logo and wordmark: `logo.svg`, `wordmark.svg`, `logo.png`, etc. |
+| `favicon/` | Browser favicons: `favicon.ico`, `favicon-16/32/48.png` |
+| `icons/` | PWA / Apple Touch: `apple-touch-icon.png`, `icon-192/512.png` |
 
-运行时应用（`web/public`、`server/public` 等）仍使用扁平路径，便于部署引用。
+## Demo media
+
+Root-level GIFs and screenshots (e.g. `usage.gif`, `cli.png`, `demo.gif`, `desktop.gif`) are referenced by [README.md](../README.md) and the docs site.
+
+Runtime apps (`web/public`, `server/public`, themes) use their own flat paths for deployment.

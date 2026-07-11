@@ -26,12 +26,12 @@ Marked.setOptions({
 });
 
 export const marked = (content: string): { html: string; toc: string } => {
-  const toc = [];
+  const toc: Array<{ level: number; id: string; text: string }> = [];
 
   renderer.heading = (text: string, level: number) => {
     const anchor = 'heading-' + toc.length;
 
-    toc.push([level, anchor, text]);
+    toc.push({ level, id: anchor, text });
     return `<h${level} id="${anchor}">${text}</h${level}>`;
   };
 

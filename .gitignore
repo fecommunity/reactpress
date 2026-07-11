@@ -1,8 +1,17 @@
+# 官方主题模板（运行时副本在 .reactpress/runtime/，已由 .reactpress/ 忽略）
+themes/*
+!themes/hello-world/
+!themes/theme-starter/
+!themes/.gitkeep
+!themes/README.md
+
 node_modules
 .DS_Store
 .idea
 .next
+.next-preview
 .cursor
+.brand-export/
 
 .env.prod
 .reactpress/
@@ -14,16 +23,33 @@ node_modules
 sitemap.xml
 
 lib
-!cli/lib
+!cli/src/lib/
+!themes/hello-world/**/lib/
+!themes/theme-starter/**/lib/
+cli/out/
 dist
 dist-ssr
 coverage
 logs
 test-results
+web/dist
+web/playwright-report
+web/.tanstack
+
+# Electron desktop (desktop/)
+desktop/out/
+desktop/.cache/
+desktop/release/
+desktop/*.dmg
+desktop/*.zip
+desktop/*.exe
+desktop/*.AppImage
+desktop/*.blockmap
+desktop/builder-debug.yml
+desktop/builder-effective-config.yaml
+
 .pnpm-store
 tsconfig.tsbuildinfo
-.pnpm-store
-
 
 
 # Production (root output only; do not use bare `build` — toolkit/src/theme/build is source)

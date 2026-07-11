@@ -1,0 +1,311 @@
+.wrap {
+  width: 100%;
+  color: var(--article-list-text);
+}
+
+.pageHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin-bottom: 4px;
+}
+
+.pageTitle {
+  margin: 0 !important;
+  font-size: 23px !important;
+  font-weight: 400 !important;
+  line-height: 1.3 !important;
+  color: var(--article-list-text) !important;
+}
+
+.statusRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+  margin-bottom: 12px;
+}
+
+.statusViews {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+  color: var(--article-list-muted);
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.statusRow .searchGroup {
+  flex: 0 0 auto;
+}
+
+.statusViews li {
+  display: inline-flex;
+  align-items: center;
+}
+
+.statusViews li + li::before {
+  content: "|";
+  margin: 0 6px;
+  color: var(--article-list-separator);
+}
+
+.statusLink {
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font: inherit;
+  color: var(--article-list-link);
+  text-decoration: none;
+  border-radius: 2px;
+  transition: color 0.15s ease;
+}
+
+.statusLink:hover {
+  color: var(--article-list-link-hover);
+}
+
+.statusLink:focus-visible {
+  outline: 2px solid var(--article-list-link);
+  outline-offset: 2px;
+}
+
+.statusLinkActive {
+  color: var(--article-list-text);
+  font-weight: 600;
+  cursor: default;
+}
+
+.statusLinkActive:hover {
+  color: var(--article-list-text);
+}
+
+.tablenav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+  margin-bottom: 0;
+  padding: 8px 0;
+  clear: both;
+}
+
+.tablenavTop {
+  border-bottom: 1px solid var(--article-list-border);
+}
+
+.tablenavBottom {
+  border-top: 1px solid var(--article-list-border);
+  margin-top: 0;
+}
+
+.tablenavCompact {
+  justify-content: flex-end;
+}
+
+.tablenavLeft {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.tablenavRight {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px 12px;
+  margin-left: auto;
+}
+
+.searchGroup {
+  display: flex;
+  align-items: stretch;
+}
+
+.searchInput {
+  width: min(240px, 100%);
+  min-width: 200px;
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+
+.searchButton {
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+}
+
+.itemCount {
+  font-size: 13px;
+  color: var(--article-list-muted);
+  white-space: nowrap;
+}
+
+.pagination {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 13px;
+  color: var(--article-list-muted);
+}
+
+.pageNavBtn {
+  min-width: 28px;
+  padding: 0 4px !important;
+  color: var(--article-list-muted) !important;
+  border-radius: 2px !important;
+  transition:
+    color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.pageNavBtn:hover:not(:disabled) {
+  color: var(--article-list-link) !important;
+  background: var(--article-list-row-hover) !important;
+}
+
+.pageNavBtn:focus-visible {
+  outline: 2px solid var(--article-list-link);
+  outline-offset: 1px;
+}
+
+.pageInput {
+  width: 40px !important;
+  text-align: center;
+  margin: 0 4px;
+}
+
+.pageOf {
+  white-space: nowrap;
+}
+
+.tableCard {
+  border: 1px solid var(--article-list-border);
+  border-radius: var(--article-list-radius);
+  overflow: hidden;
+  background: var(--article-list-bg);
+}
+
+.tableCard :global(.ant-table) {
+  font-size: 13px;
+  background: transparent;
+}
+
+.tableCard :global(.ant-table-container) {
+  border-radius: 0;
+}
+
+.tableCard :global(.ant-table-thead > tr > th) {
+  font-weight: 400;
+  background: var(--article-list-header-bg) !important;
+  color: var(--article-list-header-text) !important;
+  border-bottom: 1px solid var(--article-list-border) !important;
+}
+
+.tableCard :global(.ant-table-tbody > tr > td) {
+  vertical-align: top;
+  border-bottom: 1px solid var(--article-list-border);
+  transition: background-color 0.15s ease;
+}
+
+.tableCard :global(.ant-table-tbody > tr:hover > td) {
+  background: var(--article-list-row-hover) !important;
+}
+
+.tableCard :global(.ant-table-tbody > tr.ant-table-row-selected > td) {
+  background: var(--article-list-row-selected) !important;
+}
+
+.tableCard :global(.ant-table-tbody > tr.ant-table-row-selected:hover > td) {
+  background: color-mix(
+    in srgb,
+    var(--article-list-row-selected) 88%,
+    var(--article-list-link) 12%
+  ) !important;
+}
+
+.colTitle :global(.row-actions) {
+  visibility: hidden;
+  margin-top: 4px;
+  font-size: 12px;
+}
+
+@media (hover: none) {
+  .colTitle :global(.row-actions) {
+    visibility: visible;
+  }
+}
+
+.tableCard :global(.ant-table-tbody > tr:hover) .colTitle :global(.row-actions),
+.tableCard :global(.ant-table-tbody > tr:focus-within) .colTitle :global(.row-actions) {
+  visibility: visible;
+}
+
+.rowAction,
+.filterLink {
+  color: var(--article-list-link);
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  text-align: inherit;
+}
+
+.filterLink:hover {
+  color: var(--article-list-link-hover);
+  text-decoration: underline;
+}
+
+.rowAction:hover {
+  color: var(--article-list-link-hover);
+}
+
+.rowAction:focus-visible,
+.filterLink:focus-visible {
+  outline: 2px solid var(--article-list-link);
+  outline-offset: 2px;
+}
+
+.rowActionDanger {
+  color: var(--article-list-danger);
+}
+
+.rowActionDanger:hover {
+  color: var(--article-list-danger-hover);
+}
+
+.rowActionSep {
+  margin: 0 4px;
+  color: var(--article-list-separator);
+}
+
+.cellLink {
+  font-size: 13px;
+}
+
+.dateStatus {
+  display: block;
+  font-weight: 600;
+  color: var(--article-list-text);
+}
+
+.dateTime {
+  display: block;
+  color: var(--article-list-muted);
+  font-size: 12px;
+}
+
+.colComments {
+  text-align: center;
+}

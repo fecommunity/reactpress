@@ -1,9 +1,9 @@
 reactpress:
   label: ReactPress
   permalink: /reactpress
-  description: ReactPress description
+  description: News and updates about ReactPress — the open-source publishing platform for modern developers
 
 release:
   label: Release
   permalink: /release
-  description: Version releases
+  description: ReactPress version releases, changelogs, and migration notes for the 4.x publishing platform

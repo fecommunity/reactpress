@@ -1,0 +1,34 @@
+appId: com.reactpress.desktop
+productName: ReactPress
+asar: true
+npmRebuild: false
+directories:
+  output: release
+files:
+  - out/**/*
+  - package.json
+extraResources:
+  - from: .cache/app-resources
+    to: .
+    filter:
+      - "**/*"
+  - from: ../web/dist
+    to: renderer
+    filter:
+      - "**/*"
+  - from: resources/icon.png
+    to: icon.png
+mac:
+  target:
+    - dmg
+  icon: resources/icon.png
+  category: public.app-category.productivity
+win:
+  target:
+    - nsis
+  icon: resources/icon.png
+linux:
+  target:
+    - AppImage
+  icon: resources/icon.png
+  category: Office

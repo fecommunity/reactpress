@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "esModuleInterop": true,
+    "jsx": "preserve",
+    "target": "ES2020",
+    "lib": ["ES2020", "DOM"],
+    "moduleResolution": "node",
+    "module": "esnext",
+    "noEmit": true,
+    "baseUrl": ".",
+    "skipLibCheck": true,
+    "paths": {
+      "@site/*": ["./*"]
+    }
+  },
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": [".docusaurus", "build", "node_modules"]
+}

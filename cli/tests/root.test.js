@@ -6,7 +6,7 @@ const {
   isProjectRoot,
   isPublishedCliRoot,
   getMonorepoRoot,
-} = require('../lib/root');
+} = require('../out/lib/root');
 const { createStandaloneProject, createMonorepoFixture, rmDir } = require('./helpers/tmp-project');
 
 describe('lib/root', () => {

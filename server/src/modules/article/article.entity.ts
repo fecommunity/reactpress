@@ -31,30 +31,50 @@ export class Article {
   @Column({ type: 'text', default: null })
   summary: string; // 摘要，自动生成
 
+  @ApiProperty({ description: 'URL 别名（slug）' })
+  @Column({ type: 'varchar', length: 191, default: null, unique: true })
+  slug: string;
+
+  @ApiProperty({ description: 'SEO 关键词，逗号分隔' })
+  @Column({ type: 'text', default: null })
+  seoKeywords: string;
+
+  @ApiProperty({ description: 'SEO 描述（meta description）' })
+  @Column({ type: 'text', default: null })
+  seoDescription: string;
+
   @ApiProperty()
-  @Column({ type: 'mediumtext', default: null, charset: 'utf8mb4' })
+  @Column({ type: 'text', default: null })
   content: string; // 原始内容
 
   @ApiProperty()
-  @Column({ type: 'mediumtext', default: null, charset: 'utf8mb4' })
+  @Column({ type: 'text', default: null })
   html: string; // 格式化内容，自动生成
 
   @ApiProperty()
-  @Column({ type: 'mediumtext', default: null })
+  @Column({ type: 'text', default: null })
   toc: string; // 格式化内容索引，自动生成
 
-  @ApiProperty()
-  @ManyToOne(() => Category, (category) => category.articles, { cascade: true })
+  @ApiProperty({ type: () => Category })
+  @ManyToOne(
+    () => Category,
+    (category) => category.articles,
+    { cascade: true }
+  )
   @JoinTable()
   category: Category;
 
-  @ApiProperty()
-  @ManyToMany(() => Tag, (tag) => tag.articles, { cascade: true })
+  @ApiProperty({ type: () => Tag, isArray: true })
+  @ManyToMany(
+    () => Tag,
+    (tag) => tag.articles,
+    { cascade: true }
+  )
   @JoinTable()
   tags: Array<Tag>;
 
   @ApiProperty()
-  @Column('simple-enum', { enum: ['draft', 'publish'] })
+  @Column({ type: 'simple-enum', enum: ['draft', 'publish'] })
   status: string; // 文章状态
 
   @ApiProperty()
@@ -82,11 +102,11 @@ export class Article {
   isCommentable: boolean;
 
   @ApiProperty()
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   publishAt: Date; // 发布日期
 
   @ApiProperty({ description: '定时发布时间（草稿状态下生效）' })
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: 'datetime', nullable: true })
   scheduledPublishAt: Date;
 
   @ApiProperty()

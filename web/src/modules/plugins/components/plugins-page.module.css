@@ -1,0 +1,67 @@
+/* Active plugin row — WordPress-style blue accent */
+.tableCard :global(.ant-table-tbody > tr.rowActive > td) {
+  background: color-mix(
+    in srgb,
+    var(--article-list-link) 8%,
+    var(--article-list-bg) 92%
+  ) !important;
+}
+
+.tableCard :global(.ant-table-tbody > tr.rowActive > td:first-child) {
+  box-shadow: inset 4px 0 0 var(--article-list-link);
+}
+
+.tableCard :global(.ant-table-tbody > tr.rowActive:hover > td) {
+  background: color-mix(
+    in srgb,
+    var(--article-list-link) 12%,
+    var(--article-list-bg) 88%
+  ) !important;
+}
+
+.pluginName {
+  display: block;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--article-list-text);
+  margin-bottom: 4px;
+}
+
+.pluginMeta {
+  margin: 8px 0 0;
+  font-size: 12px;
+  color: var(--article-list-muted);
+  line-height: 1.5;
+}
+
+.pluginMetaSep {
+  margin: 0 4px;
+  color: var(--article-list-separator);
+}
+
+.loadError {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--article-list-danger);
+}
+
+.rowActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0;
+  margin-top: 2px;
+  font-size: 13px;
+}
+
+.descCell {
+  color: var(--article-list-text);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.statusMuted {
+  font-size: 13px;
+  color: var(--article-list-muted);
+}

@@ -1,8 +1,13 @@
 export type AppRuntime = 'web' | 'electron';
+export type DesktopApiMode = 'local' | 'remote';
 
 export interface DesktopApi {
+  getApiMode: () => Promise<DesktopApiMode>;
+  setApiMode: (mode: DesktopApiMode) => Promise<DesktopApiMode>;
   getApiBaseUrl: () => Promise<string>;
-  setApiBaseUrl: (url: string) => Promise<void>;
+  setApiBaseUrl: (url: string) => Promise<string>;
+  getRemoteApiBaseUrl: () => Promise<string>;
+  setRemoteApiBaseUrl: (url: string) => Promise<string>;
   showSaveDialog: (opts: { defaultPath?: string }) => Promise<string | undefined>;
   openExternal: (url: string) => Promise<void>;
   platform: NodeJS.Platform;

@@ -20,7 +20,7 @@ function incrementVersion(version, type) {
     case 'beta': {
       const match = version.match(/^(.*)-beta\.(\d+)$/);
       if (match) return `${match[1]}-beta.${parseInt(match[2], 10) + 1}`;
-      return `${version}-beta.1`;
+      return `${base}-beta.0`;
     }
     default:
       return version;
@@ -36,7 +36,11 @@ describe('publish version bump', () => {
     assert.equal(incrementVersion('3.0', 'patch'), '3.0.1');
   });
 
-  it('bumps beta', () => {
+  it('bumps beta from stable', () => {
+    assert.equal(incrementVersion('4.0.0', 'beta'), '4.0.0-beta.0');
+  });
+
+  it('bumps beta prerelease', () => {
     assert.equal(incrementVersion('3.0.0-beta.1', 'beta'), '3.0.0-beta.2');
   });
 });

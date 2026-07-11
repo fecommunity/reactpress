@@ -2,13 +2,15 @@
 sidebar_position: 1
 id: intro
 title: Introduction
+description: Official ReactPress docs — self-hosted publishing platform with WordPress-style editing, headless REST, Next.js themes, plugins, and desktop client. One CLI, ~60 seconds to live.
+keywords: [reactpress, publishing platform, wordpress alternative, headless cms, blog, next.js, react, nestjs, plugin, desktop, self-hosted]
 ---
 
 ## Introduction
 
-`ReactPress` is an open-source publishing platform built with React. Users can run blogs and websites on servers with React and MySQL, or use it as a CMS.
+**ReactPress** is an open-source **publishing platform** for the React era — not another headless backend to wire up. One CLI ships CMS API, Web Admin, swappable Next.js themes, plugins, and an Electron desktop client.
 
-**ReactPress 3.0** ships as a single global package: `npm i -g @fecommunity/reactpress@3`, then `reactpress init` and `reactpress dev` in any empty folder. See [ReactPress 3.0 Platform](./tutorial-extras/reactpress-3-0.md).
+**ReactPress 4.0** (codename **Extend**) adds a **plugin system**, **desktop client**, and **npm theme catalog** on top of 3.x. New users: `npm i -g @fecommunity/reactpress@4`. See [ReactPress 4.0 Extend](./tutorial-extras/reactpress-4-0.md). Still on 3.x? See [ReactPress 3.0 Platform](./tutorial-extras/reactpress-3-0.md).
 
 ## 🆚 Comparison
 
@@ -23,104 +25,105 @@ title: Introduction
 | **Performance Optimization**        | Virtual DOM, Code Splitting, Lazy Loading                              | Plugin-dependent optimization                           | Static page generation, excellent performance     |
 | **SEO Performance**                 | Excellent (SSR support)                                                | Good                                                    | Outstanding (static pages)                        |
 | **Customizability**                 | High (fully customizable themes and styles)                            | High (via plugins and themes)                           | Moderate (theme and component customization)      |
-| **Extensibility**                   | Strong (API interfaces, independent front-end and back-end extensions) | Strong (plugin extensions)                              | Moderate (plugin and theme extensions)            |
+| **Extensibility**                   | Strong (API, plugin hooks, independent front-end and back-end extensions) | Strong (plugin extensions)                              | Moderate (plugin and theme extensions)            |
 | **User Interface**                  | Modern, component-based design based on React                          | User-friendly backend interface                         | Minimalist, optimized for technical documentation |
 | **Security**                        | Depends on the security of the framework and database                  | Depends on plugin and theme updates and maintenance     | Static site, high security                        |
 | **Application Scenarios**           | Complex functionality, high concurrent access, SEO optimization needs  | Quick website setup, content publishing, and management | Technical documentation, static blogs             |
-| **User Groups**                     | Developers, technical teams，Personal blogs，small businesses          | Personal blogs, small businesses, startups              | Technical documentation writers, developers       |
+| **User Groups**                     | Developers, technical teams, Personal blogs, small businesses          | Personal blogs, small businesses, startups              | Technical documentation writers, developers       |
 | **Community Support**               | Active and growing                                                     | Very active, with a large user base                     | Supported by the Vue.js community                 |
 
 ## ✨ Features
 
-- 📦 Technology Stack: Built on React+MySQL+NestJS+NextJS
-- 🌈 Componentization: an interactive language and visual style based on antd
-- 🌍 Internationalization: Supports switching between Chinese and English, with international configuration management capabilities
-- 🌞 Black and White Theme: Supports free switching between light and dark mode themes
-- 🖌️ Creation Management: Built in 'MarkDown' editor, supporting article writing, category and directory management, and tag management
-- 📃 Page management: supports customizing new pages
-- 💬 Comment management: supports content comment management
-- 📷 Media Management: Supports local file upload and OSS file upload
-- ...
+### 4.0 Extend
+
+- 🔌 **Plugins**: Hooks + `plugin.json` + Admin UI slots; built-in SEO, auto-summary, batch WebP optimization
+- 🖥️ **Desktop**: Electron + SQLite local mode; connect remote API and sync content
+- 🎨 **Theme catalog**: install official themes from npm with `reactpress theme add`
+
+### Platform (since 3.x)
+
+- 📦 **Single entry**: one global `@fecommunity/reactpress` package
+- ⚡ **Zero-config setup**: auto-generated `.reactpress/config.json`, `.env`, embedded MySQL
+- 🩺 **Diagnostics**: `reactpress doctor` and `reactpress status`
+- 🌈 Componentization with antd
+- 🌍 i18n (Chinese / English)
+- 🌞 Light / dark theme
+- 🖌️ Markdown editor, posts, categories, tags
+- 📃 Pages, 💬 comments, 📷 media (local + OSS upload)
+- 🔌 **Headless**: API Key, Webhook, health check, toolkit SDK
 
 ## 🔥 Live Demo
 
-[ReactPress Demo](https://blog.gaoredu.com/)
+[ReactPress Demo](https://blog.gaoredu.com/) · [Official theme demo](https://reactpress-theme-starter.vercel.app)
 
-## ⌨️ Development
+## ⌨️ Quick start (4.0 recommended)
 
-### Environment
-
-```bash
-$ git clone --depth=1 https://github.com/fecommunity/reactpress.git
-$ cd reactpress
-$ npm i -g pnpm
-$ pnpm i
-```
-
-### Configuration
-
-After the project starts, the `.env ` configuration file in the root directory will be loaded. Please ensure that the MySQL database service is consistent with the following configuration, and create the `reactpress` database in advance
-
-```js
-DB_HOST=127.0.0.1 // Default Database Host
-DB_PORT=3306 // Default Database Port
-DB_USER=reactpress // Default Username
-DB_PASSWD=reactpress // Default Password
-DB_DATABASE=reactpress // Default Database Name
-```
-
-After the environment is ready, execute the startup shell:
+### End users — one global package
 
 ```bash
-$ pnpm run dev
+npm i -g @fecommunity/reactpress@4
+mkdir my-blog && cd my-blog
+reactpress init
+reactpress dev
 ```
 
-Open your browser and visit http://127.0.0.1:3001
+| Service | Port | URL |
+|---------|------|-----|
+| Admin | 3000 | http://localhost:3000 |
+| Site theme | 3001 | http://localhost:3001 |
+| API | 3002 | http://localhost:3002/api/health |
+| Theme preview | 3003 | http://localhost:3003 |
+
+Run `reactpress` for the interactive menu. Upgrade from 3.x: [migration guide](./tutorial-extras/migration-3-to-4.md).
+
+### Desktop client (4.0, no Docker)
+
+```bash
+# at monorepo root
+pnpm dev:desktop
+```
+
+Local SQLite mode, default account `admin` / `admin`. See [ReactPress 4.0 Extend](./tutorial-extras/reactpress-4-0.md).
+
+### Monorepo contributors
+
+```bash
+git clone --depth=1 https://github.com/fecommunity/reactpress.git
+cd reactpress
+npm i -g pnpm
+pnpm install
+pnpm run dev
+```
+
+Node.js ≥ 18 and Docker (embedded MySQL) required. Run `pnpm run build:plugins` before plugin development.
 
 ## 📦 NPM Packages
 
-ReactPress 2.0 provides three core NPM packages that can be used independently or in combination:
-
-- [@fecommunity/reactpress-client](./tutorial-extras/client-package) - Next.js based frontend client
-- [@fecommunity/reactpress-server](./tutorial-extras/server-package) - NestJS based backend API service
-- [@fecommunity/reactpress-toolkit](./tutorial-extras/toolkit-package) - TypeScript API client toolkit
-
-Each package has detailed documentation that can be found in the advanced tutorials.
+| Package | Description |
+|---------|-------------|
+| [**@fecommunity/reactpress**](./tutorial-extras/reactpress-4-0.md) | **4.0 main package** (CLI + bundled API + plugins + desktop) |
+| [ReactPress 4.0 Extend](./tutorial-extras/reactpress-4-0.md) | 4.0 overview |
+| [ReactPress 3.0 Platform](./tutorial-extras/reactpress-3-0.md) | 3.0 historical docs |
+| [@fecommunity/reactpress-client](./tutorial-extras/client-package) | Advanced: frontend only |
+| [@fecommunity/reactpress-server](./tutorial-extras/server-package) | **Deprecated** — use bundled API in main package |
+| [@fecommunity/reactpress-toolkit](./tutorial-extras/toolkit-package) | TypeScript API SDK (Headless) |
 
 ## 🔗 Links
 
 - [Home](https://github.com/fecommunity/reactpress)
-- [ReactPress](https://blog.gaoredu.com/knowledge/c7edfecf-4f47-4bd3-ba93-093e43cf5314/bef19159-4a6f-4343-b84e-b1a636b570f8)
+- [4.0 Extend](./tutorial-extras/reactpress-4-0.md)
+- [3.x → 4.0 migration](./tutorial-extras/migration-3-to-4.md)
+- [3.0 Platform](./tutorial-extras/reactpress-3-0.md)
+- [2.x → 3.0 migration](./tutorial-extras/migration-2-to-3.md)
+- [Architecture (ARCHITECTURE.md)](https://github.com/fecommunity/reactpress/blob/master/ARCHITECTURE.md)
 - [Issues](https://github.com/fecommunity/reactpress/issues)
 - [Pull Request](https://github.com/fecommunity/reactpress/pulls)
-- [next.js](https://github.com/vercel/next.js)
-- [nest.js](https://github.com/nestjs/nest)
 
-## 👥 Contributing
+## 👥 Community
 
-We warmly invite contributions from everyone. Before you get started, please take a moment to review our [Contributing Guide](https://github.com/fecommunity/reactpress). Feel free to share your ideas through [Pull Requests](https://github.com/fecommunity/reactpress/pulls) or [GitHub Issues](https://github.com/fecommunity/reactpress/issues). If you're interested in enhancing our codebase, explore the [Development Instructions](https://github.com/fecommunity/reactpress/wiki/Development) and enjoy your coding journey!
+1. Run `reactpress doctor` and `reactpress status` first
+2. [GitHub Discussions](https://github.com/fecommunity/reactpress/discussions)
+3. [GitHub Issues](https://github.com/fecommunity/reactpress/issues)
 
-1. [GitHub Discussions](https://github.com/fecommunity/reactpress/discussions)
-2. [Stack Overflow](http://stackoverflow.com/questions/tagged/antd)（English）
-3. [Segment Fault](https://segmentfault.com/t/reactpress)（Chinese）
-
-You can also send me an email: admin@gaoredu.com
-
-## ❤️ Acknowledgments
-
-The ReactPress project has been greatly inspired and assisted by the following open-source projects:
-
-- **[fantasticit]** - **[wipi]** - [[https://github.com/fantasticit/wipi](https://github.com/fantasticit/wipi)]
-
-- **[Lrunlin]** - **[blog]** - [[https://github.com/Lrunlin/blog](https://github.com/Lrunlin/blog)]
-
-- **[biaochenxuying]** - **[blog-react]** - [[https://github.com/biaochenxuying/blog-react](https://github.com/biaochenxuying/blog-react)]
-
-- **[MrXujiang]** - **[next-admin]** - [[https://github.com/MrXujiang/next-admin](https://github.com/MrXujiang/next-admin)]
-
-- **[lfb]** - **[nodejs-koa-blog]** - [[https://github.com/lfb/nodejs-koa-blog](https://github.com/lfb/nodejs-koa-blog)]
-
-……
-
-We extend our heartfelt gratitude to the authors and contributors of these projects!
+Email: admin@gaoredu.com
 

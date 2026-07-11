@@ -1,3 +1,28 @@
+# [4.0.0-beta.0](https://github.com/fecommunity/reactpress/compare/v3.7.0...v4.0.0-beta.0) (2026-06-27)
+
+> **Pre-release** — install with `npm i -g @fecommunity/reactpress@beta` for testing. Final 4.0.0 follows after validation.
+
+### Plugin System
+
+* **Hook + manifest**: `plugin.json` lifecycle (install / activate / config / hot reload); `HookService` with filters and actions
+* **Admin slots**: `AdminSlot` + `PluginAdminProvider`; SEO plugin integrates article editor
+* **Built-in plugins**: `hello-world` (auto summary), `seo` (slug, keywords, meta description), `image-optimizer` (legacy media WebP batch optimization)
+* **CLI**: `reactpress plugin list` / `install`; `pnpm build:plugins` in full build pipeline
+* **Security**: manifest JSON Schema validation, module path constraints, Ajv config validation
+
+### Desktop Client
+
+* **Electron shell**: loads same Admin SPA (`web/dist`); `pnpm dev:desktop` / `pnpm build:desktop`
+* **Local mode**: embedded SQLite API (default port `13102`), no Docker/MySQL required
+* **Remote mode**: connect to existing ReactPress API
+* **Sync**: push articles, pages, and settings from local to remote site
+
+### Themes & Docs
+
+* **Theme catalog**: npm anchor `theme-starter`; enhanced theme management; removed deprecated bundled themes
+* **hello-world**: updated README aligned with Pages Router + `createThemeApp`
+* **Docs**: ARCHITECTURE / design sync; migration 3→4; ReactPress 4.0 guide
+
 # [3.7.0](https://github.com/fecommunity/reactpress/compare/v3.6.0...v3.7.0) (2026-06-23)
 
 ### Security

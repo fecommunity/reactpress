@@ -33,7 +33,7 @@ export type ThemeTemplateSlug = (typeof ThemeTemplate)[keyof typeof ThemeTemplat
 export const DEFAULT_TEMPLATE_FILES: Record<ThemeTemplateSlug, string> = {
   [ThemeTemplate.HOME]: 'pages/index.tsx',
   [ThemeTemplate.SINGLE]: 'pages/article/[id].tsx',
-  [ThemeTemplate.PAGE]: 'pages/about.tsx',
+  [ThemeTemplate.PAGE]: 'pages/[path].tsx',
   [ThemeTemplate.ARCHIVE_CATEGORY]: 'pages/category/[category].tsx',
   [ThemeTemplate.ARCHIVE_TAG]: 'pages/tag/[tag].tsx',
   [ThemeTemplate.SEARCH]: 'pages/search.tsx',

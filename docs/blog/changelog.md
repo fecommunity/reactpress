@@ -8,6 +8,27 @@ tags: [reactpress, release]
 
 <!--truncate-->
 
+## [4.0.0-beta.0](https://github.com/fecommunity/reactpress/compare/v3.7.0...v4.0.0-beta.0) (2026-06-27)
+
+**ReactPress 4.0 Extend (beta)** — plugins, desktop client, theme catalog. Install: `npm i -g @fecommunity/reactpress@beta`.
+
+- **Plugins**: Hook system, `plugin.json` manifest, Admin slots; built-in `hello-world`, `seo`, `image-optimizer`
+- **Desktop**: Electron + SQLite local mode; remote API + sync to server
+- **Themes**: npm catalog (`theme-starter`); hello-world docs refresh
+- **Migration**: [3.x → 4.0 guide](/docs/tutorial-extras/migration-3-to-4)
+
+---
+
+## [3.7.0](https://github.com/fecommunity/reactpress/compare/v3.6.0...v3.7.0) (2026-06-23)
+
+**Security** — SQL injection and stored XSS fixes.
+
+- **SQL injection**: whitelist filter column names in public list API `findAll()` handlers
+- **Stored XSS**: sanitize comment HTML after markdown parsing; require JWT for `POST /comment`; CSP headers via Helmet
+- Credit: reported by [lsr365400](https://github.com/lsr365400)
+
+---
+
 ## [3.6.0](https://github.com/fecommunity/reactpress/compare/v3.5.0...v3.6.0) (2026-06-14)
 
 **Docs CI/CD & deployment** — automated docs pipeline and Vercel migration.

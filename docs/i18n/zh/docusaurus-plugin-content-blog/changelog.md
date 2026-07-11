@@ -8,6 +8,31 @@ tags: [reactpress, release]
 
 <!--truncate-->
 
+## [4.0.0-beta.0](https://github.com/fecommunity/reactpress/compare/v3.7.0...v4.0.0-beta.0)（2026-06-27）
+
+**ReactPress 4.0 扩展版（beta）** — 插件、桌面客户端、主题 catalog。安装：`npm i -g @fecommunity/reactpress@beta`。
+
+### 新特性
+
+- **插件系统**：Hook + `plugin.json` manifest + Admin 插槽；内置 `hello-world`（自动摘要）、`seo`（SEO 增强）、`image-optimizer`（历史图片 WebP 批量优化）
+- **桌面客户端**：Electron + SQLite 本地模式；远程 API 与内容同步
+- **主题**：npm catalog（`theme-starter`）；hello-world 文档与结构对齐
+- **迁移指南**：[3.x → 4.0](/docs/tutorial-extras/migration-3-to-4)
+
+---
+
+## [3.7.0](https://github.com/fecommunity/reactpress/compare/v3.6.0...v3.7.0) (2026-06-23)
+
+**安全修复** — SQL 注入与存储型 XSS 修复。
+
+### 新特性
+
+- **SQL 注入**：公开列表 API `findAll()` 中过滤字段名白名单校验
+- **存储型 XSS**：Markdown 解析后 HTML 消毒；`POST /comment` 需 JWT；Helmet CSP 响应头
+- 致谢：[lsr365400](https://github.com/lsr365400)
+
+---
+
 ## [3.6.0](https://github.com/fecommunity/reactpress/compare/v3.5.0...v3.6.0) (2026-06-14)
 
 **文档 CI/CD 与部署** — 自动化文档流水线，Vercel 配置迁移。

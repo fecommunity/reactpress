@@ -1,10 +1,10 @@
-import { ApiMsg } from '../../common/api-messages';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import axios from 'axios';
 import * as crypto from 'crypto';
 import { Repository } from 'typeorm';
 
+import { ApiMsg } from '../../common/api-messages';
 import { Webhook } from './webhook.entity';
 
 export type WebhookEvent = 'article.published' | 'comment.created';
@@ -35,7 +35,10 @@ export class WebhookService {
   }
 
   private signPayload(secret: string, body: string) {
-    return crypto.createHmac('sha256', secret).update(body).digest('hex');
+    return crypto
+      .createHmac('sha256', secret)
+      .update(body)
+      .digest('hex');
   }
 
   private async deliverOnce(webhook: Webhook, event: WebhookEvent, payload: Record<string, unknown>) {

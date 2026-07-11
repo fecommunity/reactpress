@@ -1,0 +1,174 @@
+.wrap {
+  --desktop-text: #1d2327;
+  --desktop-muted: #646970;
+  --desktop-border: #dcdcde;
+  --desktop-surface: #f6f7f7;
+  --desktop-input-bg: #fff;
+  --desktop-brand: #087ea4;
+  --desktop-brand-soft: rgba(8, 126, 164, 0.14);
+  max-width: 640px;
+}
+
+.title {
+  margin-top: 0 !important;
+  margin-bottom: 8px !important;
+  color: var(--desktop-text) !important;
+}
+
+.desc {
+  margin-bottom: 16px !important;
+  color: var(--desktop-muted) !important;
+}
+
+.sectionTitle {
+  margin: 0 0 8px !important;
+  color: var(--desktop-text) !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+}
+
+.sectionDesc {
+  margin-bottom: 12px !important;
+  color: var(--desktop-muted) !important;
+}
+
+.modeSwitch {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  width: 100%;
+  margin-bottom: 16px;
+  padding: 4px;
+  border: 1px solid var(--desktop-border);
+  border-radius: 999px;
+  background: var(--desktop-surface);
+}
+
+.modeOption {
+  appearance: none;
+  border: none;
+  border-radius: 999px;
+  padding: 8px 14px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--desktop-muted);
+  background: transparent;
+  cursor: pointer;
+  transition:
+    background-color 0.18s ease,
+    color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.modeOption:hover {
+  color: var(--desktop-text);
+}
+
+.modeOption:focus-visible {
+  outline: 2px solid var(--desktop-brand);
+  outline-offset: 2px;
+}
+
+.modeOptionActive {
+  color: var(--desktop-text);
+  background: var(--desktop-input-bg);
+  box-shadow: 0 1px 3px rgba(15, 23, 32, 0.08);
+}
+
+.gateLogin {
+  margin-bottom: 4px;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.gateLogin .modeSwitch {
+  margin-bottom: 0;
+}
+
+.status {
+  display: block;
+  margin-bottom: 12px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.statusReady {
+  color: #008a20;
+}
+
+.statusPending {
+  color: var(--desktop-muted);
+}
+
+.syncSection {
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid var(--desktop-border);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.wrap :global(.ant-form-item-label > label) {
+  color: var(--desktop-text);
+  font-weight: 600;
+}
+
+.wrap :global(.ant-input),
+.wrap :global(.ant-input-affix-wrapper),
+.wrap :global(.ant-input-password) {
+  background: var(--desktop-input-bg);
+  border-color: var(--desktop-border);
+  color: var(--desktop-text);
+}
+
+.wrap :global(.ant-input::placeholder) {
+  color: var(--desktop-muted);
+}
+
+:root[data-theme="dark"] .wrap {
+  --desktop-text: rgba(255, 255, 255, 0.88);
+  --desktop-muted: rgba(255, 255, 255, 0.55);
+  --desktop-border: rgba(255, 255, 255, 0.12);
+  --desktop-surface: rgba(255, 255, 255, 0.04);
+  --desktop-input-bg: rgba(255, 255, 255, 0.06);
+  --desktop-brand: #58c4dc;
+  --desktop-brand-soft: rgba(88, 196, 220, 0.16);
+}
+
+:root[data-theme="dark"] .wrap .statusReady {
+  color: #73d897;
+}
+
+:root[data-theme="dark"] .wrap .modeOptionActive {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+:global(.authCard) .wrap {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+:global(.authCard) .gateLogin {
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--desktop-border);
+}
+
+:global(.authCard) .gateLogin:has(+ .authForm) {
+  margin-bottom: 20px;
+}
+
+:global(.authCard) .syncSection {
+  border-top: none;
+  margin-top: 16px;
+  padding-top: 0;
+}

@@ -10,12 +10,12 @@ const REQUIRED_SHIPPED = [
   'package.json',
   'bin/reactpress.js',
   'bin/reactpress-cli-shim.js',
-  'lib/root.js',
-  'lib/publish.js',
-  'lib/project-type.js',
-  'ui/interactive.js',
-  'ui/banner.js',
-  'ui/theme.js',
+  'out/lib/root.js',
+  'out/lib/publish.js',
+  'out/lib/project-type.js',
+  'out/ui/interactive.js',
+  'out/ui/banner.js',
+  'out/ui/theme.js',
   'dist/index.js',
   'templates/env.default',
   'templates/config.default.json',
@@ -36,7 +36,7 @@ describe('publish/local file parity', () => {
       const top = required.split('/')[0];
       assert.ok(
         declared.has(top) || declared.has(required),
-        `package.json files[] missing "${top}" (needed for ${required})`
+        `package.json files[] missing "${top}" (needed for ${required})`,
       );
     }
   });

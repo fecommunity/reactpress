@@ -94,7 +94,7 @@ export interface SiteThemeState {
   previewThemeId?: string;
 }
 
-export const DEFAULT_ACTIVE_THEME = 'twentytwentyfive';
+export const DEFAULT_ACTIVE_THEME = 'hello-world';
 
 export const defaultSiteThemeState: SiteThemeState = {
   activeTheme: DEFAULT_ACTIVE_THEME,

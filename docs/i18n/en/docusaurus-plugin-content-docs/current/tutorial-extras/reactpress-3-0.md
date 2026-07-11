@@ -5,7 +5,9 @@ title: ReactPress 3.0 Platform
 
 # ReactPress 3.0 Platform
 
-> **One package. One command. Your CMS in about a minute.**
+> **Historical version.** New users should use [ReactPress 4.0 Extend](./reactpress-4-0.md). This page is kept for 3.x users.
+
+> **One CLI, ~60 seconds — full publishing platform, not another CMS to assemble.**
 
 Version 3.0 (codename **Platform**) focuses on **zero config**, a **single entry point**, and a **great developer experience**. The stack remains React 17 + Next.js 12 + NestJS 6 (Next 14 / React 18 is planned for **3.1**).
 

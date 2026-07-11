@@ -1,0 +1,61 @@
+{
+  "$schema": "../plugin.manifest.schema.json",
+  "id": "hello-world",
+  "name": "自动摘要",
+  "version": "1.2.0",
+  "description": "发布文章时，若摘要为空，从正文或标题自动生成 summary。",
+  "author": "ReactPress",
+  "requires": ">=3.5.0",
+  "server": {
+    "module": "./dist/index.js",
+    "hooks": {
+      "subscribe": ["article.beforePublish"]
+    }
+  },
+  "admin": {
+    "menu": {
+      "title": "自动摘要",
+      "path": "/plugins/hello-world/settings",
+      "permission": "extension:manage",
+      "sort": 10
+    }
+  },
+  "settings": {
+    "schema": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "title": "启用自动摘要",
+          "description": "关闭后，发布时不再自动写入 summary。",
+          "default": true
+        },
+        "maxLength": {
+          "type": "integer",
+          "title": "摘要最大长度",
+          "description": "从正文截取的最大字符数（40–500）。",
+          "minimum": 40,
+          "maximum": 500,
+          "default": 160
+        },
+        "suffix": {
+          "type": "string",
+          "title": "截断后缀",
+          "description": "超出最大长度时追加在末尾，例如 …",
+          "default": "…"
+        },
+        "fallbackToTitle": {
+          "type": "boolean",
+          "title": "正文为空时使用标题",
+          "description": "Markdown 正文去格式后为空时，用文章标题作为摘要。",
+          "default": true
+        }
+      }
+    }
+  },
+  "permissions": ["article:read"],
+  "capabilities": {
+    "headless": true
+  }
+}

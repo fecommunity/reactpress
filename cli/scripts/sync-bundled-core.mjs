@@ -72,7 +72,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const require = createRequire(import.meta.url);
-const { t, getLocale, setLocale } = require(join(dirname(fileURLToPath(import.meta.url)), '..', 'lib', 'i18n', 'index.js'));
+const { t, getLocale, setLocale } = require(join(dirname(fileURLToPath(import.meta.url)), '..', 'out', 'lib', 'i18n', 'index.js'));
 
 export { t, getLocale, setLocale };
 `

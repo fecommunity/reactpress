@@ -1,6 +1,6 @@
 const { describe, it } = require('node:test');
 const assert = require('node:assert/strict');
-const { t, setLocale, getLocale } = require('../lib/i18n');
+const { t, setLocale, getLocale } = require('../out/lib/i18n');
 
 describe('lib/i18n', () => {
   it('translates known keys in en and zh', () => {
@@ -16,5 +16,11 @@ describe('lib/i18n', () => {
   it('interpolates variables', () => {
     setLocale('en');
     assert.match(t('menu.opening', { url: 'http://x' }), /http:\/\/x/);
+  });
+
+  it('does not throw when key or vars are missing', () => {
+    setLocale('en');
+    assert.equal(t(undefined), '');
+    assert.equal(t('dev.timingReady', { summary: undefined }), 'Ready in ');
   });
 });

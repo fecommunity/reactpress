@@ -20,11 +20,11 @@ export class Comment {
   avatar: string;
 
   @ApiProperty()
-  @Column({ type: 'mediumtext', default: null, charset: 'utf8mb4' }) // 评论内容
+  @Column({ type: 'text', default: null }) // 评论内容
   content: string;
 
   @ApiProperty()
-  @Column({ type: 'mediumtext', default: null, charset: 'utf8mb4' }) // 评论内容
+  @Column({ type: 'text', default: null }) // 评论内容
   html: string;
 
   @ApiProperty()
@@ -32,7 +32,7 @@ export class Comment {
   pass: boolean; // 是否审核通过
 
   @ApiProperty()
-  @Column({ type: 'mediumtext', default: null, charset: 'utf8mb4' })
+  @Column({ type: 'text', default: null })
   userAgent: string;
 
   @ApiProperty()
