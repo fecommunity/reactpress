@@ -1,4 +1,6 @@
 # Build on GitHub → upload release tarball → SSH deploy on ECS.
+# Also builds desktop installers (macOS / Windows / Linux) in parallel; artifacts
+# are kept on the workflow run. Publish a GitHub Release to attach them publicly.
 #
 # Required GitHub Secrets (Settings → Secrets and variables → Actions):
 #   ECS_HOST          ECS public IP or domain
@@ -25,6 +27,9 @@ on:
 concurrency:
   group: deploy-ecs-${{ github.ref }}
   cancel-in-progress: true
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -58,6 +63,12 @@ jobs:
           name: reactpress-release
           path: ${{ steps.pack.outputs.path }}
           retention-days: 7
+
+  build-desktop:
+    uses: ./.github/workflows/build-desktop-reusable.yml
+    with:
+      attach-to-github-release: false
+      artifact-retention-days: 30
 
   deploy:
     needs: build
