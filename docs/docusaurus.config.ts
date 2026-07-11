@@ -1,8 +1,11 @@
 import type * as Preset from '@docusaurus/preset-classic';
 import type { Config } from '@docusaurus/types';
 import { themes as prismThemes } from 'prism-react-renderer';
+import { buildGlobalHeadTags, getSiteUrl } from './src/seo/headTags';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
+
+const siteUrl = getSiteUrl();
 
 const config: Config = {
   title: 'ReactPress',
@@ -11,7 +14,7 @@ const config: Config = {
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here (override via DOCS_SITE_URL in CI/Vercel)
-  url: process.env.DOCS_SITE_URL?.trim() || 'https://docs.gaoredu.com',
+  url: siteUrl,
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
@@ -32,49 +35,7 @@ const config: Config = {
 
   themes: ['@docusaurus/theme-mermaid'],
 
-  headTags: [
-    {tagName: 'meta', attributes: {property: 'og:type', content: 'website'}},
-    {tagName: 'meta', attributes: {property: 'og:site_name', content: 'ReactPress'}},
-    {tagName: 'meta', attributes: {property: 'og:locale', content: 'en_US'}},
-    {tagName: 'meta', attributes: {property: 'og:locale:alternate', content: 'zh_CN'}},
-    {tagName: 'link', attributes: {rel: 'alternate', hrefLang: 'en', href: 'https://docs.gaoredu.com/'}},
-    {tagName: 'link', attributes: {rel: 'alternate', hrefLang: 'zh', href: 'https://docs.gaoredu.com/zh/'}},
-    {tagName: 'link', attributes: {rel: 'alternate', hrefLang: 'x-default', href: 'https://docs.gaoredu.com/'}},
-    {
-      tagName: 'script',
-      attributes: {type: 'application/ld+json'},
-      innerHTML: JSON.stringify({
-        '@context': 'https://schema.org',
-        '@type': 'WebSite',
-        name: 'ReactPress',
-        alternateName: 'ReactPress Official Documentation',
-        url: 'https://docs.gaoredu.com/',
-        description:
-          'Official ReactPress docs — self-hosted publishing platform with WordPress-style editing, headless REST, Next.js themes, plugins, and desktop client.',
-        inLanguage: ['en', 'zh-CN'],
-        publisher: {
-          '@type': 'Organization',
-          name: 'ReactPress',
-          url: 'https://github.com/fecommunity/reactpress',
-        },
-      }),
-    },
-    {
-      tagName: 'script',
-      attributes: {type: 'application/ld+json'},
-      innerHTML: JSON.stringify({
-        '@context': 'https://schema.org',
-        '@type': 'SoftwareApplication',
-        name: 'ReactPress',
-        applicationCategory: 'DeveloperApplication',
-        operatingSystem: 'macOS, Windows, Linux',
-        offers: {'@type': 'Offer', price: '0', priceCurrency: 'USD'},
-        softwareVersion: '4.0',
-        url: 'https://docs.gaoredu.com/',
-        downloadUrl: 'https://www.npmjs.com/package/@fecommunity/reactpress',
-      }),
-    },
-  ],
+  headTags: buildGlobalHeadTags(siteUrl),
 
   // Even if you don't use internationalization, you can use this field to set
   // useful metadata like html lang. For example, if your site is Chinese, you
@@ -109,9 +70,13 @@ const config: Config = {
                 }
                 if (
                   pathname.includes('/docs/getting-started/first-site') ||
-                  pathname.includes('/docs/getting-started/installation')
+                  pathname.includes('/docs/getting-started/installation') ||
+                  pathname.includes('/docs/getting-started/reactpress-vs-wordpress')
                 ) {
                   return {...item, priority: 0.85, changefreq: 'weekly' as const};
+                }
+                if (pathname === '/about' || pathname === '/contact') {
+                  return {...item, priority: 0.6, changefreq: 'monthly' as const};
                 }
                 if (pathname.includes('/docs/developer-guide/headless-api')) {
                   return {...item, priority: 0.75};
@@ -247,15 +212,44 @@ const config: Config = {
           ],
         },
         {
+          title: 'Legal & trust',
+          items: [
+            {
+              label: 'About',
+              to: '/about',
+            },
+            {
+              label: 'FAQ',
+              to: '/docs/reference/faq',
+            },
+            {
+              label: 'Contact',
+              to: '/contact',
+            },
+            {
+              label: 'Privacy',
+              to: '/privacy',
+            },
+            {
+              label: 'Terms',
+              to: '/terms',
+            },
+          ],
+        },
+        {
           title: 'More',
           items: [
             {
-              label: 'Blog',
+              label: 'Changelog',
               to: '/blog',
             },
             {
               label: 'GitHub',
               href: 'https://github.com/fecommunity/reactpress',
+            },
+            {
+              label: 'npm package',
+              href: 'https://www.npmjs.com/package/@fecommunity/reactpress',
             },
           ],
         },
@@ -278,7 +272,7 @@ const config: Config = {
       {
         name: 'keywords',
         content:
-          'reactpress, publishing platform, wordpress alternative, headless cms, next.js blog, cms, blog, react, nestjs, electron, plugin, self-hosted, 博客, 内容管理, 发布平台, 插件, 桌面客户端',
+          'reactpress, react cms, open source cms, publishing platform, wordpress alternative, headless cms, next.js blog, react blog, static site generator, cms, blog, react, nestjs, electron, plugin, self-hosted, 博客, 内容管理, 发布平台, 插件, 桌面客户端',
       },
       {name: 'robots', content: 'index, follow, max-image-preview:large'},
       {name: 'googlebot', content: 'index, follow'},

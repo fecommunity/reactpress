@@ -1,6 +1,8 @@
 ---
 sidebar_position: 4
 title: Toolkit Package Usage Guide
+description: '@fecommunity/reactpress-toolkit guide — TypeScript Headless API SDK auto-generated from OpenAPI for ReactPress REST endpoints.'
+keywords: [reactpress, toolkit, headless, api sdk, typescript, openapi]
 ---
 
 # @fecommunity/reactpress-toolkit Usage Guide

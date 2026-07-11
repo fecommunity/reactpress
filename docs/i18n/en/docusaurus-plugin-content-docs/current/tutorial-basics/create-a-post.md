@@ -1,6 +1,8 @@
 ---
 sidebar_position: 4
 title: Create Blog Post
+description: Create your first ReactPress blog post — Admin login, Markdown editor, publish workflow, categories and tags.
+keywords: [reactpress, create post, blog, markdown, admin]
 ---
 
 ## Visit the website

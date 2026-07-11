@@ -1,6 +1,8 @@
 ---
 sidebar_position: 4
 title: ReactPress 3.0 Platform
+description: ReactPress 3.0 Platform history — one CLI, embedded MySQL, Admin and Next.js themes. New users should use 4.0.
+keywords: [reactpress 3.0, platform, history, migration]
 ---
 
 # ReactPress 3.0 Platform

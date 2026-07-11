@@ -2,6 +2,8 @@
 sidebar_position: 5
 id: docker-deployment
 title: Docker deployment guide
+description: ReactPress Docker deployment — container architecture, docker-compose setup, production images, and operations.
+keywords: [reactpress, docker, deployment, container, compose]
 ---
 
 # Docker deployment guide

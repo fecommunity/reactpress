@@ -1,6 +1,8 @@
 ---
 sidebar_position: 4
 title: ReactPress 3.0 平台版
+description: ReactPress 3.0 平台版历史说明 — 一条 CLI、嵌入式 MySQL、Admin 与 Next.js 主题。新用户请使用 4.0。
+keywords: [reactpress 3.0, platform, history, migration]
 ---
 
 # ReactPress 3.0 平台版

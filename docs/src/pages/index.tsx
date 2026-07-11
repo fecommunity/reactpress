@@ -17,7 +17,7 @@ const Index = () => {
   const title = `${siteConfig.title} · ${siteConfig.tagline}`;
   const description = translate({
     message:
-      'Official ReactPress docs — publishing platform with plugins, desktop, npm themes, and headless Next.js. WordPress-style editing, one CLI, ~60 seconds to live.',
+      'Official ReactPress docs — open-source React CMS and publishing platform. WordPress-style editing, Next.js SSR themes, Headless REST, plugins, desktop client. One CLI, live in ~60 seconds.',
     id: 'home.meta.description',
   });
 

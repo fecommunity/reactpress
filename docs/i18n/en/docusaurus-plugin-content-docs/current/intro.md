@@ -12,7 +12,7 @@ Choose a starting point by role. Every doc includes an SEO summary and next-step
 
 | Stage | Who you are | Start here |
 |------|--------|------------|
-| **0→1** | First time hearing about ReactPress | [Create your first site in 5 minutes](./getting-started/first-site.md) |
+| **0→1** | First time hearing about ReactPress | [Create your first site in 5 minutes](./getting-started/first-site.md) · [vs WordPress](./getting-started/reactpress-vs-wordpress.md) |
 | **1→10** | Site owner / blogger | [User guide](./user-guide/admin-overview.md) → [SEO settings](./user-guide/site-settings-seo.md) |
 | **10→50** | Frontend developer | [Theme development](./developer-guide/theme-development.md) → [Headless API](./developer-guide/headless-api.md) |
 | **50→100** | Full-stack / contributor | [Monorepo development](./developer-guide/local-development.md) → [Plugin development](./developer-guide/plugin-development.md) |
@@ -144,3 +144,35 @@ Node.js ≥ 18 and Docker (embedded MySQL) required. `pnpm run init` prepares th
 3. [GitHub Discussions](https://github.com/fecommunity/reactpress/discussions)
 
 Email: admin@gaoredu.com
+
+## FAQ
+
+<details>
+<summary><strong>What is ReactPress?</strong></summary>
+
+An open-source **publishing platform** for React developers — CMS API, Web Admin, Next.js themes, plugins, and desktop client in one CLI. Not just a Headless backend to wire up.
+
+</details>
+
+<details>
+<summary><strong>Is ReactPress free?</strong></summary>
+
+Yes. MIT licensed. Install with `npm i -g @fecommunity/reactpress@4`.
+
+</details>
+
+<details>
+<summary><strong>ReactPress vs WordPress — which should I choose?</strong></summary>
+
+See the full [ReactPress vs WordPress (2026)](./getting-started/reactpress-vs-wordpress.md) guide. Short answer: WordPress wins on plugin catalog and non-technical editors; ReactPress wins on React/Next.js stack, SSR SEO, and Headless-first architecture.
+
+</details>
+
+<details>
+<summary><strong>Can I migrate from WordPress?</strong></summary>
+
+Content can be migrated via export scripts or Headless API integration; themes must be rebuilt in Next.js. See [FAQ](./reference/faq.md) and [Headless API](./developer-guide/headless-api.md).
+
+</details>
+
+More answers: [Full FAQ](./reference/faq.md) · [About ReactPress](/about) · [Contact](/contact)

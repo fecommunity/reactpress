@@ -1,6 +1,8 @@
 ---
 sidebar_position: 6
 title: 2.x → 3.0 迁移
+description: ReactPress 2.x 升级到 3.0 迁移指南 — 全局 CLI、嵌入式 MySQL、Admin 独立化与配置变更。
+keywords: [reactpress, migration, 2.x, 3.0, upgrade]
 ---
 
 # ReactPress 2.x → 3.0 迁移指南

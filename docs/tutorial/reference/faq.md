@@ -71,6 +71,20 @@ keywords: [reactpress, faq, 常见问题, docker, wordpress, production]
 
 </details>
 
+<details>
+<summary><strong>能从 WordPress 迁移吗？</strong></summary>
+
+内容可通过导出脚本或 Headless REST API 对接；PHP 主题无法直接迁移，需在 Next.js 中重建访客前端，或使用 [reactpress-theme-starter](https://github.com/fecommunity/reactpress-theme-starter)。见 [Headless API 指南](../developer-guide/headless-api.md) 与 [ReactPress vs WordPress](../getting-started/reactpress-vs-wordpress.md)。
+
+</details>
+
+<details>
+<summary><strong>ReactPress 免费吗？</strong></summary>
+
+是，MIT 开源。全局安装：`npm i -g @fecommunity/reactpress@4`。
+
+</details>
+
 ## 版本与升级
 
 <details>
