@@ -154,6 +154,22 @@ function startWithPM2() {
   }
 }
 
+// Function to prepend bundled runtime paths so sibling toolkit/ can resolve server/node_modules.
+function prependNodePath(...dirs) {
+  const Module = require('module');
+  const sep = path.delimiter;
+  const parts = (process.env.NODE_PATH || '').split(sep).filter(Boolean);
+  for (const dir of dirs) {
+    if (fs.existsSync(dir) && !parts.includes(dir)) {
+      parts.unshift(dir);
+    }
+  }
+  if (parts.length) {
+    process.env.NODE_PATH = parts.join(sep);
+    Module._initPaths();
+  }
+}
+
 // Function to start with regular Node.js
 function startWithNode() {
   // Check if the server is built
@@ -185,6 +201,9 @@ function startWithNode() {
 
   // Set environment variables
   process.env.NODE_ENV = process.env.NODE_ENV || 'production';
+
+  // Bundled CLI layout: toolkit/ is a sibling of server/; expose server deps to toolkit requires.
+  prependNodePath(path.join(serverDir, 'node_modules'));
 
   // Import and run the server (require() alone does not invoke main — see dist/main.js)
   try {

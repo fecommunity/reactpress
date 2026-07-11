@@ -4,7 +4,7 @@ import type {
   ThemeConfigurationSchema,
   ThemeManifest,
   ThemeMods,
-} from '@fecommunity/reactpress-toolkit/theme';
+} from '@fecommunity/reactpress-toolkit/theme/extension';
 import {
   defaultSiteThemeState,
   getConfigurationSchemaFromManifest,
@@ -16,7 +16,7 @@ import {
   parseThemeManifest,
   validateAndMergeThemeConfiguration,
   validateThemeConfiguration,
-} from '@fecommunity/reactpress-toolkit/theme';
+} from '@fecommunity/reactpress-toolkit/theme/extension';
 import { readThemeAdminLocaleFile } from '@fecommunity/reactpress-toolkit/theme/node';
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -28,7 +28,7 @@ import { Repository } from 'typeorm';
 import { resolveProjectRoot, resolveMonorepoRoot } from '../../utils/project-root.util';
 import { SettingService } from '../setting/setting.service';
 import { Setting } from '../setting/setting.entity';
-import { buildThemePlaceholderCoverSvg } from '../../../../cli/out/lib/theme-placeholder-cover.js';
+import { buildThemePlaceholderCoverSvg } from '../../utils/theme-placeholder-cover';
 import {
   findThemeCatalogEntry,
   loadThemeRegistry,

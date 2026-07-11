@@ -1,6 +1,6 @@
 {
   "name": "@fecommunity/reactpress-toolkit",
-  "version": "4.0.0-beta.4",
+  "version": "4.0.0-beta.12",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
@@ -43,6 +43,10 @@
     "./theme/node": {
       "types": "./dist/theme/node.d.ts",
       "default": "./dist/theme/node.js"
+    },
+    "./theme/extension": {
+      "types": "./dist/theme/extension/index.d.ts",
+      "default": "./dist/theme/extension/index.js"
     },
     "./theme/providers": {
       "types": "./dist/theme/providers/index.d.ts",

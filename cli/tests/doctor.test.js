@@ -8,6 +8,12 @@ const {
   checkDockerForProject,
   resolveProjectProfile,
 } = require('../out/lib/doctor');
+const {
+  getProjectServerLogDir,
+  listLogFiles,
+  readTailLines,
+  filterLines,
+} = require('../out/lib/project-logs');
 const { createStandaloneProject, rmDir } = require('./helpers/tmp-project');
 
 function createSqliteProject() {
@@ -57,6 +63,28 @@ describe('lib/doctor', () => {
       const profile = await resolveProjectProfile(root);
       assert.equal(profile.localMode, false);
       assert.equal(profile.requiresDocker, true);
+    } finally {
+      rmDir(root);
+    }
+  });
+
+  it('reads project log files from .reactpress/logs/server', () => {
+    const root = createStandaloneProject();
+    try {
+      const logDir = path.join(root, '.reactpress', 'logs', 'server', 'error');
+      fs.mkdirSync(logDir, { recursive: true });
+      const logFile = path.join(logDir, 'error.log.-2026-07-11.log');
+      fs.writeFileSync(
+        logFile,
+        ['line-one', '[ERROR] boom', 'line-three'].join('\n'),
+        'utf8'
+      );
+
+      assert.equal(getProjectServerLogDir(root), path.join(root, '.reactpress', 'logs', 'server'));
+      const files = listLogFiles(getProjectServerLogDir(root), 'error');
+      assert.equal(files.length, 1);
+      assert.equal(readTailLines(logFile, 2).join('|'), '[ERROR] boom|line-three');
+      assert.deepEqual(filterLines(readTailLines(logFile, 10), 'ERROR'), ['[ERROR] boom']);
     } finally {
       rmDir(root);
     }

@@ -5,7 +5,7 @@ import {
   migrateLegacyAppearanceToThemeMods,
   pickSystemSettingPatch,
   resolveEffectiveSettingRow,
-} from '@fecommunity/reactpress-toolkit/theme';
+} from '@fecommunity/reactpress-toolkit/theme/extension';
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';

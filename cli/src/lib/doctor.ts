@@ -27,6 +27,7 @@ const { checkNginx } = require('./nginx');
 const { envFileStatus } = require('./status');
 const { describeProject } = require('./project-type');
 const { t } = require('./i18n');
+const { runDoctorLogs } = require('./project-logs');
 
 function checkNodeVersion() {
   const major = parseInt(process.versions.node.split('.')[0], 10);
@@ -331,7 +332,7 @@ async function runCheckWithSpinner(name, run) {
   return result;
 }
 
-async function runDoctor(projectRoot) {
+async function runDoctor(projectRoot, options = {}) {
   const profile = await resolveProjectProfile(projectRoot);
   applyProjectRuntimeEnv(profile);
   const env = envFileStatus(projectRoot);
@@ -409,6 +410,13 @@ async function runDoctor(projectRoot) {
         console.log(`    ${brand.primary('→')}  ${brand.dim(name)}  ${brand.warn(fix)}`);
       }
     }
+    if (!options.showLogs) {
+      console.log('');
+      console.log(`  ${brand.dim(t('doctor.logsHint'))}`);
+    }
+  }
+  if (options.showLogs) {
+    await runDoctorLogs(projectRoot, { tail: 40, source: 'error' });
   }
   console.log('');
   return failed === 0 ? 0 : 1;

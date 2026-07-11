@@ -51,6 +51,7 @@ function main() {
     main: srcPkg.main ?? 'dist/index.js',
     types: srcPkg.types ?? 'dist/index.d.ts',
     ...(srcPkg.exports ? { exports: srcPkg.exports } : {}),
+    ...(srcPkg.dependencies ? { dependencies: srcPkg.dependencies } : {}),
   };
   fs.writeFileSync(
     path.join(bundledToolkit, 'package.json'),

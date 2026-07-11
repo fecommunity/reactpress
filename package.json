@@ -1,6 +1,6 @@
 {
   "name": "reactpress",
-  "version": "4.0.0-beta.4",
+  "version": "4.0.0-beta.12",
   "private": true,
   "packageManager": "pnpm@9.15.9",
   "description": "ReactPress — publishing platform for modern developers. CMS, Admin, API, Next.js themes, plugins, desktop. One CLI.",
@@ -46,8 +46,8 @@
     "stop": "node ./cli/bin/reactpress.js server stop",
     "restart": "node ./cli/bin/reactpress.js server restart",
     "status": "node ./cli/bin/reactpress.js status",
-    "publish:packages": "node ./cli/bin/reactpress.js publish --publish",
-    "publish:build": "node ./cli/bin/reactpress.js publish --build",
+    "publish:packages": "node ./cli/out/lib/publish.js --publish",
+    "publish:build": "node ./cli/out/lib/publish.js --build",
     "prepare": "husky",
     "precommit": "lint-staged",
     "typecheck": "pnpm run build:toolkit && pnpm --dir web run typecheck && pnpm --dir cli run typecheck",

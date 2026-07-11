@@ -1,4 +1,6 @@
 // @ts-nocheck
+const fs = require('fs');
+const path = require('path');
 const { spawn } = require('child_process');
 const ora = require('ora');
 const { ensureProjectEnvironment } = require('./bootstrap');
@@ -102,6 +104,9 @@ async function startApi(projectRoot, { wait = true } = {}) {
     console.log(t('lifecycle.startingBundledApi'));
   }
 
+  const serverLogDir = path.join(projectRoot, '.reactpress', 'logs', 'server');
+  fs.mkdirSync(serverLogDir, { recursive: true });
+
   const child = spawn(process.execPath, [getServerBin(projectRoot)], {
     cwd: getServerDir(projectRoot),
     detached: true,
@@ -109,6 +114,7 @@ async function startApi(projectRoot, { wait = true } = {}) {
     env: {
       ...process.env,
       REACTPRESS_ORIGINAL_CWD: projectRoot,
+      REACTPRESS_SERVER_LOG_DIR: serverLogDir,
     },
   });
 

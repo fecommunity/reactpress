@@ -1,4 +1,4 @@
-import type { ThemeMods } from '@fecommunity/reactpress-toolkit/theme';
+import type { ThemeMods } from '@fecommunity/reactpress-toolkit/theme/extension';
 import { randomBytes } from 'crypto';
 
 export type PreviewDraftRecord = {

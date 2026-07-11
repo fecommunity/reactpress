@@ -29,7 +29,9 @@ export class ExtensionModule implements OnModuleInit {
   ) {}
 
   onModuleInit() {
-    void this.themeService.ensureDefaultTheme();
+    void this.themeService.ensureDefaultTheme().catch((err) => {
+      console.warn('[ThemeService] ensureDefaultTheme skipped:', err instanceof Error ? err.message : err);
+    });
     void this.pluginLoader.loadActivePlugins();
   }
 }

@@ -39,11 +39,35 @@ type ThemeRegistryModule = {
 
 let cached: ThemeRegistryModule | null = null;
 
+/** @fecommunity/reactpress npm package root (parent of bundled `server/`). */
+function resolveBundledCliPackageRoot(): string | null {
+  // server/dist/modules/extension -> server/
+  const serverRoot = path.join(__dirname, '..', '..', '..');
+  const cliRoot = path.dirname(serverRoot);
+  const registryPath = path.join(cliRoot, 'out', 'lib', 'theme-registry.js');
+  if (fs.existsSync(registryPath)) {
+    return cliRoot;
+  }
+  try {
+    const pkgPath = path.join(cliRoot, 'package.json');
+    if (!fs.existsSync(pkgPath)) return null;
+    const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8')) as { name?: string };
+    if (pkg.name === '@fecommunity/reactpress') {
+      return cliRoot;
+    }
+  } catch {
+    // ignore
+  }
+  return null;
+}
+
 function resolveThemeRegistryPath(monorepoRoot: string): string | null {
+  const bundledCliRoot = resolveBundledCliPackageRoot();
   const candidates = [
+    bundledCliRoot ? path.join(bundledCliRoot, 'out', 'lib', 'theme-registry.js') : null,
     path.join(monorepoRoot, 'cli', 'out', 'lib', 'theme-registry.js'),
     path.join(monorepoRoot, 'cli', 'lib', 'theme-registry.js'),
-  ];
+  ].filter(Boolean) as string[];
   for (const candidate of candidates) {
     if (fs.existsSync(candidate)) return candidate;
   }

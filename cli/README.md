@@ -1,47 +1,42 @@
-# @fecommunity/reactpress-cli
+# @fecommunity/reactpress
 
-零配置一键初始化与管理 ReactPress CMS & 博客服务器。内置 NestJS 服务端，无需单独克隆 [fecommunity/reactpress](https://github.com/fecommunity/reactpress)。
+ReactPress 4 CLI — zero-dependency publishing platform. Initialize a local SQLite site and bundled API with a single command.
 
-完整文档与贡献指南见：[github.com/fecommunity/reactpress-cli](https://github.com/fecommunity/reactpress-cli)
+Monorepo docs: [github.com/fecommunity/reactpress](https://github.com/fecommunity/reactpress) · Chinese overview: [README-zh_CN.md](../README-zh_CN.md)
 
-## 安装
-
-```bash
-npm install -g @fecommunity/reactpress-cli
-```
-
-全局命令为 `reactpress-cli`（与 npm 包名无关）。
-
-> npm 上的无作用域包名 `reactpress-cli` 已被占用，本包发布为 `@fecommunity/reactpress-cli`。
-
-## 快速开始
+## Install
 
 ```bash
-mkdir my-blog && cd my-blog
-reactpress-cli init
-reactpress-cli start
+npm install -g @fecommunity/reactpress
 ```
 
-浏览器访问 `http://localhost:3002`（API 文档：`/api`）。
+Requires Node.js 18+. On first install, `postinstall` downloads bundled server runtime dependencies (~1–2 minutes).
 
-## 常用命令
+## Quick start
 
-| 命令 | 说明 |
-|------|------|
-| `reactpress-cli init [dir]` | 初始化项目 |
-| `reactpress-cli start` | 启动服务（自动准备数据库） |
-| `reactpress-cli stop` | 停止服务 |
-| `reactpress-cli restart` | 重启服务 |
-| `reactpress-cli status` | 查看状态 |
-| `reactpress-cli config [key] [value]` | 查看/修改配置 |
-| `reactpress-cli config server.port 3003 --apply` | 改端口并重启 |
+```bash
+mkdir my-site && cd my-site
+reactpress init
+```
 
-## 要求
+- Site: `http://localhost:3001`
+- Admin: `http://localhost:3001/admin/` (`admin` / `admin`)
+- API: `http://127.0.0.1:3002/api`
+
+## Commands
+
+| Command | Description |
+|---------|-------------|
+| `reactpress init [dir]` | Initialize project (default command) |
+| `reactpress doctor [dir]` | Diagnose Node.js, ports, database, and services |
+| `reactpress doctor logs [dir]` | Tail API logs (error / request / response) for debugging |
+
+## Requirements
 
 - Node.js 18+
 - macOS / Linux / Windows
-- 默认使用 Docker 运行嵌入式 MySQL；也可在 `.reactpress/config.json` 中配置外部数据库
+- No Docker, nginx, or MySQL required (embedded SQLite + bundled API)
 
-## 许可证
+## License
 
 MIT © FECommunity
