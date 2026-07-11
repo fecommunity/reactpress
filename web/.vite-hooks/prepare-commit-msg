@@ -1,0 +1,5 @@
+#!/bin/sh
+REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+HOOK="$REPO_ROOT/.husky/prepare-commit-msg"
+[ -f "$HOOK" ] || exit 0
+exec "$HOOK" "$@"

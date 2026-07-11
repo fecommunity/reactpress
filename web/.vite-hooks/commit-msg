@@ -1,0 +1,6 @@
+#!/bin/sh
+# Repo uses core.hooksPath=web/.vite-hooks/_ ; forward to root husky to strip Cursor trailers.
+REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+HOOK="$REPO_ROOT/.husky/commit-msg"
+[ -f "$HOOK" ] || exit 0
+exec "$HOOK" "$@"

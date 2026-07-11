@@ -13,6 +13,16 @@ node_modules
 .cursor
 .brand-export/
 
+# AI / coding-agent instruction files (local .cursor only — do not commit)
+AGENTS.md
+CLAUDE.md
+GEMINI.md
+**/AGENTS.md
+**/CLAUDE.md
+**/GEMINI.md
+.github/copilot-instructions.md
+.aiassistant/
+
 .env.prod
 .reactpress/
 *.local
