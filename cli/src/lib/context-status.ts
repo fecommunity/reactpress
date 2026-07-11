@@ -12,6 +12,7 @@ const {
 const {
   loadServerSiteUrl,
   loadWebAdminUrl,
+  loadAdminConsoleUrl,
   isHttpResponding,
   checkHealth,
   getHealthUrl,
@@ -94,6 +95,9 @@ async function probeServer(projectRoot) {
 }
 
 async function probeWeb(projectRoot) {
+  if (process.env.REACTPRESS_LOCAL_MODE === '1' || process.env.REACTPRESS_SKIP_NGINX === '1') {
+    return isHttpResponding(loadAdminConsoleUrl(projectRoot), 1500);
+  }
   const port = readEnvPort(projectRoot, 'WEB_ADMIN_PORT', DEV_PORTS.ADMIN_WEB);
   if (isPortListening(port)) return true;
   return isHttpResponding(loadWebAdminUrl(projectRoot), 1500);
@@ -101,7 +105,10 @@ async function probeWeb(projectRoot) {
 
 function resolveServiceChecks(dbType) {
   const dbId = dbType === 'sqlite' ? 'sqlite' : 'mysql';
-  return [dbId, 'server', 'docker', 'nginx', 'web'];
+  if (dbType === 'sqlite') {
+    return [dbId, 'server', 'web'];
+  }
+  return [dbId, 'server', 'web'];
 }
 
 async function probeService(projectRoot, id) {

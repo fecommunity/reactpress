@@ -1,7 +1,7 @@
 {
   "name": "@fecommunity/reactpress",
   "version": "4.0.0-beta.4",
-  "description": "ReactPress 4.0 CLI — full publishing platform bootstrap: CMS, Admin, API, themes, plugins, desktop",
+  "description": "ReactPress 4 — zero-dependency publishing platform. Single command: reactpress init (init + start)",
   "author": "fecommunity",
   "license": "MIT",
   "repository": {

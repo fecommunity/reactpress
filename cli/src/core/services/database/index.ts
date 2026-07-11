@@ -107,7 +107,7 @@ async function buildConnectionFailureMessage(
   if (rootReachable && healthy) {
     return (
       `数据库容器已在端口 ${port} 运行，但账号「${creds.user}」无法连接（数据卷中的凭证与 .env 不一致）。` +
-      ` 请在项目目录执行: cd .reactpress && docker compose down -v && cd .. && reactpress start`
+      ` 请在项目目录执行: cd .reactpress && docker compose down -v && cd .. && reactpress init --force`
     );
   }
   return `数据库容器已启动，但连接超时。请执行 docker logs ${containerName} 查看详情。`;
@@ -213,6 +213,9 @@ export async function promoteToSqliteMode(
   next.database.sqlitePath = config.database.sqlitePath ?? sqlitePath;
   await saveConfig(projectRoot, next);
   await syncEnvFromConfig(projectRoot, next);
+  console.log(
+    '[reactpress] Switched to SQLite zero-dependency mode (no Docker/nginx required)',
+  );
   return ensureSqliteDatabase(projectRoot);
 }
 

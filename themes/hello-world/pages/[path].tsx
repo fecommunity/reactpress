@@ -49,11 +49,7 @@ export default function CmsPageView({ page }: CmsPageViewProps) {
         <h1 className="section-title">Not found</h1>
         <ArchiveEmptyState
           message="This page does not exist or is not published."
-          renderBackLink={({ href, label }) => (
-            <Link href={href}>
-              <a>{label}</a>
-            </Link>
-          )}
+          renderBackLink={({ href, label }) => <Link href={href}>{label}</Link>}
         />
       </SiteDocument>
     );
@@ -72,9 +68,7 @@ export default function CmsPageView({ page }: CmsPageViewProps) {
           <p className="empty-state">This page has no content yet.</p>
         )}
         <p className="cms-page-back">
-          <Link href="/">
-            <a>← Back to archives</a>
-          </Link>
+          <Link href="/">← Back to archives</Link>
         </p>
       </article>
     </SiteDocument>

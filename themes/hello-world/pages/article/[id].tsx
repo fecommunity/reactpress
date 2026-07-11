@@ -64,11 +64,7 @@ export default function ArticlePage({ article }: ArticleProps) {
         <h1 className="section-title">Not found</h1>
         <ArchiveEmptyState
           message="This article does not exist or was removed."
-          renderBackLink={({ href, label }) => (
-            <Link href={href}>
-              <a>{label}</a>
-            </Link>
-          )}
+          renderBackLink={({ href, label }) => <Link href={href}>{label}</Link>}
         />
       </SiteDocument>
     );
@@ -95,9 +91,7 @@ export default function ArticlePage({ article }: ArticleProps) {
             ) : null}
             {article.category ? (
               <span>
-                <Link href={categoryPath(article.category.value)}>
-                  <a>{article.category.label}</a>
-                </Link>
+                <Link href={categoryPath(article.category.value)}>{article.category.label}</Link>
               </span>
             ) : null}
             {viewCount != null ? <span>{viewCount} views</span> : null}
@@ -129,9 +123,7 @@ export default function ArticlePage({ article }: ArticleProps) {
         ) : null}
 
         <p className="article-nav">
-          <Link href="/">
-            <a>← Back to archives</a>
-          </Link>
+          <Link href="/">← Back to archives</Link>
         </p>
       </article>
     </SiteDocument>

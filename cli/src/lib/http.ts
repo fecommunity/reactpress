@@ -44,6 +44,25 @@ function loadWebAdminUrl(projectRoot) {
   return `http://localhost:${DEV_PORTS.ADMIN_WEB}`;
 }
 
+/** Admin console URL for the running stack (Vite dev vs theme-embedded SPA). */
+function loadAdminConsoleUrl(projectRoot) {
+  const envPath = path.join(projectRoot, '.env');
+  try {
+    const content = fs.readFileSync(envPath, 'utf8');
+    const urlMatch = content.match(/^WEB_ADMIN_URL=(.+)$/m);
+    if (urlMatch) {
+      return urlMatch[1].trim().replace(/^['"]|['"]$/g, '');
+    }
+  } catch {
+    // ignore
+  }
+  if (process.env.REACTPRESS_LOCAL_MODE === '1' || process.env.REACTPRESS_SKIP_NGINX === '1') {
+    const client = loadClientSiteUrl(projectRoot).replace(/\/$/, '');
+    return `${client}/admin/`;
+  }
+  return loadWebAdminUrl(projectRoot);
+}
+
 function loadClientSiteUrl(projectRoot) {
   const envPath = path.join(projectRoot, '.env');
   try {
@@ -236,6 +255,7 @@ module.exports = {
   isHealthPayloadReady,
   loadServerSiteUrl,
   loadWebAdminUrl,
+  loadAdminConsoleUrl,
   loadClientSiteUrl,
   getApiPrefix,
   getHealthUrl,

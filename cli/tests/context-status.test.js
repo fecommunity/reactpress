@@ -45,19 +45,7 @@ describe('context-status', () => {
   });
 
   it('resolveServiceChecks includes sqlite or mysql plus core services', () => {
-    assert.deepEqual(resolveServiceChecks('sqlite'), [
-      'sqlite',
-      'server',
-      'docker',
-      'nginx',
-      'web',
-    ]);
-    assert.deepEqual(resolveServiceChecks('mysql'), [
-      'mysql',
-      'server',
-      'docker',
-      'nginx',
-      'web',
-    ]);
+    assert.deepEqual(resolveServiceChecks('sqlite'), ['sqlite', 'server', 'web']);
+    assert.deepEqual(resolveServiceChecks('mysql'), ['mysql', 'server', 'web']);
   });
 });

@@ -29,6 +29,44 @@ if (!clientDir || !fs.existsSync(path.join(clientDir, 'package.json'))) {
 const nextDir = path.join(clientDir, '.next');
 const startScript = fs.existsSync(path.join(clientDir, 'server.js')) ? 'server.js' : null;
 
+function resolveWebPackageRoot(projectRoot) {
+  const candidates = [
+    path.join(projectRoot, 'web'),
+    path.join(projectRoot, '..', 'web'),
+  ];
+  for (const candidate of candidates) {
+    if (fs.existsSync(path.join(candidate, 'package.json'))) return candidate;
+  }
+  return null;
+}
+
+function ensureAdminStaticForTheme(projectRoot, themeDir) {
+  const adminIndex = path.join(themeDir, 'public', 'admin', 'index.html');
+  if (fs.existsSync(adminIndex)) return;
+
+  const webRoot = resolveWebPackageRoot(projectRoot);
+  if (!webRoot) {
+    console.warn('[ReactPress Client] Admin static missing and web package not found');
+    return;
+  }
+
+  const webDist = path.join(webRoot, 'dist', 'index.html');
+  if (!fs.existsSync(webDist)) {
+    console.log('[ReactPress Client] Building admin SPA (web/)…');
+    const buildWeb = spawnSync('pnpm', ['run', 'build'], { cwd: webRoot, stdio: 'inherit' });
+    if (buildWeb.status !== 0) process.exit(buildWeb.status || 1);
+  }
+
+  const syncScript = path.join(webRoot, 'bin', 'reactpress-web.js');
+  const publicAdmin = path.join(themeDir, 'public', 'admin');
+  console.log('[ReactPress Client] Syncing admin static → theme public/admin…');
+  const sync = spawnSync(process.execPath, [syncScript, 'sync-public', publicAdmin], {
+    stdio: 'inherit',
+    cwd: webRoot,
+  });
+  if (sync.status !== 0) process.exit(sync.status || 1);
+}
+
 function runStartCommand() {
   if (startScript) {
     return ['node', [startScript]];
@@ -37,6 +75,7 @@ function runStartCommand() {
 }
 
 function ensureBuilt() {
+  ensureAdminStaticForTheme(originalCwd, clientDir);
   const { activeTheme } = readActiveThemeManifest(originalCwd);
   const themeId = process.env.REACTPRESS_THEME_ID || activeTheme || path.basename(clientDir);
   if (hasUsableProductionBuild(clientDir, themeId)) return;
@@ -107,11 +146,39 @@ function startWithPm2() {
   });
 }
 
+function productionThemeEnv() {
+  const visitorPort = process.env.CLIENT_PORT || process.env.PORT || '3001';
+  const apiPort = process.env.SERVER_PORT || '3002';
+  const clientSiteUrl =
+    process.env.CLIENT_SITE_URL || process.env.NEXT_PUBLIC_CLIENT_SITE_URL || `http://127.0.0.1:${visitorPort}`;
+  const adminUrl = `${clientSiteUrl.replace(/\/$/, '')}/admin/`;
+  return {
+    ...process.env,
+    NODE_ENV: 'production',
+    PORT: String(visitorPort),
+    CLIENT_PORT: String(visitorPort),
+    CLIENT_SITE_URL: clientSiteUrl,
+    NEXT_PUBLIC_CLIENT_SITE_URL: clientSiteUrl,
+    REACTPRESS_ORIGINAL_CWD: originalCwd,
+    REACTPRESS_THEME_DIR: clientDir,
+    REACTPRESS_API_URL: process.env.REACTPRESS_API_URL || `http://127.0.0.1:${apiPort}/api`,
+    SERVER_API_URL: process.env.SERVER_API_URL || `http://127.0.0.1:${apiPort}/api`,
+    NEXT_PUBLIC_REACTPRESS_API_URL:
+      process.env.NEXT_PUBLIC_REACTPRESS_API_URL || `http://127.0.0.1:${apiPort}/api`,
+    NEXT_PUBLIC_REACTPRESS_ADMIN_URL: process.env.NEXT_PUBLIC_REACTPRESS_ADMIN_URL || adminUrl,
+    REACTPRESS_SKIP_DEV_PORT_REDIRECT: '1',
+  };
+}
+
 function startWithNode() {
   ensureBuilt();
   process.chdir(clientDir);
   const [cmd, cmdArgs] = runStartCommand();
-  const child = spawn(cmd, cmdArgs, { stdio: 'inherit', cwd: clientDir, env: process.env });
+  const child = spawn(cmd, cmdArgs, {
+    stdio: 'inherit',
+    cwd: clientDir,
+    env: productionThemeEnv(),
+  });
   child.on('close', (code) => process.exit(code ?? 0));
 }
 

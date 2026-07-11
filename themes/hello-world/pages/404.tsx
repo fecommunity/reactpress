@@ -14,9 +14,7 @@ export default function NotFound() {
       <h1 className="section-title">404</h1>
       <p>Page not found.</p>
       <p>
-        <Link href="/">
-          <a>Back to archives</a>
-        </Link>
+        <Link href="/">Back to archives</Link>
       </p>
     </SiteDocument>
   );

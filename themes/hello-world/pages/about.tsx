@@ -37,13 +37,9 @@ export default function About({ siteInfo }: AboutProps) {
       <hr className="hello-hr" aria-hidden="true" />
 
       <p>
-        <Link href="/toolkit-demo">
-          <a>Toolkit demo</a>
-        </Link>
+        <Link href="/toolkit-demo">Toolkit demo</Link>
         {' · '}
-        <Link href="/">
-          <a>Archives</a>
-        </Link>
+        <Link href="/">Archives</Link>
       </p>
     </SiteDocument>
   );

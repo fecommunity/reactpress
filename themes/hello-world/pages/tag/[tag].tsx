@@ -77,11 +77,7 @@ export default function TagPage({ tag: tagProp, articles = [], tags = [] }: TagP
           ) : (
             <ArchiveEmptyState
               message="No articles with this tag yet."
-              renderBackLink={({ href, label }) => (
-                <Link href={href}>
-                  <a>{label}</a>
-                </Link>
-              )}
+              renderBackLink={({ href, label }) => <Link href={href}>{label}</Link>}
             />
           )}
         </section>

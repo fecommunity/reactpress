@@ -126,7 +126,21 @@ async function startApi(projectRoot, { wait = true } = {}) {
     color: 'magenta',
     spinner: 'dots',
   }).start();
-  const ready = await waitForHttp(serverUrl);
+
+  const deadline = Date.now() + 120_000;
+  let ready = false;
+  while (Date.now() < deadline) {
+    if (!isProcessRunning(child.pid)) {
+      spinner.fail(t('lifecycle.apiExitedEarly', { pid: child.pid }));
+      return 1;
+    }
+    if (await require('./http').isHttpResponding(serverUrl)) {
+      ready = true;
+      break;
+    }
+    await new Promise((r) => setTimeout(r, 500));
+  }
+
   if (!ready) {
     spinner.fail(t('lifecycle.apiTimeout120', { url: serverUrl }));
     return 1;

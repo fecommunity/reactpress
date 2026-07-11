@@ -124,10 +124,10 @@ describe('banner', () => {
     );
   });
 
-  it('commandRail lists core commands', () => {
+  it('commandRail highlights init command', () => {
     const rail = commandRail();
     assert.match(rail, /init/);
-    assert.match(rail, /publish/);
+    assert.doesNotMatch(rail, /start/);
   });
 
   it('renderAnimatedLogoLines applies streaming highlight across logo', () => {
