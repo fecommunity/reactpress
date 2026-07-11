@@ -20,7 +20,7 @@
   &nbsp;·&nbsp;
   <a href="https://reactpress-theme-starter.vercel.app"><strong>Theme demo</strong></a>
   &nbsp;·&nbsp;
-  <a href="https://reactpress-docs.vercel.app/"><strong>Docs</strong></a>
+  <a href="https://docs.gaoredu.com/"><strong>Docs</strong></a>
   &nbsp;·&nbsp;
   <a href="./README-zh_CN.md"><strong>中文</strong></a>
 </p>
@@ -94,12 +94,12 @@ mkdir my-site && cd my-site
 reactpress init
 ```
 
-**Requirements:** [Node.js 18+](https://nodejs.org/) · No Docker or external database
+**Requirements:** [Node.js 20+](https://nodejs.org/) · No Docker or external database
 
 | Surface | URL |
 | :------ | :-- |
+| **Admin** | http://localhost:3000 |
 | **Public site** | http://localhost:3001 |
-| **Admin** | http://localhost:3001/admin/ |
 | **API** | http://localhost:3002/api/health |
 
 `reactpress doctor` diagnoses setup issues when something does not start correctly.
@@ -115,7 +115,7 @@ reactpress init
 
 <div align="center">
 
-**Working?** [Star the repo](https://github.com/fecommunity/reactpress/stargazers) · [Open an issue](https://github.com/fecommunity/reactpress/issues) · [Read the docs](https://reactpress-docs.vercel.app/)
+**Working?** [Star the repo](https://github.com/fecommunity/reactpress/stargazers) · [Open an issue](https://github.com/fecommunity/reactpress/issues) · [Read the docs](https://docs.gaoredu.com/)
 
 </div>
 
@@ -262,12 +262,14 @@ Dev guide: [plugins/README.md](./plugins/README.md)
 
 Write offline. Sync when ready. No Docker required.
 
+**[Download desktop client](https://docs.gaoredu.com/docs/tutorial-extras/desktop-client)** (macOS / Windows / Linux) · or build from source:
+
 ```bash
 pnpm dev:desktop       # monorepo root
 pnpm build:desktop     # build installer
 ```
 
-SQLite local storage · offline editing · optional sync to remote CMS · [desktop/README.md](./desktop/README.md)
+SQLite local storage · offline editing · remote API mode · sync to production · [desktop/README.md](./desktop/README.md)
 
 ---
 
@@ -331,7 +333,7 @@ curl -H "X-API-Key: YOUR_KEY" \
 
 | Service | URL / port |
 | :------ | :--------- |
-| Admin | http://localhost:3001/admin/ |
+| Admin | http://localhost:3000 |
 | Public site | http://localhost:3001 |
 | API | http://localhost:3002/api |
 
@@ -343,7 +345,7 @@ Monorepo contributors: use `pnpm dev` and package READMEs under `server/`, `web/
 
 ## Deploy
 
-`reactpress init` runs a local production-style stack (SQLite API + theme with embedded admin). For VPS, Docker, PM2, and backups, see the [deployment docs](https://reactpress-docs.vercel.app/).
+`reactpress init` runs a local production-style stack (SQLite API + theme with embedded admin). For VPS, Docker, PM2, and backups, see the [deployment docs](https://docs.gaoredu.com/).
 
 Theme-only hosting: deploy [reactpress-theme-starter](https://github.com/fecommunity/reactpress-theme-starter) and point it at your API.
 
@@ -383,7 +385,7 @@ Same admin-driven workflow, but a faster default theme, a cleaner headless path,
 <details>
 <summary><strong>Is 4.0 production-ready?</strong></summary>
 
-4.0 is beta (`4.0.0-beta.4`). The published CLI supports `init` and `doctor`. See the [migration guide](./docs/tutorial/tutorial-extras/migration-3-to-4.md) before upgrading production.
+4.0 is in active beta (`4.0.0-beta.18` at time of writing). The published CLI supports `init` and `doctor`. See the [migration guide](./docs/tutorial/tutorial-extras/migration-3-to-4.md) before upgrading production.
 
 </details>
 

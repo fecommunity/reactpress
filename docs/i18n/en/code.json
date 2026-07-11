@@ -325,6 +325,9 @@
   "home.hero.whatsNew": {
     "message": "What's New in 4.0"
   },
+  "home.hero.download": {
+    "message": "Download Desktop"
+  },
   "home.hero.try": {
     "message": "Live Demo"
   },

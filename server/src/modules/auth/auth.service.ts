@@ -94,7 +94,7 @@ export class AuthService {
         const existUser = await this.userService.findByConditions(user);
 
         if (!existUser) {
-          const password = `easy-blog_${uniqueid()}_${result.data.email}`;
+          const password = `reactpress_${uniqueid()}_${result.data.email}`;
           await this.userService.createUser({ ...user, password });
           const setting = await this.settingService.findAll(true);
           const emailMessage = {

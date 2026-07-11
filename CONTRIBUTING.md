@@ -11,7 +11,7 @@ agree to abide by our [Code of Conduct](./CODE_OF_CONDUCT.md).
 | :--- | :-- |
 | **Bug reports** | [Bug report](https://github.com/fecommunity/reactpress/issues/new?template=bug_report.md) — steps, component, versions, logs |
 | **Feature ideas** | [Feature request](https://github.com/fecommunity/reactpress/issues/new?template=feature_request.md) — problem, solution, area |
-| **Community tasks** | [Help wanted](https://github.com/fecommunity/reactpress/issues/new?template=help_wanted.md) — claim a scoped item from [proposed issues](./docs/proposed-reactpress-upstream-issues.md) |
+| **Community tasks** | [Help wanted](https://github.com/fecommunity/reactpress/issues/new?template=help_wanted.md) — scoped tasks labeled `help wanted` on GitHub |
 | **Product feedback** | [Feedback & suggestions](https://github.com/fecommunity/reactpress/issues/new?template=feedback.md) — UX and operator ideas (not security) |
 | **Code & docs** | Fork, branch, submit a PR (see below) |
 | **Security issues** | Follow [SECURITY.md](./SECURITY.md) — do **not** use public issues |
@@ -30,7 +30,7 @@ Security Advisories when applicable.
 
 ### Prerequisites
 
-- Node.js >= 18.0.0
+- Node.js >= 20.0.0
 - pnpm 9.x（与根目录 `packageManager` 一致，推荐 `corepack enable` 后使用）
 - MySQL 5.7+ (or Docker via `pnpm run init` / `pnpm docker:dev`)
 
@@ -53,10 +53,10 @@ reactpress/
 ├── cli/             # @fecommunity/reactpress — init, dev, build, doctor
 ├── server/          # NestJS API (primary backend)
 ├── web/             # Admin SPA (Vite)
-├── client/          # Next.js legacy admin & public frontend
+├── desktop/         # Electron desktop client
 ├── themes/          # Visitor theme templates (Next.js)
+├── plugins/         # Official plugins (SEO, summaries, image optimizer)
 ├── toolkit/         # OpenAPI-generated API SDK + theme utilities
-├── templates/       # Starter project templates
 ├── docs/            # Docusaurus documentation site
 ├── scripts/         # Dev, deploy, and lifecycle scripts
 └── .reactpress/     # Local CLI config (generated)

@@ -21,7 +21,7 @@ The official **ReactPress CLI** — install a complete, self-hosted publishing s
 
 Built for frontend teams who want WordPress-grade editing without wiring five repos together.
 
-[Documentation](https://reactpress-docs.vercel.app/) · [Live demo](https://blog.gaoredu.com) · [Theme demo](https://reactpress-theme-starter.vercel.app) · [GitHub](https://github.com/fecommunity/reactpress) · [Chinese overview](../README-zh_CN.md)
+[Documentation](https://docs.gaoredu.com/) · [Live demo](https://blog.gaoredu.com) · [Theme demo](https://reactpress-theme-starter.vercel.app) · [GitHub](https://github.com/fecommunity/reactpress) · [Chinese overview](../README-zh_CN.md)
 
 ## Install
 
@@ -33,7 +33,7 @@ npm install -g @fecommunity/reactpress@beta
 # npm install -g @fecommunity/reactpress
 ```
 
-Requires Node.js 18+. On first install, `postinstall` downloads bundled server runtime dependencies (~1–2 minutes).
+Requires Node.js 20+. On first install, `postinstall` downloads bundled server runtime dependencies (~1–2 minutes).
 
 ## Quick start
 
@@ -61,7 +61,7 @@ Run `reactpress doctor` if something does not start correctly.
 
 ## Requirements
 
-- Node.js 18+
+- Node.js 20+
 - macOS / Linux / Windows
 - Embedded SQLite + bundled API (no Docker or MySQL for local dev)
 

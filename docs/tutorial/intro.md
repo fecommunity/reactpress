@@ -10,7 +10,7 @@ keywords: [reactpress, 发布平台, wordpress 替代, headless cms, 博客, nex
 
 **ReactPress** 是为 React 时代打造的开源**发布平台**（不是又一个 Headless 后端拼装件）。一条 CLI 即可运行 CMS API、Web 管理后台、可替换的 Next.js 主题、插件扩展与 Electron 桌面客户端。
 
-**ReactPress 4.0**（代号 **Extend**）在 3.x 之上新增**插件系统**、**桌面客户端**与 **npm 主题 catalog**。新用户推荐 `npm i -g @fecommunity/reactpress@4`，详见 [ReactPress 4.0 扩展版](./tutorial-extras/reactpress-4-0.md)。仍使用 3.x 见 [3.0 平台版](./tutorial-extras/reactpress-3-0.md)。
+**ReactPress 4.0**（代号 **Extend**）在 3.x 之上新增**插件系统**、**桌面客户端**与 **npm 主题 catalog**。新用户推荐 `npm i -g @fecommunity/reactpress@4`，详见 [ReactPress 4.0 扩展版](./tutorial-extras/reactpress-4-0.md)。桌面端安装见 [桌面客户端](./tutorial-extras/desktop-client.md)。仍使用 3.x 见 [3.0 平台版](./tutorial-extras/reactpress-3-0.md)。
 
 ## 🆚 框架对比
 
@@ -102,15 +102,15 @@ pnpm run dev
 | 包 | 说明 |
 |----|------|
 | [**@fecommunity/reactpress**](./tutorial-extras/reactpress-4-0.md) | **4.0 主包**（CLI + 内置 API + 插件 + 桌面） |
+| [桌面客户端](./tutorial-extras/desktop-client.md) | 下载安装、本地 / 远程模式、同步 |
 | [ReactPress 4.0 扩展版](./tutorial-extras/reactpress-4-0.md) | 4.0 能力总览 |
 | [ReactPress 3.0 平台版](./tutorial-extras/reactpress-3-0.md) | 3.0 历史说明 |
-| [@fecommunity/reactpress-client](./tutorial-extras/client-package) | 进阶：仅部署前台 |
-| [@fecommunity/reactpress-server](./tutorial-extras/server-package) | **Deprecated**，请用主包内置 API |
 | [@fecommunity/reactpress-toolkit](./tutorial-extras/toolkit-package) | TypeScript API SDK（Headless） |
 
 ## 🔗 链接
 
 - [首页](https://github.com/fecommunity/reactpress)
+- [桌面客户端](./tutorial-extras/desktop-client.md)
 - [4.0 扩展版说明](./tutorial-extras/reactpress-4-0.md)
 - [3.x → 4.0 迁移](./tutorial-extras/migration-3-to-4.md)
 - [3.0 平台版说明](./tutorial-extras/reactpress-3-0.md)

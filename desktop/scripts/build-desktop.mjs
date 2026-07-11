@@ -19,6 +19,7 @@ import {
   isThemePackageBuildFresh,
   isWorkspaceTargetStale,
   pruneStaleReleaseArtifacts,
+  resolvePackagedAppPath,
   verifyPackagedApp,
   writePackagingFingerprint,
   writeThemePackageBuildFingerprint,
@@ -136,7 +137,7 @@ async function main() {
   pruneStaleReleaseArtifacts();
 
   const packagingFingerprint = computePackagingFingerprint(resolveSharedRuntimeVersions());
-  const packagedAppPath = path.join(desktopDir, "release/mac/ReactPress.app");
+  const packagedAppPath = resolvePackagedAppPath();
 
   if (!forceRebuild && isElectronPackagingFresh(packagingFingerprint, packagedAppPath)) {
     console.log("\n[desktop] Phase 4/4 · electron-builder (up to date, skipped)");

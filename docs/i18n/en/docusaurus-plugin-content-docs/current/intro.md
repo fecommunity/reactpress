@@ -10,7 +10,7 @@ keywords: [reactpress, publishing platform, wordpress alternative, headless cms,
 
 **ReactPress** is an open-source **publishing platform** for the React era — not another headless backend to wire up. One CLI ships CMS API, Web Admin, swappable Next.js themes, plugins, and an Electron desktop client.
 
-**ReactPress 4.0** (codename **Extend**) adds a **plugin system**, **desktop client**, and **npm theme catalog** on top of 3.x. New users: `npm i -g @fecommunity/reactpress@4`. See [ReactPress 4.0 Extend](./tutorial-extras/reactpress-4-0.md). Still on 3.x? See [ReactPress 3.0 Platform](./tutorial-extras/reactpress-3-0.md).
+**ReactPress 4.0** (codename **Extend**) adds a **plugin system**, **desktop client**, and **npm theme catalog** on top of 3.x. New users: `npm i -g @fecommunity/reactpress@4`. See [ReactPress 4.0 Extend](./tutorial-extras/reactpress-4-0.md). Install the desktop app: [Desktop client](./tutorial-extras/desktop-client.md). Still on 3.x? See [ReactPress 3.0 Platform](./tutorial-extras/reactpress-3-0.md).
 
 ## 🆚 Comparison
 
@@ -102,15 +102,15 @@ Node.js ≥ 18 and Docker (embedded MySQL) required. Run `pnpm run build:plugins
 | Package | Description |
 |---------|-------------|
 | [**@fecommunity/reactpress**](./tutorial-extras/reactpress-4-0.md) | **4.0 main package** (CLI + bundled API + plugins + desktop) |
+| [Desktop client](./tutorial-extras/desktop-client.md) | Download, local / remote modes, sync |
 | [ReactPress 4.0 Extend](./tutorial-extras/reactpress-4-0.md) | 4.0 overview |
 | [ReactPress 3.0 Platform](./tutorial-extras/reactpress-3-0.md) | 3.0 historical docs |
-| [@fecommunity/reactpress-client](./tutorial-extras/client-package) | Advanced: frontend only |
-| [@fecommunity/reactpress-server](./tutorial-extras/server-package) | **Deprecated** — use bundled API in main package |
 | [@fecommunity/reactpress-toolkit](./tutorial-extras/toolkit-package) | TypeScript API SDK (Headless) |
 
 ## 🔗 Links
 
 - [Home](https://github.com/fecommunity/reactpress)
+- [Desktop client](./tutorial-extras/desktop-client.md)
 - [4.0 Extend](./tutorial-extras/reactpress-4-0.md)
 - [3.x → 4.0 migration](./tutorial-extras/migration-3-to-4.md)
 - [3.0 Platform](./tutorial-extras/reactpress-3-0.md)

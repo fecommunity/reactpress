@@ -23,5 +23,5 @@ Other approaches you rejected and why.
 **Additional context**
 
 - **Area:** Plugin / Theme / Desktop / Docs / Integration / Other
-- **Related epic:** <!-- e.g. links to an existing issue or docs/proposed-reactpress-upstream-issues.md #3 -->
+- **Related epic:** <!-- e.g. links to an existing issue -->
 - Screenshots, sketches, or links — optional

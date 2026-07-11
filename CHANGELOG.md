@@ -10,6 +10,8 @@
 * toolkit: ship `README.md` and `LICENSE` in npm tarball; license unified to MIT
 * web: ship `LICENSE` in npm tarball
 * server: remove invalid `types` entry; add `publishConfig`; align `engines` to Node 18+
+* **Desktop**: GitHub Actions matrix build (macOS / Windows / Linux) uploads installers to Releases
+* **Docs**: canonical URL `https://docs.gaoredu.com`; desktop download guide; removed legacy 2.x / split-package pages
 
 ### Upgrade from 3.x
 

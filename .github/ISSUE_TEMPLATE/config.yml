@@ -14,7 +14,7 @@ contact_links:
     url: https://github.com/fecommunity/reactpress/issues
     about: Search open issues before filing a duplicate (CMS, API, CLI, admin, toolkit)
   - name: Proposed roadmap issues
-    url: https://github.com/fecommunity/reactpress/blob/master/docs/proposed-reactpress-upstream-issues.md
+    url: https://github.com/fecommunity/reactpress/issues?q=label%3A%22help+wanted%22
     about: Curated core and community issues you can pick up
   - name: Contributing guide
     url: https://github.com/fecommunity/reactpress/blob/master/CONTRIBUTING.md

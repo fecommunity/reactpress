@@ -6,7 +6,7 @@ labels: help wanted
 assignees: ''
 ---
 
-<!-- Pick from docs/proposed-reactpress-upstream-issues.md (#5–#9) or describe your own scoped task. -->
+<!-- Link to an existing help-wanted issue or describe a scoped task. -->
 
 **What do you want to work on?**
 

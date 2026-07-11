@@ -11,6 +11,9 @@
   "home.hero.whatsNew": {
     "message": "4.0 新特性"
   },
+  "home.hero.download": {
+    "message": "下载桌面端"
+  },
   "home.hero.try": {
     "message": "在线演示"
   },
