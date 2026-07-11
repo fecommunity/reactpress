@@ -1,4 +1,4 @@
-import { type TaxonomyItem,TaxonomyList } from '@fecommunity/reactpress-toolkit/theme';
+import { type TaxonomyItem, TaxonomyList } from '@fecommunity/reactpress-toolkit/theme';
 import Link from 'next/link';
 
 import TagsCloud from './TagsCloud';
@@ -33,13 +33,11 @@ export default function Sidebar({
             currentValue={currentCategory}
             className="taxonomy-list"
             renderLink={({ item, href, active }) => (
-              <Link href={href}>
-                <a className={active ? 'active' : ''}>
-                  {item.label}
-                  {item.articleCount != null ? (
-                    <span className="count">({item.articleCount})</span>
-                  ) : null}
-                </a>
+              <Link href={href} className={active ? 'active' : ''}>
+                {item.label}
+                {item.articleCount != null ? (
+                  <span className="count">({item.articleCount})</span>
+                ) : null}
               </Link>
             )}
           />

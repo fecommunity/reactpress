@@ -74,9 +74,7 @@ export default function SearchPage({ query = '', articles = [] }: SearchProps) {
             <>
               <p className="empty-state">No articles matched your search.</p>
               <p>
-                <Link href="/">
-                  <a>← Back to archives</a>
-                </Link>
+                <Link href="/">← Back to archives</Link>
               </p>
             </>
           )}

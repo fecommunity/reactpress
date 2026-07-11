@@ -2,7 +2,7 @@ import fs from 'fs-extra';
 import path from 'node:path';
 
 import type { ReactPressConfig } from '../../types/config';
-import { CONFIG_DIR, getProjectPaths, SQLITE_REL_PATH } from '../utils/paths';
+import { CONFIG_DIR, getProjectPaths, getTemplatesDir, SQLITE_REL_PATH } from '../utils/paths';
 import { saveConfig, syncEnvFromConfig } from '../services/config';
 
 export interface LocalSitePaths {
@@ -162,12 +162,20 @@ export async function initLocalProject(
     return {
       ok: false,
       projectRoot,
-      message: '目录已是 ReactPress 项目。使用 --force 覆盖配置，或 --local 初始化 SQLite 本地模式。',
+      message: '目录已是 ReactPress 项目。使用 --force 覆盖配置。',
     };
   }
 
   await fs.ensureDir(projectRoot);
   ensureLocalSite(projectRoot, port);
+
+  const templatesDir = getTemplatesDir();
+  const pkgTemplate = path.join(templatesDir, 'package.json');
+  const pkgDest = path.join(projectRoot, 'package.json');
+  if ((await fs.pathExists(pkgTemplate)) && (!(await fs.pathExists(pkgDest)) || options.force)) {
+    await fs.copy(pkgTemplate, pkgDest, { overwrite: true });
+  }
+
   const config = (await fs.readJson(paths.configPath)) as ReactPressConfig;
   await saveConfig(projectRoot, config);
   await syncEnvFromConfig(projectRoot, config);
@@ -175,6 +183,6 @@ export async function initLocalProject(
   return {
     ok: true,
     projectRoot,
-    message: 'ReactPress 本地项目（SQLite）初始化完成。运行 reactpress dev --local 启动。',
+    message: 'ReactPress 项目初始化完成。',
   };
 }

@@ -81,11 +81,7 @@ export default function CategoryPage({
           ) : (
             <ArchiveEmptyState
               message="No articles in this category yet."
-              renderBackLink={({ href, label }) => (
-                <Link href={href}>
-                  <a>{label}</a>
-                </Link>
-              )}
+              renderBackLink={({ href, label }) => <Link href={href}>{label}</Link>}
             />
           )}
         </section>

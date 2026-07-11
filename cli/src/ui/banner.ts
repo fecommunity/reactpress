@@ -382,10 +382,7 @@ function infoRow(label, value, lw) {
 }
 
 function commandRail() {
-  const items = ['init', 'dev', 'build', 'deploy', 'publish'];
-  return items
-    .map((name) => brand.primary('》 ') + gradientText(name, [palette.primary, palette.accent]))
-    .join(brand.dim('   '));
+  return brand.primary('》 ') + gradientText('init', [palette.primary, palette.accent]);
 }
 
 function appendInfoRows(lines, innerWidth, options, lw) {

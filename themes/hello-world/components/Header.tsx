@@ -27,16 +27,14 @@ export default function Header() {
       <a className="skip-link" href="#main-content">
         Skip to content
       </a>
-      <Link href="/">
-        <a className="site-brand">
-          <SiteLogo
-            className="site-logo"
-            alt={showBranding ? '' : siteName}
-            width={48}
-            height={48}
-          />
-          {showBranding ? <SiteBranding className="site-title-text" as="span" /> : null}
-        </a>
+      <Link href="/" className="site-brand">
+        <SiteLogo
+          className="site-logo"
+          alt={showBranding ? '' : siteName}
+          width={48}
+          height={48}
+        />
+        {showBranding ? <SiteBranding className="site-title-text" as="span" /> : null}
       </Link>
       {showBranding ? <SiteTagline /> : null}
       <NavMenu
@@ -44,10 +42,12 @@ export default function Header() {
         activeId={activeId}
         className="site-nav"
         renderLink={({ item, active }) => (
-          <Link href={item.href}>
-            <a className={active ? 'active' : ''} aria-current={active ? 'page' : undefined}>
-              {item.label}
-            </a>
+          <Link
+            href={item.href}
+            className={active ? 'active' : ''}
+            aria-current={active ? 'page' : undefined}
+          >
+            {item.label}
           </Link>
         )}
       />

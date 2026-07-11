@@ -33,9 +33,7 @@ export default function PostEntry({ article }: PostEntryProps) {
   return (
     <article className="entry">
       <h2 className="entry-title">
-        <Link href={articlePath(article.id)}>
-          <a>{article.title}</a>
-        </Link>
+        <Link href={articlePath(article.id)}>{article.title}</Link>
       </h2>
       {body ? <p className="entry-excerpt">{body}</p> : null}
       {(article.publishAt || article.category) && (
@@ -47,9 +45,7 @@ export default function PostEntry({ article }: PostEntryProps) {
           ) : null}
           {article.category ? (
             <span>
-              <Link href={categoryPath(article.category.value)}>
-                <a>{article.category.label}</a>
-              </Link>
+              <Link href={categoryPath(article.category.value)}>{article.category.label}</Link>
             </span>
           ) : null}
         </p>

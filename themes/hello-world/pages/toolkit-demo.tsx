@@ -138,8 +138,8 @@ export default function ToolkitDemo({ articles, categories, tags, stats }: Toolk
           </div>
 
           <div className="cta-section">
-            <Link href="/">
-              <a className="back-link">← Back to Home</a>
+            <Link href="/" className="back-link">
+              ← Back to Home
             </Link>
           </div>
         </div>

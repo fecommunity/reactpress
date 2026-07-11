@@ -3,6 +3,7 @@ const assert = require('node:assert/strict');
 const {
   loadServerSiteUrl,
   loadClientSiteUrl,
+  loadAdminConsoleUrl,
   getApiPrefix,
   getHealthUrl,
   normalizeProbeUrl,
@@ -31,5 +32,20 @@ describe('lib/http', () => {
       normalizeProbeUrl('http://[::1]:3001/'),
       'http://127.0.0.1:3001/',
     );
+  });
+
+  it('resolves admin console URL for local zero-dependency mode', () => {
+    const root = createStandaloneProject();
+    const prevLocal = process.env.REACTPRESS_LOCAL_MODE;
+    const prevNginx = process.env.REACTPRESS_SKIP_NGINX;
+    try {
+      process.env.REACTPRESS_LOCAL_MODE = '1';
+      process.env.REACTPRESS_SKIP_NGINX = '1';
+      assert.equal(loadAdminConsoleUrl(root), 'http://localhost:3001/admin/');
+    } finally {
+      process.env.REACTPRESS_LOCAL_MODE = prevLocal;
+      process.env.REACTPRESS_SKIP_NGINX = prevNginx;
+      rmDir(root);
+    }
   });
 });

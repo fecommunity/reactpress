@@ -1,4 +1,4 @@
-import { type TaxonomyItem,TaxonomyList } from '@fecommunity/reactpress-toolkit/theme';
+import { type TaxonomyItem, TaxonomyList } from '@fecommunity/reactpress-toolkit/theme';
 import Link from 'next/link';
 
 interface TagsCloudProps {
@@ -16,8 +16,8 @@ export default function TagsCloud({ tags = [], currentTag }: TagsCloudProps) {
       currentValue={currentTag}
       className="tags-cloud"
       renderLink={({ item, href, active }) => (
-        <Link href={href}>
-          <a className={active ? 'active' : ''}>{item.label}</a>
+        <Link href={href} className={active ? 'active' : ''}>
+          {item.label}
         </Link>
       )}
     />

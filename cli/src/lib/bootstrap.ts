@@ -3,28 +3,29 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import { setProjectCwd } from '../core/utils/cli-context';
-import { saveConfig, syncEnvFromConfig, loadConfig, isReactPressProject } from '../core/services/config';
+import { loadConfig, isReactPressProject } from '../core/services/config';
 import { ensureDatabase, ensureDatabaseHostPort } from '../core/services/database';
 import { initProject } from '../core/services/init';
-import { getProjectPaths, getTemplatesDir } from '../core/utils/paths';
 import { ensureOriginalCwd, isMonorepoCheckout } from './root';
 import { t } from './i18n';
 
-async function copyTemplateFile(src: string, dest: string): Promise<void> {
-  await fs.promises.mkdir(path.dirname(dest), { recursive: true });
-  await fs.promises.copyFile(src, dest);
+function applyZeroDependencyDefaults(): void {
+  if (!process.env.REACTPRESS_LOCAL_MODE) {
+    process.env.REACTPRESS_LOCAL_MODE = '1';
+  }
+  if (!process.env.REACTPRESS_SKIP_NGINX) {
+    process.env.REACTPRESS_SKIP_NGINX = '1';
+  }
 }
 
 export async function initMonorepoProject(
   projectRoot: string,
-  { force = false, local = false }: { force?: boolean; local?: boolean } = {},
+  { force = false }: { force?: boolean; local?: boolean } = {},
 ): Promise<{ ok: boolean; projectRoot: string; message: string }> {
-  if (local) {
-    return initProject({ directory: projectRoot, force, local: true });
-  }
+  applyZeroDependencyDefaults();
 
+  const { getProjectPaths } = require('../core/utils/paths');
   const paths = getProjectPaths(projectRoot);
-  const templatesDir = getTemplatesDir();
 
   if (fs.existsSync(paths.configPath) && !force) {
     const config = await loadConfig(projectRoot);
@@ -36,56 +37,19 @@ export async function initMonorepoProject(
     return { ok: true, projectRoot, message: t('bootstrap.configReady') };
   }
 
-  await fs.promises.mkdir(paths.reactpressDir, { recursive: true });
-  await copyTemplateFile(
-    path.join(templatesDir, 'docker-compose.yml'),
-    paths.dockerComposePath,
-  );
-
-  const config = JSON.parse(
-    await fs.promises.readFile(path.join(templatesDir, 'config.default.json'), 'utf8'),
-  );
-  await saveConfig(projectRoot, config);
-  await syncEnvFromConfig(projectRoot, config);
-
-  if (!fs.existsSync(paths.envPath) || force) {
-    await copyTemplateFile(path.join(templatesDir, 'env.default'), paths.envPath);
-    await syncEnvFromConfig(projectRoot, config);
-  }
-
-  const dbResult = await ensureDatabase(projectRoot, config);
-
-  if (!dbResult.ok) {
-    return {
-      ok: true,
-      projectRoot,
-      message: t('bootstrap.projectDbPending', { message: dbResult.message ?? '' }),
-    };
-  }
-
-  return {
-    ok: true,
-    projectRoot,
-    message: t('bootstrap.ready'),
-  };
+  return initProject({ directory: projectRoot, force });
 }
 
 export async function ensureProjectEnvironment(
   projectRoot = ensureOriginalCwd(),
   options: { skipDatabase?: boolean } = {},
 ): Promise<{ ok: boolean; projectRoot: string; message: string | null }> {
+  applyZeroDependencyDefaults();
+
   const root = path.resolve(projectRoot);
   setProjectCwd(root);
 
   if (!(await isReactPressProject(root))) {
-    if (isMonorepoCheckout(root)) {
-      const result = await initMonorepoProject(root);
-      if (!result.ok) {
-        throw new Error(result.message || t('bootstrap.initFailed'));
-      }
-      return result;
-    }
-
     const result = await initProject({ directory: root, force: false });
     if (!result.ok) {
       throw new Error(result.message || t('bootstrap.cliInitFailed'));

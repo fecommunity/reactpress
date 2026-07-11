@@ -99,7 +99,7 @@ reactpress init && reactpress dev
 | Surface | URL |
 | :------ | :-- |
 | **Public site** | http://localhost:3001 |
-| **Admin** | http://localhost:3000 |
+| **Admin** | http://localhost:3001/admin/ |
 | **API** | http://localhost:3002/api/health |
 
 `reactpress doctor` fixes setup issues · `reactpress` opens the interactive menu
