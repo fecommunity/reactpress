@@ -1,60 +1,47 @@
-# @fecommunity/reactpress
+# @fecommunity/reactpress-cli
 
-Zero-dependency CLI for the ReactPress publishing platform — CMS, admin, API, and themes. Embedded SQLite; no Docker, nginx, or MySQL required.
+零配置一键初始化与管理 ReactPress CMS & 博客服务器。内置 NestJS 服务端，无需单独克隆 [fecommunity/reactpress](https://github.com/fecommunity/reactpress)。
 
-Docs: [reactpress-docs.vercel.app](https://reactpress-docs.vercel.app/) · Repo: [github.com/fecommunity/reactpress](https://github.com/fecommunity/reactpress)
+完整文档与贡献指南见：[github.com/fecommunity/reactpress-cli](https://github.com/fecommunity/reactpress-cli)
 
-## Install
-
-```bash
-npm install -g @fecommunity/reactpress@4
-```
-
-Global command: `reactpress`.
-
-## Quick start
+## 安装
 
 ```bash
-mkdir my-site && cd my-site
-reactpress init
+npm install -g @fecommunity/reactpress-cli
 ```
 
-`init` creates the project config, starts the API and theme, and prints the URLs below.
+全局命令为 `reactpress-cli`（与 npm 包名无关）。
 
-| Surface | URL |
-| :------ | :-- |
-| Public site | http://localhost:3001 |
-| Admin | http://localhost:3001/admin/ |
-| API | http://localhost:3002/api |
+> npm 上的无作用域包名 `reactpress-cli` 已被占用，本包发布为 `@fecommunity/reactpress-cli`。
 
-Default admin credentials: `admin` / `admin`
-
-Press `Ctrl+C` to stop.
-
-## Commands
-
-| Command | Description |
-| :------ | :---------- |
-| `reactpress` | Initialize and start in the current directory (default) |
-| `reactpress init` | Same as above |
-| `reactpress init [dir]` | Initialize and start in a specific directory |
-| `reactpress init --force` | Overwrite existing config and restart |
-| `reactpress doctor` | Diagnose Node, SQLite, ports, API, site, and admin |
-
-## Troubleshooting
+## 快速开始
 
 ```bash
-reactpress doctor
+mkdir my-blog && cd my-blog
+reactpress-cli init
+reactpress-cli start
 ```
 
-`doctor` checks your environment and suggests fixes when something is misconfigured or not running. In SQLite local mode, Docker and nginx are not required.
+浏览器访问 `http://localhost:3002`（API 文档：`/api`）。
 
-## Requirements
+## 常用命令
+
+| 命令 | 说明 |
+|------|------|
+| `reactpress-cli init [dir]` | 初始化项目 |
+| `reactpress-cli start` | 启动服务（自动准备数据库） |
+| `reactpress-cli stop` | 停止服务 |
+| `reactpress-cli restart` | 重启服务 |
+| `reactpress-cli status` | 查看状态 |
+| `reactpress-cli config [key] [value]` | 查看/修改配置 |
+| `reactpress-cli config server.port 3003 --apply` | 改端口并重启 |
+
+## 要求
 
 - Node.js 18+
-- macOS, Linux, or Windows
-- No Docker, nginx, or external database needed
+- macOS / Linux / Windows
+- 默认使用 Docker 运行嵌入式 MySQL；也可在 `.reactpress/config.json` 中配置外部数据库
 
-## License
+## 许可证
 
 MIT © FECommunity

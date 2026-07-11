@@ -1,0 +1,13 @@
+# Runtime deps are installed via postinstall — never ship bundled node_modules.
+server/node_modules
+toolkit/node_modules
+
+# Dev / local artifacts
+server/logs
+server/.reactpress
+server/public/uploads
+server/dist/public
+**/*.tsbuildinfo
+**/*.map
+**/*.d.ts
+**/*.d.ts.map
