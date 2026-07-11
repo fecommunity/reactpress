@@ -7,7 +7,7 @@
 }
 
 .hero {
-  max-width: 600px;
+  max-width: min(860px, 100%);
 }
 
 .section {
@@ -73,6 +73,14 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
+.hero .toolbar {
+  padding: 0.8rem 1.25rem;
+}
+
+.hero .toolbarTitle {
+  font-size: 0.94rem;
+}
+
 .dots {
   display: flex;
   gap: 5px;
@@ -110,6 +118,11 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.hero .copyBtn {
+  padding: 0.52rem 1.05rem;
+  font-size: 0.94rem;
 }
 
 .toolbarSep {
@@ -165,6 +178,10 @@
   min-height: 12rem;
 }
 
+.hero .bodyAnimated {
+  min-height: 18.5rem;
+}
+
 .terminalScroll {
   max-height: 15rem;
   overflow-y: auto;
@@ -172,6 +189,10 @@
   padding-bottom: 0.25rem;
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+}
+
+.hero .terminalScroll {
+  max-height: 23.5rem;
 }
 
 .terminalScroll::-webkit-scrollbar {
@@ -190,8 +211,16 @@
   padding: 0.35rem 0.9rem;
 }
 
+.hero .commandRow {
+  padding: 0.55rem 1.3rem;
+}
+
 .commandRow:first-child {
   padding-top: 0.65rem;
+}
+
+.hero .commandRow:first-child {
+  padding-top: 1.05rem;
 }
 
 .prompt {
@@ -218,6 +247,11 @@
   word-break: break-word;
   line-height: 1.5;
   white-space: pre-wrap;
+}
+
+.hero .commandText,
+.hero .prompt {
+  font-size: clamp(0.96rem, 2.5vw, 1.08rem);
 }
 
 .cmdKeyword {
@@ -268,6 +302,12 @@
   animation: lineIn 0.22s ease both;
 }
 
+.hero .outputRow,
+.hero .successRow,
+.hero .dividerRow {
+  padding: 0.26rem 1.3rem;
+}
+
 .successRow,
 .dividerRow {
   padding: 0.15rem 0.9rem;
@@ -288,6 +328,12 @@
   font-size: clamp(0.72rem, 1.8vw, 0.8rem);
   color: rgba(255, 255, 255, 0.5);
   line-height: 1.5;
+}
+
+.hero .outputText,
+.hero .successText,
+.hero .serviceRow {
+  font-size: clamp(0.88rem, 2.3vw, 0.98rem);
 }
 
 .outputTag {
