@@ -14,6 +14,7 @@ const net = require('net');
 const { readPid, isProcessRunning, clearPidFile, writePid } = require('./process');
 const { ensureOriginalCwd } = require('./root');
 const { t } = require('./i18n');
+const { ensureBundledServerDeps } = require('./server-bundle');
 
 function parseServerPort(projectRoot) {
   try {
@@ -85,6 +86,14 @@ async function startApi(projectRoot, { wait = true } = {}) {
   if (!canStartLocalApi(projectRoot)) {
     console.error(t('lifecycle.noServerAvailable'));
     return 1;
+  }
+
+  if (!isUsingMonorepoServer(projectRoot)) {
+    const bundled = await ensureBundledServerDeps(projectRoot);
+    if (!bundled.ok) {
+      console.error(bundled.message || t('bundle.serverBundle.notBuilt'));
+      return 1;
+    }
   }
 
   if (isUsingMonorepoServer(projectRoot)) {

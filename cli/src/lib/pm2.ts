@@ -1,10 +1,18 @@
 // @ts-nocheck
 const { spawn } = require('child_process');
-const { getServerBin, getServerDir } = require('./paths');
+const { getServerBin, getServerDir, isUsingMonorepoServer } = require('./paths');
 const { ensureOriginalCwd } = require('./root');
 const { t } = require('./i18n');
+const { ensureBundledServerDeps } = require('./server-bundle');
 
-function startApiWithPm2(projectRoot = ensureOriginalCwd()) {
+async function startApiWithPm2(projectRoot = ensureOriginalCwd()) {
+  if (!isUsingMonorepoServer(projectRoot)) {
+    const bundled = await ensureBundledServerDeps(projectRoot);
+    if (!bundled.ok) {
+      throw new Error(bundled.message || t('bundle.serverBundle.notBuilt'));
+    }
+  }
+
   return new Promise((resolve, reject) => {
     const child = spawn(process.execPath, [getServerBin(projectRoot), '--pm2'], {
       stdio: 'inherit',

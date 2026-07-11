@@ -14,6 +14,7 @@ const { ensureOriginalCwd } = require('./root');
 const { t } = require('./i18n');
 const { ensureApiPortFree } = require('./ports');
 const { ensureDevDatabase } = require('./docker');
+const { ensureBundledServerDeps } = require('./server-bundle');
 
 let apiChild;
 
@@ -97,6 +98,14 @@ async function runApiDev(projectRoot = ensureOriginalCwd()) {
     if (reused) {
       console.log(t('dev.apiReusing', { port: apiPort }));
       return;
+    }
+  }
+
+  if (!isUsingMonorepoServer(projectRoot)) {
+    const bundled = await ensureBundledServerDeps(projectRoot);
+    if (!bundled.ok) {
+      console.error(bundled.message || t('bundle.serverBundle.notBuilt'));
+      process.exit(1);
     }
   }
 
