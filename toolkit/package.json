@@ -1,6 +1,6 @@
 {
   "name": "@fecommunity/reactpress-toolkit",
-  "version": "4.0.0-beta.13",
+  "version": "4.0.0-beta.15",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {

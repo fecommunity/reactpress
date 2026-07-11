@@ -1,6 +1,6 @@
 {
   "name": "@fecommunity/reactpress-server",
-  "version": "4.0.0-beta.13",
+  "version": "4.0.0-beta.15",
   "deprecated": "Bundled in @fecommunity/reactpress CLI from v3.1. Run `npx @fecommunity/reactpress init` for new projects.",
   "description": "ReactPress NestJS REST API (deprecated). Bundled in @fecommunity/reactpress CLI from v3.1. Headless CMS for articles, media, plugins, and themes",
   "author": "fecommunity",

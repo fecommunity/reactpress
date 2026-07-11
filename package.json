@@ -1,6 +1,6 @@
 {
   "name": "reactpress",
-  "version": "4.0.0-beta.13",
+  "version": "4.0.0-beta.15",
   "private": true,
   "packageManager": "pnpm@9.15.9",
   "description": "ReactPress — publishing platform for modern developers. CMS, Admin, API, Next.js themes, plugins, desktop. One CLI.",
