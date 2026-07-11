@@ -143,13 +143,26 @@
   ],
   "keywords": [
     "reactpress",
+    "typescript",
+    "sdk",
+    "headless-cms",
     "cms",
-    "toolkit",
+    "blog",
+    "nextjs",
+    "openapi",
+    "api-client",
+    "ssr",
     "theme",
-    "headless"
+    "plugin",
+    "react",
+    "publishing-platform"
   ],
   "author": "fecommunity",
   "license": "ISC",
+  "homepage": "https://reactpress-docs.vercel.app/",
+  "bugs": {
+    "url": "https://github.com/fecommunity/reactpress/issues"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/fecommunity/reactpress.git",
@@ -159,7 +172,7 @@
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
-  "description": "ReactPress TypeScript SDK — API clients, theme SSR, plugin hooks, headless UI",
+  "description": "Official ReactPress TypeScript SDK — OpenAPI REST clients, Next.js theme SSR, plugin hooks, and headless UI for the publishing platform",
   "dependencies": {
     "ajv": "^8.17.1",
     "axios": "^1.12.2",

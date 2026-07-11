@@ -1,12 +1,22 @@
 # @fecommunity/reactpress-server
 
-NestJS CMS API for **ReactPress 4.0** — articles, pages, media, users, plugins, themes, and site settings. Headless REST with Swagger; powers themes, Admin, and desktop via [@fecommunity/reactpress-toolkit](../toolkit/).
+> **ReactPress headless REST API — NestJS backend for the publishing platform.**
 
-> **MySQL** for production · **SQLite** for desktop / local mode.
+[![npm version](https://img.shields.io/npm/v/@fecommunity/reactpress-server.svg)](https://www.npmjs.com/package/@fecommunity/reactpress-server)
+[![License: MIT](https://img.shields.io/npm/l/@fecommunity/reactpress-server.svg)](https://github.com/fecommunity/reactpress/blob/master/server/LICENSE)
 
-[![NPM Version](https://img.shields.io/npm/v/@fecommunity/reactpress-server.svg)](https://www.npmjs.com/package/@fecommunity/reactpress-server)
-[![License](https://img.shields.io/npm/l/@fecommunity/reactpress-server.svg)](https://github.com/fecommunity/reactpress/blob/master/server/LICENSE)
-[![NestJS](https://img.shields.io/badge/NestJS-10-red)](https://nestjs.com/)
+> **Deprecated** — from ReactPress 3.1 onward, the API ships inside [`@fecommunity/reactpress`](https://www.npmjs.com/package/@fecommunity/reactpress) (CLI). New projects should run `npx @fecommunity/reactpress init` instead of installing this package standalone.
+
+This package remains available for legacy deployments and direct API integration. It powers themes, Admin, and desktop clients through [@fecommunity/reactpress-toolkit](../toolkit/).
+
+| Capability | Detail |
+| :----------- | :----- |
+| **Content** | Articles, pages, media, comments, search, site settings |
+| **Extensibility** | Plugin hook runtime and theme catalog (ReactPress 4.0) |
+| **API** | Headless REST with JWT auth, rate limiting, Swagger/OpenAPI |
+| **Database** | MySQL (production) or SQLite (local / desktop) |
+
+[Documentation](https://reactpress-docs.vercel.app/) · [Migrate to CLI](../cli/) · [GitHub](https://github.com/fecommunity/reactpress)
 
 ## Quick start
 
@@ -42,7 +52,7 @@ pnpm run --dir server dev
 ```
 
 | Command | Description |
-| :--- | :--- |
+| :------ | :---------- |
 | `pnpm run dev` | Dev server with hot reload |
 | `pnpm run build` | Production build |
 | `pnpm run test` | Unit tests |
@@ -63,7 +73,7 @@ server/
 The install wizard generates `.env`. Key variables:
 
 | Variable | Description | Default |
-| :--- | :--- | :--- |
+| :------- | :---------- | :------ |
 | `DB_HOST` | Database host | `127.0.0.1` |
 | `DB_PORT` | Database port | `3306` |
 | `DB_DATABASE` | Database name | `reactpress` |
@@ -90,3 +100,5 @@ OpenAPI spec from this server drives toolkit code generation (`pnpm run --dir to
 ## License
 
 MIT — see [LICENSE](LICENSE).
+
+<p align="center"><sub>Part of <a href="https://github.com/fecommunity/reactpress">ReactPress</a> — content owned by the system, frontend owned by developers.</sub></p>

@@ -1,10 +1,14 @@
 {
   "name": "@fecommunity/reactpress-server",
   "version": "4.0.0-beta.13",
-  "deprecated": "Use the built-in API in @fecommunity/reactpress (CLI). Standalone server publishing stopped from 3.1.",
-  "description": "ReactPress NestJS CMS API — headless REST for the publishing platform (MySQL or SQLite)",
+  "deprecated": "Bundled in @fecommunity/reactpress CLI from v3.1. Run `npx @fecommunity/reactpress init` for new projects.",
+  "description": "ReactPress NestJS REST API (deprecated). Bundled in @fecommunity/reactpress CLI from v3.1. Headless CMS for articles, media, plugins, and themes",
   "author": "fecommunity",
   "license": "MIT",
+  "homepage": "https://reactpress-docs.vercel.app/",
+  "bugs": {
+    "url": "https://github.com/fecommunity/reactpress/issues"
+  },
   "main": "dist/main.js",
   "types": "dist/index.d.ts",
   "bin": {
@@ -19,12 +23,16 @@
   ],
   "keywords": [
     "reactpress",
-    "server",
     "nestjs",
+    "headless-cms",
     "cms",
     "blog",
+    "rest-api",
     "api",
-    "typescript"
+    "openapi",
+    "swagger",
+    "typescript",
+    "self-hosted"
   ],
   "repository": {
     "type": "git",

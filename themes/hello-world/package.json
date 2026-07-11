@@ -1,7 +1,28 @@
 {
   "name": "@fecommunity/reactpress-template-hello-world",
   "version": "3.0.4",
-  "description": "Lowest-cost hello-world starter theme for ReactPress (Pages Router, Next.js 15)",
+  "description": "Official ReactPress hello-world theme — Next.js 15 Pages Router starter for blogs, categories, tags, and search",
+  "homepage": "https://reactpress-docs.vercel.app/",
+  "bugs": {
+    "url": "https://github.com/fecommunity/reactpress/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fecommunity/reactpress.git",
+    "directory": "themes/hello-world"
+  },
+  "keywords": [
+    "reactpress",
+    "nextjs",
+    "blog",
+    "theme",
+    "starter",
+    "cms",
+    "headless-cms",
+    "pages-router",
+    "typescript",
+    "publishing-platform"
+  ],
   "main": "index.js",
   "bin": {
     "create-reactpress-hello-world": "./bin/create-hello-world.js"
