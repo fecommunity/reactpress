@@ -20,7 +20,15 @@ done
 log() { echo "[$(date +'%Y-%m-%d %H:%M:%S')] $*"; }
 
 log "Building production artifacts (toolkit, server, web, active theme)..."
-node ./cli/bin/reactpress.js build
+node -e "
+  const { runBuild } = require('./cli/out/lib/build');
+  runBuild('all', process.cwd())
+    .then(() => process.exit(0))
+    .catch((err) => {
+      console.error('[reactpress]', err.message || err);
+      process.exit(1);
+    });
+"
 
 log "Ensuring active theme build stamp..."
 node -e "
