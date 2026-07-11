@@ -4,8 +4,10 @@
   "private": true,
   "scripts": {
     "docusaurus": "docusaurus",
+    "predev": "node scripts/sync-changelog-nav.mjs",
     "dev": "docusaurus start",
-    "preview": "docusaurus build && docusaurus serve",
+    "preview": "pnpm build && docusaurus serve",
+    "prebuild": "node scripts/sync-changelog-nav.mjs",
     "build": "docusaurus build",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
