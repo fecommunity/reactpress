@@ -13,25 +13,30 @@ const repoRoot = path.join(cliRoot, '..');
 const monorepoServer = path.join(repoRoot, 'server');
 const bundledServer = path.join(cliRoot, 'server');
 
-function copyDir(src, dest) {
+const SKIP_DIRS = new Set(['node_modules', 'logs', 'uploads', '.reactpress']);
+const SKIP_FILES = new Set(['tsconfig.build.tsbuildinfo', 'tsconfig.tsbuildinfo']);
+
+function copyDir(src, dest, options = {}) {
+  const skipDirs = options.skipDirs ?? SKIP_DIRS;
   fs.mkdirSync(dest, { recursive: true });
   for (const entry of fs.readdirSync(src, { withFileTypes: true })) {
-    if (entry.name === 'node_modules' || entry.name === 'logs') continue;
+    if (skipDirs.has(entry.name)) continue;
+    if (!entry.isDirectory() && SKIP_FILES.has(entry.name)) continue;
     const from = path.join(src, entry.name);
     const to = path.join(dest, entry.name);
     if (entry.isDirectory()) {
-      copyDir(from, to);
+      copyDir(from, to, options);
     } else {
       fs.copyFileSync(from, to);
     }
   }
 }
 
-function replaceDir(src, dest) {
+function replaceDir(src, dest, options = {}) {
   if (fs.existsSync(dest)) {
     fs.rmSync(dest, { recursive: true, force: true });
   }
-  copyDir(src, dest);
+  copyDir(src, dest, options);
 }
 
 function main() {
@@ -41,7 +46,9 @@ function main() {
     process.exit(0);
   }
 
-  replaceDir(path.join(monorepoServer, 'dist'), path.join(bundledServer, 'dist'));
+  replaceDir(path.join(monorepoServer, 'dist'), path.join(bundledServer, 'dist'), {
+    skipDirs: new Set([...SKIP_DIRS, 'public']),
+  });
   replaceDir(path.join(monorepoServer, 'public'), path.join(bundledServer, 'public'));
   replaceDir(path.join(monorepoServer, 'bin'), path.join(bundledServer, 'bin'));
 

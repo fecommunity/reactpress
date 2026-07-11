@@ -14,7 +14,7 @@ const require = createRequire(import.meta.url);
 
 const LEGACY_PKG = '@fecommunity/reactpress-cli-core';
 
-const SKIP_DIRS = new Set(['node_modules', '.git', 'logs']);
+const SKIP_DIRS = new Set(['node_modules', '.git', 'logs', '.reactpress']);
 const SKIP_FILES = new Set(['package-lock.json']);
 
 function copyDir(src, dest) {

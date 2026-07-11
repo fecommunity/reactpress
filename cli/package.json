@@ -38,8 +38,8 @@
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "pnpm run build && node --test tests",
-    "prepare": "node scripts/sync-bundled-core.mjs && pnpm run build",
-    "prepack": "node scripts/sync-bundled-core.mjs && node scripts/sync-monorepo-server.mjs && node scripts/sync-bundled-toolkit.mjs && node scripts/patch-bundled-dist.mjs && node scripts/install-bundled-runtime.mjs && pnpm run build",
+    "prepare": "node scripts/prepare.mjs",
+    "prepack": "node scripts/sync-bundled-core.mjs && node scripts/sync-monorepo-server.mjs && node scripts/sync-bundled-toolkit.mjs && node scripts/patch-bundled-dist.mjs && pnpm run build && node scripts/prune-bundled-pack.mjs",
     "postinstall": "node scripts/install-bundled-runtime.mjs"
   },
   "publishConfig": {
