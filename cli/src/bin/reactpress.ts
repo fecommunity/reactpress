@@ -92,6 +92,11 @@ function printRunningPanel(projectRoot) {
 }
 
 async function startServices(projectRoot) {
+  const { ensureBundledPlugins } = require('../core/services/local-site');
+  if (ensureBundledPlugins(projectRoot)) {
+    console.log(brand.dim(t('init.pluginsSeeded')));
+  }
+
   const code = await runLifecycleCommand('start', projectRoot);
   if (code !== 0) process.exit(code);
 

@@ -20,6 +20,47 @@ export function resolveWebPackageRoot(projectRoot: string): string | null {
   return null;
 }
 
+function readAdminMainAssetId(indexHtmlPath: string): string | null {
+  try {
+    const html = fs.readFileSync(indexHtmlPath, 'utf8');
+    return html.match(/assets\/(index-[^"]+\.js)/)?.[1] ?? null;
+  } catch {
+    return null;
+  }
+}
+
+function resolveAdminDistSource(projectRoot: string): string | null {
+  const bundled = resolveBundledAdminDistDir();
+  const webRoot = resolveWebPackageRoot(projectRoot);
+  const webDist = webRoot ? path.join(webRoot, 'dist') : null;
+  const webIndex = webDist ? path.join(webDist, 'index.html') : null;
+
+  if (webIndex && fs.existsSync(webIndex)) {
+    if (!bundled) return webDist;
+    const bundledIndex = path.join(bundled, 'index.html');
+    const webMtime = fs.statSync(webIndex).mtimeMs;
+    const bundledMtime = fs.statSync(bundledIndex).mtimeMs;
+    return webMtime >= bundledMtime ? webDist : bundled;
+  }
+
+  return bundled;
+}
+
+/** True when CLI/web admin-dist is newer than the theme's copied public/admin bundle. */
+export function adminSourceIsNewerThanTheme(projectRoot: string, themeDir: string): boolean {
+  const source = resolveAdminDistSource(projectRoot);
+  const sourceIndex = source ? path.join(source, 'index.html') : null;
+  const themeAdminIndex = path.join(themeDir, 'public', 'admin', 'index.html');
+  if (!sourceIndex || !fs.existsSync(sourceIndex)) return false;
+  if (!fs.existsSync(themeAdminIndex)) return true;
+
+  const sourceId = readAdminMainAssetId(sourceIndex);
+  const themeId = readAdminMainAssetId(themeAdminIndex);
+  if (sourceId && themeId) return sourceId !== themeId;
+
+  return fs.statSync(sourceIndex).mtimeMs > fs.statSync(themeAdminIndex).mtimeMs;
+}
+
 function syncDirToPublicAdmin(sourceDist: string, themeDir: string): string {
   const target = path.join(themeDir, 'public', 'admin');
   fs.removeSync(target);
@@ -77,41 +118,58 @@ function finalizeAdminThemeSetup(themeDir: string): boolean {
   return ensureAdminRewritesInNextConfig(themeDir);
 }
 
+function syncAdminFromWeb(projectRoot: string, themeDir: string): boolean {
+  const webRoot = resolveWebPackageRoot(projectRoot);
+  if (!webRoot) return false;
+
+  const webDist = path.join(webRoot, 'dist', 'index.html');
+  if (!fs.existsSync(webDist)) {
+    console.log('[ReactPress Client] Building admin SPA (web/)…');
+    const buildWeb = spawnSync('pnpm', ['run', 'build'], { cwd: webRoot, stdio: 'inherit' });
+    if (buildWeb.status !== 0) process.exit(buildWeb.status || 1);
+  }
+
+  const syncScript = path.join(webRoot, 'bin', 'reactpress-web.js');
+  const publicAdmin = path.join(themeDir, 'public', 'admin');
+  console.log('[ReactPress Client] Syncing admin static → theme public/admin…');
+  const sync = spawnSync(process.execPath, [syncScript, 'sync-public', publicAdmin], {
+    stdio: 'inherit',
+    cwd: webRoot,
+  });
+  if (sync.status !== 0) process.exit(sync.status || 1);
+  return finalizeAdminThemeSetup(themeDir) || true;
+}
+
+function syncAdminFromSource(sourceDist: string, themeDir: string): boolean {
+  console.log('[ReactPress Client] Syncing bundled admin static → theme public/admin…');
+  syncDirToPublicAdmin(sourceDist, themeDir);
+  return finalizeAdminThemeSetup(themeDir) || true;
+}
+
 /** Returns true when admin static or rewrites were newly applied (theme rebuild recommended). */
 export function ensureAdminStaticForTheme(projectRoot: string, themeDir: string): boolean {
   const adminIndex = path.join(themeDir, 'public', 'admin', 'index.html');
-  if (fs.existsSync(adminIndex)) {
+  const needsResync = !fs.existsSync(adminIndex) || adminSourceIsNewerThanTheme(projectRoot, themeDir);
+
+  if (!needsResync) {
     return finalizeAdminThemeSetup(themeDir);
   }
 
-  const webRoot = resolveWebPackageRoot(projectRoot);
-  if (webRoot) {
-    const webDist = path.join(webRoot, 'dist', 'index.html');
-    if (!fs.existsSync(webDist)) {
-      console.log('[ReactPress Client] Building admin SPA (web/)…');
-      const buildWeb = spawnSync('pnpm', ['run', 'build'], { cwd: webRoot, stdio: 'inherit' });
-      if (buildWeb.status !== 0) process.exit(buildWeb.status || 1);
+  const source = resolveAdminDistSource(projectRoot);
+  if (source && fs.existsSync(path.join(source, 'index.html'))) {
+    const webRoot = resolveWebPackageRoot(projectRoot);
+    if (webRoot && path.resolve(source) === path.resolve(path.join(webRoot, 'dist'))) {
+      return syncAdminFromWeb(projectRoot, themeDir);
     }
-    const syncScript = path.join(webRoot, 'bin', 'reactpress-web.js');
-    const publicAdmin = path.join(themeDir, 'public', 'admin');
-    console.log('[ReactPress Client] Syncing admin static → theme public/admin…');
-    const sync = spawnSync(process.execPath, [syncScript, 'sync-public', publicAdmin], {
-      stdio: 'inherit',
-      cwd: webRoot,
-    });
-    if (sync.status !== 0) process.exit(sync.status || 1);
-    return finalizeAdminThemeSetup(themeDir) || true;
+    return syncAdminFromSource(source, themeDir);
   }
 
-  const bundledDist = resolveBundledAdminDistDir();
-  if (!bundledDist) {
-    console.warn('[ReactPress Client] Admin static missing and bundled admin-dist not found');
-    return false;
+  if (syncAdminFromWeb(projectRoot, themeDir)) {
+    return true;
   }
 
-  console.log('[ReactPress Client] Syncing bundled admin static → theme public/admin…');
-  syncDirToPublicAdmin(bundledDist, themeDir);
-  return finalizeAdminThemeSetup(themeDir) || true;
+  console.warn('[ReactPress Client] Admin static missing and bundled admin-dist not found');
+  return false;
 }
 
 export function shouldRebuildThemeAfterAdminSync(themeDir: string): boolean {

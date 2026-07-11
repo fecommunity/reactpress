@@ -14,6 +14,7 @@ const {
 } = require('./paths');
 const net = require('net');
 const { readPid, isProcessRunning, clearPidFile, writePid } = require('./process');
+// writePid is also used when PM2 supervises the API (no detached child pid otherwise).
 const { stopClient } = require('./client-lifecycle');
 const { ensureOriginalCwd } = require('./root');
 const { t } = require('./i18n');
@@ -125,6 +126,9 @@ async function startApiWithPm2(projectRoot, { wait = true } = {}) {
   }
 
   const pid = getPm2AppPid(projectRoot, PM2_API_APP);
+  if (pid) {
+    writePid(projectRoot, pid);
+  }
   console.log(t('lifecycle.apiStartedBg', { pid: pid ?? PM2_API_APP }));
 
   if (!wait) return 0;

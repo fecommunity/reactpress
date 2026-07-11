@@ -1,23 +1,124 @@
 // @ts-nocheck
 const fs = require('fs');
 const path = require('path');
+const { spawnSync } = require('child_process');
 const { brand, divider, gradientText, palette, sectionHeader } = require('../ui/theme');
 const { getServerDir, getPidFile } = require('./paths');
 const { readPid, isProcessRunning } = require('./process');
+const { loadServerSiteUrl } = require('./http');
+const { getPm2App, PM2_API_APP } = require('./pm2-runtime');
 const { t } = require('./i18n');
 
 const LOG_SOURCES = ['error', 'request', 'response'];
 
+function measureLogDir(logDir) {
+  if (!fs.existsSync(logDir)) return -1;
+  return listLogFiles(logDir, 'all').reduce((sum, file) => sum + file.size, 0);
+}
+
+function getPm2ServerLogDir(projectRoot) {
+  try {
+    const app = getPm2App(projectRoot, PM2_API_APP);
+    const dir = app?.pm2_env?.env?.REACTPRESS_SERVER_LOG_DIR;
+    if (typeof dir === 'string' && dir.trim()) {
+      return path.resolve(dir.trim());
+    }
+  } catch {
+    // ignore
+  }
+  return null;
+}
+
+function parseUrlPort(urlString) {
+  try {
+    const url = new URL(urlString);
+    const port = Number(url.port);
+    if (port > 0) return port;
+    return url.protocol === 'https:' ? 443 : 80;
+  } catch {
+    return null;
+  }
+}
+
+function resolveListeningPid(port) {
+  if (!port || process.platform === 'win32') return null;
+  const result = spawnSync('lsof', ['-nP', `-iTCP:${port}`, '-sTCP:LISTEN', '-t'], {
+    encoding: 'utf8',
+    stdio: ['ignore', 'pipe', 'ignore'],
+  });
+  if (result.status !== 0 || !result.stdout.trim()) return null;
+  const pids = result.stdout
+    .trim()
+    .split('\n')
+    .map((line) => Number.parseInt(line.trim(), 10))
+    .filter((pid) => Number.isFinite(pid));
+  return pids[0] ?? null;
+}
+
+function resolveLogDirFromPid(pid) {
+  if (!pid || process.platform === 'win32') return null;
+  const result = spawnSync('lsof', ['-Fn', '-p', String(pid)], {
+    encoding: 'utf8',
+    stdio: ['ignore', 'pipe', 'ignore'],
+  });
+  if (result.status !== 0) return null;
+  for (const line of result.stdout.split('\n')) {
+    if (!line.startsWith('n') || !line.includes('.log')) continue;
+    const logPath = line.slice(1);
+    const match = logPath.match(/^(.*\/logs)\/(?:error|request|response)\//);
+    if (match) return match[1];
+  }
+  return null;
+}
+
+function resolveActiveServerLogDir(projectRoot) {
+  const port = parseUrlPort(loadServerSiteUrl(projectRoot));
+  if (!port) return null;
+  const pid = resolveListeningPid(port);
+  if (!pid) return null;
+  return resolveLogDirFromPid(pid);
+}
+
+function collectLogDirCandidates(projectRoot) {
+  const candidates = [
+    path.join(projectRoot, '.reactpress', 'logs', 'server'),
+    path.join(getServerDir(projectRoot), 'logs'),
+  ];
+  const pm2Dir = getPm2ServerLogDir(projectRoot);
+  if (pm2Dir) candidates.push(pm2Dir);
+  const activeDir = resolveActiveServerLogDir(projectRoot);
+  if (activeDir) candidates.push(activeDir);
+  return [...new Set(candidates.map((dir) => path.resolve(dir)))];
+}
+
 function getProjectServerLogDir(projectRoot) {
   const preferred = path.join(projectRoot, '.reactpress', 'logs', 'server');
-  if (fs.existsSync(preferred)) {
-    return preferred;
-  }
   const bundled = path.join(getServerDir(projectRoot), 'logs');
-  if (fs.existsSync(bundled)) {
-    return bundled;
+  const pm2Dir = getPm2ServerLogDir(projectRoot);
+  const activeDir = resolveActiveServerLogDir(projectRoot);
+
+  const localCandidates = [preferred, bundled];
+  if (pm2Dir) localCandidates.push(pm2Dir);
+
+  let bestLocal = preferred;
+  let bestLocalScore = -1;
+  for (const dir of [...new Set(localCandidates.map((d) => path.resolve(d)))]) {
+    const score = measureLogDir(dir);
+    if (score > bestLocalScore) {
+      bestLocalScore = score;
+      bestLocal = dir;
+    }
   }
-  return preferred;
+
+  if (bestLocalScore > 0) {
+    return bestLocal;
+  }
+
+  if (activeDir && fs.existsSync(activeDir) && measureLogDir(activeDir) > 0) {
+    return activeDir;
+  }
+
+  return bestLocal;
 }
 
 function normalizeSource(source) {
@@ -103,6 +204,14 @@ function printProcessHint(projectRoot) {
   const pid = readPid(projectRoot);
   const pidFile = getPidFile(projectRoot);
   if (!pid) {
+    const port = parseUrlPort(loadServerSiteUrl(projectRoot));
+    const activePid = port ? resolveListeningPid(port) : null;
+    if (activePid && isProcessRunning(activePid)) {
+      console.log(
+        `  ${brand.dim(t('doctor.logs.activePid', { pid: activePid, port }))}`
+      );
+      return;
+    }
     console.log(`  ${brand.dim(t('doctor.logs.noPid', { path: pidFile }))}`);
     return;
   }
@@ -204,6 +313,9 @@ async function runDoctorLogs(projectRoot, options = {}) {
 module.exports = {
   LOG_SOURCES,
   getProjectServerLogDir,
+  collectLogDirCandidates,
+  measureLogDir,
+  resolveActiveServerLogDir,
   listLogFiles,
   readTailLines,
   filterLines,

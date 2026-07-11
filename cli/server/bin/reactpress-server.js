@@ -196,6 +196,23 @@ function startWithNode() {
     console.log(`[ReactPress Server] Using existing REACTPRESS_ORIGINAL_CWD: ${process.env.REACTPRESS_ORIGINAL_CWD}`);
   }
 
+  const siteRoot = process.env.REACTPRESS_ORIGINAL_CWD;
+  for (const localSiteModule of [
+    path.join(serverDir, '..', 'out', 'core', 'services', 'local-site.js'),
+    path.join(serverDir, '..', 'cli', 'out', 'core', 'services', 'local-site.js'),
+  ]) {
+    if (!siteRoot || !fs.existsSync(localSiteModule)) continue;
+    try {
+      const { ensureBundledPlugins } = require(localSiteModule);
+      if (ensureBundledPlugins(siteRoot)) {
+        console.log('[ReactPress Server] Seeded bundled plugins into project');
+      }
+    } catch {
+      // ignore — plugins seeding is best-effort
+    }
+    break;
+  }
+
   // Change to the server directory
   process.chdir(serverDir);
 

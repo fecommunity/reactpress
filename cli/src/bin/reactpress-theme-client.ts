@@ -45,6 +45,11 @@ function runStartCommand() {
 }
 
 function ensureBuilt() {
+  const { ensureBundledPlugins } = require('../core/services/local-site');
+  if (ensureBundledPlugins(originalCwd)) {
+    console.log('[ReactPress Client] Seeded bundled plugins into project');
+  }
+
   const adminSynced = ensureAdminStaticForTheme(originalCwd, clientDir);
   const apiProxyPatched = patchThemeApiProxyRoute(clientDir);
   const { activeTheme } = readActiveThemeManifest(originalCwd);

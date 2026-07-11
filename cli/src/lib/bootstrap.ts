@@ -49,6 +49,15 @@ export async function ensureProjectEnvironment(
   const root = path.resolve(projectRoot);
   setProjectCwd(root);
 
+  try {
+    const { ensureBundledPlugins } = require('../core/services/local-site');
+    if (ensureBundledPlugins(root)) {
+      console.log(`[reactpress] ${t('init.pluginsSeeded')}`);
+    }
+  } catch {
+    // bundled plugins are optional; ignore when CLI core is unavailable
+  }
+
   if (!(await isReactPressProject(root))) {
     const result = await initProject({ directory: root, force: false });
     if (!result.ok) {

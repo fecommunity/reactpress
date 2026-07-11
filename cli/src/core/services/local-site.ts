@@ -2,7 +2,7 @@ import fs from 'fs-extra';
 import path from 'node:path';
 
 import type { ReactPressConfig } from '../../types/config';
-import { CONFIG_DIR, getProjectPaths, getTemplatesDir, SQLITE_REL_PATH } from '../utils/paths';
+import { CONFIG_DIR, getPackageRoot, getProjectPaths, getTemplatesDir, SQLITE_REL_PATH } from '../utils/paths';
 import { saveConfig, syncEnvFromConfig } from '../services/config';
 
 export interface LocalSitePaths {
@@ -61,6 +61,7 @@ export function ensureLocalSite(
   if (options.monorepoRoot) {
     seedBundledAssets(siteRoot, options.monorepoRoot);
   }
+  ensureBundledPlugins(siteRoot);
 
   const configPath = path.join(paths.reactpressDir, 'config.json');
   if (!fs.existsSync(configPath)) {
@@ -149,6 +150,82 @@ function seedRuntimeThemes(siteRoot: string, monorepoRoot: string): void {
       // skip broken entries
     }
   }
+}
+
+const PLUGIN_COPY_SKIP_DIRS = new Set(['node_modules', '.git', '.turbo', 'src', 'coverage']);
+
+function hasUsablePluginsRegistry(pluginsDir: string): boolean {
+  const pkgPath = path.join(pluginsDir, 'package.json');
+  if (!fs.existsSync(pkgPath)) return false;
+
+  try {
+    const meta = JSON.parse(fs.readFileSync(pkgPath, 'utf8')) as {
+      reactpress?: { local?: string[] };
+    };
+    const local = Array.isArray(meta.reactpress?.local) ? meta.reactpress.local : [];
+    return local.some(
+      (id) =>
+        typeof id === 'string' &&
+        id.trim() &&
+        fs.existsSync(path.join(pluginsDir, id.trim(), 'plugin.json')),
+    );
+  } catch {
+    return false;
+  }
+}
+
+function copyPluginTree(sourceDir: string, targetDir: string): void {
+  fs.mkdirSync(targetDir, { recursive: true });
+  for (const entry of fs.readdirSync(sourceDir, { withFileTypes: true })) {
+    const sourcePath = path.join(sourceDir, entry.name);
+    const targetPath = path.join(targetDir, entry.name);
+
+    if (entry.isDirectory()) {
+      if (PLUGIN_COPY_SKIP_DIRS.has(entry.name)) continue;
+      copyPluginTree(sourcePath, targetPath);
+      continue;
+    }
+
+    fs.copyFileSync(sourcePath, targetPath);
+  }
+}
+
+function copyBundledPlugins(sourceDir: string, targetDir: string): void {
+  const sourcePackageJson = path.join(sourceDir, 'package.json');
+  if (!fs.existsSync(sourcePackageJson)) return;
+
+  fs.mkdirSync(targetDir, { recursive: true });
+  fs.copyFileSync(sourcePackageJson, path.join(targetDir, 'package.json'));
+
+  let meta: { reactpress?: { local?: string[] } } = {};
+  try {
+    meta = JSON.parse(fs.readFileSync(sourcePackageJson, 'utf8')) as typeof meta;
+  } catch {
+    return;
+  }
+
+  const local = Array.isArray(meta.reactpress?.local) ? meta.reactpress.local : [];
+  for (const id of local) {
+    if (typeof id !== 'string' || !id.trim()) continue;
+    const sourcePath = path.join(sourceDir, id.trim());
+    const targetPath = path.join(targetDir, id.trim());
+    if (!fs.existsSync(path.join(sourcePath, 'plugin.json')) || fs.existsSync(targetPath)) continue;
+    copyPluginTree(sourcePath, targetPath);
+  }
+}
+
+/** Seed default plugins from the CLI bundle when the site has no plugins registry yet. */
+export function ensureBundledPlugins(siteRoot: string): boolean {
+  const targetDir = path.join(siteRoot, 'plugins');
+  if (hasUsablePluginsRegistry(targetDir)) return false;
+
+  const bundledDir = path.join(getPackageRoot(), 'plugins');
+  if (fs.existsSync(path.join(bundledDir, 'package.json'))) {
+    copyBundledPlugins(bundledDir, targetDir);
+    return hasUsablePluginsRegistry(targetDir);
+  }
+
+  return false;
 }
 
 export async function initLocalProject(
