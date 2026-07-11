@@ -14,7 +14,6 @@ const {
 } = require('./paths');
 const net = require('net');
 const { readPid, isProcessRunning, clearPidFile, writePid } = require('./process');
-// writePid is also used when PM2 supervises the API (no detached child pid otherwise).
 const { stopClient } = require('./client-lifecycle');
 const { ensureOriginalCwd } = require('./root');
 const { t } = require('./i18n');
@@ -96,6 +95,8 @@ async function startApiWithPm2(projectRoot, { wait = true } = {}) {
   const serverDir = getServerDir(projectRoot);
   const serverLogDir = path.join(projectRoot, '.reactpress', 'logs', 'server');
   fs.mkdirSync(serverLogDir, { recursive: true });
+  const pm2OutLog = path.join(serverLogDir, 'pm2-out.log');
+  const pm2ErrLog = path.join(serverLogDir, 'pm2-error.log');
 
   const started = runPm2(
     projectRoot,
@@ -106,6 +107,10 @@ async function startApiWithPm2(projectRoot, { wait = true } = {}) {
       PM2_API_APP,
       '--cwd',
       serverDir,
+      '--output',
+      pm2OutLog,
+      '--error',
+      pm2ErrLog,
       '--max-memory-restart',
       getPm2ServerMemoryRestart(),
       '--update-env',

@@ -79,6 +79,20 @@ function getPm2AppPid(projectRoot, name) {
   return typeof app?.pid === 'number' ? app.pid : null;
 }
 
+function getPm2AppLogPaths(projectRoot, name = PM2_API_APP) {
+  const serverLogDir = path.join(projectRoot, '.reactpress', 'logs', 'server');
+  const defaults = {
+    out: path.join(serverLogDir, 'pm2-out.log'),
+    err: path.join(serverLogDir, 'pm2-error.log'),
+  };
+  const app = getPm2App(projectRoot, name);
+  if (!app) return defaults;
+  return {
+    out: app.pm2_env?.pm_out_log_path || defaults.out,
+    err: app.pm2_env?.pm_err_log_path || defaults.err,
+  };
+}
+
 function stopPm2Apps(projectRoot, names) {
   const bin = resolvePm2Bin(projectRoot);
   if (!bin) return false;
@@ -101,5 +115,6 @@ module.exports = {
   getPm2App,
   isPm2AppOnline,
   getPm2AppPid,
+  getPm2AppLogPaths,
   stopPm2Apps,
 };

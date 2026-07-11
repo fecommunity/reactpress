@@ -46,9 +46,10 @@ const LEGACY_COMMANDS = new Set([
 function attachLogsOptions(cmd) {
   return cmd
     .option('--tail <n>', t('cli.logs.tailOption'), '50')
-    .option('--source <name>', t('cli.logs.sourceOption'), 'error')
+    .option('--source <name>', t('cli.logs.sourceOption'))
     .option('--grep <pattern>', t('cli.logs.grepOption'))
-    .option('--list', t('cli.logs.listOption'));
+    .option('--list', t('cli.logs.listOption'))
+    .option('-f, --follow', t('cli.logs.followOption'));
 }
 
 function createLogsAction() {

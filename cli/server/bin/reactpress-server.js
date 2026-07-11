@@ -198,8 +198,8 @@ function startWithNode() {
 
   const siteRoot = process.env.REACTPRESS_ORIGINAL_CWD;
   for (const localSiteModule of [
-    path.join(serverDir, '..', 'out', 'core', 'services', 'local-site.js'),
     path.join(serverDir, '..', 'cli', 'out', 'core', 'services', 'local-site.js'),
+    path.join(serverDir, '..', 'out', 'core', 'services', 'local-site.js'),
   ]) {
     if (!siteRoot || !fs.existsSync(localSiteModule)) continue;
     try {

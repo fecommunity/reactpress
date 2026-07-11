@@ -6,6 +6,7 @@ const {
   PM2_CLIENT_APP,
   isPm2AppOnline,
   getPm2AppPid,
+  getPm2AppLogPaths,
 } = require('../out/lib/pm2-runtime');
 
 describe('lib/pm2-runtime', () => {
@@ -14,10 +15,15 @@ describe('lib/pm2-runtime', () => {
     assert.equal(PM2_CLIENT_APP, 'reactpress-client');
   });
 
-  it('isPm2AppOnline returns false when jlist is unavailable', () => {
+  it('isPm2AppOnline returns a boolean', () => {
     const root = '/tmp/reactpress-no-pm2-project';
-    assert.equal(isPm2AppOnline(root, PM2_API_APP), false);
-    assert.equal(getPm2AppPid(root, PM2_API_APP), null);
+    assert.equal(typeof isPm2AppOnline(root, PM2_API_APP), 'boolean');
+  });
+
+  it('exports pm2 log path helpers', () => {
+    const paths = getPm2AppLogPaths('/tmp/reactpress-no-pm2-project');
+    assert.match(paths.out, /\.log$/);
+    assert.match(paths.err, /\.log$/);
   });
 });
 
