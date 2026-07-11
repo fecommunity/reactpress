@@ -17,12 +17,12 @@ const CORE_PUBLISH_PACKAGES = [
   {
     name: '@fecommunity/reactpress-toolkit',
     path: 'toolkit',
-    description: 'API client and utilities toolkit',
+    description: 'Official TypeScript SDK — API clients, theme SSR, plugin hooks',
   },
   {
     name: '@fecommunity/reactpress-web',
     path: 'web',
-    description: 'Admin SPA static assets and Node static server helpers',
+    description: 'Official Admin SPA — WordPress-style writing UI',
   },
   {
     name: '@fecommunity/reactpress-server',
@@ -33,7 +33,7 @@ const CORE_PUBLISH_PACKAGES = [
   {
     name: '@fecommunity/reactpress',
     path: 'cli',
-    description: t('publish.pkg.main'),
+    description: 'Publishing platform CLI — CMS, Admin, API, themes in one command',
   },
 ];
 

@@ -1,18 +1,18 @@
 # Hello World Theme
 
-Official **starter theme** — Hello Elementor–inspired layout with home, articles, categories, tags, search, and custom pages. Copy and customize for your own theme.
+> **Official ReactPress starter theme — learn the platform, ship your own.**
 
-> Local theme template · Production demo: [@fecommunity/reactpress-theme-starter](https://github.com/fecommunity/reactpress-theme-starter) · [theme system](../README.md)
-
-## Stack
+**Minimal Next.js 15 theme** for the [ReactPress](https://github.com/fecommunity/reactpress) publishing platform. Pages Router blog with home, articles, categories, tags, search, and custom pages — the reference template to copy and customize.
 
 | Item | Details |
-| --- | --- |
-| Routing | **Next.js Pages Router** (`pages/`) |
-| Entry | `pages/_app.tsx` → `createThemeApp(theme.json)` |
-| Build | `createReactPressNextConfig()` (`next.config.js`) |
-| Contract | `theme.json` (manifest + appearance + templates) |
-| SDK | `@fecommunity/reactpress-toolkit/app`, `/theme`, `/ui` |
+| :--- | :------ |
+| **Routing** | Next.js Pages Router (`pages/`) |
+| **Entry** | `pages/_app.tsx` → `createThemeApp(theme.json)` |
+| **Build** | `createReactPressNextConfig()` (`next.config.js`) |
+| **Contract** | `theme.json` (manifest + appearance + templates) |
+| **SDK** | `@fecommunity/reactpress-toolkit/app`, `/theme`, `/ui` |
+
+[Theme demo (production)](https://github.com/fecommunity/reactpress-theme-starter) · [Theme system](../README.md) · [Documentation](https://reactpress-docs.vercel.app/)
 
 ## Directory structure
 
@@ -105,3 +105,5 @@ This package can be published as `@fecommunity/reactpress-template-hello-world`.
 - [Theme system README](../README.md)
 - [ARCHITECTURE.md](../../ARCHITECTURE.md) — theme lifecycle
 - [toolkit/README.md](../../toolkit/README.md) — SDK reference
+
+<p align="center"><sub>Part of <a href="https://github.com/fecommunity/reactpress">ReactPress</a> — Next.js delivery for the publishing platform.</sub></p>

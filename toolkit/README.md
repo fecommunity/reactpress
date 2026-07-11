@@ -1,8 +1,21 @@
 # @fecommunity/reactpress-toolkit
 
-TypeScript SDK for the ReactPress publishing platform — OpenAPI clients, Next.js theme SSR, plugin hooks, and headless UI components.
+> **Official TypeScript SDK for the ReactPress publishing platform.**
 
-Use in **themes**, **plugins**, **Admin extensions**, and **custom frontends** instead of duplicating API or SSR logic.
+[![npm version](https://img.shields.io/npm/v/@fecommunity/reactpress-toolkit.svg)](https://www.npmjs.com/package/@fecommunity/reactpress-toolkit)
+[![npm downloads](https://img.shields.io/npm/dm/@fecommunity/reactpress-toolkit.svg)](https://www.npmjs.com/package/@fecommunity/reactpress-toolkit)
+[![License: ISC](https://img.shields.io/npm/l/@fecommunity/reactpress-toolkit.svg)](https://github.com/fecommunity/reactpress/blob/master/toolkit/LICENSE)
+
+The shared foundation for **ReactPress themes, plugins, Admin extensions, and custom frontends**. Auto-generated OpenAPI clients, Next.js theme SSR helpers, plugin admin hooks, and headless React UI — so you extend the platform instead of duplicating API or rendering logic.
+
+| Use case | Start here |
+| :------- | :--------- |
+| **Next.js themes** | `./theme`, `./theme/next-config`, `./app` |
+| **Plugins** | `./plugin`, `./plugin/admin`, `./plugin/client` |
+| **API integration** | `./api`, `./api/instance`, `./types` |
+| **Headless UI** | `./ui` — unstyled components and hooks |
+
+[Documentation](https://reactpress-docs.vercel.app/) · [ReactPress CLI](../cli/) · [GitHub](https://github.com/fecommunity/reactpress)
 
 ## Package exports (`package.json` → `exports`)
 
@@ -272,3 +285,5 @@ Output in `dist/`; `createApp.js` is emitted via `tsc` (`allowJs`) to `dist/them
 ## License
 
 ISC
+
+<p align="center"><sub>Part of <a href="https://github.com/fecommunity/reactpress">ReactPress</a> — the official SDK for themes, plugins, and custom frontends.</sub></p>

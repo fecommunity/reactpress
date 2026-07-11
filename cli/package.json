@@ -1,9 +1,13 @@
 {
   "name": "@fecommunity/reactpress",
   "version": "4.0.0-beta.13",
-  "description": "ReactPress 4 — zero-dependency publishing platform. Commands: reactpress init, reactpress doctor",
+  "description": "ReactPress CLI — publishing platform for modern developers. CMS, Admin, API, and Next.js themes in one command. Self-hosted, MIT. `npx @fecommunity/reactpress init`",
   "author": "fecommunity",
   "license": "MIT",
+  "homepage": "https://reactpress-docs.vercel.app/",
+  "bugs": {
+    "url": "https://github.com/fecommunity/reactpress/issues"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/fecommunity/reactpress.git",
@@ -13,7 +17,18 @@
     "reactpress",
     "cms",
     "blog",
-    "cli"
+    "blog-platform",
+    "cli",
+    "headless-cms",
+    "publishing-platform",
+    "wordpress-alternative",
+    "self-hosted",
+    "sqlite",
+    "nestjs",
+    "nextjs",
+    "content-management",
+    "typescript",
+    "open-source"
   ],
   "engines": {
     "node": ">=18"

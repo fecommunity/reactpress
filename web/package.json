@@ -1,14 +1,25 @@
 {
   "name": "@fecommunity/reactpress-web",
   "version": "4.0.0-beta.13",
-  "description": "ReactPress Admin SPA — writing console for the publishing platform (static + Node helpers)",
+  "description": "Official ReactPress Admin — WordPress-style writing UI for the publishing platform. Vite SPA with Express and Next.js /admin/ mount helpers",
   "keywords": [
     "admin",
+    "blog",
     "cms",
+    "content-management",
+    "dashboard",
+    "headless-cms",
+    "publishing",
+    "publishing-platform",
+    "react",
     "reactpress",
     "spa",
-    "static"
+    "vite"
   ],
+  "homepage": "https://reactpress-docs.vercel.app/",
+  "bugs": {
+    "url": "https://github.com/fecommunity/reactpress/issues"
+  },
   "license": "MIT",
   "author": "fecommunity",
   "repository": {

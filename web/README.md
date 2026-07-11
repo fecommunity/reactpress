@@ -1,12 +1,23 @@
 # @fecommunity/reactpress-web
 
-ReactPress **Admin** SPA — the writing console for the publishing platform: posts, media, plugins, and themes. Built with Vite and TanStack Router; published as standalone npm static assets with Node server helpers.
+> **Official ReactPress Admin — WordPress-style writing UI for the publishing platform.**
 
-> Mount at `/admin/` in production · same UI in browser and [Desktop](../desktop/README.md).
+[![npm version](https://img.shields.io/npm/v/@fecommunity/reactpress-web.svg)](https://www.npmjs.com/package/@fecommunity/reactpress-web)
+[![npm downloads](https://img.shields.io/npm/dm/@fecommunity/reactpress-web.svg)](https://www.npmjs.com/package/@fecommunity/reactpress-web)
+[![License: MIT](https://img.shields.io/npm/l/@fecommunity/reactpress-web.svg)](https://github.com/fecommunity/reactpress/blob/master/web/LICENSE)
 
-- **npm**: [@fecommunity/reactpress-web](https://www.npmjs.com/package/@fecommunity/reactpress-web)
-- **Docs**: [reactpress-docs.vercel.app](https://reactpress-docs.vercel.app/)
-- **Monorepo workspace**: `web/`
+The **ReactPress Admin** SPA — where authors write posts, manage media, install plugins, and configure themes. Built with Vite and TanStack Router; published as an npm static package with Express, Connect, and Next.js helpers for mounting at `/admin/`.
+
+Same UI in the browser and [Desktop](../desktop/README.md). Production sites mount Admin at `/admin/` alongside the visitor theme and CMS API.
+
+| Capability      | Detail                                                     |
+| :-------------- | :--------------------------------------------------------- |
+| **Writing**     | Posts, pages, media library, categories, tags              |
+| **Extensions**  | Plugin and theme management from the console               |
+| **Deployment**  | Static `dist/` — nginx, Docker, Express, or Next.js        |
+| **Integration** | `createAdminStaticMiddleware`, `serveAdmin`, Next rewrites |
+
+[Documentation](https://reactpress-docs.vercel.app/) · [ReactPress CLI](../cli/) · [npm package](https://www.npmjs.com/package/@fecommunity/reactpress-web)
 
 ## Install via npm
 
@@ -266,3 +277,5 @@ reactpress publish --publish
 ```
 
 Selecting `@fecommunity/reactpress-web` builds `toolkit` and `web/dist` first, then publishes to npm.
+
+<p align="center"><sub>Part of <a href="https://github.com/fecommunity/reactpress">ReactPress</a> — WordPress-style editing, Next.js delivery.</sub></p>
