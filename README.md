@@ -91,10 +91,10 @@
 ```bash
 npm i -g @fecommunity/reactpress@4
 mkdir my-site && cd my-site
-reactpress init && reactpress dev
+reactpress init
 ```
 
-**Requirements:** [Node.js 20+](https://nodejs.org/) · [Docker](https://www.docker.com/) recommended for bundled MySQL
+**Requirements:** [Node.js 18+](https://nodejs.org/) · No Docker or external database
 
 | Surface | URL |
 | :------ | :-- |
@@ -102,7 +102,7 @@ reactpress init && reactpress dev
 | **Admin** | http://localhost:3001/admin/ |
 | **API** | http://localhost:3002/api/health |
 
-`reactpress doctor` fixes setup issues · `reactpress` opens the interactive menu
+`reactpress doctor` diagnoses setup issues when something does not start correctly.
 
 <table align="center">
 <tr>
@@ -159,10 +159,9 @@ Modern content systems force a bad trade-off:
 Before                          With ReactPress
 ──────                          ───────────────
 Pick a CMS backend         →    reactpress init
-Configure the API          →    reactpress dev
-Build or buy an admin      →    write in Admin (:3000)
-Scaffold a frontend        →    visitors see Theme (:3001)
-Wire up deploy             →    reactpress build && start
+Write & manage content     →    Admin at /admin/
+Visitors see your theme    →    http://localhost:3001
+Something wrong?           →    reactpress doctor
 ```
 
 ---
@@ -232,12 +231,7 @@ Desktop App  → offline writing                 (Electron + SQLite)
 
 ## Themes
 
-Themes are fully replaceable Next.js frontends — not locked to core.
-
-```bash
-reactpress theme add @fecommunity/reactpress-theme-starter
-reactpress dev
-```
+Themes are fully replaceable Next.js frontends — not locked to core. Install and activate them in **Admin → Appearance → Themes**.
 
 Preview without a backend:
 
@@ -252,13 +246,7 @@ cd my-blog && pnpm dev:mock
 
 ## Plugins
 
-Extend without touching core.
-
-```bash
-reactpress plugin install seo
-reactpress plugin install hello-world   # auto-summary on publish
-reactpress plugin install image-optimizer
-```
+Extend without touching core. Install and enable plugins in **Admin → Plugins**.
 
 | Plugin | Capability |
 | :----- | :--------- |
@@ -333,22 +321,21 @@ curl -H "X-API-Key: YOUR_KEY" \
 | Official starter | [reactpress-theme-starter](https://github.com/fecommunity/reactpress-theme-starter) |
 
 <details>
-<summary><strong>Commands & ports</strong></summary>
+<summary><strong>CLI commands & ports (local init)</strong></summary>
 
 | Command | Action |
 | :------ | :----- |
-| `reactpress init` | New site |
-| `reactpress dev` | API + admin + theme |
-| `reactpress build` / `start` | Production |
-| `reactpress theme add <pkg>` | Install theme |
-| `reactpress plugin install <id>` | Install plugin |
+| `reactpress` / `reactpress init` | Initialize and start (SQLite + API + theme) |
+| `reactpress init --force` | Re-initialize existing project |
+| `reactpress doctor` | Diagnose environment and URLs |
 
-| Service | Port |
-| :------ | :---: |
-| Admin | 3000 |
-| Public site | 3001 |
-| API | 3002 |
-| Theme preview | 3003 |
+| Service | URL / port |
+| :------ | :--------- |
+| Admin | http://localhost:3001/admin/ |
+| Public site | http://localhost:3001 |
+| API | http://localhost:3002/api |
+
+Monorepo contributors: use `pnpm dev` and package READMEs under `server/`, `web/`, `themes/`.
 
 </details>
 
@@ -356,19 +343,16 @@ curl -H "X-API-Key: YOUR_KEY" \
 
 ## Deploy
 
-```bash
-reactpress build && reactpress start
-```
+`reactpress init` runs a local production-style stack (SQLite API + theme with embedded admin). For VPS, Docker, PM2, and backups, see the [deployment docs](https://reactpress-docs.vercel.app/).
 
-Docker, PM2, backups: [full docs](https://reactpress-docs.vercel.app/). Theme-only: deploy [reactpress-theme-starter](https://github.com/fecommunity/reactpress-theme-starter) and point it at your API.
+Theme-only hosting: deploy [reactpress-theme-starter](https://github.com/fecommunity/reactpress-theme-starter) and point it at your API.
 
 ---
 
 ## Roadmap (4.x)
 
-- Plugin npm catalog · `reactpress plugin create`
+- Plugin npm catalog
 - Desktop auto-update, tray, shortcuts
-- `reactpress theme create` scaffold
 - Theme & plugin marketplace
 
 ---
@@ -378,7 +362,7 @@ Docker, PM2, backups: [full docs](https://reactpress-docs.vercel.app/). Theme-on
 <details>
 <summary><strong>Do I need Docker?</strong></summary>
 
-Recommended for bundled MySQL. Desktop runs on SQLite without Docker.
+No for the default CLI flow — `reactpress init` uses embedded SQLite. Docker is only needed if you configure MySQL via `embedded-docker` in `.reactpress/config.json`. The desktop app also runs on SQLite without Docker.
 
 </details>
 
@@ -399,7 +383,7 @@ Same admin-driven workflow, but a faster default theme, a cleaner headless path,
 <details>
 <summary><strong>Is 4.0 production-ready?</strong></summary>
 
-4.0 is beta (`4.0.0-beta.3`). Core 3.x is battle-tested — see [migration guide](./docs/tutorial/tutorial-extras/migration-3-to-4.md) before upgrading production.
+4.0 is beta (`4.0.0-beta.4`). The published CLI supports `init` and `doctor`. See the [migration guide](./docs/tutorial/tutorial-extras/migration-3-to-4.md) before upgrading production.
 
 </details>
 

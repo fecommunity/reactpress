@@ -186,17 +186,9 @@ function startWithNode() {
   // Set environment variables
   process.env.NODE_ENV = process.env.NODE_ENV || 'production';
 
-  // Import and run the server (require() alone does not invoke main — see dist/main.js)
+  // Import and run the server
   try {
-    const mainModule = require(distPath);
-    if (typeof mainModule.main !== 'function') {
-      console.error('[ReactPress Server] Server entry does not export main()');
-      process.exit(1);
-    }
-    mainModule.main().catch((error) => {
-      console.error('[ReactPress Server] Failed to start server:', error);
-      process.exit(1);
-    });
+    require(distPath);
   } catch (error) {
     console.error('[ReactPress Server] Failed to start server:', error);
     process.exit(1);

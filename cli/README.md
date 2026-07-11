@@ -1,6 +1,6 @@
 # @fecommunity/reactpress
 
-Zero-dependency CLI to run the ReactPress publishing platform — CMS, admin, API, themes, and plugins. Embedded SQLite; no Docker, nginx, or MySQL required.
+Zero-dependency CLI for the ReactPress publishing platform — CMS, admin, API, and themes. Embedded SQLite; no Docker, nginx, or MySQL required.
 
 Docs: [reactpress-docs.vercel.app](https://reactpress-docs.vercel.app/) · Repo: [github.com/fecommunity/reactpress](https://github.com/fecommunity/reactpress)
 
@@ -19,7 +19,7 @@ mkdir my-site && cd my-site
 reactpress init
 ```
 
-Initializes the project and starts API + frontend in one step.
+`init` creates the project config, starts the API and theme, and prints the URLs below.
 
 | Surface | URL |
 | :------ | :-- |
@@ -29,7 +29,9 @@ Initializes the project and starts API + frontend in one step.
 
 Default admin credentials: `admin` / `admin`
 
-## Command
+Press `Ctrl+C` to stop.
+
+## Commands
 
 | Command | Description |
 | :------ | :---------- |
@@ -37,6 +39,15 @@ Default admin credentials: `admin` / `admin`
 | `reactpress init` | Same as above |
 | `reactpress init [dir]` | Initialize and start in a specific directory |
 | `reactpress init --force` | Overwrite existing config and restart |
+| `reactpress doctor` | Diagnose Node, SQLite, ports, API, site, and admin |
+
+## Troubleshooting
+
+```bash
+reactpress doctor
+```
+
+`doctor` checks your environment and suggests fixes when something is misconfigured or not running. In SQLite local mode, Docker and nginx are not required.
 
 ## Requirements
 
