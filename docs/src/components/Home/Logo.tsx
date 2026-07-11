@@ -7,17 +7,22 @@ type LogoProps = {
   className?: string;
 };
 
+/** Padding so rotating rings are not clipped by the SVG viewport. */
+const LOGO_VIEWBOX = '-20 -20 152 142';
+const LOGO_WIDTH = 144;
+const LOGO_HEIGHT = Math.round((LOGO_WIDTH * 142) / 152);
+
 function Logo({ className }: LogoProps) {
   return (
     <svg
       className={clsx(styles.logo, className)}
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 112 102"
+      viewBox={LOGO_VIEWBOX}
       fill="none"
       role="img"
       aria-label="ReactPress"
-      width={112}
-      height={102}
+      width={LOGO_WIDTH}
+      height={LOGO_HEIGHT}
     >
       <title>ReactPress</title>
       <g className={styles.rings}>

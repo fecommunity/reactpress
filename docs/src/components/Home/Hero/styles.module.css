@@ -133,15 +133,15 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 2.5rem 1.25rem 0;
+  justify-content: flex-start;
+  padding: 1.25rem 1.25rem 0;
   /* 为底部场景预留空间，避免文案与终端压住封面 */
   margin-bottom: min(48%, 400px);
   text-align: center;
 }
 
 .intro {
-  max-width: 42rem;
+  max-width: 52rem;
   width: 100%;
   animation: contentEnter 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
@@ -158,9 +158,14 @@
 }
 
 .logo {
-  margin-bottom: 0.65rem;
+  display: block;
+  width: clamp(7.5rem, 18vw, 9rem);
+  height: auto;
+  margin: 0 auto 0;
+  padding: 0;
+  overflow: visible;
   transition: transform 0.25s ease, filter 0.25s ease;
-  filter: drop-shadow(0 0 16px rgba(65, 209, 255, 0.3));
+  filter: drop-shadow(0 0 18px rgba(65, 209, 255, 0.32));
   will-change: transform;
 }
 
@@ -307,7 +312,7 @@ html[data-theme='light'] .secondaryButton {
 
 .cliWrap {
   width: 100%;
-  max-width: 600px;
+  max-width: min(860px, 100%);
   animation: cliEnter 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.12s both;
 }
 
@@ -346,7 +351,7 @@ html[data-theme='light'] .secondaryButton {
   }
 
   .content {
-    padding-top: 1.75rem;
+    padding-top: 0.85rem;
     margin-bottom: min(50%, 340px);
   }
 

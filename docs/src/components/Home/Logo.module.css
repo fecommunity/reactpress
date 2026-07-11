@@ -1,6 +1,10 @@
 .logo {
-  display: inline-block;
+  display: block;
+  overflow: visible;
   vertical-align: middle;
+  flex-shrink: 0;
+  max-width: 100%;
+  height: auto;
 }
 
 .rings {
