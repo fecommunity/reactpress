@@ -1,0 +1,63 @@
+.sidebar {
+  max-height: calc(100vh - (var(--ifm-navbar-height) + 2rem));
+  overflow-y: auto;
+  position: sticky;
+  top: calc(var(--ifm-navbar-height) + 2rem);
+}
+
+.sidebarMobile {
+  max-height: none;
+  overflow-y: visible;
+  position: static;
+  padding: 0.5rem 0;
+}
+
+.title {
+  font-size: var(--ifm-h3-font-size);
+  font-weight: var(--ifm-font-weight-bold);
+  margin-bottom: 1rem;
+}
+
+.yearHeading {
+  margin-top: 1.6rem;
+  margin-bottom: 0.4rem;
+  font-size: var(--ifm-h4-font-size);
+}
+
+.yearHeading:first-of-type {
+  margin-top: 0;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.item {
+  margin-top: 0.7rem;
+}
+
+.link {
+  color: var(--ifm-font-color-base);
+  display: block;
+  line-height: 1.35;
+}
+
+.link:hover {
+  color: var(--ifm-color-primary);
+  text-decoration: none;
+}
+
+.linkActive {
+  composes: link;
+  color: var(--ifm-color-primary);
+  font-weight: var(--ifm-font-weight-semibold);
+}
+
+@media (max-width: 996px) {
+  .sidebarDesktopOnly {
+    display: none;
+  }
+}

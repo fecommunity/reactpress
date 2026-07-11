@@ -8,7 +8,7 @@ tags: [reactpress, release]
 
 <!--truncate-->
 
-## [4.0.0-beta.0](https://github.com/fecommunity/reactpress/compare/v3.7.0...v4.0.0-beta.0)（2026-06-27）
+## [4.0.0-beta.0](https://github.com/fecommunity/reactpress/compare/v3.7.0...v4.0.0-beta.0) (2026-06-27)
 
 **ReactPress 4.0 扩展版（beta）** — 插件、桌面客户端、主题 catalog。安装：`npm i -g @fecommunity/reactpress@beta`。
 
@@ -133,6 +133,40 @@ tags: [reactpress, release]
 - `@fecommunity/reactpress-cli` → `@fecommunity/reactpress@3`
 - `@fecommunity/reactpress-server` deprecated
 - 迁移指南：[2.x → 3.0](/docs/tutorial-extras/migration-2-to-3)
+
+---
+
+## [2.0.1](https://github.com/fecommunity/reactpress/compare/v2.0.0...v2.0.1) (2025-09-26)
+
+### Bug Fixes
+
+* 修正 HttpClient 文件名大小写 ([7dd892a](https://github.com/fecommunity/reactpress/commit/7dd892a8d5b05a3ab24eaf73577848eb25b06450))
+
+### Features
+
+* 新增 toolkit 包配置 ([0ed839d](https://github.com/fecommunity/reactpress/commit/0ed839d4667d671ea06b088c0bac5a2890680445))
+
+## [2.0.0](https://github.com/fecommunity/reactpress/compare/v1.10.0...v2.0.0) (2025-09-21)
+
+### Bug Fixes
+
+* 修复 server 加载问题 ([a6f759b](https://github.com/fecommunity/reactpress/commit/a6f759b386e32727501b0eea3ea38f5a89dfe700))
+* 类型定义修复 ([d6491d5](https://github.com/fecommunity/reactpress/commit/d6491d56f2ffdd19d5a47fda7273958cd4243fb3))
+
+### Features
+
+* 新增 hello-world 模板 ([7e2c948](https://github.com/fecommunity/reactpress/commit/7e2c9487ddc6023d7b382250b131fbe828013680))
+* 新增 reactpress toolkit ([58f9312](https://github.com/fecommunity/reactpress/commit/58f9312644736aceb362e517fad8c3b3a83f275f))
+* 新增 swagger v2 UI ([ef9fdc1](https://github.com/fecommunity/reactpress/commit/ef9fdc166955b4659c81fb559138ce38ef599cfe))
+* 新增 twentytwentyfive 主题 ([715281f](https://github.com/fecommunity/reactpress/commit/715281fedcf8072348e4b8b6794891c7e67e1f99))
+* 支持 npx 安装 server ([e7f7b97](https://github.com/fecommunity/reactpress/commit/e7f7b970bb4dd8b845fcd8dde4048678a403557a))
+* 支持快速安装 ([96c1d0a](https://github.com/fecommunity/reactpress/commit/96c1d0a7cc1c72b7f6c489ba236ab6eb78472dee))
+
+## [1.10.0](https://github.com/fecommunity/reactpress/compare/v1.9.0...v1.10.0) (2025-08-03)
+
+### Features
+
+* 新增 config 类型定义 ([d8a6fed](https://github.com/fecommunity/reactpress/commit/d8a6fed7bc13f74be0916f80497590c7e737fb86))
 
 ---
 

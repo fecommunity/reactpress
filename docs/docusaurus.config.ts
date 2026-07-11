@@ -35,10 +35,7 @@ const config: Config = {
     },
   },
 
-  themes: [
-    '@docusaurus/theme-mermaid',
-    ...(algoliaConfig ? ['@docusaurus/theme-search-algolia'] : []),
-  ],
+  themes: ['@docusaurus/theme-mermaid'],
 
   headTags: buildGlobalHeadTags(siteUrl),
 
@@ -268,7 +265,7 @@ const config: Config = {
     mermaid: {
       theme: {light: 'neutral', dark: 'dark'},
     },
-    ...(algoliaConfig ? {algolia: algoliaConfig} : {}),
+    algolia: algoliaConfig,
     metadata: [
       {
         name: 'description',
@@ -285,6 +282,10 @@ const config: Config = {
       {
         name: 'google-site-verification',
         content: '8t6NmKz1PcYI6YSo4N390MXzZSy-Hg-RLa12p7d5cmM',
+      },
+      {
+        name: 'algolia-site-verification',
+        content: '597DB75F60C5A6DE',
       },
       {name: 'twitter:card', content: 'summary_large_image'},
     ],
