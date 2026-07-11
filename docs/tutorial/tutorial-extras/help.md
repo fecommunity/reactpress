@@ -1,20 +1,26 @@
 ---
 sidebar_position: 3
-title: 常见问题
+title: 常见问题（归档）
+description: 本页已合并至完整 FAQ。请访问 ReactPress 官方常见问题获取最新答案。
+keywords: [reactpress, faq, help]
 ---
 
-## 数据库无法连接，启动异常？
+# 常见问题（归档）
 
-通常是数据库配置信息不正确，请仔细检查`.env`文件的配置信息是否完全一致。
+:::info 文档已更新
+完整 FAQ 已迁移至 **[常见问题 FAQ](../reference/faq.md)**，包含安装、部署、主题、插件与版本升级等 20+ 条问答。
 
-## 生产环境 `env` 配置如何填写？
+故障排查请参阅 **[故障排查](../reference/troubleshooting.md)**。
+:::
 
-基本信息可以和本地环境保持一致，需要把 `CLIENT_SITE_URL` 客户端地址更新为对应的页面域名地址，`SERVER_SITE_URL` 更新为对应的服务器域名地址。
+## 快速链接
 
+- [数据库无法连接？](../reference/troubleshooting.md#数据库问题)
+- [生产环境 env 如何填写？](../reference/faq.md)
+- [需要 Docker 吗？](../reference/faq.md)
 
+## 获取更多帮助
 
-## 更多问题
-
-欢迎大家使用，使用过程遇到任何问题可以直接在Github提个issue 或 直接 与本人联系。
-
-![微信](https://www.gaoredu.com/wp-content/uploads/2024/08/WechatIMG23.jpg)
+1. `reactpress doctor` 与 `reactpress logs`
+2. [GitHub Issues](https://github.com/fecommunity/reactpress/issues)
+3. [GitHub Discussions](https://github.com/fecommunity/reactpress/discussions)

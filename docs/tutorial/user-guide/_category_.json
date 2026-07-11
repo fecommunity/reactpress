@@ -1,0 +1,10 @@
+{
+  "label": "使用指南",
+  "position": 3,
+  "link": {
+    "type": "generated-index",
+    "slug": "user-guide",
+    "title": "使用指南",
+    "description": "面向内容创作者与站点管理员：后台操作、文章与页面、媒体库、主题外观、插件与 SEO 设置。"
+  }
+}

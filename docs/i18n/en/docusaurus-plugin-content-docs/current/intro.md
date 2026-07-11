@@ -6,6 +6,19 @@ description: Official ReactPress docs — self-hosted publishing platform with W
 keywords: [reactpress, publishing platform, wordpress alternative, headless cms, blog, next.js, react, nestjs, plugin, desktop, self-hosted]
 ---
 
+## Learning path (0 → 100)
+
+Choose a starting point by role. Every doc includes an SEO summary and next-step links.
+
+| Stage | Who you are | Start here |
+|------|--------|------------|
+| **0→1** | First time hearing about ReactPress | [Create your first site in 5 minutes](./getting-started/first-site.md) |
+| **1→10** | Site owner / blogger | [User guide](./user-guide/admin-overview.md) → [SEO settings](./user-guide/site-settings-seo.md) |
+| **10→50** | Frontend developer | [Theme development](./developer-guide/theme-development.md) → [Headless API](./developer-guide/headless-api.md) |
+| **50→100** | Full-stack / contributor | [Monorepo development](./developer-guide/local-development.md) → [Plugin development](./developer-guide/plugin-development.md) |
+| **Go live** | Operations | [Production deployment](./tutorial-basics/deploy-your-site.md) → [Docker](./tutorial-extras/docker-deployment.md) |
+| **Troubleshoot** | Hit a problem | [FAQ](./reference/faq.md) → [Troubleshooting](./reference/troubleshooting.md) |
+
 ## Introduction
 
 **ReactPress** is an open-source **publishing platform** for the React era — not another headless backend to wire up. One CLI ships CMS API, Web Admin, swappable Next.js themes, plugins, and an Electron desktop client.
@@ -64,8 +77,11 @@ keywords: [reactpress, publishing platform, wordpress alternative, headless cms,
 npm i -g @fecommunity/reactpress@4
 mkdir my-blog && cd my-blog
 reactpress init
-reactpress dev
 ```
+
+:::info 4.0 note
+`init` **auto-starts** API, Admin, and theme — no need to run `reactpress dev` (removed from the global CLI). Stop services with `reactpress stop`.
+:::
 
 | Service | Port | URL |
 |---------|------|-----|
@@ -74,7 +90,7 @@ reactpress dev
 | API | 3002 | http://localhost:3002/api/health |
 | Theme preview | 3003 | http://localhost:3003 |
 
-Run `reactpress` for the interactive menu. Upgrade from 3.x: [migration guide](./tutorial-extras/migration-3-to-4.md).
+Run `reactpress` for the interactive menu. Upgrade from 3.x: [migration guide](./tutorial-extras/migration-3-to-4.md). From 2.x: [2.x → 3.0](./tutorial-extras/migration-2-to-3.md).
 
 ### Desktop client (4.0, no Docker)
 
@@ -95,7 +111,7 @@ pnpm install
 pnpm run dev
 ```
 
-Node.js ≥ 18 and Docker (embedded MySQL) required. Run `pnpm run build:plugins` before plugin development.
+Node.js ≥ 18 and Docker (embedded MySQL) required. `pnpm run init` prepares the environment without starting services. Run `pnpm run build:plugins` before plugin development.
 
 ## 📦 NPM Packages
 
@@ -119,11 +135,12 @@ Node.js ≥ 18 and Docker (embedded MySQL) required. Run `pnpm run build:plugins
 - [Issues](https://github.com/fecommunity/reactpress/issues)
 - [Pull Request](https://github.com/fecommunity/reactpress/pulls)
 
+> We recommend [How To Ask Questions The Smart Way](https://github.com/ryanhanwu/How-To-Ask-Questions-The-Smart-Way) and [How to Report Bugs Effectively](http://www.chiark.greenend.org.uk/~sgtatham/bugs.html) — better questions get better answers.
+
 ## 👥 Community
 
 1. Run `reactpress doctor` and `reactpress status` first
-2. [GitHub Discussions](https://github.com/fecommunity/reactpress/discussions)
-3. [GitHub Issues](https://github.com/fecommunity/reactpress/issues)
+2. [GitHub Issues](https://github.com/fecommunity/reactpress/issues)
+3. [GitHub Discussions](https://github.com/fecommunity/reactpress/discussions)
 
 Email: admin@gaoredu.com
-
