@@ -80,10 +80,34 @@ describe('reactpress init-only CLI', () => {
       const out = runCli(['doctor', 'logs', root, '--tail', '5'], {
         env: { REACTPRESS_LOCAL_MODE: '1', REACTPRESS_SKIP_NGINX: '1' },
       });
-      assert.match(out, /ReactPress Doctor/i);
+      assert.match(out, /ReactPress Logs/i);
       assert.match(out, /\[ERROR\] test/);
     } finally {
       rmDir(root);
     }
+  });
+
+  it('logs command lists project log files', () => {
+    const { createStandaloneProject, rmDir } = require('./helpers/tmp-project');
+    const root = createStandaloneProject();
+    try {
+      const logDir = path.join(root, '.reactpress', 'logs', 'server', 'error');
+      fs.mkdirSync(logDir, { recursive: true });
+      fs.writeFileSync(path.join(logDir, 'error.log.-2026-07-11.log'), '[ERROR] via-logs\n', 'utf8');
+
+      const out = runCli(['logs', root, '--tail', '5'], {
+        env: { REACTPRESS_LOCAL_MODE: '1', REACTPRESS_SKIP_NGINX: '1' },
+      });
+      assert.match(out, /ReactPress Logs/i);
+      assert.match(out, /\[ERROR\] via-logs/);
+    } finally {
+      rmDir(root);
+    }
+  });
+
+  it('--help documents logs and stop commands', () => {
+    const out = runCli(['--help']);
+    assert.match(out, /reactpress logs/i);
+    assert.match(out, /reactpress stop/i);
   });
 });

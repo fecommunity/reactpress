@@ -118,6 +118,10 @@ function getPidFile(projectRoot) {
   return path.join(resolveProjectRoot(projectRoot), '.reactpress', 'server.pid');
 }
 
+function getClientPidFile(projectRoot) {
+  return path.join(resolveProjectRoot(projectRoot), '.reactpress', 'client.pid');
+}
+
 module.exports = {
   getMonorepoRoot,
   resolveProjectRoot,
@@ -136,4 +140,5 @@ module.exports = {
   getThemeBin,
   getClientBin,
   getPidFile,
+  getClientPidFile,
 };

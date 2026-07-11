@@ -8,6 +8,7 @@ const { spawnSync } = require('child_process');
 const { upsertNpmThemeLock } = require('./theme-lock');
 const { buildThemeEnvOverrides, syncThemeEnvFromProject } = require('./theme-env');
 const { ensurePreviewFrameAllowed } = require('./theme-preview-frame');
+const { patchThemeApiProxyRoute } = require('./theme-api-proxy-patch');
 const { resolveCatalogInstallSpec } = require('./theme-registry');
 
 const THEME_ID_RE = /^[a-z0-9][a-z0-9-]*$/i;
@@ -347,6 +348,7 @@ async function installThemeFromNpm(projectRoot, spec, options = {}) {
       syncThemeEnvFromProject(root, targetDir);
     }
     ensurePreviewFrameAllowed(targetDir);
+    patchThemeApiProxyRoute(targetDir);
 
     const npmSpec = parsed.kind === 'npm' ? parsed.spec : resolvedSpec;
     upsertNpmThemeLock(root, themeId, {

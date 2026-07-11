@@ -125,7 +125,7 @@ async function runDoctorLogs(projectRoot, options = {}) {
 
   console.log('');
   console.log(
-    `  ${gradientText(t('doctor.logs.title'), [palette.primary, palette.accent], { bold: true })}  ${brand.dim(t('doctor.logs.subtitle'))}`
+    `  ${gradientText(t('logs.title'), [palette.primary, palette.accent], { bold: true })}  ${brand.dim(t('logs.subtitle'))}`
   );
   console.log(`  ${brand.dim(t('doctor.project', { path: projectRoot }))}`);
   console.log(`  ${brand.dim(t('doctor.logs.dir', { path: logDir }))}`);

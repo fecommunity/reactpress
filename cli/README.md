@@ -29,7 +29,8 @@ reactpress init
 |---------|-------------|
 | `reactpress init [dir]` | Initialize project |
 | `reactpress doctor [dir]` | Diagnose Node.js, ports, database, and services |
-| `reactpress doctor logs [dir]` | Tail API logs (error / request / response) for debugging |
+| `reactpress logs [dir]` | Tail API logs (error / request / response) |
+| `reactpress stop [dir]` | Stop API and site services |
 
 ## Requirements
 
