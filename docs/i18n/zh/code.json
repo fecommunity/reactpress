@@ -1,9 +1,12 @@
 {
   "theme.tagline": {
-    "message": "不是 CMS，是发布平台。约 60 秒上线。"
+    "message": "开源 React 发布平台。一条 CLI，约 60 秒上线。"
+  },
+  "home.meta.title": {
+    "message": "ReactPress - 开源 React 发布平台。一条 CLI，约 60 秒上线。"
   },
   "home.hero.subTitle": {
-    "message": "WordPress 式编辑 · Next.js 交付 · 一条 CLI — CMS + 后台 + API + 主题 + 插件 + 桌面端，无需拼装。"
+    "message": "WordPress 式编辑 - Next.js 交付 - 一条 CLI - CMS + 后台 + API + 主题 + 插件 + 桌面端，无需拼装。"
   },
   "home.hero.intro": {
     "message": "快速开始"
@@ -19,6 +22,18 @@
   },
   "home.cli.running": {
     "message": "运行中"
+  },
+  "home.cli.typing": {
+    "message": "输入中"
+  },
+  "home.cli.executing": {
+    "message": "执行中"
+  },
+  "home.cli.step": {
+    "message": "步骤 {current}/{total}"
+  },
+  "home.cli.footerHint": {
+    "message": "复制上方命令，粘贴到终端即可开始"
   },
   "home.cli.copied": {
     "message": "已复制"

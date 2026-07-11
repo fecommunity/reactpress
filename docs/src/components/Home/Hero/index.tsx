@@ -51,9 +51,9 @@ function Hero() {
               </GitHubButton>
             </span>
           </div>
-          <p className={styles.subtitle}>
-            <Translate id="home.hero.subTitle">
-              WordPress-style editing · Next.js delivery · one CLI — CMS, Admin, API, themes, plugins, and desktop, no assembly required.
+          <p className={styles.slogan}>
+            <Translate id="theme.tagline">
+              Open-source React publishing platform. One CLI, live in ~60 seconds.
             </Translate>
           </p>
 
@@ -61,9 +61,6 @@ function Hero() {
             <div className={styles.buttonContainer}>
               <Link className={styles.primaryButton} to="/docs/intro">
                 <Translate id="home.hero.intro">Get Started</Translate>
-              </Link>
-              <Link className={styles.secondaryButton} to="/docs/tutorial-extras/desktop-client">
-                <Translate id="home.hero.download">Download Desktop</Translate>
               </Link>
               <Link className={styles.secondaryButton} to="/docs/tutorial-extras/reactpress-4-0">
                 <Translate id="home.hero.whatsNew">What&apos;s New in 4.0</Translate>
