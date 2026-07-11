@@ -14,9 +14,9 @@ function runCli(args, { env } = {}) {
   });
 }
 
-function runCliFail(args) {
+function runCliFail(args, { env } = {}) {
   try {
-    runCli(args);
+    runCli(args, { env });
     return null;
   } catch (err) {
     return err;
@@ -24,10 +24,11 @@ function runCliFail(args) {
 }
 
 describe('reactpress init-only CLI', () => {
-  it('--help documents init as the only command', () => {
+  it('--help documents init and doctor commands', () => {
     const out = runCli(['--help']);
     assert.match(out, /reactpress/i);
     assert.match(out, /init/i);
+    assert.match(out, /doctor/i);
     assert.doesNotMatch(out, /reactpress docker/i);
     assert.doesNotMatch(out, /reactpress nginx/i);
     assert.doesNotMatch(out, /reactpress dev/i);
@@ -38,5 +39,22 @@ describe('reactpress init-only CLI', () => {
     const err = runCliFail(['start']);
     assert.ok(err);
     assert.match(String(err.stderr || err.stdout || ''), /init/i);
+  });
+
+  it('runs doctor and prints diagnostics', () => {
+    const { createStandaloneProject, rmDir } = require('./helpers/tmp-project');
+    const root = createStandaloneProject();
+    try {
+      const err = runCliFail(['doctor', root], {
+        env: { REACTPRESS_LOCAL_MODE: '1', REACTPRESS_SKIP_NGINX: '1' },
+      });
+      assert.ok(err);
+      const out = String(err.stdout || err.stderr || '');
+      assert.match(out, /ReactPress Doctor/i);
+      assert.match(out, /Node\.js/i);
+      assert.match(out, /Admin console/i);
+    } finally {
+      rmDir(root);
+    }
   });
 });

@@ -15,10 +15,17 @@ const {
   gradientText,
   palette,
 } = require('../ui/theme');
-const { getHealthUrl, checkHealth } = require('./http');
+const {
+  getHealthUrl,
+  checkHealth,
+  loadAdminConsoleUrl,
+  loadClientSiteUrl,
+  isHttpResponding,
+} = require('./http');
 const { isDockerRunning } = require('./docker');
 const { checkNginx } = require('./nginx');
 const { envFileStatus } = require('./status');
+const { describeProject } = require('./project-type');
 const { t } = require('./i18n');
 
 function checkNodeVersion() {
@@ -42,6 +49,81 @@ function checkDocker() {
     message: t('doctor.dockerBad'),
     fix: t('doctor.dockerFix'),
   };
+}
+
+function isLocalZeroDepMode(projectRoot) {
+  if (process.env.REACTPRESS_LOCAL_MODE === '1' || process.env.REACTPRESS_SKIP_NGINX === '1') {
+    return true;
+  }
+  const env = parseEnv(projectRoot);
+  if (String(env.DB_TYPE || '').toLowerCase() === 'sqlite') return true;
+  try {
+    const configPath = path.join(projectRoot, '.reactpress', 'config.json');
+    if (fs.existsSync(configPath)) {
+      const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+      if (config.database?.mode === 'embedded-sqlite') return true;
+    }
+  } catch {
+    // ignore
+  }
+  return false;
+}
+
+async function resolveProjectProfile(projectRoot) {
+  const env = parseEnv(projectRoot);
+  let configMode;
+  try {
+    const configPath = path.join(projectRoot, '.reactpress', 'config.json');
+    if (fs.existsSync(configPath)) {
+      const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+      configMode = config.database?.mode;
+    }
+  } catch {
+    // ignore
+  }
+
+  const envDbType = String(env.DB_TYPE || '').toLowerCase();
+  if (
+    process.env.REACTPRESS_LOCAL_MODE === '1' ||
+    process.env.REACTPRESS_SKIP_NGINX === '1' ||
+    envDbType === 'sqlite' ||
+    configMode === 'embedded-sqlite'
+  ) {
+    return { localMode: true, dbType: 'sqlite', requiresDocker: false };
+  }
+
+  const dbType = await resolveDbType(projectRoot);
+  if (dbType === 'sqlite') {
+    return { localMode: true, dbType: 'sqlite', requiresDocker: false };
+  }
+
+  if (configMode === 'embedded-docker') {
+    return { localMode: false, dbType: 'mysql', requiresDocker: true };
+  }
+
+  return { localMode: false, dbType, requiresDocker: true };
+}
+
+function applyProjectRuntimeEnv(profile) {
+  if (profile.localMode) {
+    process.env.REACTPRESS_LOCAL_MODE = '1';
+    process.env.REACTPRESS_SKIP_NGINX = '1';
+  }
+}
+
+function checkDockerForProject(projectRoot, profile) {
+  if (profile?.requiresDocker === false || profile?.localMode || isLocalZeroDepMode(projectRoot)) {
+    return { ok: true, message: t('doctor.dockerSkipped') };
+  }
+  return checkDocker();
+}
+
+function checkPnpmForProject(projectRoot) {
+  const project = describeProject(projectRoot);
+  if (project.kind !== 'monorepo') {
+    return { ok: true, message: t('doctor.pnpmSkipped') };
+  }
+  return checkPnpm();
 }
 
 function parseEnv(projectRoot) {
@@ -104,9 +186,23 @@ async function checkPorts(projectRoot) {
   };
 }
 
-async function checkDatabase(projectRoot) {
+async function resolveDbType(projectRoot) {
   const env = parseEnv(projectRoot);
-  const dbType = String(env.DB_TYPE || 'mysql').toLowerCase();
+  if (String(env.DB_TYPE || '').toLowerCase() === 'sqlite') return 'sqlite';
+  try {
+    const configPath = path.join(projectRoot, '.reactpress', 'config.json');
+    if (fs.existsSync(configPath)) {
+      const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+      if (config.database?.mode === 'embedded-sqlite') return 'sqlite';
+    }
+  } catch {
+    // ignore
+  }
+  return 'mysql';
+}
+
+async function checkDatabase(projectRoot) {
+  const dbType = await resolveDbType(projectRoot);
 
   if (dbType === 'sqlite') {
     const { probeSqliteDatabase } = require('../core/services/database/sqlite');
@@ -120,6 +216,7 @@ async function checkDatabase(projectRoot) {
     };
   }
 
+  const env = parseEnv(projectRoot);
   const host = env.DB_HOST || '127.0.0.1';
   const port = parseInt(env.DB_PORT || '3306', 10);
   const user = env.DB_USER || 'root';
@@ -163,16 +260,46 @@ async function checkDatabase(projectRoot) {
   });
 }
 
-async function checkApiHealth(projectRoot) {
+async function checkApiHealth(projectRoot, profile) {
   const healthUrl = getHealthUrl(projectRoot);
   const result = await checkHealth(healthUrl);
   if (result.ok) {
     return { ok: true, message: t('doctor.apiOk', { url: healthUrl }) };
   }
+  const fix =
+    profile?.localMode || isLocalZeroDepMode(projectRoot)
+      ? t('doctor.apiFixInit')
+      : t('doctor.apiFix');
   return {
     ok: false,
     message: t('doctor.apiBad', { url: healthUrl }),
-    fix: t('doctor.apiFix'),
+    fix,
+  };
+}
+
+async function checkThemeSite(projectRoot) {
+  const url = loadClientSiteUrl(projectRoot);
+  const ok = await isHttpResponding(url, 2500);
+  if (ok) {
+    return { ok: true, message: t('doctor.siteOk', { url }) };
+  }
+  return {
+    ok: false,
+    message: t('doctor.siteBad', { url }),
+    fix: t('doctor.siteFix'),
+  };
+}
+
+async function checkAdminConsole(projectRoot) {
+  const url = loadAdminConsoleUrl(projectRoot);
+  const ok = await isHttpResponding(url, 2500);
+  if (ok) {
+    return { ok: true, message: t('doctor.adminOk', { url }) };
+  }
+  return {
+    ok: false,
+    message: t('doctor.adminBad', { url }),
+    fix: t('doctor.adminFix', { url }),
   };
 }
 
@@ -205,16 +332,18 @@ async function runCheckWithSpinner(name, run) {
 }
 
 async function runDoctor(projectRoot) {
+  const profile = await resolveProjectProfile(projectRoot);
+  applyProjectRuntimeEnv(profile);
   const env = envFileStatus(projectRoot);
   const checks = [
     { name: 'Node.js', run: () => checkNodeVersion() },
-    { name: 'pnpm', run: () => checkPnpm() },
+    { name: 'pnpm', run: () => checkPnpmForProject(projectRoot) },
     {
       name: t('doctor.check.config'),
       run: () => ({
         ok: env.config,
         message: env.config ? t('doctor.configOk') : t('doctor.configBad'),
-        fix: t('doctor.configFix'),
+        fix: env.config ? undefined : t('doctor.configFix'),
       }),
     },
     {
@@ -222,15 +351,22 @@ async function runDoctor(projectRoot) {
       run: () => ({
         ok: env.env,
         message: env.env ? t('doctor.envOk') : t('doctor.envBad'),
-        fix: t('doctor.envFix'),
+        fix: env.env ? undefined : t('doctor.envFix'),
       }),
     },
-    { name: 'Docker', run: () => checkDocker() },
+    { name: 'Docker', run: () => checkDockerForProject(projectRoot, profile) },
     { name: t('doctor.check.nginx'), run: () => checkNginx(projectRoot) },
     { name: t('doctor.check.ports'), run: () => checkPorts(projectRoot) },
     { name: t('doctor.check.database'), run: () => checkDatabase(projectRoot) },
-    { name: t('doctor.check.api'), run: () => checkApiHealth(projectRoot) },
+    { name: t('doctor.check.api'), run: () => checkApiHealth(projectRoot, profile) },
   ];
+
+  if (profile.localMode) {
+    checks.push(
+      { name: t('doctor.check.site'), run: () => checkThemeSite(projectRoot) },
+      { name: t('doctor.check.admin'), run: () => checkAdminConsole(projectRoot) }
+    );
+  }
 
   const w = Math.min(terminalWidth() - 4, 52);
   const results = [];
@@ -282,4 +418,7 @@ module.exports = {
   runDoctor,
   checkNodeVersion,
   checkDocker,
+  checkDockerForProject,
+  resolveProjectProfile,
+  isLocalZeroDepMode,
 };

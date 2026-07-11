@@ -2,5 +2,9 @@
   "name": "reactpress-site",
   "private": true,
   "version": "1.0.0",
-  "description": "ReactPress CMS & Blog site"
+  "description": "ReactPress CMS & Blog site",
+  "scripts": {
+    "start": "reactpress-cli start",
+    "stop": "reactpress-cli stop"
+  }
 }

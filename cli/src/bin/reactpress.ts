@@ -3,7 +3,7 @@
 
 /**
  * ReactPress 4 — zero-dependency publishing platform.
- * Single command: `reactpress init` (also the default when invoked with no args).
+ * Commands: `reactpress init` (default), `reactpress doctor`.
  */
 
 const { Command } = require('commander');
@@ -24,6 +24,7 @@ const {
 const { t } = require('../lib/i18n');
 const { describeProject } = require('../lib/project-type');
 const { refreshBannerWithStartup } = require('../ui/banner-startup');
+const { runDoctor } = require('../lib/doctor');
 
 const LEGACY_COMMANDS = new Set([
   'start',
@@ -33,7 +34,6 @@ const LEGACY_COMMANDS = new Set([
   'server',
   'build',
   'status',
-  'doctor',
   'publish',
   'theme',
   'plugin',
@@ -129,11 +129,21 @@ program
     await runInit(directory || '.', options);
   });
 
+program
+  .command('doctor [directory]')
+  .description(t('cli.doctor.description'))
+  .action(async (directory) => {
+    const projectRoot = path.resolve(directory || '.');
+    process.env.REACTPRESS_ORIGINAL_CWD = projectRoot;
+    const code = await runDoctor(projectRoot);
+    process.exit(code);
+  });
+
 program.on('--help', () => {
   console.log('');
   console.log(brand.bold(t('cli.help.examples')));
   console.log(divider(40));
-  for (const line of [t('cli.help.init'), t('cli.help.zeroDep')]) {
+  for (const line of [t('cli.help.init'), t('cli.help.doctor'), t('cli.help.zeroDep')]) {
     console.log(brand.dim(line));
   }
   console.log('');
