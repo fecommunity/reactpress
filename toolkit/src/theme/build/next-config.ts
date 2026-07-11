@@ -57,10 +57,13 @@ function applyThemeWebpackResolve(
 export function createReactPressNextConfig(
   overrides: ReactPressNextConfig = {},
 ): ReactPressNextConfig {
-  const { webpack: userWebpack, eslint, transpilePackages, ...rest } = overrides;
+  const { webpack: userWebpack, eslint, transpilePackages, compress, ...rest } = overrides;
 
   return {
     reactStrictMode: true,
+    // Themes rewrite `/api` to Nest. Next's compress middleware decompresses upstream
+    // bodies but can still emit `Content-Encoding: br`, breaking admin fetch (ERR_CONTENT_DECODING_FAILED).
+    compress: compress ?? false,
     transpilePackages: ['@fecommunity/reactpress-toolkit', ...(transpilePackages ?? [])],
     eslint: {
       ignoreDuringBuilds: true,

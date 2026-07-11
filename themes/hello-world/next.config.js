@@ -27,7 +27,6 @@ function createApiRewrites() {
 module.exports = createReactPressNextConfig({
   distDir: process.env.NEXT_DIST_DIR || '.next',
   poweredByHeader: false,
-  compress: true,
   async rewrites() {
     const apiRewrites = createApiRewrites();
     const adminRewrites = createAdminVercelRewrites?.();
