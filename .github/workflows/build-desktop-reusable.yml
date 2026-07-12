@@ -1,7 +1,6 @@
 # Reusable desktop installer build (macOS / Windows / Linux).
 #
 # Callers:
-#   - deploy-ecs.yml — parallel with server deploy; artifacts kept in Actions
 #   - release-desktop.yml — attach installers to GitHub Release
 name: Build Desktop (reusable)
 

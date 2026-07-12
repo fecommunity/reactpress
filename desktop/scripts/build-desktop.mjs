@@ -91,12 +91,16 @@ async function main() {
       ),
   ]);
 
-  await runAll("Phase 2/4 · app bundles (server, web, theme)", [
+  await runAll("Phase 2/4 · app bundles (server, web)", [
     () => buildIfStale("server API", () => runAsync("server", "pnpm", ["run", "--dir", "server", "build"])),
     () =>
       buildIfStale("web (electron)", () =>
         runAsync("web (electron)", "pnpm", ["run", "--dir", "web", "build:electron"]),
       ),
+  ]);
+
+  // hello-world prebuild runs `reactpress-web sync-public` and needs web/dist — must follow web build.
+  await runAll("Phase 2b/4 · themes (after web dist)", [
     () => {
       const helloWorldDir = path.join(root, "themes", "hello-world");
       if (!fs.existsSync(helloWorldDir)) return Promise.resolve();
