@@ -20,15 +20,16 @@ Before logging in, you need to register an account first. After successful regis
 
 ## Enter the backend
 
-Admin console: `http://localhost:3000` (since 4.0, Admin is a separate Vite SPA, not `:3001/admin`).
+Admin console: `http://localhost:3001/admin/` (`reactpress init` mounts Admin on the visitor site port).
 ![QQ_1730649254076.png]( https://api.gaoredu.com/public/uploads/2024-11-03/QQ_1730649254076.png )
 
 ## New Article
 
-You can directly select the "New Article" option through the directory on the left:
-![QQ_1730649280585.png]( https://api.gaoredu.com/public/uploads/2024-11-03/QQ_1730649280585.png )
+Select **Posts → Add New** in the sidebar. The Markdown editor supports live preview, cover image, categories, and tags:
+
+![Post editor — Markdown with live preview](/img/admin/post.png)
+
 ## Publish article
 
-Click the "Publish" button in the upper right corner to complete the content publishing:
-![QQ_1730649303524.png]( https://api.gaoredu.com/public/uploads/2024-11-03/QQ_1730649303524.png )
+Set visibility in the **Publish** panel on the right, then click **Publish** to go live.
 So far, your first article has been created.

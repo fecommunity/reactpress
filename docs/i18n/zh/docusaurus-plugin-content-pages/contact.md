@@ -18,7 +18,7 @@ keywords: [reactpress, 联系, 支持, github issues]
 
 ## 提交 Issue 前
 
-1. 在您的环境运行 `reactpress doctor` 与 `reactpress status`
+1. 在您的环境运行 `reactpress doctor` 与 `reactpress logs`
 2. 搜索[已有 Issue](https://github.com/fecommunity/reactpress/issues) 避免重复
 3. 阅读 [FAQ](/zh/docs/reference/faq) 与[故障排查](/zh/docs/reference/troubleshooting)
 4. 附上 Node 版本、操作系统、ReactPress 版本与相关日志

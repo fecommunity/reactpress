@@ -14,7 +14,7 @@
 </p>
 
 <p align="center">
-  <a href="#-30-second-start"><strong>Quick start ↓</strong></a>
+  <a href="#30-second-start"><strong>Quick start ↓</strong></a>
   &nbsp;·&nbsp;
   <a href="https://blog.gaoredu.com"><strong>Live demo</strong></a>
   &nbsp;·&nbsp;
@@ -89,17 +89,19 @@
 ## 30-second start
 
 ```bash
-npm i -g @fecommunity/reactpress@4
+npm i -g @fecommunity/reactpress@beta
 mkdir my-site && cd my-site
 reactpress init
 ```
 
 **Requirements:** [Node.js 20+](https://nodejs.org/) · No Docker or external database
 
+> 4.x 发布在 npm **`@beta`** 标签（`@latest` 仍为 3.x）。
+
 | Surface | URL |
 | :------ | :-- |
-| **Admin** | http://localhost:3000 |
 | **Public site** | http://localhost:3001 |
+| **Admin** | http://localhost:3001/admin/ (`admin` / `admin`) |
 | **API** | http://localhost:3002/api/health |
 
 `reactpress doctor` diagnoses setup issues when something does not start correctly.
@@ -299,7 +301,7 @@ SQLite local storage · offline editing · remote API mode · sync to production
 Codename **Extend** — plugins, desktop, npm themes. Still **one CLI, one Admin.**
 
 ```bash
-npm i -g @fecommunity/reactpress@4
+npm i -g @fecommunity/reactpress@beta
 ```
 
 [4.0 guide](./docs/tutorial/tutorial-extras/reactpress-4-0.md) · [Migrate from 3.x](./docs/tutorial/tutorial-extras/migration-3-to-4.md)
@@ -330,14 +332,16 @@ curl -H "X-API-Key: YOUR_KEY" \
 | `reactpress` / `reactpress init` | Initialize and start (SQLite + API + theme) |
 | `reactpress init --force` | Re-initialize existing project |
 | `reactpress doctor` | Diagnose environment and URLs |
+| `reactpress logs` | Tail API logs |
+| `reactpress stop` | Stop API and site services |
 
 | Service | URL / port |
 | :------ | :--------- |
-| Admin | http://localhost:3000 |
 | Public site | http://localhost:3001 |
+| Admin | http://localhost:3001/admin/ |
 | API | http://localhost:3002/api |
 
-Monorepo contributors: use `pnpm dev` and package READMEs under `server/`, `web/`, `themes/`.
+Monorepo contributors: see [CONTRIBUTING.md](./CONTRIBUTING.md) and package READMEs under `server/`, `web/`, `themes/`.
 
 </details>
 
@@ -385,7 +389,7 @@ Same admin-driven workflow, but a faster default theme, a cleaner headless path,
 <details>
 <summary><strong>Is 4.0 production-ready?</strong></summary>
 
-4.0 is in active beta (`4.0.0-beta.18` at time of writing). The published CLI supports `init` and `doctor`. See the [migration guide](./docs/tutorial/tutorial-extras/migration-3-to-4.md) before upgrading production.
+4.0 is in active beta (`4.0.0-beta.18` at time of writing). The published CLI supports `init`, `doctor`, `logs`, and `stop`. See the [migration guide](./docs/tutorial/tutorial-extras/migration-3-to-4.md) before upgrading production.
 
 </details>
 

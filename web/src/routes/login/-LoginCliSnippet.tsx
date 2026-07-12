@@ -15,9 +15,9 @@ import {
 import styles from "./login-cli-snippet.module.css";
 
 const QUICK_START_LINES = [
-  "npm i -g @fecommunity/reactpress@4",
+  "npm i -g @fecommunity/reactpress@beta",
+  "mkdir my-site && cd my-site",
   "reactpress init",
-  "reactpress dev",
 ] as const;
 
 const REPO_DISPLAY = "github.com/fecommunity/reactpress";

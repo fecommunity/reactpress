@@ -18,7 +18,7 @@ We welcome questions, bug reports, feature ideas, and contributions from the Rea
 
 ## Before opening an issue
 
-1. Run `reactpress doctor` and `reactpress status` on your installation
+1. Run `reactpress doctor` and `reactpress logs` on your installation
 2. Search [existing issues](https://github.com/fecommunity/reactpress/issues) for duplicates
 3. Read the [FAQ](/docs/reference/faq) and [Troubleshooting](/docs/reference/troubleshooting) guides
 4. Include Node.js version, OS, ReactPress version, and relevant log output

@@ -10,7 +10,7 @@ keywords: [reactpress, glossary, definitions, terminology]
 | Term | English | Description |
 |------|------|------|
 | **Publishing platform** | Publishing platform | ReactPress positioning: full system with Admin, API, themes, plugins — not a CMS backend alone |
-| **Admin** | Admin / Web Admin | Vite SPA admin UI, port 3000, content and site management |
+| **Admin** | Admin / Web Admin | Vite SPA admin UI; `reactpress init` default `:3001/admin/`, Monorepo dev may use :3000 |
 | **API / Server** | CMS API | NestJS REST service, port 3002, persistence and Hook hub |
 | **Theme** | Theme | Next.js visitor frontend, port 3001, replaceable via npm |
 | **Plugin** | Plugin | Server-side Hook extension + optional Admin slots |

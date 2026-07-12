@@ -15,7 +15,7 @@ keywords: [reactpress vs wordpress, react cms, wordpress alternative, headless c
 | --- | --- | --- |
 | **定位** | React 时代的完整发布平台（Admin + API + Next.js 主题 + 插件 + 桌面） | 全球最流行的 PHP CMS，插件与主题生态极其成熟 |
 | **技术栈** | React、Next.js、NestJS、SQLite/MySQL | PHP、MySQL、传统主题 |
-| **上手** | `npm i -g @fecommunity/reactpress@4` → `reactpress init`，约 60 秒 | 托管一键安装或 LAMP 栈，5 分钟级 |
+| **上手** | `npm i -g @fecommunity/reactpress@beta` → `reactpress init`，约 60 秒 | 托管一键安装或 LAMP 栈，5 分钟级 |
 | **最适合** | React 团队、Headless 定制、现代 SSR SEO | 非技术用户、海量插件需求、成熟托管生态 |
 
 ## 技术架构对比
@@ -97,12 +97,12 @@ ReactPress 也不是 Strapi / Payload / Contentful 的直接竞品 — 后者主
 ## 快速试用 ReactPress
 
 ```bash
-npm i -g @fecommunity/reactpress@4
+npm i -g @fecommunity/reactpress@beta
 mkdir my-blog && cd my-blog
 reactpress init
 ```
 
-- Admin：http://localhost:3000
+- Admin：http://localhost:3001/admin/
 - 访客站：http://localhost:3001
 - API：http://localhost:3002/api/health
 

@@ -12,7 +12,7 @@ keywords: [reactpress, 关于, 开源, react cms, 发布平台]
 
 | 层级 | 技术 | 用途 |
 | --- | --- | --- |
-| CLI | `@fecommunity/reactpress` | `init`、`doctor`、`status`、主题 catalog、生产启动 |
+| CLI | `@fecommunity/reactpress` | `init`、`doctor`、`logs`、`stop` |
 | API | NestJS + SQLite / MySQL | Headless REST、Webhook、API Key |
 | Admin | Vite + React | WordPress 式内容、媒体、主题、插件管理 |
 | 主题 | Next.js（SSR） | 访客站 SEO、sitemap、OG 标签 |
@@ -22,7 +22,7 @@ keywords: [reactpress, 关于, 开源, react cms, 发布平台]
 ReactPress 4.0（代号 **Extend**）为当前推荐版本：
 
 ```bash
-npm i -g @fecommunity/reactpress@4
+npm i -g @fecommunity/reactpress@beta
 ```
 
 ## 适用人群

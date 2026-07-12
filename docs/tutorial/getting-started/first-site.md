@@ -12,7 +12,7 @@ keywords: [reactpress, quick start, 快速开始, 第一篇博客, init, tutoria
 ## 第 1 步：安装 CLI
 
 ```bash
-npm install -g @fecommunity/reactpress@4
+npm install -g @fecommunity/reactpress@beta
 ```
 
 ## 第 2 步：初始化站点
@@ -36,13 +36,13 @@ reactpress init
 | 服务 | 地址 |
 |------|------|
 | **访客站** | http://localhost:3001 |
-| **管理后台** | http://localhost:3000 |
+| **管理后台** | http://localhost:3001/admin/ |
 | **API** | http://localhost:3002/api |
 | **健康检查** | http://localhost:3002/api/health |
 
 ## 第 3 步：登录 Admin
 
-1. 浏览器打开 `http://localhost:3000`
+1. 浏览器打开 `http://localhost:3001/admin/`
 2. 使用默认账号登录：`admin` / `admin`
 3. **首次登录后请立即修改密码**（设置 → 账户）
 

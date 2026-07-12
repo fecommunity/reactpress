@@ -28,7 +28,9 @@ keywords: [reactpress, faq, 常见问题, docker, wordpress, production]
 <details>
 <summary><strong>Admin 地址是 3000 还是 3001/admin？</strong></summary>
 
-4.0 起 Admin 是**独立 Vite SPA**，地址为 `http://localhost:3000`。`:3001` 是 Next.js 访客主题，不再包含 `/admin` 路径。
+**`reactpress init` 默认**：**http://localhost:3001/admin/**（Admin 挂载在访客主题同端口）。
+
+Monorepo 本地开发时，Admin Vite dev server 可能在 **http://localhost:3000**。
 
 </details>
 
@@ -81,7 +83,7 @@ keywords: [reactpress, faq, 常见问题, docker, wordpress, production]
 <details>
 <summary><strong>ReactPress 免费吗？</strong></summary>
 
-是，MIT 开源。全局安装：`npm i -g @fecommunity/reactpress@4`。
+是，MIT 开源。全局安装：`npm i -g @fecommunity/reactpress@beta`。
 
 </details>
 

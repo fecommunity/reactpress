@@ -14,10 +14,9 @@ See [ReactPress 4.0 Extend](./reactpress-4-0.md) for the full overview.
 ## Upgrade steps
 
 ```bash
-npm i -g @fecommunity/reactpress@4
+npm i -g @fecommunity/reactpress@beta
 cd your-site
 reactpress doctor
-reactpress dev
 ```
 
 Monorepo contributors:

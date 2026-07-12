@@ -23,7 +23,7 @@ keywords: [reactpress, 发布平台, wordpress 替代, headless cms, 博客, nex
 
 **ReactPress** 是为 React 时代打造的开源**发布平台**（不是又一个 Headless 后端拼装件）。一条 CLI 即可运行 CMS API、Web 管理后台、可替换的 Next.js 主题、插件扩展与 Electron 桌面客户端。
 
-**ReactPress 4.0**（代号 **Extend**）在 3.x 之上新增**插件系统**、**桌面客户端**与 **npm 主题 catalog**。新用户推荐 `npm i -g @fecommunity/reactpress@4`，详见 [ReactPress 4.0 扩展版](./tutorial-extras/reactpress-4-0.md)。桌面端安装见 [桌面客户端](./tutorial-extras/desktop-client.md)。仍使用 3.x 见 [3.0 平台版](./tutorial-extras/reactpress-3-0.md)。
+**ReactPress 4.0**（代号 **Extend**）在 3.x 之上新增**插件系统**、**桌面客户端**与 **npm 主题 catalog**。新用户推荐 `npm i -g @fecommunity/reactpress@beta`，详见 [ReactPress 4.0 扩展版](./tutorial-extras/reactpress-4-0.md)。桌面端安装见 [桌面客户端](./tutorial-extras/desktop-client.md)。仍使用 3.x 见 [3.0 平台版](./tutorial-extras/reactpress-3-0.md)。
 
 ## 🆚 框架对比
 
@@ -55,9 +55,9 @@ keywords: [reactpress, 发布平台, wordpress 替代, headless cms, 博客, nex
 
 ### 平台能力（3.x 起）
 
-- 📦 **唯一入口**：`@fecommunity/reactpress` 一条命令管理 init / dev / doctor / status
+- 📦 **唯一入口**：`@fecommunity/reactpress` 一条命令管理 init / doctor / logs / stop
 - ⚡ **零配置起站**：自动生成 `.reactpress/config.json`、`.env` 与嵌入式 MySQL
-- 🩺 **可诊断**：`reactpress doctor` 与 `reactpress status` 快速排错
+- 🩺 **可诊断**：`reactpress doctor` 与 `reactpress logs` 快速排错
 - 🌈 组件化：基于 `antd 5.20` 的交互与视觉
 - 🌍 国际化：中英文切换
 - 🌞 黑白主题：亮色 / 暗黑模式
@@ -74,7 +74,7 @@ keywords: [reactpress, 发布平台, wordpress 替代, headless cms, 博客, nex
 ### 终端用户 — 一个全局包
 
 ```bash
-npm i -g @fecommunity/reactpress@4
+npm i -g @fecommunity/reactpress@beta
 mkdir my-blog && cd my-blog
 reactpress init
 ```
@@ -85,7 +85,7 @@ reactpress init
 
 | 服务 | 端口 | 地址 |
 |------|------|------|
-| 管理后台 | 3000 | http://localhost:3000 |
+| 管理后台 | 3001 `/admin/` | http://localhost:3001/admin/ |
 | 访客主题 | 3001 | http://localhost:3001 |
 | API | 3002 | http://localhost:3002/api/health |
 | 主题预览 | 3003 | http://localhost:3003 |
@@ -141,7 +141,7 @@ pnpm run dev
 
 如果您在使用的过程中碰到问题，可以通过下面几个途径寻求帮助：
 
-1. 先运行 `reactpress doctor` 与 `reactpress status`
+1. 先运行 `reactpress doctor` 与 `reactpress logs`
 2. [GitHub Issues](https://github.com/fecommunity/reactpress/issues)
 3. [GitHub Discussions](https://github.com/fecommunity/reactpress/discussions)
 
@@ -159,7 +159,7 @@ Email: admin@gaoredu.com
 <details>
 <summary><strong>ReactPress 免费吗？</strong></summary>
 
-是，MIT 开源。安装：`npm i -g @fecommunity/reactpress@4`。
+是，MIT 开源。安装：`npm i -g @fecommunity/reactpress@beta`。
 
 </details>
 

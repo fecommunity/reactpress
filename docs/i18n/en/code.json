@@ -595,8 +595,8 @@
   "全局安装后，初始化、开发、自检与状态查看都在命令行里完成。": {
     "message": "After a global install, initialize, develop, self-check, and view status from the terminal."
   },
-  "全局安装 @fecommunity/reactpress@4，init / dev / doctor / status 一条命令搞定。": {
-    "message": "After a global install, initialize, develop, self-check, and view status from the terminal."
+  "全局安装 @fecommunity/reactpress@beta，init / doctor / logs / stop 一条命令搞定。": {
+    "message": "Global install @fecommunity/reactpress@beta — init, doctor, logs, and stop from one CLI."
   },
   "全局安装 @fecommunity/reactpress@3，init / dev / doctor / status 一条命令搞定。": {
     "message": "After a global install, initialize, develop, self-check, and view status from the terminal."

@@ -17,7 +17,7 @@ noted in a release announcement.
 Install the latest release:
 
 ```bash
-npm i -g @fecommunity/reactpress@4
+npm i -g @fecommunity/reactpress@beta
 ```
 
 ## Reporting a Vulnerability

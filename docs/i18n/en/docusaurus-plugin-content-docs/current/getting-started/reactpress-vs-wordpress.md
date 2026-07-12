@@ -15,7 +15,7 @@ If you are evaluating an **open-source blog, CMS, or publishing platform**, "Rea
 | --- | --- | --- |
 | **Positioning** | Full publishing platform for the React era (Admin + API + Next.js themes + plugins + desktop) | World's most popular PHP CMS with a massive plugin/theme market |
 | **Stack** | React, Next.js, NestJS, SQLite/MySQL | PHP, MySQL, traditional themes |
-| **Time to live** | `npm i -g @fecommunity/reactpress@4` → `reactpress init` — about 60 seconds | One-click hosting or LAMP stack — often minutes |
+| **Time to live** | `npm i -g @fecommunity/reactpress@beta` → `reactpress init` — about 60 seconds | One-click hosting or LAMP stack — often minutes |
 | **Best for** | React teams, Headless customization, modern SSR SEO | Non-technical editors, huge plugin catalog, mature hosting |
 
 ## Architecture
@@ -97,12 +97,12 @@ ReactPress is not a direct substitute for Strapi, Payload, or Contentful — tho
 ## Try ReactPress in 60 seconds
 
 ```bash
-npm i -g @fecommunity/reactpress@4
+npm i -g @fecommunity/reactpress@beta
 mkdir my-blog && cd my-blog
 reactpress init
 ```
 
-- Admin: http://localhost:3000
+- Admin: http://localhost:3001/admin/
 - Visitor site: http://localhost:3001
 - API: http://localhost:3002/api/health
 

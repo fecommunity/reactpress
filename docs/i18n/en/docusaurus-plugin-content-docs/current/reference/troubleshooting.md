@@ -34,7 +34,7 @@ Bundled runtime download failed during global install:
 
 ```bash
 # retry install
-npm install -g @fecommunity/reactpress@4 --force
+npm install -g @fecommunity/reactpress@beta --force
 
 # check proxy and registry
 npm config get registry

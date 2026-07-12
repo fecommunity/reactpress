@@ -18,7 +18,7 @@ ReactPress 4.0 提供三条本地路径，按场景选择。
 ## 方式一：全局 CLI（推荐）
 
 ```bash
-npm i -g @fecommunity/reactpress@4
+npm i -g @fecommunity/reactpress@beta
 mkdir my-blog && cd my-blog
 reactpress init
 ```
@@ -27,7 +27,7 @@ reactpress init
 
 | 服务 | 端口 | 地址 |
 |------|------|------|
-| 管理后台 | 3000 | http://localhost:3000 |
+| 管理后台 | 3001 `/admin/` | http://localhost:3001/admin/ |
 | 访客主题 | 3001 | http://localhost:3001 |
 | API | 3002 | http://localhost:3002/api/health |
 | 主题预览 | 3003 | http://localhost:3003 |

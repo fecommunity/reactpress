@@ -28,14 +28,10 @@ node -v   # 应显示 v20.x 或更高
 ## 安装 CLI（推荐）
 
 ```bash
-npm install -g @fecommunity/reactpress@4
-```
-
-当前 4.0 仍为 beta 阶段，也可：
-
-```bash
 npm install -g @fecommunity/reactpress@beta
 ```
+
+> npm **`@beta`** 标签为 4.x 预发布；`@latest` 仍为 3.x。不存在 `@4` dist-tag。
 
 首次 `npm install -g` 会触发 `postinstall`，下载 bundled server 运行时依赖，约需 1–2 分钟。
 
@@ -68,10 +64,11 @@ reactpress --help
 
 | 服务 | 端口 | 说明 |
 |------|------|------|
-| Admin 管理后台 | 3000 | Vite SPA |
+| Admin（`reactpress init` 默认） | 3001 `/admin/` | 挂载在访客主题同端口 |
 | 访客主题 | 3001 | Next.js SSR |
 | API | 3002 | NestJS REST |
 | 主题预览 | 3003 | Admin iframe 预览 |
+| Admin（Monorepo 开发） | 3000 | 独立 Vite dev server |
 
 修改端口见 [项目配置项](../tutorial-extras/config-intro.md)。
 

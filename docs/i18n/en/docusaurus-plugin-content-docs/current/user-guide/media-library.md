@@ -9,6 +9,8 @@ keywords: [reactpress, media, media library, upload, oss, images, webp]
 
 The ReactPress media library manages site images and attachments for posts, pages, and theme settings.
 
+![Media library](/img/admin/midia.png)
+
 ## Local upload
 
 1. **Media → Upload** or insert images from the editor

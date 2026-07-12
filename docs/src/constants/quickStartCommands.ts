@@ -27,14 +27,14 @@ type DevReadyLines = readonly string[];
 const QUICK_START_DEV_READY_LINES_EN: DevReadyLines = [
   '✓ ReactPress is running',
   'Site     http://localhost:3001',
-  'Admin    http://localhost:3000',
+  'Admin    http://localhost:3001/admin/',
   'API      http://localhost:3002/api',
 ];
 
 const QUICK_START_DEV_READY_LINES_ZH: DevReadyLines = [
   '✓ ReactPress 已启动',
   '前台     http://localhost:3001',
-  '管理端   http://localhost:3000',
+  '管理端   http://localhost:3001/admin/',
   'API      http://localhost:3002/api',
 ];
 

@@ -14,7 +14,7 @@ export function buildNpmVersionPageUrl(version: string): string {
 /** Fallback when the registry is unreachable (SSR / offline). */
 export const FALLBACK_REACTPRESS_VERSIONS = {
   latest: '3.7.0',
-  beta: '4.0.0-beta.0',
+  beta: '4.0.0-beta.18',
 } as const;
 
 export type ReactPressDistTags = {

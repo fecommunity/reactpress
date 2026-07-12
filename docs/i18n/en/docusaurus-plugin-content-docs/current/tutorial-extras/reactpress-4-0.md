@@ -20,19 +20,18 @@ keywords: [reactpress 4.0, extend, plugin, desktop, theme catalog, wordpress alt
 ## Quick start (full stack, same as 3.x)
 
 ```bash
-npm i -g @fecommunity/reactpress@4
-# During beta you can also: npm i -g @fecommunity/reactpress@beta
+npm i -g @fecommunity/reactpress@beta
 mkdir my-blog && cd my-blog
 reactpress init
-reactpress dev
 ```
 
 | Service | Port | Description |
 |------|------|------|
-| Admin | 3000 | Vite Admin SPA |
+| Admin | 3001 `/admin/` | `reactpress init` default |
 | Site theme | 3001 | Active Next.js theme |
 | API | 3002 | NestJS REST |
 | Theme preview | 3003 | Admin iframe preview |
+| Admin (Monorepo dev) | 3000 | Standalone Vite dev server |
 
 ## Desktop client (new)
 

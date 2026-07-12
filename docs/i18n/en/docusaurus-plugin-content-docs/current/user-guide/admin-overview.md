@@ -7,7 +7,7 @@ keywords: [reactpress, admin, dashboard, web admin]
 
 # Admin Overview
 
-ReactPress 4.0 **Admin** is a standalone Vite SPA at **http://localhost:3000** (not `:3001/admin`).
+ReactPress **Admin** is a Vite SPA. After `reactpress init`, open **http://localhost:3001/admin/** (default credentials `admin` / `admin`). Monorepo local development may use **http://localhost:3000** instead.
 
 ## Login and language
 
@@ -31,6 +31,8 @@ ReactPress 4.0 **Admin** is a standalone Vite SPA at **http://localhost:3000** (
 
 ## Editor capabilities
 
+![Post editor — Markdown with live preview](/img/admin/post.png)
+
 - **Markdown** WYSIWYG editing
 - Cover image, summary, slug
 - Multi-select categories / tags
@@ -41,9 +43,11 @@ ReactPress 4.0 **Admin** is a standalone Vite SPA at **http://localhost:3000** (
 
 | URL | Purpose |
 |------|------|
-| `:3000` | Admin writing and management only |
-| `:3001` | Next.js theme site visitors see |
-| `:3003` | Theme preview iframe in Admin (when no production theme is active) |
+| `:3001/admin/` | Admin console (`reactpress init` default) |
+| `:3001` | Visitor Next.js theme site |
+| `:3002/api` | CMS API |
+| `:3003` | Theme preview iframe in Admin |
+| `:3000` | Admin Vite dev server (Monorepo dev only) |
 
 ## Desktop client
 
