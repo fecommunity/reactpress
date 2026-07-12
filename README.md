@@ -101,11 +101,11 @@ reactpress init
 
 > 4.x 发布在 npm **`@beta`** 标签（`@latest` 仍为 3.x）。
 
-| Surface | URL |
-| :------ | :-- |
-| **Public site** | http://localhost:3001 |
-| **Admin** | http://localhost:3001/admin/ (`admin` / `admin`) |
-| **API** | http://localhost:3002/api/health |
+| Surface         | URL                                              |
+| :-------------- | :----------------------------------------------- |
+| **Public site** | http://localhost:3001                            |
+| **Admin**       | http://localhost:3001/admin/ (`admin` / `admin`) |
+| **API**         | http://localhost:3002/api/health                 |
 
 `reactpress doctor` diagnoses setup issues when something does not start correctly.
 
@@ -152,10 +152,10 @@ reactpress init
 
 Modern content systems force a bad trade-off:
 
-| Path | Trade-off |
-| :--- | :-------- |
-| **WordPress-style CMS** | Great editing — slow themes, coupled PHP stack |
-| **Static site generators** | Blazing fast — no real CMS for non-developers |
+| Path                               | Trade-off                                                 |
+| :--------------------------------- | :-------------------------------------------------------- |
+| **WordPress-style CMS**            | Great editing — slow themes, coupled PHP stack            |
+| **Static site generators**         | Blazing fast — no real CMS for non-developers             |
 | **Headless CMS** (Strapi, Payload) | Flexible API — you still assemble admin, frontend, deploy |
 
 > **Frontend teams deserve one publishing platform — not five repos to wire together.**
@@ -177,14 +177,14 @@ ReactPress is a **full publishing platform built for the React era** — not ano
 
 One CLI install. Everything included:
 
-| Layer | What you get |
-| :---- | :----------- |
-| **CMS** | WordPress-style editing — posts, pages, media, categories |
-| **API** | Headless REST — React-first, Swagger-documented |
-| **Admin** | Web writing UI — no separate admin to build |
-| **Themes** | npm-installable Next.js frontends — swappable |
+| Layer       | What you get                                                  |
+| :---------- | :------------------------------------------------------------ |
+| **CMS**     | WordPress-style editing — posts, pages, media, categories     |
+| **API**     | Headless REST — React-first, Swagger-documented               |
+| **Admin**   | Web writing UI — no separate admin to build                   |
+| **Themes**  | npm-installable Next.js frontends — swappable                 |
 | **Plugins** | Hook-based extensibility — SEO, summaries, image optimization |
-| **Desktop** | Local-first writing — SQLite, offline, sync upstream |
+| **Desktop** | Local-first writing — SQLite, offline, sync upstream          |
 
 > Content owned by the system. Frontend owned by developers. **It is not a CMS — it is a publishing platform.**
 
@@ -192,13 +192,13 @@ One CLI install. Everything included:
 
 ## What you can build
 
-| Use case | Why ReactPress fits |
-| :------- | :------------------ |
-| Personal blogs | Admin writing + Lighthouse-fast Next.js theme |
-| Developer docs & knowledge bases | Built into official theme + API |
-| SaaS marketing sites | Headless API + custom Next.js frontend |
-| Multi-editor teams | Web admin for writers, theme repo for engineers |
-| Offline-first workflows | Desktop app with SQLite, sync when ready |
+| Use case                         | Why ReactPress fits                             |
+| :------------------------------- | :---------------------------------------------- |
+| Personal blogs                   | Admin writing + Lighthouse-fast Next.js theme   |
+| Developer docs & knowledge bases | Built into official theme + API                 |
+| SaaS marketing sites             | Headless API + custom Next.js frontend          |
+| Multi-editor teams               | Web admin for writers, theme repo for engineers |
+| Offline-first workflows          | Desktop app with SQLite, sync when ready        |
 
 ---
 
@@ -253,13 +253,13 @@ cd my-blog && pnpm dev:mock
 
 Extend without touching core. Install and enable plugins in **Admin → Plugins**.
 
-| Plugin | Capability |
-| :----- | :--------- |
-| `seo` | Slug, keywords, meta description + Admin editor slot |
-| `hello-world` | Auto-generate article summaries |
-| `image-optimizer` | Batch WebP optimization for media |
+| Plugin            | Capability                                           |
+| :---------------- | :--------------------------------------------------- |
+| `seo`             | Slug, keywords, meta description + Admin editor slot |
+| `hello-world`     | Auto-generate article summaries                      |
+| `image-optimizer` | Batch WebP optimization for media                    |
 
-Dev guide: [plugins/README.md](./plugins/README.md)
+Dev guide: [plugins/README.md](./plugins/README.md) · Starter template: [reactpress-plugin-starter](https://github.com/fecommunity/reactpress-plugin-starter)
 
 ---
 
@@ -280,14 +280,14 @@ SQLite local storage · offline editing · remote API mode · sync to production
 
 ## Why ReactPress?
 
-| | ReactPress | WordPress | Static sites | Headless CMS |
-| :-: | :--- | :--- | :--- | :--- |
-| **Editing experience** | Yes | Yes | No | Partial |
-| **Frontend freedom** | Yes | No | Build-time only | Yes |
-| **Full system out of box** | Yes | Via plugins | No | No |
-| **Time to start** | ~1 min | Hours | Fast per site | Setup + assembly |
-| **Local / offline writing** | Desktop app | No | No | No |
-| **Lighthouse performance** | 95² | Theme-dependent | Excellent | Depends on frontend |
+|                             | ReactPress  | WordPress       | Static sites    | Headless CMS        |
+| :-------------------------: | :---------- | :-------------- | :-------------- | :------------------ |
+|   **Editing experience**    | Yes         | Yes             | No              | Partial             |
+|    **Frontend freedom**     | Yes         | No              | Build-time only | Yes                 |
+| **Full system out of box**  | Yes         | Via plugins     | No              | No                  |
+|      **Time to start**      | ~1 min      | Hours           | Fast per site   | Setup + assembly    |
+| **Local / offline writing** | Desktop app | No              | No              | No                  |
+| **Lighthouse performance**  | 95²         | Theme-dependent | Excellent       | Depends on frontend |
 
 **vs WordPress** — same editing workflow, modern Next.js delivery, no PHP theme bloat.
 
@@ -320,29 +320,30 @@ curl -H "X-API-Key: YOUR_KEY" \
   "http://localhost:3002/api/article/headless/list?status=publish&page=1&pageSize=10"
 ```
 
-| Resource | Link |
-| :------- | :--- |
-| Swagger | http://localhost:3002/api |
-| Theme dev | [themes/README.md](./themes/README.md) |
-| Plugin dev | [plugins/README.md](./plugins/README.md) |
-| Official starter | [reactpress-theme-starter](https://github.com/fecommunity/reactpress-theme-starter) |
+| Resource       | Link                                                                                  |
+| :------------- | :------------------------------------------------------------------------------------ |
+| Swagger        | http://localhost:3002/api                                                             |
+| Theme dev      | [themes/README.md](./themes/README.md)                                                |
+| Plugin dev     | [plugins/README.md](./plugins/README.md)                                              |
+| Theme starter  | [reactpress-theme-starter](https://github.com/fecommunity/reactpress-theme-starter)   |
+| Plugin starter | [reactpress-plugin-starter](https://github.com/fecommunity/reactpress-plugin-starter) |
 
 <details>
 <summary><strong>CLI commands & ports (local init)</strong></summary>
 
-| Command | Action |
-| :------ | :----- |
+| Command                          | Action                                      |
+| :------------------------------- | :------------------------------------------ |
 | `reactpress` / `reactpress init` | Initialize and start (SQLite + API + theme) |
-| `reactpress init --force` | Re-initialize existing project |
-| `reactpress doctor` | Diagnose environment and URLs |
-| `reactpress logs` | Tail API logs |
-| `reactpress stop` | Stop API and site services |
+| `reactpress init --force`        | Re-initialize existing project              |
+| `reactpress doctor`              | Diagnose environment and URLs               |
+| `reactpress logs`                | Tail API logs                               |
+| `reactpress stop`                | Stop API and site services                  |
 
-| Service | URL / port |
-| :------ | :--------- |
-| Public site | http://localhost:3001 |
-| Admin | http://localhost:3001/admin/ |
-| API | http://localhost:3002/api |
+| Service     | URL / port                   |
+| :---------- | :--------------------------- |
+| Public site | http://localhost:3001        |
+| Admin       | http://localhost:3001/admin/ |
+| API         | http://localhost:3002/api    |
 
 Monorepo contributors: see [CONTRIBUTING.md](./CONTRIBUTING.md) and package READMEs under `server/`, `web/`, `themes/`.
 
