@@ -452,8 +452,8 @@ Yes — ReactPress targets all three: self-hosted WordPress-style editing, headl
 
 <!-- star-history:start -->
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="assets/star-history/star-history-dark.svg">
-  <img alt="Star History Chart" src="assets/star-history/star-history-light.svg">
+  <source media="(prefers-color-scheme: dark)" srcset="public/star-history/star-history-dark.svg">
+  <img alt="Star History Chart" src="public/star-history/star-history-light.svg">
 </picture>
 <!-- star-history:end -->
 

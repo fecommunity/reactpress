@@ -22,6 +22,7 @@ jobs:
         id: star-history
         with:
           repos: fecommunity/reactpress
+          output-dir: public/star-history
           update-readme: false
           commit: false
 
@@ -67,6 +68,6 @@ jobs:
         run: |
           git config user.name "FECommunity"
           git config user.email "admin@gaoredu.com"
-          git add assets/star-history README.md README-zh_CN.md
+          git add public/star-history README.md README-zh_CN.md
           git commit -m "docs: update README star history charts"
           git push

@@ -23,6 +23,7 @@ Root-level demo media (`usage.gif`, `demo.gif`, `desktop.gif`, `lighthouse.png`)
 | Directory | Contents |
 | :--- | :--- |
 | `admin/` | Admin UI screenshots for [web/README](../web/README.md) and [docs site](https://docs.gaoredu.com/): `post.png`, `midia.png`, `plugins.png`, `theme-custom.png`, `settings.png` |
+| `star-history/` | GitHub star history charts for root README files (updated by `.github/workflows/star-history.yml`) |
 
 A copy of `admin/` is synced to `docs/static/img/admin/` for the documentation site.
 

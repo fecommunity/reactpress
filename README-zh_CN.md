@@ -452,8 +452,8 @@ Monorepo 贡献者请参阅 [CONTRIBUTING.md](./CONTRIBUTING.md) 及各子包 RE
 
 <!-- star-history:start -->
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="assets/star-history/star-history-dark.svg">
-  <img alt="Star History Chart" src="assets/star-history/star-history-light.svg">
+  <source media="(prefers-color-scheme: dark)" srcset="public/star-history/star-history-dark.svg">
+  <img alt="Star History Chart" src="public/star-history/star-history-light.svg">
 </picture>
 <!-- star-history:end -->
 
