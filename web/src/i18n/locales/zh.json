@@ -101,7 +101,7 @@
     "authFooterDocs": "文档",
     "authFooterSuffix": "了解安装与部署。",
     "heroTitle": "ReactPress",
-    "heroTagline": "WordPress 式编辑 · Next.js 交付 · 一条 CLI — 插件、桌面端与 npm 主题，无需拼装。",
+    "heroTagline": "用 React 发布，像 WordPress 一样交付。",
     "docsHome": {
       "highlightsTitle": "4.0 亮点",
       "featuresTitle": "平台能力",
@@ -118,7 +118,7 @@
       "aria": "ReactPress 产品介绍",
       "mobileAria": "ReactPress 快速开始与相关链接",
       "linksAria": "ReactPress 相关链接",
-      "tagline": "WordPress 式编辑 · Next.js 交付 · 一条 CLI — 插件、桌面端与 npm 主题，无需拼装。",
+      "tagline": "CMS、后台、无头 API、Next.js 主题、插件与桌面端 — 一条 CLI，零拼装。",
       "getStarted": "快速开始",
       "whatsNew": "4.0 新特性",
       "liveDemo": "在线演示",

@@ -33,7 +33,7 @@ const CORE_PUBLISH_PACKAGES = [
   {
     name: '@fecommunity/reactpress',
     path: 'cli',
-    description: 'Publishing platform CLI — CMS, Admin, API, themes in one command',
+    description: 'Publishing platform CLI — Publish with React. Ship like WordPress.',
   },
 ];
 

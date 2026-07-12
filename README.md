@@ -6,12 +6,15 @@
 
 <h1 align="center">ReactPress</h1>
 
-<h3 align="center">Not a CMS. A publishing platform for modern developers.</h3>
+<img src="./public/poster.png" alt="ReactPress — Publish with React. Ship like WordPress." width="100%" />
+
+<h3 align="center">Publish with React. Ship like WordPress.</h3>
 
 <p align="center">
-  <strong>WordPress-style editing · Next.js delivery · One CLI to ship.</strong><br/>
-  CMS + Admin + API + Themes + Plugins + Desktop — no assembly required.
+  <strong>CMS, Admin, Headless API, Next.js themes, plugins & desktop — one CLI, zero assembly.</strong>
 </p>
+
+<br/>
 
 <p align="center">
   <a href="#30-second-start"><strong>Quick start ↓</strong></a>
@@ -443,7 +446,7 @@ Yes — ReactPress targets all three: self-hosted WordPress-style editing, headl
   <img src="https://img.shields.io/github/stars/fecommunity/reactpress?style=for-the-badge&color=ffd700&labelColor=1a1a2e" alt="Star ReactPress on GitHub" />
 </a>
 
-<p><sub>Not a CMS. A publishing platform for modern developers.<br/>Help us reach more builders — ⭐ on GitHub.</sub></p>
+<p><sub>Publish with React. Ship like WordPress.<br/>Help us reach more builders — ⭐ on GitHub.</sub></p>
 
 <br/>
 

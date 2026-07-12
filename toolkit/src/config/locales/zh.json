@@ -121,5 +121,5 @@
   "navCategoryMenu": "导航分类",
   "carouselPrev": "上一张，第 {current} 张，共 {total} 张",
   "carouselNext": "下一张，第 {current} 张，共 {total} 张",
-  "aboutUsFallback": "ReactPress — 现代化博客发布平台"
+  "aboutUsFallback": "ReactPress — 用 React 发布，像 WordPress 一样交付。"
 }

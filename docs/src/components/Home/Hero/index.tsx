@@ -82,7 +82,7 @@ function Hero() {
           </div>
           <p className={styles.slogan}>
             <Translate id="theme.tagline">
-              Open-source React publishing platform. One CLI, live in ~60 seconds.
+              Publish with React. Ship like WordPress.
             </Translate>
           </p>
 
