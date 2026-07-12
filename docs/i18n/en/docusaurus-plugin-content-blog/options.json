@@ -1,14 +1,14 @@
 {
   "title": {
-    "message": "Changelog",
+    "message": "Blog",
     "description": "The title for the blog used in SEO"
   },
   "description": {
-    "message": "Release notes and version history for ReactPress — plugins, desktop, themes, and publishing platform updates.",
+    "message": "ReactPress blog — articles on React CMS and Next.js publishing, plus release notes under Changelog.",
     "description": "The description for the blog used in SEO"
   },
   "sidebar.title": {
-    "message": "Releases",
+    "message": "Blog",
     "description": "The label for the left sidebar"
   }
 }

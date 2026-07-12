@@ -59,33 +59,39 @@ const config: Config = {
           ignorePatterns: ['/tags/**', '/markdown-page'],
           filename: 'sitemap.xml',
           createSitemapItems: async (params) => {
-            const {defaultCreateSitemapItems, ...rest} = params;
+            const { defaultCreateSitemapItems, ...rest } = params;
             const items = await defaultCreateSitemapItems(rest);
             return items
               .filter((item) => !item.url.includes('/markdown-page'))
               .map((item) => {
                 const pathname = new URL(item.url).pathname;
                 if (pathname === '/' || pathname === '/zh/') {
-                  return {...item, priority: 1.0, changefreq: 'daily' as const};
+                  return { ...item, priority: 1.0, changefreq: 'daily' as const };
                 }
                 if (pathname.endsWith('/docs/intro')) {
-                  return {...item, priority: 0.9};
+                  return { ...item, priority: 0.9 };
                 }
                 if (
                   pathname.includes('/docs/getting-started/first-site') ||
                   pathname.includes('/docs/getting-started/installation') ||
                   pathname.includes('/docs/getting-started/reactpress-vs-wordpress')
                 ) {
-                  return {...item, priority: 0.85, changefreq: 'weekly' as const};
+                  return { ...item, priority: 0.85, changefreq: 'weekly' as const };
                 }
                 if (pathname === '/about' || pathname === '/contact') {
-                  return {...item, priority: 0.6, changefreq: 'monthly' as const};
+                  return { ...item, priority: 0.6, changefreq: 'monthly' as const };
                 }
                 if (pathname.includes('/docs/developer-guide/headless-api')) {
-                  return {...item, priority: 0.75};
+                  return { ...item, priority: 0.75 };
+                }
+                if (pathname.includes('/blog/why-react-still-doesnt-have-wordpress-reactpress-4')) {
+                  return { ...item, priority: 0.85, changefreq: 'monthly' as const };
+                }
+                if (pathname === '/blog' || pathname === '/zh/blog') {
+                  return { ...item, priority: 0.75, changefreq: 'weekly' as const };
                 }
                 if (pathname.includes('/blog/changelog')) {
-                  return {...item, priority: 0.8};
+                  return { ...item, priority: 0.8 };
                 }
                 if (
                   pathname.includes('/blog/archive') ||
@@ -93,7 +99,7 @@ const config: Config = {
                   pathname.endsWith('/blog/tags') ||
                   pathname.includes('/blog/tags/')
                 ) {
-                  return {...item, priority: 0.3};
+                  return { ...item, priority: 0.3 };
                 }
                 return item;
               });
@@ -104,7 +110,7 @@ const config: Config = {
           sidebarPath: './sidebars.ts',
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
-          editUrl: ({docPath, locale}) => {
+          editUrl: ({ docPath, locale }) => {
             const branch = 'master';
             const base = `https://github.com/fecommunity/reactpress/edit/${branch}`;
             if (locale === 'en') {
@@ -115,11 +121,14 @@ const config: Config = {
         },
         blog: {
           showReadingTime: true,
+          blogTitle: 'Blog',
+          blogDescription:
+            'ReactPress blog — long-form articles on React CMS, Next.js publishing, and open-source platform updates. Release notes live under Changelog.',
           feedOptions: {
             type: ['rss', 'atom'],
             xslt: true,
           },
-          editUrl: ({blogPath, locale}) => {
+          editUrl: ({ blogPath, locale }) => {
             const branch = 'master';
             const base = `https://github.com/fecommunity/reactpress/edit/${branch}`;
             if (locale === 'zh') {
@@ -131,8 +140,7 @@ const config: Config = {
           onInlineTags: 'warn',
           onInlineAuthors: 'warn',
           onUntruncatedBlogPosts: 'warn',
-          blogSidebarTitle: 'ReactPress',
-          blogTitle: 'Changelog',
+          blogSidebarTitle: 'Blog',
         },
         theme: {
           customCss: [
@@ -163,7 +171,8 @@ const config: Config = {
           position: 'left',
           label: 'Docs',
         },
-        { to: '/blog', label: 'Changelog', position: 'left' },
+        { to: '/blog', label: 'Blog', position: 'left' },
+        { to: '/blog/changelog', label: 'Changelog', position: 'left' },
         { to: '/docs/tutorial-extras/desktop-client', label: 'Download', position: 'left' },
         { href: 'https://blog.gaoredu.com', label: 'Demo', position: 'left' },
         {
@@ -243,8 +252,12 @@ const config: Config = {
           title: 'More',
           items: [
             {
-              label: 'Changelog',
+              label: 'Blog',
               to: '/blog',
+            },
+            {
+              label: 'Changelog',
+              to: '/blog/changelog',
             },
             {
               label: 'GitHub',
@@ -264,7 +277,7 @@ const config: Config = {
       darkTheme: prismThemes.dracula,
     },
     mermaid: {
-      theme: {light: 'neutral', dark: 'dark'},
+      theme: { light: 'neutral', dark: 'dark' },
     },
     algolia: algoliaConfig,
     metadata: [
@@ -278,8 +291,8 @@ const config: Config = {
         content:
           'reactpress, react cms, open source cms, publishing platform, wordpress alternative, headless cms, next.js blog, react blog, static site generator, cms, blog, react, nestjs, electron, plugin, self-hosted, 博客, 内容管理, 发布平台, 插件, 桌面客户端',
       },
-      {name: 'robots', content: 'index, follow, max-image-preview:large'},
-      {name: 'googlebot', content: 'index, follow'},
+      { name: 'robots', content: 'index, follow, max-image-preview:large' },
+      { name: 'googlebot', content: 'index, follow' },
       {
         name: 'google-site-verification',
         content: '8t6NmKz1PcYI6YSo4N390MXzZSy-Hg-RLa12p7d5cmM',
@@ -288,7 +301,7 @@ const config: Config = {
         name: 'algolia-site-verification',
         content: '597DB75F60C5A6DE',
       },
-      {name: 'twitter:card', content: 'summary_large_image'},
+      { name: 'twitter:card', content: 'summary_large_image' },
     ],
   } satisfies Preset.ThemeConfig,
 };

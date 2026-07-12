@@ -7,3 +7,18 @@ release:
   label: Release
   permalink: /release
   description: ReactPress version releases, changelogs, and migration notes for the 4.x publishing platform
+
+article:
+  label: Article
+  permalink: /article
+  description: Long-form articles on React CMS, Next.js publishing, and WordPress alternatives
+
+wordpress-alternative:
+  label: WordPress alternative
+  permalink: /wordpress-alternative
+  description: Comparing ReactPress with WordPress and legacy CMS options
+
+react-cms:
+  label: React CMS
+  permalink: /react-cms
+  description: React-native content management and publishing platforms

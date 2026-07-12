@@ -1,0 +1,24 @@
+reactpress:
+  label: ReactPress
+  permalink: /reactpress
+  description: ReactPress 开源 React 发布平台相关资讯
+
+release:
+  label: 版本发布
+  permalink: /release
+  description: ReactPress 版本更新、changelog 与迁移说明
+
+article:
+  label: 文章
+  permalink: /article
+  description: React CMS、Next.js 发布与 WordPress 替代方案等长文
+
+wordpress-alternative:
+  label: WordPress 替代
+  permalink: /wordpress-alternative
+  description: ReactPress 与 WordPress 及传统 CMS 的对比与选型
+
+react-cms:
+  label: React CMS
+  permalink: /react-cms
+  description: 基于 React 的内容管理与发布平台

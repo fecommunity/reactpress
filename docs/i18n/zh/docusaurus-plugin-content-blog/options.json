@@ -1,14 +1,14 @@
 {
   "title": {
-    "message": "更新日志",
+    "message": "博客",
     "description": "The title for the blog used in SEO"
   },
   "description": {
-    "message": "ReactPress 版本更新与发布说明：插件、桌面客户端、主题与发布平台能力变更记录。",
+    "message": "ReactPress 博客 — React CMS 与 Next.js 发布相关长文；版本发布说明见更新日志。",
     "description": "The description for the blog used in SEO"
   },
   "sidebar.title": {
-    "message": "版本发布",
+    "message": "博客",
     "description": "The label for the left sidebar"
   }
 }

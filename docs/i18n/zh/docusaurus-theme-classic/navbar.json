@@ -15,6 +15,18 @@
     "message": "博客",
     "description": "Navbar item with label Blog"
   },
+  "item.label.Changelog": {
+    "message": "更新日志",
+    "description": "Navbar item with label Changelog"
+  },
+  "item.label.Docs": {
+    "message": "文档",
+    "description": "Navbar item with label Docs"
+  },
+  "item.label.Download": {
+    "message": "下载",
+    "description": "Navbar item with label Download"
+  },
   "item.label.Demo": {
     "message": "Demo 演示",
     "description": "Navbar item with label Demo"
