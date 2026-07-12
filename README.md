@@ -205,22 +205,33 @@ One CLI install. Everything included:
 ## Architecture
 
 ```mermaid
-flowchart LR
-  subgraph Authoring
-    Admin["Admin"]
-    Desktop["Desktop"]
+flowchart TB
+  subgraph Authoring["Authoring"]
+    CLI["CLI<br/>init · dev · doctor"]
+    Admin["Admin<br/>React + Vite · /admin/"]
+    Desktop["Desktop<br/>Electron · offline SQLite"]
   end
-  subgraph Core
-    API["CMS API"]
-    Plugins["Plugins"]
+
+  subgraph Core["CMS Core"]
+    API["CMS API<br/>NestJS · :3002"]
+    Plugins["Plugins<br/>hooks · in-process"]
+    DB[("SQLite / MySQL")]
   end
-  subgraph Delivery
-    Theme["Theme"]
+
+  subgraph Delivery["Delivery"]
+    Theme["Active theme<br/>Next.js · :3001"]
+    Preview["Theme preview<br/>:3003"]
   end
-  Admin --> API
-  Desktop --> API
+
+  CLI -->|"orchestrate"| API
+  CLI --> Theme
+  Admin -->|"REST"| API
+  Desktop -->|"REST"| API
   Plugins --> API
-  API --> Theme
+  API --> DB
+  API -->|"headless JSON"| Theme
+  API --> Preview
+  Admin -.->|"iframe"| Preview
 ```
 
 ```
