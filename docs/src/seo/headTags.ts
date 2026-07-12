@@ -1,6 +1,7 @@
-import type {Tag} from '@docusaurus/types';
+import type { Tag } from '@docusaurus/types';
 
 const DEFAULT_SITE_URL = 'https://docs.gaoredu.com';
+const GOOGLE_ADSENSE_CLIENT = 'ca-pub-5349318179336721';
 
 export function getSiteUrl(): string {
   return process.env.DOCS_SITE_URL?.trim() || DEFAULT_SITE_URL;
@@ -43,64 +44,72 @@ export function buildGlobalHeadTags(siteUrl: string): Tag[] {
   const baseUrl = siteUrl.replace(/\/$/, '');
 
   return [
-    {tagName: 'link', attributes: {rel: 'apple-touch-icon', href: `${baseUrl}/img/apple-touch-icon.png`}},
-    {tagName: 'meta', attributes: {property: 'og:type', content: 'website'}},
-    {tagName: 'meta', attributes: {property: 'og:site_name', content: 'ReactPress'}},
-    {tagName: 'meta', attributes: {property: 'og:locale', content: 'en_US'}},
-    {tagName: 'meta', attributes: {property: 'og:locale:alternate', content: 'zh_CN'}},
-    {tagName: 'link', attributes: {rel: 'alternate', hrefLang: 'en', href: `${baseUrl}/`}},
-    {tagName: 'link', attributes: {rel: 'alternate', hrefLang: 'zh', href: `${baseUrl}/zh/`}},
-    {tagName: 'link', attributes: {rel: 'alternate', hrefLang: 'x-default', href: `${baseUrl}/`}},
     {
       tagName: 'script',
-      attributes: {type: 'application/ld+json'},
+      attributes: {
+        async: true,
+        src: `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${GOOGLE_ADSENSE_CLIENT}`,
+        crossorigin: 'anonymous',
+      },
+    },
+    { tagName: 'link', attributes: { rel: 'apple-touch-icon', href: `${baseUrl}/img/apple-touch-icon.png` } },
+    { tagName: 'meta', attributes: { property: 'og:type', content: 'website' } },
+    { tagName: 'meta', attributes: { property: 'og:site_name', content: 'ReactPress' } },
+    { tagName: 'meta', attributes: { property: 'og:locale', content: 'en_US' } },
+    { tagName: 'meta', attributes: { property: 'og:locale:alternate', content: 'zh_CN' } },
+    { tagName: 'link', attributes: { rel: 'alternate', hrefLang: 'en', href: `${baseUrl}/` } },
+    { tagName: 'link', attributes: { rel: 'alternate', hrefLang: 'zh', href: `${baseUrl}/zh/` } },
+    { tagName: 'link', attributes: { rel: 'alternate', hrefLang: 'x-default', href: `${baseUrl}/` } },
+    {
+      tagName: 'script',
+      attributes: { type: 'application/ld+json' },
       innerHTML: JSON.stringify({
         '@context': 'https://schema.org',
         '@graph': [
           {
             '@type': 'WebSite',
-            name: 'ReactPress',
-            alternateName: 'ReactPress Official Documentation',
-            url: `${baseUrl}/`,
-            description:
+            'name': 'ReactPress',
+            'alternateName': 'ReactPress Official Documentation',
+            'url': `${baseUrl}/`,
+            'description':
               'Official ReactPress docs — self-hosted publishing platform with WordPress-style editing, headless REST, Next.js themes, plugins, and desktop client.',
-            inLanguage: ['en', 'zh-CN'],
-            publisher: {'@id': `${baseUrl}/#organization`},
+            'inLanguage': ['en', 'zh-CN'],
+            'publisher': { '@id': `${baseUrl}/#organization` },
           },
           {
             '@type': 'Organization',
             '@id': `${baseUrl}/#organization`,
-            name: 'ReactPress',
-            url: `${baseUrl}/`,
-            logo: `${baseUrl}/img/logo.svg`,
-            sameAs: [
+            'name': 'ReactPress',
+            'url': `${baseUrl}/`,
+            'logo': `${baseUrl}/img/logo.svg`,
+            'sameAs': [
               'https://github.com/fecommunity/reactpress',
               'https://www.npmjs.com/package/@fecommunity/reactpress',
             ],
-            contactPoint: {
+            'contactPoint': {
               '@type': 'ContactPoint',
-              email: 'admin@gaoredu.com',
-              contactType: 'customer support',
-              availableLanguage: ['English', 'Chinese'],
+              'email': 'admin@gaoredu.com',
+              'contactType': 'customer support',
+              'availableLanguage': ['English', 'Chinese'],
             },
           },
           {
             '@type': 'SoftwareApplication',
-            name: 'ReactPress',
-            applicationCategory: 'DeveloperApplication',
-            operatingSystem: 'macOS, Windows, Linux',
-            offers: {'@type': 'Offer', price: '0', priceCurrency: 'USD'},
-            softwareVersion: '4.0',
-            url: `${baseUrl}/`,
-            downloadUrl: 'https://www.npmjs.com/package/@fecommunity/reactpress',
-            author: {'@id': `${baseUrl}/#organization`},
+            'name': 'ReactPress',
+            'applicationCategory': 'DeveloperApplication',
+            'operatingSystem': 'macOS, Windows, Linux',
+            'offers': { '@type': 'Offer', 'price': '0', 'priceCurrency': 'USD' },
+            'softwareVersion': '4.0',
+            'url': `${baseUrl}/`,
+            'downloadUrl': 'https://www.npmjs.com/package/@fecommunity/reactpress',
+            'author': { '@id': `${baseUrl}/#organization` },
           },
           {
             '@type': 'FAQPage',
-            mainEntity: FAQ_ENTRIES.map(({question, answer}) => ({
+            'mainEntity': FAQ_ENTRIES.map(({ question, answer }) => ({
               '@type': 'Question',
-              name: question,
-              acceptedAnswer: {'@type': 'Answer', text: answer},
+              'name': question,
+              'acceptedAnswer': { '@type': 'Answer', 'text': answer },
             })),
           },
         ],
