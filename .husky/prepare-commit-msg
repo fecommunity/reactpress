@@ -1,8 +1,5 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
-. "$(dirname "$0")/scripts/strip-cursor-attribution.sh"
+. "$(dirname "$0")/scripts/hooks-common.sh"
 
-COMMIT_MSG_FILE=$1
-[ -f "$COMMIT_MSG_FILE" ] || exit 0
-strip_cursor_attribution < "$COMMIT_MSG_FILE" > "${COMMIT_MSG_FILE}.tmp" &&
-  mv "${COMMIT_MSG_FILE}.tmp" "$COMMIT_MSG_FILE"
+sanitize_commit_message_file "$1"

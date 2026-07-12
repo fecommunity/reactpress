@@ -1,12 +1,6 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
-. "$(dirname "$0")/scripts/strip-cursor-attribution.sh"
+. "$(dirname "$0")/scripts/hooks-common.sh"
 
-# Cursor may append trailers after commit-msg; amend once if still present.
-[ "$CURSOR_STRIP_AMENDING" = "1" ] && exit 0
-
-if git log -1 --format=%B | grep -qE '^Co-authored-by:.*[Cc]ursor|^Made-with:.*[Cc]ursor'; then
-  CURSOR_STRIP_AMENDING=1
-  export CURSOR_STRIP_AMENDING
-  git log -1 --format=%B | strip_cursor_attribution | git commit --amend -F - --no-verify
-fi
+# Cursor trailers or legacy author names may appear after commit-msg; amend once if needed.
+fixup_last_commit_if_needed

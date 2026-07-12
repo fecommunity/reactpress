@@ -1,2 +1,12 @@
-cd "$(dirname "$0")/.." || exit 1
+#!/bin/sh
+# core.hooksPath=web/.vite-hooks/_ — run root lint-staged, then web vp staged.
+REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+
+. "$REPO_ROOT/.husky/scripts/hooks-common.sh"
+normalize_git_identity
+
+cd "$REPO_ROOT" || exit 1
+pnpm run precommit || exit $?
+
+cd "$REPO_ROOT/web" || exit 1
 exec ./node_modules/.bin/vp staged
