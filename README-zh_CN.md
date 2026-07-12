@@ -4,10 +4,10 @@
   <img height="120" src="./public/brand/logo.png" alt="ReactPress 标志">
 </a>
 
-<h1 align="center">ReactPress</h1>
 
 <img src="./public/poster.png" alt="ReactPress — 用 React 发布，像 WordPress 一样交付。" width="100%" />
 
+<h1 align="center">ReactPress</h1>
 <h3 align="center">用 React 发布，像 WordPress 一样交付。</h3>
 
 <p align="center">

@@ -4,9 +4,9 @@
   <img height="120" src="./public/brand/logo.png" alt="ReactPress Logo">
 </a>
 
-<h1 align="center">ReactPress</h1>
-
 <img src="./public/poster.png" alt="ReactPress — Publish with React. Ship like WordPress." width="100%" />
+
+<h1 align="center">ReactPress</h1>
 
 <h3 align="center">Publish with React. Ship like WordPress.</h3>
 
