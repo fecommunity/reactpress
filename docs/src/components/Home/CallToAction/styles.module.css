@@ -58,11 +58,12 @@ html[data-theme='light'] .title {
 }
 
 .subtitle {
-  font-size: 1rem;
-  line-height: 1.55;
+  font-size: 1.05rem;
+  line-height: 1.6;
   color: var(--home-secondary-text);
-  max-width: 32rem;
-  margin: 0 auto 1rem;
+  max-width: 36rem;
+  margin: 0 auto 1.25rem;
+  font-weight: 400;
 }
 
 .footerCta {

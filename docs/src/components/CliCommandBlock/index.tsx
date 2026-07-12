@@ -1,6 +1,11 @@
 import Translate, { translate } from '@docusaurus/Translate';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
-import { QUICK_START_COMMANDS, QUICK_START_COPY_COMMAND } from '@site/src/constants/quickStartCommands';
+import { buildQuickStartCommands } from '@site/src/constants/quickStartCommands';
+import {
+  buildInstallCommand,
+  type ReactPressDistTags,
+} from '@site/src/npm/packageVersions';
+import { useReactPressVersions } from '@site/src/npm/useReactPressVersions';
 import clsx from 'clsx';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
@@ -8,12 +13,15 @@ import styles from './styles.module.css';
 import { useCliTypewriter } from './useCliTypewriter';
 
 type Variant = 'hero' | 'section';
+export type NpmDistTag = keyof ReactPressDistTags;
 
 type Props = {
   variant?: Variant;
   className?: string;
   showHint?: boolean;
   animate?: boolean;
+  showVersionSwitch?: boolean;
+  defaultVersionTag?: NpmDistTag;
   commands?: readonly string[];
   copyCommand?: string;
   installCommand?: string;
@@ -46,7 +54,7 @@ async function copyText(text: string): Promise<boolean> {
 
 function CopyIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
+    <svg className={styles.copyBtnIcon} viewBox="0 0 24 24" fill="none" aria-hidden>
       <path
         d="M8 4v12a2 2 0 002 2h8a2 2 0 002-2V8.83a2 2 0 00-.59-1.41l-4.83-4.83A2 2 0 0013.17 2H10a2 2 0 00-2 2z"
         stroke="currentColor"
@@ -59,7 +67,7 @@ function CopyIcon() {
 
 function CheckIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
+    <svg className={styles.copyBtnIcon} viewBox="0 0 24 24" fill="none" aria-hidden>
       <path
         d="M5 12.5l4.5 4.5L19 7"
         stroke="currentColor"
@@ -170,22 +178,49 @@ export default function CliCommandBlock({
   className,
   showHint = variant !== 'hero',
   animate = variant === 'hero',
-  commands = QUICK_START_COMMANDS,
-  copyCommand = QUICK_START_COPY_COMMAND,
-  installCommand = QUICK_START_COMMANDS[0],
+  showVersionSwitch = variant === 'hero',
+  defaultVersionTag = 'beta',
+  commands: commandsProp,
+  copyCommand: copyCommandProp,
+  installCommand: installCommandProp,
   betaVersion,
 }: Props) {
   const { i18n } = useDocusaurusContext();
   const locale = i18n.currentLocale === 'zh' ? 'zh' : 'en';
+  const { latest, beta, isLoading: versionsLoading } = useReactPressVersions();
+  const [selectedTag, setSelectedTag] = useState<NpmDistTag>(defaultVersionTag);
   const [copied, setCopied] = useState(false);
-  const lines = commands.length > 0 ? commands : [...QUICK_START_COMMANDS];
+
+  const managedInstallCommand = useMemo(
+    () => buildInstallCommand(selectedTag),
+    [selectedTag],
+  );
+  const managedCommands = useMemo(
+    () => buildQuickStartCommands(managedInstallCommand),
+    [managedInstallCommand],
+  );
+  const managedCopyCommand = useMemo(() => managedCommands.join('\n'), [managedCommands]);
+  const selectedVersion = selectedTag === 'beta' ? beta : latest;
+
+  const useManagedCommands = showVersionSwitch;
+  const installCommand = useManagedCommands
+    ? managedInstallCommand
+    : (installCommandProp ?? managedInstallCommand);
+  const lines = useManagedCommands
+    ? managedCommands
+    : commandsProp && commandsProp.length > 0
+      ? commandsProp
+      : managedCommands;
+  const copyCommand = useManagedCommands
+    ? managedCopyCommand
+    : (copyCommandProp ?? managedCopyCommand);
 
   const { history, activeInput, isTyping, animate: isAnimating } = useCliTypewriter({
     enabled: animate,
     locale,
     commands: lines,
     installCommand,
-    betaVersion,
+    betaVersion: betaVersion ?? selectedVersion,
   });
 
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -207,6 +242,11 @@ export default function CliCommandBlock({
     }
   }, [copyCommand]);
 
+  const handleVersionTagChange = useCallback((tag: NpmDistTag) => {
+    setSelectedTag(tag);
+    setCopied(false);
+  }, []);
+
   const showLiveInput = isAnimating && isTyping;
   const isReady = isAnimating && history.some((line) => line.kind === 'success') && !showLiveInput;
 
@@ -215,43 +255,92 @@ export default function CliCommandBlock({
       className={clsx(styles.wrapper, styles[variant], className)}
       data-variant={variant}
       data-ready={isReady || undefined}
+      data-typing={showLiveInput || undefined}
     >
-      <div className={styles.glow} aria-hidden />
       <div className={styles.panel}>
         <div className={styles.toolbar}>
-          <div className={styles.dots} aria-hidden>
-            <span />
-            <span />
-            <span className={clsx(isReady && styles.dotLive)} />
+          <div className={styles.toolbarLeading}>
+            <div className={styles.dots} aria-hidden>
+              <span />
+              <span />
+              <span className={clsx(isReady && styles.dotLive)} />
+            </div>
           </div>
-          <span className={styles.toolbarTitle}>
-            <Translate id="home.cli.title">reactpress</Translate>
-            <span className={styles.toolbarSep}>-</span>
-            <span className={styles.toolbarCwd}>{toolbarCwd}</span>
+          <div className={styles.toolbarCenter}>
+            <span className={styles.toolbarTitle}>
+              <Translate id="home.cli.title">reactpress</Translate>
+              <span className={styles.toolbarSep}>—</span>
+              <span className={styles.toolbarCwd}>{toolbarCwd}</span>
+            </span>
             {isReady && (
               <span className={styles.toolbarStatus}>
+                <span className={styles.statusDot} aria-hidden />
                 <Translate id="home.cli.running">Running</Translate>
               </span>
             )}
-          </span>
-          <button
-            type="button"
-            className={clsx(styles.copyBtn, copied && styles.copyBtnDone)}
-            onClick={handleCopy}
-            aria-label={translate({
-              message: 'Copy quick start commands',
-              id: 'home.cli.copyAll.aria',
-            })}
-          >
-            {copied ? <CheckIcon /> : <CopyIcon />}
-            <span>
-              {copied ? (
-                <Translate id="home.cli.copied">Copied!</Translate>
-              ) : (
-                <Translate id="home.cli.copyAll">Copy</Translate>
+          </div>
+          <div className={styles.toolbarTrailing}>
+            <div
+              className={clsx(
+                styles.toolbarActions,
+                showVersionSwitch && versionsLoading && styles.toolbarActionsLoading,
               )}
-            </span>
-          </button>
+            >
+              {showVersionSwitch && (
+                <div
+                  className={styles.versionSwitch}
+                  role="group"
+                  aria-busy={versionsLoading || undefined}
+                  aria-label={translate({
+                    message: 'Choose npm dist-tag for install command',
+                    id: 'home.cli.versionSwitch.aria',
+                  })}
+                >
+                  {(['beta', 'latest'] as const).map((tag, index) => {
+                    const version = tag === 'beta' ? beta : latest;
+                    const isActive = selectedTag === tag;
+                    return (
+                      <React.Fragment key={tag}>
+                        {index > 0 && <span className={styles.versionDivider} aria-hidden />}
+                        <button
+                          type="button"
+                          className={clsx(
+                            styles.versionOption,
+                            styles.toolbarMono,
+                            isActive && styles.versionOptionActive,
+                          )}
+                          disabled={versionsLoading}
+                          aria-pressed={isActive}
+                          aria-label={`${tag} (${version})`}
+                          onClick={() => handleVersionTagChange(tag)}
+                        >
+                          <Translate id={`home.hero.version.tag.${tag}`}>{tag}</Translate>
+                        </button>
+                      </React.Fragment>
+                    );
+                  })}
+                </div>
+              )}
+              <button
+                type="button"
+                className={clsx(styles.copyBtn, copied && styles.copyBtnDone)}
+                onClick={handleCopy}
+                aria-label={translate({
+                  message: 'Copy quick start commands',
+                  id: 'home.cli.copyAll.aria',
+                })}
+              >
+                {copied ? <CheckIcon /> : <CopyIcon />}
+                <span className={styles.copyBtnLabel}>
+                  {copied ? (
+                    <Translate id="home.cli.copied">Copied!</Translate>
+                  ) : (
+                    <Translate id="home.cli.copyAll">Copy</Translate>
+                  )}
+                </span>
+              </button>
+            </div>
+          </div>
         </div>
 
         <div
@@ -262,52 +351,55 @@ export default function CliCommandBlock({
             id: 'home.cli.terminal.aria',
           })}
         >
-          <div ref={scrollRef} className={styles.terminalScroll}>
-            {history.map((line, index) => {
-              const inReadyBlock = readyIndex >= 0 && index >= readyIndex;
-              return (
-                <div
-                  key={`${line.kind}-${index}-${line.text}`}
-                  className={clsx(
-                    line.kind === 'input' && styles.commandRow,
-                    line.kind === 'output' && styles.outputRow,
-                    line.kind === 'success' && styles.successRow,
-                    line.kind === 'divider' && styles.dividerRow,
-                    inReadyBlock && styles.readyBlock,
-                    line.kind === 'success' && index === readyIndex + 1 && styles.readyHeadline,
-                  )}
-                >
-                  {line.kind === 'input' ? (
-                    <>
-                      <span className={styles.prompt} aria-hidden>
-                        $
-                      </span>
-                      <code className={styles.commandText}>
-                        <CommandLine text={line.text} />
-                      </code>
-                    </>
-                  ) : line.kind === 'output' ? (
-                    <OutputLine text={line.text} />
-                  ) : line.kind === 'divider' ? (
-                    <span className={styles.dividerText}>{line.text}</span>
-                  ) : (
-                    <SuccessLine text={line.text} />
-                  )}
-                </div>
-              );
-            })}
+          <div className={styles.viewport}>
+            <div ref={scrollRef} className={styles.terminalScroll}>
+              {history.map((line, index) => {
+                const inReadyBlock = readyIndex >= 0 && index >= readyIndex;
+                return (
+                  <div
+                    key={`${line.kind}-${index}-${line.text}`}
+                    className={clsx(
+                      line.kind === 'input' && styles.commandRow,
+                      line.kind === 'output' && styles.outputRow,
+                      line.kind === 'success' && styles.successRow,
+                      line.kind === 'divider' && styles.dividerRow,
+                      inReadyBlock && styles.readyBlock,
+                      line.kind === 'success' && index === readyIndex + 1 && styles.readyHeadline,
+                    )}
+                  >
+                    {line.kind === 'input' ? (
+                      <>
+                        <span className={styles.prompt} aria-hidden>
+                          $
+                        </span>
+                        <code className={styles.commandText}>
+                          <CommandLine text={line.text} />
+                        </code>
+                      </>
+                    ) : line.kind === 'output' ? (
+                      <OutputLine text={line.text} />
+                    ) : line.kind === 'divider' ? (
+                      <span className={styles.dividerText}>{line.text}</span>
+                    ) : (
+                      <SuccessLine text={line.text} />
+                    )}
+                  </div>
+                );
+              })}
 
-            {showLiveInput && (
-              <div className={styles.commandRow}>
-                <span className={styles.prompt} aria-hidden>
-                  $
-                </span>
-                <code className={styles.commandText}>
-                  {activeInput}
-                  <TerminalCursor />
-                </code>
-              </div>
-            )}
+              {showLiveInput && (
+                <div className={clsx(styles.commandRow, styles.commandRowActive)}>
+                  <span className={styles.prompt} aria-hidden>
+                    $
+                  </span>
+                  <code className={styles.commandText}>
+                    {activeInput}
+                    <TerminalCursor />
+                  </code>
+                </div>
+              )}
+            </div>
+            <div className={styles.scrollFade} aria-hidden />
           </div>
         </div>
 

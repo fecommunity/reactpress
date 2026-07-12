@@ -1,12 +1,30 @@
 {
   "theme.tagline": {
-    "message": "开源 React 发布平台。一条 CLI，约 60 秒上线。"
+    "message": "用 React 发布，像 WordPress 一样交付。"
   },
   "home.meta.title": {
-    "message": "ReactPress - 开源 React 发布平台。一条 CLI，约 60 秒上线。"
+    "message": "ReactPress — 用 React 发布，像 WordPress 一样交付"
+  },
+  "home.meta.description": {
+    "message": "ReactPress 官方文档 — 自托管 React 发布平台：WordPress 式编辑、Headless REST、Next.js 主题、插件生态与桌面客户端。一条 CLI，约 60 秒上线，无需拼装。"
+  },
+  "home.hero.eyebrow": {
+    "message": "开源 · 自托管 · React 原生"
   },
   "home.hero.subTitle": {
-    "message": "WordPress 式编辑 - Next.js 交付 - 一条 CLI - CMS + 后台 + API + 主题 + 插件 + 桌面端，无需拼装。"
+    "message": "CMS、后台、无头 API、Next.js 主题、插件与桌面端 — 一条 CLI，零拼装。"
+  },
+  "home.hero.chip.cms": {
+    "message": "内容 CMS"
+  },
+  "home.hero.chip.nextjs": {
+    "message": "Next.js SSR"
+  },
+  "home.hero.chip.headless": {
+    "message": "Headless REST"
+  },
+  "home.hero.chip.plugins": {
+    "message": "插件 Hook"
   },
   "home.hero.intro": {
     "message": "快速开始"
@@ -20,11 +38,44 @@
   "home.hero.try": {
     "message": "在线演示"
   },
+  "home.hero.github": {
+    "message": "GitHub"
+  },
   "home.hero.version.tag.beta": {
     "message": "beta"
   },
   "home.hero.version.tag.latest": {
     "message": "latest"
+  },
+  "home.stats.aria": {
+    "message": "平台核心指标"
+  },
+  "home.stats.setup.value": {
+    "message": "约 60 秒"
+  },
+  "home.stats.setup.label": {
+    "message": "首次部署"
+  },
+  "home.stats.themes.value": {
+    "message": "Next.js"
+  },
+  "home.stats.themes.label": {
+    "message": "SSR 主题"
+  },
+  "home.stats.api.value": {
+    "message": "REST"
+  },
+  "home.stats.api.label": {
+    "message": "无头 API"
+  },
+  "home.stats.plugins.value": {
+    "message": "Hook"
+  },
+  "home.stats.plugins.label": {
+    "message": "插件体系"
+  },
+  "home.stats.tagline": {
+    "message": "WordPress 的熟悉感，React 的原生交付 — 无需胶水缝合。"
   },
   "home.cli.running": {
     "message": "运行中"
@@ -53,76 +104,100 @@
   "home.cli.terminal.aria": {
     "message": "ReactPress 快速开始命令演示"
   },
+  "home.cli.hint": {
+    "message": "复制全部命令，粘贴到终端按序执行即可起站"
+  },
+  "home.cli.versionSwitch.aria": {
+    "message": "选择 npm 安装版本（beta 或 latest）"
+  },
+  "home.highlights.eyebrow": {
+    "message": "ReactPress 4.0"
+  },
   "home.highlights.title": {
-    "message": "4.0 核心亮点"
+    "message": "不一样地构建，完整地交付"
+  },
+  "home.highlights.subtitle": {
+    "message": "WordPress 教会互联网的每一件事 — 用 React 重建，作为一个平台整体交付。"
   },
   "home.highlight.plugins.title": {
     "message": "插件生态"
   },
   "home.highlight.plugins.desc": {
-    "message": "像 WordPress 一样装插件扩展能力；Hook + plugin.json + Admin 插槽，内置 SEO 与自动摘要。"
+    "message": "WordPress 级扩展能力 — Hook 体系、plugin.json 清单与 Admin 插槽，SEO 与自动摘要开箱即用。"
   },
   "home.highlight.desktop.title": {
     "message": "桌面客户端"
   },
   "home.highlight.desktop.desc": {
-    "message": "不开浏览器也能写作管理；Electron 壳 + SQLite 本地模式，可同步到远程站点。"
+    "message": "离线写作、联网同步 — Electron 壳 + SQLite 本地模式，无缝远程发布。"
   },
   "home.highlight.themes.title": {
-    "message": "npm 主题 catalog"
+    "message": "npm 主题目录"
   },
   "home.highlight.themes.desc": {
-    "message": "官方主题从 npm 一键安装；theme-starter catalog 与 hello-world 入门模板。"
+    "message": "从 npm 安装生产级主题 — 官方目录、theme-starter 脚手架与 hello-world 模板。"
+  },
+  "home.highlight.zero.title": {
+    "message": "零配置起站"
+  },
+  "home.highlight.zero.desc": {
+    "message": "两条命令、一分钟 — 自动生成配置、.env 与 Docker MySQL，无需手工搭环境。"
+  },
+  "home.highlight.cli.title": {
+    "message": "一条命令行"
+  },
+  "home.highlight.cli.desc": {
+    "message": "init、dev、status、自检 — 全局安装后，终端里掌控完整生命周期。"
+  },
+  "home.highlight.dx.title": {
+    "message": "全栈一盒交付"
+  },
+  "home.highlight.dx.desc": {
+    "message": "CMS、后台、API、主题、插件与桌面端 — 不必拼凑五个仓库才能发布内容。"
   },
   "home.call.feature": {
-    "message": "平台能力一览"
+    "message": "所需尽有，无需拼装"
   },
   "home.call.subtitle": {
-    "message": "从个人博客到团队内容站 — 发布、管理与协作，一条 CLI 开箱即用。"
+    "message": "从个人博客到团队内容中心 — 发布、治理与集成，不必再胶水粘合各套工具。"
   },
   "home.call.cta": {
-    "message": "阅读完整文档"
+    "message": "探索完整文档"
   },
   "home.feature.zero.title": {
     "message": "零配置起站"
   },
   "home.feature.zero.desc": {
-    "message": "安装向导式流程，自动完成配置与数据库，像安装常用博客程序一样简单。"
+    "message": "安装向导自动完成站点与数据库配置 — 像装 WordPress 一样熟悉，像跑两条命令一样快。"
   },
   "home.feature.cli.title": {
     "message": "命令行一站式"
   },
   "home.feature.cli.desc": {
-    "message": "环境自检、运行状态查看，交互式菜单与启动成功后的直达链接。"
+    "message": "init、dev、status、自检共用一个二进制 — 交互式菜单，启动即见直达链接。"
   },
   "home.feature.ui.title": {
     "message": "现代界面"
   },
   "home.feature.ui.desc": {
-    "message": "现代化管理后台与前台，支持亮/暗主题切换。"
+    "message": "精致的管理后台与前台，亮/暗主题 — 为日常编辑工作而生。"
   },
   "home.feature.content.title": {
     "message": "创作与内容"
   },
   "home.feature.content.desc": {
-    "message": "内置 Markdown 编辑器，文章、分类、标签、页面、评论与媒体管理一应俱全。"
+    "message": "Markdown 原生编辑器，文章、分类、标签、页面、评论与媒体 — 写作者与编辑者所需一应俱全。"
   },
   "home.feature.headless.title": {
     "message": "开放集成"
   },
   "home.feature.headless.desc": {
-    "message": "开放接口、访问密钥与事件回调，便于对接外部系统与自动化流程。"
+    "message": "REST API、访问密钥与 Webhook — 接入 CI、移动应用或数据流水线。"
   },
   "home.feature.i18n.title": {
     "message": "国际化"
   },
   "home.feature.i18n.desc": {
-    "message": "中英文界面切换，在电脑、平板与手机上均可舒适使用。"
-  },
-  "home.meta.description": {
-    "message": "ReactPress 官方文档 — 自托管发布平台：WordPress 式编辑、Headless REST、Next.js 主题、插件与桌面客户端。一条 CLI，约 60 秒上线。"
-  },
-  "home.cli.hint": {
-    "message": "复制全部命令，粘贴到终端按序执行即可起站"
+    "message": "中英文界面开箱即用 — 在电脑、平板与手机上都有原生般的体验。"
   }
 }

@@ -1,6 +1,5 @@
 import {
   buildInstallCommand,
-  buildNpmInstallOutput,
   FALLBACK_REACTPRESS_VERSIONS,
 } from '@site/src/npm/packageVersions';
 
@@ -53,8 +52,8 @@ export function buildQuickStartCommands(installCommand = QUICK_START_INSTALL_COM
   return [installCommand, 'mkdir my-blog && cd my-blog', 'reactpress init'] as const;
 }
 
-export function getInstallDemoOutput(betaVersion: string): readonly string[] {
-  return [buildNpmInstallOutput(betaVersion), 'added 1 package in 12s'];
+export function getInstallDemoOutput(_betaVersion: string): readonly string[] {
+  return ['added 1 package in 12s'];
 }
 
 export function getQuickStartDemoOutputs(
