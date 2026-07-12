@@ -3,6 +3,8 @@ import type { Config } from '@docusaurus/types';
 import { themes as prismThemes } from 'prism-react-renderer';
 import { resolveAlgoliaConfig } from './src/seo/algolia';
 import { buildGlobalHeadTags, getSiteUrl } from './src/seo/headTags';
+import { buildSiteMetadata } from './src/seo/metadata';
+import { enhanceSitemapItems } from './src/seo/sitemap';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
@@ -61,48 +63,7 @@ const config: Config = {
           createSitemapItems: async (params) => {
             const { defaultCreateSitemapItems, ...rest } = params;
             const items = await defaultCreateSitemapItems(rest);
-            return items
-              .filter((item) => !item.url.includes('/markdown-page'))
-              .map((item) => {
-                const pathname = new URL(item.url).pathname;
-                if (pathname === '/' || pathname === '/zh/') {
-                  return { ...item, priority: 1.0, changefreq: 'daily' as const };
-                }
-                if (pathname.endsWith('/docs/intro')) {
-                  return { ...item, priority: 0.9 };
-                }
-                if (
-                  pathname.includes('/docs/getting-started/first-site') ||
-                  pathname.includes('/docs/getting-started/installation') ||
-                  pathname.includes('/docs/getting-started/reactpress-vs-wordpress')
-                ) {
-                  return { ...item, priority: 0.85, changefreq: 'weekly' as const };
-                }
-                if (pathname === '/about' || pathname === '/contact') {
-                  return { ...item, priority: 0.6, changefreq: 'monthly' as const };
-                }
-                if (pathname.includes('/docs/developer-guide/headless-api')) {
-                  return { ...item, priority: 0.75 };
-                }
-                if (pathname.includes('/blog/why-react-still-doesnt-have-wordpress-reactpress-4')) {
-                  return { ...item, priority: 0.85, changefreq: 'monthly' as const };
-                }
-                if (pathname === '/blog' || pathname === '/zh/blog') {
-                  return { ...item, priority: 0.75, changefreq: 'weekly' as const };
-                }
-                if (pathname.includes('/blog/changelog')) {
-                  return { ...item, priority: 0.8 };
-                }
-                if (
-                  pathname.includes('/blog/archive') ||
-                  pathname.includes('/blog/authors') ||
-                  pathname.endsWith('/blog/tags') ||
-                  pathname.includes('/blog/tags/')
-                ) {
-                  return { ...item, priority: 0.3 };
-                }
-                return item;
-              });
+            return enhanceSitemapItems(items, siteUrl);
           },
         },
         docs: {
@@ -280,29 +241,7 @@ const config: Config = {
       theme: { light: 'neutral', dark: 'dark' },
     },
     algolia: algoliaConfig,
-    metadata: [
-      {
-        name: 'description',
-        content:
-          'Official ReactPress docs — self-hosted publishing platform with WordPress-style editing, headless REST, Next.js themes, plugins, and desktop client. One CLI, ~60 seconds to live.',
-      },
-      {
-        name: 'keywords',
-        content:
-          'reactpress, react cms, open source cms, publishing platform, wordpress alternative, headless cms, next.js blog, react blog, static site generator, cms, blog, react, nestjs, electron, plugin, self-hosted, 博客, 内容管理, 发布平台, 插件, 桌面客户端',
-      },
-      { name: 'robots', content: 'index, follow, max-image-preview:large' },
-      { name: 'googlebot', content: 'index, follow' },
-      {
-        name: 'google-site-verification',
-        content: '8t6NmKz1PcYI6YSo4N390MXzZSy-Hg-RLa12p7d5cmM',
-      },
-      {
-        name: 'algolia-site-verification',
-        content: '597DB75F60C5A6DE',
-      },
-      { name: 'twitter:card', content: 'summary_large_image' },
-    ],
+    metadata: buildSiteMetadata(),
   } satisfies Preset.ThemeConfig,
 };
 

@@ -4,5 +4,17 @@
   "buildCommand": "pnpm run build:docs",
   "outputDirectory": "docs/build",
   "framework": null,
-  "ignoreCommand": "git diff --quiet HEAD^ HEAD -- docs/ pnpm-lock.yaml"
+  "ignoreCommand": "git diff --quiet HEAD^ HEAD -- docs/ pnpm-lock.yaml",
+  "redirects": [
+    {
+      "source": "/docs/tutorial-extras/help",
+      "destination": "/docs/reference/faq",
+      "permanent": true
+    },
+    {
+      "source": "/zh/docs/tutorial-extras/help",
+      "destination": "/zh/docs/reference/faq",
+      "permanent": true
+    }
+  ]
 }
