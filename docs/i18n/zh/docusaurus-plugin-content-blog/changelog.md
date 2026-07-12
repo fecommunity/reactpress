@@ -27,9 +27,9 @@ tags: [reactpress, release]
 
 ### 新特性
 
-- **插件系统**：Hook + `plugin.json` manifest + Admin 插槽；内置 `hello-world`（自动摘要）、`seo`（SEO 增强）、`image-optimizer`（历史图片 WebP 批量优化）
-- **桌面客户端**：Electron + SQLite 本地模式；远程 API 与内容同步
-- **主题**：npm catalog（`theme-starter`）；hello-world 文档与结构对齐
+- **插件系统** ([#69](https://github.com/fecommunity/reactpress/issues/69))：Hook + `plugin.json` manifest + Admin 插槽；内置 `hello-world`（自动摘要）、`seo`（SEO 增强）、`image-optimizer`（历史图片 WebP 批量优化）
+- **桌面客户端** ([#70](https://github.com/fecommunity/reactpress/issues/70))：Electron + SQLite 本地模式；远程 API 与内容同步
+- **主题系统** ([#71](https://github.com/fecommunity/reactpress/issues/71))：npm catalog（`theme-starter`）、`theme add`/`list`、预览池；hello-world 文档与结构对齐
 - **迁移指南**：[3.x → 4.0](/docs/tutorial-extras/migration-3-to-4)
 
 ---
@@ -153,33 +153,33 @@ tags: [reactpress, release]
 
 ### Bug Fixes
 
-* 修正 HttpClient 文件名大小写 ([7dd892a](https://github.com/fecommunity/reactpress/commit/7dd892a8d5b05a3ab24eaf73577848eb25b06450))
+- 修正 HttpClient 文件名大小写 ([7dd892a](https://github.com/fecommunity/reactpress/commit/7dd892a8d5b05a3ab24eaf73577848eb25b06450))
 
 ### Features
 
-* 新增 toolkit 包配置 ([0ed839d](https://github.com/fecommunity/reactpress/commit/0ed839d4667d671ea06b088c0bac5a2890680445))
+- 新增 toolkit 包配置 ([0ed839d](https://github.com/fecommunity/reactpress/commit/0ed839d4667d671ea06b088c0bac5a2890680445))
 
 ## [2.0.0](https://github.com/fecommunity/reactpress/compare/v1.10.0...v2.0.0) (2025-09-21)
 
 ### Bug Fixes
 
-* 修复 server 加载问题 ([a6f759b](https://github.com/fecommunity/reactpress/commit/a6f759b386e32727501b0eea3ea38f5a89dfe700))
-* 类型定义修复 ([d6491d5](https://github.com/fecommunity/reactpress/commit/d6491d56f2ffdd19d5a47fda7273958cd4243fb3))
+- 修复 server 加载问题 ([a6f759b](https://github.com/fecommunity/reactpress/commit/a6f759b386e32727501b0eea3ea38f5a89dfe700))
+- 类型定义修复 ([d6491d5](https://github.com/fecommunity/reactpress/commit/d6491d56f2ffdd19d5a47fda7273958cd4243fb3))
 
 ### Features
 
-* 新增 hello-world 模板 ([7e2c948](https://github.com/fecommunity/reactpress/commit/7e2c9487ddc6023d7b382250b131fbe828013680))
-* 新增 reactpress toolkit ([58f9312](https://github.com/fecommunity/reactpress/commit/58f9312644736aceb362e517fad8c3b3a83f275f))
-* 新增 swagger v2 UI ([ef9fdc1](https://github.com/fecommunity/reactpress/commit/ef9fdc166955b4659c81fb559138ce38ef599cfe))
-* 新增 twentytwentyfive 主题 ([715281f](https://github.com/fecommunity/reactpress/commit/715281fedcf8072348e4b8b6794891c7e67e1f99))
-* 支持 npx 安装 server ([e7f7b97](https://github.com/fecommunity/reactpress/commit/e7f7b970bb4dd8b845fcd8dde4048678a403557a))
-* 支持快速安装 ([96c1d0a](https://github.com/fecommunity/reactpress/commit/96c1d0a7cc1c72b7f6c489ba236ab6eb78472dee))
+- 新增 hello-world 模板 ([7e2c948](https://github.com/fecommunity/reactpress/commit/7e2c9487ddc6023d7b382250b131fbe828013680))
+- 新增 reactpress toolkit ([58f9312](https://github.com/fecommunity/reactpress/commit/58f9312644736aceb362e517fad8c3b3a83f275f))
+- 新增 swagger v2 UI ([ef9fdc1](https://github.com/fecommunity/reactpress/commit/ef9fdc166955b4659c81fb559138ce38ef599cfe))
+- 新增 twentytwentyfive 主题 ([715281f](https://github.com/fecommunity/reactpress/commit/715281fedcf8072348e4b8b6794891c7e67e1f99))
+- 支持 npx 安装 server ([e7f7b97](https://github.com/fecommunity/reactpress/commit/e7f7b970bb4dd8b845fcd8dde4048678a403557a))
+- 支持快速安装 ([96c1d0a](https://github.com/fecommunity/reactpress/commit/96c1d0a7cc1c72b7f6c489ba236ab6eb78472dee))
 
 ## [1.10.0](https://github.com/fecommunity/reactpress/compare/v1.9.0...v1.10.0) (2025-08-03)
 
 ### Features
 
-* 新增 config 类型定义 ([d8a6fed](https://github.com/fecommunity/reactpress/commit/d8a6fed7bc13f74be0916f80497590c7e737fb86))
+- 新增 config 类型定义 ([d8a6fed](https://github.com/fecommunity/reactpress/commit/d8a6fed7bc13f74be0916f80497590c7e737fb86))
 
 ---
 
