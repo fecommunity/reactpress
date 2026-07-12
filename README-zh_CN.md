@@ -6,12 +6,15 @@
 
 <h1 align="center">ReactPress</h1>
 
-<h3 align="center">不是 CMS，是现代开发者的发布平台。</h3>
+<img src="./public/poster.png" alt="ReactPress — 用 React 发布，像 WordPress 一样交付。" width="100%" />
+
+<h3 align="center">用 React 发布，像 WordPress 一样交付。</h3>
 
 <p align="center">
-  <strong>WordPress 式编辑 · Next.js 交付 · 一条 CLI 上线。</strong><br/>
-  CMS + 后台 + API + 主题 + 插件 + 桌面端 — 无需自行拼装。
+  <strong>CMS、后台、无头 API、Next.js 主题、插件与桌面端 — 一条 CLI，零拼装。</strong>
 </p>
+
+<br/>
 
 <p align="center">
   <a href="#30-秒快速开始"><strong>快速开始 ↓</strong></a>
@@ -443,7 +446,7 @@ Monorepo 贡献者请参阅 [CONTRIBUTING.md](./CONTRIBUTING.md) 及各子包 RE
   <img src="https://img.shields.io/github/stars/fecommunity/reactpress?style=for-the-badge&color=ffd700&labelColor=1a1a2e" alt="在 GitHub 上 Star ReactPress" />
 </a>
 
-<p><sub>不是 CMS，是现代开发者的发布平台。<br/>帮助更多开发者发现它 — 欢迎在 GitHub 上 ⭐。</sub></p>
+<p><sub>用 React 发布，像 WordPress 一样交付。<br/>帮助更多开发者发现它 — 欢迎在 GitHub 上 ⭐。</sub></p>
 
 <br/>
 

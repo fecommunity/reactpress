@@ -1,8 +1,8 @@
 # @fecommunity/reactpress
 
-> **Not a CMS. A publishing platform for modern developers.**
+> **Publish with React. Ship like WordPress.**
 >
-> WordPress-style editing · Next.js delivery · One CLI to ship.
+> CMS, Admin, Headless API, Next.js themes, plugins & desktop — one CLI, zero assembly.
 
 [![npm version](https://img.shields.io/npm/v/@fecommunity/reactpress/beta.svg?label=beta)](https://www.npmjs.com/package/@fecommunity/reactpress/v/beta)
 [![npm latest](https://img.shields.io/npm/v/@fecommunity/reactpress.svg?label=latest)](https://www.npmjs.com/package/@fecommunity/reactpress)

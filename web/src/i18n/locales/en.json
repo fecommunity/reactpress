@@ -101,7 +101,7 @@
     "authFooterDocs": "documentation",
     "authFooterSuffix": "for setup and deployment.",
     "heroTitle": "ReactPress",
-    "heroTagline": "WordPress-style editing · Next.js delivery · one CLI — plugins, desktop, npm themes, no assembly.",
+    "heroTagline": "Publish with React. Ship like WordPress.",
     "docsHome": {
       "highlightsTitle": "4.0 highlights",
       "featuresTitle": "Platform capabilities",
@@ -118,7 +118,7 @@
       "aria": "ReactPress product overview",
       "mobileAria": "ReactPress quick start and links",
       "linksAria": "ReactPress links",
-      "tagline": "WordPress-style editing · Next.js delivery · one CLI — plugins, desktop, npm themes, no assembly.",
+      "tagline": "CMS, Admin, Headless API, Next.js themes, plugins & desktop — one CLI, zero assembly.",
       "getStarted": "Get Started",
       "whatsNew": "What's New in 4.0",
       "liveDemo": "Live Demo",

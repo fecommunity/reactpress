@@ -1,7 +1,7 @@
 {
   "name": "@fecommunity/reactpress",
   "version": "4.0.0-beta.18",
-  "description": "ReactPress CLI — publishing platform for modern developers. CMS, Admin, API, and Next.js themes in one command. Self-hosted, MIT. `npx @fecommunity/reactpress init`",
+  "description": "ReactPress CLI — Publish with React. Ship like WordPress. CMS, Admin, Headless API, and Next.js themes in one command. Self-hosted, MIT. `npx @fecommunity/reactpress init`",
   "author": "fecommunity",
   "license": "MIT",
   "homepage": "https://docs.gaoredu.com/",

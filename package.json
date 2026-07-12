@@ -3,7 +3,7 @@
   "version": "4.0.0-beta.18",
   "private": true,
   "packageManager": "pnpm@9.15.9",
-  "description": "ReactPress — publishing platform for modern developers. CMS, Admin, API, Next.js themes, plugins, desktop. One CLI.",
+  "description": "ReactPress — Publish with React. Ship like WordPress. CMS, Admin, Headless API, Next.js themes, plugins, desktop — one CLI.",
   "bin": {
     "reactpress": "./cli/bin/reactpress.js"
   },
