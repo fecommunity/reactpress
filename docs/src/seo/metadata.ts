@@ -5,7 +5,7 @@ export function buildSiteMetadata(): SiteMetaTag[] {
     {
       name: 'description',
       content:
-        'Official ReactPress docs — self-hosted publishing platform with WordPress-style editing, headless REST, Next.js themes, plugins, and desktop client. One CLI, ~60 seconds to live.',
+        'Official ReactPress docs — the publishing system for React developers. Build blogs, documentation, company websites, and content-driven applications with React. One CLI, ~60 seconds to live.',
     },
     {
       name: 'keywords',

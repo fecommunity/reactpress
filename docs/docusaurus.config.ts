@@ -14,7 +14,7 @@ const algoliaConfig = resolveAlgoliaConfig();
 const config: Config = {
   title: 'ReactPress',
   titleDelimiter: '-',
-  tagline: 'Publish with React. Ship like WordPress.',
+  tagline: 'The publishing system for React developers.',
   // Default meta description for non-home pages (home overrides in src/pages/index.tsx)
   favicon: 'img/favicon.ico',
 

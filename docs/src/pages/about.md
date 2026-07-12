@@ -1,23 +1,23 @@
 ---
 title: About ReactPress
-description: About ReactPress — an open-source React publishing platform with WordPress-style editing, Next.js themes, plugins, Headless REST, and a desktop client. MIT licensed.
+description: About ReactPress — the publishing system for React developers. Build blogs, documentation, company websites, and content-driven applications with React. MIT licensed.
 keywords: [reactpress, about, open source, react cms, publishing platform]
 ---
 
 # About ReactPress
 
-**ReactPress** is an open-source **publishing platform** built for the React era. It is not a headless backend you have to assemble — one CLI ships a CMS API, Web Admin, swappable Next.js themes, a plugin ecosystem, and an Electron desktop client.
+**ReactPress** is **the publishing system for React developers** — build blogs, documentation, company websites, and content-driven applications with React. One CLI ships a CMS API, Web Admin, swappable Next.js themes, a plugin ecosystem, and an Electron desktop client.
 
 ## What we build
 
-| Layer | Technology | Purpose |
-| --- | --- | --- |
-| CLI | `@fecommunity/reactpress` | `init`, `doctor`, `logs`, `stop` |
-| API | NestJS + SQLite / MySQL | Headless REST, webhooks, API keys |
-| Admin | Vite + React | WordPress-style content, media, themes, plugins |
-| Theme | Next.js (SSR) | Visitor site with SEO, sitemap, OG tags |
-| Desktop | Electron | Offline writing with SQLite local mode |
-| Plugins | Hook + `plugin.json` | SEO, auto-summary, WebP optimization, custom slots |
+| Layer   | Technology                | Purpose                                            |
+| ------- | ------------------------- | -------------------------------------------------- |
+| CLI     | `@fecommunity/reactpress` | `init`, `doctor`, `logs`, `stop`                   |
+| API     | NestJS + SQLite / MySQL   | Headless REST, webhooks, API keys                  |
+| Admin   | Vite + React              | WordPress-style content, media, themes, plugins    |
+| Theme   | Next.js (SSR)             | Visitor site with SEO, sitemap, OG tags            |
+| Desktop | Electron                  | Offline writing with SQLite local mode             |
+| Plugins | Hook + `plugin.json`      | SEO, auto-summary, WebP optimization, custom slots |
 
 ReactPress 4.0 (codename **Extend**) is the current recommended release. New users install with:
 

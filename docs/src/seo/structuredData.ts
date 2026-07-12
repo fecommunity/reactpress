@@ -12,7 +12,7 @@ export const FAQ_ENTRIES_EN: FaqEntry[] = [
   {
     question: 'What is ReactPress?',
     answer:
-      'ReactPress is an open-source publishing platform for React developers — CMS API, Web Admin, Next.js themes, plugins, and a desktop client in one CLI.',
+      'ReactPress is the publishing system for React developers — build blogs, documentation, company websites, and content-driven applications with React. One CLI ships CMS API, Web Admin, Next.js themes, plugins, and a desktop client.',
   },
   {
     question: 'How is ReactPress different from WordPress?',
@@ -45,7 +45,7 @@ export const FAQ_ENTRIES_ZH: FaqEntry[] = [
   {
     question: 'ReactPress 是什么？',
     answer:
-      'ReactPress 是为 React 开发者打造的开源发布平台 — 一条 CLI 即可运行 CMS API、Web 管理后台、Next.js 主题、插件与 Electron 桌面客户端。',
+      'ReactPress 是面向 React 开发者的发布系统 — 用 React 构建博客、文档、企业官网与内容驱动型应用。一条 CLI 即可运行 CMS API、Web 管理后台、Next.js 主题、插件与 Electron 桌面客户端。',
   },
   {
     question: 'ReactPress 与 WordPress 有何不同？',
@@ -78,7 +78,7 @@ export function buildOrganizationGraph(baseUrl: string) {
         'alternateName': 'ReactPress Official Documentation',
         'url': `${baseUrl}/`,
         'description':
-          'Official ReactPress docs — self-hosted publishing platform with WordPress-style editing, headless REST, Next.js themes, plugins, and desktop client.',
+          'Official ReactPress docs — the publishing system for React developers. Build blogs, documentation, company websites, and content-driven applications with React.',
         'inLanguage': ['en', 'zh-CN'],
         'publisher': { '@id': `${baseUrl}/#organization` },
       },

@@ -2,26 +2,39 @@
 sidebar_position: 1
 id: intro
 title: Introduction
-description: Official ReactPress docs — self-hosted publishing platform with WordPress-style editing, headless REST, Next.js themes, plugins, and desktop client. One CLI, ~60 seconds to live.
-keywords: [reactpress, publishing platform, wordpress alternative, headless cms, blog, next.js, react, nestjs, plugin, desktop, self-hosted]
+description: Official ReactPress docs — the publishing system for React developers. Build blogs, documentation, company websites, and content-driven applications with React. One CLI, ~60 seconds to live.
+keywords:
+  [
+    reactpress,
+    publishing platform,
+    wordpress alternative,
+    headless cms,
+    blog,
+    next.js,
+    react,
+    nestjs,
+    plugin,
+    desktop,
+    self-hosted,
+  ]
 ---
 
 ## Learning path (0 → 100)
 
 Choose a starting point by role. Every doc includes an SEO summary and next-step links.
 
-| Stage | Who you are | Start here |
-|------|--------|------------|
-| **0→1** | First time hearing about ReactPress | [Create your first site in 5 minutes](./getting-started/first-site.md) · [vs WordPress](./getting-started/reactpress-vs-wordpress.md) |
-| **1→10** | Site owner / blogger | [User guide](./user-guide/admin-overview.md) → [SEO settings](./user-guide/site-settings-seo.md) |
-| **10→50** | Frontend developer | [Theme development](./developer-guide/theme-development.md) → [Headless API](./developer-guide/headless-api.md) |
-| **50→100** | Full-stack / contributor | [Monorepo development](./developer-guide/local-development.md) → [Plugin development](./developer-guide/plugin-development.md) |
-| **Go live** | Operations | [Production deployment](./tutorial-basics/deploy-your-site.md) → [Docker](./tutorial-extras/docker-deployment.md) |
-| **Troubleshoot** | Hit a problem | [FAQ](./reference/faq.md) → [Troubleshooting](./reference/troubleshooting.md) |
+| Stage            | Who you are                         | Start here                                                                                                                            |
+| ---------------- | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| **0→1**          | First time hearing about ReactPress | [Create your first site in 5 minutes](./getting-started/first-site.md) · [vs WordPress](./getting-started/reactpress-vs-wordpress.md) |
+| **1→10**         | Site owner / blogger                | [User guide](./user-guide/admin-overview.md) → [SEO settings](./user-guide/site-settings-seo.md)                                      |
+| **10→50**        | Frontend developer                  | [Theme development](./developer-guide/theme-development.md) → [Headless API](./developer-guide/headless-api.md)                       |
+| **50→100**       | Full-stack / contributor            | [Monorepo development](./developer-guide/local-development.md) → [Plugin development](./developer-guide/plugin-development.md)        |
+| **Go live**      | Operations                          | [Production deployment](./tutorial-basics/deploy-your-site.md) → [Docker](./tutorial-extras/docker-deployment.md)                     |
+| **Troubleshoot** | Hit a problem                       | [FAQ](./reference/faq.md) → [Troubleshooting](./reference/troubleshooting.md)                                                         |
 
 ## Introduction
 
-**ReactPress** is an open-source **publishing platform** for the React era — not another headless backend to wire up. One CLI ships CMS API, Web Admin, swappable Next.js themes, plugins, and an Electron desktop client.
+**ReactPress** is **the publishing system for React developers** — build blogs, documentation, company websites, and content-driven applications with React. One CLI ships CMS API, Web Admin, swappable Next.js themes, plugins, and an Electron desktop client.
 
 **ReactPress 4.0** (codename **Extend**) adds a **plugin system**, **desktop client**, and **npm theme catalog** on top of 3.x. New users: `npm i -g @fecommunity/reactpress@beta`. See [ReactPress 4.0 Extend](./tutorial-extras/reactpress-4-0.md). Install the desktop app: [Desktop client](./tutorial-extras/desktop-client.md). Still on 3.x? See [ReactPress 3.0 Platform](./tutorial-extras/reactpress-3-0.md).
 
@@ -29,21 +42,21 @@ Choose a starting point by role. Every doc includes an SEO summary and next-step
 
 **Comparison of ReactPress, WordPress, and VuePress**
 
-| **Feature**                         | **ReactPress**                                                         | **WordPress**                                           | **VuePress**                                      |
-| ----------------------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------- | ------------------------------------------------- |
-| **Technology Stack**                | React + NextJS + MySQL + NestJS                                        | PHP + MySQL                                             | Vue.js                                            |
-| **Type**                            | Open-source publishing platform / CMS                                  | Open-source publishing platform / CMS                   | Static site generator / Documentation tool        |
-| **Front-end & Back-end Separation** | Supported                                                              | Not supported (traditional approach)                    | Supported                                         |
-| **Component-based Development**     | Supported                                                              | Limited support (via plugins and themes)                | Supported                                         |
-| **Performance Optimization**        | Virtual DOM, Code Splitting, Lazy Loading                              | Plugin-dependent optimization                           | Static page generation, excellent performance     |
-| **SEO Performance**                 | Excellent (SSR support)                                                | Good                                                    | Outstanding (static pages)                        |
-| **Customizability**                 | High (fully customizable themes and styles)                            | High (via plugins and themes)                           | Moderate (theme and component customization)      |
+| **Feature**                         | **ReactPress**                                                            | **WordPress**                                           | **VuePress**                                      |
+| ----------------------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------- | ------------------------------------------------- |
+| **Technology Stack**                | React + NextJS + MySQL + NestJS                                           | PHP + MySQL                                             | Vue.js                                            |
+| **Type**                            | Open-source publishing platform / CMS                                     | Open-source publishing platform / CMS                   | Static site generator / Documentation tool        |
+| **Front-end & Back-end Separation** | Supported                                                                 | Not supported (traditional approach)                    | Supported                                         |
+| **Component-based Development**     | Supported                                                                 | Limited support (via plugins and themes)                | Supported                                         |
+| **Performance Optimization**        | Virtual DOM, Code Splitting, Lazy Loading                                 | Plugin-dependent optimization                           | Static page generation, excellent performance     |
+| **SEO Performance**                 | Excellent (SSR support)                                                   | Good                                                    | Outstanding (static pages)                        |
+| **Customizability**                 | High (fully customizable themes and styles)                               | High (via plugins and themes)                           | Moderate (theme and component customization)      |
 | **Extensibility**                   | Strong (API, plugin hooks, independent front-end and back-end extensions) | Strong (plugin extensions)                              | Moderate (plugin and theme extensions)            |
-| **User Interface**                  | Modern, component-based design based on React                          | User-friendly backend interface                         | Minimalist, optimized for technical documentation |
-| **Security**                        | Depends on the security of the framework and database                  | Depends on plugin and theme updates and maintenance     | Static site, high security                        |
-| **Application Scenarios**           | Complex functionality, high concurrent access, SEO optimization needs  | Quick website setup, content publishing, and management | Technical documentation, static blogs             |
-| **User Groups**                     | Developers, technical teams, Personal blogs, small businesses          | Personal blogs, small businesses, startups              | Technical documentation writers, developers       |
-| **Community Support**               | Active and growing                                                     | Very active, with a large user base                     | Supported by the Vue.js community                 |
+| **User Interface**                  | Modern, component-based design based on React                             | User-friendly backend interface                         | Minimalist, optimized for technical documentation |
+| **Security**                        | Depends on the security of the framework and database                     | Depends on plugin and theme updates and maintenance     | Static site, high security                        |
+| **Application Scenarios**           | Complex functionality, high concurrent access, SEO optimization needs     | Quick website setup, content publishing, and management | Technical documentation, static blogs             |
+| **User Groups**                     | Developers, technical teams, Personal blogs, small businesses             | Personal blogs, small businesses, startups              | Technical documentation writers, developers       |
+| **Community Support**               | Active and growing                                                        | Very active, with a large user base                     | Supported by the Vue.js community                 |
 
 ## ✨ Features
 
@@ -83,12 +96,12 @@ reactpress init
 `init` **auto-starts** API, Admin, and theme — no need to run `reactpress dev` (removed from the global CLI). Stop services with `reactpress stop`.
 :::
 
-| Service | Port | URL |
-|---------|------|-----|
-| Admin | 3001 `/admin/` | http://localhost:3001/admin/ |
-| Site theme | 3001 | http://localhost:3001 |
-| API | 3002 | http://localhost:3002/api/health |
-| Theme preview | 3003 | http://localhost:3003 |
+| Service       | Port           | URL                              |
+| ------------- | -------------- | -------------------------------- |
+| Admin         | 3001 `/admin/` | http://localhost:3001/admin/     |
+| Site theme    | 3001           | http://localhost:3001            |
+| API           | 3002           | http://localhost:3002/api/health |
+| Theme preview | 3003           | http://localhost:3003            |
 
 Run `reactpress` for the interactive menu. Upgrade from 3.x: [migration guide](./tutorial-extras/migration-3-to-4.md). From 2.x: [2.x → 3.0](./tutorial-extras/migration-2-to-3.md).
 
@@ -115,13 +128,13 @@ Node.js ≥ 18 and Docker (embedded MySQL) required. `pnpm run init` prepares th
 
 ## 📦 NPM Packages
 
-| Package | Description |
-|---------|-------------|
-| [**@fecommunity/reactpress**](./tutorial-extras/reactpress-4-0.md) | **4.0 main package** (CLI + bundled API + plugins + desktop) |
-| [Desktop client](./tutorial-extras/desktop-client.md) | Download, local / remote modes, sync |
-| [ReactPress 4.0 Extend](./tutorial-extras/reactpress-4-0.md) | 4.0 overview |
-| [ReactPress 3.0 Platform](./tutorial-extras/reactpress-3-0.md) | 3.0 historical docs |
-| [@fecommunity/reactpress-toolkit](./tutorial-extras/toolkit-package) | TypeScript API SDK (Headless) |
+| Package                                                              | Description                                                  |
+| -------------------------------------------------------------------- | ------------------------------------------------------------ |
+| [**@fecommunity/reactpress**](./tutorial-extras/reactpress-4-0.md)   | **4.0 main package** (CLI + bundled API + plugins + desktop) |
+| [Desktop client](./tutorial-extras/desktop-client.md)                | Download, local / remote modes, sync                         |
+| [ReactPress 4.0 Extend](./tutorial-extras/reactpress-4-0.md)         | 4.0 overview                                                 |
+| [ReactPress 3.0 Platform](./tutorial-extras/reactpress-3-0.md)       | 3.0 historical docs                                          |
+| [@fecommunity/reactpress-toolkit](./tutorial-extras/toolkit-package) | TypeScript API SDK (Headless)                                |
 
 ## 🔗 Links
 
@@ -150,7 +163,7 @@ Email: admin@gaoredu.com
 <details>
 <summary><strong>What is ReactPress?</strong></summary>
 
-An open-source **publishing platform** for React developers — CMS API, Web Admin, Next.js themes, plugins, and desktop client in one CLI. Not just a Headless backend to wire up.
+The publishing system for React developers — build blogs, documentation, company websites, and content-driven applications with React. CMS API, Web Admin, Next.js themes, plugins, and desktop client in one CLI.
 
 </details>
 

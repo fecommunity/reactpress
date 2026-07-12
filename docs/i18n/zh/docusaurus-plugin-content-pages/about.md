@@ -1,23 +1,23 @@
 ---
 title: 关于 ReactPress
-description: 关于 ReactPress — 开源 React 发布平台：WordPress 式编辑、Next.js 主题、插件、Headless REST 与桌面客户端。MIT 协议。
+description: 关于 ReactPress — 面向 React 开发者的发布系统。用 React 构建博客、文档、企业官网与内容驱动型应用。MIT 协议。
 keywords: [reactpress, 关于, 开源, react cms, 发布平台]
 ---
 
 # 关于 ReactPress
 
-**ReactPress** 是为 React 时代打造的开源**发布平台**，不是需要自行拼装的 Headless 后端。一条 CLI 即可运行 CMS API、Web 管理后台、可替换的 Next.js 主题、插件生态与 Electron 桌面客户端。
+**ReactPress** 是 **面向 React 开发者的发布系统** — 用 React 构建博客、文档、企业官网与内容驱动型应用。一条 CLI 即可运行 CMS API、Web 管理后台、可替换的 Next.js 主题、插件生态与 Electron 桌面客户端。
 
 ## 我们提供什么
 
-| 层级 | 技术 | 用途 |
-| --- | --- | --- |
-| CLI | `@fecommunity/reactpress` | `init`、`doctor`、`logs`、`stop` |
-| API | NestJS + SQLite / MySQL | Headless REST、Webhook、API Key |
-| Admin | Vite + React | WordPress 式内容、媒体、主题、插件管理 |
-| 主题 | Next.js（SSR） | 访客站 SEO、sitemap、OG 标签 |
-| 桌面 | Electron | SQLite 本地模式离线写作 |
-| 插件 | Hook + `plugin.json` | SEO、自动摘要、WebP 优化、Admin 插槽 |
+| 层级  | 技术                      | 用途                                   |
+| ----- | ------------------------- | -------------------------------------- |
+| CLI   | `@fecommunity/reactpress` | `init`、`doctor`、`logs`、`stop`       |
+| API   | NestJS + SQLite / MySQL   | Headless REST、Webhook、API Key        |
+| Admin | Vite + React              | WordPress 式内容、媒体、主题、插件管理 |
+| 主题  | Next.js（SSR）            | 访客站 SEO、sitemap、OG 标签           |
+| 桌面  | Electron                  | SQLite 本地模式离线写作                |
+| 插件  | Hook + `plugin.json`      | SEO、自动摘要、WebP 优化、Admin 插槽   |
 
 ReactPress 4.0（代号 **Extend**）为当前推荐版本：
 

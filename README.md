@@ -4,14 +4,14 @@
   <img height="120" src="./public/brand/logo.png" alt="ReactPress Logo">
 </a>
 
-<img src="./public/poster.png" alt="ReactPress — Publish with React. Ship like WordPress." width="100%" />
+<img src="./public/poster.png" alt="ReactPress — The publishing system for React developers." width="100%" />
 
 <h1 align="center">ReactPress</h1>
 
-<h3 align="center">Publish with React. Ship like WordPress.</h3>
+<h3 align="center">The publishing system for React developers.</h3>
 
 <p align="center">
-  <strong>CMS, Admin, Headless API, Next.js themes, plugins & desktop — one CLI, zero assembly.</strong>
+  <strong>Build blogs, documentation, company websites, and content-driven applications with React.</strong>
 </p>
 
 <br/>
@@ -173,7 +173,7 @@ Something wrong?           →    reactpress doctor
 
 ## What is ReactPress?
 
-ReactPress is a **full publishing platform built for the React era** — not another headless backend to wire up.
+ReactPress is **the publishing system for React developers** — build blogs, documentation, company websites, and content-driven applications with React. One CLI, not another headless backend to wire up.
 
 One CLI install. Everything included:
 
@@ -457,7 +457,7 @@ Yes — ReactPress targets all three: self-hosted WordPress-style editing, headl
   <img src="https://img.shields.io/github/stars/fecommunity/reactpress?style=for-the-badge&color=ffd700&labelColor=1a1a2e" alt="Star ReactPress on GitHub" />
 </a>
 
-<p><sub>Publish with React. Ship like WordPress.<br/>Help us reach more builders — ⭐ on GitHub.</sub></p>
+<p><sub>The publishing system for React developers.<br/>Help us reach more builders — ⭐ on GitHub.</sub></p>
 
 <br/>
 

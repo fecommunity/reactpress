@@ -17,11 +17,11 @@ const Index = () => {
   const canonicalUrl = `${siteConfig.url}${siteConfig.baseUrl}`.replace(/\/$/, '') + '/';
   const title = translate({
     id: 'home.meta.title',
-    message: 'ReactPress — Publish with React. Ship like WordPress.',
+    message: 'ReactPress — The publishing system for React developers.',
   });
   const description = translate({
     message:
-      'Official ReactPress docs — self-hosted React publishing platform with WordPress-style editing, headless REST, Next.js themes, plugins, and desktop. One CLI, ~60 seconds to live.',
+      'Official ReactPress docs — the publishing system for React developers. Build blogs, documentation, company websites, and content-driven applications with React. One CLI, ~60 seconds to live.',
     id: 'home.meta.description',
   });
   const faqEntries = i18n.currentLocale === 'zh' ? FAQ_ENTRIES_ZH : FAQ_ENTRIES_EN;

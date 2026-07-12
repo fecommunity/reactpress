@@ -6,9 +6,7 @@ import Devices from '@site/src/components/Home/Hero/Devices';
 import FloorBackground from '@site/src/components/Home/Hero/FloorBackground';
 import GridBackground from '@site/src/components/Home/Hero/GridBackground';
 import Logo from '@site/src/components/Home/Logo';
-import {
-  buildGitHubReleaseTagUrl,
-} from '@site/src/npm/packageVersions';
+import { buildGitHubReleaseTagUrl } from '@site/src/npm/packageVersions';
 import { useReactPressVersions } from '@site/src/npm/useReactPressVersions';
 import clsx from 'clsx';
 import React from 'react';
@@ -81,8 +79,11 @@ function Hero() {
             </span>
           </div>
           <p className={styles.slogan}>
-            <Translate id="theme.tagline">
-              Publish with React. Ship like WordPress.
+            <Translate id="theme.tagline">The publishing system for React developers.</Translate>
+          </p>
+          <p className={styles.subTitle}>
+            <Translate id="home.hero.subTitle">
+              Build blogs, documentation, company websites, and content-driven applications with React.
             </Translate>
           </p>
 

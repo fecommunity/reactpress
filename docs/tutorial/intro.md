@@ -2,26 +2,27 @@
 sidebar_position: 1
 id: intro
 title: 介绍
-description: ReactPress 官方文档 — 自托管发布平台：WordPress 式编辑、Headless REST、Next.js 主题、插件与桌面客户端。一条 CLI，约 60 秒上线。
-keywords: [reactpress, 发布平台, wordpress 替代, headless cms, 博客, next.js, react, nestjs, 插件, 桌面客户端, 自托管, 官方文档]
+description: ReactPress 官方文档 — 面向 React 开发者的发布系统。用 React 构建博客、文档、企业官网与内容驱动型应用。一条 CLI，约 60 秒上线。
+keywords:
+  [reactpress, 发布平台, wordpress 替代, headless cms, 博客, next.js, react, nestjs, 插件, 桌面客户端, 自托管, 官方文档]
 ---
 
 ## 学习路径（0 → 100）
 
 按角色选择起点，每篇文档均含 SEO 摘要与下一步链接。
 
-| 阶段 | 你是谁 | 从这里开始 |
-|------|--------|------------|
-| **0→1** | 第一次听说 ReactPress | [5 分钟创建第一个站点](./getting-started/first-site.md) · [对比 WordPress](./getting-started/reactpress-vs-wordpress.md) |
-| **1→10** | 站长 / 博主 | [使用指南](./user-guide/admin-overview.md) → [SEO 设置](./user-guide/site-settings-seo.md) |
-| **10→50** | 前端开发者 | [主题开发](./developer-guide/theme-development.md) → [Headless API](./developer-guide/headless-api.md) |
-| **50→100** | 全栈 / 贡献者 | [Monorepo 开发](./developer-guide/local-development.md) → [插件开发](./developer-guide/plugin-development.md) |
-| **上线** | 运维 | [生产部署](./tutorial-basics/deploy-your-site.md) → [Docker](./tutorial-extras/docker-deployment.md) |
-| **排错** | 遇到问题 | [FAQ](./reference/faq.md) → [故障排查](./reference/troubleshooting.md) |
+| 阶段       | 你是谁                | 从这里开始                                                                                                               |
+| ---------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| **0→1**    | 第一次听说 ReactPress | [5 分钟创建第一个站点](./getting-started/first-site.md) · [对比 WordPress](./getting-started/reactpress-vs-wordpress.md) |
+| **1→10**   | 站长 / 博主           | [使用指南](./user-guide/admin-overview.md) → [SEO 设置](./user-guide/site-settings-seo.md)                               |
+| **10→50**  | 前端开发者            | [主题开发](./developer-guide/theme-development.md) → [Headless API](./developer-guide/headless-api.md)                   |
+| **50→100** | 全栈 / 贡献者         | [Monorepo 开发](./developer-guide/local-development.md) → [插件开发](./developer-guide/plugin-development.md)            |
+| **上线**   | 运维                  | [生产部署](./tutorial-basics/deploy-your-site.md) → [Docker](./tutorial-extras/docker-deployment.md)                     |
+| **排错**   | 遇到问题              | [FAQ](./reference/faq.md) → [故障排查](./reference/troubleshooting.md)                                                   |
 
 ## 项目简介
 
-**ReactPress** 是为 React 时代打造的开源**发布平台**（不是又一个 Headless 后端拼装件）。一条 CLI 即可运行 CMS API、Web 管理后台、可替换的 Next.js 主题、插件扩展与 Electron 桌面客户端。
+**ReactPress** 是 **面向 React 开发者的发布系统** — 用 React 构建博客、文档、企业官网与内容驱动型应用。一条 CLI 即可运行 CMS API、Web 管理后台、可替换的 Next.js 主题、插件扩展与 Electron 桌面客户端。
 
 **ReactPress 4.0**（代号 **Extend**）在 3.x 之上新增**插件系统**、**桌面客户端**与 **npm 主题 catalog**。新用户推荐 `npm i -g @fecommunity/reactpress@beta`，详见 [ReactPress 4.0 扩展版](./tutorial-extras/reactpress-4-0.md)。桌面端安装见 [桌面客户端](./tutorial-extras/desktop-client.md)。仍使用 3.x 见 [3.0 平台版](./tutorial-extras/reactpress-3-0.md)。
 
@@ -29,21 +30,21 @@ keywords: [reactpress, 发布平台, wordpress 替代, headless cms, 博客, nex
 
 以下是 `ReactPress`、`WordPress` 和 `VuePress` 三者的对比：
 
-| 项目 | ReactPress | WordPress | VuePress |
-| --- | --- | --- | --- |
-| **技术栈** | React+NextJS+MySQL+NestJS | PHP+MySQL | Vue.js |
-| **类型** | 开源发布平台/CMS | 开源发布平台/CMS | 静态网站生成器/文档工具 |
-| **前后端分离** | 支持 | 不支持（传统方式） | 支持 |
-| **组件化开发** | 支持 | 有限支持（通过插件和主题） | 支持 |
-| **性能优化** | 虚拟DOM、代码分割、懒加载 | 依赖插件优化 | 静态页面生成，性能优越 |
-| **SEO性能** | 出色（SSR支持） | 良好 | 优秀（静态页面） |
-| **定制性** | 高（完全自定义主题和样式） | 高（通过插件和主题） | 中等（主题和组件定制） |
-| **扩展性** | 强（API、插件 Hook、前后端独立扩展） | 强（插件扩展） | 中等（插件和主题扩展） |
-| **用户界面** | 现代化，基于React的组件化设计 | 用户友好的后台界面 | 简约，为技术文档优化 |
-| **安全性** | 依赖框架和数据库的安全性 | 依赖插件和主题的更新与维护 | 静态网站，安全性较高 |
-| **适用场景** | 复杂功能、高并发访问、SEO优化需求 | 快速搭建网站、内容发布和管理 | 技术文档、静态博客 |
-| **用户群体** | 开发者、技术团队、个人博客、小型企业 | 个人博客、小型企业、初创公司 | 技术文档编写者、开发者 |
-| **社区支持** | 活跃且不断成长 | 非常活跃，拥有庞大的用户群体 | Vue.js社区支持 |
+| 项目           | ReactPress                           | WordPress                    | VuePress                |
+| -------------- | ------------------------------------ | ---------------------------- | ----------------------- |
+| **技术栈**     | React+NextJS+MySQL+NestJS            | PHP+MySQL                    | Vue.js                  |
+| **类型**       | 开源发布平台/CMS                     | 开源发布平台/CMS             | 静态网站生成器/文档工具 |
+| **前后端分离** | 支持                                 | 不支持（传统方式）           | 支持                    |
+| **组件化开发** | 支持                                 | 有限支持（通过插件和主题）   | 支持                    |
+| **性能优化**   | 虚拟DOM、代码分割、懒加载            | 依赖插件优化                 | 静态页面生成，性能优越  |
+| **SEO性能**    | 出色（SSR支持）                      | 良好                         | 优秀（静态页面）        |
+| **定制性**     | 高（完全自定义主题和样式）           | 高（通过插件和主题）         | 中等（主题和组件定制）  |
+| **扩展性**     | 强（API、插件 Hook、前后端独立扩展） | 强（插件扩展）               | 中等（插件和主题扩展）  |
+| **用户界面**   | 现代化，基于React的组件化设计        | 用户友好的后台界面           | 简约，为技术文档优化    |
+| **安全性**     | 依赖框架和数据库的安全性             | 依赖插件和主题的更新与维护   | 静态网站，安全性较高    |
+| **适用场景**   | 复杂功能、高并发访问、SEO优化需求    | 快速搭建网站、内容发布和管理 | 技术文档、静态博客      |
+| **用户群体**   | 开发者、技术团队、个人博客、小型企业 | 个人博客、小型企业、初创公司 | 技术文档编写者、开发者  |
+| **社区支持**   | 活跃且不断成长                       | 非常活跃，拥有庞大的用户群体 | Vue.js社区支持          |
 
 ## ✨ 特性
 
@@ -83,12 +84,12 @@ reactpress init
 `init` 会**自动启动** API、Admin 与主题，无需再执行 `reactpress dev`（该命令在全局 CLI 中已移除）。停止服务用 `reactpress stop`。
 :::
 
-| 服务 | 端口 | 地址 |
-|------|------|------|
-| 管理后台 | 3001 `/admin/` | http://localhost:3001/admin/ |
-| 访客主题 | 3001 | http://localhost:3001 |
-| API | 3002 | http://localhost:3002/api/health |
-| 主题预览 | 3003 | http://localhost:3003 |
+| 服务     | 端口           | 地址                             |
+| -------- | -------------- | -------------------------------- |
+| 管理后台 | 3001 `/admin/` | http://localhost:3001/admin/     |
+| 访客主题 | 3001           | http://localhost:3001            |
+| API      | 3002           | http://localhost:3002/api/health |
+| 主题预览 | 3003           | http://localhost:3003            |
 
 无子命令时运行 `reactpress` 进入交互菜单。从 3.x 升级见 [迁移指南](./tutorial-extras/migration-3-to-4.md)；从 2.x 见 [2.x → 3.0](./tutorial-extras/migration-2-to-3.md)。
 
@@ -115,13 +116,13 @@ pnpm run dev
 
 ## 📦 包与文档
 
-| 包 | 说明 |
-|----|------|
-| [**@fecommunity/reactpress**](./tutorial-extras/reactpress-4-0.md) | **4.0 主包**（CLI + 内置 API + 插件 + 桌面） |
-| [桌面客户端](./tutorial-extras/desktop-client.md) | 下载安装、本地 / 远程模式、同步 |
-| [ReactPress 4.0 扩展版](./tutorial-extras/reactpress-4-0.md) | 4.0 能力总览 |
-| [ReactPress 3.0 平台版](./tutorial-extras/reactpress-3-0.md) | 3.0 历史说明 |
-| [@fecommunity/reactpress-toolkit](./tutorial-extras/toolkit-package) | TypeScript API SDK（Headless） |
+| 包                                                                   | 说明                                         |
+| -------------------------------------------------------------------- | -------------------------------------------- |
+| [**@fecommunity/reactpress**](./tutorial-extras/reactpress-4-0.md)   | **4.0 主包**（CLI + 内置 API + 插件 + 桌面） |
+| [桌面客户端](./tutorial-extras/desktop-client.md)                    | 下载安装、本地 / 远程模式、同步              |
+| [ReactPress 4.0 扩展版](./tutorial-extras/reactpress-4-0.md)         | 4.0 能力总览                                 |
+| [ReactPress 3.0 平台版](./tutorial-extras/reactpress-3-0.md)         | 3.0 历史说明                                 |
+| [@fecommunity/reactpress-toolkit](./tutorial-extras/toolkit-package) | TypeScript API SDK（Headless）               |
 
 ## 🔗 链接
 
@@ -152,7 +153,7 @@ Email: admin@gaoredu.com
 <details>
 <summary><strong>ReactPress 是什么？</strong></summary>
 
-面向 React 开发者的开源**发布平台** — 一条 CLI 包含 CMS API、Web Admin、Next.js 主题、插件与桌面客户端，不是单纯的 Headless 后端拼装件。
+面向 React 开发者的发布系统 — 用 React 构建博客、文档、企业官网与内容驱动型应用。一条 CLI 包含 CMS API、Web Admin、Next.js 主题、插件与桌面客户端。
 
 </details>
 

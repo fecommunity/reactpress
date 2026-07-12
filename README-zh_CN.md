@@ -4,13 +4,13 @@
   <img height="120" src="./public/brand/logo.png" alt="ReactPress 标志">
 </a>
 
-<img src="./public/poster.png" alt="ReactPress — 用 React 发布，像 WordPress 一样交付。" width="100%" />
+<img src="./public/poster.png" alt="ReactPress — 面向 React 开发者的发布系统。" width="100%" />
 
 <h1 align="center">ReactPress</h1>
-<h3 align="center">用 React 发布，像 WordPress 一样交付。</h3>
+<h3 align="center">面向 React 开发者的发布系统。</h3>
 
 <p align="center">
-  <strong>CMS、后台、无头 API、Next.js 主题、插件与桌面端 — 一条 CLI，零拼装。</strong>
+  <strong>用 React 构建博客、文档、企业官网与内容驱动型应用。</strong>
 </p>
 
 <br/>
@@ -172,7 +172,7 @@ reactpress init
 
 ## ReactPress 是什么？
 
-ReactPress 是 **为 React 时代打造的全栈发布平台** — 不是又一个需要你自己接线的 Headless 后端。
+ReactPress 是 **面向 React 开发者的发布系统** — 用 React 构建博客、文档、企业官网与内容驱动型应用。一条 CLI，不是又一个需要你自己接线的 Headless 后端。
 
 一条 CLI，全部包含：
 
@@ -445,7 +445,7 @@ Monorepo 贡献者请参阅 [CONTRIBUTING.md](./CONTRIBUTING.md) 及各子包 RE
   <img src="https://img.shields.io/github/stars/fecommunity/reactpress?style=for-the-badge&color=ffd700&labelColor=1a1a2e" alt="在 GitHub 上 Star ReactPress" />
 </a>
 
-<p><sub>用 React 发布，像 WordPress 一样交付。<br/>帮助更多开发者发现它 — 欢迎在 GitHub 上 ⭐。</sub></p>
+<p><sub>面向 React 开发者的发布系统。<br/>帮助更多开发者发现它 — 欢迎在 GitHub 上 ⭐。</sub></p>
 
 <br/>
 
