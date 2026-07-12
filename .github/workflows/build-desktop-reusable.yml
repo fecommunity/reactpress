@@ -11,6 +11,10 @@ on:
         description: Upload installers to the GitHub Release for this workflow run
         type: boolean
         default: false
+      release-tag:
+        description: GitHub release tag name (e.g. v4.0.0-beta.18)
+        type: string
+        default: ''
       artifact-retention-days:
         description: Days to keep workflow artifacts when not attaching to a Release
         type: number
@@ -105,6 +109,7 @@ jobs:
       - name: Upload to GitHub Release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ inputs.release-tag }}
           files: release-assets/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

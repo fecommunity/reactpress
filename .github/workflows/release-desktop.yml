@@ -3,12 +3,29 @@ name: Release Desktop
 on:
   release:
     types: [published]
+  push:
+    tags:
+      - 'v4.*'
+      - 'v4.0.*'
+      - 'v4.0.0-beta.*'
+      - 'v4.0.0'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Git tag to attach installers to (e.g. v4.0.0-beta.18)
+        required: false
+        default: ''
 
 permissions:
   contents: write
+
+concurrency:
+  group: release-desktop-${{ github.event.release.tag_name || github.ref_name || inputs.tag || 'manual' }}
+  cancel-in-progress: false
 
 jobs:
   build-desktop:
     uses: ./.github/workflows/build-desktop-reusable.yml
     with:
       attach-to-github-release: true
+      release-tag: ${{ github.event.release.tag_name || github.ref_name || inputs.tag }}
