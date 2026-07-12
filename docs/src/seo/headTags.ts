@@ -47,7 +47,7 @@ export function buildGlobalHeadTags(siteUrl: string): Tag[] {
     {
       tagName: 'script',
       attributes: {
-        async: true,
+        async: 'true',
         src: `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${GOOGLE_ADSENSE_CLIENT}`,
         crossorigin: 'anonymous',
       },
