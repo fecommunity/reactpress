@@ -8,7 +8,7 @@
     "dev": "docusaurus start",
     "preview": "pnpm build && docusaurus serve",
     "prebuild": "node scripts/sync-changelog-nav.mjs",
-    "build": "docusaurus build",
+    "build": "docusaurus build && node scripts/pretty-sitemap.mjs build",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
     "deploy:surge": "pnpm build && surge build/ reactpress.surge.sh",
