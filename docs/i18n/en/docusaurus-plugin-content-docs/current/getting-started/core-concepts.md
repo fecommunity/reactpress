@@ -36,7 +36,7 @@ flowchart LR
 
 | Component | Technology | Port | Responsibility |
 |------|------|------|------|
-| **Admin** | React + Vite SPA | 3000 | Write posts, manage media, install themes/plugins, site settings |
+| **Admin** | React + Vite SPA | 3001 `/admin/` | Write posts, manage media, install themes/plugins, site settings (Monorepo dev may use :3000) |
 | **API** | NestJS | 3002 | Persistence, auth, Hooks, Headless REST |
 | **Theme** | Next.js SSR/ISR | 3001 | Visitor-facing site (fully replaceable) |
 | **Plugin** | Node module + Hook | — | Server-side logic (SEO, summaries, image optimization, etc.) |
@@ -46,7 +46,7 @@ flowchart LR
 
 | WordPress | ReactPress | Notes |
 |-----------|------------|------|
-| wp-admin | Admin (:3000) | Content management UI |
+| wp-admin | Admin (`:3001/admin/`) | Content management UI |
 | Theme | themes/* (:3001) | Visitor frontend, installable via npm |
 | Plugin | plugins/* | Hook extensions without modifying themes |
 | REST API | /api/* | Headless enabled by default |

@@ -11,6 +11,8 @@ keywords: [reactpress, seo, settings, sitemap, meta, api key, webhook, smtp]
 
 ## 基础站点信息
 
+![General site settings](/img/admin/settings.png)
+
 **设置 → 常规**：
 
 | 字段 | 作用 |

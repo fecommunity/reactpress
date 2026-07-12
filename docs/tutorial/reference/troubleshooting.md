@@ -34,7 +34,7 @@ Monorepo：`pnpm status`、`pnpm docker:dev:logs`
 
 ```bash
 # 重试安装
-npm install -g @fecommunity/reactpress@4 --force
+npm install -g @fecommunity/reactpress@beta --force
 
 # 检查代理与 registry
 npm config get registry

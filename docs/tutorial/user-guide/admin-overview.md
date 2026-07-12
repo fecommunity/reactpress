@@ -7,7 +7,7 @@ keywords: [reactpress, admin, 管理后台, dashboard, 后台]
 
 # 管理后台概览
 
-ReactPress 4.0 的 **Admin** 是独立的 Vite SPA，默认地址 `http://localhost:3000`（不是 `:3001/admin`）。
+ReactPress **Admin** 是 Vite SPA。执行 `reactpress init` 后，在 **http://localhost:3001/admin/** 打开（默认账号 `admin` / `admin`）。Monorepo 本地开发时 Admin 可能在 **http://localhost:3000**。
 
 ## 登录与语言
 
@@ -31,6 +31,8 @@ ReactPress 4.0 的 **Admin** 是独立的 Vite SPA，默认地址 `http://localh
 
 ## 编辑器能力
 
+![Post editor — Markdown with live preview](/img/admin/post.png)
+
 - **Markdown** 所见即所得编辑
 - 封面图、摘要、别名（slug）
 - 分类 / 标签多选
@@ -41,9 +43,11 @@ ReactPress 4.0 的 **Admin** 是独立的 Vite SPA，默认地址 `http://localh
 
 | 地址 | 用途 |
 |------|------|
-| `:3000` | 仅管理员写作与管理 |
-| `:3001` | 访客看到的 Next.js 主题站 |
-| `:3003` | Admin 内 iframe 主题预览（未启用正式主题时） |
+| `:3001/admin/` | 管理后台（`reactpress init` 默认） |
+| `:3001` | 访客 Next.js 主题站 |
+| `:3002/api` | CMS API |
+| `:3003` | Admin 内 iframe 主题预览 |
+| `:3000` | Admin Vite dev server（仅 Monorepo 开发） |
 
 ## 桌面客户端
 

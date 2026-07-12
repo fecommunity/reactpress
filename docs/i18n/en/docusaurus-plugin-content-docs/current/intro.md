@@ -23,7 +23,7 @@ Choose a starting point by role. Every doc includes an SEO summary and next-step
 
 **ReactPress** is an open-source **publishing platform** for the React era — not another headless backend to wire up. One CLI ships CMS API, Web Admin, swappable Next.js themes, plugins, and an Electron desktop client.
 
-**ReactPress 4.0** (codename **Extend**) adds a **plugin system**, **desktop client**, and **npm theme catalog** on top of 3.x. New users: `npm i -g @fecommunity/reactpress@4`. See [ReactPress 4.0 Extend](./tutorial-extras/reactpress-4-0.md). Install the desktop app: [Desktop client](./tutorial-extras/desktop-client.md). Still on 3.x? See [ReactPress 3.0 Platform](./tutorial-extras/reactpress-3-0.md).
+**ReactPress 4.0** (codename **Extend**) adds a **plugin system**, **desktop client**, and **npm theme catalog** on top of 3.x. New users: `npm i -g @fecommunity/reactpress@beta`. See [ReactPress 4.0 Extend](./tutorial-extras/reactpress-4-0.md). Install the desktop app: [Desktop client](./tutorial-extras/desktop-client.md). Still on 3.x? See [ReactPress 3.0 Platform](./tutorial-extras/reactpress-3-0.md).
 
 ## 🆚 Comparison
 
@@ -55,9 +55,9 @@ Choose a starting point by role. Every doc includes an SEO summary and next-step
 
 ### Platform (since 3.x)
 
-- 📦 **Single entry**: one global `@fecommunity/reactpress` package
+- 📦 **Single entry**: `@fecommunity/reactpress` — `init`, `doctor`, `logs`, `stop`
 - ⚡ **Zero-config setup**: auto-generated `.reactpress/config.json`, `.env`, embedded MySQL
-- 🩺 **Diagnostics**: `reactpress doctor` and `reactpress status`
+- 🩺 **Diagnostics**: `reactpress doctor` and `reactpress logs`
 - 🌈 Componentization with antd
 - 🌍 i18n (Chinese / English)
 - 🌞 Light / dark theme
@@ -74,7 +74,7 @@ Choose a starting point by role. Every doc includes an SEO summary and next-step
 ### End users — one global package
 
 ```bash
-npm i -g @fecommunity/reactpress@4
+npm i -g @fecommunity/reactpress@beta
 mkdir my-blog && cd my-blog
 reactpress init
 ```
@@ -85,7 +85,7 @@ reactpress init
 
 | Service | Port | URL |
 |---------|------|-----|
-| Admin | 3000 | http://localhost:3000 |
+| Admin | 3001 `/admin/` | http://localhost:3001/admin/ |
 | Site theme | 3001 | http://localhost:3001 |
 | API | 3002 | http://localhost:3002/api/health |
 | Theme preview | 3003 | http://localhost:3003 |
@@ -139,7 +139,7 @@ Node.js ≥ 18 and Docker (embedded MySQL) required. `pnpm run init` prepares th
 
 ## 👥 Community
 
-1. Run `reactpress doctor` and `reactpress status` first
+1. Run `reactpress doctor` and `reactpress logs` first
 2. [GitHub Issues](https://github.com/fecommunity/reactpress/issues)
 3. [GitHub Discussions](https://github.com/fecommunity/reactpress/discussions)
 
@@ -157,7 +157,7 @@ An open-source **publishing platform** for React developers — CMS API, Web Adm
 <details>
 <summary><strong>Is ReactPress free?</strong></summary>
 
-Yes. MIT licensed. Install with `npm i -g @fecommunity/reactpress@4`.
+Yes. MIT licensed. Install with `npm i -g @fecommunity/reactpress@beta`.
 
 </details>
 

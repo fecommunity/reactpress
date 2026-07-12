@@ -10,7 +10,7 @@ keywords: [reactpress, production, deploy, nginx, start, build]
 已在服务器安装 Node ≥ 18 与 Docker（或外部 MySQL）时：
 
 ```bash
-npm i -g @fecommunity/reactpress@4
+npm i -g @fecommunity/reactpress@beta
 cd /path/to/your-site   # 含 .reactpress/ 的项目目录
 reactpress init         # 若尚未初始化
 reactpress build        # 按需构建
@@ -74,14 +74,12 @@ pm2 restart all       # 或 pnpm run pm2
 
 ## 进阶：独立包部署
 
-4.0 默认使用 **`@fecommunity/reactpress` 内置 API**。仅在需要单独部署前台或连接远程 API 时参考：
+4.0 全局 CLI 默认使用**内置 API + 主题内嵌 Admin**（`reactpress init`）。以下拆分部署能力主要面向 **Monorepo 贡献者**或仍使用 3.x CLI 的站点：
 
-| 场景 | 命令 |
+| 场景 | 说明 |
 |------|------|
-| 全栈 | `reactpress start` |
-| 仅 API | `reactpress dev --api-only` / `reactpress server start` |
-| 仅管理后台 | `reactpress dev --web-only` |
-| 仅访客主题 | `reactpress dev --client-only` |
+| 全栈（终端用户） | `reactpress init` |
+| 仅 API / 拆分进程 | Monorepo：`pnpm dev:api` 等，见 [Monorepo 开发](../developer-guide/local-development.md) |
 | 桌面客户端 | `pnpm build:desktop`（本地 SQLite，非服务器部署） |
 
 `@fecommunity/reactpress-server` 已 deprecated，请勿作为新项目的生产入口。

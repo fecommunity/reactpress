@@ -35,7 +35,7 @@ const FAQ_ENTRIES = [
   {
     question: 'Is ReactPress free?',
     answer:
-      'Yes. ReactPress is open source under the MIT license. Install via npm: npm i -g @fecommunity/reactpress@4.',
+      'Yes. ReactPress is open source under the MIT license. Install via npm: npm i -g @fecommunity/reactpress@beta.',
   },
 ] as const;
 

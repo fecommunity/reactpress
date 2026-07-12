@@ -48,6 +48,8 @@ cd my-blog && pnpm dev:mock
 
 ## Site customization
 
+![Theme customizer with live preview](/img/admin/theme-custom.png)
+
 In **Appearance → Customize** (or Settings → Site):
 
 - Site title, description, logo, favicon

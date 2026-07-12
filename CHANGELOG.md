@@ -15,7 +15,7 @@
 
 ### Upgrade from 3.x
 
-* Run `npm i -g @fecommunity/reactpress@4` (or `@latest` after stable publish)
+* Run `npm i -g @fecommunity/reactpress@beta` (or `@latest` after stable publish)
 * Use `reactpress init` in a new directory; see [migration guide](./docs/migration-3-to-4.md)
 
 ---

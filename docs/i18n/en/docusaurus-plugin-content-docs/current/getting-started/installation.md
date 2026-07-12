@@ -28,14 +28,10 @@ node -v   # should show v20.x or higher
 ## Install the CLI (recommended)
 
 ```bash
-npm install -g @fecommunity/reactpress@4
-```
-
-4.0 is still in beta; you can also use:
-
-```bash
 npm install -g @fecommunity/reactpress@beta
 ```
+
+> npm **`@beta`** is the 4.x pre-release tag; `@latest` is still 3.x. There is no `@4` dist-tag.
 
 The first `npm install -g` triggers `postinstall`, which downloads bundled server runtime dependencies (~1–2 minutes).
 
@@ -68,10 +64,11 @@ Default ports — ensure they are free before deployment:
 
 | Service | Port | Description |
 |------|------|------|
-| Admin | 3000 | Vite SPA |
+| Admin (`reactpress init` default) | 3001 `/admin/` | Mounted on the visitor theme port |
 | Visitor theme | 3001 | Next.js SSR |
 | API | 3002 | NestJS REST |
 | Theme preview | 3003 | Admin iframe preview |
+| Admin (Monorepo dev) | 3000 | Standalone Vite dev server |
 
 To change ports, see [Configuration](../tutorial-extras/config-intro.md).
 

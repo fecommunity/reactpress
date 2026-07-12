@@ -13,14 +13,14 @@ ReactPress **4.0** 在 3.x 平台能力之上新增：**插件系统**、**Elect
 | 已用 `reactpress dev` + MySQL 的全栈站点 | 可选升级 CLI；插件/桌面为增量能力 |
 | Headless / 仅 API | 无 Breaking；可按需启用插件 |
 | 主题作者 | 无 Breaking；继续 `theme.json` + Pages Router |
-| 新用户 | 直接安装 `@fecommunity/reactpress@4` |
+| 新用户 | 直接安装 `@fecommunity/reactpress@beta` |
 
 ---
 
 ## 升级 CLI
 
 ```bash
-npm i -g @fecommunity/reactpress@4
+npm i -g @fecommunity/reactpress@beta
 cd your-site
 reactpress doctor
 pnpm dev   # 或 reactpress dev

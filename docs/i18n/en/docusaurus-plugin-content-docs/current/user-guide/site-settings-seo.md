@@ -11,6 +11,8 @@ For **site administrators**: Admin settings, SEO plugin, and production URL conf
 
 ## Basic site information
 
+![General site settings](/img/admin/settings.png)
+
 **Settings → General**:
 
 | Field | Purpose |

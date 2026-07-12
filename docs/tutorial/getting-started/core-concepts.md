@@ -36,7 +36,7 @@ flowchart LR
 
 | 组件 | 技术 | 端口 | 职责 |
 |------|------|------|------|
-| **Admin** | React + Vite SPA | 3000 | 写文章、管媒体、装主题/插件、站点设置 |
+| **Admin** | React + Vite SPA | 3001 `/admin/` | 写文章、管媒体、装主题/插件、站点设置（Monorepo 开发时可能为 :3000） |
 | **API** | NestJS | 3002 | 持久化、鉴权、Hook、Headless REST |
 | **Theme** | Next.js SSR/ISR | 3001 | 访客看到的网站（可完全替换） |
 | **Plugin** | Node 模块 + Hook | — | 服务端逻辑扩展（SEO、摘要、图片优化等） |
@@ -46,7 +46,7 @@ flowchart LR
 
 | WordPress | ReactPress | 说明 |
 |-----------|------------|------|
-| wp-admin | Admin (:3000) | 内容管理界面 |
+| wp-admin | Admin (`:3001/admin/`) | 内容管理界面 |
 | Theme | themes/* (:3001) | 访客前端，npm 可安装 |
 | Plugin | plugins/* | Hook 扩展，不修改主题 |
 | REST API | /api/* | Headless 默认开启 |

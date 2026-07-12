@@ -20,6 +20,22 @@ Same UI in the browser and [Desktop](../desktop/README.md). Production sites mou
 
 [Documentation](https://docs.gaoredu.com/) · [ReactPress CLI](../cli/) · [npm package](https://www.npmjs.com/package/@fecommunity/reactpress-web)
 
+## Screenshots
+
+<div align="center">
+
+| Writing                                  | Media                                       |
+| :--------------------------------------- | :------------------------------------------ |
+| ![Post editor](../public/admin/post.png) | ![Media library](../public/admin/midia.png) |
+
+| Plugins                                 | Theme customizer                                      |
+| :-------------------------------------- | :---------------------------------------------------- |
+| ![Plugins](../public/admin/plugins.png) | ![Theme customizer](../public/admin/theme-custom.png) |
+
+![Site settings](../public/admin/settings.png)
+
+</div>
+
 ## Install via npm
 
 ```bash

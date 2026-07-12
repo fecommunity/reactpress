@@ -20,4 +20,10 @@ pnpm export:brand
 
 Root-level demo media (`usage.gif`, `demo.gif`, `desktop.gif`, `lighthouse.png`) is referenced by [README.md](../README.md) and [README-zh_CN](../README-zh_CN.md).
 
+| Directory | Contents |
+| :--- | :--- |
+| `admin/` | Admin UI screenshots for [web/README](../web/README.md) and [docs site](https://docs.gaoredu.com/): `post.png`, `midia.png`, `plugins.png`, `theme-custom.png`, `settings.png` |
+
+A copy of `admin/` is synced to `docs/static/img/admin/` for the documentation site.
+
 Runtime apps (`web/public`, `server/public`, themes) use their own flat paths for deployment.

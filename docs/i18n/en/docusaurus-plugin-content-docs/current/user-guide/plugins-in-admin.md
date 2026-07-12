@@ -13,6 +13,8 @@ ReactPress 4.0 **plugins** extend server-side logic (Hooks), similar to WordPres
 
 ## Operations in Admin
 
+![Plugin management](/img/admin/plugins.png)
+
 1. **Plugins → Available** to browse the catalog
 2. **Install** → **Enable**
 3. Click the plugin name for **Settings** (form generated from `plugin.json` `settings.schema`)

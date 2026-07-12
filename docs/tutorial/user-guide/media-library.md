@@ -9,6 +9,8 @@ keywords: [reactpress, media, 媒体库, upload, oss, 图片, webp]
 
 ReactPress 媒体库统一管理站点图片与附件，供文章、页面与主题设置引用。
 
+![Media library](/img/admin/midia.png)
+
 ## 本地上传
 
 1. **媒体 → 上传** 或编辑器内插入图片

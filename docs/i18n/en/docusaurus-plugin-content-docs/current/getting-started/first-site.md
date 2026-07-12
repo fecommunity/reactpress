@@ -12,7 +12,7 @@ This tutorial is for **first-time ReactPress end users**. No repository clone or
 ## Step 1: Install the CLI
 
 ```bash
-npm install -g @fecommunity/reactpress@4
+npm install -g @fecommunity/reactpress@beta
 ```
 
 ## Step 2: Initialize the site
@@ -36,13 +36,13 @@ On success you should see output similar to:
 | Service | URL |
 |------|------|
 | **Visitor site** | http://localhost:3001 |
-| **Admin** | http://localhost:3000 |
+| **Admin** | http://localhost:3001/admin/ |
 | **API** | http://localhost:3002/api |
 | **Health check** | http://localhost:3002/api/health |
 
 ## Step 3: Log in to Admin
 
-1. Open **http://localhost:3000** in your browser
+1. Open **http://localhost:3001/admin/** in your browser
 2. Log in with the default account: `admin` / `admin`
 3. **Change your password immediately** after first login (Settings → Account)
 

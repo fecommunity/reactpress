@@ -12,7 +12,7 @@ keywords: [reactpress, about, open source, react cms, publishing platform]
 
 | Layer | Technology | Purpose |
 | --- | --- | --- |
-| CLI | `@fecommunity/reactpress` | `init`, `doctor`, `status`, theme catalog, production start |
+| CLI | `@fecommunity/reactpress` | `init`, `doctor`, `logs`, `stop` |
 | API | NestJS + SQLite / MySQL | Headless REST, webhooks, API keys |
 | Admin | Vite + React | WordPress-style content, media, themes, plugins |
 | Theme | Next.js (SSR) | Visitor site with SEO, sitemap, OG tags |
@@ -22,7 +22,7 @@ keywords: [reactpress, about, open source, react cms, publishing platform]
 ReactPress 4.0 (codename **Extend**) is the current recommended release. New users install with:
 
 ```bash
-npm i -g @fecommunity/reactpress@4
+npm i -g @fecommunity/reactpress@beta
 ```
 
 ## Who ReactPress is for

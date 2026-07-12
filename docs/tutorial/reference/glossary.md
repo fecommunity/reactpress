@@ -10,7 +10,7 @@ keywords: [reactpress, glossary, 术语, definitions]
 | 术语 | 英文 | 说明 |
 |------|------|------|
 | **发布平台** | Publishing platform | ReactPress 定位：含 Admin、API、主题、插件的完整系统，非单纯 CMS 后端 |
-| **Admin** | Admin / Web Admin | Vite SPA 管理后台，端口 3000，负责内容与站点管理 |
+| **Admin** | Admin / Web Admin | Vite SPA 管理后台；`reactpress init` 默认 `:3001/admin/`，Monorepo 开发可能为 :3000 |
 | **API / Server** | CMS API | NestJS REST 服务，端口 3002，持久化与 Hook 中枢 |
 | **主题** | Theme | Next.js 访客前端，端口 3001，可 npm 安装替换 |
 | **插件** | Plugin | 服务端 Hook 扩展 + 可选 Admin 插槽 |

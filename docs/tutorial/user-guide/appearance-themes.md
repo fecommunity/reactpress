@@ -48,6 +48,8 @@ cd my-blog && pnpm dev:mock
 
 ## 站点定制
 
+![Theme customizer with live preview](/img/admin/theme-custom.png)
+
 在 **外观 → 定制**（或设置 → 站点）中可配置：
 
 - 站点标题、描述、Logo、Favicon

@@ -28,7 +28,9 @@ In 4.0 global CLI, **`init` already starts services** — no separate `dev`. `de
 <details>
 <summary><strong>Is Admin on 3000 or 3001/admin?</strong></summary>
 
-Since 4.0, Admin is a **standalone Vite SPA** at **http://localhost:3000**. `:3001` is the Next.js visitor theme — it no longer includes `/admin`.
+**`reactpress init` default**: **http://localhost:3001/admin/** (Admin mounted on the same port as the visitor theme).
+
+Monorepo local development may use a separate Admin Vite dev server at **http://localhost:3000**.
 
 </details>
 
@@ -81,7 +83,7 @@ Content can be exported and re-imported via scripts or integrated through the He
 <details>
 <summary><strong>Is ReactPress free?</strong></summary>
 
-Yes. ReactPress is open source under the MIT license. Install globally: `npm i -g @fecommunity/reactpress@4`.
+Yes. ReactPress is open source under the MIT license. Install globally: `npm i -g @fecommunity/reactpress@beta`.
 
 </details>
 

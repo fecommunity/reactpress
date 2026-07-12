@@ -20,19 +20,18 @@ keywords: [reactpress 4.0, extend, plugin, desktop, theme catalog, wordpress alt
 ## 快速开始（全栈，与 3.x 相同）
 
 ```bash
-npm i -g @fecommunity/reactpress@4
-# 当前 beta 阶段也可：npm i -g @fecommunity/reactpress@beta
+npm i -g @fecommunity/reactpress@beta
 mkdir my-blog && cd my-blog
 reactpress init
-reactpress dev
 ```
 
 | 服务 | 端口 | 说明 |
 |------|------|------|
-| 管理后台 | 3000 | Vite Admin SPA |
+| 管理后台 | 3001 `/admin/` | `reactpress init` 默认 |
 | 访客主题 | 3001 | 激活的 Next.js 主题 |
 | API | 3002 | NestJS REST |
 | 主题预览 | 3003 | 后台 iframe 预览 |
+| Admin（Monorepo 开发） | 3000 | 独立 Vite dev server |
 
 ## 桌面客户端（新）
 

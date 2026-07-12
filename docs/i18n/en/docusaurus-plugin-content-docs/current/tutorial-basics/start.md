@@ -18,7 +18,7 @@ ReactPress 4.0 offers three local paths — choose by scenario.
 ## Option 1: Global CLI (recommended)
 
 ```bash
-npm i -g @fecommunity/reactpress@4
+npm i -g @fecommunity/reactpress@beta
 mkdir my-blog && cd my-blog
 reactpress init
 ```
@@ -27,7 +27,7 @@ reactpress init
 
 | Service | Port | URL |
 |---------|------|-----|
-| Admin | 3000 | http://localhost:3000 |
+| Admin | 3001 `/admin/` | http://localhost:3001/admin/ |
 | Visitor theme | 3001 | http://localhost:3001 |
 | API | 3002 | http://localhost:3002/api/health |
 | Theme preview | 3003 | http://localhost:3003 |

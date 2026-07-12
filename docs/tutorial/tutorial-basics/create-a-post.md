@@ -21,18 +21,19 @@ keywords: [reactpress, create post, blog, markdown, admin]
 
 ## 进入后台
 
-管理后台地址为 `http://localhost:3000`（4.0 起 Admin 为独立 Vite SPA，不在 `:3001/admin`）。
+管理后台地址为 `http://localhost:3001/admin/`（`reactpress init` 默认将 Admin 挂载在访客站同端口）。
 
 ![QQ_1730649254076.png](https://api.gaoredu.com/public/uploads/2024-11-03/QQ_1730649254076.png)
 
 ## 新建文章
 
-可以通过左侧的目录直接选择“新建文章”选项：
-![QQ_1730649280585.png](https://api.gaoredu.com/public/uploads/2024-11-03/QQ_1730649280585.png)
+在左侧菜单选择 **文章 → 新建**，使用 Markdown 编辑器撰写内容（支持实时预览、封面图、分类与标签）：
+
+![Post editor — Markdown with live preview](/img/admin/post.png)
 
 ## 发布文章
-点击右上角的“发布”按钮完成内容发布：
-![QQ_1730649303524.png](https://api.gaoredu.com/public/uploads/2024-11-03/QQ_1730649303524.png)
+
+在右侧 **发布** 面板设置可见性后，点击 **发布** 完成内容上线。
 
 
 至此，你的第一篇文章就创作好了。
