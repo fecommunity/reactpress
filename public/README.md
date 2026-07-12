@@ -18,6 +18,6 @@ pnpm export:brand
 
 ## Demo media
 
-Root-level GIFs and screenshots (e.g. `usage.gif`, `cli.png`, `demo.gif`, `desktop.gif`) are referenced by [README.md](../README.md) and the docs site.
+Root-level demo media (`usage.gif`, `demo.gif`, `desktop.gif`, `lighthouse.png`) is referenced by [README.md](../README.md) and [README-zh_CN](../README-zh_CN.md).
 
 Runtime apps (`web/public`, `server/public`, themes) use their own flat paths for deployment.
