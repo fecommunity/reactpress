@@ -1,6 +1,6 @@
 # Changelog
 
-## [4.0.0](https://github.com/fecommunity/reactpress/compare/v4.0.0-beta.13...v4.0.0) (unreleased)
+## [4.0.0](https://github.com/fecommunity/reactpress/compare/v4.0.0-beta.18...v4.0.0) (unreleased)
 
 > **Stable release** — promotes 4.x from `beta` to `latest` on npm. Install with `npm i -g @fecommunity/reactpress`.
 
@@ -17,6 +17,29 @@
 
 * Run `npm i -g @fecommunity/reactpress@beta` (or `@latest` after stable publish)
 * Use `reactpress init` in a new directory; see [migration guide](./docs/migration-3-to-4.md)
+
+---
+
+# [4.0.0-beta.18](https://github.com/fecommunity/reactpress/compare/v4.0.0-beta.0...v4.0.0-beta.18) (2026-07-12)
+
+> **Pre-release** — current npm `@beta` tag. Install: `npm i -g @fecommunity/reactpress@beta`.
+
+### CLI & packaging
+
+* Zero-dependency mode: bundled toolkit and server runtime in the CLI tarball
+* Theme API proxy patching and improved `reactpress theme install`
+* Enhanced logging, `doctor`, and admin lifecycle commands
+
+### Desktop & CI
+
+* Reusable GitHub Actions workflow for cross-platform desktop installers (macOS / Windows / Linux)
+* Desktop builds attach to GitHub Releases on publish
+
+### Docs & README
+
+* Docs site: Algolia DocSearch, changelog version sidebar, hero npm version tags (`@beta` / `@latest`)
+* README and admin demo media refresh; star history charts moved under `public/`
+* Installation guide clarifies `@beta` vs `@latest`; canonical docs at `https://docs.gaoredu.com`
 
 ---
 

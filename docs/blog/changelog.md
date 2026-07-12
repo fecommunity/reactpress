@@ -8,6 +8,17 @@ tags: [reactpress, release]
 
 <!--truncate-->
 
+## [4.0.0-beta.18](https://github.com/fecommunity/reactpress/compare/v4.0.0-beta.0...v4.0.0-beta.18) (2026-07-12)
+
+**ReactPress 4.0 beta.18** — current npm `@beta`. Install: `npm i -g @fecommunity/reactpress@beta`.
+
+- **CLI**: zero-dependency bundled runtime, theme install/proxy improvements, `doctor` / logging polish
+- **Desktop**: cross-platform installer workflow; uploads to GitHub Releases on publish
+- **Docs**: Algolia DocSearch, changelog sidebar, hero version tags; README and demo media refresh
+- **Assets**: star history charts under `public/star-history/`
+
+---
+
 ## [4.0.0-beta.0](https://github.com/fecommunity/reactpress/compare/v3.7.0...v4.0.0-beta.0) (2026-06-27)
 
 **ReactPress 4.0 Extend (beta)** — plugins, desktop client, theme catalog. Install: `npm i -g @fecommunity/reactpress@beta`.

@@ -8,6 +8,19 @@ tags: [reactpress, release]
 
 <!--truncate-->
 
+## [4.0.0-beta.18](https://github.com/fecommunity/reactpress/compare/v4.0.0-beta.0...v4.0.0-beta.18) (2026-07-12)
+
+**ReactPress 4.0 beta.18** — 当前 npm `@beta` 标签。安装：`npm i -g @fecommunity/reactpress@beta`。
+
+### 亮点
+
+- **CLI**：零依赖捆绑运行时、主题安装/代理改进、`doctor` 与日志体验优化
+- **桌面端**：跨平台安装包构建工作流；发布时自动上传至 GitHub Releases
+- **文档**：Algolia DocSearch、changelog 版本侧栏、首页版本标签；README 与演示素材更新
+- **资源**：star history 图表迁移至 `public/star-history/`
+
+---
+
 ## [4.0.0-beta.0](https://github.com/fecommunity/reactpress/compare/v3.7.0...v4.0.0-beta.0) (2026-06-27)
 
 **ReactPress 4.0 扩展版（beta）** — 插件、桌面客户端、主题 catalog。安装：`npm i -g @fecommunity/reactpress@beta`。

@@ -11,6 +11,11 @@ export function buildNpmVersionPageUrl(version: string): string {
   return `${REACTPRESS_NPM_PAGE_URL}/v/${encodeURIComponent(version)}`;
 }
 
+/** GitHub release tag page, e.g. …/releases/tag/v4.0.0-beta.18 */
+export function buildGitHubReleaseTagUrl(version: string): string {
+  return `https://github.com/fecommunity/reactpress/releases/tag/v${encodeURIComponent(version)}`;
+}
+
 /** Fallback when the registry is unreachable (SSR / offline). */
 export const FALLBACK_REACTPRESS_VERSIONS = {
   latest: '3.7.0',

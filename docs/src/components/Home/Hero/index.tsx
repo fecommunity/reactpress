@@ -7,7 +7,7 @@ import FloorBackground from '@site/src/components/Home/Hero/FloorBackground';
 import GridBackground from '@site/src/components/Home/Hero/GridBackground';
 import Logo from '@site/src/components/Home/Logo';
 import {
-  buildNpmVersionPageUrl,
+  buildGitHubReleaseTagUrl,
 } from '@site/src/npm/packageVersions';
 import { useReactPressVersions } from '@site/src/npm/useReactPressVersions';
 import clsx from 'clsx';
@@ -45,10 +45,10 @@ function Hero() {
           <Logo className={styles.logo} />
           <div className={styles.titleRow}>
             <h1 className={styles.title}>{siteConfig.title}</h1>
-            <div className={styles.versionTags} aria-label="npm package versions">
+            <div className={styles.versionTags} aria-label="package release versions">
               <a
                 className={clsx(styles.versionTag, styles.versionTagBeta)}
-                href={buildNpmVersionPageUrl(beta)}
+                href={buildGitHubReleaseTagUrl(beta)}
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -59,7 +59,7 @@ function Hero() {
               </a>
               <a
                 className={clsx(styles.versionTag, styles.versionTagLatest)}
-                href={buildNpmVersionPageUrl(latest)}
+                href={buildGitHubReleaseTagUrl(latest)}
                 target="_blank"
                 rel="noopener noreferrer"
               >

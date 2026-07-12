@@ -6,6 +6,10 @@ export type ChangelogNavItem = {
 
 export const CHANGELOG_VERSIONS_EN: ChangelogNavItem[] = [
   {
+    "id": "400-beta18-2026-07-12",
+    "label": "4.0.0-beta.18 (2026-07-12)"
+  },
+  {
     "id": "400-beta0-2026-06-27",
     "label": "4.0.0-beta.0 (2026-06-27)"
   },
