@@ -6,14 +6,12 @@ import Devices from '@site/src/components/Home/Hero/Devices';
 import FloorBackground from '@site/src/components/Home/Hero/FloorBackground';
 import GridBackground from '@site/src/components/Home/Hero/GridBackground';
 import Logo from '@site/src/components/Home/Logo';
-import { buildQuickStartCommands } from '@site/src/constants/quickStartCommands';
 import {
-  buildInstallCommand,
   buildNpmVersionPageUrl,
 } from '@site/src/npm/packageVersions';
 import { useReactPressVersions } from '@site/src/npm/useReactPressVersions';
 import clsx from 'clsx';
-import React, { useMemo } from 'react';
+import React from 'react';
 import GitHubButton from 'react-github-btn';
 
 import styles from './styles.module.css';
@@ -21,12 +19,6 @@ import styles from './styles.module.css';
 function Hero() {
   const { siteConfig } = useDocusaurusContext();
   const { latest, beta } = useReactPressVersions();
-  const installCommand = buildInstallCommand('beta');
-  const quickStartCommands = useMemo(
-    () => buildQuickStartCommands(installCommand),
-    [installCommand],
-  );
-  const quickStartScript = useMemo(() => quickStartCommands.join('\n'), [quickStartCommands]);
 
   return (
     <header className={styles.container}>
@@ -113,14 +105,7 @@ function Hero() {
             </div>
 
             <div className={styles.cliWrap}>
-              <CliCommandBlock
-                variant="hero"
-                showHint={false}
-                commands={quickStartCommands}
-                copyCommand={quickStartScript}
-                installCommand={installCommand}
-                betaVersion={beta}
-              />
+              <CliCommandBlock variant="hero" showHint={false} />
             </div>
           </div>
         </div>

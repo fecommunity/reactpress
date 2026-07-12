@@ -16,11 +16,11 @@ const Index = () => {
   const canonicalUrl = `${siteConfig.url}${siteConfig.baseUrl}`.replace(/\/$/, '') + '/';
   const title = translate({
     id: 'home.meta.title',
-    message: 'ReactPress - Open-source React publishing platform. One CLI, live in ~60 seconds.',
+    message: 'ReactPress — Publish with React. Ship like WordPress.',
   });
   const description = translate({
     message:
-      'Official ReactPress docs — open-source React CMS and publishing platform. WordPress-style editing, Next.js SSR themes, Headless REST, plugins, desktop client. One CLI, live in ~60 seconds.',
+      'Official ReactPress docs — self-hosted React publishing platform with WordPress-style editing, headless REST, Next.js themes, plugins, and desktop. One CLI, ~60 seconds to live.',
     id: 'home.meta.description',
   });
 

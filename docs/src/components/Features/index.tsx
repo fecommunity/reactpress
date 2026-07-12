@@ -18,7 +18,7 @@ const FeatureList: FeatureItem[] = [
     Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
     description: translate({
       message:
-        'Installer-style flow auto-configures your site and database — as familiar as setting up a popular blog platform.',
+        'Installer-style wizard configures your site and database automatically — as familiar as setting up WordPress, as fast as running two commands.',
       id: 'home.feature.zero.desc',
     }),
     accent: 1,
@@ -28,7 +28,7 @@ const FeatureList: FeatureItem[] = [
     Svg: require('@site/static/img/undraw_version_control.svg').default,
     description: translate({
       message:
-        'Environment checks, status output, interactive menus, and direct links right after startup.',
+        'One binary for init, dev, status, and self-check — interactive menus and live URLs the moment your stack is up.',
       id: 'home.feature.cli.desc',
     }),
     accent: 2,
@@ -37,7 +37,7 @@ const FeatureList: FeatureItem[] = [
     title: translate({ message: 'Modern interface', id: 'home.feature.ui.title' }),
     Svg: require('@site/static/img/undraw_react.svg').default,
     description: translate({
-      message: 'Modern admin and public site with light/dark theme support.',
+      message: 'Polished admin and public site with light/dark themes — built for daily editorial work.',
       id: 'home.feature.ui.desc',
     }),
     accent: 3,
@@ -47,7 +47,7 @@ const FeatureList: FeatureItem[] = [
     Svg: require('@site/static/img/undraw_typewriter.svg').default,
     description: translate({
       message:
-        'Built-in Markdown editor; articles, categories, tags, pages, comments, and media in one place.',
+        'Markdown-native editor with articles, taxonomies, pages, comments, and media — everything writers and editors expect.',
       id: 'home.feature.content.desc',
     }),
     accent: 1,
@@ -56,7 +56,7 @@ const FeatureList: FeatureItem[] = [
     title: translate({ message: 'Open integrations', id: 'home.feature.headless.title' }),
     Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
     description: translate({
-      message: 'Open APIs, access keys, and event callbacks for external systems and automation.',
+      message: 'REST APIs, access keys, and webhooks — wire ReactPress into your CI, mobile apps, or data pipeline.',
       id: 'home.feature.headless.desc',
     }),
     accent: 2,
@@ -65,7 +65,7 @@ const FeatureList: FeatureItem[] = [
     title: translate({ message: 'Internationalization', id: 'home.feature.i18n.title' }),
     Svg: require('@site/static/img/undraw_around_the_world.svg').default,
     description: translate({
-      message: 'Chinese/English UI, comfortable on desktop, tablet, and mobile.',
+      message: 'Bilingual UI out of the box — responsive layouts that feel native on desktop, tablet, and phone.',
       id: 'home.feature.i18n.desc',
     }),
     accent: 3,

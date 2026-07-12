@@ -311,16 +311,31 @@
     "description": "The title of the tag list page"
   },
   "theme.tagline": {
-    "message": "Open-source React publishing platform. One CLI, live in ~60 seconds."
+    "message": "Publish with React. Ship like WordPress."
   },
   "home.meta.title": {
-    "message": "ReactPress - Open-source React publishing platform. One CLI, live in ~60 seconds."
+    "message": "ReactPress — Publish with React. Ship like WordPress."
   },
   "home.meta.description": {
-    "message": "Official ReactPress docs — self-hosted publishing platform with WordPress-style editing, headless REST, Next.js themes, plugins, and desktop. One CLI, ~60 seconds to live."
+    "message": "Official ReactPress docs — self-hosted React publishing platform with WordPress-style editing, headless REST, Next.js themes, plugins, and desktop. One CLI, ~60 seconds to live."
+  },
+  "home.hero.eyebrow": {
+    "message": "Open source · Self-hosted · React-native"
   },
   "home.hero.subTitle": {
-    "message": "WordPress-style editing - Next.js delivery - one CLI - CMS, Admin, API, themes, plugins, and desktop, no assembly required."
+    "message": "CMS, Admin, Headless API, Next.js themes, plugins & desktop — one CLI, zero assembly."
+  },
+  "home.hero.chip.cms": {
+    "message": "Editorial CMS"
+  },
+  "home.hero.chip.nextjs": {
+    "message": "Next.js SSR"
+  },
+  "home.hero.chip.headless": {
+    "message": "Headless REST"
+  },
+  "home.hero.chip.plugins": {
+    "message": "Plugin hooks"
   },
   "home.hero.intro": {
     "message": "Get Started"
@@ -333,6 +348,9 @@
   },
   "home.hero.try": {
     "message": "Live Demo"
+  },
+  "home.hero.github": {
+    "message": "GitHub"
   },
   "home.hero.version.tag.beta": {
     "message": "beta"
@@ -361,6 +379,9 @@
   "home.cli.hint": {
     "message": "Copy all commands and paste into your terminal to get started"
   },
+  "home.cli.versionSwitch.aria": {
+    "message": "Choose npm dist-tag for install command"
+  },
   "home.cli.running": {
     "message": "Running"
   },
@@ -376,29 +397,65 @@
   "home.cli.footerHint": {
     "message": "Copy the script above and paste into Terminal to get started"
   },
+  "home.stats.aria": {
+    "message": "Platform at a glance"
+  },
+  "home.stats.setup.value": {
+    "message": "~60s"
+  },
+  "home.stats.setup.label": {
+    "message": "First deploy"
+  },
+  "home.stats.themes.value": {
+    "message": "Next.js"
+  },
+  "home.stats.themes.label": {
+    "message": "SSR themes"
+  },
+  "home.stats.api.value": {
+    "message": "REST"
+  },
+  "home.stats.api.label": {
+    "message": "Headless API"
+  },
+  "home.stats.plugins.value": {
+    "message": "Hook"
+  },
+  "home.stats.plugins.label": {
+    "message": "Plugin system"
+  },
+  "home.stats.tagline": {
+    "message": "WordPress familiarity. React-native delivery. No duct tape."
+  },
   "home.cli.terminal.aria": {
     "message": "ReactPress quick start command demo"
   },
+  "home.highlights.eyebrow": {
+    "message": "ReactPress 4.0"
+  },
   "home.highlights.title": {
-    "message": "4.0 highlights"
+    "message": "Built different. Shipped whole."
+  },
+  "home.highlights.subtitle": {
+    "message": "Everything WordPress taught the web — rebuilt on React, delivered as one platform."
   },
   "home.highlight.plugins.title": {
     "message": "Plugin ecosystem"
   },
   "home.highlight.plugins.desc": {
-    "message": "Extend your site like WordPress — Hook + plugin.json + Admin slots; SEO and auto-summary built in."
+    "message": "WordPress-grade extensibility — Hook system, plugin.json manifest, and admin slots. SEO and auto-summary ship built-in."
   },
   "home.highlight.desktop.title": {
     "message": "Desktop client"
   },
   "home.highlight.desktop.desc": {
-    "message": "Write and manage without a browser — Electron shell with SQLite local mode and remote sync."
+    "message": "Write offline, sync when ready — Electron shell with SQLite local mode and seamless remote publishing."
   },
   "home.highlight.themes.title": {
     "message": "npm theme catalog"
   },
   "home.highlight.themes.desc": {
-    "message": "Install official themes from npm — theme-starter catalog and hello-world starter template."
+    "message": "Install production themes from npm — official catalog, theme-starter scaffold, and hello-world template."
   },
   "复制命令，立即开始": {
     "message": "Copy commands to get started"
@@ -443,19 +500,19 @@
     "message": "Zero-config setup"
   },
   "home.highlight.zero.desc": {
-    "message": "Two commands set up your site and database — no manual environment configuration."
+    "message": "Two commands, one minute — auto-generated config, .env, and Docker MySQL. No manual environment wiring."
   },
   "home.highlight.cli.title": {
     "message": "One command line tool"
   },
   "home.highlight.cli.desc": {
-    "message": "After a global install, initialize, develop, self-check, and view status from the terminal."
+    "message": "init, dev, status, self-check — the entire lifecycle from a single global install in your terminal."
   },
   "home.highlight.dx.title": {
-    "message": "Easy to get started"
+    "message": "Full-stack in one box"
   },
   "home.highlight.dx.desc": {
-    "message": "Interactive guides, environment checks, and status tips — open your site and admin right after startup."
+    "message": "CMS, admin, API, themes, plugins, and desktop — no stitching together five repos to ship content."
   },
   "home.quickstart.title": {
     "message": "Your CMS in one minute"
@@ -476,49 +533,49 @@
     "message": "Quick start commands"
   },
   "home.call.feature": {
-    "message": "Platform capabilities"
+    "message": "Everything you need. Nothing to assemble."
   },
   "home.call.subtitle": {
-    "message": "From personal blogs to team content sites — publish, manage, and ship with one CLI out of the box."
+    "message": "From solo blogs to team content hubs — publish, govern, and integrate without gluing tools together."
   },
   "home.call.cta": {
-    "message": "Read full documentation"
+    "message": "Explore the full documentation"
   },
   "home.feature.zero.title": {
     "message": "Zero-config setup"
   },
   "home.feature.zero.desc": {
-    "message": "Installer-style flow auto-configures your site and database — as familiar as setting up a popular blog platform."
+    "message": "Installer-style wizard configures your site and database automatically — as familiar as setting up WordPress, as fast as running two commands."
   },
   "home.feature.cli.title": {
     "message": "All-in-one CLI"
   },
   "home.feature.cli.desc": {
-    "message": "Environment checks, status output, interactive menus, and direct links right after startup."
+    "message": "One binary for init, dev, status, and self-check — interactive menus and live URLs the moment your stack is up."
   },
   "home.feature.ui.title": {
     "message": "Modern interface"
   },
   "home.feature.ui.desc": {
-    "message": "Modern admin and public site with light/dark theme support."
+    "message": "Polished admin and public site with light/dark themes — built for daily editorial work."
   },
   "home.feature.content.title": {
     "message": "Content & authoring"
   },
   "home.feature.content.desc": {
-    "message": "Built-in Markdown editor; articles, categories, tags, pages, comments, and media in one place."
+    "message": "Markdown-native editor with articles, taxonomies, pages, comments, and media — everything writers and editors expect."
   },
   "home.feature.headless.title": {
     "message": "Open integrations"
   },
   "home.feature.headless.desc": {
-    "message": "Open APIs, access keys, and event callbacks for external systems and automation."
+    "message": "REST APIs, access keys, and webhooks — wire ReactPress into your CI, mobile apps, or data pipeline."
   },
   "home.feature.i18n.title": {
     "message": "Internationalization"
   },
   "home.feature.i18n.desc": {
-    "message": "Chinese/English UI, comfortable on desktop, tablet, and mobile."
+    "message": "Bilingual UI out of the box — responsive layouts that feel native on desktop, tablet, and phone."
   },
   "零配置起站": {
     "message": "Zero-config setup"
