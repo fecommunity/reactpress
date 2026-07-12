@@ -16,6 +16,8 @@ type Options = {
   enabled: boolean;
   locale?: QuickStartLocale;
   commands?: readonly string[];
+  installCommand?: string;
+  betaVersion?: string;
   loop?: boolean;
   charDelayMs?: number;
   linePauseMs?: number;
@@ -33,8 +35,10 @@ function prefersReducedMotion(): boolean {
 function buildStaticTerminal(
   commands: readonly string[],
   locale: QuickStartLocale,
+  installCommand: string,
+  betaVersion: string,
 ): TerminalLine[] {
-  const demoOutputs = getQuickStartDemoOutputs(locale);
+  const demoOutputs = getQuickStartDemoOutputs(locale, installCommand, betaVersion);
   const readyLines = getQuickStartDevReadyLines(locale);
   const lines: TerminalLine[] = [];
   for (const cmd of commands) {
@@ -54,23 +58,27 @@ export function useCliTypewriter({
   enabled,
   locale = 'en',
   commands = QUICK_START_COMMANDS,
+  installCommand = QUICK_START_COMMANDS[0],
+  betaVersion,
   loop = true,
   charDelayMs = 40,
   linePauseMs = 380,
   outputDelayMs = 120,
   holdMs = 4500,
 }: Options) {
+  const resolvedBetaVersion = betaVersion ?? installCommand.split('@').pop() ?? 'beta';
+
   const demoOutputs = useMemo(
-    () => getQuickStartDemoOutputs(locale),
-    [locale],
+    () => getQuickStartDemoOutputs(locale, installCommand, resolvedBetaVersion),
+    [locale, installCommand, resolvedBetaVersion],
   );
   const readyLines = useMemo(
     () => getQuickStartDevReadyLines(locale),
     [locale],
   );
   const staticLines = useMemo(
-    () => buildStaticTerminal(commands, locale),
-    [commands, locale],
+    () => buildStaticTerminal(commands, locale, installCommand, resolvedBetaVersion),
+    [commands, locale, installCommand, resolvedBetaVersion],
   );
 
   const [history, setHistory] = useState<TerminalLine[]>([]);

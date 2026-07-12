@@ -6,13 +6,27 @@ import Devices from '@site/src/components/Home/Hero/Devices';
 import FloorBackground from '@site/src/components/Home/Hero/FloorBackground';
 import GridBackground from '@site/src/components/Home/Hero/GridBackground';
 import Logo from '@site/src/components/Home/Logo';
-import React from 'react';
+import { buildQuickStartCommands } from '@site/src/constants/quickStartCommands';
+import {
+  buildInstallCommand,
+  buildNpmVersionPageUrl,
+} from '@site/src/npm/packageVersions';
+import { useReactPressVersions } from '@site/src/npm/useReactPressVersions';
+import clsx from 'clsx';
+import React, { useMemo } from 'react';
 import GitHubButton from 'react-github-btn';
 
 import styles from './styles.module.css';
 
 function Hero() {
   const { siteConfig } = useDocusaurusContext();
+  const { latest, beta } = useReactPressVersions();
+  const installCommand = buildInstallCommand('beta');
+  const quickStartCommands = useMemo(
+    () => buildQuickStartCommands(installCommand),
+    [installCommand],
+  );
+  const quickStartScript = useMemo(() => quickStartCommands.join('\n'), [quickStartCommands]);
 
   return (
     <header className={styles.container}>
@@ -39,7 +53,30 @@ function Hero() {
           <Logo className={styles.logo} />
           <div className={styles.titleRow}>
             <h1 className={styles.title}>{siteConfig.title}</h1>
-            <span className={styles.badge}>4.0</span>
+            <div className={styles.versionTags} aria-label="npm package versions">
+              <a
+                className={clsx(styles.versionTag, styles.versionTagBeta)}
+                href={buildNpmVersionPageUrl(beta)}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span className={styles.tagLabel}>
+                  <Translate id="home.hero.version.tag.beta">beta</Translate>
+                </span>
+                <span className={styles.tagValue}>{beta}</span>
+              </a>
+              <a
+                className={clsx(styles.versionTag, styles.versionTagLatest)}
+                href={buildNpmVersionPageUrl(latest)}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span className={styles.tagLabel}>
+                  <Translate id="home.hero.version.tag.latest">latest</Translate>
+                </span>
+                <span className={styles.tagValue}>{latest}</span>
+              </a>
+            </div>
             <span className={styles.githubWrap}>
               <GitHubButton
                 href="https://github.com/fecommunity/reactpress"
@@ -76,7 +113,14 @@ function Hero() {
             </div>
 
             <div className={styles.cliWrap}>
-              <CliCommandBlock variant="hero" showHint={false} />
+              <CliCommandBlock
+                variant="hero"
+                showHint={false}
+                commands={quickStartCommands}
+                copyCommand={quickStartScript}
+                installCommand={installCommand}
+                betaVersion={beta}
+              />
             </div>
           </div>
         </div>

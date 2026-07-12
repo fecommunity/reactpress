@@ -1,5 +1,11 @@
-/** ReactPress 4.0 quick-start commands (homepage + docs) */
-export const QUICK_START_INSTALL_COMMAND = 'npm i -g @fecommunity/reactpress@beta';
+import {
+  buildInstallCommand,
+  buildNpmInstallOutput,
+  FALLBACK_REACTPRESS_VERSIONS,
+} from '@site/src/npm/packageVersions';
+
+/** ReactPress quick-start commands (homepage CLI demo). */
+export const QUICK_START_INSTALL_COMMAND = buildInstallCommand('beta');
 
 export const QUICK_START_COMMANDS = [
   QUICK_START_INSTALL_COMMAND,
@@ -19,24 +25,6 @@ export type QuickStartLocale = 'en' | 'zh';
 type DemoOutputs = Record<string, readonly string[]>;
 type DevReadyLines = readonly string[];
 
-const QUICK_START_DEMO_OUTPUTS_EN: DemoOutputs = {
-  [QUICK_START_INSTALL_COMMAND]: [
-    '@fecommunity/reactpress@beta',
-    'added 1 package in 12s',
-  ],
-  'mkdir my-blog && cd my-blog': [],
-  'reactpress init': [],
-};
-
-const QUICK_START_DEMO_OUTPUTS_ZH: DemoOutputs = {
-  [QUICK_START_INSTALL_COMMAND]: [
-    '@fecommunity/reactpress@beta',
-    'added 1 package in 12s',
-  ],
-  'mkdir my-blog && cd my-blog': [],
-  'reactpress init': [],
-};
-
 const QUICK_START_DEV_READY_LINES_EN: DevReadyLines = [
   '✓ ReactPress is running',
   'Site     http://localhost:3001',
@@ -51,14 +39,36 @@ const QUICK_START_DEV_READY_LINES_ZH: DevReadyLines = [
   'API      http://localhost:3002/api',
 ];
 
-/** @deprecated Use getQuickStartDemoOutputs(locale) */
-export const QUICK_START_DEMO_OUTPUTS = QUICK_START_DEMO_OUTPUTS_EN;
+/** @deprecated Use getQuickStartDemoOutputs(locale, installCommand, betaVersion) */
+export const QUICK_START_DEMO_OUTPUTS = getQuickStartDemoOutputs(
+  'en',
+  QUICK_START_INSTALL_COMMAND,
+  FALLBACK_REACTPRESS_VERSIONS.beta,
+);
 
 /** @deprecated Use getQuickStartDevReadyLines(locale) */
 export const QUICK_START_DEV_READY_LINES = QUICK_START_DEV_READY_LINES_EN;
 
-export function getQuickStartDemoOutputs(locale: string): DemoOutputs {
-  return locale === 'zh' ? QUICK_START_DEMO_OUTPUTS_ZH : QUICK_START_DEMO_OUTPUTS_EN;
+export function buildQuickStartCommands(installCommand = QUICK_START_INSTALL_COMMAND) {
+  return [installCommand, 'mkdir my-blog && cd my-blog', 'reactpress init'] as const;
+}
+
+export function getInstallDemoOutput(betaVersion: string): readonly string[] {
+  return [buildNpmInstallOutput(betaVersion), 'added 1 package in 12s'];
+}
+
+export function getQuickStartDemoOutputs(
+  locale: string,
+  installCommand: string,
+  betaVersion: string,
+): DemoOutputs {
+  const installDemoOutput = getInstallDemoOutput(betaVersion);
+  const shared: DemoOutputs = {
+    [installCommand]: installDemoOutput,
+    'mkdir my-blog && cd my-blog': [],
+    'reactpress init': [],
+  };
+  return shared;
 }
 
 export function getQuickStartDevReadyLines(locale: string): DevReadyLines {
