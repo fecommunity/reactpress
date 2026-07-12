@@ -20,13 +20,14 @@ describe('sync-bundled-plugins', () => {
     const bundled = path.join(CLI_ROOT, 'plugins');
     assert.ok(fs.existsSync(path.join(bundled, 'package.json')));
     for (const id of ['hello-world', 'seo', 'image-optimizer']) {
-      assert.ok(
-        fs.existsSync(path.join(bundled, id, 'plugin.json')),
-        `missing bundled plugin ${id}/plugin.json`,
-      );
+      assert.ok(fs.existsSync(path.join(bundled, id, 'plugin.json')), `missing bundled plugin ${id}/plugin.json`);
       assert.ok(
         fs.existsSync(path.join(bundled, id, 'dist', 'index.js')),
-        `missing bundled plugin ${id}/dist/index.js`,
+        `missing bundled plugin ${id}/dist/index.js`
+      );
+      assert.ok(
+        fs.existsSync(path.join(bundled, id, 'src', 'locales', 'en.json')),
+        `missing bundled plugin ${id}/src/locales/en.json`
       );
     }
   });
@@ -36,9 +37,11 @@ describe('ensureBundledPlugins', () => {
   it('seeds default plugins into an empty project from the CLI bundle', () => {
     const bundledRegistry = path.join(CLI_ROOT, 'plugins', 'package.json');
     if (!fs.existsSync(bundledRegistry)) {
-      require('node:child_process').spawnSync(process.execPath, [
-        path.join(CLI_ROOT, 'scripts', 'sync-bundled-plugins.mjs'),
-      ], { cwd: CLI_ROOT, stdio: 'inherit' });
+      require('node:child_process').spawnSync(
+        process.execPath,
+        [path.join(CLI_ROOT, 'scripts', 'sync-bundled-plugins.mjs')],
+        { cwd: CLI_ROOT, stdio: 'inherit' }
+      );
     }
 
     const { ensureBundledPlugins } = require('../out/core/services/local-site');

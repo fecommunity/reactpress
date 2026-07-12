@@ -51,18 +51,18 @@ pnpm dev
 }
 ```
 
-| 字段 | 说明 |
-|------|------|
-| `id` | kebab-case，与目录名一致 |
-| `server.module` | 编译后的 JS 入口 |
-| `server.hooks.subscribe` | 声明订阅的 Hook 名 |
-| `admin.slots.subscribe` | Admin UI 插槽 ID（可选） |
-| `settings.schema` | JSON Schema 生成配置表单 |
+| 字段                     | 说明                     |
+| ------------------------ | ------------------------ |
+| `id`                     | kebab-case，与目录名一致 |
+| `server.module`          | 编译后的 JS 入口         |
+| `server.hooks.subscribe` | 声明订阅的 Hook 名       |
+| `admin.slots.subscribe`  | Admin UI 插槽 ID（可选） |
+| `settings.schema`        | JSON Schema 生成配置表单 |
 
 ## Server 入口
 
 ```typescript
-// plugins/my-plugin/src/index.ts
+// plugins/my-plugin/src/server/index.ts
 import type { PluginContext } from '@fecommunity/reactpress-toolkit/plugin';
 
 export function register(hooks: PluginContext['hooks'], ctx: PluginContext) {
@@ -79,11 +79,11 @@ export function register(hooks: PluginContext['hooks'], ctx: PluginContext) {
 
 ## Hook vs Webhook
 
-| | Hook | Webhook |
-|---|------|---------|
+|      | Hook                  | Webhook              |
+| ---- | --------------------- | -------------------- |
 | 方向 | 入站（插件 ← Server） | 出站（Server → URL） |
-| 同步 | 是，可改 payload | 异步 HTTP |
-| 用途 | 摘要、校验、SEO | Slack、CI、外部系统 |
+| 同步 | 是，可改 payload      | 异步 HTTP            |
+| 用途 | 摘要、校验、SEO       | Slack、CI、外部系统  |
 
 发布文章时的调用顺序：
 

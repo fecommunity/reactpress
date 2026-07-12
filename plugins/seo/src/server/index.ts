@@ -24,7 +24,7 @@ export function register(hooks: HookService, ctx: PluginContext): void {
   });
 
   ctx.logger.log(
-    `registered (enabled=${config().enabled}, autoSlug=${config().autoSlug}, autoDescription=${config().autoDescription})`,
+    `registered (enabled=${config().enabled}, autoSlug=${config().autoSlug}, autoDescription=${config().autoDescription})`
   );
 }
 

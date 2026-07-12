@@ -33,11 +33,11 @@ Aligns with the three-layer directory model in [`themes/README.md`](../themes/RE
 
 ## vs themes and webhooks
 
-| Type | Extends | Process | Examples |
-| :--- | :--- | :--- | :--- |
-| **Theme** | Visitor UI, SSR | Next.js (:3001) | Skins, article templates |
-| **Plugin** | Business rules, hooks | NestJS API (:3002) | Auto summary, SEO |
-| **Webhook** | Cross-system async notify | Server outbound HTTP | Slack, CI triggers |
+| Type        | Extends                   | Process              | Examples                 |
+| :---------- | :------------------------ | :------------------- | :----------------------- |
+| **Theme**   | Visitor UI, SSR           | Next.js (:3001)      | Skins, article templates |
+| **Plugin**  | Business rules, hooks     | NestJS API (:3002)   | Auto summary, SEO        |
+| **Webhook** | Cross-system async notify | Server outbound HTTP | Slack, CI triggers       |
 
 **Boundaries**
 
@@ -67,10 +67,10 @@ article.service
 }
 ```
 
-| Source | Metadata | Registry location |
-| :--- | :--- | :--- |
-| **local** | `plugins/{id}/plugin.json` | `reactpress.local` array |
-| **npm** | `plugin.json` inside package | catalog anchor (phase 2, same rules as theme npm) |
+| Source    | Metadata                     | Registry location                                 |
+| :-------- | :--------------------------- | :------------------------------------------------ |
+| **local** | `plugins/{id}/plugin.json`   | `reactpress.local` array                          |
+| **npm**   | `plugin.json` inside package | catalog anchor (phase 2, same rules as theme npm) |
 
 To add a local plugin: id matches directory name and `plugin.json` `id`; add to `local` array.
 
@@ -105,73 +105,82 @@ Schema: [`plugin.manifest.schema.json`](./plugin.manifest.schema.json). Parser: 
 }
 ```
 
-| Field | Required | Description |
-| :--- | :---: | :--- |
-| `id` | ✓ | kebab-case, matches directory name |
-| `name` / `version` | ✓ | Display name and semver |
-| `requires` | | Minimum ReactPress version |
-| `requiresPlugins` | | Other plugin ids this depends on |
-| `server.module` | ✓* | Server entry (compiled JS) |
-| `server.hooks.subscribe` | | Declared hook names |
-| `admin.slots.subscribe` | | Built-in Admin slot ids (enum) |
-| `admin.menu` | | Standalone plugin settings page menu |
-| `settings.schema` | | JSON Schema for config form |
-| `locales/{locale}.json` | | Admin strings (same convention as themes) |
-| `permissions` | | Admin capability declarations |
-| `capabilities` | | Security capabilities (see below) |
+| Field                       | Required | Description                          |
+| :-------------------------- | :------: | :----------------------------------- |
+| `id`                        |    ✓     | kebab-case, matches directory name   |
+| `name` / `version`          |    ✓     | Display name and semver              |
+| `requires`                  |          | Minimum ReactPress version           |
+| `requiresPlugins`           |          | Other plugin ids this depends on     |
+| `server.module`             |   ✓\*    | Server entry (compiled JS)           |
+| `server.hooks.subscribe`    |          | Declared hook names                  |
+| `admin.slots.subscribe`     |          | Built-in Admin slot ids (enum)       |
+| `admin.menu`                |          | Standalone plugin settings page menu |
+| `settings.schema`           |          | JSON Schema for config form          |
+| `src/locales/{locale}.json` |          | Admin strings                        |
+| `permissions`               |          | Admin capability declarations        |
+| `capabilities`              |          | Security capabilities (see below)    |
 
-\* At least `server.module`, or one of `admin.slots` / `admin.menu` (Admin code convention: `admin/index.ts`).
+\* At least `server.module`, or one of `admin.slots` / `admin.menu` (Admin code convention: `src/admin/index.ts`).
 
-| WordPress plugin header | ReactPress |
-| :--- | :--- |
-| Plugin Name | `name` |
-| Version | `version` |
-| Text Domain | `id` |
-| Requires at least | `requires` |
-| Requires Plugins | `requiresPlugins` |
+| WordPress plugin header | ReactPress        |
+| :---------------------- | :---------------- |
+| Plugin Name             | `name`            |
+| Version                 | `version`         |
+| Text Domain             | `id`              |
+| Requires at least       | `requires`        |
+| Requires Plugins        | `requiresPlugins` |
 
 ## Plugin package structure
 
-TypeScript plugins use **flat `src/` → `dist/`**:
+Every plugin package uses the same layout: **manifest and i18n at the root**, **all TypeScript under `src/`**, split by runtime:
 
 ```
 plugins/my-plugin/
-├── plugin.json
-├── locales/
-│   ├── en.json
-│   └── zh.json
+├── plugin.json          # manifest (id, hooks, settings schema, admin slots)
 ├── package.json
-├── tsconfig.json
+├── tsconfig.json        # extends ../tsconfig.base.json (server compile only)
 ├── README.md
-└── src/
-    ├── index.ts         # export function register(hooks, ctx)
-    ├── …
-    └── types.ts
-        ↓ pnpm run build
-    dist/
-    └── index.js         # plugin.json → server.module
+├── src/
+│   ├── server/          # Node Hook logic → tsc → dist/
+│   │   ├── index.ts     # export function register(hooks, ctx)
+│   │   └── …
+│   ├── admin/           # optional React Admin UI (bundled by web via Vite)
+│   │   ├── index.ts     # export function registerAdmin(registry, ctx)
+│   │   └── …
+│   └── locales/         # Admin UI strings (en.json, zh.json, …)
+└── dist/                # plugin.json → server.module (./dist/index.js)
+    └── index.js
 ```
 
-Admin i18n matches themes: `locales/{locale}.json` at package root; API `GET /extension/plugins/:id/locales/:locale` (parallel to themes `…/themes/:id/locales/:locale`).
+| Path           | Runtime                             | Build                              |
+| :------------- | :---------------------------------- | :--------------------------------- |
+| `src/server/`  | NestJS `require()` at API startup   | `pnpm run build` → `tsc` → `dist/` |
+| `src/admin/`   | Admin SPA (Vite `import.meta.glob`) | Compiled when building `web/`      |
+| `src/locales/` | Admin i18n API                      | No build — served as JSON          |
+| `plugin.json`  | Install / enable / config           | No build                           |
+
+Shared server compiler defaults live in [`tsconfig.base.json`](./tsconfig.base.json). Admin TSX is excluded from plugin `tsc` and compiled by the Admin Vite app instead.
+
+Admin i18n lives in `src/locales/{locale}.json`; API `GET /extension/plugins/:id/locales/:locale` reads from the installed plugin tree (themes keep `locales/` at package root).
 
 **Dependency rules**
 
 ```
-plugins/{id}/src   →  @fecommunity/reactpress-toolkit/plugin/server only
-plugins/{id}/admin →  toolkit/plugin/admin + toolkit/plugin/react
-server core        →  HookService only, no direct plugin imports
-web / themes       →  load plugin admin via Admin slots (convention: admin/index.ts)
+plugins/{id}/src/server  →  @fecommunity/reactpress-toolkit/plugin/server only
+plugins/{id}/src/admin   →  toolkit/plugin/admin + toolkit/plugin/react
+server core              →  HookService only, no direct plugin imports
+web / themes             →  load plugin admin via convention src/admin/index.ts
 ```
 
 ### Admin UI slots
 
 Symmetric with `server.hooks.subscribe`: **manifest declares slot enum**, **code convention defines entry path**.
 
-| Layer | Declaration | Notes |
-| :--- | :--- | :--- |
-| `plugin.json` | `admin.slots.subscribe: ["article.editor.meta.afterSummary"]` | Built-in slot id enum drives Admin load |
-| Plugin package | Fixed `admin/index.ts` → `registerAdmin()` | No path in manifest |
-| Core pages | `<AdminSlot slot={AdminSlotIds.…} />` | Host mount point |
+| Layer          | Declaration                                                   | Notes                                   |
+| :------------- | :------------------------------------------------------------ | :-------------------------------------- |
+| `plugin.json`  | `admin.slots.subscribe: ["article.editor.meta.afterSummary"]` | Built-in slot id enum drives Admin load |
+| Plugin package | Fixed `src/admin/index.ts` → `registerAdmin()`                | No path in manifest                     |
+| Core pages     | `<AdminSlot slot={AdminSlotIds.…} />`                         | Host mount point                        |
 
 **Manifest example:**
 
@@ -190,9 +199,9 @@ Symmetric with `server.hooks.subscribe`: **manifest declares slot enum**, **code
 
 **Built-in slots** (`AdminSlotIds` / JSON Schema `enum`):
 
-| Slot id | Location |
-| :--- | :--- |
-| `article.editor.meta.afterSummary` | Article editor · below summary |
+| Slot id                               | Location                           |
+| :------------------------------------ | :--------------------------------- |
+| `article.editor.meta.afterSummary`    | Article editor · below summary     |
 | `article.editor.sidebar.afterPublish` | Article editor · below publish box |
 
 **Core page mount:**
@@ -200,10 +209,10 @@ Symmetric with `server.hooks.subscribe`: **manifest declares slot enum**, **code
 ```tsx
 import { AdminSlot, AdminSlotIds } from '@fecommunity/reactpress-toolkit/plugin/react';
 
-<AdminSlot slot={AdminSlotIds.ARTICLE_EDITOR_META_AFTER_SUMMARY} context={slotContext} />
+<AdminSlot slot={AdminSlotIds.ARTICLE_EDITOR_META_AFTER_SUMMARY} context={slotContext} />;
 ```
 
-**Plugin admin entry** (`plugins/{id}/admin/index.ts`):
+**Plugin admin entry** (`plugins/{id}/src/admin/index.ts`):
 
 ```typescript
 import {
@@ -224,12 +233,12 @@ export default { registerAdmin } satisfies PluginAdminModule;
 
 Slot component props: `{ context, pluginId, config }`. `context` is defined by the host page (e.g. `ArticleEditorAdminSlotContext` with `draft` / `patch` / `translate`).
 
-When enabled and manifest includes `admin.slots` or `admin.menu`, `PluginAdminProvider` loads `plugins/{id}/admin/index` by convention; enable/disable triggers re-bootstrap.
+When enabled and manifest includes `admin.slots` or `admin.menu`, `PluginAdminProvider` loads `plugins/{id}/src/admin/index` by convention; enable/disable triggers re-bootstrap.
 
 **Admin dependency rules**
 
 ```
-plugins/{id}/admin →  @fecommunity/reactpress-toolkit/plugin/admin + plugin/react + react/antd
+plugins/{id}/src/admin →  @fecommunity/reactpress-toolkit/plugin/admin + plugin/react + react/antd
 ```
 
 Server entry contract:
@@ -238,9 +247,13 @@ Server entry contract:
 import type { HookService, PluginContext } from '@fecommunity/reactpress-toolkit/plugin/server';
 
 export function register(hooks: HookService, ctx: PluginContext): void {
-  hooks.addFilter('article.beforePublish', async (article) => {
-    return article;
-  }, { priority: 10, pluginId: ctx.id });
+  hooks.addFilter(
+    'article.beforePublish',
+    async (article) => {
+      return article;
+    },
+    { priority: 10, pluginId: ctx.id }
+  );
 }
 
 // optional: cleanup timers on deactivate
@@ -249,12 +262,12 @@ export function deactivate(): void {}
 
 ## Lifecycle
 
-| Action | Effect |
-| :--- | :--- |
-| **Install** | Materialize to `.reactpress/plugins/`; write `installedPlugins[]` |
-| **Enable** | Write `activePlugins[]`; Server **hot-loads** `server.module` |
-| **Disable** | Remove hooks; optionally call `deactivate()` |
-| **Uninstall** | Must disable first; delete runtime directory |
+| Action        | Effect                                                            |
+| :------------ | :---------------------------------------------------------------- |
+| **Install**   | Materialize to `.reactpress/plugins/`; write `installedPlugins[]` |
+| **Enable**    | Write `activePlugins[]`; Server **hot-loads** `server.module`     |
+| **Disable**   | Remove hooks; optionally call `deactivate()`                      |
+| **Uninstall** | Must disable first; delete runtime directory                      |
 
 Unlike themes: plugin enable/disable **does not require API restart**; theme enable requires Next restart (:3001).
 
@@ -276,13 +289,13 @@ Persistence (`Setting.globalSetting.plugins`):
 
 ## Hook system
 
-| Hook | Type | Timing | Payload |
-| :--- | :--- | :--- | :--- |
-| `article.beforeCreate` | filter | Before create | `Partial<Article>` |
+| Hook                    | Type   | Timing         | Payload                      |
+| :---------------------- | :----- | :------------- | :--------------------------- |
+| `article.beforeCreate`  | filter | Before create  | `Partial<Article>`           |
 | `article.beforePublish` | filter | Before publish | Mutate fields (e.g. summary) |
-| `article.afterPublish` | action | After publish | `{ article, isNew }` |
-| `comment.beforeCreate` | filter | Before comment | Can `__hookReject` |
-| `comment.afterCreate` | action | After comment | `{ comment, createByAdmin }` |
+| `article.afterPublish`  | action | After publish  | `{ article, isNew }`         |
+| `comment.beforeCreate`  | filter | Before comment | Can `__hookReject`           |
+| `comment.afterCreate`   | action | After comment  | `{ comment, createByAdmin }` |
 
 Reject a filter (toolkit `createHookRejectValue` / `getHookReject`):
 
@@ -297,7 +310,7 @@ Same hook name sorted by `priority` (default 10); failed plugins write `loadErro
 ## Build a new plugin
 
 1. Copy [`hello-world/`](./hello-world/) → `plugins/my-plugin/`
-2. Edit `plugin.json`, `src/index.ts`
+2. Edit `plugin.json`, `src/server/index.ts`
 3. Add to [`plugins/package.json`](./package.json) → `local`
 4. Build and enable:
 
@@ -312,16 +325,16 @@ pnpm dev   # compiles local plugins on demand before start
 
 ## Install & API
 
-| Action | HTTP |
-| :--- | :--- |
-| List | `GET /api/extension/plugins` |
-| State | `GET /api/extension/plugins/state` |
-| Install | `POST /api/extension/plugins/:id/install` |
-| Enable | `POST /api/extension/plugins/:id/activate` |
-| Disable | `POST /api/extension/plugins/:id/deactivate` |
-| Uninstall | `DELETE /api/extension/plugins/:id` |
-| Config | `PUT /api/extension/plugins/:id/config` (auto reload after save) |
-| Admin locales | `GET /api/extension/plugins/:id/locales/:locale` |
+| Action        | HTTP                                                             |
+| :------------ | :--------------------------------------------------------------- |
+| List          | `GET /api/extension/plugins`                                     |
+| State         | `GET /api/extension/plugins/state`                               |
+| Install       | `POST /api/extension/plugins/:id/install`                        |
+| Enable        | `POST /api/extension/plugins/:id/activate`                       |
+| Disable       | `POST /api/extension/plugins/:id/deactivate`                     |
+| Uninstall     | `DELETE /api/extension/plugins/:id`                              |
+| Config        | `PUT /api/extension/plugins/:id/config` (auto reload after save) |
+| Admin locales | `GET /api/extension/plugins/:id/locales/:locale`                 |
 
 Plugins with `settings.schema` show a **Settings** link opening a WordPress-style config page (`/plugins/{id}/settings`).
 
@@ -339,23 +352,23 @@ reactpress plugin install hello-world
 - **Materialize copy**: production skips symlinks when copying plugin files.
 - **Plugin id**: global kebab-case validation; invalid ids in `globalSetting.plugins` are ignored.
 
-| capability | Meaning | Runtime enforcement |
-| :--- | :--- | :--- |
-| `headless` | Server only, no Admin UI | Documented convention |
-| `network` | Outbound HTTP | Phase 2 |
-| `filesystem` | Read/write outside project | Phase 2 |
-| `database` | Register entities | Phase 2 |
+| capability   | Meaning                    | Runtime enforcement   |
+| :----------- | :------------------------- | :-------------------- |
+| `headless`   | Server only, no Admin UI   | Documented convention |
+| `network`    | Outbound HTTP              | Phase 2               |
+| `filesystem` | Read/write outside project | Phase 2               |
+| `database`   | Register entities          | Phase 2               |
 
 Manifest `permissions[]` declares Admin UI capabilities; server API boundary is currently **admin role**.
 
 ## Typical use cases
 
-| Scenario | Mount |
-| :--- | :--- |
-| Mutate fields before publish | `article.beforePublish` filter |
-| Comment filtering | `comment.beforeCreate` filter |
-| Post-publish analytics | `article.afterPublish` action |
-| Server-only, no UI | `server.module` + `headless: true` |
+| Scenario                     | Mount                              |
+| :--------------------------- | :--------------------------------- |
+| Mutate fields before publish | `article.beforePublish` filter     |
+| Comment filtering            | `comment.beforeCreate` filter      |
+| Post-publish analytics       | `article.afterPublish` action      |
+| Server-only, no UI           | `server.module` + `headless: true` |
 
 **Not suitable for plugins**: visitor page components (use themes), large DB schema changes (core migration PR).
 
@@ -371,23 +384,23 @@ Full `pnpm build` includes plugins after toolkit, before server.
 
 ## Built-in plugins
 
-| id | Name | Description |
-| :--- | :--- | :--- |
-| [`hello-world`](./hello-world/) | Auto Summary | Generate summary from body/title when empty on publish |
-| [`seo`](./seo/) | SEO Enhancement | Slug, keywords, meta description with auto-fill |
-| [`image-optimizer`](./image-optimizer/) | Image Optimization | Analyze legacy assets, batch WebP variants |
+| id                                      | Name               | Description                                            |
+| :-------------------------------------- | :----------------- | :----------------------------------------------------- |
+| [`hello-world`](./hello-world/)         | Auto Summary       | Generate summary from body/title when empty on publish |
+| [`seo`](./seo/)                         | SEO Enhancement    | Slug, keywords, meta description with auto-fill        |
+| [`image-optimizer`](./image-optimizer/) | Image Optimization | Analyze legacy assets, batch WebP variants             |
 
 ## Related code
 
-| Module | Role |
-| :--- | :--- |
-| `server/src/modules/extension/plugin.service.ts` | Install, enable, config |
-| `server/src/modules/extension/plugin-loader.service.ts` | Dynamic load + `register()` |
-| `server/src/modules/hook/hook.service.ts` | Hook registry |
-| `toolkit/src/plugin/server/` | Plugin SDK |
-| `toolkit/src/plugin/extension/plugin.ts` | Manifest parsing and state types |
-| `cli/out/lib/plugin-build.js` | Dev on-demand compile |
-| `web/src/modules/plugins/` | Admin plugin list |
+| Module                                                  | Role                             |
+| :------------------------------------------------------ | :------------------------------- |
+| `server/src/modules/extension/plugin.service.ts`        | Install, enable, config          |
+| `server/src/modules/extension/plugin-loader.service.ts` | Dynamic load + `register()`      |
+| `server/src/modules/hook/hook.service.ts`               | Hook registry                    |
+| `toolkit/src/plugin/server/`                            | Plugin SDK                       |
+| `toolkit/src/plugin/extension/plugin.ts`                | Manifest parsing and state types |
+| `cli/out/lib/plugin-build.js`                           | Dev on-demand compile            |
+| `web/src/modules/plugins/`                              | Admin plugin list                |
 
 ## Roadmap (not implemented)
 

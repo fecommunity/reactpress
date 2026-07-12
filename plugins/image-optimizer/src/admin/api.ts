@@ -1,6 +1,6 @@
-import { resolveApiBaseUrl } from "@fecommunity/reactpress-toolkit/plugin/react";
+import { resolveApiBaseUrl } from '@fecommunity/reactpress-toolkit/plugin/react';
 
-const DEFAULT_API_BASE = "/api";
+const DEFAULT_API_BASE = '/api';
 
 export interface ImageOptimizeReport {
   total: number;
@@ -35,7 +35,7 @@ export interface OptimizeRunOptions {
 export interface OptimizeJobItemResult {
   fileId: string;
   originalname: string;
-  status: "success" | "skipped" | "failed";
+  status: 'success' | 'skipped' | 'failed';
   oldUrl?: string;
   newUrl?: string;
   savedBytes?: number;
@@ -44,7 +44,7 @@ export interface OptimizeJobItemResult {
 
 export interface OptimizeJob {
   id: string;
-  status: "pending" | "running" | "completed" | "failed";
+  status: 'pending' | 'running' | 'completed' | 'failed';
   dryRun: boolean;
   total: number;
   processed: number;
@@ -66,9 +66,9 @@ export interface OptimizeJob {
 }
 
 function readAccessToken(): string | null {
-  if (typeof localStorage === "undefined") return null;
+  if (typeof localStorage === 'undefined') return null;
   try {
-    const raw = localStorage.getItem("auth-storage");
+    const raw = localStorage.getItem('auth-storage');
     if (!raw) return null;
     const parsed = JSON.parse(raw) as { state?: { tokens?: { accessToken?: string } } };
     return parsed.state?.tokens?.accessToken ?? null;
@@ -83,12 +83,12 @@ function readApiErrorMessage(err: unknown, fallback: string): string {
 }
 
 async function optimizeFetch<T>(path: string, init?: RequestInit): Promise<T> {
-  const base = (await resolveApiBaseUrl(DEFAULT_API_BASE)).replace(/\/$/, "");
+  const base = (await resolveApiBaseUrl(DEFAULT_API_BASE)).replace(/\/$/, '');
   const token = readAccessToken();
   const res = await fetch(`${base}${path}`, {
     ...init,
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...init?.headers,
     },
@@ -101,27 +101,27 @@ async function optimizeFetch<T>(path: string, init?: RequestInit): Promise<T> {
     message?: string;
   };
   if (res.status === 401) {
-    throw new Error("SESSION_EXPIRED");
+    throw new Error('SESSION_EXPIRED');
   }
   if (!res.ok) {
     throw new Error(body.msg ?? body.message ?? `Request failed: ${res.status}`);
   }
-  if (typeof body.code === "number" && body.code !== 0) {
-    throw new Error(body.message ?? "Request failed");
+  if (typeof body.code === 'number' && body.code !== 0) {
+    throw new Error(body.message ?? 'Request failed');
   }
   if (body.success === false) {
-    throw new Error(body.msg ?? "Request failed");
+    throw new Error(body.msg ?? 'Request failed');
   }
   return body.data as T;
 }
 
 export function fetchOptimizeReport() {
-  return optimizeFetch<ImageOptimizeReport>("/file/optimize/report");
+  return optimizeFetch<ImageOptimizeReport>('/file/optimize/report');
 }
 
 export function startOptimizeJob(options: OptimizeRunOptions) {
-  return optimizeFetch<OptimizeJob>("/file/optimize/run", {
-    method: "POST",
+  return optimizeFetch<OptimizeJob>('/file/optimize/run', {
+    method: 'POST',
     body: JSON.stringify(options),
   });
 }

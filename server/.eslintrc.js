@@ -21,5 +21,8 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'off',
     'simple-import-sort/imports': 'off',
     'simple-import-sort/exports': 'off',
+    // Server package pins Prettier 1.x; eslint-plugin-prettier cannot parse modern TS (`import type`).
+    // Formatting is handled by root Prettier / lint-staged, not ESLint.
+    'prettier/prettier': 'off',
   },
 };

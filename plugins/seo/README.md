@@ -9,35 +9,35 @@ Official plugin — **URL slug**, **SEO keywords**, and **meta description** wit
 
 ## Features
 
-| Field | Description |
-| :--- | :--- |
-| `slug` | URL alias, accessible at `/article/{slug}` |
-| `seoKeywords` | meta keywords, comma-separated |
-| `seoDescription` | meta description |
+| Field            | Description                                |
+| :--------------- | :----------------------------------------- |
+| `slug`           | URL alias, accessible at `/article/{slug}` |
+| `seoKeywords`    | meta keywords, comma-separated             |
+| `seoDescription` | meta description                           |
 
-| Scenario | Behavior (when plugin enabled and option on) |
-| :--- | :--- |
-| Slug empty | Generate slug from title |
-| SEO description empty | Prefer summary, else truncate body |
-| SEO keywords empty | Use title + tag names |
+| Scenario              | Behavior (when plugin enabled and option on) |
+| :-------------------- | :------------------------------------------- |
+| Slug empty            | Generate slug from title                     |
+| SEO description empty | Prefer summary, else truncate body           |
+| SEO keywords empty    | Use title + tag names                        |
 
 ## Hooks
 
-| Hook | Type | Description |
-| :--- | :--- | :--- |
-| `article.beforeCreate` | filter | Fill SEO fields on create |
+| Hook                    | Type   | Description                |
+| :---------------------- | :----- | :------------------------- |
+| `article.beforeCreate`  | filter | Fill SEO fields on create  |
 | `article.beforePublish` | filter | Fill SEO fields on publish |
 
 ## Configuration
 
-| Field | Type | Default | Description |
-| :--- | :--- | :--- | :--- |
-| `enabled` | boolean | `true` | Master switch |
-| `autoSlug` | boolean | `true` | Auto-generate slug |
-| `autoDescription` | boolean | `true` | Auto-generate description |
-| `autoKeywords` | boolean | `true` | Auto-generate keywords |
-| `descriptionMaxLength` | number | `160` | Max description length |
-| `descriptionSuffix` | string | `…` | Truncation suffix |
+| Field                  | Type    | Default | Description               |
+| :--------------------- | :------ | :------ | :------------------------ |
+| `enabled`              | boolean | `true`  | Master switch             |
+| `autoSlug`             | boolean | `true`  | Auto-generate slug        |
+| `autoDescription`      | boolean | `true`  | Auto-generate description |
+| `autoKeywords`         | boolean | `true`  | Auto-generate keywords    |
+| `descriptionMaxLength` | number  | `160`   | Max description length    |
+| `descriptionSuffix`    | string  | `…`     | Truncation suffix         |
 
 ## Usage
 
@@ -48,7 +48,7 @@ Official plugin — **URL slug**, **SEO keywords**, and **meta description** wit
 
 ## Admin UI
 
-The **SEO Settings** panel in the article editor is injected via Admin slot `article.editor.meta.afterSummary` (see [`admin/`](./admin/)). The panel unmounts automatically when the plugin is deactivated.
+The **SEO Settings** panel in the article editor is injected via Admin slot `article.editor.meta.afterSummary` (see [`src/admin/`](./src/admin/)). The panel unmounts automatically when the plugin is deactivated.
 
 ## Development
 

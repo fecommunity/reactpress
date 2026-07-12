@@ -5,10 +5,12 @@ import {
 } from "@fecommunity/reactpress-toolkit/plugin/extension";
 import { http } from "msw";
 
-import helloWorldAdminEn from "../../../../plugins/hello-world/locales/en.json";
-import helloWorldAdminZh from "../../../../plugins/hello-world/locales/zh.json";
-import seoAdminEn from "../../../../plugins/seo/locales/en.json";
-import seoAdminZh from "../../../../plugins/seo/locales/zh.json";
+import helloWorldAdminEn from "../../../../plugins/hello-world/src/locales/en.json";
+import helloWorldAdminZh from "../../../../plugins/hello-world/src/locales/zh.json";
+import imageOptimizerAdminEn from "../../../../plugins/image-optimizer/src/locales/en.json";
+import imageOptimizerAdminZh from "../../../../plugins/image-optimizer/src/locales/zh.json";
+import seoAdminEn from "../../../../plugins/seo/src/locales/en.json";
+import seoAdminZh from "../../../../plugins/seo/src/locales/zh.json";
 import { successResponse, withDelay } from "../createHandler";
 import { getMockGlobalSetting, patchMockGlobalSettingPlugins, setMockGlobalSetting } from "./page";
 
@@ -52,6 +54,25 @@ const SEO_SETTINGS = {
   },
 };
 
+const IMAGE_OPTIMIZER_SETTINGS = {
+  schema: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      batchSize: {
+        type: "integer",
+        title: "每批处理数量",
+        minimum: 1,
+        maximum: 200,
+        default: 50,
+      },
+      skipGif: { type: "boolean", title: "跳过 GIF", default: true },
+      rewriteContent: { type: "boolean", title: "优化后回写内容 URL", default: false },
+      cleanupOriginals: { type: "boolean", title: "优化后删除原文件", default: false },
+    },
+  },
+};
+
 const MOCK_PLUGINS = [
   {
     id: "hello-world",
@@ -91,6 +112,28 @@ const MOCK_PLUGINS = [
         path: "/plugins/seo/settings",
         permission: "extension:manage",
         sort: 20,
+      },
+    },
+  },
+  {
+    id: "image-optimizer",
+    name: "图片资源优化",
+    version: "1.0.0",
+    description: "分析历史图片素材并批量压缩为 WebP 多尺寸变体，可选回写文章与页面中的图片 URL。",
+    author: "ReactPress",
+    source: "local" as const,
+    installed: false,
+    active: false,
+    settings: IMAGE_OPTIMIZER_SETTINGS,
+    server: {
+      module: "./dist/index.js",
+    },
+    admin: {
+      menu: {
+        title: "图片优化",
+        path: "/plugins/image-optimizer/settings",
+        permission: "extension:manage",
+        sort: 30,
       },
     },
   },
@@ -140,6 +183,12 @@ export const pluginHandlers = [
       const messages = locale.toLowerCase().startsWith("zh") ? seoAdminZh : seoAdminEn;
       return successResponse({ pluginId: id, locale, messages });
     }
+    if (id === "image-optimizer") {
+      const messages = locale.toLowerCase().startsWith("zh")
+        ? imageOptimizerAdminZh
+        : imageOptimizerAdminEn;
+      return successResponse({ pluginId: id, locale, messages });
+    }
     return successResponse({ pluginId: id, locale, messages: {} });
   }),
 
@@ -169,16 +218,20 @@ export const pluginHandlers = [
     await withDelay(200);
     const state = getPluginStateFromGlobalSetting(getMockGlobalSetting());
     const id = String(params.id);
+    const installedPlugins = state.installedPlugins.includes(id)
+      ? state.installedPlugins
+      : [...state.installedPlugins, id];
     const activePlugins = state.activePlugins.includes(id)
       ? state.activePlugins
       : [...state.activePlugins, id];
     const entries = { ...state.entries };
     entries[id] = {
-      ...(entries[id] ?? { version: "1.2.0", source: "local" }),
+      ...(entries[id] ?? { version: "1.0.0", source: "local" }),
       activatedAt: new Date().toISOString(),
       loadError: undefined,
     };
     const merged = mergePluginStateIntoGlobalSetting(getMockGlobalSetting(), {
+      installedPlugins,
       activePlugins,
       entries,
     });

@@ -40,7 +40,7 @@ export function PluginAdminProvider({ children }: PluginAdminProviderProps) {
         if (!pluginHasBundledAdminModule(plugin.id)) {
           if (import.meta.env.DEV) {
             console.warn(
-              `[PluginAdmin] Plugin "${plugin.id}" declares admin UI but no bundled admin/index.ts was found.`,
+              `[PluginAdmin] Plugin "${plugin.id}" declares admin UI but no bundled src/admin/index.ts was found.`,
             );
           }
           continue;

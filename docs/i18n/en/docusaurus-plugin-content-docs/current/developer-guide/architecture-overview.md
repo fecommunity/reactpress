@@ -19,7 +19,7 @@ flowchart TB
     Web["web — Admin SPA"]
     Desktop["desktop — Electron"]
     Theme["themes/* — Next.js SSR"]
-    PluginUI["plugins/*/admin"]
+    PluginUI["plugins/*/src/admin"]
   end
 
   subgraph Contract["Contract layer"]
@@ -46,15 +46,15 @@ flowchart TB
 
 ## Package responsibility matrix
 
-| Package | npm | Responsibility | Rendering | SEO |
-|----|-----|------|------|-----|
-| **server** | `@fecommunity/reactpress-server`¹ | Business logic, persistence, auth | — | — |
-| **web** | `@fecommunity/reactpress-web` | Admin UI | Vite CSR | No |
-| **themes/** | per-theme packages | Visitor site | Next SSR/ISR | Yes |
-| **toolkit** | `@fecommunity/reactpress-toolkit` | API client, types | — | — |
-| **plugins/** | per-plugin packages | Hook logic + Admin slots | Mixed | Plugin-related |
-| **desktop** | — | Electron shell + local API | loads web/dist | No |
-| **cli** | `@fecommunity/reactpress` | init / doctor / orchestration | — | — |
+| Package      | npm                               | Responsibility                    | Rendering      | SEO            |
+| ------------ | --------------------------------- | --------------------------------- | -------------- | -------------- |
+| **server**   | `@fecommunity/reactpress-server`¹ | Business logic, persistence, auth | —              | —              |
+| **web**      | `@fecommunity/reactpress-web`     | Admin UI                          | Vite CSR       | No             |
+| **themes/**  | per-theme packages                | Visitor site                      | Next SSR/ISR   | Yes            |
+| **toolkit**  | `@fecommunity/reactpress-toolkit` | API client, types                 | —              | —              |
+| **plugins/** | per-plugin packages               | Hook logic + Admin slots          | Mixed          | Plugin-related |
+| **desktop**  | —                                 | Electron shell + local API        | loads web/dist | No             |
+| **cli**      | `@fecommunity/reactpress`         | init / doctor / orchestration     | —              | —              |
 
 ¹ Standalone npm package deprecated; end users use CLI bundled API.
 
@@ -62,13 +62,13 @@ flowchart TB
 
 **Maintainability → Extensibility → Tech fit → Low cost**
 
-| Decision | Choice | Reason |
-|------|------|------|
-| API access | Toolkit only | Single client, OpenAPI codegen |
-| Admin | Vite SPA | Interaction-heavy, no SSR needed |
-| Visitor site | Next.js | SSR/ISR, SEO |
-| Extensions | Hook + manifest | WordPress-style, no core edits |
-| List state | URL searchParams | Shareable, refreshable |
+| Decision     | Choice           | Reason                           |
+| ------------ | ---------------- | -------------------------------- |
+| API access   | Toolkit only     | Single client, OpenAPI codegen   |
+| Admin        | Vite SPA         | Interaction-heavy, no SSR needed |
+| Visitor site | Next.js          | SSR/ISR, SEO                     |
+| Extensions   | Hook + manifest  | WordPress-style, no core edits   |
+| List state   | URL searchParams | Shareable, refreshable           |
 
 ## Data flow rules
 
@@ -79,20 +79,20 @@ flowchart TB
 
 ## Runtime ports
 
-| Process | Default port |
-|------|----------|
-| Admin | 3000 |
-| Theme | 3001 |
-| API | 3002 |
-| Theme preview | 3003 |
+| Process       | Default port |
+| ------------- | ------------ |
+| Admin         | 3000         |
+| Theme         | 3001         |
+| API           | 3002         |
+| Theme preview | 3003         |
 
 ## Extension points
 
-| Extension | Registry | Docs |
-|----------|----------|------|
-| Theme | `theme.json` / npm catalog | [Theme development](./theme-development.md) |
-| Plugin | `plugin.json` | [Plugin development](./plugin-development.md) |
-| Headless | REST + API Key | [Headless API](./headless-api.md) |
+| Extension | Registry                   | Docs                                          |
+| --------- | -------------------------- | --------------------------------------------- |
+| Theme     | `theme.json` / npm catalog | [Theme development](./theme-development.md)   |
+| Plugin    | `plugin.json`              | [Plugin development](./plugin-development.md) |
+| Headless  | REST + API Key             | [Headless API](./headless-api.md)             |
 
 ## Related docs
 

@@ -13,17 +13,20 @@ const repoRoot = path.join(cliRoot, '..');
 const pluginsRoot = path.join(repoRoot, 'plugins');
 const bundledPlugins = path.join(cliRoot, 'plugins');
 
-const PLUGIN_SKIP_DIRS = new Set(['node_modules', '.git', '.turbo', 'src', 'coverage']);
+const PLUGIN_SKIP_DIRS = new Set(['node_modules', '.git', '.turbo', 'coverage']);
+const PLUGIN_SKIP_REL_PATHS = new Set(['src/server', 'src/admin']);
 
-function copyPluginTree(srcDir, destDir) {
+function copyPluginTree(srcDir, destDir, relFromRoot = '') {
   fs.mkdirSync(destDir, { recursive: true });
   for (const entry of fs.readdirSync(srcDir, { withFileTypes: true })) {
     const src = path.join(srcDir, entry.name);
     const dest = path.join(destDir, entry.name);
 
     if (entry.isDirectory()) {
-      if (PLUGIN_SKIP_DIRS.has(entry.name)) continue;
-      copyPluginTree(src, dest);
+      if (!relFromRoot && PLUGIN_SKIP_DIRS.has(entry.name)) continue;
+      const relPath = relFromRoot ? path.posix.join(relFromRoot, entry.name) : entry.name;
+      if (PLUGIN_SKIP_REL_PATHS.has(relPath)) continue;
+      copyPluginTree(src, dest, relPath);
       continue;
     }
 

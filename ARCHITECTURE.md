@@ -38,22 +38,22 @@
 
 ReactPress is a WordPress-like content platform with a clear separation of concerns:
 
-| Domain | Capabilities |
-|--------|--------------|
-| Content | Articles, categories, tags, comments, static pages |
-| Media | Upload, media library, storage (local / OSS) |
-| Appearance | Theme install / activate / preview, site customization |
-| Extensions | Plugin install / enable / configure |
-| System | Users & permissions, site settings, import/export, analytics |
+| Domain     | Capabilities                                                 |
+| ---------- | ------------------------------------------------------------ |
+| Content    | Articles, categories, tags, comments, static pages           |
+| Media      | Upload, media library, storage (local / OSS)                 |
+| Appearance | Theme install / activate / preview, site customization       |
+| Extensions | Plugin install / enable / configure                          |
+| System     | Users & permissions, site settings, import/export, analytics |
 
 ### Non-functional goals
 
-| Goal | Target |
-|------|--------|
+| Goal                 | Target                                                                        |
+| -------------------- | ----------------------------------------------------------------------------- |
 | Admin responsiveness | Shell stays mounted; route switches feel < 100ms; list views cache on revisit |
-| Visitor SEO | Core pages SSR/ISR; Lighthouse SEO ≥ 90 |
-| Multi-device | One responsive web app for desktop / tablet / mobile |
-| Data consistency | All frontends access API only through toolkit |
+| Visitor SEO          | Core pages SSR/ISR; Lighthouse SEO ≥ 90                                       |
+| Multi-device         | One responsive web app for desktop / tablet / mobile                          |
+| Data consistency     | All frontends access API only through toolkit                                 |
 
 ---
 
@@ -67,7 +67,7 @@ flowchart TB
     Web["web — Admin SPA"]
     Desktop["desktop — Electron shell (loads web/dist)"]
     Theme["themes/* — Visitor SSR"]
-    PluginUI["plugins/*/admin — Plugin Admin slots"]
+    PluginUI["plugins/*/src/admin — Plugin Admin slots"]
   end
 
   subgraph Contract["Contract (stable, shared)"]
@@ -95,16 +95,16 @@ flowchart TB
 
 ### Responsibility matrix
 
-| Package | Single responsibility | Rendering | SEO |
-|---------|----------------------|-----------|-----|
-| **server** | Business rules, persistence, auth, extension lifecycle | — | — |
-| **web** | Admin UI | Vite CSR SPA | No |
-| **themes/** | Visitor site | Next.js SSR/SSG/ISR | Yes |
-| **toolkit** | API client, types, React integration, extension schemas | — | — |
-| **plugins/** | Incremental logic (Hook + optional Admin UI) | Server + Admin slots | Plugin-dependent |
-| **desktop/** | Electron shell, local API orchestration, IPC | Loads `web/dist` | No |
-| **cli** | Local dev / deploy orchestration | — | — |
-| **docs** | Project docs (Docusaurus) | SSG | — |
+| Package      | Single responsibility                                   | Rendering            | SEO              |
+| ------------ | ------------------------------------------------------- | -------------------- | ---------------- |
+| **server**   | Business rules, persistence, auth, extension lifecycle  | —                    | —                |
+| **web**      | Admin UI                                                | Vite CSR SPA         | No               |
+| **themes/**  | Visitor site                                            | Next.js SSR/SSG/ISR  | Yes              |
+| **toolkit**  | API client, types, React integration, extension schemas | —                    | —                |
+| **plugins/** | Incremental logic (Hook + optional Admin UI)            | Server + Admin slots | Plugin-dependent |
+| **desktop/** | Electron shell, local API orchestration, IPC            | Loads `web/dist`     | No               |
+| **cli**      | Local dev / deploy orchestration                        | —                    | —                |
+| **docs**     | Project docs (Docusaurus)                               | SSG                  | —                |
 
 ### Architecture red lines
 
@@ -125,26 +125,26 @@ flowchart LR
   T --> C[Low cost]
 ```
 
-| Principle | Meaning | How it lands |
-|-------------|---------|--------------|
+| Principle           | Meaning                                            | How it lands                                                     |
+| ------------------- | -------------------------------------------------- | ---------------------------------------------------------------- |
 | **Maintainability** | Change one place, test one place, clear boundaries | Layering + Feature Modules + single API client + OpenAPI codegen |
-| **Extensibility** | Core changes rarely; third parties can attach | Registry + Hook + manifest contracts |
-| **Technical fit** | Match tech to scenario; avoid stack bloat | Admin = SPA, public pages = SSR, business logic in Server |
-| **Low cost** | Few processes, few repos, little duplication | Monorepo + shared toolkit; responsive web instead of native apps |
+| **Extensibility**   | Core changes rarely; third parties can attach      | Registry + Hook + manifest contracts                             |
+| **Technical fit**   | Match tech to scenario; avoid stack bloat          | Admin = SPA, public pages = SSR, business logic in Server        |
+| **Low cost**        | Few processes, few repos, little duplication       | Monorepo + shared toolkit; responsive web instead of native apps |
 
 ### Key decision summary
 
-| Decision | Choice | Maintainability | Extensibility | Fit | Cost |
-|----------|--------|-----------------|---------------|-----|------|
-| API access | toolkit as sole entry | ★★★ | ★★ | ★★★ | Low |
-| Admin | Vite SPA | ★★ | ★★ | ★★★ | Low |
-| Visitor | Next.js SSR/ISR | ★★ | ★★★ | ★★★ | Medium |
-| Module layout | Feature Module + Registry | ★★★ | ★★★ | ★★ | Low |
-| Plugins | Hook + manifest | ★★ | ★★★ | ★★★ | Medium |
-| Themes | Separate process + `theme.json` | ★★ | ★★★ | ★★★ | Medium |
-| List state | URL searchParams | ★★★ | ★★ | ★★★ | Low |
-| Multi-device | Responsive web + Electron shell | ★★★ | ★★ | ★★★ | Medium |
-| Types | OpenAPI codegen | ★★★ | ★★ | ★★★ | Low |
+| Decision      | Choice                          | Maintainability | Extensibility | Fit | Cost   |
+| ------------- | ------------------------------- | --------------- | ------------- | --- | ------ |
+| API access    | toolkit as sole entry           | ★★★             | ★★            | ★★★ | Low    |
+| Admin         | Vite SPA                        | ★★              | ★★            | ★★★ | Low    |
+| Visitor       | Next.js SSR/ISR                 | ★★              | ★★★           | ★★★ | Medium |
+| Module layout | Feature Module + Registry       | ★★★             | ★★★           | ★★  | Low    |
+| Plugins       | Hook + manifest                 | ★★              | ★★★           | ★★★ | Medium |
+| Themes        | Separate process + `theme.json` | ★★              | ★★★           | ★★★ | Medium |
+| List state    | URL searchParams                | ★★★             | ★★            | ★★★ | Low    |
+| Multi-device  | Responsive web + Electron shell | ★★★             | ★★            | ★★★ | Medium |
+| Types         | OpenAPI codegen                 | ★★★             | ★★            | ★★★ | Low    |
 
 ---
 
@@ -154,16 +154,16 @@ Managed with **pnpm workspace** (`pnpm-workspace.yaml`):
 
 ```yaml
 packages:
-  - 'cli'        # Global CLI (@fecommunity/reactpress)
-  - 'server'     # NestJS API
-  - 'web'        # Admin SPA
-  - 'desktop'    # Electron shell
-  - 'docs'       # Docusaurus docs site
-  - 'toolkit'    # Shared API contract layer
-  - 'themes'     # Theme registry
-  - 'themes/*'   # Official theme templates
-  - 'plugins'    # Plugin registry
-  - 'plugins/*'  # Official plugins
+  - 'cli' # Global CLI (@fecommunity/reactpress)
+  - 'server' # NestJS API
+  - 'web' # Admin SPA
+  - 'desktop' # Electron shell
+  - 'docs' # Docusaurus docs site
+  - 'toolkit' # Shared API contract layer
+  - 'themes' # Theme registry
+  - 'themes/*' # Official theme templates
+  - 'plugins' # Plugin registry
+  - 'plugins/*' # Official plugins
 ```
 
 ### Repository tree (core)
@@ -193,13 +193,13 @@ reactpress/
 
 ### npm package mapping
 
-| Directory | npm package | Notes |
-|-----------|-------------|-------|
-| `cli/` | `@fecommunity/reactpress` | 4.0 main package; global `reactpress` command |
-| `web/` | `@fecommunity/reactpress-web` | Admin SPA |
-| `server/` | `@fecommunity/reactpress-server` | Monorepo source; standalone npm deprecated — use CLI bundled API |
-| `toolkit/` | `@fecommunity/reactpress-toolkit` | Shared SDK |
-| `themes/hello-world` | `@fecommunity/reactpress-template-hello-world` | Starter theme |
+| Directory            | npm package                                    | Notes                                                            |
+| -------------------- | ---------------------------------------------- | ---------------------------------------------------------------- |
+| `cli/`               | `@fecommunity/reactpress`                      | 4.0 main package; global `reactpress` command                    |
+| `web/`               | `@fecommunity/reactpress-web`                  | Admin SPA                                                        |
+| `server/`            | `@fecommunity/reactpress-server`               | Monorepo source; standalone npm deprecated — use CLI bundled API |
+| `toolkit/`           | `@fecommunity/reactpress-toolkit`              | Shared SDK                                                       |
+| `themes/hello-world` | `@fecommunity/reactpress-template-hello-world` | Starter theme                                                    |
 
 ---
 
@@ -207,15 +207,15 @@ reactpress/
 
 CLI orchestrates independent processes in local development:
 
-| Process | Default port | Stack | Notes |
-|---------|--------------|-------|-------|
-| **web** | 3000 | Vite + React | Admin entry |
-| **active theme** | 3001 | Next.js | Current visitor theme |
-| **server** | 3002 | NestJS | REST API (prefix `/api`) |
-| **preview theme** | 3003 | Next.js | Admin iframe preview of non-active theme |
-| **MySQL** | 3306 | MySQL 5.7 | Full-stack dev / default production persistence |
-| **desktop local API** | 3002 | NestJS + SQLite | Embedded API in `pnpm dev:desktop` (same port as standard API) |
-| **nginx** (optional) | 80 / 8080 | nginx | Unified reverse proxy |
+| Process               | Default port | Stack           | Notes                                                          |
+| --------------------- | ------------ | --------------- | -------------------------------------------------------------- |
+| **web**               | 3000         | Vite + React    | Admin entry                                                    |
+| **active theme**      | 3001         | Next.js         | Current visitor theme                                          |
+| **server**            | 3002         | NestJS          | REST API (prefix `/api`)                                       |
+| **preview theme**     | 3003         | Next.js         | Admin iframe preview of non-active theme                       |
+| **MySQL**             | 3306         | MySQL 5.7       | Full-stack dev / default production persistence                |
+| **desktop local API** | 3002         | NestJS + SQLite | Embedded API in `pnpm dev:desktop` (same port as standard API) |
+| **nginx** (optional)  | 80 / 8080    | nginx           | Unified reverse proxy                                          |
 
 Three core processes (Admin, theme, API) deploy and scale independently — traffic patterns differ, so separation beats a monolithic Next app.
 
@@ -370,20 +370,20 @@ List filters, pagination, and sort live in URL searchParams:
 /article?page=2&status=published&sort=-createdAt&keyword=react
 ```
 
-| Benefit | Why |
-|---------|-----|
-| Shareable | Admins copy links to restore views |
-| Testable | E2E does not depend on component state |
-| Cacheable | React Query uses URL params as queryKey |
+| Benefit         | Why                                        |
+| --------------- | ------------------------------------------ |
+| Shareable       | Admins copy links to restore views         |
+| Testable        | E2E does not depend on component state     |
+| Cacheable       | React Query uses URL params as queryKey    |
 | Device-agnostic | Desktop / mobile share the same data logic |
 
 ### Codegen boundaries
 
-| Generated (no hand edits) | Hand-written |
-|---------------------------|--------------|
-| `toolkit/api/*` | `toolkit/react/hooks/*` |
-| `toolkit/types/*` | `toolkit/admin/components/*` |
-| OpenAPI spec | Feature Module business UI |
+| Generated (no hand edits) | Hand-written                 |
+| ------------------------- | ---------------------------- |
+| `toolkit/api/*`           | `toolkit/react/hooks/*`      |
+| `toolkit/types/*`         | `toolkit/admin/components/*` |
+| OpenAPI spec              | Feature Module business UI   |
 
 ---
 
@@ -393,10 +393,10 @@ Modeled after WordPress `add_action` / `add_filter`, constrained by TypeScript m
 
 ### Extension model
 
-| Type | Extends | Carrier |
-|------|---------|---------|
-| **Theme** | Visitor UI | Independent Next.js package + `theme.json` |
-| **Plugin** | Business logic + optional Admin UI | Server module + optional `admin/index.ts` |
+| Type       | Extends                            | Carrier                                       |
+| ---------- | ---------------------------------- | --------------------------------------------- |
+| **Theme**  | Visitor UI                         | Independent Next.js package + `theme.json`    |
+| **Plugin** | Business logic + optional Admin UI | Server module + optional `src/admin/index.ts` |
 
 **Hooks** (in-process, can mutate) vs **Webhooks** (outbound HTTP) are separate.
 
@@ -445,12 +445,12 @@ interface HookService {
 }
 ```
 
-| Hook | When |
-|------|------|
+| Hook                    | When                         |
+| ----------------------- | ---------------------------- |
 | `article.beforePublish` | Mutate fields before publish |
-| `article.afterPublish` | Notify, index after publish |
-| `comment.beforeCreate` | Spam filter |
-| `setting.beforeSave` | Validate extension config |
+| `article.afterPublish`  | Notify, index after publish  |
+| `comment.beforeCreate`  | Spam filter                  |
+| `setting.beforeSave`    | Validate extension config    |
 
 ### Admin Registry
 
@@ -472,18 +472,22 @@ Core modules and plugins use the same API — new official features = new module
 
 ### Theme switching strategy
 
-| Phase | Strategy | Rationale |
-|-------|----------|-----------|
+| Phase         | Strategy                                     | Rationale                                 |
+| ------------- | -------------------------------------------- | ----------------------------------------- |
 | MVP (current) | Update `activeTheme` + restart theme process | Simple, stable SSR, no runtime federation |
-| Later | Hot swap / multi-theme preview | Only when product requires it |
+| Later         | Hot swap / multi-theme preview               | Only when product requires it             |
 
 ### Permission model
 
 ```typescript
 type Permission =
-  | 'article:read' | 'article:write' | 'article:publish'
-  | 'media:manage' | 'page:manage'
-  | 'user:manage' | 'setting:manage'
+  | 'article:read'
+  | 'article:write'
+  | 'article:publish'
+  | 'media:manage'
+  | 'page:manage'
+  | 'user:manage'
+  | 'setting:manage'
   | 'extension:manage';
 ```
 
@@ -495,18 +499,18 @@ String capabilities beat hard-coded `role === 'admin'`.
 
 ### Plugin three-layer model
 
-| Layer | Path | Role |
-|-------|------|------|
-| Registry | `plugins/` + `plugins/package.json` | What can be installed |
-| Materialized | `.reactpress/plugins/{id}/` | Installed copy with `dist/` |
-| Active | `Setting.globalSetting.plugins` | Enabled list + per-plugin config |
+| Layer        | Path                                | Role                             |
+| ------------ | ----------------------------------- | -------------------------------- |
+| Registry     | `plugins/` + `plugins/package.json` | What can be installed            |
+| Materialized | `.reactpress/plugins/{id}/`         | Installed copy with `dist/`      |
+| Active       | `Setting.globalSetting.plugins`     | Enabled list + per-plugin config |
 
-| Action | Effect |
-|--------|--------|
-| Install | Materialize to `.reactpress/plugins/` |
-| Enable | Hot-load `server.module` → `register(hooks, ctx)` |
-| Disable | Remove hooks; optional `deactivate()` |
-| Config | JSON Schema validation then reload |
+| Action  | Effect                                            |
+| ------- | ------------------------------------------------- |
+| Install | Materialize to `.reactpress/plugins/`             |
+| Enable  | Hot-load `server.module` → `register(hooks, ctx)` |
+| Disable | Remove hooks; optional `deactivate()`             |
+| Config  | JSON Schema validation then reload                |
 
 Built-in plugins: `hello-world`, `seo`, `image-optimizer`. See [plugins/README.md](./plugins/README.md).
 
@@ -516,52 +520,52 @@ Built-in plugins: `hello-world`, `seo`, `image-optimizer`. See [plugins/README.m
 
 ### Rendering by scenario
 
-| Scenario | Tech | Why |
-|----------|------|-----|
-| Admin | **Vite + React SPA** | No SEO; small CSR bundle, fast HMR, static deploy |
-| Visitor theme | **Next.js SSR/SSG/ISR** | Crawlers and social previews need full HTML |
-| API | **NestJS REST** | Mature modules; OpenAPI codegen chain |
+| Scenario      | Tech                    | Why                                               |
+| ------------- | ----------------------- | ------------------------------------------------- |
+| Admin         | **Vite + React SPA**    | No SEO; small CSR bundle, fast HMR, static deploy |
+| Visitor theme | **Next.js SSR/SSG/ISR** | Crawlers and social previews need full HTML       |
+| API           | **NestJS REST**         | Mature modules; OpenAPI codegen chain             |
 
 **Not chosen:**
 
-| Approach | Why not |
-|----------|---------|
-| Admin on Next.js | No SSR/RSC benefit; extra routing + server complexity |
-| Admin + theme in one app | Coupled responsibilities, bundle bloat, cannot deploy separately |
-| GraphQL instead of REST | Existing Swagger pipeline; GraphQL adds schema maintenance |
-| Micro-frontends (qiankun, etc.) | Team/scale mismatch; Registry + dynamic import is enough |
+| Approach                        | Why not                                                          |
+| ------------------------------- | ---------------------------------------------------------------- |
+| Admin on Next.js                | No SSR/RSC benefit; extra routing + server complexity            |
+| Admin + theme in one app        | Coupled responsibilities, bundle bloat, cannot deploy separately |
+| GraphQL instead of REST         | Existing Swagger pipeline; GraphQL adds schema maintenance       |
+| Micro-frontends (qiankun, etc.) | Team/scale mismatch; Registry + dynamic import is enough         |
 
 ### Admin frontend stack
 
-| Layer | Choice | Role |
-|-------|--------|------|
-| Build | Vite+ (`vp dev/build`) | Fast dev, native ESM |
-| Routing | TanStack Router | Type-safe, file routes, searchParams first-class |
-| Server state | TanStack Query | Cache, retry, optimistic mutations |
-| Client state | Zustand (auth/settings only) | Light persistence; avoid global store abuse |
-| UI | Ant Design 6 | Complete admin components, responsive grid |
-| Validation | Zod | Unified form + API boundary |
+| Layer        | Choice                       | Role                                             |
+| ------------ | ---------------------------- | ------------------------------------------------ |
+| Build        | Vite+ (`vp dev/build`)       | Fast dev, native ESM                             |
+| Routing      | TanStack Router              | Type-safe, file routes, searchParams first-class |
+| Server state | TanStack Query               | Cache, retry, optimistic mutations               |
+| Client state | Zustand (auth/settings only) | Light persistence; avoid global store abuse      |
+| UI           | Ant Design 6                 | Complete admin components, responsive grid       |
+| Validation   | Zod                          | Unified form + API boundary                      |
 
 State split: **URL for list state · React Query for server data · Zustand for session/UI prefs**.
 
 ### Admin performance
 
-| Technique | Mechanism |
-|-----------|-----------|
-| Persistent shell | Layout route stays mounted; only `<Outlet />` swaps |
-| Route-level code split | Each module is its own chunk |
-| Lazy heavy deps | Rich text, charts via `React.lazy()` |
-| List cache | `staleTime: 30s` for instant back-navigation |
-| Prefetch | Sidebar hover preloads next route chunk |
+| Technique              | Mechanism                                           |
+| ---------------------- | --------------------------------------------------- |
+| Persistent shell       | Layout route stays mounted; only `<Outlet />` swaps |
+| Route-level code split | Each module is its own chunk                        |
+| Lazy heavy deps        | Rich text, charts via `React.lazy()`                |
+| List cache             | `staleTime: 30s` for instant back-navigation        |
+| Prefetch               | Sidebar hover preloads next route chunk             |
 
 ### Visitor SEO
 
-| Page type | Mode |
-|-----------|------|
+| Page type               | Mode                 |
+| ----------------------- | -------------------- |
 | Home, article, archives | ISR `revalidate: 60` |
-| About, privacy | SSG |
-| Search | SSR |
-| Comment submit | CSR island |
+| About, privacy          | SSG                  |
+| Search                  | SSR                  |
+| Comment submit          | CSR island           |
 
 `toolkit/theme` provides `fetchArticle`, `buildPageMeta`, `buildJsonLd` — theme authors call helpers, not SEO boilerplate.
 
@@ -571,23 +575,23 @@ State split: **URL for list state · React Query for server data · Zustand for 
 
 ### Cost model
 
-| Cost type | Control strategy |
-|-----------|-------------------|
-| Development | Monorepo + toolkit reuse; Feature Module templates for CRUD |
-| Operations | Admin static hosting; theme = standard Next deploy; API single process |
-| Multi-device | Responsive web — no native iOS/Android Admin |
-| Extensions | manifest + Registry — no core PR for third-party features |
+| Cost type      | Control strategy                                                        |
+| -------------- | ----------------------------------------------------------------------- |
+| Development    | Monorepo + toolkit reuse; Feature Module templates for CRUD             |
+| Operations     | Admin static hosting; theme = standard Next deploy; API single process  |
+| Multi-device   | Responsive web — no native iOS/Android Admin                            |
+| Extensions     | manifest + Registry — no core PR for third-party features               |
 | Learning curve | Stack converges on React + Nest; theme authors need Next + toolkit only |
 
 ### Responsive web (one codebase, three viewports)
 
 Breakpoints align with Ant Design (single standard across repo):
 
-| Breakpoint | Width | Admin | Theme |
-|------------|-------|-------|-------|
-| `< md` | < 768px | Drawer nav; table → cards | Single column |
-| `md–lg` | 768–992px | Collapsed sidebar | Two columns |
-| `≥ lg` | ≥ 992px | Fixed sidebar + wide table | Sidebar + main |
+| Breakpoint | Width     | Admin                      | Theme          |
+| ---------- | --------- | -------------------------- | -------------- |
+| `< md`     | < 768px   | Drawer nav; table → cards  | Single column  |
+| `md–lg`    | 768–992px | Collapsed sidebar          | Two columns    |
+| `≥ lg`     | ≥ 992px   | Fixed sidebar + wide table | Sidebar + main |
 
 Shared components in `toolkit/admin`: `ResponsiveTable`, `ResponsiveFilterToolbar`, `ResponsiveFormModal`.
 
@@ -602,14 +606,14 @@ Shared components in `toolkit/admin`: `ResponsiveTable`, `ResponsiveFilterToolba
 
 ### What we deliberately skip (cost control)
 
-| Skip | Reason |
-|------|--------|
-| Native mobile Admin app | Responsive web covers most ops |
-| Electron-embedded duplicate Admin UI | Shell only loads `web/dist` |
-| Plugin marketplace sandbox (v1) | Local dir + admin trust model is enough |
-| Theme runtime federation | Separate process + restart is simpler |
-| Multi-DB / multi-tenant (v1) | Single-site CMS first |
-| Custom ORM / UI library | TypeORM + Ant Design |
+| Skip                                 | Reason                                  |
+| ------------------------------------ | --------------------------------------- |
+| Native mobile Admin app              | Responsive web covers most ops          |
+| Electron-embedded duplicate Admin UI | Shell only loads `web/dist`             |
+| Plugin marketplace sandbox (v1)      | Local dir + admin trust model is enough |
+| Theme runtime federation             | Separate process + restart is simpler   |
+| Multi-DB / multi-tenant (v1)         | Single-site CMS first                   |
+| Custom ORM / UI library              | TypeORM + Ant Design                    |
 
 ---
 
@@ -617,14 +621,14 @@ Shared components in `toolkit/admin`: `ResponsiveTable`, `ResponsiveFilterToolba
 
 ### Stack
 
-| Layer | Technology |
-|-------|------------|
-| Framework | NestJS 6 |
-| ORM | TypeORM 0.2 |
-| Database | MySQL (default); **SQLite** for desktop local mode (`DB_TYPE=sqlite`) |
-| Auth | Passport + JWT, API Key |
-| Docs | Swagger at `/api` |
-| Other | helmet, compression, rate-limit, log4js, nodemailer, ali-oss |
+| Layer     | Technology                                                            |
+| --------- | --------------------------------------------------------------------- |
+| Framework | NestJS 6                                                              |
+| ORM       | TypeORM 0.2                                                           |
+| Database  | MySQL (default); **SQLite** for desktop local mode (`DB_TYPE=sqlite`) |
+| Auth      | Passport + JWT, API Key                                               |
+| Docs      | Swagger at `/api`                                                     |
+| Other     | helmet, compression, rate-limit, log4js, nodemailer, ali-oss          |
 
 ### Module layout
 
@@ -662,15 +666,15 @@ User, Article, ArticleRevision, Category, Tag, Comment, Page, Knowledge, File, S
 
 ### Stack
 
-| Category | Technology |
-|----------|------------|
-| Build | Vite+ |
-| UI | React 18 + Ant Design 6 |
-| Routing | TanStack Router (file routes) |
-| Data | TanStack Query + Zustand (auth persist) |
-| Editor | Monaco + Showdown (Markdown) |
-| i18n | i18next |
-| Testing | MSW + Playwright E2E |
+| Category | Technology                              |
+| -------- | --------------------------------------- |
+| Build    | Vite+                                   |
+| UI       | React 18 + Ant Design 6                 |
+| Routing  | TanStack Router (file routes)           |
+| Data     | TanStack Query + Zustand (auth persist) |
+| Editor   | Monaco + Showdown (Markdown)            |
+| i18n     | i18next                                 |
+| Testing  | MSW + Playwright E2E                    |
 
 ### Directory structure
 
@@ -688,18 +692,18 @@ web/src/
 
 ### Admin route map
 
-| Module | Route | APIs |
-|--------|-------|------|
-| Dashboard | `/` | view, article stats |
-| Articles | `/article`, `/article/editor/:id?` | article, category, tag |
-| Comments | `/article/comment` | comment |
-| Media | `/media` | file |
-| Pages | `/page`, `/page/editor/:id?` | page |
-| Appearance | `/appearance/themes`, `/appearance/customize` | extension, setting |
-| Plugins | `/plugins`, `/plugins/:id/settings` | extension |
-| Users | `/users`, `/profile` | user |
-| Settings | `/settings/:tab` | setting, smtp, api-key, webhook |
-| Data | `/data/analytics`, `/data/export`, `/data/import` | view, search, export |
+| Module     | Route                                             | APIs                            |
+| ---------- | ------------------------------------------------- | ------------------------------- |
+| Dashboard  | `/`                                               | view, article stats             |
+| Articles   | `/article`, `/article/editor/:id?`                | article, category, tag          |
+| Comments   | `/article/comment`                                | comment                         |
+| Media      | `/media`                                          | file                            |
+| Pages      | `/page`, `/page/editor/:id?`                      | page                            |
+| Appearance | `/appearance/themes`, `/appearance/customize`     | extension, setting              |
+| Plugins    | `/plugins`, `/plugins/:id/settings`               | extension                       |
+| Users      | `/users`, `/profile`                              | user                            |
+| Settings   | `/settings/:tab`                                  | setting, smtp, api-key, webhook |
+| Data       | `/data/analytics`, `/data/export`, `/data/import` | view, search, export            |
 
 Settings use routes (not tab query params). Plugins insert tabs via `settings.registerTab({ id, title, path, permission })`.
 
@@ -750,18 +754,18 @@ themes/hello-world/
 
 ### WordPress mapping
 
-| WordPress | ReactPress |
-|-----------|------------|
-| `style.css` header | `theme.json` |
-| `functions.php` | `pages/_app.tsx` → `createThemeApp()` |
-| Template hierarchy | `theme.json` → `templates` + `pages/*` |
-| Customizer | `appearance.sections` + Formily + `useThemeMod` |
+| WordPress          | ReactPress                                      |
+| ------------------ | ----------------------------------------------- |
+| `style.css` header | `theme.json`                                    |
+| `functions.php`    | `pages/_app.tsx` → `createThemeApp()`           |
+| Template hierarchy | `theme.json` → `templates` + `pages/*`          |
+| Customizer         | `appearance.sections` + Formily + `useThemeMod` |
 
 ### Official themes
 
-| Theme | Source | Role |
-|-------|--------|------|
-| **hello-world** | local | Minimal Pages Router starter |
+| Theme                        | Source                       | Role                                                    |
+| ---------------------------- | ---------------------------- | ------------------------------------------------------- |
+| **hello-world**              | local                        | Minimal Pages Router starter                            |
 | **reactpress-theme-starter** | npm (`theme-starter` anchor) | Full theme: search, knowledge base, comments, dark mode |
 
 ### Theme lifecycle
@@ -806,13 +810,13 @@ toolkit/src/
 
 ### Export paths
 
-| Path | Use |
-|------|-----|
-| `@fecommunity/reactpress-toolkit` | Main entry |
-| `@fecommunity/reactpress-toolkit/react` | React client factory |
-| `@fecommunity/reactpress-toolkit/theme` | Theme SSR |
-| `@fecommunity/reactpress-toolkit/plugin/server` | Plugin Hook SDK |
-| `@fecommunity/reactpress-toolkit/plugin/admin` | Plugin Admin registration |
+| Path                                            | Use                       |
+| ----------------------------------------------- | ------------------------- |
+| `@fecommunity/reactpress-toolkit`               | Main entry                |
+| `@fecommunity/reactpress-toolkit/react`         | React client factory      |
+| `@fecommunity/reactpress-toolkit/theme`         | Theme SSR                 |
+| `@fecommunity/reactpress-toolkit/plugin/server` | Plugin Hook SDK           |
+| `@fecommunity/reactpress-toolkit/plugin/admin`  | Plugin Admin registration |
 
 ### Regenerate
 
@@ -831,17 +835,17 @@ Published as `@fecommunity/reactpress` — zero-config project lifecycle.
 
 ### Core commands
 
-| Command | Description |
-|---------|-------------|
-| `reactpress init` | Init project (`.env` + `.reactpress/config.json`; `--local` = SQLite) |
-| `reactpress dev` | Full-stack dev (API + web + theme + Docker MySQL) |
-| `reactpress dev --api-only` | API only (headless) |
-| `reactpress dev --web-only` | Admin + API |
-| `reactpress build` / `start` | Production build / start |
-| `reactpress doctor` / `status` | Diagnostics / status |
-| `reactpress plugin list/install` | Plugin registry |
-| `reactpress theme list/add` | Theme catalog |
-| `reactpress desktop dev` | Desktop dev (SQLite + Admin + Electron) |
+| Command                          | Description                                                           |
+| -------------------------------- | --------------------------------------------------------------------- |
+| `reactpress init`                | Init project (`.env` + `.reactpress/config.json`; `--local` = SQLite) |
+| `reactpress dev`                 | Full-stack dev (API + web + theme + Docker MySQL)                     |
+| `reactpress dev --api-only`      | API only (headless)                                                   |
+| `reactpress dev --web-only`      | Admin + API                                                           |
+| `reactpress build` / `start`     | Production build / start                                              |
+| `reactpress doctor` / `status`   | Diagnostics / status                                                  |
+| `reactpress plugin list/install` | Plugin registry                                                       |
+| `reactpress theme list/add`      | Theme catalog                                                         |
+| `reactpress desktop dev`         | Desktop dev (SQLite + Admin + Electron)                               |
 
 ### CLI layout (4.0 TypeScript)
 
@@ -886,18 +890,18 @@ See [cli/README.md](./cli/README.md).
 
 **`.reactpress/config.json`** is the source of truth; `.env` is synced on `init`. **`--local`** uses SQLite with `config.local.json` / `env.local.default`.
 
-| File | Purpose |
-|------|---------|
-| `.reactpress/config.json` | Project config |
-| `.reactpress/active-theme.json` | Active theme id |
-| `.reactpress/preview-theme.json` | Preview theme id |
-| `.reactpress/runtime/{id}/` | Materialized theme copy |
-| `.reactpress/plugins/{id}/` | Materialized plugin copy |
-| `.env` | DB, ports, secrets |
+| File                             | Purpose                  |
+| -------------------------------- | ------------------------ |
+| `.reactpress/config.json`        | Project config           |
+| `.reactpress/active-theme.json`  | Active theme id          |
+| `.reactpress/preview-theme.json` | Preview theme id         |
+| `.reactpress/runtime/{id}/`      | Materialized theme copy  |
+| `.reactpress/plugins/{id}/`      | Materialized plugin copy |
+| `.env`                           | DB, ports, secrets       |
 
-| Variable | Default |
-|----------|---------|
-| `SERVER_PORT` | `3002` |
+| Variable             | Default                     |
+| -------------------- | --------------------------- |
+| `SERVER_PORT`        | `3002`                      |
 | `REACTPRESS_API_URL` | `http://localhost:3002/api` |
 
 ---
@@ -912,19 +916,19 @@ See [cli/README.md](./cli/README.md).
 
 ### Production options
 
-| Mode | Notes |
-|------|-------|
-| **PM2** | `pnpm build` → `pnpm start` |
+| Mode       | Notes                                        |
+| ---------- | -------------------------------------------- |
+| **PM2**    | `pnpm build` → `pnpm start`                  |
 | **Docker** | MySQL container + nginx; API can run on host |
-| **Vercel** | Theme / Admin static deploy |
+| **Vercel** | Theme / Admin static deploy                  |
 
 ### nginx routes (dev)
 
-| Path | Target |
-|------|--------|
-| `/` | Theme `:3001` |
+| Path      | Target        |
+| --------- | ------------- |
+| `/`       | Theme `:3001` |
 | `/admin/` | Admin `:3000` |
-| `/api` | API `:3002` |
+| `/api`    | API `:3002`   |
 
 ---
 
@@ -985,47 +989,47 @@ flowchart TB
   Toolkit --> API[server :3002]
 ```
 
-| Layer | Responsibility |
-|-------|----------------|
-| **web** | All Admin UI (same as browser) |
-| **toolkit** | API client, auth, `getRuntime()` / `getDesktopApi()` |
-| **desktop** | Main/Preload only: window, IPC, SQLite API spawn, config |
-| **server** | REST API; local mode spawned by Main, remote mode connects externally |
+| Layer       | Responsibility                                                        |
+| ----------- | --------------------------------------------------------------------- |
+| **web**     | All Admin UI (same as browser)                                        |
+| **toolkit** | API client, auth, `getRuntime()` / `getDesktopApi()`                  |
+| **desktop** | Main/Preload only: window, IPC, SQLite API spawn, config              |
+| **server**  | REST API; local mode spawned by Main, remote mode connects externally |
 
 ### Modes
 
-| Mode | Description |
-|------|-------------|
+| Mode                | Description                                                                   |
+| ------------------- | ----------------------------------------------------------------------------- |
 | **Local (default)** | Main spawns embedded API (SQLite, default `:3002`); default `admin` / `admin` |
-| **Remote** | Connect to existing ReactPress API; sync local content to remote site |
+| **Remote**          | Connect to existing ReactPress API; sync local content to remote site         |
 
 ### Load modes
 
-| Mode | Use case |
-|------|----------|
-| **A. Bundled (production)** | `file://` or custom protocol → `web/dist/index.html` |
-| **B. Remote URL** | Load `https://admin.example.com` (enterprise intranet) |
-| **C. Dev** | `http://localhost:3000` (Vite dev server) |
+| Mode                        | Use case                                               |
+| --------------------------- | ------------------------------------------------------ |
+| **A. Bundled (production)** | `file://` or custom protocol → `web/dist/index.html`   |
+| **B. Remote URL**           | Load `https://admin.example.com` (enterprise intranet) |
+| **C. Dev**                  | `http://localhost:3000` (Vite dev server)              |
 
 ### Security (Electron)
 
-| Rule | Required |
-|------|----------|
-| `contextIsolation: true` | Yes |
-| `nodeIntegration: false` in renderer | Yes |
-| Preload whitelist IPC channels | Yes |
-| `webSecurity: true` | Yes |
-| Remote URL allowlist | When using mode B |
+| Rule                                 | Required          |
+| ------------------------------------ | ----------------- |
+| `contextIsolation: true`             | Yes               |
+| `nodeIntegration: false` in renderer | Yes               |
+| Preload whitelist IPC channels       | Yes               |
+| `webSecurity: true`                  | Yes               |
+| Remote URL allowlist                 | When using mode B |
 
 ### Desktop roadmap
 
-| Phase | Content | Status |
-|-------|---------|--------|
-| D0 | Scaffold; dev loads Vite; prod loads `web/dist` | ✅ 4.0 |
-| D1 | Local SQLite, remote API switch, login, macOS/Windows packages | ✅ 4.0 MVP |
-| D1+ | Local → remote content sync | ✅ 4.0 |
-| D2 | Tray, shortcuts, native notifications | Planned |
-| D3 | `electron-updater` | Planned |
+| Phase | Content                                                        | Status     |
+| ----- | -------------------------------------------------------------- | ---------- |
+| D0    | Scaffold; dev loads Vite; prod loads `web/dist`                | ✅ 4.0     |
+| D1    | Local SQLite, remote API switch, login, macOS/Windows packages | ✅ 4.0 MVP |
+| D1+   | Local → remote content sync                                    | ✅ 4.0     |
+| D2    | Tray, shortcuts, native notifications                          | Planned    |
+| D3    | `electron-updater`                                             | Planned    |
 
 **Why Electron over Tauri:** mature updater/tray/builder ecosystem; Chromium matches Admin stack; shell is swappable — **web + toolkit stay unchanged**.
 
@@ -1037,32 +1041,32 @@ See [desktop/README.md](./desktop/README.md).
 
 ### 4.0 vs 3.x
 
-| 3.x | 4.0 |
-|-----|-----|
+| 3.x                        | 4.0                                                                       |
+| -------------------------- | ------------------------------------------------------------------------- |
 | No official plugin runtime | Hook + manifest + Admin slots; built-in hello-world, seo, image-optimizer |
-| Web Admin only | Optional **Electron desktop** (SQLite local mode) |
-| hello-world–centric themes | npm catalog (`theme-starter` anchor) |
-| CLI pure JS `lib/` | TypeScript `src/` → `out/` |
+| Web Admin only             | Optional **Electron desktop** (SQLite local mode)                         |
+| hello-world–centric themes | npm catalog (`theme-starter` anchor)                                      |
+| CLI pure JS `lib/`         | TypeScript `src/` → `out/`                                                |
 
 ### 3.0 vs 2.x
 
-| 2.x | 3.0 |
-|-----|-----|
+| 2.x                                      | 3.0                                  |
+| ---------------------------------------- | ------------------------------------ |
 | Monolithic `client/` Next (incl. /admin) | `web/` Admin SPA + `themes/` visitor |
-| Multiple HTTP layers | Unified toolkit client |
-| Manual setup | CLI `init` + `dev` |
+| Multiple HTTP layers                     | Unified toolkit client               |
+| Manual setup                             | CLI `init` + `dev`                   |
 
 ### Implementation phases (historical)
 
-| Step | Deliverable | Status |
-|------|-------------|--------|
-| 1–2 | toolkit client + web Shell + auth | ✅ 3.x |
-| 3–4 | article module template + core CRUD | ✅ 3.x |
-| 5–6 | server extension/hook + appearance/plugins UI | ✅ 3.x–4.0 |
-| 7 | theme.json + CLI theme commands | ✅ 3.x |
-| 8–9 | responsive components + import/export | ✅ 3.x |
-| 10 | Electron desktop shell | ✅ 4.0 MVP |
-| 11 | Plugin Hook + Admin slots | ✅ 4.0 |
+| Step | Deliverable                                   | Status     |
+| ---- | --------------------------------------------- | ---------- |
+| 1–2  | toolkit client + web Shell + auth             | ✅ 3.x     |
+| 3–4  | article module template + core CRUD           | ✅ 3.x     |
+| 5–6  | server extension/hook + appearance/plugins UI | ✅ 3.x–4.0 |
+| 7    | theme.json + CLI theme commands               | ✅ 3.x     |
+| 8–9  | responsive components + import/export         | ✅ 3.x     |
+| 10   | Electron desktop shell                        | ✅ 4.0 MVP |
+| 11   | Plugin Hook + Admin slots                     | ✅ 4.0     |
 
 ### Known legacy / future work
 
@@ -1072,25 +1076,25 @@ See [desktop/README.md](./desktop/README.md).
 
 ### Feature coverage
 
-| Domain | Status |
-|--------|--------|
-| Content, media, appearance, system settings | ✅ |
-| Plugins (Hook + Registry + Admin slots) | ✅ 4.0 |
-| Desktop (Electron + SQLite) | ✅ 4.0 MVP |
-| Knowledge base | ✅ server module |
+| Domain                                      | Status           |
+| ------------------------------------------- | ---------------- |
+| Content, media, appearance, system settings | ✅               |
+| Plugins (Hook + Registry + Admin slots)     | ✅ 4.0           |
+| Desktop (Electron + SQLite)                 | ✅ 4.0 MVP       |
+| Knowledge base                              | ✅ server module |
 
 ---
 
 ## 23. Acceptance criteria
 
-| Dimension | Standard |
-|-----------|----------|
+| Dimension       | Standard                                                                                |
+| --------------- | --------------------------------------------------------------------------------------- |
 | Maintainability | New CRUD module ≤ one directory + one `register()`; API changes = server + codegen only |
-| Extensibility | Official SEO plugin mounts menu + Hook without core edits |
-| Performance | Admin route switch < 100ms; theme Lighthouse SEO ≥ 90 |
-| Multi-device | No horizontal scroll at 390px; core flows pass E2E on three viewports |
-| Consistency | web / themes / plugins have no custom HTTP clients |
-| Desktop | Packaged app shows same Admin as browser; no forked Admin source |
+| Extensibility   | Official SEO plugin mounts menu + Hook without core edits                               |
+| Performance     | Admin route switch < 100ms; theme Lighthouse SEO ≥ 90                                   |
+| Multi-device    | No horizontal scroll at 390px; core flows pass E2E on three viewports                   |
+| Consistency     | web / themes / plugins have no custom HTTP clients                                      |
+| Desktop         | Packaged app shows same Admin as browser; no forked Admin source                        |
 
 ---
 

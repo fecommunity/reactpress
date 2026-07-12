@@ -14,10 +14,7 @@ function stripMarkdown(text: string): string {
 }
 
 /** 摘要为空时从正文（或标题）生成 summary。 */
-export function applyAutoSummary(
-  article: ArticleDraft,
-  config: SummaryPluginConfig,
-): ArticleDraft {
+export function applyAutoSummary(article: ArticleDraft, config: SummaryPluginConfig): ArticleDraft {
   if (!config.enabled) return article;
 
   const existing = String(article.summary ?? '').trim();

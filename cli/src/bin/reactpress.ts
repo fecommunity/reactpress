@@ -15,12 +15,7 @@ const { initProject } = require('../core/services/init');
 const { runLifecycleCommand } = require('../lib/lifecycle');
 const { startClientInBackground } = require('../lib/client-lifecycle');
 const { getCliVersion } = require('../lib/paths');
-const {
-  loadServerSiteUrl,
-  loadAdminConsoleUrl,
-  loadClientSiteUrl,
-  getApiPrefix,
-} = require('../lib/http');
+const { loadServerSiteUrl, loadAdminConsoleUrl, loadClientSiteUrl, getApiPrefix } = require('../lib/http');
 const { t } = require('../lib/i18n');
 const { describeProject } = require('../lib/project-type');
 const { refreshBannerWithStartup } = require('../ui/banner-startup');
@@ -70,10 +65,7 @@ if (!process.env.REACTPRESS_SKIP_NGINX) {
 
 const program = new Command();
 
-program
-  .name('reactpress')
-  .description(t('cli.description'))
-  .version(getCliVersion());
+program.name('reactpress').description(t('cli.description')).version(getCliVersion());
 
 function printRunningPanel(projectRoot) {
   const apiUrl = loadServerSiteUrl(projectRoot);
@@ -108,10 +100,7 @@ async function startServices(projectRoot) {
     const clientCode = await startClientInBackground(projectRoot);
     if (clientCode !== 0) process.exit(clientCode);
   } catch (err) {
-    if (
-      err.code === 'REACTPRESS_THEME_NOT_FOUND' ||
-      err.code === 'REACTPRESS_THEME_BIN_NOT_FOUND'
-    ) {
+    if (err.code === 'REACTPRESS_THEME_NOT_FOUND' || err.code === 'REACTPRESS_THEME_BIN_NOT_FOUND') {
       printRunningPanel(projectRoot);
       console.log(brand.dim(t('init.apiOnlyHint')));
       return;
@@ -151,9 +140,9 @@ program
     await runInit(directory || '.', options);
   });
 
-attachLogsOptions(
-  program.command('logs [directory]').description(t('cli.logs.description')),
-).action(createLogsAction());
+attachLogsOptions(program.command('logs [directory]').description(t('cli.logs.description'))).action(
+  createLogsAction()
+);
 
 program
   .command('stop [directory]')
@@ -165,15 +154,11 @@ program
     process.exit(0);
   });
 
-const doctorCommand = program
-  .command('doctor')
-  .description(t('cli.doctor.description'));
+const doctorCommand = program.command('doctor').description(t('cli.doctor.description'));
 
-attachLogsOptions(
-  doctorCommand
-    .command('logs [directory]')
-    .description(t('cli.logs.descriptionAlias')),
-).action(createLogsAction());
+attachLogsOptions(doctorCommand.command('logs [directory]').description(t('cli.logs.descriptionAlias'))).action(
+  createLogsAction()
+);
 
 doctorCommand
   .command('check [directory]', { isDefault: true })
@@ -210,15 +195,19 @@ async function showHelpBanner() {
 
 async function main() {
   const argv = process.argv.slice(2);
+  const projectRoot = path.resolve(process.env.REACTPRESS_ORIGINAL_CWD || process.cwd());
 
   if (argv[0] && LEGACY_COMMANDS.has(argv[0])) {
+    if (isMonorepoCheckout(projectRoot)) {
+      require('./reactpress-monorepo');
+      return;
+    }
     console.error(chalk.red('[reactpress]'), t('init.unknownCommand', { cmd: argv[0] }));
     console.error(brand.dim(t('init.useInitOnly')));
     process.exit(1);
   }
 
-  const wantsHelp =
-    argv.length === 0 || argv.includes('-h') || argv.includes('--help');
+  const wantsHelp = argv.length === 0 || argv.includes('-h') || argv.includes('--help');
 
   if (wantsHelp) {
     await showHelpBanner();

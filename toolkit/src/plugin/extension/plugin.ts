@@ -27,7 +27,7 @@ export interface PluginAdminSlotsManifest {
 }
 
 export interface PluginAdminManifest {
-  /** @deprecated Use convention `admin/index.ts`; declared slots drive loading. */
+  /** @deprecated Use convention `src/admin/index.ts`; declared slots drive loading. */
   entry?: string;
   slots?: PluginAdminSlotsManifest;
   menu?: PluginAdminMenuManifest;
@@ -119,8 +119,7 @@ export function parsePluginManifest(raw: unknown): PluginManifest | null {
               typeof (serverRaw as Record<string, unknown>).hooks === 'object'
                 ? {
                     subscribe: Array.isArray(
-                      ((serverRaw as Record<string, unknown>).hooks as Record<string, unknown>)
-                        .subscribe,
+                      ((serverRaw as Record<string, unknown>).hooks as Record<string, unknown>).subscribe
                     )
                       ? (
                           ((serverRaw as Record<string, unknown>).hooks as Record<string, unknown>)
@@ -128,12 +127,10 @@ export function parsePluginManifest(raw: unknown): PluginManifest | null {
                         ).filter((h): h is string => typeof h === 'string')
                       : undefined,
                     provide: Array.isArray(
-                      ((serverRaw as Record<string, unknown>).hooks as Record<string, unknown>)
-                        .provide,
+                      ((serverRaw as Record<string, unknown>).hooks as Record<string, unknown>).provide
                     )
                       ? (
-                          ((serverRaw as Record<string, unknown>).hooks as Record<string, unknown>)
-                            .provide as unknown[]
+                          ((serverRaw as Record<string, unknown>).hooks as Record<string, unknown>).provide as unknown[]
                         ).filter((h): h is string => typeof h === 'string')
                       : undefined,
                   }
@@ -149,21 +146,15 @@ export function parsePluginManifest(raw: unknown): PluginManifest | null {
           const raw = adminRaw as Record<string, unknown>;
           const slotsRaw = raw.slots;
           const subscribe =
-            slotsRaw &&
-            typeof slotsRaw === 'object' &&
-            Array.isArray((slotsRaw as Record<string, unknown>).subscribe)
+            slotsRaw && typeof slotsRaw === 'object' && Array.isArray((slotsRaw as Record<string, unknown>).subscribe)
               ? ((slotsRaw as Record<string, unknown>).subscribe as unknown[]).filter(
-                  (slot): slot is AdminSlotId =>
-                    typeof slot === 'string' && isAdminSlotId(slot),
+                  (slot): slot is AdminSlotId => typeof slot === 'string' && isAdminSlotId(slot)
                 )
               : undefined;
           return {
             entry: typeof raw.entry === 'string' ? raw.entry : undefined,
             slots: subscribe?.length ? { subscribe } : undefined,
-            menu:
-              raw.menu && typeof raw.menu === 'object'
-                ? (raw.menu as PluginAdminMenuManifest)
-                : undefined,
+            menu: raw.menu && typeof raw.menu === 'object' ? (raw.menu as PluginAdminMenuManifest) : undefined,
           };
         })()
       : undefined;
@@ -181,10 +172,7 @@ export function parsePluginManifest(raw: unknown): PluginManifest | null {
       : undefined;
 
   const capsRaw = o.capabilities;
-  const capabilities =
-    capsRaw && typeof capsRaw === 'object'
-      ? (capsRaw as PluginCapabilities)
-      : undefined;
+  const capabilities = capsRaw && typeof capsRaw === 'object' ? (capsRaw as PluginCapabilities) : undefined;
 
   return {
     id: o.id,
@@ -214,14 +202,10 @@ export function getPluginStateFromGlobalSetting(raw: unknown): SitePluginState {
 
   return {
     installedPlugins: Array.isArray(plugins.installedPlugins)
-      ? plugins.installedPlugins.filter(
-          (id): id is string => typeof id === 'string' && isValidPluginId(id),
-        )
+      ? plugins.installedPlugins.filter((id): id is string => typeof id === 'string' && isValidPluginId(id))
       : [],
     activePlugins: Array.isArray(plugins.activePlugins)
-      ? plugins.activePlugins.filter(
-          (id): id is string => typeof id === 'string' && isValidPluginId(id),
-        )
+      ? plugins.activePlugins.filter((id): id is string => typeof id === 'string' && isValidPluginId(id))
       : [],
     entries:
       plugins.entries && typeof plugins.entries === 'object'
@@ -232,7 +216,7 @@ export function getPluginStateFromGlobalSetting(raw: unknown): SitePluginState {
 
 export function mergePluginStateIntoGlobalSetting(
   raw: unknown,
-  patch: Partial<SitePluginState>,
+  patch: Partial<SitePluginState>
 ): GlobalSettingWithPlugins {
   const base =
     raw && typeof raw === 'object'

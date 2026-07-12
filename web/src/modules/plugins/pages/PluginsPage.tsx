@@ -124,8 +124,8 @@ export function PluginsPage() {
       if (action === "deactivate") await deactivateMutation.mutateAsync(id);
       if (action === "uninstall") await uninstallMutation.mutateAsync(id);
       message.success(t(`plugins.${action}Success`));
-    } catch {
-      message.error(t("plugins.actionFailed"));
+    } catch (err) {
+      message.error(err instanceof Error ? err.message : t("plugins.actionFailed"));
     }
   };
 

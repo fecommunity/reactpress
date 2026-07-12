@@ -11,11 +11,10 @@ import type { ArticleDraft } from './types';
 export function register(hooks: HookService, ctx: PluginContext): void {
   const config = () => resolveConfig(ctx);
 
-  hooks.addFilter<ArticleDraft>(
-    'article.beforePublish',
-    async (article) => applyAutoSummary(article, config()),
-    { priority: 10, pluginId: ctx.id },
-  );
+  hooks.addFilter<ArticleDraft>('article.beforePublish', async (article) => applyAutoSummary(article, config()), {
+    priority: 10,
+    pluginId: ctx.id,
+  });
 
   ctx.logger.log(`registered (enabled=${config().enabled}, maxLength=${config().maxLength})`);
 }

@@ -5,18 +5,18 @@ import type { PluginListItem } from "@/shared/api/plugins";
 
 /**
  * Vite 需静态 glob 才能打包插件 admin 入口；勿用模板字符串 dynamic import。
- * 约定：`plugins/{id}/admin/index.ts`
+ * 约定：`plugins/{id}/src/admin/index.ts`
  */
 const pluginAdminModules = import.meta.glob<PluginAdminModule>(
-  "../../../../plugins/*/admin/index.ts",
+  "../../../../plugins/*/src/admin/index.ts",
 );
 
 function resolveAdminModuleKey(pluginId: string): string | undefined {
-  const suffix = `/plugins/${pluginId}/admin/index.ts`;
+  const suffix = `/plugins/${pluginId}/src/admin/index.ts`;
   return Object.keys(pluginAdminModules).find((key) => key.replace(/\\/g, "/").endsWith(suffix));
 }
 
-/** Load plugin admin module from conventional path `plugins/{id}/admin/index.ts`. */
+/** Load plugin admin module from conventional path `plugins/{id}/src/admin/index.ts`. */
 export function loadPluginAdminModule(pluginId: string): Promise<PluginAdminModule> {
   const key = resolveAdminModuleKey(pluginId);
   const load = key ? pluginAdminModules[key] : undefined;

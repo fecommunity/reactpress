@@ -9,22 +9,22 @@ Official plugin — **analyze legacy uploads and batch-compress to WebP multi-si
 
 ## Features
 
-| Capability | Description |
-| :--- | :--- |
-| Batch optimization | Process historical uploads via Core `FileOptimizationService` |
-| WebP variants | Generate compressed multi-size WebP outputs |
-| URL rewrite | Optionally replace old image URLs in article/page content after batch run |
-| Admin dashboard | Full UI at **Plugins → Image Optimization** |
+| Capability         | Description                                                               |
+| :----------------- | :------------------------------------------------------------------------ |
+| Batch optimization | Process historical uploads via Core `FileOptimizationService`             |
+| WebP variants      | Generate compressed multi-size WebP outputs                               |
+| URL rewrite        | Optionally replace old image URLs in article/page content after batch run |
+| Admin dashboard    | Full UI at **Plugins → Image Optimization**                               |
 
-Batch compression is executed by the core file optimization service; this plugin registers configuration and exposes the admin dashboard (`admin/OptimizeDashboard`).
+Batch compression is executed by the core file optimization service; this plugin registers configuration and exposes the admin dashboard (`src/admin/OptimizeDashboard.tsx`).
 
 ## Configuration
 
-| Field | Type | Default | Description |
-| :--- | :--- | :--- | :--- |
-| `batchSize` | integer | `50` | Max images per batch (1–200) |
-| `skipGif` | boolean | `true` | Skip GIF (WebP conversion loses animation) |
-| `rewriteContent` | boolean | `false` | Rewrite article/page image URLs after optimization |
+| Field              | Type    | Default | Description                                             |
+| :----------------- | :------ | :------ | :------------------------------------------------------ |
+| `batchSize`        | integer | `50`    | Max images per batch (1–200)                            |
+| `skipGif`          | boolean | `true`  | Skip GIF (WebP conversion loses animation)              |
+| `rewriteContent`   | boolean | `false` | Rewrite article/page image URLs after optimization      |
 | `cleanupOriginals` | boolean | `false` | Delete original files after optimization (irreversible) |
 
 ## Usage

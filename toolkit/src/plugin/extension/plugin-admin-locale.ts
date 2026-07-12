@@ -1,12 +1,13 @@
-import {
-  getNestedLocaleString,
-  getNestedLocaleValue,
-} from '../../utils/object';
+import { getNestedLocaleString, getNestedLocaleValue } from '../../utils/object';
 
-/** Admin copy shipped with the plugin (`locales/{locale}.json`). */
+/** Admin copy shipped with the plugin (`src/locales/{locale}.json`). */
 export type PluginAdminLocaleMessages = Record<string, unknown>;
 
-export const PLUGIN_LOCALE_DIR = 'locales';
+/** Primary locale directory inside a plugin package. */
+export const PLUGIN_LOCALE_DIR = 'src/locales';
+
+/** Legacy root-level locale dir (pre–4.x layout); kept for older bundled plugins. */
+export const PLUGIN_LOCALE_DIR_LEGACY = 'locales';
 
 export { getNestedLocaleString, getNestedLocaleValue };
 
@@ -28,7 +29,7 @@ export type PluginSettingsSchema = Record<string, unknown> & {
 export function resolvePluginAdminLocaleText(
   messages: PluginAdminLocaleMessages | null | undefined,
   dotPath: string,
-  fallback?: string,
+  fallback?: string
 ): string {
   const fromLocale = messages ? getNestedLocaleString(messages, dotPath) : undefined;
   if (fromLocale) return fromLocale;
@@ -38,7 +39,7 @@ export function resolvePluginAdminLocaleText(
 function localizeSchemaField(
   field: PluginSchemaProperty,
   pathParts: string[],
-  resolve: (path: string, fallback?: string) => string,
+  resolve: (path: string, fallback?: string) => string
 ): void {
   if (typeof field.title === 'string') {
     field.title = resolve([...pathParts, 'title'].join('.'), field.title);
@@ -69,7 +70,7 @@ function localizeSchemaField(
 /** Apply plugin admin locale messages to settings JSON Schema titles/descriptions. */
 export function localizePluginSettingsSchemaWithLocale(
   schema: PluginSettingsSchema | null | undefined,
-  messages: PluginAdminLocaleMessages | null | undefined,
+  messages: PluginAdminLocaleMessages | null | undefined
 ): PluginSettingsSchema | null {
   if (!schema) return null;
 

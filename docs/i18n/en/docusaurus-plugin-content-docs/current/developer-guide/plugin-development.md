@@ -51,18 +51,18 @@ pnpm dev
 }
 ```
 
-| Field | Description |
-|------|------|
-| `id` | kebab-case, matches directory name |
-| `server.module` | Compiled JS entry |
-| `server.hooks.subscribe` | Declared Hook names |
-| `admin.slots.subscribe` | Admin UI slot IDs (optional) |
-| `settings.schema` | JSON Schema for settings form |
+| Field                    | Description                        |
+| ------------------------ | ---------------------------------- |
+| `id`                     | kebab-case, matches directory name |
+| `server.module`          | Compiled JS entry                  |
+| `server.hooks.subscribe` | Declared Hook names                |
+| `admin.slots.subscribe`  | Admin UI slot IDs (optional)       |
+| `settings.schema`        | JSON Schema for settings form      |
 
 ## Server entry
 
 ```typescript
-// plugins/my-plugin/src/index.ts
+// plugins/my-plugin/src/server/index.ts
 import type { PluginContext } from '@fecommunity/reactpress-toolkit/plugin';
 
 export function register(hooks: PluginContext['hooks'], ctx: PluginContext) {
@@ -79,11 +79,11 @@ Build: `pnpm run build:plugins`
 
 ## Hook vs Webhook
 
-| | Hook | Webhook |
-|---|------|---------|
-| Direction | Inbound (plugin ← Server) | Outbound (Server → URL) |
-| Sync | Yes, can mutate payload | Async HTTP |
-| Use case | Summary, validation, SEO | Slack, CI, external systems |
+|           | Hook                      | Webhook                     |
+| --------- | ------------------------- | --------------------------- |
+| Direction | Inbound (plugin ← Server) | Outbound (Server → URL)     |
+| Sync      | Yes, can mutate payload   | Async HTTP                  |
+| Use case  | Summary, validation, SEO  | Slack, CI, external systems |
 
 Publish flow:
 

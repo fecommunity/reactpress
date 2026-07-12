@@ -9,7 +9,7 @@ import { resolveConfig } from './config';
 export function register(_hooks: HookService, ctx: PluginContext): void {
   const config = resolveConfig(ctx);
   ctx.logger.log(
-    `registered (batchSize=${config.batchSize}, skipGif=${config.skipGif}, rewriteContent=${config.rewriteContent})`,
+    `registered (batchSize=${config.batchSize}, skipGif=${config.skipGif}, rewriteContent=${config.rewriteContent})`
   );
 }
 

@@ -57,10 +57,7 @@ function buildDescription(article: ArticleDraft, config: SeoPluginConfig): strin
 }
 
 /** 补全 slug、seoKeywords、seoDescription。 */
-export function applySeoDefaults(
-  article: ArticleDraft,
-  config: SeoPluginConfig,
-): ArticleDraft {
+export function applySeoDefaults(article: ArticleDraft, config: SeoPluginConfig): ArticleDraft {
   if (!config.enabled) return article;
 
   const next: ArticleDraft = { ...article };

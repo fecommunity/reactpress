@@ -10,32 +10,32 @@ Official example plugin — **auto-fill article summary on publish** when empty.
 
 ## Features
 
-| Scenario | Behavior |
-| :--- | :--- |
-| Summary already set on publish | No change |
+| Scenario                        | Behavior                                  |
+| :------------------------------ | :---------------------------------------- |
+| Summary already set on publish  | No change                                 |
 | Summary empty, body has content | Strip Markdown, truncate, write `summary` |
-| Summary and body both empty | Use title if `fallbackToTitle` is enabled |
+| Summary and body both empty     | Use title if `fallbackToTitle` is enabled |
 
 ## Hooks
 
 Subscribes to a single hook with a focused responsibility:
 
-| Hook | Type | Description |
-| :--- | :--- | :--- |
+| Hook                    | Type   | Description                      |
+| :---------------------- | :----- | :------------------------------- |
 | `article.beforePublish` | filter | Fill in `summary` before publish |
 
 ## Configuration
 
 Declared via `plugin.json` → `settings.schema`, stored in `globalSetting.plugins.entries.hello-world.config`.
 
-Admin UI strings (plugin name, descriptions, field labels) live in [`locales/`](./locales/) (`locales/{locale}.json`), following the same convention as themes; Chinese strings in `plugin.json` serve as fallback.
+Admin UI strings (plugin name, descriptions, field labels) live in [`src/locales/`](./src/locales/) (`src/locales/{locale}.json`); Chinese strings in `plugin.json` serve as fallback.
 
-| Field | Type | Default | Description |
-| :--- | :--- | :--- | :--- |
-| `enabled` | boolean | `true` | Enable auto summary |
-| `maxLength` | number | `160` | Max length (40–500) |
-| `suffix` | string | `…` | Suffix when truncated |
-| `fallbackToTitle` | boolean | `true` | Use title when body is empty |
+| Field             | Type    | Default | Description                  |
+| :---------------- | :------ | :------ | :--------------------------- |
+| `enabled`         | boolean | `true`  | Enable auto summary          |
+| `maxLength`       | number  | `160`   | Max length (40–500)          |
+| `suffix`          | string  | `…`     | Suffix when truncated        |
+| `fallbackToTitle` | boolean | `true`  | Use title when body is empty |
 
 Update config (admin login required):
 
@@ -71,13 +71,17 @@ hello-world/
 ├── tsconfig.json
 ├── README.md
 └── src/
-    ├── index.ts      # register() entry
-    ├── config.ts     # defaults and merge
-    ├── summary.ts    # Markdown strip + truncate
-    └── types.ts
-        ↓ tsc
-    dist/
-    └── index.js      # runtime loads this file
+    ├── server/           # Node Hook logic
+    │   ├── index.ts
+    │   ├── config.ts
+    │   ├── summary.ts
+    │   └── types.ts
+    └── locales/          # Admin UI strings
+        ├── en.json
+        └── zh.json
+            ↓ tsc (server only)
+        dist/
+        └── index.js
 ```
 
 ## Development
@@ -87,7 +91,7 @@ hello-world/
 pnpm --filter @reactpress/plugin-hello-world run build
 pnpm --filter @reactpress/plugin-hello-world run typecheck
 
-# after editing src, rebuild and deactivate → reactivate in admin
+# after editing src/server, rebuild and deactivate → reactivate in admin
 ```
 
 Dependencies:
@@ -98,7 +102,7 @@ Dependencies:
 
 1. Copy this directory to `plugins/my-plugin/`
 2. Update `plugin.json` `id`, `name`, `hooks.subscribe`
-3. Rewrite `src/index.ts` and business modules
+3. Rewrite `src/server/index.ts` and business modules
 4. Add the id to [`plugins/package.json`](../package.json) → `local` list
 
 See [`../README.md`](../README.md) for the plugin system overview.

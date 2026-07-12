@@ -79,7 +79,8 @@ function PluginSettingsPageInner({ pluginId }: PluginSettingsPageProps) {
           (mod as { default?: { SettingsPanel?: ComponentType<PluginSettingsPanelProps> } }).default
             ?.SettingsPanel;
         if (!cancelled && Panel) {
-          setSettingsPanel(Panel as ComponentType<PluginSettingsPanelProps>);
+          // Store a component function in state — wrap in updater so React does not invoke Panel(prev).
+          setSettingsPanel(() => Panel as ComponentType<PluginSettingsPanelProps>);
         } else if (!cancelled) {
           setSettingsPanel(null);
         }

@@ -1,30 +1,30 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from 'react';
 
-import { resolveApiBaseUrl } from "@fecommunity/reactpress-toolkit/plugin/react";
+import { resolveApiBaseUrl } from '@fecommunity/reactpress-toolkit/plugin/react';
 
 type LocaleMessages = Record<string, unknown>;
 
 function readNestedMessage(messages: LocaleMessages, path: string): string | undefined {
-  const parts = path.split(".");
+  const parts = path.split('.');
   let current: unknown = messages;
   for (const part of parts) {
-    if (!current || typeof current !== "object") return undefined;
+    if (!current || typeof current !== 'object') return undefined;
     current = (current as Record<string, unknown>)[part];
   }
-  return typeof current === "string" ? current : undefined;
+  return typeof current === 'string' ? current : undefined;
 }
 
 function detectLocale(): string {
-  if (typeof document === "undefined") return "en";
-  const lang = document.documentElement.lang || navigator.language || "en";
-  return lang.toLowerCase().startsWith("zh") ? "zh" : "en";
+  if (typeof document === 'undefined') return 'en';
+  const lang = document.documentElement.lang || navigator.language || 'en';
+  return lang.toLowerCase().startsWith('zh') ? 'zh' : 'en';
 }
 
 async function fetchPluginLocale(pluginId: string, locale: string): Promise<LocaleMessages> {
-  const base = (await resolveApiBaseUrl("/api")).replace(/\/$/, "");
+  const base = (await resolveApiBaseUrl('/api')).replace(/\/$/, '');
   const token = (() => {
     try {
-      const raw = localStorage.getItem("auth-storage");
+      const raw = localStorage.getItem('auth-storage');
       if (!raw) return null;
       const parsed = JSON.parse(raw) as { state?: { tokens?: { accessToken?: string } } };
       return parsed.state?.tokens?.accessToken ?? null;
@@ -38,7 +38,7 @@ async function fetchPluginLocale(pluginId: string, locale: string): Promise<Loca
       headers: {
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
       },
-    },
+    }
   );
   if (!res.ok) return {};
   const body = (await res.json()) as { data?: { messages?: LocaleMessages } };
@@ -60,9 +60,7 @@ export function usePluginDashboardText(pluginId: string) {
   }, [locale, pluginId]);
 
   return useMemo(
-    () =>
-      (key: string, fallback: string) =>
-        readNestedMessage(messages, `dashboard.${key}`) ?? fallback,
-    [messages],
+    () => (key: string, fallback: string) => readNestedMessage(messages, `dashboard.${key}`) ?? fallback,
+    [messages]
   );
 }

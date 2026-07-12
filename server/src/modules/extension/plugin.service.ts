@@ -45,7 +45,6 @@ export class PluginService {
   private static readonly COPY_SKIP_NAMES = new Set([
     'node_modules',
     '.git',
-    'src',
     '.turbo',
     'coverage',
     '.reactpress',
@@ -54,10 +53,13 @@ export class PluginService {
     'tsconfig.json',
   ]);
 
+  /** Source-only paths under a plugin package (runtime ships dist/ + src/locales/). */
+  private static readonly COPY_SKIP_REL_PATHS = new Set(['src/server', 'src/admin']);
+
   constructor(
     @InjectRepository(Setting)
     private readonly settingRepository: Repository<Setting>,
-    private readonly settingService: SettingService,
+    private readonly settingService: SettingService
   ) {}
 
   private pluginsRoot(): string {
@@ -138,9 +140,20 @@ export class PluginService {
     if (!fs.existsSync(dir)) return [];
     return fs
       .readdirSync(dir, { withFileTypes: true })
-      .filter((d) => d.isDirectory())
+      .filter((d) => this.isRuntimePluginEntry(dir, d))
       .map((d) => this.readManifest(path.join(dir, d.name)))
       .filter((m): m is PluginManifest => m !== null);
+  }
+
+  /** Runtime entries are symlinks in dev and copied dirs in production. */
+  private isRuntimePluginEntry(parentDir: string, entry: fs.Dirent): boolean {
+    if (entry.isDirectory()) return true;
+    if (!entry.isSymbolicLink()) return false;
+    try {
+      return fs.statSync(path.join(parentDir, entry.name)).isDirectory();
+    } catch {
+      return false;
+    }
   }
 
   async listPlugins(): Promise<PluginListItem[]> {
@@ -150,7 +163,7 @@ export class PluginService {
     const byId = new Map<string, PluginListItem>();
 
     const add = (manifest: PluginManifest, source: 'local' | 'installed') => {
-      const installed = installedSet.has(manifest.id) || source === 'installed';
+      const installed = installedSet.has(manifest.id);
       const entry = state.entries[manifest.id];
       byId.set(manifest.id, {
         ...manifest,
@@ -179,10 +192,10 @@ export class PluginService {
     return found;
   }
 
-  /** Admin copy from `plugins/{id}/locales/{locale}.json` (same layout as themes). */
+  /** Admin copy from `plugins/{id}/src/locales/{locale}.json`. */
   async getPluginAdminLocale(
     pluginId: string,
-    locale: string,
+    locale: string
   ): Promise<{ pluginId: string; locale: string; messages: PluginAdminLocaleMessages }> {
     if (!isValidPluginId(pluginId)) {
       throw new BadRequestException(`Invalid plugin id "${pluginId}"`);
@@ -261,22 +274,16 @@ export class PluginService {
     if (!isValidPluginId(id)) {
       throw new BadRequestException(`Invalid plugin id "${id}"`);
     }
-    await this.ensurePluginMaterialized(id);
+    await this.ensurePluginInstalled(id);
     const manifest = this.readRuntimeManifest(id);
     if (!manifest) {
       throw new NotFoundException(`Plugin "${id}" not found in runtime`);
     }
 
     const state = await this.getPluginState();
-    if (!state.installedPlugins.includes(id)) {
-      throw new BadRequestException(`Plugin "${id}" is not installed`);
-    }
-
     this.validatePluginDependencies(id, manifest, state);
 
-    const activePlugins = state.activePlugins.includes(id)
-      ? state.activePlugins
-      : [...state.activePlugins, id];
+    const activePlugins = state.activePlugins.includes(id) ? state.activePlugins : [...state.activePlugins, id];
     const entries = { ...state.entries };
     entries[id] = {
       ...(entries[id] ?? { version: manifest.version, source: 'local' }),
@@ -315,10 +322,7 @@ export class PluginService {
     return this.savePluginState({ installedPlugins, entries });
   }
 
-  async updatePluginConfig(
-    id: string,
-    config: Record<string, unknown>,
-  ): Promise<SitePluginState> {
+  async updatePluginConfig(id: string, config: Record<string, unknown>): Promise<SitePluginState> {
     if (!isValidPluginId(id)) {
       throw new BadRequestException(`Invalid plugin id "${id}"`);
     }
@@ -371,11 +375,7 @@ export class PluginService {
     await this.savePluginState({ entries });
   }
 
-  private validatePluginDependencies(
-    id: string,
-    manifest: PluginManifest,
-    state: SitePluginState,
-  ): void {
+  private validatePluginDependencies(id: string, manifest: PluginManifest, state: SitePluginState): void {
     const required = manifest.requiresPlugins ?? [];
     for (const dep of required) {
       if (!isValidPluginId(dep)) {
@@ -387,15 +387,34 @@ export class PluginService {
     }
   }
 
-  private async ensurePluginMaterialized(id: string): Promise<void> {
+  /** Ensure runtime files exist and the plugin is recorded in site plugin state. */
+  private async ensurePluginInstalled(id: string): Promise<void> {
     const runtimePath = path.join(this.runtimeDir(), id);
-    if (fs.existsSync(runtimePath)) return;
-    await this.installPlugin(id);
+    if (!fs.existsSync(runtimePath)) {
+      await this.installPlugin(id);
+      return;
+    }
+
+    const state = await this.getPluginState();
+    if (state.installedPlugins.includes(id)) return;
+
+    const manifest = this.readRuntimeManifest(id) ?? this.readManifest(path.join(this.templatesDir(), id));
+    if (!manifest) {
+      throw new BadRequestException(`Plugin "${id}" has invalid plugin.json`);
+    }
+
+    const installedPlugins = [...state.installedPlugins, id];
+    const entries = { ...state.entries };
+    entries[id] = {
+      version: manifest.version,
+      source: 'local',
+      ...(entries[id] ?? {}),
+    };
+    await this.savePluginState({ installedPlugins, entries });
   }
 
   private materializeRuntimePlugin(templatePath: string, targetDir: string): void {
-    const forceCopy =
-      process.env.REACTPRESS_PLUGIN_RUNTIME_COPY === '1' || process.env.NODE_ENV === 'production';
+    const forceCopy = process.env.REACTPRESS_PLUGIN_RUNTIME_COPY === '1' || process.env.NODE_ENV === 'production';
     if (!forceCopy) {
       const linkTarget = path.relative(path.dirname(targetDir), templatePath);
       fs.symlinkSync(linkTarget, targetDir, 'dir');
@@ -404,17 +423,19 @@ export class PluginService {
     this.copyDir(templatePath, targetDir);
   }
 
-  private copyDir(src: string, dest: string): void {
+  private copyDir(src: string, dest: string, relFromRoot = ''): void {
     fs.mkdirSync(dest, { recursive: true });
     for (const entry of fs.readdirSync(src, { withFileTypes: true })) {
-      if (PluginService.COPY_SKIP_NAMES.has(entry.name)) continue;
+      if (!relFromRoot && PluginService.COPY_SKIP_NAMES.has(entry.name)) continue;
+      const relPath = relFromRoot ? path.posix.join(relFromRoot, entry.name) : entry.name;
+      if (PluginService.COPY_SKIP_REL_PATHS.has(relPath)) continue;
       const from = path.join(src, entry.name);
       const to = path.join(dest, entry.name);
       if (entry.isSymbolicLink()) {
         // Do not recreate symlinks — avoids copying links that escape the plugin tree.
         continue;
       } else if (entry.isDirectory()) {
-        this.copyDir(from, to);
+        this.copyDir(from, to, relPath);
       } else if (entry.isFile()) {
         fs.copyFileSync(from, to);
       }

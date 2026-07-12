@@ -58,7 +58,7 @@ function shouldBuildPlugin(pluginDir) {
   const entry = path.join(pluginDir, moduleRel.replace(/^\.\//, ''));
   if (!fs.existsSync(entry)) return true;
 
-  const srcMtime = newestMtime(pluginDir, 'src');
+  const srcMtime = newestMtime(pluginDir, 'src/server');
   const entryMtime = fs.statSync(entry).mtimeMs;
   return srcMtime > entryMtime;
 }
