@@ -97,13 +97,6 @@ module.exports = {
     'simple-import-sort/exports': 'off',
   },
   ignorePatterns: [
-    'dist/',
-    'node_modules',
-    'scripts',
-    'examples',
-    '**/.next',
-    'toolkit/dist',
-    'server/dist',
-    'web/src/routeTree.gen.ts',
+    // Canonical list: see repo root `.eslintignore`
   ],
 };

@@ -1,6 +1,47 @@
-node_modules
-**/.next/**
-**/_next/**
-**/dist/**
+# Dependencies
+node_modules/
+
+# Config (not application source)
 .eslintrc.js
-dist
+
+# Build / compile outputs
+dist/
+**/dist/
+out/
+**/out/
+/build/
+dist-ssr/
+**/.next/
+**/.next-preview/
+**/_next/
+
+# Monorepo package outputs
+toolkit/dist/
+server/dist/
+web/dist/
+cli/out/
+cli/dist/
+cli/toolkit/
+cli/admin-dist/
+cli/plugins/
+cli/server/
+desktop/out/
+desktop/release/
+docs/build/
+.docusaurus/
+plugins/*/dist/
+
+# Generated sources
+web/src/routeTree.gen.ts
+
+# Local runtime, cache, and test artifacts
+.reactpress/
+coverage/
+test-results/
+playwright-report/
+web/playwright-report/
+web/.tanstack/
+
+# Maintenance scripts & samples (root eslint targets app packages only)
+scripts/
+examples/
