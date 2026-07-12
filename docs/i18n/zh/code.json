@@ -20,6 +20,12 @@
   "home.hero.try": {
     "message": "在线演示"
   },
+  "home.hero.version.tag.beta": {
+    "message": "beta"
+  },
+  "home.hero.version.tag.latest": {
+    "message": "latest"
+  },
   "home.cli.running": {
     "message": "运行中"
   },

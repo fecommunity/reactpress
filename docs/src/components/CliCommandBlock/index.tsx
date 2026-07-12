@@ -16,6 +16,8 @@ type Props = {
   animate?: boolean;
   commands?: readonly string[];
   copyCommand?: string;
+  installCommand?: string;
+  betaVersion?: string;
 };
 
 const SERVICE_ROW_PATTERN = /^(\S+)\s{2,}(https?:\/\/\S+)$/;
@@ -170,6 +172,8 @@ export default function CliCommandBlock({
   animate = variant === 'hero',
   commands = QUICK_START_COMMANDS,
   copyCommand = QUICK_START_COPY_COMMAND,
+  installCommand = QUICK_START_COMMANDS[0],
+  betaVersion,
 }: Props) {
   const { i18n } = useDocusaurusContext();
   const locale = i18n.currentLocale === 'zh' ? 'zh' : 'en';
@@ -180,6 +184,8 @@ export default function CliCommandBlock({
     enabled: animate,
     locale,
     commands: lines,
+    installCommand,
+    betaVersion,
   });
 
   const scrollRef = useRef<HTMLDivElement>(null);

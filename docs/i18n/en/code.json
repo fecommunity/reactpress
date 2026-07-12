@@ -334,6 +334,12 @@
   "home.hero.try": {
     "message": "Live Demo"
   },
+  "home.hero.version.tag.beta": {
+    "message": "beta"
+  },
+  "home.hero.version.tag.latest": {
+    "message": "latest"
+  },
   "home.hero.cliLabel": {
     "message": "Copy commands to get started"
   },
