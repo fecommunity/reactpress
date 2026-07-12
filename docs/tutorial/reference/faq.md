@@ -28,9 +28,9 @@ keywords: [reactpress, faq, 常见问题, docker, wordpress, production]
 <details>
 <summary><strong>Admin 地址是 3000 还是 3001/admin？</strong></summary>
 
-**`reactpress init` 默认**：**http://localhost:3001/admin/**（Admin 挂载在访客主题同端口）。
+**`reactpress init` 默认**：`http://localhost:3001/admin/`（Admin 挂载在访客主题同端口）。
 
-Monorepo 本地开发时，Admin Vite dev server 可能在 **http://localhost:3000**。
+Monorepo 本地开发时，Admin Vite dev server 可能在 `http://localhost:3000`。
 
 </details>
 
