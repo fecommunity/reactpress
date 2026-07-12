@@ -2,4 +2,4 @@
 . "$(dirname "$0")/_/husky.sh"
 . "$(dirname "$0")/scripts/hooks-common.sh"
 
-sanitize_commit_message_file "$1"
+sanitize_commit_message_file "$1" || exit 1
