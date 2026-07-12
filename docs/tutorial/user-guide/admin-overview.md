@@ -7,7 +7,7 @@ keywords: [reactpress, admin, 管理后台, dashboard, 后台]
 
 # 管理后台概览
 
-ReactPress **Admin** 是 Vite SPA。执行 `reactpress init` 后，在 **http://localhost:3001/admin/** 打开（默认账号 `admin` / `admin`）。Monorepo 本地开发时 Admin 可能在 **http://localhost:3000**。
+ReactPress **Admin** 是 Vite SPA。执行 `reactpress init` 后，在 `http://localhost:3001/admin/` 打开（默认账号 `admin` / `admin`）。Monorepo 本地开发时 Admin 可能在 `http://localhost:3000`。
 
 ## 登录与语言
 
