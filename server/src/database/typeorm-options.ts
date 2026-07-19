@@ -35,15 +35,25 @@ const ENTITIES = [
   Webhook,
 ];
 
+/** Default: SQLite / non-production sync on; production MySQL off (avoid ALTER wiping timestamps). Override with DB_SYNCHRONIZE=true|false. */
+function resolveSynchronize(configService: ConfigService, dbType: string): boolean {
+  const raw = configService.get('DB_SYNCHRONIZE');
+  if (raw === true || raw === 'true' || raw === '1') return true;
+  if (raw === false || raw === 'false' || raw === '0') return false;
+  if (dbType === 'sqlite') return true;
+  return process.env.NODE_ENV !== 'production';
+}
+
 export function createTypeOrmOptions(configService: ConfigService): TypeOrmModuleOptions {
   const dbType = String(configService.get('DB_TYPE') || 'mysql').toLowerCase();
+  const synchronize = resolveSynchronize(configService, dbType);
 
   if (dbType === 'sqlite') {
     return {
       type: 'sqlite',
       database: configService.get('DB_DATABASE') || 'reactpress.db',
       entities: ENTITIES,
-      synchronize: true,
+      synchronize,
     };
   }
 
@@ -57,6 +67,6 @@ export function createTypeOrmOptions(configService: ConfigService): TypeOrmModul
     database: configService.get('DB_DATABASE', 'reactpress'),
     charset: 'utf8mb4',
     timezone: '+08:00',
-    synchronize: true,
+    synchronize,
   };
 }
