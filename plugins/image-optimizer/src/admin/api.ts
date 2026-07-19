@@ -82,6 +82,28 @@ function readApiErrorMessage(err: unknown, fallback: string): string {
   return fallback;
 }
 
+async function parseResponseBody(res: Response): Promise<{
+  success?: boolean;
+  code?: number;
+  data?: unknown;
+  msg?: string;
+  message?: string;
+} | null> {
+  const text = await res.text();
+  if (!text.trim()) return null;
+  try {
+    return JSON.parse(text) as {
+      success?: boolean;
+      code?: number;
+      data?: unknown;
+      msg?: string;
+      message?: string;
+    };
+  } catch {
+    throw new Error(`Invalid JSON from ${res.url || 'API'} (HTTP ${res.status}): ${text.slice(0, 120) || '(empty)'}`);
+  }
+}
+
 async function optimizeFetch<T>(path: string, init?: RequestInit): Promise<T> {
   const base = (await resolveApiBaseUrl(DEFAULT_API_BASE)).replace(/\/$/, '');
   const token = readAccessToken();
@@ -93,18 +115,15 @@ async function optimizeFetch<T>(path: string, init?: RequestInit): Promise<T> {
       ...init?.headers,
     },
   });
-  const body = (await res.json()) as {
-    success?: boolean;
-    code?: number;
-    data?: T;
-    msg?: string;
-    message?: string;
-  };
+  const body = await parseResponseBody(res);
   if (res.status === 401) {
     throw new Error('SESSION_EXPIRED');
   }
   if (!res.ok) {
-    throw new Error(body.msg ?? body.message ?? `Request failed: ${res.status}`);
+    throw new Error(body?.msg ?? body?.message ?? `Request failed: ${res.status}`);
+  }
+  if (!body) {
+    throw new Error(`Empty response from ${base}${path}`);
   }
   if (typeof body.code === 'number' && body.code !== 0) {
     throw new Error(body.message ?? 'Request failed');

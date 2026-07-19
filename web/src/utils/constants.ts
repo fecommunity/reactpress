@@ -2,13 +2,15 @@
  * Server API root including global prefix (`/api`).
  * Endpoint constants under `src/api/*` must NOT repeat `/api` in the path.
  *
- * Dev default `/api` → same-origin (Vite proxy); target from `VITE_DEV_API_PROXY_TARGET`.
+ * - Dev: `/api` → Vite proxy (`VITE_DEV_API_PROXY_TARGET`)
+ * - Production static Admin (nginx / theme `/admin/` + same-origin `/api`): `/api`
+ * - Override with `VITE_API_BASE_URL` when the API is on another absolute origin
  */
 function resolveApiBaseUrl(): string {
   const fromEnv = import.meta.env.VITE_API_BASE_URL?.trim();
   if (fromEnv) return fromEnv.replace(/\/$/, "");
-  if (import.meta.env.DEV) return "/api";
-  return "http://localhost:3002/api";
+  // Same-origin `/api` for both dev and published Admin SPA (Next rewrite / nginx).
+  return "/api";
 }
 
 export const API_BASE_URL = resolveApiBaseUrl();

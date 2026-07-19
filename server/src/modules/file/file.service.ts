@@ -18,6 +18,7 @@ import {
 import { filterByWhitelist } from '../../utils/query-whitelist.util';
 import { Oss } from '../../utils/oss.util';
 import { uniqueid } from '../../utils/uniqueid.util';
+import { resolveUploadBaseUrl, rewriteBrokenUploadUrl } from '../../utils/upload-url.util';
 import { LocalUpload } from '../../utils/upload.util';
 import { SettingService } from '../setting/setting.service';
 import { File } from './file.entity';
@@ -38,10 +39,20 @@ export class FileService {
   }
 
   private getUploadBaseUrl(): string {
-    return (
-      this.configService.get('SERVER_PUBLIC_UPLOAD_URL') ||
-      `${this.configService.get('SERVER_SITE_URL')}/public/uploads`
-    );
+    return resolveUploadBaseUrl(this.configService);
+  }
+
+  private normalizeFile(file: File): File {
+    const base = this.getUploadBaseUrl();
+    file.url = rewriteBrokenUploadUrl(file.url, base);
+    if (file.variants) {
+      for (const variant of Object.values(file.variants)) {
+        if (variant?.url) {
+          variant.url = rewriteBrokenUploadUrl(variant.url, base);
+        }
+      }
+    }
+    return file;
   }
 
   private async persistBuffer(filename: string, buffer: Buffer, hasOssConfig: boolean): Promise<string> {
@@ -67,7 +78,7 @@ export class FileService {
    * @param file
    */
   async uploadFile(file, unique, scene: ImageScene = 'default'): Promise<File> {
-    let { originalname, mimetype, size, buffer } = file;
+    const { originalname, mimetype, size, buffer } = file;
     const dataFolder = dateFormat(new Date(), 'yyyy-MM-dd');
     const ext = path.extname(originalname);
     const hasOssConfig = await this.oss.hasOssConfig();
@@ -126,7 +137,7 @@ export class FileService {
     const query = this.fileRepository.createQueryBuilder('file').orderBy('file.createAt', 'DESC');
 
     if (typeof queryParams === 'object') {
-      const { page = 1, pageSize = 12, ...otherParams } = queryParams;
+      const { page = 1, pageSize = 12 } = queryParams;
       query.skip((+page - 1) * +pageSize);
       query.take(+pageSize);
 
@@ -136,7 +147,8 @@ export class FileService {
       });
     }
 
-    return query.getManyAndCount();
+    const [rows, total] = await query.getManyAndCount();
+    return [rows.map((file) => this.normalizeFile(file)), total];
   }
 
   /**
@@ -144,11 +156,13 @@ export class FileService {
    * @param id
    */
   async findById(id): Promise<File> {
-    return this.fileRepository.findOne(id);
+    const file = await this.fileRepository.findOne(id);
+    return file ? this.normalizeFile(file) : file;
   }
 
   async findByIds(ids): Promise<Array<File>> {
-    return this.fileRepository.findByIds(ids);
+    const files = await this.fileRepository.findByIds(ids);
+    return files.map((file) => this.normalizeFile(file));
   }
 
   /**

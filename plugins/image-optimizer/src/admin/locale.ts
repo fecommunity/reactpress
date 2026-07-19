@@ -41,8 +41,14 @@ async function fetchPluginLocale(pluginId: string, locale: string): Promise<Loca
     }
   );
   if (!res.ok) return {};
-  const body = (await res.json()) as { data?: { messages?: LocaleMessages } };
-  return body.data?.messages ?? {};
+  const text = await res.text();
+  if (!text.trim()) return {};
+  try {
+    const body = JSON.parse(text) as { data?: { messages?: LocaleMessages } };
+    return body.data?.messages ?? {};
+  } catch {
+    return {};
+  }
 }
 
 export function usePluginDashboardText(pluginId: string) {

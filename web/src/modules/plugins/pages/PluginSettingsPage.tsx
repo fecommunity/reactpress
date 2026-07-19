@@ -68,8 +68,11 @@ function PluginSettingsPageInner({ pluginId }: PluginSettingsPageProps) {
   const [form] = Form.useForm();
   const { updateConfigMutation } = usePluginMutations();
   const { messages } = usePluginAdminLocaleText();
-  const [SettingsPanel, setSettingsPanel] =
-    useState<ComponentType<PluginSettingsPanelProps> | null>(null);
+  // Store as `{ Component }` — never put a component function in useState directly
+  // (React treats function state updates as updaters and would call Panel(null)).
+  const [settingsPanel, setSettingsPanel] = useState<{
+    Component: ComponentType<PluginSettingsPanelProps>;
+  } | null>(null);
   const [panelStatus, setPanelStatus] = useState<"idle" | "loading" | "ready" | "missing">("idle");
 
   useEffect(() => {
@@ -88,8 +91,7 @@ function PluginSettingsPageInner({ pluginId }: PluginSettingsPageProps) {
             ?.SettingsPanel;
         if (cancelled) return;
         if (Panel) {
-          // Store a component function in state — wrap in updater so React does not invoke Panel(prev).
-          setSettingsPanel(() => Panel as ComponentType<PluginSettingsPanelProps>);
+          setSettingsPanel({ Component: Panel as ComponentType<PluginSettingsPanelProps> });
           setPanelStatus("ready");
         } else {
           setSettingsPanel(null);
@@ -170,6 +172,7 @@ function PluginSettingsPageInner({ pluginId }: PluginSettingsPageProps) {
     );
   }
 
+  const SettingsPanel = settingsPanel?.Component ?? null;
   const showCustomPanel = panelStatus === "ready" && SettingsPanel;
   const showSchemaForm = hasSchema;
   if (!showCustomPanel && !showSchemaForm && panelStatus !== "loading") {

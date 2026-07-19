@@ -78,19 +78,30 @@ async function optimizeFetch<T>(path: string, init?: RequestInit): Promise<T> {
       ...init?.headers,
     },
   });
-  const body = (await res.json()) as {
+  const text = await res.text();
+  let body: {
     success?: boolean;
     code?: number;
     data?: T;
     msg?: string;
     message?: string;
-  };
+  } | null = null;
+  if (text.trim()) {
+    try {
+      body = JSON.parse(text) as typeof body;
+    } catch {
+      throw new Error(`Invalid JSON from ${base}${path} (HTTP ${res.status})`);
+    }
+  }
   if (res.status === 401) {
     clearInvalidServerSession();
     throw new Error("SESSION_EXPIRED");
   }
   if (!res.ok) {
-    throw new Error(body.msg ?? body.message ?? `Request failed: ${res.status}`);
+    throw new Error(body?.msg ?? body?.message ?? `Request failed: ${res.status}`);
+  }
+  if (!body) {
+    throw new Error(`Empty response from ${base}${path}`);
   }
   if (typeof body.code === "number" && body.code !== 0) {
     throw new Error(body.message ?? "Request failed");

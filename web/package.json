@@ -1,6 +1,6 @@
 {
   "name": "@fecommunity/reactpress-web",
-  "version": "4.0.0-beta.18",
+  "version": "4.0.0-beta.20",
   "description": "Official ReactPress Admin — WordPress-style writing UI for the publishing platform. Vite SPA with Express and Next.js /admin/ mount helpers",
   "keywords": [
     "admin",

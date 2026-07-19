@@ -16,6 +16,7 @@ import {
 } from '../../utils/image-processor.util';
 import { Oss } from '../../utils/oss.util';
 import { LocalUpload } from '../../utils/upload.util';
+import { resolveUploadBaseUrl, rewriteBrokenUploadUrl } from '../../utils/upload-url.util';
 import { ArticleRevision } from '../article/article-revision.entity';
 import { Article } from '../article/article.entity';
 import { Page } from '../page/page.entity';
@@ -60,17 +61,14 @@ export class FileOptimizationService {
     @InjectRepository(Page)
     private readonly pageRepository: Repository<Page>,
     private readonly settingService: SettingService,
-    private readonly configService: ConfigService,
+    private readonly configService: ConfigService
   ) {
     this.oss = new Oss(this.settingService);
     this.localUpload = new LocalUpload();
   }
 
   private getUploadBaseUrl(): string {
-    return (
-      this.configService.get('SERVER_PUBLIC_UPLOAD_URL') ||
-      `${this.configService.get('SERVER_SITE_URL')}/public/uploads`
-    );
+    return resolveUploadBaseUrl(this.configService);
   }
 
   private async persistBuffer(filename: string, buffer: Buffer, hasOssConfig: boolean): Promise<string> {
@@ -185,16 +183,13 @@ export class FileOptimizationService {
     };
   }
 
-  private async countLegacyContentRefs(
-    repo: Repository<Article | Page>,
-    alias: string,
-  ): Promise<number> {
+  private async countLegacyContentRefs(repo: Repository<Article | Page>, alias: string): Promise<number> {
     return repo
       .createQueryBuilder(alias)
       .where(
         `((${alias}.cover LIKE :upload AND ${alias}.cover NOT LIKE :webp)
           OR (${alias}.html LIKE :upload AND ${alias}.html NOT LIKE :webp))`,
-        { upload: '%uploads/%', webp: '%.webp%' },
+        { upload: '%uploads/%', webp: '%.webp%' }
       )
       .getCount();
   }
@@ -311,13 +306,16 @@ export class FileOptimizationService {
 
   private async reprocessOne(
     file: File,
-    opts: { dryRun: boolean; hasOssConfig: boolean; cleanupOriginals: boolean },
+    opts: { dryRun: boolean; hasOssConfig: boolean; cleanupOriginals: boolean }
   ): Promise<OptimizeJobItemResult> {
+    const uploadBase = this.getUploadBaseUrl();
+    // Keep DB url for content rewrite matching; also expose a display-normalized form.
+    const storedUrl = file.url;
     const base: OptimizeJobItemResult = {
       fileId: file.id,
       originalname: file.originalname,
       status: 'failed',
-      oldUrl: file.url,
+      oldUrl: storedUrl,
     };
 
     try {
@@ -354,8 +352,8 @@ export class FileOptimizationService {
       const primaryVariant = primaryVariantForScene('default');
       const primary = variantsMeta[primaryVariant];
       const oldFilename = file.filename;
-      const oldUrl = file.url;
       const oldSize = file.size ?? 0;
+      const normalizedOldUrl = rewriteBrokenUploadUrl(storedUrl, uploadBase);
 
       file.originalname = `${path.basename(file.originalname, path.extname(file.originalname))}.webp`;
       file.filename = primary.filename;
@@ -372,6 +370,8 @@ export class FileOptimizationService {
       return {
         ...base,
         status: 'success',
+        // Prefer rewriting broken `undefined/...` URLs when present in content.
+        oldUrl: storedUrl.startsWith('undefined/') ? storedUrl : normalizedOldUrl,
         newUrl: primary.url,
         savedBytes: Math.max(0, oldSize - primary.size),
       };
