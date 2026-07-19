@@ -896,6 +896,7 @@
     "settingsTitle": "{{name}} 设置",
     "settingsSection": "插件选项",
     "settingsSaveHint": "保存后立即生效，无需重启服务。",
+    "settingsPanelMissing": "未加载到插件管理面板（批量优化等）。请用 Monorepo 重新执行 pnpm run build:web，并将 Admin 静态资源同步到当前后台，或使用 /api/file/optimize 接口。",
     "backToPlugins": "返回插件列表"
   },
   "placeholder": {

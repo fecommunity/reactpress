@@ -22,14 +22,19 @@ import {
   type PluginSettingsSchema,
 } from "@/modules/plugins/utils/pluginSettingsSchema";
 import { localizePluginSettingsSchema } from "@/modules/plugins/utils/resolvePluginManifestText";
-import { fetchPlugin } from "@/shared/api/plugins";
+import { fetchPlugin, type PluginListItem } from "@/shared/api/plugins";
 import { getApiErrorMessage } from "@/shared/api/getApiErrorMessage";
 import { ModulePlaceholder } from "@/shared/components/ModulePlaceholder";
 import { loadPluginAdminModule, pluginHasBundledAdminModule } from "@/shared/pluginAdmin/loaders";
+import { pluginManifestHasAdminUI } from "@fecommunity/reactpress-toolkit/plugin/extension";
 
 type PluginSettingsPageProps = {
   pluginId: string;
 };
+
+function pluginShouldShowAdminPanelHint(plugin: { admin?: PluginListItem["admin"] }): boolean {
+  return pluginManifestHasAdminUI(plugin.admin);
+}
 
 function renderControl(prop: PluginSchemaProperty) {
   if (prop.type === "boolean") {
@@ -65,28 +70,36 @@ function PluginSettingsPageInner({ pluginId }: PluginSettingsPageProps) {
   const { messages } = usePluginAdminLocaleText();
   const [SettingsPanel, setSettingsPanel] =
     useState<ComponentType<PluginSettingsPanelProps> | null>(null);
+  const [panelStatus, setPanelStatus] = useState<"idle" | "loading" | "ready" | "missing">("idle");
 
   useEffect(() => {
     if (!pluginHasBundledAdminModule(pluginId)) {
       setSettingsPanel(null);
+      setPanelStatus("missing");
       return;
     }
     let cancelled = false;
+    setPanelStatus("loading");
     void loadPluginAdminModule(pluginId)
       .then((mod) => {
         const Panel =
           mod.SettingsPanel ??
           (mod as { default?: { SettingsPanel?: ComponentType<PluginSettingsPanelProps> } }).default
             ?.SettingsPanel;
-        if (!cancelled && Panel) {
+        if (cancelled) return;
+        if (Panel) {
           // Store a component function in state — wrap in updater so React does not invoke Panel(prev).
           setSettingsPanel(() => Panel as ComponentType<PluginSettingsPanelProps>);
-        } else if (!cancelled) {
+          setPanelStatus("ready");
+        } else {
           setSettingsPanel(null);
+          setPanelStatus("missing");
         }
       })
       .catch(() => {
-        if (!cancelled) setSettingsPanel(null);
+        if (cancelled) return;
+        setSettingsPanel(null);
+        setPanelStatus("missing");
       });
     return () => {
       cancelled = true;
@@ -157,7 +170,9 @@ function PluginSettingsPageInner({ pluginId }: PluginSettingsPageProps) {
     );
   }
 
-  if (!hasSchema) {
+  const showCustomPanel = panelStatus === "ready" && SettingsPanel;
+  const showSchemaForm = hasSchema;
+  if (!showCustomPanel && !showSchemaForm && panelStatus !== "loading") {
     return (
       <div className={styles.emptyWrap}>
         <ModulePlaceholder
@@ -171,7 +186,10 @@ function PluginSettingsPageInner({ pluginId }: PluginSettingsPageProps) {
     );
   }
 
-  const typedSchema = localizedSchema as PluginSettingsSchema;
+  const typedSchema = (localizedSchema ?? {
+    type: "object",
+    properties: {},
+  }) as PluginSettingsSchema;
 
   const onFinish = (values: Record<string, unknown>) => {
     const config: Record<string, unknown> = {};
@@ -222,7 +240,13 @@ function PluginSettingsPageInner({ pluginId }: PluginSettingsPageProps) {
 
       <div className={`admin-panel ${styles.panel}`}>
         <div className={`admin-panel__body ${styles.panelBody}`}>
-          {SettingsPanel ? (
+          {panelStatus === "loading" ? (
+            <div className={styles.panelLoading}>
+              <Spin />
+            </div>
+          ) : null}
+
+          {showCustomPanel && SettingsPanel ? (
             <SettingsPanel
               pluginId={pluginId}
               config={plugin.config ?? {}}
@@ -230,41 +254,51 @@ function PluginSettingsPageInner({ pluginId }: PluginSettingsPageProps) {
             />
           ) : null}
 
-          <h2 className={styles.sectionTitle}>{t("plugins.settingsSection")}</h2>
+          {panelStatus === "missing" && pluginShouldShowAdminPanelHint(plugin) ? (
+            <p className={styles.panelHint} role="status">
+              {t("plugins.settingsPanelMissing")}
+            </p>
+          ) : null}
 
-          <Form form={form} layout="vertical" className={styles.form} onFinish={onFinish}>
-            {fieldKeys.map((key) => {
-              const prop = typedSchema.properties?.[key];
-              if (!prop) return null;
-              const label = prop.title ?? key;
-              return (
-                <Form.Item
-                  key={key}
-                  name={key}
-                  label={label}
-                  valuePropName={prop.type === "boolean" ? "checked" : "value"}
-                  extra={
-                    prop.description ? (
-                      <span className={styles.fieldHint}>{prop.description}</span>
-                    ) : undefined
-                  }
+          {showSchemaForm ? (
+            <>
+              <h2 className={styles.sectionTitle}>{t("plugins.settingsSection")}</h2>
+
+              <Form form={form} layout="vertical" className={styles.form} onFinish={onFinish}>
+                {fieldKeys.map((key) => {
+                  const prop = typedSchema.properties?.[key];
+                  if (!prop) return null;
+                  const label = prop.title ?? key;
+                  return (
+                    <Form.Item
+                      key={key}
+                      name={key}
+                      label={label}
+                      valuePropName={prop.type === "boolean" ? "checked" : "value"}
+                      extra={
+                        prop.description ? (
+                          <span className={styles.fieldHint}>{prop.description}</span>
+                        ) : undefined
+                      }
+                    >
+                      {renderControl(prop)}
+                    </Form.Item>
+                  );
+                })}
+              </Form>
+
+              <div className={styles.footer}>
+                <Button
+                  type="primary"
+                  loading={updateConfigMutation.isPending}
+                  onClick={() => form.submit()}
                 >
-                  {renderControl(prop)}
-                </Form.Item>
-              );
-            })}
-          </Form>
-
-          <div className={styles.footer}>
-            <Button
-              type="primary"
-              loading={updateConfigMutation.isPending}
-              onClick={() => form.submit()}
-            >
-              {t("plugins.settingsSave")}
-            </Button>
-            <p className={styles.footerHint}>{t("plugins.settingsSaveHint")}</p>
-          </div>
+                  {t("plugins.settingsSave")}
+                </Button>
+                <p className={styles.footerHint}>{t("plugins.settingsSaveHint")}</p>
+              </div>
+            </>
+          ) : null}
         </div>
       </div>
     </div>

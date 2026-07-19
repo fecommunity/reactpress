@@ -896,6 +896,7 @@
     "settingsTitle": "{{name}} Settings",
     "settingsSection": "Plugin options",
     "settingsSaveHint": "Changes apply immediately without restarting the server.",
+    "settingsPanelMissing": "The plugin management panel (batch optimize, etc.) did not load. Rebuild Admin with pnpm run build:web from the monorepo and sync admin static assets, or call /api/file/optimize.",
     "backToPlugins": "Back to plugins"
   },
   "placeholder": {

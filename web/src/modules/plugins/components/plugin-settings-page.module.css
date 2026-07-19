@@ -59,6 +59,23 @@
   padding: 20px 24px 16px;
 }
 
+.panelLoading {
+  display: flex;
+  justify-content: center;
+  padding: 24px 0 16px;
+}
+
+.panelHint {
+  margin: 0 0 16px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  background: var(--ant-color-warning-bg);
+  border: 1px solid var(--ant-color-warning-border);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ant-color-text);
+}
+
 .sectionTitle {
   margin: 0 0 16px;
   padding-bottom: 10px;
