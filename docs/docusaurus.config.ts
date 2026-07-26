@@ -132,8 +132,19 @@ const config: Config = {
           position: 'left',
           label: 'Docs',
         },
-        { to: '/blog', label: 'Blog', position: 'left' },
-        { to: '/blog/changelog', label: 'Changelog', position: 'left' },
+        {
+          to: '/blog',
+          label: 'Blog',
+          position: 'left',
+          // Exclude /blog/changelog so Blog and Changelog are not both active.
+          activeBaseRegex: `/blog(?!/changelog(?:/|$))`,
+        },
+        {
+          to: '/blog/changelog',
+          label: 'Changelog',
+          position: 'left',
+          activeBasePath: '/blog/changelog',
+        },
         { to: '/docs/tutorial-extras/desktop-client', label: 'Download', position: 'left' },
         { href: 'https://blog.gaoredu.com', label: 'Demo', position: 'left' },
         {
