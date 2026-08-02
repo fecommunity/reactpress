@@ -44,6 +44,13 @@ Monorepo 本地开发时，Admin Vite dev server 可能在 `http://localhost:300
 ## 功能与选型
 
 <details>
+<summary><strong>ReactPress 是什么？</strong></summary>
+
+面向 React 开发者的开源**发布系统**（Admin + NestJS API + Next.js 主题 + 插件 + 桌面客户端），不是只提供 API 的 Headless CMS。详见 [ReactPress 是什么？](../getting-started/what-is-reactpress.md)。
+
+</details>
+
+<details>
 <summary><strong>可以用自己的前端吗？</strong></summary>
 
 可以。ReactPress 提供 Headless REST + API Key。可 fork [reactpress-theme-starter](https://github.com/fecommunity/reactpress-theme-starter) 或自行对接 `/api/article` 等端点。见 [Headless API 指南](../developer-guide/headless-api.md)。
@@ -162,5 +169,9 @@ Monorepo 开发需 `pnpm run build:plugins` 后重启 API。确认 Admin 中插�
 
 ## 相关文档
 
+- [ReactPress 是什么？](../getting-started/what-is-reactpress.md)
+- [用 Next.js 60 秒搭建博客](../getting-started/build-nextjs-blog-in-60-seconds.md)
+- [ReactPress vs WordPress](../getting-started/reactpress-vs-wordpress.md)
+- [面向 React 的自托管 CMS](../getting-started/self-hosted-cms-for-react.md)
 - [故障排查](./troubleshooting.md)
 - [术语表](./glossary.md)

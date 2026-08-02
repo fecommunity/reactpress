@@ -1,5 +1,5 @@
 ---
-sidebar_position: 2
+sidebar_position: 4
 title: Create Your First Site in 5 Minutes
 description: ReactPress beginner tutorial — from npm install to publishing your first post. Complete init in ~60 seconds and access Admin, visitor site, and API.
 keywords: [reactpress, quick start, first blog, init, tutorial]
@@ -33,11 +33,11 @@ reactpress init
 
 On success you should see output similar to:
 
-| Service | URL |
-|------|------|
-| **Visitor site** | http://localhost:3001 |
-| **Admin** | http://localhost:3001/admin/ |
-| **API** | http://localhost:3002/api |
+| Service          | URL                              |
+| ---------------- | -------------------------------- |
+| **Visitor site** | http://localhost:3001            |
+| **Admin**        | http://localhost:3001/admin/     |
+| **API**          | http://localhost:3002/api        |
 | **Health check** | http://localhost:3002/api/health |
 
 ## Step 3: Log in to Admin
@@ -90,10 +90,14 @@ More troubleshooting: [Troubleshooting](../reference/troubleshooting.md).
 
 ## What to learn next
 
-| You are… | Recommended reading |
-|-------|----------|
-| Content creator | [User guide: Content management](../user-guide/content-management.md) |
-| Site administrator | [Site settings & SEO](../user-guide/site-settings-seo.md) |
-| Frontend developer | [Theme development](../developer-guide/theme-development.md) |
-| Full-stack / integration | [Headless API](../developer-guide/headless-api.md) |
-| Ready to go live | [Production deployment](../tutorial-basics/deploy-your-site.md) |
+| You are…                      | Recommended reading                                                             |
+| ----------------------------- | ------------------------------------------------------------------------------- |
+| New to the product            | [What is ReactPress?](./what-is-reactpress.md)                                  |
+| Want a 60s Next.js blog proof | [Build a blog with Next.js in 60 seconds](./build-nextjs-blog-in-60-seconds.md) |
+| Content creator               | [User guide: Content management](../user-guide/content-management.md)           |
+| Site administrator            | [Site settings & SEO](../user-guide/site-settings-seo.md)                       |
+| Frontend developer            | [Theme development](../developer-guide/theme-development.md)                    |
+| Full-stack / integration      | [Headless API](../developer-guide/headless-api.md)                              |
+| Ready to go live              | [Production deployment](../tutorial-basics/deploy-your-site.md)                 |
+| Comparing WordPress           | [ReactPress vs WordPress](./reactpress-vs-wordpress.md)                         |
+| Self-hosting                  | [Self-hosted CMS for React](./self-hosted-cms-for-react.md)                     |

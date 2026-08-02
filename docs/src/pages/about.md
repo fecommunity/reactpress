@@ -31,6 +31,7 @@ npm i -g @fecommunity/reactpress@beta
 - **Bloggers and content teams** who prefer WordPress-style workflows with Next.js performance
 - **Open-source maintainers** who need docs, changelog, and marketing pages with SSR
 - **Teams evaluating WordPress alternatives** — see [ReactPress vs WordPress](/docs/getting-started/reactpress-vs-wordpress)
+- **Self-hosters who want a React CMS** — see [Self-hosted CMS for React](/docs/getting-started/self-hosted-cms-for-react)
 
 ## Open source & license
 
@@ -49,6 +50,10 @@ Questions, security reports, or partnership inquiries: [Contact us](/contact) or
 
 ## Related pages
 
+- [What is ReactPress?](/docs/getting-started/what-is-reactpress)
+- [Build a Next.js blog in 60 seconds](/docs/getting-started/build-nextjs-blog-in-60-seconds)
+- [ReactPress vs WordPress](/docs/getting-started/reactpress-vs-wordpress)
+- [Self-hosted CMS for React](/docs/getting-started/self-hosted-cms-for-react)
 - [FAQ](/docs/reference/faq)
 - [Privacy Policy](/privacy)
 - [Terms of Use](/terms)

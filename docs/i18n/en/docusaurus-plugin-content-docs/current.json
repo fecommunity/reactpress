@@ -28,7 +28,7 @@
     "description": "The generated-index page title for category 快速入门 in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.快速入门.link.generated-index.description": {
-    "message": "From zero: install ReactPress, create your first site, and understand Admin / API / theme / plugin / desktop. Live in ~60 seconds.",
+    "message": "From zero: learn what ReactPress is, build a Next.js blog in 60 seconds, install, core concepts, vs WordPress, and self-hosting. Live in ~60 seconds.",
     "description": "The generated-index page description for category 快速入门 in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.使用指南": {

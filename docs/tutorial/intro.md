@@ -11,14 +11,14 @@ keywords:
 
 按角色选择起点，每篇文档均含 SEO 摘要与下一步链接。
 
-| 阶段       | 你是谁                | 从这里开始                                                                                                               |
-| ---------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| **0→1**    | 第一次听说 ReactPress | [5 分钟创建第一个站点](./getting-started/first-site.md) · [对比 WordPress](./getting-started/reactpress-vs-wordpress.md) |
-| **1→10**   | 站长 / 博主           | [使用指南](./user-guide/admin-overview.md) → [SEO 设置](./user-guide/site-settings-seo.md)                               |
-| **10→50**  | 前端开发者            | [主题开发](./developer-guide/theme-development.md) → [Headless API](./developer-guide/headless-api.md)                   |
-| **50→100** | 全栈 / 贡献者         | [Monorepo 开发](./developer-guide/local-development.md) → [插件开发](./developer-guide/plugin-development.md)            |
-| **上线**   | 运维                  | [生产部署](./tutorial-basics/deploy-your-site.md) → [Docker](./tutorial-extras/docker-deployment.md)                     |
-| **排错**   | 遇到问题              | [FAQ](./reference/faq.md) → [故障排查](./reference/troubleshooting.md)                                                   |
+| 阶段       | 你是谁                | 从这里开始                                                                                                                                                                                                   |
+| ---------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **0→1**    | 第一次听说 ReactPress | [ReactPress 是什么？](./getting-started/what-is-reactpress.md) · [60 秒 Next.js 博客](./getting-started/build-nextjs-blog-in-60-seconds.md) · [对比 WordPress](./getting-started/reactpress-vs-wordpress.md) |
+| **1→10**   | 站长 / 博主           | [使用指南](./user-guide/admin-overview.md) → [SEO 设置](./user-guide/site-settings-seo.md)                                                                                                                   |
+| **10→50**  | 前端开发者            | [主题开发](./developer-guide/theme-development.md) → [Headless API](./developer-guide/headless-api.md)                                                                                                       |
+| **50→100** | 全栈 / 贡献者         | [Monorepo 开发](./developer-guide/local-development.md) → [插件开发](./developer-guide/plugin-development.md)                                                                                                |
+| **上线**   | 运维                  | [生产部署](./tutorial-basics/deploy-your-site.md) → [Docker](./tutorial-extras/docker-deployment.md)                                                                                                         |
+| **排错**   | 遇到问题              | [FAQ](./reference/faq.md) → [故障排查](./reference/troubleshooting.md)                                                                                                                                       |
 
 ## 项目简介
 

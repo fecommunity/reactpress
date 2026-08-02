@@ -1,5 +1,5 @@
 ---
-sidebar_position: 3
+sidebar_position: 5
 title: 核心概念
 description: 理解 ReactPress 五大组件 — Admin 管理后台、NestJS API、Next.js 主题、Hook 插件系统与 Electron 桌面客户端的职责边界。
 keywords: [reactpress, architecture, 架构, admin, api, theme, plugin, desktop, 概念]
@@ -34,23 +34,23 @@ flowchart LR
   API --> Theme
 ```
 
-| 组件 | 技术 | 端口 | 职责 |
-|------|------|------|------|
-| **Admin** | React + Vite SPA | 3001 `/admin/` | 写文章、管媒体、装主题/插件、站点设置（Monorepo 开发时可能为 :3000） |
-| **API** | NestJS | 3002 | 持久化、鉴权、Hook、Headless REST |
-| **Theme** | Next.js SSR/ISR | 3001 | 访客看到的网站（可完全替换） |
-| **Plugin** | Node 模块 + Hook | — | 服务端逻辑扩展（SEO、摘要、图片优化等） |
-| **Desktop** | Electron | — | 离线写作、SQLite 本地模式、同步到远程 |
+| 组件        | 技术             | 端口           | 职责                                                                 |
+| ----------- | ---------------- | -------------- | -------------------------------------------------------------------- |
+| **Admin**   | React + Vite SPA | 3001 `/admin/` | 写文章、管媒体、装主题/插件、站点设置（Monorepo 开发时可能为 :3000） |
+| **API**     | NestJS           | 3002           | 持久化、鉴权、Hook、Headless REST                                    |
+| **Theme**   | Next.js SSR/ISR  | 3001           | 访客看到的网站（可完全替换）                                         |
+| **Plugin**  | Node 模块 + Hook | —              | 服务端逻辑扩展（SEO、摘要、图片优化等）                              |
+| **Desktop** | Electron         | —              | 离线写作、SQLite 本地模式、同步到远程                                |
 
 ## 与 WordPress 的对应关系
 
-| WordPress | ReactPress | 说明 |
-|-----------|------------|------|
-| wp-admin | Admin (`:3001/admin/`) | 内容管理界面 |
-| Theme | themes/* (:3001) | 访客前端，npm 可安装 |
-| Plugin | plugins/* | Hook 扩展，不修改主题 |
-| REST API | /api/* | Headless 默认开启 |
-| — | Desktop | 本地优先写作（WordPress 无对等物） |
+| WordPress | ReactPress             | 说明                               |
+| --------- | ---------------------- | ---------------------------------- |
+| wp-admin  | Admin (`:3001/admin/`) | 内容管理界面                       |
+| Theme     | themes/\* (:3001)      | 访客前端，npm 可安装               |
+| Plugin    | plugins/\*             | Hook 扩展，不修改主题              |
+| REST API  | /api/\*                | Headless 默认开启                  |
+| —         | Desktop                | 本地优先写作（WordPress 无对等物） |
 
 ## 数据流
 
@@ -83,13 +83,15 @@ my-site/
 
 ## 两种用户路径
 
-| 路径 | 适用 | 入口 |
-|------|------|------|
-| **终端用户** | 建站、写博客 | `npm i -g @fecommunity/reactpress` → `init` |
-| **贡献者** | 改 core、写主题/插件 | clone monorepo → `pnpm dev` |
+| 路径         | 适用                 | 入口                                        |
+| ------------ | -------------------- | ------------------------------------------- |
+| **终端用户** | 建站、写博客         | `npm i -g @fecommunity/reactpress` → `init` |
+| **贡献者**   | 改 core、写主题/插件 | clone monorepo → `pnpm dev`                 |
 
 ## 相关文档
 
 - [安装与环境要求](./installation.md)
+- [ReactPress 是什么？](./what-is-reactpress.md)
+- [用 Next.js 60 秒搭建博客](./build-nextjs-blog-in-60-seconds.md)
 - [CLI 命令参考](../developer-guide/cli-reference.md)
 - [术语表](../reference/glossary.md)

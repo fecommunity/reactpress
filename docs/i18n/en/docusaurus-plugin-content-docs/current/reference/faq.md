@@ -44,6 +44,13 @@ First bootstrap: `admin` / `admin`. Change password immediately after login; in 
 ## Features & choosing ReactPress
 
 <details>
+<summary><strong>What is ReactPress?</strong></summary>
+
+An open-source **publishing system for React developers** (Admin + NestJS API + Next.js themes + plugins + desktop client) — not a Headless-only API. See [What is ReactPress?](../getting-started/what-is-reactpress.md).
+
+</details>
+
+<details>
 <summary><strong>Can I use my own frontend?</strong></summary>
 
 Yes. ReactPress provides Headless REST + API Key. Fork [reactpress-theme-starter](https://github.com/fecommunity/reactpress-theme-starter) or integrate `/api/article` and other endpoints. See [Headless API guide](../developer-guide/headless-api.md).
@@ -162,5 +169,9 @@ Before asking, read [How To Ask Questions The Smart Way](https://github.com/ryan
 
 ## Related docs
 
+- [What is ReactPress?](../getting-started/what-is-reactpress.md)
+- [Build a Next.js blog in 60 seconds](../getting-started/build-nextjs-blog-in-60-seconds.md)
+- [ReactPress vs WordPress](../getting-started/reactpress-vs-wordpress.md)
+- [Self-hosted CMS for React](../getting-started/self-hosted-cms-for-react.md)
 - [Troubleshooting](./troubleshooting.md)
 - [Glossary](./glossary.md)

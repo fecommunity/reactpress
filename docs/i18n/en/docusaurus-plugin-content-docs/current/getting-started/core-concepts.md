@@ -1,5 +1,5 @@
 ---
-sidebar_position: 3
+sidebar_position: 5
 title: Core Concepts
 description: Understand ReactPress's five components — Admin, NestJS API, Next.js theme, Hook plugin system, and Electron desktop client — and their boundaries.
 keywords: [reactpress, architecture, admin, api, theme, plugin, desktop, concepts]
@@ -34,23 +34,23 @@ flowchart LR
   API --> Theme
 ```
 
-| Component | Technology | Port | Responsibility |
-|------|------|------|------|
-| **Admin** | React + Vite SPA | 3001 `/admin/` | Write posts, manage media, install themes/plugins, site settings (Monorepo dev may use :3000) |
-| **API** | NestJS | 3002 | Persistence, auth, Hooks, Headless REST |
-| **Theme** | Next.js SSR/ISR | 3001 | Visitor-facing site (fully replaceable) |
-| **Plugin** | Node module + Hook | — | Server-side logic (SEO, summaries, image optimization, etc.) |
-| **Desktop** | Electron | — | Offline writing, SQLite local mode, sync to remote |
+| Component   | Technology         | Port           | Responsibility                                                                                |
+| ----------- | ------------------ | -------------- | --------------------------------------------------------------------------------------------- |
+| **Admin**   | React + Vite SPA   | 3001 `/admin/` | Write posts, manage media, install themes/plugins, site settings (Monorepo dev may use :3000) |
+| **API**     | NestJS             | 3002           | Persistence, auth, Hooks, Headless REST                                                       |
+| **Theme**   | Next.js SSR/ISR    | 3001           | Visitor-facing site (fully replaceable)                                                       |
+| **Plugin**  | Node module + Hook | —              | Server-side logic (SEO, summaries, image optimization, etc.)                                  |
+| **Desktop** | Electron           | —              | Offline writing, SQLite local mode, sync to remote                                            |
 
 ## Mapping to WordPress
 
-| WordPress | ReactPress | Notes |
-|-----------|------------|------|
-| wp-admin | Admin (`:3001/admin/`) | Content management UI |
-| Theme | themes/* (:3001) | Visitor frontend, installable via npm |
-| Plugin | plugins/* | Hook extensions without modifying themes |
-| REST API | /api/* | Headless enabled by default |
-| — | Desktop | Local-first writing (no WordPress equivalent) |
+| WordPress | ReactPress             | Notes                                         |
+| --------- | ---------------------- | --------------------------------------------- |
+| wp-admin  | Admin (`:3001/admin/`) | Content management UI                         |
+| Theme     | themes/\* (:3001)      | Visitor frontend, installable via npm         |
+| Plugin    | plugins/\*             | Hook extensions without modifying themes      |
+| REST API  | /api/\*                | Headless enabled by default                   |
+| —         | Desktop                | Local-first writing (no WordPress equivalent) |
 
 ## Data flow
 
@@ -83,13 +83,15 @@ my-site/
 
 ## Two user paths
 
-| Path | For | Entry |
-|------|------|------|
-| **End user** | Build sites, blog | `npm i -g @fecommunity/reactpress` → `init` |
-| **Contributor** | Core, themes, plugins | clone monorepo → `pnpm dev` |
+| Path            | For                   | Entry                                       |
+| --------------- | --------------------- | ------------------------------------------- |
+| **End user**    | Build sites, blog     | `npm i -g @fecommunity/reactpress` → `init` |
+| **Contributor** | Core, themes, plugins | clone monorepo → `pnpm dev`                 |
 
 ## Related docs
 
 - [Installation & requirements](./installation.md)
+- [What is ReactPress?](./what-is-reactpress.md)
+- [Build a Next.js blog in 60 seconds](./build-nextjs-blog-in-60-seconds.md)
 - [CLI command reference](../developer-guide/cli-reference.md)
 - [Glossary](../reference/glossary.md)

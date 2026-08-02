@@ -1,5 +1,5 @@
 ---
-sidebar_position: 2
+sidebar_position: 4
 title: 5 分钟创建第一个站点
 description: ReactPress 新手教程 — 从 npm 安装到发布第一篇文章，约 60 秒完成 init 并访问 Admin、访客站与 API。
 keywords: [reactpress, quick start, 快速开始, 第一篇博客, init, tutorial]
@@ -33,11 +33,11 @@ reactpress init
 
 成功后可看到类似输出：
 
-| 服务 | 地址 |
-|------|------|
-| **访客站** | http://localhost:3001 |
-| **管理后台** | http://localhost:3001/admin/ |
-| **API** | http://localhost:3002/api |
+| 服务         | 地址                             |
+| ------------ | -------------------------------- |
+| **访客站**   | http://localhost:3001            |
+| **管理后台** | http://localhost:3001/admin/     |
+| **API**      | http://localhost:3002/api        |
 | **健康检查** | http://localhost:3002/api/health |
 
 ## 第 3 步：登录 Admin
@@ -90,10 +90,14 @@ reactpress stop            # 停止服务后重新 init
 
 ## 接下来学什么？
 
-| 你是… | 推荐阅读 |
-|-------|----------|
-| 内容创作者 | [使用指南：内容管理](../user-guide/content-management.md) |
-| 站点管理员 | [站点设置与 SEO](../user-guide/site-settings-seo.md) |
-| 前端开发者 | [主题开发](../developer-guide/theme-development.md) |
-| 全栈 / 集成 | [Headless API](../developer-guide/headless-api.md) |
-| 准备上线 | [生产环境部署](../tutorial-basics/deploy-your-site.md) |
+| 你是…                     | 推荐阅读                                                         |
+| ------------------------- | ---------------------------------------------------------------- |
+| 想先搞清产品              | [ReactPress 是什么？](./what-is-reactpress.md)                   |
+| 想 60 秒验证 Next.js 博客 | [用 Next.js 60 秒搭建博客](./build-nextjs-blog-in-60-seconds.md) |
+| 内容创作者                | [使用指南：内容管理](../user-guide/content-management.md)        |
+| 站点管理员                | [站点设置与 SEO](../user-guide/site-settings-seo.md)             |
+| 前端开发者                | [主题开发](../developer-guide/theme-development.md)              |
+| 全栈 / 集成               | [Headless API](../developer-guide/headless-api.md)               |
+| 准备上线                  | [生产环境部署](../tutorial-basics/deploy-your-site.md)           |
+| 对比 WordPress            | [ReactPress vs WordPress](./reactpress-vs-wordpress.md)          |
+| 自托管                    | [面向 React 的自托管 CMS](./self-hosted-cms-for-react.md)        |

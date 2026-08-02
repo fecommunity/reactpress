@@ -11,18 +11,20 @@ ReactPress 4.0 面向**终端用户**与**仓库贡献者**提供两条路径。
 
 ## 系统要求
 
-| 项目 | 要求 |
-|------|------|
-| **Node.js** | 20 或更高（推荐 LTS） |
-| **操作系统** | macOS 12+、Windows 10+、主流 Linux |
-| **包管理器** | npm / pnpm / yarn 均可安装全局 CLI |
-| **数据库（默认）** | 嵌入式 SQLite — **无需 Docker 或 MySQL** |
-| **磁盘空间** | 首次安装约 200–400 MB（含 bundled API 运行时） |
+| 项目               | 要求                                           |
+| ------------------ | ---------------------------------------------- |
+| **Node.js**        | 20 或更高（推荐 LTS）                          |
+| **操作系统**       | macOS 12+、Windows 10+、主流 Linux             |
+| **包管理器**       | npm / pnpm / yarn 均可安装全局 CLI             |
+| **数据库（默认）** | 嵌入式 SQLite — **无需 Docker 或 MySQL**       |
+| **磁盘空间**       | 首次安装约 200–400 MB（含 bundled API 运行时） |
 
 :::tip 验证 Node 版本
+
 ```bash
 node -v   # 应显示 v20.x 或更高
 ```
+
 :::
 
 ## 安装 CLI（推荐）
@@ -46,13 +48,13 @@ reactpress --help
 
 4.0 面向终端用户精简为四个核心命令；主题、插件等高级操作在 **Admin 后台**完成。
 
-| 命令 | 说明 |
-|------|------|
-| `reactpress init [目录]` | 初始化站点并自动启动 API + Admin + 主题 |
-| `reactpress init --force` | 强制重新初始化（会重置本地数据，慎用） |
-| `reactpress doctor` | 诊断 Node、端口、数据库、服务状态 |
-| `reactpress logs` | 查看 API 日志（支持 `--follow`、`--grep`） |
-| `reactpress stop` | 停止当前站点的 API 与主题进程 |
+| 命令                      | 说明                                       |
+| ------------------------- | ------------------------------------------ |
+| `reactpress init [目录]`  | 初始化站点并自动启动 API + Admin + 主题    |
+| `reactpress init --force` | 强制重新初始化（会重置本地数据，慎用）     |
+| `reactpress doctor`       | 诊断 Node、端口、数据库、服务状态          |
+| `reactpress logs`         | 查看 API 日志（支持 `--follow`、`--grep`） |
+| `reactpress stop`         | 停止当前站点的 API 与主题进程              |
 
 :::info 关于 `reactpress dev`
 4.0 起 **`init` 即包含启动**：执行 `reactpress init` 后服务会自动运行，无需再执行 `dev`。Monorepo 贡献者仍使用 `pnpm dev`，见 [Monorepo 开发](../developer-guide/local-development.md)。
@@ -62,13 +64,13 @@ reactpress --help
 
 默认端口如下，部署前请确保未被占用：
 
-| 服务 | 端口 | 说明 |
-|------|------|------|
+| 服务                            | 端口           | 说明                 |
+| ------------------------------- | -------------- | -------------------- |
 | Admin（`reactpress init` 默认） | 3001 `/admin/` | 挂载在访客主题同端口 |
-| 访客主题 | 3001 | Next.js SSR |
-| API | 3002 | NestJS REST |
-| 主题预览 | 3003 | Admin iframe 预览 |
-| Admin（Monorepo 开发） | 3000 | 独立 Vite dev server |
+| 访客主题                        | 3001           | Next.js SSR          |
+| API                             | 3002           | NestJS REST          |
+| 主题预览                        | 3003           | Admin iframe 预览    |
+| Admin（Monorepo 开发）          | 3000           | 独立 Vite dev server |
 
 修改端口见 [项目配置项](../tutorial-extras/config-intro.md)。
 
@@ -91,6 +93,10 @@ reactpress --help
 
 ## 下一步
 
+- [ReactPress 是什么？](./what-is-reactpress.md)
+- [用 Next.js 60 秒搭建博客](./build-nextjs-blog-in-60-seconds.md)
 - [5 分钟创建第一个站点](./first-site.md)
 - [核心概念：Admin / API / 主题 / 插件](./core-concepts.md)
+- [ReactPress vs WordPress](./reactpress-vs-wordpress.md)
+- [面向 React 的自托管 CMS](./self-hosted-cms-for-react.md)
 - [常见问题](../reference/faq.md)

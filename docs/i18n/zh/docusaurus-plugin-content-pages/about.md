@@ -31,6 +31,7 @@ npm i -g @fecommunity/reactpress@beta
 - **博主与内容团队**：WordPress 式工作流 + Next.js 性能
 - **开源维护者**：需要 SSR 文档站、更新日志与营销页
 - **评估 WordPress 替代方案的团队** — 见 [ReactPress vs WordPress](/zh/docs/getting-started/reactpress-vs-wordpress)
+- **希望自托管 React CMS 的团队** — 见 [面向 React 的自托管 CMS](/zh/docs/getting-started/self-hosted-cms-for-react)
 
 ## 开源与许可
 
@@ -49,6 +50,10 @@ ReactPress 由 [fecommunity](https://github.com/fecommunity) 组织维护，采�
 
 ## 相关页面
 
+- [ReactPress 是什么？](/zh/docs/getting-started/what-is-reactpress)
+- [用 Next.js 60 秒搭建博客](/zh/docs/getting-started/build-nextjs-blog-in-60-seconds)
+- [ReactPress vs WordPress](/zh/docs/getting-started/reactpress-vs-wordpress)
+- [面向 React 的自托管 CMS](/zh/docs/getting-started/self-hosted-cms-for-react)
 - [FAQ](/zh/docs/reference/faq)
 - [隐私政策](/zh/privacy)
 - [使用条款](/zh/terms)

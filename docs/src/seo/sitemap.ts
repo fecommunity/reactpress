@@ -26,7 +26,10 @@ function applyPriorityRules(item: SitemapItemInput): SitemapItemInput {
   if (
     pathname.includes('/docs/getting-started/first-site') ||
     pathname.includes('/docs/getting-started/installation') ||
+    pathname.includes('/docs/getting-started/what-is-reactpress') ||
+    pathname.includes('/docs/getting-started/build-nextjs-blog-in-60-seconds') ||
     pathname.includes('/docs/getting-started/reactpress-vs-wordpress') ||
+    pathname.includes('/docs/getting-started/self-hosted-cms-for-react') ||
     pathname.includes('/docs/tutorial-basics/create-a-post')
   ) {
     return { ...item, priority: 0.85, changefreq: 'weekly' };

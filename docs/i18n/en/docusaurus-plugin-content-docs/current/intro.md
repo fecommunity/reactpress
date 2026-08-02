@@ -23,14 +23,14 @@ keywords:
 
 Choose a starting point by role. Every doc includes an SEO summary and next-step links.
 
-| Stage            | Who you are                         | Start here                                                                                                                            |
-| ---------------- | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| **0→1**          | First time hearing about ReactPress | [Create your first site in 5 minutes](./getting-started/first-site.md) · [vs WordPress](./getting-started/reactpress-vs-wordpress.md) |
-| **1→10**         | Site owner / blogger                | [User guide](./user-guide/admin-overview.md) → [SEO settings](./user-guide/site-settings-seo.md)                                      |
-| **10→50**        | Frontend developer                  | [Theme development](./developer-guide/theme-development.md) → [Headless API](./developer-guide/headless-api.md)                       |
-| **50→100**       | Full-stack / contributor            | [Monorepo development](./developer-guide/local-development.md) → [Plugin development](./developer-guide/plugin-development.md)        |
-| **Go live**      | Operations                          | [Production deployment](./tutorial-basics/deploy-your-site.md) → [Docker](./tutorial-extras/docker-deployment.md)                     |
-| **Troubleshoot** | Hit a problem                       | [FAQ](./reference/faq.md) → [Troubleshooting](./reference/troubleshooting.md)                                                         |
+| Stage            | Who you are                         | Start here                                                                                                                                                                                                  |
+| ---------------- | ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **0→1**          | First time hearing about ReactPress | [What is ReactPress?](./getting-started/what-is-reactpress.md) · [Next.js blog in 60s](./getting-started/build-nextjs-blog-in-60-seconds.md) · [vs WordPress](./getting-started/reactpress-vs-wordpress.md) |
+| **1→10**         | Site owner / blogger                | [User guide](./user-guide/admin-overview.md) → [SEO settings](./user-guide/site-settings-seo.md)                                                                                                            |
+| **10→50**        | Frontend developer                  | [Theme development](./developer-guide/theme-development.md) → [Headless API](./developer-guide/headless-api.md)                                                                                             |
+| **50→100**       | Full-stack / contributor            | [Monorepo development](./developer-guide/local-development.md) → [Plugin development](./developer-guide/plugin-development.md)                                                                              |
+| **Go live**      | Operations                          | [Production deployment](./tutorial-basics/deploy-your-site.md) → [Docker](./tutorial-extras/docker-deployment.md)                                                                                           |
+| **Troubleshoot** | Hit a problem                       | [FAQ](./reference/faq.md) → [Troubleshooting](./reference/troubleshooting.md)                                                                                                                               |
 
 ## Introduction
 

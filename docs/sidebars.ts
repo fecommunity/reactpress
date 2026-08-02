@@ -15,14 +15,17 @@ const sidebars: SidebarsConfig = {
         slug: 'getting-started',
         title: '快速入门',
         description:
-          '从零开始：安装 ReactPress、创建第一个站点、理解 Admin / API / 主题 / 插件 / 桌面端。约 60 秒上线。',
+          '从零开始：了解 ReactPress、60 秒搭建 Next.js 博客、安装、核心概念、对比 WordPress 与自托管。约 60 秒上线。',
       },
       collapsed: false,
       items: [
         'getting-started/installation',
+        'getting-started/what-is-reactpress',
+        'getting-started/build-nextjs-blog-in-60-seconds',
         'getting-started/first-site',
         'getting-started/core-concepts',
         'getting-started/reactpress-vs-wordpress',
+        'getting-started/self-hosted-cms-for-react',
       ],
     },
     {
