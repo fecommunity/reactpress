@@ -140,3 +140,8 @@ Yes — export via API, migrate DB files, or point a new theme at the same API.
 
 **Is 4.0 ready for self-hosted production?**  
 Core `init` / `doctor` paths are stable in active beta; stage first and read [3.x → 4.0 migration](../tutorial-extras/migration-3-to-4.md). More: [FAQ](../reference/faq.md).
+
+## From the blog
+
+- [Self-hosted Next.js CMS blog guide (2026)](/blog/self-hosted-nextjs-cms-blog-guide)
+- [Next.js blog SEO checklist](/blog/nextjs-blog-seo-checklist-reactpress)

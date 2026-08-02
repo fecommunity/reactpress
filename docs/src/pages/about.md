@@ -54,6 +54,7 @@ Questions, security reports, or partnership inquiries: [Contact us](/contact) or
 - [Build a Next.js blog in 60 seconds](/docs/getting-started/build-nextjs-blog-in-60-seconds)
 - [ReactPress vs WordPress](/docs/getting-started/reactpress-vs-wordpress)
 - [Self-hosted CMS for React](/docs/getting-started/self-hosted-cms-for-react)
+- [Blog](/blog) — SEO guides and comparisons
 - [FAQ](/docs/reference/faq)
 - [Privacy Policy](/privacy)
 - [Terms of Use](/terms)

@@ -137,3 +137,8 @@ No. Local `init` is enough to start; production can be any Node host, Docker, or
 
 **How is this different from `create-next-app` + MDX?**  
 MDX starters are great for git-only content. ReactPress adds Admin, media, comments, plugins, and a Headless API when non-developers need to publish.
+
+## From the blog
+
+- [Next.js blog SEO checklist](/blog/nextjs-blog-seo-checklist-reactpress)
+- [Self-hosted Next.js CMS guide](/blog/self-hosted-nextjs-cms-blog-guide)

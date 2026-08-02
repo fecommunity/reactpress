@@ -190,3 +190,4 @@ More: [FAQ](../reference/faq.md).
 - [Core concepts](./core-concepts.md)
 - [Installation](./installation.md)
 - [About ReactPress](/about)
+- Blog: [WordPress alternatives for React (2026)](/blog/wordpress-alternatives-for-react-developers-2026) · [vs Strapi / Payload](/blog/reactpress-vs-strapi-payload-headless-cms)

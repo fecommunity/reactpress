@@ -54,6 +54,7 @@ ReactPress 由 [fecommunity](https://github.com/fecommunity) 组织维护，采�
 - [用 Next.js 60 秒搭建博客](/zh/docs/getting-started/build-nextjs-blog-in-60-seconds)
 - [ReactPress vs WordPress](/zh/docs/getting-started/reactpress-vs-wordpress)
 - [面向 React 的自托管 CMS](/zh/docs/getting-started/self-hosted-cms-for-react)
+- [博客](/zh/blog) — SEO 指南与对比文
 - [FAQ](/zh/docs/reference/faq)
 - [隐私政策](/zh/privacy)
 - [使用条款](/zh/terms)

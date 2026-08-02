@@ -22,3 +22,18 @@ react-cms:
   label: React CMS
   permalink: /react-cms
   description: 基于 React 的内容管理与发布平台
+
+nextjs:
+  label: Next.js
+  permalink: /nextjs
+  description: Next.js 博客、SSR SEO 与 ReactPress 主题发布
+
+headless-cms:
+  label: Headless CMS
+  permalink: /headless-cms
+  description: Headless CMS 对比，以及何时更适合完整发布平台
+
+self-hosted:
+  label: 自托管
+  permalink: /self-hosted
+  description: 面向 React 团队的自托管 CMS、博客与数据主权指南

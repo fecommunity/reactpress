@@ -22,3 +22,18 @@ react-cms:
   label: React CMS
   permalink: /react-cms
   description: React-native content management and publishing platforms
+
+nextjs:
+  label: Next.js
+  permalink: /nextjs
+  description: Next.js blogs, SSR SEO, and theme-based publishing with ReactPress
+
+headless-cms:
+  label: Headless CMS
+  permalink: /headless-cms
+  description: Headless CMS comparisons and when a full publishing platform is a better fit
+
+self-hosted:
+  label: Self-hosted
+  permalink: /self-hosted
+  description: Self-hosted CMS, blogs, and data-ownership guides for React teams

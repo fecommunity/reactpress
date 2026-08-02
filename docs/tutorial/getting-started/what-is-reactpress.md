@@ -113,3 +113,10 @@ flowchart LR
 | 对比 WordPress            | [ReactPress vs WordPress（2026）](./reactpress-vs-wordpress.md)  |
 | 自托管与运维              | [面向 React 的自托管 CMS](./self-hosted-cms-for-react.md)        |
 | 安装细节                  | [安装与环境要求](./installation.md)                              |
+
+## 博客延伸阅读
+
+- [2026 面向 React 的 WordPress 替代](/zh/blog/wordpress-alternatives-for-react-developers-2026)
+- [ReactPress vs Strapi vs Payload](/zh/blog/reactpress-vs-strapi-payload-headless-cms)
+- [自托管 Next.js CMS 指南](/zh/blog/self-hosted-nextjs-cms-blog-guide)
+- [Next.js 博客 SEO 清单](/zh/blog/nextjs-blog-seo-checklist-reactpress)

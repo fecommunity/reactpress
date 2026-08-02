@@ -127,3 +127,8 @@ reactpress stop   # 需要时停止后重新 init
 
 **和 `create-next-app` + MDX 有何不同？**  
 MDX starter 适合纯 Git 内容。当非开发者也要发文时，ReactPress 提供 Admin、媒体、评论、插件与 Headless API。
+
+## 博客延伸阅读
+
+- [Next.js 博客 SEO 清单](/zh/blog/nextjs-blog-seo-checklist-reactpress)
+- [自托管 Next.js CMS 指南](/zh/blog/self-hosted-nextjs-cms-blog-guide)

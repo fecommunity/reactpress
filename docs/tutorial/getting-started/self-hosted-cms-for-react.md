@@ -130,3 +130,8 @@ flowchart TB
 
 **4.0 适合自托管生产吗？**  
 核心 `init` / `doctor` 在 active beta 中已较稳定；请先预发，并阅读 [3.x → 4.0 迁移](../tutorial-extras/migration-3-to-4.md)。更多见 [FAQ](../reference/faq.md)。
+
+## 博客延伸阅读
+
+- [自托管 Next.js 博客 CMS 指南（2026）](/zh/blog/self-hosted-nextjs-cms-blog-guide)
+- [Next.js 博客 SEO 清单](/zh/blog/nextjs-blog-seo-checklist-reactpress)

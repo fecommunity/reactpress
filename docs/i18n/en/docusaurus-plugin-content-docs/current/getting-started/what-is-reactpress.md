@@ -123,3 +123,10 @@ ReactPress here is the **fecommunity open-source publishing platform** (NestJS +
 | Choose vs WordPress                | [ReactPress vs WordPress (2026)](./reactpress-vs-wordpress.md)                         |
 | Self-hosting & ops                 | [Self-hosted CMS for React](./self-hosted-cms-for-react.md)                            |
 | Install details                    | [Installation](./installation.md)                                                      |
+
+## From the blog
+
+- [WordPress alternatives for React developers (2026)](/blog/wordpress-alternatives-for-react-developers-2026)
+- [ReactPress vs Strapi vs Payload](/blog/reactpress-vs-strapi-payload-headless-cms)
+- [Self-hosted Next.js CMS guide](/blog/self-hosted-nextjs-cms-blog-guide)
+- [Next.js blog SEO checklist](/blog/nextjs-blog-seo-checklist-reactpress)

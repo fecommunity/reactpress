@@ -181,3 +181,4 @@ active beta，核心路径稳定。请阅读 [3.x → 4.0 迁移](../tutorial-ex
 - [核心概念](./core-concepts.md)
 - [安装指南](./installation.md)
 - [关于 ReactPress](/about)
+- 博客：[2026 WordPress 替代](/zh/blog/wordpress-alternatives-for-react-developers-2026) · [vs Strapi / Payload](/zh/blog/reactpress-vs-strapi-payload-headless-cms)

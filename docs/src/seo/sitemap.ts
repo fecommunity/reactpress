@@ -40,7 +40,13 @@ function applyPriorityRules(item: SitemapItemInput): SitemapItemInput {
   if (pathname.includes('/docs/developer-guide/headless-api')) {
     return { ...item, priority: 0.75 };
   }
-  if (pathname.includes('/blog/why-react-still-doesnt-have-wordpress-reactpress-4')) {
+  if (
+    pathname.includes('/blog/why-react-still-doesnt-have-wordpress-reactpress-4') ||
+    pathname.includes('/blog/reactpress-vs-strapi-payload-headless-cms') ||
+    pathname.includes('/blog/self-hosted-nextjs-cms-blog-guide') ||
+    pathname.includes('/blog/wordpress-alternatives-for-react-developers-2026') ||
+    pathname.includes('/blog/nextjs-blog-seo-checklist-reactpress')
+  ) {
     return { ...item, priority: 0.85, changefreq: 'monthly' };
   }
   if (localeNeutralPathKey(pathname) === '/blog') {
