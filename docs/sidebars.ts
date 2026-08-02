@@ -103,12 +103,7 @@ const sidebars: SidebarsConfig = {
         title: '参考与排错',
         description: 'FAQ、故障排查、术语表。',
       },
-      items: [
-        'reference/faq',
-        'reference/troubleshooting',
-        'reference/glossary',
-        'tutorial-extras/help',
-      ],
+      items: ['reference/faq', 'reference/troubleshooting', 'reference/glossary'],
     },
   ],
 };

@@ -15,6 +15,44 @@
       "source": "/zh/docs/tutorial-extras/help",
       "destination": "/zh/docs/reference/faq",
       "permanent": true
+    },
+    {
+      "source": "/docs/tutorial-extras/client-package",
+      "destination": "/docs/developer-guide/theme-development",
+      "permanent": true
+    },
+    {
+      "source": "/zh/docs/tutorial-extras/client-package",
+      "destination": "/zh/docs/developer-guide/theme-development",
+      "permanent": true
+    },
+    {
+      "source": "/docs/tutorial-extras/server-package",
+      "destination": "/docs/tutorial-extras/migration-2-to-3",
+      "permanent": true
+    },
+    {
+      "source": "/zh/docs/tutorial-extras/server-package",
+      "destination": "/zh/docs/tutorial-extras/migration-2-to-3",
+      "permanent": true
+    }
+  ],
+  "headers": [
+    {
+      "source": "/blog/rss.xml",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, follow" }]
+    },
+    {
+      "source": "/blog/atom.xml",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, follow" }]
+    },
+    {
+      "source": "/zh/blog/rss.xml",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, follow" }]
+    },
+    {
+      "source": "/zh/blog/atom.xml",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, follow" }]
     }
   ]
 }

@@ -164,4 +164,3 @@ Before asking, read [How To Ask Questions The Smart Way](https://github.com/ryan
 
 - [Troubleshooting](./troubleshooting.md)
 - [Glossary](./glossary.md)
-- [Legacy FAQ page](../tutorial-extras/help.md)

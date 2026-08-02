@@ -164,4 +164,3 @@ Monorepo 开发需 `pnpm run build:plugins` 后重启 API。确认 Admin 中插�
 
 - [故障排查](./troubleshooting.md)
 - [术语表](./glossary.md)
-- [旧版常见问题页](../tutorial-extras/help.md)

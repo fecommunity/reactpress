@@ -1,5 +1,13 @@
 /** Pathnames that should not be indexed (utility / aggregate pages). */
-const NOINDEX_SUFFIXES = ['/search', '/blog/README', '/blog/archive', '/blog/authors', '/blog/tags'] as const;
+const NOINDEX_SUFFIXES = [
+  '/search',
+  '/blog/README',
+  '/blog/archive',
+  '/blog/authors',
+  '/blog/tags',
+  '/blog/rss.xml',
+  '/blog/atom.xml',
+] as const;
 
 function stripLocalePrefix(pathname: string): string {
   if (pathname === '/zh' || pathname === '/zh/') {
@@ -36,7 +44,12 @@ export function shouldNoIndexPath(pathname: string): boolean {
 
 export function shouldExcludeFromSitemap(url: string): boolean {
   const pathname = new URL(url).pathname;
+  const key = localeNeutralPathKey(pathname);
   if (pathname.includes('/markdown-page')) {
+    return true;
+  }
+  // Retired / redirected docs must not stay in the sitemap.
+  if (key === '/docs/tutorial-extras/help') {
     return true;
   }
   if (shouldNoIndexPath(pathname)) {
