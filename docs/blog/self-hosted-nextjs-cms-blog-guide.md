@@ -75,7 +75,7 @@ ReactPress is an open-source **publishing system for React developers**:
 - Optional Electron desktop for offline writing
 
 ```bash
-npm i -g @fecommunity/reactpress@beta
+npm i -g @fecommunity/reactpress
 mkdir my-blog && cd my-blog
 reactpress init
 ```
@@ -148,14 +148,14 @@ No. Many blogs run on a single VM.
 Yes — Headless API + API keys. See [Headless API](/docs/developer-guide/headless-api).
 
 **Is 4.0 production-ready?**  
-Active beta; stage first. [FAQ](/docs/reference/faq) · [Migration 3→4](/docs/tutorial-extras/migration-3-to-4).
+Yes — 4.0.0 is stable. Stage first when upgrading from 3.x. [FAQ](/docs/reference/faq) · [Migration 3→4](/docs/tutorial-extras/migration-3-to-4).
 
 ---
 
 ## Start here
 
 ```bash
-npm i -g @fecommunity/reactpress@beta
+npm i -g @fecommunity/reactpress
 mkdir my-blog && cd my-blog
 reactpress init
 ```

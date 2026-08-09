@@ -79,7 +79,7 @@ Strapi、Payload（及同类）在这些场景很强：
 ReactPress 用一条 CLI 把这些层接好：
 
 ```bash
-npm i -g @fecommunity/reactpress@beta
+npm i -g @fecommunity/reactpress
 mkdir my-site && cd my-site
 reactpress init
 ```

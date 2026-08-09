@@ -8,19 +8,19 @@ ReactPress **4.0** 在 3.x 平台能力之上新增：**插件系统**、**Elect
 
 ## 谁需要读本文
 
-| 场景 | 是否需要迁移动作 |
-|------|------------------|
-| 已用 `reactpress dev` + MySQL 的全栈站点 | 可选升级 CLI；插件/桌面为增量能力 |
-| Headless / 仅 API | 无 Breaking；可按需启用插件 |
-| 主题作者 | 无 Breaking；继续 `theme.json` + Pages Router |
-| 新用户 | 直接安装 `@fecommunity/reactpress@beta` |
+| 场景                                     | 是否需要迁移动作                              |
+| ---------------------------------------- | --------------------------------------------- |
+| 已用 `reactpress dev` + MySQL 的全栈站点 | 可选升级 CLI；插件/桌面为增量能力             |
+| Headless / 仅 API                        | 无 Breaking；可按需启用插件                   |
+| 主题作者                                 | 无 Breaking；继续 `theme.json` + Pages Router |
+| 新用户                                   | 直接安装 `@fecommunity/reactpress`            |
 
 ---
 
 ## 升级 CLI
 
 ```bash
-npm i -g @fecommunity/reactpress@beta
+npm i -g @fecommunity/reactpress
 cd your-site
 reactpress doctor
 pnpm dev   # 或 reactpress dev
@@ -73,11 +73,11 @@ reactpress theme add @fecommunity/reactpress-theme-starter@1.0.0-beta.0
 
 ## Breaking Changes（4.0）
 
-| 变更 | 影响 | 处理 |
-|------|------|------|
-| 无强制 Breaking | 3.x 站点配置与 API 保持兼容 | 正常升级 CLI 即可 |
-| 内置插件 `requires: ">=3.5.0"` | 仅影响插件 manifest 语义 | 使用 4.0 CLI 即可满足 |
-| 移除 bundled 旧主题（my-blog、twentytwentyfive） | 若曾依赖仓库内旧主题 | 改用 hello-world 或 npm theme-starter |
+| 变更                                             | 影响                        | 处理                                  |
+| ------------------------------------------------ | --------------------------- | ------------------------------------- |
+| 无强制 Breaking                                  | 3.x 站点配置与 API 保持兼容 | 正常升级 CLI 即可                     |
+| 内置插件 `requires: ">=3.5.0"`                   | 仅影响插件 manifest 语义    | 使用 4.0 CLI 即可满足                 |
+| 移除 bundled 旧主题（my-blog、twentytwentyfive） | 若曾依赖仓库内旧主题        | 改用 hello-world 或 npm theme-starter |
 
 ---
 

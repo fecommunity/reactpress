@@ -7,14 +7,14 @@ agree to abide by our [Code of Conduct](./CODE_OF_CONDUCT.md).
 
 ## Ways to Contribute
 
-| Type | How |
-| :--- | :-- |
-| **Bug reports** | [Bug report](https://github.com/fecommunity/reactpress/issues/new?template=bug_report.md) — steps, component, versions, logs |
-| **Feature ideas** | [Feature request](https://github.com/fecommunity/reactpress/issues/new?template=feature_request.md) — problem, solution, area |
-| **Community tasks** | [Help wanted](https://github.com/fecommunity/reactpress/issues/new?template=help_wanted.md) — scoped tasks labeled `help wanted` on GitHub |
+| Type                 | How                                                                                                                                        |
+| :------------------- | :----------------------------------------------------------------------------------------------------------------------------------------- |
+| **Bug reports**      | [Bug report](https://github.com/fecommunity/reactpress/issues/new?template=bug_report.md) — steps, component, versions, logs               |
+| **Feature ideas**    | [Feature request](https://github.com/fecommunity/reactpress/issues/new?template=feature_request.md) — problem, solution, area              |
+| **Community tasks**  | [Help wanted](https://github.com/fecommunity/reactpress/issues/new?template=help_wanted.md) — scoped tasks labeled `help wanted` on GitHub |
 | **Product feedback** | [Feedback & suggestions](https://github.com/fecommunity/reactpress/issues/new?template=feedback.md) — UX and operator ideas (not security) |
-| **Code & docs** | Fork, branch, submit a PR (see below) |
-| **Security issues** | Follow [SECURITY.md](./SECURITY.md) — do **not** use public issues |
+| **Code & docs**      | Fork, branch, submit a PR (see below)                                                                                                      |
+| **Security issues**  | Follow [SECURITY.md](./SECURITY.md) — do **not** use public issues                                                                         |
 
 ## Security Contributors
 
@@ -22,8 +22,8 @@ We thank researchers who practice responsible disclosure and help keep ReactPres
 secure. Valid reports are credited in [CHANGELOG.md](./CHANGELOG.md) and GitHub
 Security Advisories when applicable.
 
-| Contributor | Contribution |
-| :---------- | :----------- |
+| Contributor                               | Contribution                                                                                                                                                                                                                       |
+| :---------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [lsr365400](https://github.com/lsr365400) | Reported SQL injection and stored XSS ([GHSA-wmw4-mw6x-6vfm](https://github.com/fecommunity/reactpress/security/advisories/GHSA-wmw4-mw6x-6vfm)); contributed fixes in [PR #83](https://github.com/fecommunity/reactpress/pull/83) |
 
 ## Development Setup
@@ -64,15 +64,15 @@ reactpress/
 
 ## Development Workflow
 
-| Task | Command |
-|------|---------|
-| Full stack dev | `pnpm dev` |
-| API only (watch) | `pnpm dev:api` or `pnpm dev:server` |
-| Client only | `pnpm dev:client` |
-| Docker MySQL + proxy | `pnpm docker:dev` |
-| Regenerate API types | `pnpm run build:toolkit` |
-| Swagger spec | `pnpm run generate:swagger` |
-| API lifecycle | `pnpm run start` / `stop` / `restart` / `status` |
+| Task                 | Command                                          |
+| -------------------- | ------------------------------------------------ |
+| Full stack dev       | `pnpm dev`                                       |
+| API only (watch)     | `pnpm dev:api` or `pnpm dev:server`              |
+| Client only          | `pnpm dev:client`                                |
+| Docker MySQL + proxy | `pnpm docker:dev`                                |
+| Regenerate API types | `pnpm run build:toolkit`                         |
+| Swagger spec         | `pnpm run generate:swagger`                      |
+| API lifecycle        | `pnpm run start` / `stop` / `restart` / `status` |
 
 `pnpm dev` builds toolkit first, waits for API health, then starts the client.
 
@@ -128,10 +128,13 @@ pnpm login --registry https://registry.npmjs.org
 # Interactive (choose beta/stable + version)
 pnpm run publish:packages
 
+# Promote 4.0 beta → stable (@latest)
+NPM_OTP=123456 pnpm run publish:packages -- --tag latest --version 4.0.0 --yes
+
 # Beta prerelease (uses package.json versions, npm tag: beta)
 NPM_OTP=123456 pnpm run publish:packages -- --tag beta --yes
 
-# Explicit version
+# Explicit beta version
 NPM_OTP=123456 pnpm run publish:packages -- --tag beta --version 4.0.0-beta.0 --yes
 
 # Build artifacts only (no npm publish)
@@ -142,14 +145,14 @@ Published packages: **toolkit**, **web**, **server** (deprecated), **cli** (`@fe
 
 ## Architecture & Documentation
 
-| Topic | Reference |
-| :---- | :-------- |
-| Platform overview | [docs/tutorial/intro.md](./docs/tutorial/intro.md) |
-| ReactPress 3.0 | [docs/tutorial/tutorial-extras/reactpress-3-0.md](./docs/tutorial/tutorial-extras/reactpress-3-0.md) |
-| Upgrade from 2.x | [docs/migration-2-to-3.md](./docs/migration-2-to-3.md) |
-| Configuration | [docs/tutorial/tutorial-extras/config-intro.md](./docs/tutorial/tutorial-extras/config-intro.md) |
-| Theme manifest schema | [themes/theme.manifest.schema.json](./themes/theme.manifest.schema.json) |
-| Changelog | [CHANGELOG.md](./CHANGELOG.md) |
+| Topic                 | Reference                                                                                            |
+| :-------------------- | :--------------------------------------------------------------------------------------------------- |
+| Platform overview     | [docs/tutorial/intro.md](./docs/tutorial/intro.md)                                                   |
+| ReactPress 3.0        | [docs/tutorial/tutorial-extras/reactpress-3-0.md](./docs/tutorial/tutorial-extras/reactpress-3-0.md) |
+| Upgrade from 2.x      | [docs/migration-2-to-3.md](./docs/migration-2-to-3.md)                                               |
+| Configuration         | [docs/tutorial/tutorial-extras/config-intro.md](./docs/tutorial/tutorial-extras/config-intro.md)     |
+| Theme manifest schema | [themes/theme.manifest.schema.json](./themes/theme.manifest.schema.json)                             |
+| Changelog             | [CHANGELOG.md](./CHANGELOG.md)                                                                       |
 
 Live docs: [blog.gaoredu.com](https://blog.gaoredu.com)
 

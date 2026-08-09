@@ -67,14 +67,14 @@ function installPM2() {
   console.log('[ReactPress Server] Installing PM2...');
   const installResult = spawnSync('npm', ['install', 'pm2', '--no-save'], {
     stdio: 'inherit',
-    cwd: serverDir
+    cwd: serverDir,
   });
-  
+
   if (installResult.status !== 0) {
     console.error('[ReactPress Server] Failed to install PM2');
     return false;
   }
-  
+
   return true;
 }
 
@@ -88,25 +88,25 @@ function startWithPM2() {
       process.exit(1);
     }
   }
-  
+
   // Check if the server is built
   if (!fs.existsSync(distPath)) {
     console.log('[ReactPress Server] Server not built yet. Building...');
-    
+
     // Try to build the server
     const buildResult = spawnSync('npm', ['run', 'build'], {
       stdio: 'inherit',
-      cwd: serverDir
+      cwd: serverDir,
     });
-    
+
     if (buildResult.status !== 0) {
       console.error('[ReactPress Server] Failed to build server');
       process.exit(1);
     }
   }
-  
+
   console.log('[ReactPress Server] Starting with PM2...');
-  
+
   // Use ecosystem.config.js if it exists, otherwise use direct command
   let pm2Command = 'pm2';
   try {
@@ -118,19 +118,19 @@ function startWithPM2() {
   } catch (e) {
     pm2Command = 'pm2';
   }
-  
+
   // Check if ecosystem.config.js exists
   if (fs.existsSync(ecosystemPath)) {
     const pm2 = spawn(pm2Command, ['start', ecosystemPath], {
       stdio: 'inherit',
-      cwd: serverDir
+      cwd: serverDir,
     });
-    
+
     pm2.on('close', (code) => {
       console.log(`[ReactPress Server] PM2 process exited with code ${code}`);
       process.exit(code);
     });
-    
+
     pm2.on('error', (error) => {
       console.error('[ReactPress Server] Failed to start with PM2:', error);
       process.exit(1);
@@ -139,18 +139,34 @@ function startWithPM2() {
     // Fallback to direct start
     const pm2 = spawn(pm2Command, ['start', distPath, '--name', 'reactpress-server'], {
       stdio: 'inherit',
-      cwd: serverDir
+      cwd: serverDir,
     });
-    
+
     pm2.on('close', (code) => {
       console.log(`[ReactPress Server] PM2 process exited with code ${code}`);
       process.exit(code);
     });
-    
+
     pm2.on('error', (error) => {
       console.error('[ReactPress Server] Failed to start with PM2:', error);
       process.exit(1);
     });
+  }
+}
+
+// Function to prepend bundled runtime paths so sibling toolkit/ can resolve server/node_modules.
+function prependNodePath(...dirs) {
+  const Module = require('module');
+  const sep = path.delimiter;
+  const parts = (process.env.NODE_PATH || '').split(sep).filter(Boolean);
+  for (const dir of dirs) {
+    if (fs.existsSync(dir) && !parts.includes(dir)) {
+      parts.unshift(dir);
+    }
+  }
+  if (parts.length) {
+    process.env.NODE_PATH = parts.join(sep);
+    Module._initPaths();
   }
 }
 
@@ -159,13 +175,13 @@ function startWithNode() {
   // Check if the server is built
   if (!fs.existsSync(distPath)) {
     console.log('[ReactPress Server] Server not built yet. Building...');
-    
+
     // Try to build the server
     const buildResult = spawnSync('npm', ['run', 'build'], {
       stdio: 'inherit',
-      cwd: serverDir
+      cwd: serverDir,
     });
-    
+
     if (buildResult.status !== 0) {
       console.error('[ReactPress Server] Failed to build server');
       process.exit(1);
@@ -180,15 +196,43 @@ function startWithNode() {
     console.log(`[ReactPress Server] Using existing REACTPRESS_ORIGINAL_CWD: ${process.env.REACTPRESS_ORIGINAL_CWD}`);
   }
 
+  const siteRoot = process.env.REACTPRESS_ORIGINAL_CWD;
+  for (const localSiteModule of [
+    path.join(serverDir, '..', 'cli', 'out', 'core', 'services', 'local-site.js'),
+    path.join(serverDir, '..', 'out', 'core', 'services', 'local-site.js'),
+  ]) {
+    if (!siteRoot || !fs.existsSync(localSiteModule)) continue;
+    try {
+      const { ensureBundledPlugins } = require(localSiteModule);
+      if (ensureBundledPlugins(siteRoot)) {
+        console.log('[ReactPress Server] Seeded bundled plugins into project');
+      }
+    } catch {
+      // ignore — plugins seeding is best-effort
+    }
+    break;
+  }
+
   // Change to the server directory
   process.chdir(serverDir);
 
   // Set environment variables
   process.env.NODE_ENV = process.env.NODE_ENV || 'production';
 
-  // Import and run the server
+  // Bundled CLI layout: toolkit/ is a sibling of server/; expose server deps to toolkit requires.
+  prependNodePath(path.join(serverDir, 'node_modules'));
+
+  // Import and run the server (require() alone does not invoke main — see dist/main.js)
   try {
-    require(distPath);
+    const mainModule = require(distPath);
+    if (typeof mainModule.main !== 'function') {
+      console.error('[ReactPress Server] Server entry does not export main()');
+      process.exit(1);
+    }
+    mainModule.main().catch((error) => {
+      console.error('[ReactPress Server] Failed to start server:', error);
+      process.exit(1);
+    });
   } catch (error) {
     console.error('[ReactPress Server] Failed to start server:', error);
     process.exit(1);

@@ -24,7 +24,7 @@ Looking for a **self-hosted CMS for React** — not a SaaS Headless plan, not a 
 **ReactPress** is an open-source, **self-hosted publishing platform** for React developers: Admin + NestJS API + Next.js themes + plugins + optional desktop client, all started from one CLI. Your content and media stay on **your** machine or server.
 
 ```bash
-npm i -g @fecommunity/reactpress@beta
+npm i -g @fecommunity/reactpress
 mkdir my-cms && cd my-cms
 reactpress init
 ```
@@ -139,7 +139,7 @@ No. Many sites run as a single Node host with SQLite or MySQL.
 Yes — export via API, migrate DB files, or point a new theme at the same API.
 
 **Is 4.0 ready for self-hosted production?**  
-Core `init` / `doctor` paths are stable in active beta; stage first and read [3.x → 4.0 migration](../tutorial-extras/migration-3-to-4.md). More: [FAQ](../reference/faq.md).
+4.0.0 is stable; when upgrading from 3.x, stage first and read [3.x → 4.0 migration](../tutorial-extras/migration-3-to-4.md). More: [FAQ](../reference/faq.md).
 
 ## From the blog
 

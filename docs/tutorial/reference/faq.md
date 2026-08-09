@@ -90,7 +90,7 @@ Monorepo 本地开发时，Admin Vite dev server 可能在 `http://localhost:300
 <details>
 <summary><strong>ReactPress 免费吗？</strong></summary>
 
-是，MIT 开源。全局安装：`npm i -g @fecommunity/reactpress@beta`。
+是，MIT 开源。全局安装：`npm i -g @fecommunity/reactpress`。
 
 </details>
 
@@ -99,7 +99,7 @@ Monorepo 本地开发时，Admin Vite dev server 可能在 `http://localhost:300
 <details>
 <summary><strong>4.0 可以上生产吗？</strong></summary>
 
-4.0 处于 active beta。建议在升级生产前阅读 [3.x → 4.0 迁移](../tutorial-extras/migration-3-to-4.md) 并在 staging 验证。核心路径 `init` / `doctor` 已稳定可用。
+4.0.0 为当前稳定版（npm `@latest`）。从 3.x 升级请阅读 [3.x → 4.0 迁移](../tutorial-extras/migration-3-to-4.md)，并先在预发验证。
 
 </details>
 

@@ -8,9 +8,19 @@ tags: [reactpress, release]
 
 <!--truncate-->
 
+## [4.0.0](https://github.com/fecommunity/reactpress/compare/v4.0.0-beta.18...v4.0.0) (2026-08-09)
+
+**ReactPress 4.0.0 stable** — npm `@latest` ([#88](https://github.com/fecommunity/reactpress/issues/88)). Install: `npm i -g @fecommunity/reactpress`.
+
+- **Release**: promotes 4.x from `@beta` to `@latest`
+- **Docs / README / Admin**: default install path is stable 4.0.0
+- **Publish CLI**: `promote to stable` version mode; `resolveNpmTag` maps `4.0.0` → `latest`
+
+---
+
 ## [4.0.0-beta.18](https://github.com/fecommunity/reactpress/compare/v4.0.0-beta.0...v4.0.0-beta.18) (2026-07-12)
 
-**ReactPress 4.0 beta.18** — current npm `@beta`. Install: `npm i -g @fecommunity/reactpress@beta`.
+**ReactPress 4.0 beta.18** — npm `@beta` at the time. Install: `npm i -g @fecommunity/reactpress@beta`.
 
 - **CLI**: zero-dependency bundled runtime, theme install/proxy improvements, `doctor` / logging polish
 - **Desktop**: cross-platform installer workflow; uploads to GitHub Releases on publish

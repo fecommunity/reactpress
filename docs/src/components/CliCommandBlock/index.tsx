@@ -1,10 +1,7 @@
 import Translate, { translate } from '@docusaurus/Translate';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import { buildQuickStartCommands } from '@site/src/constants/quickStartCommands';
-import {
-  buildInstallCommand,
-  type ReactPressDistTags,
-} from '@site/src/npm/packageVersions';
+import { buildInstallCommand, type ReactPressDistTags } from '@site/src/npm/packageVersions';
 import { useReactPressVersions } from '@site/src/npm/useReactPressVersions';
 import clsx from 'clsx';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -98,8 +95,7 @@ function CommandLine({ text }: { text: string }) {
     const [, subcommand] = text.split(' ');
     return (
       <>
-        <span className={styles.cmdBin}>reactpress</span>{' '}
-        <span className={styles.cmdArg}>{subcommand}</span>
+        <span className={styles.cmdBin}>reactpress</span> <span className={styles.cmdArg}>{subcommand}</span>
       </>
     );
   }
@@ -107,10 +103,8 @@ function CommandLine({ text }: { text: string }) {
   if (text.includes('mkdir') && text.includes('cd')) {
     return (
       <>
-        <span className={styles.cmdKeyword}>mkdir</span>{' '}
-        <span className={styles.cmdPath}>my-blog</span>{' '}
-        <span className={styles.cmdOperator}>&&</span>{' '}
-        <span className={styles.cmdKeyword}>cd</span>{' '}
+        <span className={styles.cmdKeyword}>mkdir</span> <span className={styles.cmdPath}>my-blog</span>{' '}
+        <span className={styles.cmdOperator}>&&</span> <span className={styles.cmdKeyword}>cd</span>{' '}
         <span className={styles.cmdPath}>my-blog</span>
       </>
     );
@@ -159,14 +153,8 @@ function SuccessLine({ text }: { text: string }) {
   return <span className={styles.successText}>{text}</span>;
 }
 
-function resolveToolbarCwd(
-  history: { kind: string; text: string }[],
-  activeInput: string,
-): string {
-  const entered = [
-    ...history.filter((line) => line.kind === 'input').map((line) => line.text),
-    activeInput,
-  ];
+function resolveToolbarCwd(history: { kind: string; text: string }[], activeInput: string): string {
+  const entered = [...history.filter((line) => line.kind === 'input').map((line) => line.text), activeInput];
   if (entered.some((line) => line.includes('cd my-blog') || line.trim() === 'reactpress init')) {
     return '~/my-blog';
   }
@@ -179,7 +167,7 @@ export default function CliCommandBlock({
   showHint = variant !== 'hero',
   animate = variant === 'hero',
   showVersionSwitch = variant === 'hero',
-  defaultVersionTag = 'beta',
+  defaultVersionTag = 'latest',
   commands: commandsProp,
   copyCommand: copyCommandProp,
   installCommand: installCommandProp,
@@ -191,31 +179,26 @@ export default function CliCommandBlock({
   const [selectedTag, setSelectedTag] = useState<NpmDistTag>(defaultVersionTag);
   const [copied, setCopied] = useState(false);
 
-  const managedInstallCommand = useMemo(
-    () => buildInstallCommand(selectedTag),
-    [selectedTag],
-  );
-  const managedCommands = useMemo(
-    () => buildQuickStartCommands(managedInstallCommand),
-    [managedInstallCommand],
-  );
+  const managedInstallCommand = useMemo(() => buildInstallCommand(selectedTag), [selectedTag]);
+  const managedCommands = useMemo(() => buildQuickStartCommands(managedInstallCommand), [managedInstallCommand]);
   const managedCopyCommand = useMemo(() => managedCommands.join('\n'), [managedCommands]);
   const selectedVersion = selectedTag === 'beta' ? beta : latest;
 
   const useManagedCommands = showVersionSwitch;
-  const installCommand = useManagedCommands
-    ? managedInstallCommand
-    : (installCommandProp ?? managedInstallCommand);
+  const installCommand = useManagedCommands ? managedInstallCommand : (installCommandProp ?? managedInstallCommand);
   const lines = useManagedCommands
     ? managedCommands
     : commandsProp && commandsProp.length > 0
       ? commandsProp
       : managedCommands;
-  const copyCommand = useManagedCommands
-    ? managedCopyCommand
-    : (copyCommandProp ?? managedCopyCommand);
+  const copyCommand = useManagedCommands ? managedCopyCommand : (copyCommandProp ?? managedCopyCommand);
 
-  const { history, activeInput, isTyping, animate: isAnimating } = useCliTypewriter({
+  const {
+    history,
+    activeInput,
+    isTyping,
+    animate: isAnimating,
+  } = useCliTypewriter({
     enabled: animate,
     locale,
     commands: lines,
@@ -283,7 +266,7 @@ export default function CliCommandBlock({
             <div
               className={clsx(
                 styles.toolbarActions,
-                showVersionSwitch && versionsLoading && styles.toolbarActionsLoading,
+                showVersionSwitch && versionsLoading && styles.toolbarActionsLoading
               )}
             >
               {showVersionSwitch && (
@@ -307,7 +290,7 @@ export default function CliCommandBlock({
                           className={clsx(
                             styles.versionOption,
                             styles.toolbarMono,
-                            isActive && styles.versionOptionActive,
+                            isActive && styles.versionOptionActive
                           )}
                           disabled={versionsLoading}
                           aria-pressed={isActive}
@@ -364,7 +347,7 @@ export default function CliCommandBlock({
                       line.kind === 'success' && styles.successRow,
                       line.kind === 'divider' && styles.dividerRow,
                       inReadyBlock && styles.readyBlock,
-                      line.kind === 'success' && index === readyIndex + 1 && styles.readyHeadline,
+                      line.kind === 'success' && index === readyIndex + 1 && styles.readyHeadline
                     )}
                   >
                     {line.kind === 'input' ? (
@@ -408,7 +391,9 @@ export default function CliCommandBlock({
             {showHint ? (
               <Translate id="home.cli.hint">Copy all commands and paste into your terminal to get started</Translate>
             ) : (
-              <Translate id="home.cli.footerHint">Copy the script above and paste into Terminal to get started</Translate>
+              <Translate id="home.cli.footerHint">
+                Copy the script above and paste into Terminal to get started
+              </Translate>
             )}
           </p>
         )}

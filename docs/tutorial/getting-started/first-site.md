@@ -12,7 +12,7 @@ keywords: [reactpress, quick start, 快速开始, 第一篇博客, init, tutoria
 ## 第 1 步：安装 CLI
 
 ```bash
-npm install -g @fecommunity/reactpress@beta
+npm install -g @fecommunity/reactpress
 ```
 
 ## 第 2 步：初始化站点

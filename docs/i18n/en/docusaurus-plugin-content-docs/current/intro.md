@@ -36,7 +36,7 @@ Choose a starting point by role. Every doc includes an SEO summary and next-step
 
 **ReactPress** is **the publishing system for React developers** — build blogs, documentation, company websites, and content-driven applications with React. One CLI ships CMS API, Web Admin, swappable Next.js themes, plugins, and an Electron desktop client.
 
-**ReactPress 4.0** (codename **Extend**) adds a **plugin system**, **desktop client**, and **npm theme catalog** on top of 3.x. New users: `npm i -g @fecommunity/reactpress@beta`. See [ReactPress 4.0 Extend](./tutorial-extras/reactpress-4-0.md). Install the desktop app: [Desktop client](./tutorial-extras/desktop-client.md). Still on 3.x? See [ReactPress 3.0 Platform](./tutorial-extras/reactpress-3-0.md).
+**ReactPress 4.0** (codename **Extend**) adds a **plugin system**, **desktop client**, and **npm theme catalog** on top of 3.x. New users: `npm i -g @fecommunity/reactpress`. See [ReactPress 4.0 Extend](./tutorial-extras/reactpress-4-0.md). Install the desktop app: [Desktop client](./tutorial-extras/desktop-client.md). Still on 3.x? See [ReactPress 3.0 Platform](./tutorial-extras/reactpress-3-0.md).
 
 ## 🆚 Comparison
 
@@ -87,7 +87,7 @@ Choose a starting point by role. Every doc includes an SEO summary and next-step
 ### End users — one global package
 
 ```bash
-npm i -g @fecommunity/reactpress@beta
+npm i -g @fecommunity/reactpress
 mkdir my-blog && cd my-blog
 reactpress init
 ```
@@ -170,7 +170,7 @@ The publishing system for React developers — build blogs, documentation, compa
 <details>
 <summary><strong>Is ReactPress free?</strong></summary>
 
-Yes. MIT licensed. Install with `npm i -g @fecommunity/reactpress@beta`.
+Yes. MIT licensed. Install with `npm i -g @fecommunity/reactpress`.
 
 </details>
 

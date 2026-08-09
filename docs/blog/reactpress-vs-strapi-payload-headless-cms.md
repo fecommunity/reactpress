@@ -79,7 +79,7 @@ With Strapi/Payload you assemble those layers. Many teams underestimate that ass
 ReactPress ships the layers as one CLI:
 
 ```bash
-npm i -g @fecommunity/reactpress@beta
+npm i -g @fecommunity/reactpress
 mkdir my-site && cd my-site
 reactpress init
 ```

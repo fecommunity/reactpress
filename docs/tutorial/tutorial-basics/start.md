@@ -9,28 +9,28 @@ keywords: [reactpress, local development, dev, pnpm, monorepo]
 
 ReactPress 4.0 提供三条本地路径，按场景选择。
 
-| 场景 | 方式 | 前置 |
-|------|------|------|
-| **建站 / 试用（推荐）** | 全局 `reactpress init` | Node ≥ 20 |
-| **离线写作** | 桌面客户端 | 见 [桌面客户端](../tutorial-extras/desktop-client.md) |
-| **贡献 monorepo** | `pnpm dev` | Node ≥ 20、pnpm |
+| 场景                    | 方式                   | 前置                                                  |
+| ----------------------- | ---------------------- | ----------------------------------------------------- |
+| **建站 / 试用（推荐）** | 全局 `reactpress init` | Node ≥ 20                                             |
+| **离线写作**            | 桌面客户端             | 见 [桌面客户端](../tutorial-extras/desktop-client.md) |
+| **贡献 monorepo**       | `pnpm dev`             | Node ≥ 20、pnpm                                       |
 
 ## 方式一：全局 CLI（推荐）
 
 ```bash
-npm i -g @fecommunity/reactpress@beta
+npm i -g @fecommunity/reactpress
 mkdir my-blog && cd my-blog
 reactpress init
 ```
 
 `init` 生成配置、初始化 SQLite 并**自动启动**全栈。
 
-| 服务 | 端口 | 地址 |
-|------|------|------|
-| 管理后台 | 3001 `/admin/` | http://localhost:3001/admin/ |
-| 访客主题 | 3001 | http://localhost:3001 |
-| API | 3002 | http://localhost:3002/api/health |
-| 主题预览 | 3003 | http://localhost:3003 |
+| 服务     | 端口           | 地址                             |
+| -------- | -------------- | -------------------------------- |
+| 管理后台 | 3001 `/admin/` | http://localhost:3001/admin/     |
+| 访客主题 | 3001           | http://localhost:3001            |
+| API      | 3002           | http://localhost:3002/api/health |
+| 主题预览 | 3003           | http://localhost:3003            |
 
 ### 常用命令
 

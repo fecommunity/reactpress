@@ -91,14 +91,14 @@
 ## 30 秒快速开始
 
 ```bash
-npm i -g @fecommunity/reactpress@beta
+npm i -g @fecommunity/reactpress
 mkdir my-site && cd my-site
 reactpress init
 ```
 
 **环境要求：** [Node.js 20+](https://nodejs.org/) · 无需 Docker 或外部数据库
 
-> 4.x 发布在 npm **`@beta`** 标签（`@latest` 仍为 3.x）。
+> 4.0 已发布在 npm **`@latest`**。仅预发布版本使用 `@beta`。
 
 | 入口         | 地址                                              |
 | :----------- | :------------------------------------------------ |
@@ -303,7 +303,7 @@ SQLite 本地存储 · 离线编辑 · 远程 API 模式 · 同步到生产 · [
 代号 **Extend** — 插件、桌面端、npm 主题。仍是 **一条 CLI、一套 Admin**。
 
 ```bash
-npm i -g @fecommunity/reactpress@beta
+npm i -g @fecommunity/reactpress
 ```
 
 [4.0 指南](./docs/tutorial/tutorial-extras/reactpress-4-0.md) · [从 3.x 迁移](./docs/tutorial/tutorial-extras/migration-3-to-4.md)
@@ -392,7 +392,7 @@ Monorepo 贡献者请参阅 [CONTRIBUTING.md](./CONTRIBUTING.md) 及各子包 RE
 <details>
 <summary><strong>4.0 能用于生产吗？</strong></summary>
 
-4.0 处于 beta 阶段（撰写时为 `4.0.0-beta.18`）。已发布的 CLI 支持 `init`、`doctor`、`logs`、`stop`。生产环境升级前请阅读[迁移指南](./docs/tutorial/tutorial-extras/migration-3-to-4.md)。
+4.0.0 为当前稳定版（npm `@latest`）。CLI 支持 `init`、`doctor`、`logs`、`stop`。从 3.x 升级请阅读[迁移指南](./docs/tutorial/tutorial-extras/migration-3-to-4.md)。
 
 </details>
 

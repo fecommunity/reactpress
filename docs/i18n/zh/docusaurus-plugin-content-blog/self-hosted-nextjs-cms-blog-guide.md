@@ -75,7 +75,7 @@ ReactPress 是面向 React 开发者的开源**发布系统**：
 - 可选 Electron 桌面端离线写作
 
 ```bash
-npm i -g @fecommunity/reactpress@beta
+npm i -g @fecommunity/reactpress
 mkdir my-blog && cd my-blog
 reactpress init
 ```
@@ -148,14 +148,14 @@ reactpress init
 可以 — Headless API + API Key。见 [Headless API](/zh/docs/developer-guide/headless-api)。
 
 **4.0 能上生产吗？**  
-active beta；请先预发。[FAQ](/zh/docs/reference/faq) · [3→4 迁移](/zh/docs/tutorial-extras/migration-3-to-4)。
+4.0.0 稳定版；从 3.x 升级请先预发。[FAQ](/zh/docs/reference/faq) · [3→4 迁移](/zh/docs/tutorial-extras/migration-3-to-4)。
 
 ---
 
 ## 从这里开始
 
 ```bash
-npm i -g @fecommunity/reactpress@beta
+npm i -g @fecommunity/reactpress
 mkdir my-blog && cd my-blog
 reactpress init
 ```

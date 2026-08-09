@@ -33,7 +33,7 @@ One global CLI ships:
 | **CLI**       | `init` · `doctor` · `logs` · `stop` — live in about **60 seconds**       |
 
 ```bash
-npm i -g @fecommunity/reactpress@beta
+npm i -g @fecommunity/reactpress
 mkdir my-site && cd my-site
 reactpress init
 ```
@@ -106,13 +106,13 @@ ReactPress here is the **fecommunity open-source publishing platform** (NestJS +
 
 ## Quick answers
 
-| Question                   | Answer                                                                                   |
-| -------------------------- | ---------------------------------------------------------------------------------------- |
-| Is it free?                | Yes — MIT open source                                                                    |
-| Do I need Docker?          | No by default (SQLite). Docker only for embedded-docker / external MySQL                 |
-| Is it production-ready?    | 4.0 is active beta; validate on staging — see [FAQ](../reference/faq.md)                 |
-| Can I use my own frontend? | Yes — Headless REST + API keys                                                           |
-| vs WordPress?              | Same editing idea, React/Next delivery — [full comparison](./reactpress-vs-wordpress.md) |
+| Question                   | Answer                                                                                            |
+| -------------------------- | ------------------------------------------------------------------------------------------------- |
+| Is it free?                | Yes — MIT open source                                                                             |
+| Do I need Docker?          | No by default (SQLite). Docker only for embedded-docker / external MySQL                          |
+| Is it production-ready?    | 4.0.0 is stable (`@latest`); stage first when upgrading from 3.x — see [FAQ](../reference/faq.md) |
+| Can I use my own frontend? | Yes — Headless REST + API keys                                                                    |
+| vs WordPress?              | Same editing idea, React/Next delivery — [full comparison](./reactpress-vs-wordpress.md)          |
 
 ## Start here
 

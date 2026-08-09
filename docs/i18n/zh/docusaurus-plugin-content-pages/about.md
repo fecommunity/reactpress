@@ -22,7 +22,7 @@ keywords: [reactpress, 关于, 开源, react cms, 发布平台]
 ReactPress 4.0（代号 **Extend**）为当前推荐版本：
 
 ```bash
-npm i -g @fecommunity/reactpress@beta
+npm i -g @fecommunity/reactpress
 ```
 
 ## 适用人群

@@ -29,7 +29,7 @@ New to the product? Start with [What is ReactPress?](./what-is-reactpress.md).
 | -------------------- | -------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
 | **Positioning**      | Full **publishing system for React developers** (Admin + API + Next.js themes + plugins + desktop) | World’s most popular PHP CMS; huge plugin/theme market    |
 | **Stack**            | React, Next.js, NestJS, SQLite / MySQL                                                             | PHP, MySQL, classic themes                                |
-| **Time to live**     | `npm i -g @fecommunity/reactpress@beta` → `reactpress init` — ~**60 seconds**                      | One-click host or LAMP — often minutes                    |
+| **Time to live**     | `npm i -g @fecommunity/reactpress` → `reactpress init` — ~**60 seconds**                           | One-click host or LAMP — often minutes                    |
 | **Editing**          | Markdown-first Admin; familiar post/page/media model                                               | Gutenberg blocks; enormous editor ecosystem               |
 | **Visitor delivery** | Next.js SSR / ISR by default                                                                       | PHP themes; caching plugins common                        |
 | **Headless**         | First-class REST + TypeScript toolkit                                                              | REST exists; Headless usually extra setup                 |
@@ -152,7 +152,7 @@ Ship a proof in a minute: [Build a Next.js blog in 60 seconds](./build-nextjs-bl
 ## Try ReactPress
 
 ```bash
-npm i -g @fecommunity/reactpress@beta
+npm i -g @fecommunity/reactpress
 mkdir my-blog && cd my-blog
 reactpress init
 ```
@@ -173,7 +173,7 @@ This ReactPress is **fecommunity/reactpress** — a NestJS + Next.js publishing 
 Yes — MIT. Install from npm.
 
 **Is 4.0 production-ready?**  
-Active beta with stable core paths. Read [3.x → 4.0 migration](../tutorial-extras/migration-3-to-4.md) and validate on staging.
+Yes — 4.0.0 is stable (`@latest`). Read [3.x → 4.0 migration](../tutorial-extras/migration-3-to-4.md) when upgrading from 3.x and validate on staging.
 
 **Can I use my own frontend?**  
 Yes — Headless REST + API keys.
