@@ -7,17 +7,17 @@ ReactPress 3.x receives critical fixes on a best-effort basis during the 4.x rol
 Older major versions (2.x and below) no longer receive security updates unless
 noted in a release announcement.
 
-| Version | Supported          |
-| :------ | :----------------- |
-| 4.x     | :white_check_mark: |
+| Version | Supported              |
+| :------ | :--------------------- |
+| 4.x     | :white_check_mark:     |
 | 3.x     | :warning: (transition) |
-| 2.x     | :x:                |
-| < 2.0   | :x:                |
+| 2.x     | :x:                    |
+| < 2.0   | :x:                    |
 
 Install the latest release:
 
 ```bash
-npm i -g @fecommunity/reactpress@beta
+npm i -g @fecommunity/reactpress
 ```
 
 ## Reporting a Vulnerability
@@ -44,12 +44,12 @@ Include as much of the following as you can:
 
 ## What to Expect
 
-| Timeline | Action |
-| :------- | :----- |
-| **Within 72 hours** | Acknowledgement of your report |
-| **Within 7 days** | Initial assessment and severity classification |
-| **Ongoing** | Status updates until resolved |
-| **After fix** | Coordinated disclosure and credit in release notes (if desired) |
+| Timeline            | Action                                                          |
+| :------------------ | :-------------------------------------------------------------- |
+| **Within 72 hours** | Acknowledgement of your report                                  |
+| **Within 7 days**   | Initial assessment and severity classification                  |
+| **Ongoing**         | Status updates until resolved                                   |
+| **After fix**       | Coordinated disclosure and credit in release notes (if desired) |
 
 We appreciate responsible disclosure. Valid reports may be credited in
 [CHANGELOG.md](./CHANGELOG.md) unless you prefer to remain anonymous.

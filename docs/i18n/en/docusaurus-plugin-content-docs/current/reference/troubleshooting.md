@@ -16,13 +16,13 @@ reactpress logs --tail 100
 
 ## Diagnostic command cheat sheet
 
-| Command | Purpose |
-|------|------|
-| `reactpress doctor` | Environment, ports, DB, processes overview |
-| `reactpress doctor --show-logs` | Attach log snippet on failure |
-| `reactpress logs -f` | Follow API logs live |
-| `reactpress logs --grep error` | Filter error lines |
-| `reactpress stop` | Clean stop before restart |
+| Command                         | Purpose                                    |
+| ------------------------------- | ------------------------------------------ |
+| `reactpress doctor`             | Environment, ports, DB, processes overview |
+| `reactpress doctor --show-logs` | Attach log snippet on failure              |
+| `reactpress logs -f`            | Follow API logs live                       |
+| `reactpress logs --grep error`  | Filter error lines                         |
+| `reactpress stop`               | Clean stop before restart                  |
 
 Monorepo: `pnpm status`, `pnpm docker:dev:logs`
 
@@ -34,7 +34,7 @@ Bundled runtime download failed during global install:
 
 ```bash
 # retry install
-npm install -g @fecommunity/reactpress@beta --force
+npm install -g @fecommunity/reactpress --force
 
 # check proxy and registry
 npm config get registry
@@ -71,11 +71,11 @@ Change ports: [Configuration](../tutorial-extras/config-intro.md).
 
 ### API up but Admin / theme unreachable
 
-| Symptom | Likely cause | Fix |
-|------|----------|------|
-| :3000 won't open | web process not started | Monorepo: `pnpm dev:web`; check logs |
-| :3001 blank | theme not enabled | Admin → Appearance → enable theme |
-| CORS error | URL mismatch | verify `CLIENT_SITE_URL` / `SERVER_SITE_URL` |
+| Symptom          | Likely cause            | Fix                                          |
+| ---------------- | ----------------------- | -------------------------------------------- |
+| :3000 won't open | web process not started | Monorepo: `pnpm dev:web`; check logs         |
+| :3001 blank      | theme not enabled       | Admin → Appearance → enable theme            |
+| CORS error       | URL mismatch            | verify `CLIENT_SITE_URL` / `SERVER_SITE_URL` |
 
 ### Theme process REACTPRESS_THEME_NOT_FOUND
 

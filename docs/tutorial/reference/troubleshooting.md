@@ -16,13 +16,13 @@ reactpress logs --tail 100
 
 ## 诊断命令速查
 
-| 命令 | 用途 |
-|------|------|
-| `reactpress doctor` | 环境、端口、DB、进程总览 |
-| `reactpress doctor --show-logs` | 失败时附带日志片段 |
-| `reactpress logs -f` | 实时跟踪 API 日志 |
-| `reactpress logs --grep error` | 过滤错误行 |
-| `reactpress stop` | 停止后干净重启 |
+| 命令                            | 用途                     |
+| ------------------------------- | ------------------------ |
+| `reactpress doctor`             | 环境、端口、DB、进程总览 |
+| `reactpress doctor --show-logs` | 失败时附带日志片段       |
+| `reactpress logs -f`            | 实时跟踪 API 日志        |
+| `reactpress logs --grep error`  | 过滤错误行               |
+| `reactpress stop`               | 停止后干净重启           |
 
 Monorepo：`pnpm status`、`pnpm docker:dev:logs`
 
@@ -34,7 +34,7 @@ Monorepo：`pnpm status`、`pnpm docker:dev:logs`
 
 ```bash
 # 重试安装
-npm install -g @fecommunity/reactpress@beta --force
+npm install -g @fecommunity/reactpress --force
 
 # 检查代理与 registry
 npm config get registry
@@ -71,11 +71,11 @@ reactpress init
 
 ### API 启动但 Admin / 主题无法访问
 
-| 现象 | 可能原因 | 处理 |
-|------|----------|------|
-| :3000 无法打开 | web 进程未起 | Monorepo：`pnpm dev:web`；检查 logs |
-| :3001 空白 | 主题未启用 | Admin → 外观 → 启用主题 |
-| CORS 错误 | URL 配置不一致 | 核对 `CLIENT_SITE_URL` / `SERVER_SITE_URL` |
+| 现象           | 可能原因       | 处理                                       |
+| -------------- | -------------- | ------------------------------------------ |
+| :3000 无法打开 | web 进程未起   | Monorepo：`pnpm dev:web`；检查 logs        |
+| :3001 空白     | 主题未启用     | Admin → 外观 → 启用主题                    |
+| CORS 错误      | URL 配置不一致 | 核对 `CLIENT_SITE_URL` / `SERVER_SITE_URL` |
 
 ### 主题进程报错 REACTPRESS_THEME_NOT_FOUND
 

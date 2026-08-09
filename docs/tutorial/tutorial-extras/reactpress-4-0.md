@@ -20,7 +20,7 @@ keywords: [reactpress 4.0, extend, plugin, desktop, theme catalog, wordpress alt
 ## 快速开始（全栈，与 3.x 相同）
 
 ```bash
-npm i -g @fecommunity/reactpress@beta
+npm i -g @fecommunity/reactpress
 mkdir my-blog && cd my-blog
 reactpress init
 ```

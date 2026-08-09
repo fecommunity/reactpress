@@ -58,7 +58,7 @@ WordPress 仍占据很大份额。但对 **React 开发者**来说，痛点很�
 | 许可                       | MIT                         |
 
 ```bash
-npm i -g @fecommunity/reactpress@beta
+npm i -g @fecommunity/reactpress
 mkdir my-site && cd my-site
 reactpress init
 ```

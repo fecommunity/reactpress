@@ -85,7 +85,7 @@ keywords:
 | **当前版本**             | 4.0（代号 **Extend**）——插件、桌面、npm 主题 catalog                                                  |
 
 ```bash
-npm i -g @fecommunity/reactpress@beta
+npm i -g @fecommunity/reactpress
 mkdir my-site && cd my-site
 reactpress init
 ```
@@ -234,7 +234,7 @@ ReactPress 4.0 的每一项能力——bundled CLI、SQLite 默认、npm 主题�
 ### 4.3 三十秒上手
 
 ```bash
-npm i -g @fecommunity/reactpress@beta
+npm i -g @fecommunity/reactpress
 mkdir my-site && cd my-site
 reactpress init
 ```
@@ -669,7 +669,7 @@ reactpress init
 ## 十九、快速开始
 
 ```bash
-npm i -g @fecommunity/reactpress@beta
+npm i -g @fecommunity/reactpress
 mkdir my-blog && cd my-blog
 reactpress init
 ```
@@ -701,7 +701,7 @@ ReactPress 4.0 把这些原则翻译到 React 时代：
 若你在搜索 **React CMS**、**Next.js CMS**、**WordPress alternative**、**open source CMS**——从这里开始：
 
 ```bash
-npm i -g @fecommunity/reactpress@beta
+npm i -g @fecommunity/reactpress
 mkdir my-blog && cd my-blog
 reactpress init
 ```

@@ -24,7 +24,7 @@ keywords:
 
 **ReactPress** 是 **面向 React 开发者的发布系统** — 用 React 构建博客、文档、企业官网与内容驱动型应用。一条 CLI 即可运行 CMS API、Web 管理后台、可替换的 Next.js 主题、插件扩展与 Electron 桌面客户端。
 
-**ReactPress 4.0**（代号 **Extend**）在 3.x 之上新增**插件系统**、**桌面客户端**与 **npm 主题 catalog**。新用户推荐 `npm i -g @fecommunity/reactpress@beta`，详见 [ReactPress 4.0 扩展版](./tutorial-extras/reactpress-4-0.md)。桌面端安装见 [桌面客户端](./tutorial-extras/desktop-client.md)。仍使用 3.x 见 [3.0 平台版](./tutorial-extras/reactpress-3-0.md)。
+**ReactPress 4.0**（代号 **Extend**）在 3.x 之上新增**插件系统**、**桌面客户端**与 **npm 主题 catalog**。新用户推荐 `npm i -g @fecommunity/reactpress`，详见 [ReactPress 4.0 扩展版](./tutorial-extras/reactpress-4-0.md)。桌面端安装见 [桌面客户端](./tutorial-extras/desktop-client.md)。仍使用 3.x 见 [3.0 平台版](./tutorial-extras/reactpress-3-0.md)。
 
 ## 🆚 框架对比
 
@@ -75,7 +75,7 @@ keywords:
 ### 终端用户 — 一个全局包
 
 ```bash
-npm i -g @fecommunity/reactpress@beta
+npm i -g @fecommunity/reactpress
 mkdir my-blog && cd my-blog
 reactpress init
 ```
@@ -160,7 +160,7 @@ Email: admin@gaoredu.com
 <details>
 <summary><strong>ReactPress 免费吗？</strong></summary>
 
-是，MIT 开源。安装：`npm i -g @fecommunity/reactpress@beta`。
+是，MIT 开源。安装：`npm i -g @fecommunity/reactpress`。
 
 </details>
 

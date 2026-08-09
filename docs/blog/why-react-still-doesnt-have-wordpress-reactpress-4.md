@@ -95,7 +95,7 @@ This article is a long-form field guide. It explains:
 | **Current release**        | 4.0 (codename **Extend**) — plugins, desktop, npm theme catalog.                                                              |
 
 ```bash
-npm i -g @fecommunity/reactpress@beta
+npm i -g @fecommunity/reactpress
 mkdir my-site && cd my-site
 reactpress init
 ```
@@ -473,7 +473,7 @@ Hard rules:
 ### 4.5 Thirty-second start
 
 ```bash
-npm i -g @fecommunity/reactpress@beta
+npm i -g @fecommunity/reactpress
 mkdir my-site && cd my-site
 reactpress init
 ```
@@ -1265,7 +1265,7 @@ CLI generates `.env` from `.reactpress/config.json`. Avoid hand-editing unless y
 ### 15.1 New sites
 
 ```bash
-npm i -g @fecommunity/reactpress@beta
+npm i -g @fecommunity/reactpress
 mkdir my-site && cd my-site
 reactpress init
 ```
@@ -1277,7 +1277,7 @@ Fastest path to a **React publishing platform** proof of concept.
 4.0 adds plugins, desktop, npm theme catalog — **no forced breaking config migration**.
 
 ```bash
-npm i -g @fecommunity/reactpress@beta
+npm i -g @fecommunity/reactpress
 cd your-site
 reactpress doctor
 ```
@@ -1410,7 +1410,7 @@ Yes. MIT license. Commercial use allowed. Self-host without vendor fees.
 
 ### Is 4.0 production-ready?
 
-4.0 is moving from beta to stable on npm (`@fecommunity/reactpress`). Core paths (`init`, Admin, API, theme, plugins) are battle-tested in community and dogfood sites like [blog.gaoredu.com](https://blog.gaoredu.com). Validate on staging; read [migration guide](/docs/tutorial-extras/migration-3-to-4).
+Yes. 4.0.0 is the current stable release on npm (`@fecommunity/reactpress`). Core paths (`init`, Admin, API, theme, plugins) are battle-tested in community and dogfood sites like [blog.gaoredu.com](https://blog.gaoredu.com). When upgrading from 3.x, validate on staging; read [migration guide](/docs/tutorial-extras/migration-3-to-4).
 
 ### Do I need Docker?
 
@@ -1475,10 +1475,10 @@ No. It is optional for offline/local-first authors. Web Admin is complete.
 ### 19.1 Install CLI
 
 ```bash
-npm i -g @fecommunity/reactpress@beta
+npm i -g @fecommunity/reactpress
 ```
 
-4.x may publish under `@beta` before `@latest` promotion — check [npm](https://www.npmjs.com/package/@fecommunity/reactpress).
+Install with `npm i -g @fecommunity/reactpress` (`@latest`). Prereleases use `@beta` — check [npm](https://www.npmjs.com/package/@fecommunity/reactpress).
 
 ### 19.2 Initialize site
 
@@ -1868,7 +1868,7 @@ This appendix narrates a realistic **first week** deploying ReactPress as a **Wo
 The lead engineer runs:
 
 ```bash
-npm i -g @fecommunity/reactpress@beta
+npm i -g @fecommunity/reactpress
 mkdir acme-blog && cd acme-blog
 reactpress init
 ```
@@ -2399,7 +2399,7 @@ Saying no keeps ReactPress a **publishing platform** instead of an everything ba
 
 ```bash
 # Install
-npm i -g @fecommunity/reactpress@beta
+npm i -g @fecommunity/reactpress
 
 # New site
 mkdir site && cd site && reactpress init
@@ -2541,7 +2541,7 @@ We are not claiming 60,000 plugins tomorrow. We are claiming the **mechanism and
 If you searched for **React CMS**, **Next.js CMS**, **WordPress alternative**, **open source CMS**, or **React publishing platform** — start here:
 
 ```bash
-npm i -g @fecommunity/reactpress@beta
+npm i -g @fecommunity/reactpress
 mkdir my-blog && cd my-blog
 reactpress init
 ```

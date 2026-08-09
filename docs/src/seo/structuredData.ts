@@ -27,12 +27,11 @@ export const FAQ_ENTRIES_EN: FaqEntry[] = [
   {
     question: 'Is ReactPress 4.0 production-ready?',
     answer:
-      '4.0 is in active beta. Core paths init and doctor are stable; validate on staging before upgrading production and read the 3.x to 4.0 migration guide.',
+      '4.0.0 is the current stable release. When upgrading from 3.x, validate on staging and read the 3.x to 4.0 migration guide.',
   },
   {
     question: 'Is ReactPress free?',
-    answer:
-      'Yes. ReactPress is open source under the MIT license. Install via npm: npm i -g @fecommunity/reactpress@beta.',
+    answer: 'Yes. ReactPress is open source under the MIT license. Install via npm: npm i -g @fecommunity/reactpress.',
   },
 ];
 
@@ -64,7 +63,7 @@ export const FAQ_ENTRIES_ZH: FaqEntry[] = [
   },
   {
     question: 'ReactPress 免费吗？',
-    answer: '是的。ReactPress 基于 MIT 开源，可通过 npm i -g @fecommunity/reactpress@beta 安装。',
+    answer: '是的。ReactPress 基于 MIT 开源，可通过 npm i -g @fecommunity/reactpress 安装。',
   },
 ];
 

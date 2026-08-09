@@ -55,6 +55,11 @@ function getCanonicalVersion() {
   return getCurrentVersion('cli');
 }
 
+/** Strip prerelease suffix: `4.0.0-beta.18` → `4.0.0`. */
+function promoteToStable(version) {
+  return String(version).split('-')[0];
+}
+
 function incrementVersion(version, type) {
   const base = String(version).split('-')[0];
   const parts = base.split('.').map((p) => parseInt(p, 10));
@@ -75,6 +80,8 @@ function incrementVersion(version, type) {
       if (match) return `${match[1]}-beta.${parseInt(match[2], 10) + 1}`;
       return `${base}-beta.0`;
     }
+    case 'stable':
+      return promoteToStable(version);
     default:
       return version;
   }
@@ -237,22 +244,31 @@ async function promptPublishPlan(defaults = {}) {
     },
   ]);
 
+  const stableCandidate = promoteToStable(current);
+  const canPromoteStable = String(current).includes('-') && stableCandidate !== current;
+
+  const versionChoices = [
+    { name: `Keep ${current}`, value: 'keep' },
+    ...(canPromoteStable
+      ? [{ name: `Promote to stable (${stableCandidate}) → npm latest`, value: 'stable' }]
+      : []),
+    { name: `Bump beta (${incrementVersion(current, 'beta')})`, value: 'beta' },
+    { name: `Bump patch (${incrementVersion(current, 'patch')})`, value: 'patch' },
+    { name: 'Enter custom version', value: 'custom' },
+  ];
+
   const { versionMode } = await inquirer.prompt([
     {
       type: 'list',
       name: 'versionMode',
       message: `Version (current: ${current}):`,
-      choices: [
-        { name: `Keep ${current}`, value: 'keep' },
-        { name: `Bump beta (${incrementVersion(current, 'beta')})`, value: 'beta' },
-        { name: `Bump patch (${incrementVersion(current, 'patch')})`, value: 'patch' },
-        { name: 'Enter custom version', value: 'custom' },
-      ],
+      choices: versionChoices,
+      default: channel === 'latest' && canPromoteStable ? 'stable' : 'keep',
     },
   ]);
 
   let version = current;
-  if (versionMode === 'beta' || versionMode === 'patch') {
+  if (versionMode === 'beta' || versionMode === 'patch' || versionMode === 'stable') {
     version = incrementVersion(current, versionMode);
   } else if (versionMode === 'custom') {
     const { customVersion } = await inquirer.prompt([
@@ -408,6 +424,7 @@ async function main() {
   console.log('Examples:');
   console.log('  NPM_OTP=123456 pnpm run publish:packages -- --yes');
   console.log('  pnpm run publish:packages -- --tag beta --version 4.0.0-beta.0 --yes');
+  console.log('  pnpm run publish:packages -- --tag latest --version 4.0.0 --yes');
 }
 
 module.exports = {
@@ -415,6 +432,7 @@ module.exports = {
   buildPackages,
   publishPackages,
   incrementVersion,
+  promoteToStable,
   resolveNpmTag,
   CORE_PUBLISH_PACKAGES,
 };

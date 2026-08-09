@@ -1,24 +1,22 @@
 export const REACTPRESS_NPM_PACKAGE = '@fecommunity/reactpress';
 
-export const REACTPRESS_NPM_REGISTRY_URL =
-  'https://registry.npmjs.org/@fecommunity%2Freactpress';
+export const REACTPRESS_NPM_REGISTRY_URL = 'https://registry.npmjs.org/@fecommunity%2Freactpress';
 
-export const REACTPRESS_NPM_PAGE_URL =
-  'https://www.npmjs.com/package/@fecommunity/reactpress';
+export const REACTPRESS_NPM_PAGE_URL = 'https://www.npmjs.com/package/@fecommunity/reactpress';
 
-/** npm.com version page, e.g. …/v/4.0.0-beta.18 */
+/** npm.com version page, e.g. …/v/4.0.0 */
 export function buildNpmVersionPageUrl(version: string): string {
   return `${REACTPRESS_NPM_PAGE_URL}/v/${encodeURIComponent(version)}`;
 }
 
-/** GitHub release tag page, e.g. …/releases/tag/v4.0.0-beta.18 */
+/** GitHub release tag page, e.g. …/releases/tag/v4.0.0 */
 export function buildGitHubReleaseTagUrl(version: string): string {
   return `https://github.com/fecommunity/reactpress/releases/tag/v${encodeURIComponent(version)}`;
 }
 
 /** Fallback when the registry is unreachable (SSR / offline). */
 export const FALLBACK_REACTPRESS_VERSIONS = {
-  latest: '3.7.0',
+  latest: '4.0.0',
   beta: '4.0.0-beta.18',
 } as const;
 
@@ -46,7 +44,7 @@ export async function fetchReactPressVersions(): Promise<ReactPressDistTags> {
   };
 }
 
-export function buildInstallCommand(tag: 'beta' | 'latest' = 'beta'): string {
+export function buildInstallCommand(tag: 'beta' | 'latest' = 'latest'): string {
   return `npm i -g ${REACTPRESS_NPM_PACKAGE}@${tag}`;
 }
 

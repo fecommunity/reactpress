@@ -90,7 +90,7 @@ Content can be exported and re-imported via scripts or integrated through the He
 <details>
 <summary><strong>Is ReactPress free?</strong></summary>
 
-Yes. ReactPress is open source under the MIT license. Install globally: `npm i -g @fecommunity/reactpress@beta`.
+Yes. ReactPress is open source under the MIT license. Install globally: `npm i -g @fecommunity/reactpress`.
 
 </details>
 
@@ -99,7 +99,7 @@ Yes. ReactPress is open source under the MIT license. Install globally: `npm i -
 <details>
 <summary><strong>Is 4.0 production-ready?</strong></summary>
 
-4.0 is in active beta. Before upgrading production, read [3.x → 4.0 migration](../tutorial-extras/migration-3-to-4.md) and validate on staging. Core paths `init` / `doctor` are stable.
+4.0.0 is the current stable release (npm `@latest`). When upgrading from 3.x, read [3.x → 4.0 migration](../tutorial-extras/migration-3-to-4.md) and validate on staging.
 
 </details>
 

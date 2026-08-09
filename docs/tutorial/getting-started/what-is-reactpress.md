@@ -23,7 +23,7 @@ keywords: [reactpress 是什么, reactpress, react cms, react 发布平台, next
 | **CLI**       | `init` · `doctor` · `logs` · `stop` — 约 **60 秒**上线 |
 
 ```bash
-npm i -g @fecommunity/reactpress@beta
+npm i -g @fecommunity/reactpress
 mkdir my-site && cd my-site
 reactpress init
 ```
@@ -96,13 +96,13 @@ flowchart LR
 
 ## 快速问答
 
-| 问题               | 答案                                                                       |
-| ------------------ | -------------------------------------------------------------------------- |
-| 免费吗？           | 是 — MIT 开源                                                              |
-| 需要 Docker 吗？   | 默认不需要（SQLite）；仅 embedded-docker / 外部 MySQL 时需要               |
-| 能上生产吗？       | 4.0 为 active beta；请在预发验证 — 见 [FAQ](../reference/faq.md)           |
-| 能用自己的前端吗？ | 可以 — Headless REST + API Key                                             |
-| 和 WordPress？     | 编辑理念相近，交付用 React/Next — [完整对比](./reactpress-vs-wordpress.md) |
+| 问题               | 答案                                                                             |
+| ------------------ | -------------------------------------------------------------------------------- |
+| 免费吗？           | 是 — MIT 开源                                                                    |
+| 需要 Docker 吗？   | 默认不需要（SQLite）；仅 embedded-docker / 外部 MySQL 时需要                     |
+| 能上生产吗？       | 4.0.0 为稳定版（`@latest`）；从 3.x 升级请先预发 — 见 [FAQ](../reference/faq.md) |
+| 能用自己的前端吗？ | 可以 — Headless REST + API Key                                                   |
+| 和 WordPress？     | 编辑理念相近，交付用 React/Next — [完整对比](./reactpress-vs-wordpress.md)       |
 
 ## 从这里开始
 

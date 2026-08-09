@@ -1,10 +1,7 @@
-import {
-  buildInstallCommand,
-  FALLBACK_REACTPRESS_VERSIONS,
-} from '@site/src/npm/packageVersions';
+import { buildInstallCommand, FALLBACK_REACTPRESS_VERSIONS } from '@site/src/npm/packageVersions';
 
 /** ReactPress quick-start commands (homepage CLI demo). */
-export const QUICK_START_INSTALL_COMMAND = buildInstallCommand('beta');
+export const QUICK_START_INSTALL_COMMAND = buildInstallCommand('latest');
 
 export const QUICK_START_COMMANDS = [
   QUICK_START_INSTALL_COMMAND,
@@ -38,11 +35,11 @@ const QUICK_START_DEV_READY_LINES_ZH: DevReadyLines = [
   'API      http://localhost:3002/api',
 ];
 
-/** @deprecated Use getQuickStartDemoOutputs(locale, installCommand, betaVersion) */
+/** @deprecated Use getQuickStartDemoOutputs(locale, installCommand, version) */
 export const QUICK_START_DEMO_OUTPUTS = getQuickStartDemoOutputs(
   'en',
   QUICK_START_INSTALL_COMMAND,
-  FALLBACK_REACTPRESS_VERSIONS.beta,
+  FALLBACK_REACTPRESS_VERSIONS.latest
 );
 
 /** @deprecated Use getQuickStartDevReadyLines(locale) */
@@ -56,11 +53,7 @@ export function getInstallDemoOutput(_betaVersion: string): readonly string[] {
   return ['added 1 package in 12s'];
 }
 
-export function getQuickStartDemoOutputs(
-  locale: string,
-  installCommand: string,
-  betaVersion: string,
-): DemoOutputs {
+export function getQuickStartDemoOutputs(locale: string, installCommand: string, betaVersion: string): DemoOutputs {
   const installDemoOutput = getInstallDemoOutput(betaVersion);
   const shared: DemoOutputs = {
     [installCommand]: installDemoOutput,

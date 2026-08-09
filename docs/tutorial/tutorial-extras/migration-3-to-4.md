@@ -14,7 +14,7 @@ ReactPress **4.0** 在 3.x 之上新增插件系统、Electron 桌面客户端�
 ## 升级步骤
 
 ```bash
-npm i -g @fecommunity/reactpress@beta
+npm i -g @fecommunity/reactpress
 cd your-site
 reactpress doctor
 ```

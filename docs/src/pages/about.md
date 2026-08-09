@@ -22,7 +22,7 @@ keywords: [reactpress, about, open source, react cms, publishing platform]
 ReactPress 4.0 (codename **Extend**) is the current recommended release. New users install with:
 
 ```bash
-npm i -g @fecommunity/reactpress@beta
+npm i -g @fecommunity/reactpress
 ```
 
 ## Who ReactPress is for

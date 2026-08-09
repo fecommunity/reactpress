@@ -1,308 +1,264 @@
 # Changelog
 
-## [4.0.0](https://github.com/fecommunity/reactpress/compare/v4.0.0-beta.18...v4.0.0) (unreleased)
+## [4.0.0](https://github.com/fecommunity/reactpress/compare/v4.0.0-beta.18...v4.0.0) (2026-08-09)
 
-> **Stable release** — promotes 4.x from `beta` to `latest` on npm. Install with `npm i -g @fecommunity/reactpress`.
+> **Stable release** — promotes 4.x from `beta` to `latest` on npm ([#88](https://github.com/fecommunity/reactpress/issues/88)). Install with `npm i -g @fecommunity/reactpress`.
 
 ### Publishing & packaging
 
-* npm metadata: brand-aligned descriptions, keywords, homepage, and README for CLI, toolkit, web, and server
-* toolkit: ship `README.md` and `LICENSE` in npm tarball; license unified to MIT
-* web: ship `LICENSE` in npm tarball
-* server: remove invalid `types` entry; add `publishConfig`; align `engines` to Node 18+
-* **Desktop**: GitHub Actions matrix build (macOS / Windows / Linux) uploads installers to Releases
-* **Docs**: canonical URL `https://docs.gaoredu.com`; desktop download guide; removed legacy 2.x / split-package pages
+- npm metadata: brand-aligned descriptions, keywords, homepage, and README for CLI, toolkit, web, and server
+- toolkit: ship `README.md` and `LICENSE` in npm tarball; license unified to MIT
+- web: ship `LICENSE` in npm tarball
+- server: remove invalid `types` entry; add `publishConfig`; align `engines` to Node 18+
+- **Desktop**: GitHub Actions matrix build (macOS / Windows / Linux) uploads installers to Releases
+- **Docs**: canonical URL `https://docs.gaoredu.com`; desktop download guide; removed legacy 2.x / split-package pages
+- **Release**: docs, README, Admin CLI snippet, and docs site default to `@latest` / 4.0.0; publish CLI supports `promote to stable`
 
 ### Upgrade from 3.x
 
-* Run `npm i -g @fecommunity/reactpress@beta` (or `@latest` after stable publish)
-* Use `reactpress init` in a new directory; see [migration guide](./docs/migration-3-to-4.md)
+- Run `npm i -g @fecommunity/reactpress` (npm `@latest`)
+- Use `reactpress init` in a new directory; see [migration guide](./docs/migration-3-to-4.md)
 
 ---
 
 # [4.0.0-beta.18](https://github.com/fecommunity/reactpress/compare/v4.0.0-beta.0...v4.0.0-beta.18) (2026-07-12)
 
-> **Pre-release** — current npm `@beta` tag. Install: `npm i -g @fecommunity/reactpress@beta`.
+> **Pre-release** — npm `@beta` tag at the time. Install: `npm i -g @fecommunity/reactpress@beta`.
 
 ### CLI & packaging
 
-* Zero-dependency mode: bundled toolkit and server runtime in the CLI tarball
-* Theme API proxy patching and improved `reactpress theme install`
-* Enhanced logging, `doctor`, and admin lifecycle commands
+- Zero-dependency mode: bundled toolkit and server runtime in the CLI tarball
+- Theme API proxy patching and improved `reactpress theme install`
+- Enhanced logging, `doctor`, and admin lifecycle commands
 
 ### Desktop & CI
 
-* Reusable GitHub Actions workflow for cross-platform desktop installers (macOS / Windows / Linux)
-* Desktop builds attach to GitHub Releases on publish
+- Reusable GitHub Actions workflow for cross-platform desktop installers (macOS / Windows / Linux)
+- Desktop builds attach to GitHub Releases on publish
 
 ### Docs & README
 
-* Docs site: Algolia DocSearch, changelog version sidebar, hero npm version tags (`@beta` / `@latest`)
-* README and admin demo media refresh; star history charts moved under `public/`
-* Installation guide clarifies `@beta` vs `@latest`; canonical docs at `https://docs.gaoredu.com`
+- Docs site: Algolia DocSearch, changelog version sidebar, hero npm version tags (`@beta` / `@latest`)
+- README and admin demo media refresh; star history charts moved under `public/`
+- Installation guide clarifies `@beta` vs `@latest`; canonical docs at `https://docs.gaoredu.com`
 
 ---
 
 # [4.0.0-beta.0](https://github.com/fecommunity/reactpress/compare/v3.7.0...v4.0.0-beta.0) (2026-06-27)
 
-> **Pre-release** — install with `npm i -g @fecommunity/reactpress@beta` for testing. Final 4.0.0 follows after validation.
+> **Pre-release** — install with `npm i -g @fecommunity/reactpress@beta` for testing. Final 4.0.0 followed after validation.
 
 ### Plugin System
 
-* **Hook + manifest**: `plugin.json` lifecycle (install / activate / config / hot reload); `HookService` with filters and actions
-* **Admin slots**: `AdminSlot` + `PluginAdminProvider`; SEO plugin integrates article editor
-* **Built-in plugins**: `hello-world` (auto summary), `seo` (slug, keywords, meta description), `image-optimizer` (legacy media WebP batch optimization)
-* **CLI**: `reactpress plugin list` / `install`; `pnpm build:plugins` in full build pipeline
-* **Security**: manifest JSON Schema validation, module path constraints, Ajv config validation
+- **Hook + manifest**: `plugin.json` lifecycle (install / activate / config / hot reload); `HookService` with filters and actions
+- **Admin slots**: `AdminSlot` + `PluginAdminProvider`; SEO plugin integrates article editor
+- **Built-in plugins**: `hello-world` (auto summary), `seo` (slug, keywords, meta description), `image-optimizer` (legacy media WebP batch optimization)
+- **CLI**: `reactpress plugin list` / `install`; `pnpm build:plugins` in full build pipeline
+- **Security**: manifest JSON Schema validation, module path constraints, Ajv config validation
 
 ### Desktop Client
 
-* **Electron shell**: loads same Admin SPA (`web/dist`); `pnpm dev:desktop` / `pnpm build:desktop`
-* **Local mode**: embedded SQLite API (default port `13102`), no Docker/MySQL required
-* **Remote mode**: connect to existing ReactPress API
-* **Sync**: push articles, pages, and settings from local to remote site
+- **Electron shell**: loads same Admin SPA (`web/dist`); `pnpm dev:desktop` / `pnpm build:desktop`
+- **Local mode**: embedded SQLite API (default port `13102`), no Docker/MySQL required
+- **Remote mode**: connect to existing ReactPress API
+- **Sync**: push articles, pages, and settings from local to remote site
 
 ### Themes & Docs
 
-* **Theme catalog**: npm anchor `theme-starter`; enhanced theme management; removed deprecated bundled themes
-* **hello-world**: updated README aligned with Pages Router + `createThemeApp`
-* **Docs**: ARCHITECTURE / design sync; migration 3→4; ReactPress 4.0 guide
+- **Theme catalog**: npm anchor `theme-starter`; enhanced theme management; removed deprecated bundled themes
+- **hello-world**: updated README aligned with Pages Router + `createThemeApp`
+- **Docs**: ARCHITECTURE / design sync; migration 3→4; ReactPress 4.0 guide
 
 # [3.7.0](https://github.com/fecommunity/reactpress/compare/v3.6.0...v3.7.0) (2026-06-23)
 
 ### Security
 
-* **SQL injection**: whitelist filter column names in public list API `findAll()` handlers ([GHSA-wmw4-mw6x-6vfm](https://github.com/fecommunity/reactpress/security/advisories/GHSA-wmw4-mw6x-6vfm))
-* **Stored XSS**: sanitize comment HTML after markdown parsing; require JWT for `POST /comment`; add CSP headers via Helmet
-* Credit: reported by [lsr365400](https://github.com/lsr365400)
+- **SQL injection**: whitelist filter column names in public list API `findAll()` handlers ([GHSA-wmw4-mw6x-6vfm](https://github.com/fecommunity/reactpress/security/advisories/GHSA-wmw4-mw6x-6vfm))
+- **Stored XSS**: sanitize comment HTML after markdown parsing; require JWT for `POST /comment`; add CSP headers via Helmet
+- Credit: reported by [lsr365400](https://github.com/lsr365400)
 
 # [3.6.0](https://github.com/fecommunity/reactpress/compare/v3.5.0...v3.6.0) (2026-06-14)
 
 ### Docs CI/CD & Deployment
 
-* **Docs deployment**: GitHub Actions CI/CD pipeline for documentation site deployment
-* **Vercel**: configuration migrated to repository root; documentation links updated to new deployment URL
-* **CI**: removed deprecated deploy workflow; MySQL service image switched to AWS ECR public mirror for faster GHA builds
-* **Config**: improved `DOCS_SITE_URL` handling in deployment configuration
+- **Docs deployment**: GitHub Actions CI/CD pipeline for documentation site deployment
+- **Vercel**: configuration migrated to repository root; documentation links updated to new deployment URL
+- **CI**: removed deprecated deploy workflow; MySQL service image switched to AWS ECR public mirror for faster GHA builds
+- **Config**: improved `DOCS_SITE_URL` handling in deployment configuration
 
 # [3.5.0](https://github.com/fecommunity/reactpress/compare/v3.4.0...v3.5.0) (2026-06-14)
 
 ### Theme Catalog
 
-* **npm theme catalog**: added `theme.catalog.schema.json` and `themes/package.json` for theme discovery and management
+- **npm theme catalog**: added `theme.catalog.schema.json` and `themes/package.json` for theme discovery and management
 
 # [3.4.0](https://github.com/fecommunity/reactpress/compare/v3.3.0...v3.4.0) (2026-06-12)
 
 ### Community
 
-* **Issue templates**: updated bug report, feature request, and config templates for improved clarity and usability
+- **Issue templates**: updated bug report, feature request, and config templates for improved clarity and usability
 
 # [3.3.0](https://github.com/fecommunity/reactpress/compare/v3.2.0...v3.3.0) (2026-06-07)
 
 ### Community & Security
 
-* **Code of Conduct**: added `CODE_OF_CONDUCT.md`
-* **Security Policy**: added `SECURITY.md` with vulnerability reporting guidelines
+- **Code of Conduct**: added `CODE_OF_CONDUCT.md`
+- **Security Policy**: added `SECURITY.md` with vulnerability reporting guidelines
 
 # [3.2.0](https://github.com/fecommunity/reactpress/compare/v3.1.1...v3.2.0) (2026-06-07)
 
 ### Theme Development
 
-* **Next.js config**: added Next.js configuration and node helpers for theme development workflow
+- **Next.js config**: added Next.js configuration and node helpers for theme development workflow
 
 # [3.1.1](https://github.com/fecommunity/reactpress/compare/v3.1.0...v3.1.1) (2026-06-07)
 
 ### Bug Fixes
 
-* **Theme schema**: corrected `theme.manifest.schema.json` `$id` URL for accuracy
+- **Theme schema**: corrected `theme.manifest.schema.json` `$id` URL for accuracy
 
 # [3.1.0](https://github.com/fecommunity/reactpress/compare/v3.0.0...v3.1.0) (2026-06-07)
 
 ### Toolkit Theme Refactor
 
-* **Toolkit 3.1**: `@fecommunity/reactpress-toolkit` split into `theme` / `ui` / `app` / `plugin` submodules; theme manifest parsing, appearance config (Formily), SSR bootstrap, site settings & preview
-* **Export paths**: `package.json` exports add `./theme`, `./ui`, `./app`, `./plugin/*` subpaths for on-demand theme and plugin imports
+- **Toolkit 3.1**: `@fecommunity/reactpress-toolkit` split into `theme` / `ui` / `app` / `plugin` submodules; theme manifest parsing, appearance config (Formily), SSR bootstrap, site settings & preview
+- **Export paths**: `package.json` exports add `./theme`, `./ui`, `./app`, `./plugin/*` subpaths for on-demand theme and plugin imports
 
 ### CLI & Operations
 
-* **CLI 3.0.3**: `reactpress nginx` reverse proxy management; `reactpress db backup` supports Docker `mysqldump`; `reactpress build` target selection & step logging; improved interactive theming and error messages
-* **Fix**: enhanced monorepo root detection logic
+- **CLI 3.0.3**: `reactpress nginx` reverse proxy management; `reactpress db backup` supports Docker `mysqldump`; `reactpress build` target selection & step logging; improved interactive theming and error messages
+- **Fix**: enhanced monorepo root detection logic
 
 ### Brand Assets
 
-* **Unified branding**: `public/brand/`, `public/favicon/`, and `public/icons/` centrally manage logo / favicon / PWA icons
-* **Export script**: `pnpm export:brand` syncs assets to server, web, cli, themes, and other directories
+- **Unified branding**: `public/brand/`, `public/favicon/`, and `public/icons/` centrally manage logo / favicon / PWA icons
+- **Export script**: `pnpm export:brand` syncs assets to server, web, cli, themes, and other directories
 
 ### Docs & Other
 
-* **README**: added official theme section, Lighthouse performance metrics, and "Why ReactPress?" overview
-* **Theme schema**: `theme.manifest.schema.json` `$id` updated to `reactpress-docs.vercel.app`
+- **README**: added official theme section, Lighthouse performance metrics, and "Why ReactPress?" overview
+- **Theme schema**: `theme.manifest.schema.json` `$id` updated to `reactpress-docs.vercel.app`
 
 # [3.0.0](https://github.com/fecommunity/reactpress/compare/v2.0.2...v3.0.0) (2026-05-17)
 
 ### Platform 3.0 — CLI-first Headless
 
-* **CLI**: main package renamed to `@fecommunity/reactpress`; `reactpress dev` prints frontend/admin/API/Swagger URLs on ready; `doctor`/`dev` failures include actionable suggestions; CLI i18n (`REACTPRESS_LANG` / `--lang`); `reactpress-cli` bin deprecated
-* **Headless**: `GET /api/health`; API Key (`X-API-Key` + `/api/article/headless/list`); Webhooks (`article.published`, `comment.created`, HMAC signature + 3 retries)
-* **Content**: scheduled article publishing (`scheduledPublishAt`); article revision history & rollback
-* **Config**: root `.env.example`; removed deprecated `.reactpress` config path
-* **Ops**: `cli/templates/docker-compose.prod.yml` production example; `scripts/benchmark-cold-start.mjs` cold-start benchmark
-* **Breaking**: `@fecommunity/reactpress-server` deprecated; use `@fecommunity/reactpress@3`; see [docs/migration-2-to-3.md](./docs/migration-2-to-3.md)
+- **CLI**: main package renamed to `@fecommunity/reactpress`; `reactpress dev` prints frontend/admin/API/Swagger URLs on ready; `doctor`/`dev` failures include actionable suggestions; CLI i18n (`REACTPRESS_LANG` / `--lang`); `reactpress-cli` bin deprecated
+- **Headless**: `GET /api/health`; API Key (`X-API-Key` + `/api/article/headless/list`); Webhooks (`article.published`, `comment.created`, HMAC signature + 3 retries)
+- **Content**: scheduled article publishing (`scheduledPublishAt`); article revision history & rollback
+- **Config**: root `.env.example`; removed deprecated `.reactpress` config path
+- **Ops**: `cli/templates/docker-compose.prod.yml` production example; `scripts/benchmark-cold-start.mjs` cold-start benchmark
+- **Breaking**: `@fecommunity/reactpress-server` deprecated; use `@fecommunity/reactpress@3`; see [docs/migration-2-to-3.md](./docs/migration-2-to-3.md)
 
 # [2.0.0-beta-4-beta.1](https://github.com/fecommunity/reactpress/compare/v2.0.1...v2.0.0-beta-4-beta.1) (2025-11-16)
 
-
 ### Features
 
-* optimize docker development ([e0dfa36](https://github.com/fecommunity/reactpress/commit/e0dfa360e5d754d9ab9c22939e7754907abfe6e5))
-* support docker deploy [to [#26](https://github.com/fecommunity/reactpress/issues/26)] ([9eafb4a](https://github.com/fecommunity/reactpress/commit/9eafb4a093278a717d98bbd52583a5624f7fa30d))
-
-
+- optimize docker development ([e0dfa36](https://github.com/fecommunity/reactpress/commit/e0dfa360e5d754d9ab9c22939e7754907abfe6e5))
+- support docker deploy [to [#26](https://github.com/fecommunity/reactpress/issues/26)] ([9eafb4a](https://github.com/fecommunity/reactpress/commit/9eafb4a093278a717d98bbd52583a5624f7fa30d))
 
 ## [2.0.1](https://github.com/fecommunity/reactpress/compare/v2.0.0...v2.0.1) (2025-09-26)
 
-
 ### Bug Fixes
 
-* correct HttpClient filename case sensitivity ([7dd892a](https://github.com/fecommunity/reactpress/commit/7dd892a8d5b05a3ab24eaf73577848eb25b06450))
-
+- correct HttpClient filename case sensitivity ([7dd892a](https://github.com/fecommunity/reactpress/commit/7dd892a8d5b05a3ab24eaf73577848eb25b06450))
 
 ### Features
 
-* add config for toolkit package ([0ed839d](https://github.com/fecommunity/reactpress/commit/0ed839d4667d671ea06b088c0bac5a2890680445))
-
-
+- add config for toolkit package ([0ed839d](https://github.com/fecommunity/reactpress/commit/0ed839d4667d671ea06b088c0bac5a2890680445))
 
 # [2.0.0](https://github.com/fecommunity/reactpress/compare/v1.10.0...v2.0.0) (2025-09-21)
 
-
 ### Bug Fixes
 
-* server load issue ([a6f759b](https://github.com/fecommunity/reactpress/commit/a6f759b386e32727501b0eea3ea38f5a89dfe700))
-* type defs ([d6491d5](https://github.com/fecommunity/reactpress/commit/d6491d56f2ffdd19d5a47fda7273958cd4243fb3))
-
+- server load issue ([a6f759b](https://github.com/fecommunity/reactpress/commit/a6f759b386e32727501b0eea3ea38f5a89dfe700))
+- type defs ([d6491d5](https://github.com/fecommunity/reactpress/commit/d6491d56f2ffdd19d5a47fda7273958cd4243fb3))
 
 ### Features
 
-* add hello-world template ([7e2c948](https://github.com/fecommunity/reactpress/commit/7e2c9487ddc6023d7b382250b131fbe828013680))
-* add reactpress toolkit ([58f9312](https://github.com/fecommunity/reactpress/commit/58f9312644736aceb362e517fad8c3b3a83f275f))
-* add swagger v2 ui ([ef9fdc1](https://github.com/fecommunity/reactpress/commit/ef9fdc166955b4659c81fb559138ce38ef599cfe))
-* add twentytwentyfive theme ([715281f](https://github.com/fecommunity/reactpress/commit/715281fedcf8072348e4b8b6794891c7e67e1f99))
-* support npx install server ([e7f7b97](https://github.com/fecommunity/reactpress/commit/e7f7b970bb4dd8b845fcd8dde4048678a403557a))
-* support quick install ([96c1d0a](https://github.com/fecommunity/reactpress/commit/96c1d0a7cc1c72b7f6c489ba236ab6eb78472dee))
-* support quick install ([793bca7](https://github.com/fecommunity/reactpress/commit/793bca79f2bfa921f75bc1cc5f234207aa0ab40a))
-
-
+- add hello-world template ([7e2c948](https://github.com/fecommunity/reactpress/commit/7e2c9487ddc6023d7b382250b131fbe828013680))
+- add reactpress toolkit ([58f9312](https://github.com/fecommunity/reactpress/commit/58f9312644736aceb362e517fad8c3b3a83f275f))
+- add swagger v2 ui ([ef9fdc1](https://github.com/fecommunity/reactpress/commit/ef9fdc166955b4659c81fb559138ce38ef599cfe))
+- add twentytwentyfive theme ([715281f](https://github.com/fecommunity/reactpress/commit/715281fedcf8072348e4b8b6794891c7e67e1f99))
+- support npx install server ([e7f7b97](https://github.com/fecommunity/reactpress/commit/e7f7b970bb4dd8b845fcd8dde4048678a403557a))
+- support quick install ([96c1d0a](https://github.com/fecommunity/reactpress/commit/96c1d0a7cc1c72b7f6c489ba236ab6eb78472dee))
+- support quick install ([793bca7](https://github.com/fecommunity/reactpress/commit/793bca79f2bfa921f75bc1cc5f234207aa0ab40a))
 
 # [1.10.0](https://github.com/fecommunity/reactpress/compare/v1.9.0...v1.10.0) (2025-08-03)
 
-
 ### Features
 
-* add type defs for config ([d8a6fed](https://github.com/fecommunity/reactpress/commit/d8a6fed7bc13f74be0916f80497590c7e737fb86))
-
-
+- add type defs for config ([d8a6fed](https://github.com/fecommunity/reactpress/commit/d8a6fed7bc13f74be0916f80497590c7e737fb86))
 
 # [1.9.0](https://github.com/fecommunity/reactpress/compare/v1.8.0...v1.9.0) (2025-05-21)
 
-
-
 # [1.8.0](https://github.com/fecommunity/reactpress/compare/v1.7.0...v1.8.0) (2025-03-22)
-
 
 ### Features
 
-* upgrade next version ([64cac4d](https://github.com/fecommunity/reactpress/commit/64cac4dcb9268a6bbb14fbbfe6995406638f7508))
-
-
+- upgrade next version ([64cac4d](https://github.com/fecommunity/reactpress/commit/64cac4dcb9268a6bbb14fbbfe6995406638f7508))
 
 # [1.7.0](https://github.com/fecommunity/reactpress/compare/v1.6.0...v1.7.0) (2025-03-07)
 
-
 ### Features
 
-* add reactpress docs ([002972b](https://github.com/fecommunity/reactpress/commit/002972b6194d13917d60de8dae019445739760cc))
-* release reactpress v1.6.0 ([9d75118](https://github.com/fecommunity/reactpress/commit/9d75118b7e19d85ab95b3e6f227f1b95cd95acb8))
-
-
+- add reactpress docs ([002972b](https://github.com/fecommunity/reactpress/commit/002972b6194d13917d60de8dae019445739760cc))
+- release reactpress v1.6.0 ([9d75118](https://github.com/fecommunity/reactpress/commit/9d75118b7e19d85ab95b3e6f227f1b95cd95acb8))
 
 # [1.6.0](https://github.com/fecommunity/reactpress/compare/v1.5.0...v1.6.0) (2024-12-21)
 
-
 ### Features
 
-* knowledge page perfect ([#16](https://github.com/fecommunity/reactpress/issues/16)) ([b9ae27d](https://github.com/fecommunity/reactpress/commit/b9ae27d087b3b451668b3c0acb40359b20a089e2))
-
-
+- knowledge page perfect ([#16](https://github.com/fecommunity/reactpress/issues/16)) ([b9ae27d](https://github.com/fecommunity/reactpress/commit/b9ae27d087b3b451668b3c0acb40359b20a089e2))
 
 # [1.5.0](https://github.com/fecommunity/reactpress/compare/v1.4.0...v1.5.0) (2024-12-21)
 
-
 ### Bug Fixes
 
-* adapt small screen content display issue ([84895c8](https://github.com/fecommunity/reactpress/commit/84895c8341d34285068806d5908b2af358719f80))
-* add key for tex loop item ([e8a2e36](https://github.com/fecommunity/reactpress/commit/e8a2e36f13d5031d845c3c3055374e5ff0446bc2))
-* nav config build error ([66acf46](https://github.com/fecommunity/reactpress/commit/66acf46485f902aa0647b4886beb0701372b95c2))
-* nav query id undefined ([2d0bbd7](https://github.com/fecommunity/reactpress/commit/2d0bbd78f4d73579039b3a9bf7c846fe2d976073))
-* route level default value ([4aae64e](https://github.com/fecommunity/reactpress/commit/4aae64e86346052cb51e63e7c149853a6d8d8ae6))
-
+- adapt small screen content display issue ([84895c8](https://github.com/fecommunity/reactpress/commit/84895c8341d34285068806d5908b2af358719f80))
+- add key for tex loop item ([e8a2e36](https://github.com/fecommunity/reactpress/commit/e8a2e36f13d5031d845c3c3055374e5ff0446bc2))
+- nav config build error ([66acf46](https://github.com/fecommunity/reactpress/commit/66acf46485f902aa0647b4886beb0701372b95c2))
+- nav query id undefined ([2d0bbd7](https://github.com/fecommunity/reactpress/commit/2d0bbd78f4d73579039b3a9bf7c846fe2d976073))
+- route level default value ([4aae64e](https://github.com/fecommunity/reactpress/commit/4aae64e86346052cb51e63e7c149853a6d8d8ae6))
 
 ### Features
 
-* add animation tags cloud ([68b1a5b](https://github.com/fecommunity/reactpress/commit/68b1a5b2fe73fafd7a9b282ed77f836aa7a76bf6))
-* add global config setting page ([c825425](https://github.com/fecommunity/reactpress/commit/c82542540b20f423b3b3f3ba04ea5e48e2523f5c))
-* add nav page ([c6703c6](https://github.com/fecommunity/reactpress/commit/c6703c6e3dea33a8cc226f1c02d9b5cac0ef827e))
-* optimized page interaction experience ([b0ac19a](https://github.com/fecommunity/reactpress/commit/b0ac19ab31b6bcf0d8916aeb373e6fa7288303aa))
-
-
+- add animation tags cloud ([68b1a5b](https://github.com/fecommunity/reactpress/commit/68b1a5b2fe73fafd7a9b282ed77f836aa7a76bf6))
+- add global config setting page ([c825425](https://github.com/fecommunity/reactpress/commit/c82542540b20f423b3b3f3ba04ea5e48e2523f5c))
+- add nav page ([c6703c6](https://github.com/fecommunity/reactpress/commit/c6703c6e3dea33a8cc226f1c02d9b5cac0ef827e))
+- optimized page interaction experience ([b0ac19a](https://github.com/fecommunity/reactpress/commit/b0ac19ab31b6bcf0d8916aeb373e6fa7288303aa))
 
 # [1.4.0](https://github.com/fecommunity/reactpress/compare/v1.3.0...v1.4.0) (2024-12-08)
 
-
-
 # [1.3.0](https://github.com/fecommunity/reactpress/compare/v1.2.0...v1.3.0) (2024-12-01)
-
 
 ### Features
 
-* add system systemSubTitle setting config ([136f012](https://github.com/fecommunity/reactpress/commit/136f01288cb9714092a2aa0dc01421817bb26b7d))
-* optimized the css style loading experience for homepage ([0e7761f](https://github.com/fecommunity/reactpress/commit/0e7761fd28c1cac099ac15ddaa644a904aca8da4))
-* react helmet seo perfect ([848a5da](https://github.com/fecommunity/reactpress/commit/848a5da2a60cbd4c0684d6607ad9df6eeaa2dd7b))
-
-
+- add system systemSubTitle setting config ([136f012](https://github.com/fecommunity/reactpress/commit/136f01288cb9714092a2aa0dc01421817bb26b7d))
+- optimized the css style loading experience for homepage ([0e7761f](https://github.com/fecommunity/reactpress/commit/0e7761fd28c1cac099ac15ddaa644a904aca8da4))
+- react helmet seo perfect ([848a5da](https://github.com/fecommunity/reactpress/commit/848a5da2a60cbd4c0684d6607ad9df6eeaa2dd7b))
 
 # [1.2.0](https://github.com/fecommunity/reactpress/compare/v1.1.0...v1.2.0) (2024-11-23)
 
-
 ### Bug Fixes
 
-* system notice info empty error ([4e41daa](https://github.com/fecommunity/reactpress/commit/4e41daa14dc96499e6d65ebc2648f87147fc248d))
-* update admin view article link ([41656a7](https://github.com/fecommunity/reactpress/commit/41656a740d301cda7ec54bb6ceaaa8e8cea7c222))
-
+- system notice info empty error ([4e41daa](https://github.com/fecommunity/reactpress/commit/4e41daa14dc96499e6d65ebc2648f87147fc248d))
+- update admin view article link ([41656a7](https://github.com/fecommunity/reactpress/commit/41656a740d301cda7ec54bb6ceaaa8e8cea7c222))
 
 ### Features
 
-* add category tag for article list ([f5068a1](https://github.com/fecommunity/reactpress/commit/f5068a17b4728a47330fbbbca0f236d12e299e40))
-* support system notification feature ([515e556](https://github.com/fecommunity/reactpress/commit/515e556d7b63192cbad4bda68d5ecf639cbaa96b))
-
-
+- add category tag for article list ([f5068a1](https://github.com/fecommunity/reactpress/commit/f5068a17b4728a47330fbbbca0f236d12e299e40))
+- support system notification feature ([515e556](https://github.com/fecommunity/reactpress/commit/515e556d7b63192cbad4bda68d5ecf639cbaa96b))
 
 # [1.1.0](https://github.com/fecommunity/reactpress/compare/v1.0.0...v1.1.0) (2024-11-02)
 
-
-
 # [1.0.0](https://github.com/fecommunity/reactpress/compare/a6b73a189090e0199cc6f803bfb498cdeb7868a5...v1.0.0) (2024-09-28)
-
 
 ### Bug Fixes
 
-* add ignoreValidator for system creating user ([83408d2](https://github.com/fecommunity/reactpress/commit/83408d20383a6a57546dacfcd7751210c6c66d4c))
-* next build type defs ([ec428b3](https://github.com/fecommunity/reactpress/commit/ec428b3cfe6950a368e3aeb7bf9945cf81a1f481))
-
+- add ignoreValidator for system creating user ([83408d2](https://github.com/fecommunity/reactpress/commit/83408d20383a6a57546dacfcd7751210c6c66d4c))
+- next build type defs ([ec428b3](https://github.com/fecommunity/reactpress/commit/ec428b3cfe6950a368e3aeb7bf9945cf81a1f481))
 
 ### Features
 
-* init easy-blog project ([a6b73a1](https://github.com/fecommunity/reactpress/commit/a6b73a189090e0199cc6f803bfb498cdeb7868a5))
-
-
-
+- init easy-blog project ([a6b73a1](https://github.com/fecommunity/reactpress/commit/a6b73a189090e0199cc6f803bfb498cdeb7868a5))

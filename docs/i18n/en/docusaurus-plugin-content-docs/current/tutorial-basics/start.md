@@ -9,28 +9,28 @@ keywords: [reactpress, local development, dev, pnpm, monorepo]
 
 ReactPress 4.0 offers three local paths — choose by scenario.
 
-| Scenario | Approach | Prerequisites |
-|----------|----------|-----------------|
-| **Build / try a site (recommended)** | Global `reactpress init` | Node ≥ 20 |
-| **Offline writing** | Desktop client | See [Desktop client](../tutorial-extras/desktop-client.md) |
-| **Contribute to monorepo** | `pnpm dev` | Node ≥ 20, pnpm |
+| Scenario                             | Approach                 | Prerequisites                                              |
+| ------------------------------------ | ------------------------ | ---------------------------------------------------------- |
+| **Build / try a site (recommended)** | Global `reactpress init` | Node ≥ 20                                                  |
+| **Offline writing**                  | Desktop client           | See [Desktop client](../tutorial-extras/desktop-client.md) |
+| **Contribute to monorepo**           | `pnpm dev`               | Node ≥ 20, pnpm                                            |
 
 ## Option 1: Global CLI (recommended)
 
 ```bash
-npm i -g @fecommunity/reactpress@beta
+npm i -g @fecommunity/reactpress
 mkdir my-blog && cd my-blog
 reactpress init
 ```
 
 `init` generates config, initializes SQLite, and **auto-starts** the full stack.
 
-| Service | Port | URL |
-|---------|------|-----|
-| Admin | 3001 `/admin/` | http://localhost:3001/admin/ |
-| Visitor theme | 3001 | http://localhost:3001 |
-| API | 3002 | http://localhost:3002/api/health |
-| Theme preview | 3003 | http://localhost:3003 |
+| Service       | Port           | URL                              |
+| ------------- | -------------- | -------------------------------- |
+| Admin         | 3001 `/admin/` | http://localhost:3001/admin/     |
+| Visitor theme | 3001           | http://localhost:3001            |
+| API           | 3002           | http://localhost:3002/api/health |
+| Theme preview | 3003           | http://localhost:3003            |
 
 ### Common commands
 

@@ -151,7 +151,7 @@ ReactPress **image-optimizer** 插件可辅助批量 WebP — 再配合主题里
 | 本地快速验证 | `reactpress init` 约 60 秒 |
 
 ```bash
-npm i -g @fecommunity/reactpress@beta
+npm i -g @fecommunity/reactpress
 mkdir my-blog && cd my-blog
 reactpress init
 ```

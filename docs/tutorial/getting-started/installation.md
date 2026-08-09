@@ -30,10 +30,10 @@ node -v   # 应显示 v20.x 或更高
 ## 安装 CLI（推荐）
 
 ```bash
-npm install -g @fecommunity/reactpress@beta
+npm install -g @fecommunity/reactpress
 ```
 
-> npm **`@beta`** 标签为 4.x 预发布；`@latest` 仍为 3.x。不存在 `@4` dist-tag。
+> 4.0 稳定版在 npm **`@latest`**。预发布使用 `@beta`。不存在 `@4` dist-tag。
 
 首次 `npm install -g` 会触发 `postinstall`，下载 bundled server 运行时依赖，约需 1–2 分钟。
 

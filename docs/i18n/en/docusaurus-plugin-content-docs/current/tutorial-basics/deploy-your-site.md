@@ -10,7 +10,7 @@ keywords: [reactpress, production, deploy, nginx, start, build]
 With Node ≥ 18 and Docker (or external MySQL) on your server:
 
 ```bash
-npm i -g @fecommunity/reactpress@beta
+npm i -g @fecommunity/reactpress
 cd /path/to/your-site   # project with .reactpress/
 reactpress init         # if not initialized yet
 reactpress build
@@ -76,11 +76,11 @@ pm2 restart all
 
 4.0 global CLI ships a **bundled API + theme-embedded Admin** (`reactpress init`). Split-process deployment is mainly for **Monorepo contributors** or sites still on the 3.x CLI:
 
-| Scenario | Notes |
-|----------|-------|
-| Full stack (end users) | `reactpress init` |
+| Scenario                   | Notes                                                                                                |
+| -------------------------- | ---------------------------------------------------------------------------------------------------- |
+| Full stack (end users)     | `reactpress init`                                                                                    |
 | API-only / split processes | Monorepo: `pnpm dev:api`, etc. — see [Monorepo development](../developer-guide/local-development.md) |
-| Desktop app | `pnpm build:desktop` (local SQLite, not server deployment) |
+| Desktop app                | `pnpm build:desktop` (local SQLite, not server deployment)                                           |
 
 `@fecommunity/reactpress-server` is deprecated — do not use it for new projects.
 
