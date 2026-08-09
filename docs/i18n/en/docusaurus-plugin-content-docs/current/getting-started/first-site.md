@@ -50,15 +50,15 @@ On success you should see output similar to:
 Never use the default password in production. Before deployment, update `ADMIN_USER` / `ADMIN_PASSWD` or change the account in Admin.
 :::
 
-## Step 4: Install and enable a theme
+## Step 4: Confirm the theme
 
-If the visitor site at `:3001` shows no content yet, in Admin:
+`init` usually **auto-installs and activates** the featured theme (`reactpress-theme-starter`). Opening http://localhost:3001 should show the visitor site.
+
+If the page is blank, in Admin:
 
 1. Go to **Appearance → Themes**
-2. Install **reactpress-theme-starter** from the catalog (or the hello-world starter theme)
-3. Click **Enable**
-
-After enabling, refresh http://localhost:3001 to see the visitor site.
+2. Install **reactpress-theme-starter** from the catalog (or hello-world)
+3. Click **Enable**, then refresh the visitor site
 
 ## Step 5: Publish your first post
 

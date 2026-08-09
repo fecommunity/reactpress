@@ -139,7 +139,7 @@ Set `CLIENT_SITE_URL` to the public visitor domain and `SERVER_SITE_URL` to the 
 <details>
 <summary><strong>Port already in use?</strong></summary>
 
-`reactpress doctor` lists blocking processes. Change `server.port` / `client.port` in `config.json` then `config --apply` (Monorepo), or stop the conflicting process.
+`reactpress doctor` lists blocking processes. Change ports in `config.json` / `.env` and restart (`reactpress stop` → `reactpress init`); Monorepo checkouts can use full CLI `config --apply`, or stop the conflicting process.
 
 </details>
 

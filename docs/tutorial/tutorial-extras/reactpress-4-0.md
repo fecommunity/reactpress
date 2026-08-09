@@ -17,13 +17,15 @@ keywords: [reactpress 4.0, extend, plugin, desktop, theme catalog, wordpress alt
 | **桌面** | 不开浏览器也能写作管理        | Electron 壳 + SQLite 本地模式，可同步到远程           |
 | **主题** | 官方主题从 npm 一键安装       | `theme-starter` catalog + hello-world 入门模板        |
 
-## 快速开始（全栈，与 3.x 相同）
+## 快速开始（全栈）
 
 ```bash
 npm i -g @fecommunity/reactpress
 mkdir my-blog && cd my-blog
 reactpress init
 ```
+
+默认 **SQLite**，无需 Docker。`init` 会自动启动服务；停止用 `reactpress stop`。
 
 | 服务                   | 端口           | 说明                   |
 | ---------------------- | -------------- | ---------------------- |
@@ -32,6 +34,8 @@ reactpress init
 | API                    | 3002           | NestJS REST            |
 | 主题预览               | 3003           | 后台 iframe 预览       |
 | Admin（Monorepo 开发） | 3000           | 独立 Vite dev server   |
+
+全局 CLI 命令：`init` · `doctor` · `logs` · `stop`。详见 [CLI 命令参考](../developer-guide/cli-reference.md)。
 
 ## 桌面客户端（新）
 
@@ -57,11 +61,10 @@ pnpm dev:desktop
 
 ## 插件系统（新）
 
-| 命令 / 入口                             | 说明             |
-| --------------------------------------- | ---------------- |
-| 后台 → 插件                             | 安装、启用、配置 |
-| `reactpress plugin list`                | 查看注册表       |
-| `reactpress plugin install hello-world` | CLI 安装         |
+| 入口                                       | 说明                                 |
+| ------------------------------------------ | ------------------------------------ |
+| 后台 → 插件                                | 安装、启用、配置（**终端用户推荐**） |
+| Monorepo：`reactpress plugin list/install` | 完整 CLI 仅在仓库检出中可用          |
 
 内置插件：
 
@@ -85,23 +88,31 @@ pnpm dev:desktop
 | hello-world              | 仓库 local | 学习、复制改                   |
 | reactpress-theme-starter | npm        | 生产站点（搜索、知识库、评论） |
 
+`init` 会自动安装并启用官方 featured 主题。也可在 **Admin → 外观 → 主题** 中安装。
+
+Monorepo 贡献者：
+
 ```bash
 reactpress theme add @fecommunity/reactpress-theme-starter@1.0.0-beta.0
 ```
 
-## 常用命令（4.0 新增）
+（`theme` / `plugin` 子命令不在全局 npm CLI 中。）
 
-| 命令                             | 说明                          |
-| -------------------------------- | ----------------------------- |
-| `pnpm dev:desktop`               | 桌面开发（SQLite + Electron） |
-| `pnpm build:desktop`             | 打包桌面安装程序              |
-| `pnpm build:plugins`             | 编译官方插件                  |
-| `reactpress plugin list/install` | 插件 CLI                      |
-| `reactpress desktop dev`         | 同 `dev:desktop`（monorepo）  |
+## 常用命令（4.0）
+
+| 命令                 | 说明                                    |
+| -------------------- | --------------------------------------- |
+| `reactpress init`    | 初始化并启动（终端用户）                |
+| `reactpress doctor`  | 环境诊断                                |
+| `reactpress logs`    | 查看 API 日志                           |
+| `reactpress stop`    | 停止服务                                |
+| `pnpm dev:desktop`   | 桌面开发（SQLite + Electron，Monorepo） |
+| `pnpm build:desktop` | 打包桌面安装程序                        |
+| `pnpm build:plugins` | 编译官方插件                            |
 
 ## 从 3.x 升级
 
-见 [3.x → 4.0 迁移指南](./migration-3-to-4.md)。**无强制 Breaking**。
+见 [3.x → 4.0 迁移指南](./migration-3-to-4.md)。**无强制 Breaking**。注意：全局 CLI 已移除 `dev` / `theme` / `plugin` / `build` / `start` 等命令，请改用 Admin 或 Monorepo 脚本。
 
 ## 路线图（4.x 后续）
 

@@ -141,13 +141,13 @@
     "message": "零配置起站"
   },
   "home.highlight.zero.desc": {
-    "message": "两条命令、一分钟 — 自动生成配置、.env 与 Docker MySQL，无需手工搭环境。"
+    "message": "一条命令、一分钟 — 自动生成配置、.env 与嵌入式 SQLite，无需 Docker 或手工搭环境。"
   },
   "home.highlight.cli.title": {
     "message": "一条命令行"
   },
   "home.highlight.cli.desc": {
-    "message": "init、dev、status、自检 — 全局安装后，终端里掌控完整生命周期。"
+    "message": "init、doctor、logs、stop — 全局安装后，终端里掌控完整生命周期。"
   },
   "home.highlight.dx.title": {
     "message": "全栈一盒交付"
@@ -174,7 +174,7 @@
     "message": "命令行一站式"
   },
   "home.feature.cli.desc": {
-    "message": "init、dev、status、自检共用一个二进制 — 交互式菜单，启动即见直达链接。"
+    "message": "init、doctor、logs、stop 共用一个二进制 — 启动即见直达链接。"
   },
   "home.feature.ui.title": {
     "message": "现代界面"

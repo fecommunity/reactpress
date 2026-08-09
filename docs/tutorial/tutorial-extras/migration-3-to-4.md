@@ -17,6 +17,7 @@ ReactPress **4.0** 在 3.x 之上新增插件系统、Electron 桌面客户端�
 npm i -g @fecommunity/reactpress
 cd your-site
 reactpress doctor
+reactpress init    # 若需重新拉起服务（默认 SQLite）
 ```
 
 Monorepo 贡献者：
@@ -27,6 +28,18 @@ pnpm install
 pnpm run build:plugins
 pnpm dev
 ```
+
+## CLI 变化（重要）
+
+4.0 全局 CLI（`@fecommunity/reactpress`）精简为：
+
+`init` · `doctor` · `logs` · `stop`
+
+以下命令在全局 CLI 中**已移除**（会提示改用 `init` 或 Admin）：
+
+`dev` · `theme` · `plugin` · `build` · `start` · `config` · `db` · `desktop` · …
+
+主题与插件请在 **Admin** 中管理。完整子命令仍可在 **Monorepo 检出**中通过内部 CLI 使用。
 
 ## 新能力（可选）
 
@@ -45,6 +58,10 @@ pnpm build:desktop    # 打包安装程序
 
 ### 官方主题
 
+`init` 会自动安装 featured npm 主题。也可在 **Admin → 外观 → 主题** 中安装 `reactpress-theme-starter`。
+
+Monorepo：
+
 ```bash
 reactpress theme add @fecommunity/reactpress-theme-starter@1.0.0-beta.0
 ```
@@ -52,6 +69,8 @@ reactpress theme add @fecommunity/reactpress-theme-starter@1.0.0-beta.0
 ## Breaking Changes
 
 4.0 **无强制 Breaking** 配置迁移。若曾使用仓库内已移除的 bundled 主题（my-blog、twentytwentyfive），请改用 `hello-world` 或 npm 官方主题。
+
+默认数据库从 3.x 的 Docker MySQL 改为 **SQLite**；若仍需 MySQL，见 [项目配置项](./config-intro.md) 与 [Docker 部署](./docker-deployment.md)。
 
 ## 相关文档
 

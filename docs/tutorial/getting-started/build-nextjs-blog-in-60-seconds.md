@@ -22,7 +22,7 @@ keywords: [next.js 博客, 用 next.js 建博客, next.js cms, reactpress, react
 
 ## 前置条件
 
-- Node.js 18+（建议 LTS）
+- Node.js 20+（建议 LTS）
 - npm / pnpm / yarn
 - 一个空目录
 

@@ -8,16 +8,16 @@
 [![npm beta](https://img.shields.io/npm/v/@fecommunity/reactpress/beta.svg?label=beta)](https://www.npmjs.com/package/@fecommunity/reactpress/v/beta)
 [![npm downloads](https://img.shields.io/npm/dm/@fecommunity/reactpress.svg)](https://www.npmjs.com/package/@fecommunity/reactpress)
 [![License: MIT](https://img.shields.io/npm/l/@fecommunity/reactpress.svg)](https://github.com/fecommunity/reactpress/blob/master/LICENSE)
-[![Node.js](https://img.shields.io/badge/node-%3E%3D18-brightgreen?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org/)
+[![Node.js](https://img.shields.io/badge/node-%3E%3D20-brightgreen?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org/)
 
 The official **ReactPress CLI** — install a complete, self-hosted publishing stack in ~60 seconds. CMS API, Web Admin, and Next.js theme support ship together. No Docker, nginx, or external database required for local development.
 
-| Layer       | What you get                                                        |
-| :---------- | :------------------------------------------------------------------ |
-| **CMS API** | Headless NestJS REST — SQLite locally, MySQL in production          |
-| **Admin**   | Writing console at `/admin/` — posts, pages, media, plugins, themes |
-| **Themes**  | npm-installable Next.js frontends — swap without touching content   |
-| **CLI**     | `init`, `doctor`, `logs` — operate and diagnose from the terminal   |
+| Layer       | What you get                                                              |
+| :---------- | :------------------------------------------------------------------------ |
+| **CMS API** | Headless NestJS REST — SQLite by default, MySQL optional                  |
+| **Admin**   | Writing console at `/admin/` — posts, pages, media, plugins, themes       |
+| **Themes**  | npm-installable Next.js frontends — swap without touching content         |
+| **CLI**     | `init`, `doctor`, `logs`, `stop` — operate and diagnose from the terminal |
 
 Built for frontend teams who want WordPress-grade editing without wiring five repos together.
 

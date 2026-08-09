@@ -50,15 +50,15 @@ reactpress init
 生产环境切勿使用默认密码。部署前务必修改 `ADMIN_USER` / `ADMIN_PASSWD` 或在 Admin 中更新账户。
 :::
 
-## 第 4 步：安装并启用主题
+## 第 4 步：确认主题
 
-若访客站 `:3001` 尚未显示内容，在 Admin 中：
+`init` 通常会**自动安装并启用**官方 featured 主题（`reactpress-theme-starter`）。打开 http://localhost:3001 应能看到访客站。
+
+若页面空白，在 Admin 中：
 
 1. 进入 **外观 → 主题**
-2. 从 catalog 安装 **reactpress-theme-starter**（或 hello-world 入门主题）
-3. 点击 **启用**
-
-启用后刷新 http://localhost:3001 即可看到访客站点。
+2. 从 catalog 安装 **reactpress-theme-starter**（或 hello-world）
+3. 点击 **启用** 后刷新访客站
 
 ## 第 5 步：发布第一篇文章
 

@@ -50,7 +50,7 @@ node -v   # 需要 ≥ 20
 
 ### init --force 后数据丢失
 
-`--force` 会重置 `.reactpress/` 与 SQLite。生产数据请先 `reactpress db backup`（Monorepo）或手动复制 `.reactpress/reactpress.db`。
+`--force` 会重置 `.reactpress/` 与 SQLite。生产数据请先手动复制 `.reactpress/reactpress.db`（或 MySQL 场景下用 Monorepo 的 `db backup` / 外部备份工具）。
 
 ## 服务无法启动
 
@@ -99,7 +99,7 @@ reactpress init --force   # 会清空数据，慎用
 
 ### 配置不同步
 
-修改 `config.json` 后执行 `reactpress config --apply`（Monorepo），勿只改 `.env` 而不改 config 源。
+终端用户：同时更新 `config.json` 与 `.env`，再 `reactpress stop` → `reactpress init`。Monorepo 贡献者可使用仓库内完整 CLI 的 `reactpress config --apply`。勿只改 `.env` 而忘记 config 源。
 
 ## 内容与 API
 

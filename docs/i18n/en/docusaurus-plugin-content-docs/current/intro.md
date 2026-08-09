@@ -44,7 +44,7 @@ Choose a starting point by role. Every doc includes an SEO summary and next-step
 
 | **Feature**                         | **ReactPress**                                                            | **WordPress**                                           | **VuePress**                                      |
 | ----------------------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------- | ------------------------------------------------- |
-| **Technology Stack**                | React + NextJS + MySQL + NestJS                                           | PHP + MySQL                                             | Vue.js                                            |
+| **Technology Stack**                | React + Next.js + SQLite/MySQL + NestJS                                   | PHP + MySQL                                             | Vue.js                                            |
 | **Type**                            | Open-source publishing platform / CMS                                     | Open-source publishing platform / CMS                   | Static site generator / Documentation tool        |
 | **Front-end & Back-end Separation** | Supported                                                                 | Not supported (traditional approach)                    | Supported                                         |
 | **Component-based Development**     | Supported                                                                 | Limited support (via plugins and themes)                | Supported                                         |
@@ -64,14 +64,14 @@ Choose a starting point by role. Every doc includes an SEO summary and next-step
 
 - 🔌 **Plugins**: Hooks + `plugin.json` + Admin UI slots; built-in SEO, auto-summary, batch WebP optimization
 - 🖥️ **Desktop**: Electron + SQLite local mode; connect remote API and sync content
-- 🎨 **Theme catalog**: install official themes from npm with `reactpress theme add`
+- 🎨 **Theme catalog**: install official themes from npm in Admin (`init` auto-installs the featured theme)
 
 ### Platform (since 3.x)
 
 - 📦 **Single entry**: `@fecommunity/reactpress` — `init`, `doctor`, `logs`, `stop`
-- ⚡ **Zero-config setup**: auto-generated `.reactpress/config.json`, `.env`, embedded MySQL
+- ⚡ **Zero-config setup**: auto-generated `.reactpress/config.json`, `.env`, embedded SQLite
 - 🩺 **Diagnostics**: `reactpress doctor` and `reactpress logs`
-- 🌈 Componentization with antd
+- 🌈 Componentization with Ant Design
 - 🌍 i18n (Chinese / English)
 - 🌞 Light / dark theme
 - 🖌️ Markdown editor, posts, categories, tags
@@ -103,7 +103,7 @@ reactpress init
 | API           | 3002           | http://localhost:3002/api/health |
 | Theme preview | 3003           | http://localhost:3003            |
 
-Run `reactpress` for the interactive menu. Upgrade from 3.x: [migration guide](./tutorial-extras/migration-3-to-4.md). From 2.x: [2.x → 3.0](./tutorial-extras/migration-2-to-3.md).
+Run `reactpress` for the banner and help. Upgrade from 3.x: [migration guide](./tutorial-extras/migration-3-to-4.md). From 2.x: [2.x → 3.0](./tutorial-extras/migration-2-to-3.md).
 
 ### Desktop client (4.0, no Docker)
 
@@ -124,7 +124,7 @@ pnpm install
 pnpm run dev
 ```
 
-Node.js ≥ 18 and Docker (embedded MySQL) required. `pnpm run init` prepares the environment without starting services. Run `pnpm run build:plugins` before plugin development.
+Node.js 20+ required. Default development uses SQLite (no Docker); optional `pnpm docker:dev` for embedded MySQL. `pnpm run init` prepares the environment without starting services. Run `pnpm run build:plugins` before plugin development.
 
 ## 📦 NPM Packages
 

@@ -500,13 +500,13 @@
     "message": "Zero-config setup"
   },
   "home.highlight.zero.desc": {
-    "message": "Two commands, one minute — auto-generated config, .env, and Docker MySQL. No manual environment wiring."
+    "message": "One command, one minute — auto-generated config, .env, and embedded SQLite. No Docker or manual environment wiring."
   },
   "home.highlight.cli.title": {
     "message": "One command line tool"
   },
   "home.highlight.cli.desc": {
-    "message": "init, dev, status, self-check — the entire lifecycle from a single global install in your terminal."
+    "message": "init, doctor, logs, stop — the entire lifecycle from a single global install in your terminal."
   },
   "home.highlight.dx.title": {
     "message": "Full-stack in one box"
@@ -551,7 +551,7 @@
     "message": "All-in-one CLI"
   },
   "home.feature.cli.desc": {
-    "message": "One binary for init, dev, status, and self-check — interactive menus and live URLs the moment your stack is up."
+    "message": "One binary for init, doctor, logs, and stop — live URLs the moment your stack is up."
   },
   "home.feature.ui.title": {
     "message": "Modern interface"

@@ -32,7 +32,7 @@ Typical time from install to a live local stack: about **60 seconds**.
 
 ## Prerequisites
 
-- Node.js 18+ (LTS recommended)
+- Node.js 20+ (LTS recommended)
 - npm, pnpm, or yarn
 - Empty folder for your site
 

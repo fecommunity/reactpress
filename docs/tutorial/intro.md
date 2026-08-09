@@ -32,7 +32,7 @@ keywords:
 
 | 项目           | ReactPress                           | WordPress                    | VuePress                |
 | -------------- | ------------------------------------ | ---------------------------- | ----------------------- |
-| **技术栈**     | React+NextJS+MySQL+NestJS            | PHP+MySQL                    | Vue.js                  |
+| **技术栈**     | React+Next.js+SQLite/MySQL+NestJS    | PHP+MySQL                    | Vue.js                  |
 | **类型**       | 开源发布平台/CMS                     | 开源发布平台/CMS             | 静态网站生成器/文档工具 |
 | **前后端分离** | 支持                                 | 不支持（传统方式）           | 支持                    |
 | **组件化开发** | 支持                                 | 有限支持（通过插件和主题）   | 支持                    |
@@ -52,14 +52,14 @@ keywords:
 
 - 🔌 **插件系统**：Hook + `plugin.json` + Admin 插槽；内置 SEO、自动摘要、图片 WebP 批量优化
 - 🖥️ **桌面客户端**：Electron + SQLite 本地模式，可连接远程 API 并同步内容
-- 🎨 **主题 catalog**：`reactpress theme add` 从 npm 一键安装官方主题
+- 🎨 **主题 catalog**：Admin 从 npm 一键安装官方主题（`init` 自动安装 featured 主题）
 
 ### 平台能力（3.x 起）
 
 - 📦 **唯一入口**：`@fecommunity/reactpress` 一条命令管理 init / doctor / logs / stop
-- ⚡ **零配置起站**：自动生成 `.reactpress/config.json`、`.env` 与嵌入式 MySQL
+- ⚡ **零配置起站**：自动生成 `.reactpress/config.json`、`.env` 与嵌入式 SQLite
 - 🩺 **可诊断**：`reactpress doctor` 与 `reactpress logs` 快速排错
-- 🌈 组件化：基于 `antd 5.20` 的交互与视觉
+- 🌈 组件化：基于 Ant Design 的交互与视觉
 - 🌍 国际化：中英文切换
 - 🌞 黑白主题：亮色 / 暗黑模式
 - 🖌️ 创作管理：内置 Markdown 编辑器，文章、分类、标签
@@ -91,7 +91,7 @@ reactpress init
 | API      | 3002           | http://localhost:3002/api/health |
 | 主题预览 | 3003           | http://localhost:3003            |
 
-无子命令时运行 `reactpress` 进入交互菜单。从 3.x 升级见 [迁移指南](./tutorial-extras/migration-3-to-4.md)；从 2.x 见 [2.x → 3.0](./tutorial-extras/migration-2-to-3.md)。
+无子命令时运行 `reactpress` 显示 banner 与帮助。从 3.x 升级见 [迁移指南](./tutorial-extras/migration-3-to-4.md)；从 2.x 见 [2.x → 3.0](./tutorial-extras/migration-2-to-3.md)。
 
 ### 桌面客户端（4.0，无需 Docker）
 
@@ -112,7 +112,7 @@ pnpm install
 pnpm run dev
 ```
 
-需要 Node.js ≥ 18 与 Docker（默认嵌入式 MySQL）。`pnpm run init` 可仅准备环境而不启动服务。开发插件前先执行 `pnpm run build:plugins`。
+需要 Node.js 20+。默认开发流使用 SQLite，无需 Docker；可选 `pnpm docker:dev` 启用嵌入式 MySQL。`pnpm run init` 可仅准备环境而不启动服务。开发插件前先执行 `pnpm run build:plugins`。
 
 ## 📦 包与文档
 

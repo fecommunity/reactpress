@@ -76,13 +76,14 @@ reactpress --help
 
 ## 可选：MySQL / Docker
 
-默认 **SQLite** 适合本地试用与小规模自托管。生产环境如需 MySQL：
+默认 **SQLite** 适合本地试用与小规模自托管。如需 MySQL：
 
-1. 在 `.reactpress/config.json` 中配置 `database.mode`
-2. 执行 `reactpress config --apply`（Monorepo / 旧版 CLI）
-3. 运行 `reactpress doctor` 确认连接
+1. 在 `.reactpress/config.json` 中配置 `database.mode`（如 `embedded-docker`）并补齐连接字段
+2. 同步编辑根目录 `.env`（`DB_TYPE`、主机、凭据等）
+3. Monorepo 可用 `pnpm docker:dev` 与仓库内完整 CLI；终端用户改配置后 `reactpress stop` 再 `reactpress init`
+4. 运行 `reactpress doctor` 确认连接
 
-详见 [Docker 部署](../tutorial-extras/docker-deployment.md) 与 [生产环境部署](../tutorial-basics/deploy-your-site.md)。
+详见 [项目配置项](../tutorial-extras/config-intro.md)、[Docker 部署](../tutorial-extras/docker-deployment.md) 与 [生产环境部署](../tutorial-basics/deploy-your-site.md)。
 
 ## 桌面客户端（可选）
 

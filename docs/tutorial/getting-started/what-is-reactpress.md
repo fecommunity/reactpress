@@ -85,8 +85,8 @@ flowchart LR
 
 - 插件系统 + Admin 插槽
 - Electron 桌面客户端
-- npm 主题 catalog（`reactpress theme add`）
-- 默认嵌入式 SQLite（Docker 可选）
+- npm 主题 catalog（Admin 安装；`init` 自动启用 featured 主题）
+- 默认嵌入式 SQLite（Docker / MySQL 可选）
 
 许可：**MIT**。包：[@fecommunity/reactpress](https://www.npmjs.com/package/@fecommunity/reactpress) · 源码：[fecommunity/reactpress](https://github.com/fecommunity/reactpress)
 

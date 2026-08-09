@@ -18,22 +18,23 @@ ReactPress 的**访客网站**由可替换的 **Next.js 主题**渲染，与 Adm
 
 ## 官方主题
 
-| 主题 | 来源 | 适用 |
-|------|------|------|
-| **hello-world** | 仓库 local | 学习、二次开发 |
-| **reactpress-theme-starter** | npm | 生产站点：搜索、知识库、评论、暗色模式 |
+| 主题                         | 来源       | 适用                                   |
+| ---------------------------- | ---------- | -------------------------------------- |
+| **hello-world**              | 仓库 local | 学习、二次开发                         |
+| **reactpress-theme-starter** | npm        | 生产站点：搜索、知识库、评论、暗色模式 |
 
 在线演示：[reactpress-theme-starter.vercel.app](https://reactpress-theme-starter.vercel.app)
 
-## Monorepo / 旧版 CLI 安装
+## 安装方式
 
-在 Monorepo 或仍支持 theme 子命令的环境中：
+- **终端用户（推荐）**：`reactpress init` 会自动安装 featured 主题；也可在 **Admin → 外观 → 主题** 中安装
+- **Monorepo**：完整 CLI 支持 `theme` 子命令：
 
 ```bash
 reactpress theme add @fecommunity/reactpress-theme-starter@1.0.0-beta.0
 ```
 
-4.0 终端用户推荐在 **Admin → 外观 → 主题** 中一键安装。
+（全局 npm CLI 不含 `theme` 命令。）
 
 ## 主题-only 预览（无后端）
 

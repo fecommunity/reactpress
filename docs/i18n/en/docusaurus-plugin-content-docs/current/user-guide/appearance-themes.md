@@ -18,22 +18,23 @@ The **visitor site** is rendered by a replaceable **Next.js theme**, fully separ
 
 ## Official themes
 
-| Theme | Source | Use case |
-|------|------|------|
-| **hello-world** | Local in repo | Learning, customization |
-| **reactpress-theme-starter** | npm | Production: search, knowledge base, comments, dark mode |
+| Theme                        | Source        | Use case                                                |
+| ---------------------------- | ------------- | ------------------------------------------------------- |
+| **hello-world**              | Local in repo | Learning, customization                                 |
+| **reactpress-theme-starter** | npm           | Production: search, knowledge base, comments, dark mode |
 
 Live demo: [reactpress-theme-starter.vercel.app](https://reactpress-theme-starter.vercel.app)
 
-## Monorepo / legacy CLI install
+## Install options
 
-In Monorepo or environments that still support theme subcommands:
+- **End users (recommended)**: `reactpress init` auto-installs the featured theme; you can also install from **Admin → Appearance → Themes**
+- **Monorepo**: full CLI supports the `theme` subcommand:
 
 ```bash
 reactpress theme add @fecommunity/reactpress-theme-starter@1.0.0-beta.0
 ```
 
-4.0 end users should install from **Admin → Appearance → Themes**.
+(The global npm CLI does not include `theme`.)
 
 ## Theme-only preview (no backend)
 

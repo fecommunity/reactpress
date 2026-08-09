@@ -15,12 +15,12 @@ keywords: [reactpress, seo, settings, sitemap, meta, api key, webhook, smtp]
 
 **设置 → 常规**：
 
-| 字段 | 作用 |
-|------|------|
-| 站点标题 | 浏览器标题、OG 站点名 |
-| 站点描述 | 默认 meta description |
+| 字段           | 作用                     |
+| -------------- | ------------------------ |
+| 站点标题       | 浏览器标题、OG 站点名    |
+| 站点描述       | 默认 meta description    |
 | Logo / Favicon | 主题 header 与浏览器图标 |
-| 语言 | 默认 locale |
+| 语言           | 默认 locale              |
 
 这些信息由 API 持久化，主题通过设置 API 渲染。
 
@@ -71,7 +71,7 @@ CLIENT_SITE_URL=https://www.example.com
 SERVER_SITE_URL=https://api.example.com
 ```
 
-修改 `.reactpress/config.json` 后执行 `reactpress config --apply`（Monorepo），并运行 `reactpress doctor` 验证。
+修改 `.reactpress/config.json` 与根目录 `.env` 后，终端用户执行 `reactpress stop` → `reactpress init`；Monorepo 可用仓库内完整 CLI 的 `config --apply`。并用 `reactpress doctor` 验证。
 
 详见 [项目配置项](../tutorial-extras/config-intro.md) 与 [FAQ](../reference/faq.md)。
 

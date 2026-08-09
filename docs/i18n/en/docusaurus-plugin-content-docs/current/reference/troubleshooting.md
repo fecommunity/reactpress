@@ -50,7 +50,7 @@ Use [nvm](https://github.com/nvm-sh/nvm) or [fnm](https://github.com/Schniz/fnm)
 
 ### Data loss after init --force
 
-`--force` resets `.reactpress/` and SQLite. For production data, run `reactpress db backup` (Monorepo) or copy `.reactpress/reactpress.db` manually first.
+`--force` resets `.reactpress/` and SQLite. For production data, copy `.reactpress/reactpress.db` first (or use Monorepo `db backup` / external tools for MySQL).
 
 ## Services won't start
 
@@ -99,7 +99,7 @@ reactpress init --force   # clears data — use with caution
 
 ### Config out of sync
 
-After editing `config.json`, run `reactpress config --apply` (Monorepo). Do not edit `.env` alone without updating config source.
+End users: update both `config.json` and `.env`, then `reactpress stop` → `reactpress init`. Monorepo contributors can use the full CLI `reactpress config --apply`. Do not edit `.env` alone without updating the config source.
 
 ## Content and API
 

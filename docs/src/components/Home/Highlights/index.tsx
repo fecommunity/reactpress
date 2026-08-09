@@ -34,8 +34,7 @@ const items: HighlightItem[] = [
     Icon: IconDesktop,
     title: translate({ message: 'Desktop client', id: 'home.highlight.desktop.title' }),
     description: translate({
-      message:
-        'Write offline, sync when ready — Electron shell with SQLite local mode and seamless remote publishing.',
+      message: 'Write offline, sync when ready — Electron shell with SQLite local mode and seamless remote publishing.',
       id: 'home.highlight.desktop.desc',
     }),
     accent: 'cyan',
@@ -55,7 +54,7 @@ const items: HighlightItem[] = [
     title: translate({ message: 'Zero-config setup', id: 'home.highlight.zero.title' }),
     description: translate({
       message:
-        'Two commands, one minute — auto-generated config, .env, and Docker MySQL. No manual environment wiring.',
+        'One command, one minute — auto-generated config, .env, and embedded SQLite. No Docker or manual environment wiring.',
       id: 'home.highlight.zero.desc',
     }),
     accent: 'purple',
@@ -64,8 +63,7 @@ const items: HighlightItem[] = [
     Icon: IconTerminal,
     title: translate({ message: 'One command line tool', id: 'home.highlight.cli.title' }),
     description: translate({
-      message:
-        'init, dev, status, self-check — the entire lifecycle from a single global install in your terminal.',
+      message: 'init, doctor, logs, stop — the entire lifecycle from a single global install in your terminal.',
       id: 'home.highlight.cli.desc',
     }),
     accent: 'cyan',
@@ -74,8 +72,7 @@ const items: HighlightItem[] = [
     Icon: IconLayers,
     title: translate({ message: 'Full-stack in one box', id: 'home.highlight.dx.title' }),
     description: translate({
-      message:
-        'CMS, admin, API, themes, plugins, and desktop — no stitching together five repos to ship content.',
+      message: 'CMS, admin, API, themes, plugins, and desktop — no stitching together five repos to ship content.',
       id: 'home.highlight.dx.desc',
     }),
     accent: 'teal',

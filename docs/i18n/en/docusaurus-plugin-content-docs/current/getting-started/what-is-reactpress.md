@@ -95,8 +95,8 @@ Deeper model: [Core concepts](./core-concepts.md) · [Architecture overview](../
 
 - Plugin system + Admin slots
 - Electron desktop client
-- npm theme catalog (`reactpress theme add`)
-- Embedded SQLite by default (Docker optional)
+- npm theme catalog (install in Admin; `init` auto-activates the featured theme)
+- Embedded SQLite by default (Docker / MySQL optional)
 
 License: **MIT**. Package: [@fecommunity/reactpress](https://www.npmjs.com/package/@fecommunity/reactpress) · Source: [fecommunity/reactpress](https://github.com/fecommunity/reactpress)
 

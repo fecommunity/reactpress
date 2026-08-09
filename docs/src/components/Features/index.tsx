@@ -27,8 +27,7 @@ const FeatureList: FeatureItem[] = [
     title: translate({ message: 'All-in-one CLI', id: 'home.feature.cli.title' }),
     Svg: require('@site/static/img/undraw_version_control.svg').default,
     description: translate({
-      message:
-        'One binary for init, dev, status, and self-check — interactive menus and live URLs the moment your stack is up.',
+      message: 'One binary for init, doctor, logs, and stop — live URLs the moment your stack is up.',
       id: 'home.feature.cli.desc',
     }),
     accent: 2,

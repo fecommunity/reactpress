@@ -76,13 +76,14 @@ To change ports, see [Configuration](../tutorial-extras/config-intro.md).
 
 ## Optional: MySQL / Docker
 
-Default **SQLite** suits local trials and small self-hosted deployments. For MySQL in production:
+Default **SQLite** suits local trials and small self-hosted deployments. For MySQL:
 
-1. Set `database.mode` in `.reactpress/config.json`
-2. Run `reactpress config --apply` (Monorepo / legacy CLI)
-3. Run `reactpress doctor` to confirm connectivity
+1. Set `database.mode` in `.reactpress/config.json` (e.g. `embedded-docker`) and fill connection fields
+2. Update root `.env` (`DB_TYPE`, host, credentials, etc.)
+3. Monorepo: `pnpm docker:dev` and the full CLI; end users: `reactpress stop` then `reactpress init` after edits
+4. Run `reactpress doctor` to confirm connectivity
 
-See [Docker deployment](../tutorial-extras/docker-deployment.md) and [Production deployment](../tutorial-basics/deploy-your-site.md).
+See [Project configuration](../tutorial-extras/config-intro.md), [Docker deployment](../tutorial-extras/docker-deployment.md), and [Production deployment](../tutorial-basics/deploy-your-site.md).
 
 ## Desktop client (optional)
 

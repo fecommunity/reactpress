@@ -15,12 +15,12 @@ For **site administrators**: Admin settings, SEO plugin, and production URL conf
 
 **Settings → General**:
 
-| Field | Purpose |
-|------|------|
-| Site title | Browser title, OG site name |
-| Site description | Default meta description |
-| Logo / Favicon | Theme header and browser icon |
-| Language | Default locale |
+| Field            | Purpose                       |
+| ---------------- | ----------------------------- |
+| Site title       | Browser title, OG site name   |
+| Site description | Default meta description      |
+| Logo / Favicon   | Theme header and browser icon |
+| Language         | Default locale                |
 
 Stored in API; themes render via settings API.
 
@@ -71,7 +71,7 @@ CLIENT_SITE_URL=https://www.example.com
 SERVER_SITE_URL=https://api.example.com
 ```
 
-After editing `.reactpress/config.json`, run `reactpress config --apply` (Monorepo) and `reactpress doctor` to verify.
+After editing `.reactpress/config.json` and root `.env`, end users should run `reactpress stop` → `reactpress init`; Monorepo checkouts can use the full CLI `config --apply`. Verify with `reactpress doctor`.
 
 See [Configuration](../tutorial-extras/config-intro.md) and [FAQ](../reference/faq.md).
 

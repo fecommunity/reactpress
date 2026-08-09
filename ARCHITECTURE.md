@@ -621,14 +621,14 @@ Shared components in `toolkit/admin`: `ResponsiveTable`, `ResponsiveFilterToolba
 
 ### Stack
 
-| Layer     | Technology                                                            |
-| --------- | --------------------------------------------------------------------- |
-| Framework | NestJS 6                                                              |
-| ORM       | TypeORM 0.2                                                           |
-| Database  | MySQL (default); **SQLite** for desktop local mode (`DB_TYPE=sqlite`) |
-| Auth      | Passport + JWT, API Key                                               |
-| Docs      | Swagger at `/api`                                                     |
-| Other     | helmet, compression, rate-limit, log4js, nodemailer, ali-oss          |
+| Layer     | Technology                                                                                          |
+| --------- | --------------------------------------------------------------------------------------------------- |
+| Framework | NestJS 6                                                                                            |
+| ORM       | TypeORM 0.2                                                                                         |
+| Database  | **SQLite** (default for `reactpress init` / desktop); MySQL optional (`embedded-docker` / external) |
+| Auth      | Passport + JWT, API Key                                                                             |
+| Docs      | Swagger at `/api`                                                                                   |
+| Other     | helmet, compression, rate-limit, log4js, nodemailer, ali-oss                                        |
 
 ### Module layout
 
@@ -833,19 +833,28 @@ See [toolkit/README.md](./toolkit/README.md).
 
 Published as `@fecommunity/reactpress` — zero-config project lifecycle.
 
-### Core commands
+### Core commands (global npm CLI)
 
-| Command                          | Description                                                           |
-| -------------------------------- | --------------------------------------------------------------------- |
-| `reactpress init`                | Init project (`.env` + `.reactpress/config.json`; `--local` = SQLite) |
-| `reactpress dev`                 | Full-stack dev (API + web + theme + Docker MySQL)                     |
-| `reactpress dev --api-only`      | API only (headless)                                                   |
-| `reactpress dev --web-only`      | Admin + API                                                           |
-| `reactpress build` / `start`     | Production build / start                                              |
-| `reactpress doctor` / `status`   | Diagnostics / status                                                  |
-| `reactpress plugin list/install` | Plugin registry                                                       |
-| `reactpress theme list/add`      | Theme catalog                                                         |
-| `reactpress desktop dev`         | Desktop dev (SQLite + Admin + Electron)                               |
+| Command             | Description                                |
+| ------------------- | ------------------------------------------ |
+| `reactpress init`   | Init project and start (SQLite by default) |
+| `reactpress doctor` | Diagnostics (Node, ports, DB, processes)   |
+| `reactpress logs`   | Tail API logs                              |
+| `reactpress stop`   | Stop API and theme processes               |
+
+Removed from the global CLI (use Admin UI or Monorepo scripts instead): `dev`, `theme`, `plugin`, `build`, `start`, `config`, `db`, `desktop`, …
+
+### Monorepo / contributor commands
+
+Available from a repository checkout (via `pnpm` scripts / internal CLI):
+
+| Command / script            | Description                             |
+| --------------------------- | --------------------------------------- |
+| `pnpm dev`                  | Full-stack development                  |
+| `pnpm build` / `pnpm pm2`   | Production build / start                |
+| `reactpress theme add`      | Install theme from npm catalog          |
+| `reactpress plugin install` | Install plugin from registry            |
+| `pnpm dev:desktop`          | Desktop dev (SQLite + Admin + Electron) |
 
 ### CLI layout (4.0 TypeScript)
 
@@ -888,7 +897,7 @@ See [cli/README.md](./cli/README.md).
 
 ## 17. Configuration
 
-**`.reactpress/config.json`** is the source of truth; `.env` is synced on `init`. **`--local`** uses SQLite with `config.local.json` / `env.local.default`.
+**`.reactpress/config.json`** is the source of truth; `.env` is written on `init`. End-user default is **SQLite** (`database.mode: embedded-sqlite`). MySQL / Docker is optional.
 
 | File                             | Purpose                  |
 | -------------------------------- | ------------------------ |
@@ -1054,7 +1063,7 @@ See [desktop/README.md](./desktop/README.md).
 | ---------------------------------------- | ------------------------------------ |
 | Monolithic `client/` Next (incl. /admin) | `web/` Admin SPA + `themes/` visitor |
 | Multiple HTTP layers                     | Unified toolkit client               |
-| Manual setup                             | CLI `init` + `dev`                   |
+| Manual setup                             | CLI `init` (auto-start)              |
 
 ### Implementation phases (historical)
 

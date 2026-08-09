@@ -139,7 +139,7 @@ Monorepo 本地开发时，Admin Vite dev server 可能在 `http://localhost:300
 <details>
 <summary><strong>端口被占用怎么办？</strong></summary>
 
-`reactpress doctor` 会列出占用进程。可修改 `config.json` 中 `server.port` / `client.port` 后 `config --apply`（Monorepo），或停止冲突进程。
+`reactpress doctor` 会列出占用进程。可修改 `config.json` / `.env` 中的端口后重启（`reactpress stop` → `reactpress init`）；Monorepo 可用完整 CLI 的 `config --apply`，或停止冲突进程。
 
 </details>
 
