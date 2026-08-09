@@ -1,95 +1,37 @@
 <div align="center">
 
 <a href="https://blog.gaoredu.com" title="ReactPress">
-  <img height="120" src="./public/brand/logo.png" alt="ReactPress Logo">
+  <img height="88" src="./public/brand/logo.png" alt="ReactPress">
 </a>
 
 <img src="./public/poster.png" alt="ReactPress — The publishing system for React developers." width="100%" />
 
-<h1 align="center">ReactPress</h1>
+# ReactPress
 
-<h3 align="center">The publishing system for React developers.</h3>
+### The publishing system for React developers
 
-<p align="center">
-  <strong>Build blogs, documentation, company websites, and content-driven applications with React.</strong>
-</p>
+One CLI for a self-hosted CMS, Admin, headless API, Next.js themes, plugins, and desktop writing — MIT licensed.
 
-<br/>
+[Quick start](#quick-start) · [Live demo](https://blog.gaoredu.com) · [Theme demo](https://reactpress-theme-starter.vercel.app) · [Docs](https://docs.gaoredu.com/) · [中文](./README-zh_CN.md)
 
-<p align="center">
-  <a href="#30-second-start"><strong>Quick start ↓</strong></a>
-  &nbsp;·&nbsp;
-  <a href="https://blog.gaoredu.com"><strong>Live demo</strong></a>
-  &nbsp;·&nbsp;
-  <a href="https://reactpress-theme-starter.vercel.app"><strong>Theme demo</strong></a>
-  &nbsp;·&nbsp;
-  <a href="https://docs.gaoredu.com/"><strong>Docs</strong></a>
-  &nbsp;·&nbsp;
-  <a href="./README-zh_CN.md"><strong>中文</strong></a>
-</p>
+[![npm](https://img.shields.io/npm/v/@fecommunity/reactpress.svg?style=flat-square&label=npm)](https://www.npmjs.com/package/@fecommunity/reactpress)
+[![downloads](https://img.shields.io/npm/dm/@fecommunity/reactpress.svg?style=flat-square)](https://www.npmjs.com/package/@fecommunity/reactpress)
+[![license](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](./LICENSE)
+[![node](https://img.shields.io/badge/node-%3E%3D20-brightgreen?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org/)
+[![stars](https://img.shields.io/github/stars/fecommunity/reactpress?style=flat-square)](https://github.com/fecommunity/reactpress/stargazers)
+[![lighthouse](https://img.shields.io/badge/Lighthouse_Perf-95-0cce6b?style=flat-square&logo=lighthouse&logoColor=white)](https://reactpress-theme-starter.vercel.app)
 
-[![GitHub stars](https://img.shields.io/github/stars/fecommunity/reactpress?style=social)](https://github.com/fecommunity/reactpress/stargazers)
-[![npm downloads](https://img.shields.io/npm/dm/@fecommunity/reactpress?style=flat-square)](https://www.npmjs.com/package/@fecommunity/reactpress)
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/fecommunity/reactpress/blob/master/LICENSE)
-[![NPM Version](https://img.shields.io/npm/v/@fecommunity/reactpress.svg?style=flat-square)](https://www.npmjs.com/package/@fecommunity/reactpress)
-[![Node.js](https://img.shields.io/badge/node-%3E%3D20-brightgreen?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org/)
-[![Lighthouse 95](https://img.shields.io/badge/Lighthouse-95%20%2F%20100%20SEO-0cce6b?style=flat-square&logo=lighthouse&logoColor=white)](https://reactpress-theme-starter.vercel.app)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/fecommunity/reactpress/pulls)
-
-<p>
-  <img src="https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=react&logoColor=white" alt="React" />
-  <img src="https://img.shields.io/badge/Next.js-000000?style=flat-square&logo=next.js&logoColor=white" alt="Next.js" />
-  <img src="https://img.shields.io/badge/NestJS-E0234E?style=flat-square&logo=nestjs&logoColor=white" alt="NestJS" />
-  <img src="https://img.shields.io/badge/Electron-47848F?style=flat-square&logo=electron&logoColor=white" alt="Electron" />
-  <img src="https://img.shields.io/badge/MySQL_/_SQLite-4479A1?style=flat-square&logo=mysql&logoColor=white" alt="MySQL / SQLite" />
-</p>
-
-<br/>
-
-<a href="https://github.com/fecommunity/reactpress/stargazers">
-  <img src="https://img.shields.io/github/stars/fecommunity/reactpress?style=for-the-badge&color=ffd700&labelColor=1a1a2e" alt="Star ReactPress on GitHub" />
-</a>
-
-<p><sub>If ReactPress saves you from stitching CMS + API + frontend — a ⭐ helps the next developer find it.</sub></p>
+<img src="https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=react&logoColor=black" alt="React" />
+<img src="https://img.shields.io/badge/Next.js-000000?style=flat-square&logo=next.js&logoColor=white" alt="Next.js" />
+<img src="https://img.shields.io/badge/NestJS-E0234E?style=flat-square&logo=nestjs&logoColor=white" alt="NestJS" />
+<img src="https://img.shields.io/badge/Electron-47848F?style=flat-square&logo=electron&logoColor=white" alt="Electron" />
+<img src="https://img.shields.io/badge/SQLite_/_MySQL-4479A1?style=flat-square&logo=mysql&logoColor=white" alt="SQLite / MySQL" />
 
 </div>
 
 ---
 
-## See it in action
-
-<div align="center">
-
-![ReactPress CLI — install to live site in ~60 seconds](./public/usage.gif)
-
-<table>
-  <tr>
-    <td width="50%">
-      <a href="./desktop/README.md">
-        <img src="./public/desktop.gif" alt="Desktop — offline writing with SQLite" width="100%" />
-      </a>
-      <sub><b>Desktop</b> — offline writing, sync to production</sub>
-    </td>
-    <td width="50%">
-      <a href="https://reactpress-theme-starter.vercel.app">
-        <img src="./public/demo.gif" alt="Official theme — search, comments, knowledge base" width="100%" />
-      </a>
-      <sub><b>Visitor site</b> — search · comments · knowledge base · dark mode</sub>
-    </td>
-  </tr>
-</table>
-
-<a href="https://reactpress-theme-starter.vercel.app">
-  <img src="./public/lighthouse.png" alt="Lighthouse: Performance 95, Accessibility 100, Best Practices 100, SEO 100" width="720" />
-</a>
-
-<sub>Scores on the <a href="https://reactpress-theme-starter.vercel.app">official theme demo</a>. Production results depend on hosting and content.</sub>
-
-</div>
-
----
-
-## 30-second start
+## Quick start
 
 ```bash
 npm i -g @fecommunity/reactpress
@@ -97,108 +39,156 @@ mkdir my-site && cd my-site
 reactpress init
 ```
 
-**Requirements:** [Node.js 20+](https://nodejs.org/) · No Docker or external database
+| Surface     | URL                                              |
+| :---------- | :----------------------------------------------- |
+| Public site | http://localhost:3001                            |
+| Admin       | http://localhost:3001/admin/ (`admin` / `admin`) |
+| API health  | http://localhost:3002/api/health                 |
 
-> 4.0 is on npm **`@latest`**. Use `@beta` only for prereleases.
+**Requirements:** [Node.js 20+](https://nodejs.org/). Default flow uses embedded SQLite — no Docker or external database.
 
-| Surface         | URL                                              |
-| :-------------- | :----------------------------------------------- |
-| **Public site** | http://localhost:3001                            |
-| **Admin**       | http://localhost:3001/admin/ (`admin` / `admin`) |
-| **API**         | http://localhost:3002/api/health                 |
+If startup fails, run `reactpress doctor`.
 
-`reactpress doctor` diagnoses setup issues when something does not start correctly.
+> Current stable: **4.0.0** on npm `@latest`. Use `@beta` only for prereleases.
 
-<table align="center">
-<tr>
-<td align="center"><strong>~60 sec</strong><br/><sub>init → live stack</sub></td>
-<td align="center"><strong>95 / 100</strong><br/><sub>Lighthouse performance</sub></td>
-<td align="center"><strong>MIT</strong><br/><sub>self-hosted</sub></td>
-<td align="center"><strong>1 CLI</strong><br/><sub>full platform</sub></td>
-</tr>
-</table>
+---
+
+## See it in action
 
 <div align="center">
 
-**Working?** [Star the repo](https://github.com/fecommunity/reactpress/stargazers) · [Open an issue](https://github.com/fecommunity/reactpress/issues) · [Read the docs](https://docs.gaoredu.com/)
+![ReactPress CLI — init flow demo](./public/usage.gif)
+
+<table>
+  <tr>
+    <td width="50%" align="center" valign="top">
+      <a href="./desktop/README.md">
+        <img src="./public/desktop.gif" alt="Desktop client — offline writing with SQLite" width="100%" />
+      </a>
+      <br/>
+      <sub><b>Desktop</b> — offline writing, sync when ready</sub>
+    </td>
+    <td width="50%" align="center" valign="top">
+      <a href="https://reactpress-theme-starter.vercel.app">
+        <img src="./public/demo.gif" alt="Official theme — search, comments, knowledge base" width="100%" />
+      </a>
+      <br/>
+      <sub><b>Visitor site</b> — search · comments · knowledge base · dark mode</sub>
+    </td>
+  </tr>
+</table>
+
+<a href="https://reactpress-theme-starter.vercel.app">
+  <img src="./public/lighthouse.png" alt="Lighthouse report for the official theme demo" width="720" />
+</a>
+
+<br/>
+
+<sub>
+  Official theme demo audit (screenshot): Performance <strong>95</strong>, Accessibility <strong>100</strong>, Best Practices <strong>100</strong>, SEO <strong>100</strong>.
+  Re-run on your host and content for current numbers.
+</sub>
 
 </div>
 
 ---
 
-## Contents
+## Why ReactPress?
 
-- [See it in action](#see-it-in-action)
-- [30-second start](#30-second-start)
-- [Contents](#contents)
-- [The problem](#the-problem)
-- [What is ReactPress?](#what-is-reactpress)
-- [What you can build](#what-you-can-build)
-- [Architecture](#architecture)
-- [Themes](#themes)
-- [Plugins](#plugins)
-- [Desktop-first writing](#desktop-first-writing)
-- [Why ReactPress?](#why-reactpress)
-- [What's new in 4.0](#whats-new-in-40)
-- [For developers](#for-developers)
-- [Deploy](#deploy)
-- [Roadmap (4.x)](#roadmap-4x)
-- [FAQ](#faq)
-- [Contributing](#contributing)
+WordPress-style editing is hard to replace. Headless CMS tools give you an API — then you still build admin, frontend, and ops. ReactPress is the middle path for React teams:
+
+| Approach          | What you get                                   | What you still own             |
+| :---------------- | :--------------------------------------------- | :----------------------------- |
+| WordPress         | Mature editing                                 | PHP themes / coupled stack     |
+| Static generators | Fast HTML                                      | Real CMS for non-developers    |
+| Headless CMS      | Flexible API                                   | Admin + frontend + deploy glue |
+| **ReactPress**    | CMS + Admin + API + themes + plugins + desktop | Your content and theme code    |
+
+**Who it is for**
+
+- React / Next.js developers who want a self-hosted blog or content site without assembling five repos
+- Teams that need writers in an Admin UI and engineers owning a Next.js theme
+- Anyone comparing WordPress alternatives, headless CMS options, or a Next.js blog stack
 
 ---
 
-## The problem
+## Features
 
-Modern content systems force a bad trade-off:
+| Layer       | What ships today                                                              |
+| :---------- | :---------------------------------------------------------------------------- |
+| **CMS**     | Posts, pages, media, categories, tags                                         |
+| **Admin**   | Writing UI at `/admin/` (same SPA in the browser and desktop)                 |
+| **API**     | Headless REST + Swagger                                                       |
+| **Themes**  | Swappable Next.js visitor frontends (npm-installable)                         |
+| **Plugins** | Server hooks + optional Admin slots (`seo`, `hello-world`, `image-optimizer`) |
+| **Desktop** | Electron + local SQLite mode; optional remote API + sync                      |
+| **CLI**     | `init`, `doctor`, `logs`, `stop`                                              |
 
-| Path                               | Trade-off                                                 |
-| :--------------------------------- | :-------------------------------------------------------- |
-| **WordPress-style CMS**            | Great editing — slow themes, coupled PHP stack            |
-| **Static site generators**         | Blazing fast — no real CMS for non-developers             |
-| **Headless CMS** (Strapi, Payload) | Flexible API — you still assemble admin, frontend, deploy |
+Content stays in the platform. Presentation stays in your theme (or any headless client).
 
-> **Frontend teams deserve one publishing platform — not five repos to wire together.**
+---
 
+## Comparison
+
+|                           | ReactPress                  | WordPress       | Static sites  | Headless CMS        |
+| :------------------------ | :-------------------------- | :-------------- | :------------ | :------------------ |
+| Editing experience        | Yes                         | Yes             | No            | Partial             |
+| Frontend freedom          | Yes                         | Limited         | Build-time    | Yes                 |
+| Full stack out of the box | Yes                         | Via plugins     | No            | No                  |
+| Time to first local site  | Minutes (`reactpress init`) | Often longer    | Fast per site | Setup + assembly    |
+| Offline writing           | Desktop app                 | No              | No            | No                  |
+| Default theme Performance | 95¹                         | Theme-dependent | Usually high  | Depends on frontend |
+
+¹ Lighthouse **Performance** on the [official theme demo](https://reactpress-theme-starter.vercel.app) (screenshot above). Accessibility / Best Practices / SEO were 100 in that audit.
+
+- **vs WordPress** — similar editorial workflow; Next.js delivery, no PHP theme lock-in for the public site.
+- **vs static generators** — keep the speed; add a real CMS.
+- **vs Strapi / Payload** — they ship a backend; ReactPress ships CMS + Admin + theme + desktop as one product.
+
+---
+
+## Themes
+
+Replaceable Next.js frontends. Install and activate in **Admin → Appearance → Themes**.
+
+```bash
+npx create-next-app@latest my-blog \
+  --example "https://github.com/fecommunity/reactpress-theme-starter" \
+  --use-pnpm
+cd my-blog && pnpm dev:mock
 ```
-Before                          With ReactPress
-──────                          ───────────────
-Pick a CMS backend         →    reactpress init
-Write & manage content     →    Admin at /admin/
-Visitors see your theme    →    http://localhost:3001
-Something wrong?           →    reactpress doctor
-```
+
+- Live: [reactpress-theme-starter.vercel.app](https://reactpress-theme-starter.vercel.app)
+- Deploy: [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/fecommunity/reactpress-theme-starter)
+- Guide: [themes/README.md](./themes/README.md)
 
 ---
 
-## What is ReactPress?
+## Plugins
 
-ReactPress is **the publishing system for React developers** — build blogs, documentation, company websites, and content-driven applications with React. One CLI, not another headless backend to wire up.
+Extend the server without forking core. Manage in **Admin → Plugins**.
 
-One CLI install. Everything included:
+| Plugin            | Capability                                           |
+| :---------------- | :--------------------------------------------------- |
+| `seo`             | Slug, keywords, meta description + Admin editor slot |
+| `hello-world`     | Auto-generate article summaries on publish           |
+| `image-optimizer` | Batch WebP optimization for media                    |
 
-| Layer       | What you get                                                  |
-| :---------- | :------------------------------------------------------------ |
-| **CMS**     | WordPress-style editing — posts, pages, media, categories     |
-| **API**     | Headless REST — React-first, Swagger-documented               |
-| **Admin**   | Web writing UI — no separate admin to build                   |
-| **Themes**  | npm-installable Next.js frontends — swappable                 |
-| **Plugins** | Hook-based extensibility — SEO, summaries, image optimization |
-| **Desktop** | Local-first writing — SQLite, offline, sync upstream          |
-
-> Content owned by the system. Frontend owned by developers. **It is not a CMS — it is a publishing platform.**
+Starter: [reactpress-plugin-starter](https://github.com/fecommunity/reactpress-plugin-starter) · Guide: [plugins/README.md](./plugins/README.md)
 
 ---
 
-## What you can build
+## Desktop
 
-| Use case                         | Why ReactPress fits                             |
-| :------------------------------- | :---------------------------------------------- |
-| Personal blogs                   | Admin writing + Lighthouse-fast Next.js theme   |
-| Developer docs & knowledge bases | Built into official theme + API                 |
-| SaaS marketing sites             | Headless API + custom Next.js frontend          |
-| Multi-editor teams               | Web admin for writers, theme repo for engineers |
-| Offline-first workflows          | Desktop app with SQLite, sync when ready        |
+Same Admin UI, local-first. Local SQLite mode needs no Docker.
+
+|             |                                                                                                                              |
+| :---------- | :--------------------------------------------------------------------------------------------------------------------------- |
+| Docs        | [Desktop client](https://docs.gaoredu.com/docs/tutorial-extras/desktop-client)                                               |
+| Releases    | [GitHub Releases](https://github.com/fecommunity/reactpress/releases) (installers when the desktop workflow attaches assets) |
+| From source | `pnpm dev:desktop` · `pnpm build:desktop`                                                                                    |
+
+Details: [desktop/README.md](./desktop/README.md)
 
 ---
 
@@ -207,145 +197,70 @@ One CLI install. Everything included:
 ```mermaid
 flowchart TB
   subgraph Authoring["Authoring"]
-    CLI["CLI<br/>init · dev · doctor"]
-    Admin["Admin<br/>React + Vite · /admin/"]
-    Desktop["Desktop<br/>Electron · offline SQLite"]
+    CLI["CLI — init · doctor · logs"]
+    Admin["Admin — React + Vite · /admin/"]
+    Desktop["Desktop — Electron · SQLite"]
   end
 
-  subgraph Core["CMS Core"]
-    API["CMS API<br/>NestJS · :3002"]
-    Plugins["Plugins<br/>hooks · in-process"]
+  subgraph Core["Platform"]
+    API["CMS API — NestJS · :3002"]
+    Plugins["Plugins — hooks"]
     DB[("SQLite / MySQL")]
   end
 
   subgraph Delivery["Delivery"]
-    Theme["Active theme<br/>Next.js · :3001"]
-    Preview["Theme preview<br/>:3003"]
+    Theme["Active theme — Next.js · :3001"]
+    Preview["Theme preview · :3003"]
   end
 
-  CLI -->|"orchestrate"| API
+  CLI --> API
   CLI --> Theme
-  Admin -->|"REST"| API
-  Desktop -->|"REST"| API
+  Admin -->|REST| API
+  Desktop -->|REST| API
   Plugins --> API
   API --> DB
-  API -->|"headless JSON"| Theme
+  API -->|JSON| Theme
   API --> Preview
-  Admin -.->|"iframe"| Preview
+  Admin -.->|iframe| Preview
 ```
 
-```
-CMS Core     → content, media, settings        (NestJS)
-Admin UI     → writing experience              (React + Vite)
-API Layer    → headless access                 (REST + Swagger)
-Theme System → visitor-facing frontend         (Next.js, npm)
-Plugin System→ extensibility                   (hooks + Admin slots)
-Desktop App  → offline writing                 (Electron + SQLite)
-```
+| Package     | Role                                     |
+| :---------- | :--------------------------------------- |
+| `cli`       | Orchestration                            |
+| `server`    | Business rules, auth, hooks, persistence |
+| `web`       | Admin SPA                                |
+| `themes/*`  | Visitor SSR/ISR                          |
+| `plugins/*` | Incremental logic                        |
+| `desktop`   | Electron shell over Admin                |
+| `toolkit`   | Shared API client and contracts          |
 
----
-
-## Themes
-
-Themes are fully replaceable Next.js frontends — not locked to core. Install and activate them in **Admin → Appearance → Themes**.
-
-Preview without a backend:
-
-```bash
-npx create-next-app@latest my-blog --example "https://github.com/fecommunity/reactpress-theme-starter" --use-pnpm
-cd my-blog && pnpm dev:mock
-```
-
-**Live:** [reactpress-theme-starter.vercel.app](https://reactpress-theme-starter.vercel.app) · [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/fecommunity/reactpress-theme-starter)
-
----
-
-## Plugins
-
-Extend without touching core. Install and enable plugins in **Admin → Plugins**.
-
-| Plugin            | Capability                                           |
-| :---------------- | :--------------------------------------------------- |
-| `seo`             | Slug, keywords, meta description + Admin editor slot |
-| `hello-world`     | Auto-generate article summaries                      |
-| `image-optimizer` | Batch WebP optimization for media                    |
-
-Dev guide: [plugins/README.md](./plugins/README.md) · Starter template: [reactpress-plugin-starter](https://github.com/fecommunity/reactpress-plugin-starter)
-
----
-
-## Desktop-first writing
-
-Write offline. Sync when ready. No Docker required.
-
-**[Download desktop client](https://docs.gaoredu.com/docs/tutorial-extras/desktop-client)** (macOS / Windows / Linux) · or build from source:
-
-```bash
-pnpm dev:desktop       # monorepo root
-pnpm build:desktop     # build installer
-```
-
-SQLite local storage · offline editing · remote API mode · sync to production · [desktop/README.md](./desktop/README.md)
-
----
-
-## Why ReactPress?
-
-|                             | ReactPress  | WordPress       | Static sites    | Headless CMS        |
-| :-------------------------: | :---------- | :-------------- | :-------------- | :------------------ |
-|   **Editing experience**    | Yes         | Yes             | No              | Partial             |
-|    **Frontend freedom**     | Yes         | No              | Build-time only | Yes                 |
-| **Full system out of box**  | Yes         | Via plugins     | No              | No                  |
-|      **Time to start**      | ~1 min      | Hours           | Fast per site   | Setup + assembly    |
-| **Local / offline writing** | Desktop app | No              | No              | No                  |
-| **Lighthouse performance**  | 95²         | Theme-dependent | Excellent       | Depends on frontend |
-
-**vs WordPress** — same editing workflow, modern Next.js delivery, no PHP theme bloat.
-
-**vs Static generators** — keep the speed, add a real CMS.
-
-**vs Strapi / Payload** — they ship a backend; ReactPress ships the **full publishing platform**.
-
-² [Official theme demo](https://reactpress-theme-starter.vercel.app)
-
----
-
-## What's new in 4.0
-
-Codename **Extend** — plugins, desktop, npm themes. Still **one CLI, one Admin.**
-
-```bash
-npm i -g @fecommunity/reactpress
-```
-
-[4.0 guide](./docs/tutorial/tutorial-extras/reactpress-4-0.md) · [Migrate from 3.x](./docs/tutorial/tutorial-extras/migration-3-to-4.md)
+Design notes: [ARCHITECTURE.md](./ARCHITECTURE.md)
 
 ---
 
 ## For developers
 
-Headless by default. Connect any frontend via REST.
+Headless by default:
 
 ```bash
 curl -H "X-API-Key: YOUR_KEY" \
   "http://localhost:3002/api/article/headless/list?status=publish&page=1&pageSize=10"
 ```
 
-| Resource       | Link                                                                                  |
-| :------------- | :------------------------------------------------------------------------------------ |
-| Swagger        | http://localhost:3002/api                                                             |
-| Theme dev      | [themes/README.md](./themes/README.md)                                                |
-| Plugin dev     | [plugins/README.md](./plugins/README.md)                                              |
-| Theme starter  | [reactpress-theme-starter](https://github.com/fecommunity/reactpress-theme-starter)   |
-| Plugin starter | [reactpress-plugin-starter](https://github.com/fecommunity/reactpress-plugin-starter) |
+| Resource        | Link                                                                                  |
+| :-------------- | :------------------------------------------------------------------------------------ |
+| Swagger (local) | http://localhost:3002/api                                                             |
+| Theme starter   | [reactpress-theme-starter](https://github.com/fecommunity/reactpress-theme-starter)   |
+| Plugin starter  | [reactpress-plugin-starter](https://github.com/fecommunity/reactpress-plugin-starter) |
+| Docs            | [docs.gaoredu.com](https://docs.gaoredu.com/)                                         |
 
 <details>
-<summary><strong>CLI commands & ports (local init)</strong></summary>
+<summary><strong>CLI commands & local ports</strong></summary>
 
 | Command                          | Action                                      |
 | :------------------------------- | :------------------------------------------ |
 | `reactpress` / `reactpress init` | Initialize and start (SQLite + API + theme) |
-| `reactpress init --force`        | Re-initialize existing project              |
+| `reactpress init --force`        | Re-initialize an existing project           |
 | `reactpress doctor`              | Diagnose environment and URLs               |
 | `reactpress logs`                | Tail API logs                               |
 | `reactpress stop`                | Stop API and site services                  |
@@ -356,25 +271,38 @@ curl -H "X-API-Key: YOUR_KEY" \
 | Admin       | http://localhost:3001/admin/ |
 | API         | http://localhost:3002/api    |
 
-Monorepo contributors: see [CONTRIBUTING.md](./CONTRIBUTING.md) and package READMEs under `server/`, `web/`, `themes/`.
-
 </details>
 
 ---
 
 ## Deploy
 
-`reactpress init` runs a local production-style stack (SQLite API + theme with embedded admin). For VPS, Docker, PM2, and backups, see the [deployment docs](https://docs.gaoredu.com/).
+`reactpress init` runs a local production-style stack (SQLite API + theme with embedded Admin).
 
-Theme-only hosting: deploy [reactpress-theme-starter](https://github.com/fecommunity/reactpress-theme-starter) and point it at your API.
+- Full-stack hosting (VPS, Docker, PM2, backups): [deployment docs](https://docs.gaoredu.com/)
+- Theme-only: deploy [reactpress-theme-starter](https://github.com/fecommunity/reactpress-theme-starter) and point it at your API
 
 ---
 
-## Roadmap (4.x)
+## What's new in 4.0
 
-- Plugin npm catalog
-- Desktop auto-update, tray, shortcuts
-- Theme & plugin marketplace
+Stable on npm `@latest` (codename **Extend**):
+
+- Plugin system — Hook + `plugin.json` + Admin slots
+- Desktop client — Electron + SQLite local mode, remote sync
+- npm theme catalog — installable Next.js themes
+
+[4.0 guide](./docs/tutorial/tutorial-extras/reactpress-4-0.md) · [Migrate from 3.x](./docs/tutorial/tutorial-extras/migration-3-to-4.md) · [Changelog](./CHANGELOG.md)
+
+---
+
+## Roadmap
+
+| Item                                         | Tracking                                                   |
+| :------------------------------------------- | :--------------------------------------------------------- |
+| Plugin npm catalog (`reactpress plugin add`) | [#89](https://github.com/fecommunity/reactpress/issues/89) |
+| Desktop tray / shortcuts / auto-update       | [#91](https://github.com/fecommunity/reactpress/issues/91) |
+| Theme & plugin marketplace UI                | [#92](https://github.com/fecommunity/reactpress/issues/92) |
 
 ---
 
@@ -383,35 +311,28 @@ Theme-only hosting: deploy [reactpress-theme-starter](https://github.com/fecommu
 <details>
 <summary><strong>Do I need Docker?</strong></summary>
 
-No for the default CLI flow — `reactpress init` uses embedded SQLite. Docker is only needed if you configure MySQL via `embedded-docker` in `.reactpress/config.json`. The desktop app also runs on SQLite without Docker.
+Not for the default CLI flow — `reactpress init` uses embedded SQLite. Docker is only required when you configure MySQL via `embedded-docker` in `.reactpress/config.json`. Desktop local mode also uses SQLite without Docker.
 
 </details>
 
 <details>
 <summary><strong>Can I use my own frontend?</strong></summary>
 
-Yes — headless REST API with API keys. Fork the [official starter](https://github.com/fecommunity/reactpress-theme-starter) or build against `/api/article`, `/api/page`, etc.
+Yes. Use the headless REST API with API keys. Fork the [official theme starter](https://github.com/fecommunity/reactpress-theme-starter) or call `/api/article`, `/api/page`, and related endpoints.
 
 </details>
 
 <details>
 <summary><strong>How is this different from WordPress?</strong></summary>
 
-Same admin-driven workflow, but a faster default theme, a cleaner headless path, and no plugin bloat for a modern React/Next.js frontend.
+Similar admin-driven workflow, with a Next.js public site, a clean headless path, and no PHP theme stack for visitors.
 
 </details>
 
 <details>
 <summary><strong>Is 4.0 production-ready?</strong></summary>
 
-4.0.0 is the current stable release on npm `@latest`. The CLI supports `init`, `doctor`, `logs`, and `stop`. See the [migration guide](./docs/tutorial/tutorial-extras/migration-3-to-4.md) before upgrading from 3.x.
-
-</details>
-
-<details>
-<summary><strong>WordPress alternative? Headless CMS? Next.js blog?</strong></summary>
-
-Yes — ReactPress targets all three: self-hosted WordPress-style editing, headless REST for custom frontends, and an official Next.js theme with Lighthouse 95 performance out of the box.
+Yes. **4.0.0** is the current stable release on npm `@latest`. When upgrading from 3.x, validate on staging and read the [migration guide](./docs/tutorial/tutorial-extras/migration-3-to-4.md).
 
 </details>
 
@@ -419,45 +340,25 @@ Yes — ReactPress targets all three: self-hosted WordPress-style editing, headl
 
 ## Contributing
 
-[Contributing](./CONTRIBUTING.md) · [Code of Conduct](./CODE_OF_CONDUCT.md) · [Security](./SECURITY.md)
+[CONTRIBUTING.md](./CONTRIBUTING.md) · [Code of Conduct](./CODE_OF_CONDUCT.md) · [SECURITY.md](./SECURITY.md)
 
 [Issues](https://github.com/fecommunity/reactpress/issues) · [Pull requests](https://github.com/fecommunity/reactpress/pulls)
 
-<table>
-  <tbody>
-    <tr>
-      <td align="center" width="12.5%"><a href="https://github.com/fecommunity"><img src="https://github.com/fecommunity.png?s=72" width="72" height="72" style="border-radius:50%" alt="fecommunity"/><br/><sub><b>FECommunity</b></sub></a></td>
-      <td align="center" width="12.5%"><a href="https://github.com/want2sleeep"><img src="https://github.com/want2sleeep.png?s=72" width="72" height="72" style="border-radius:50%" alt="want2sleeep"/><br/><sub><b>SleepSheep</b></sub></a></td>
-      <td align="center" width="12.5%"><a href="https://github.com/fantasticit"><img src="https://github.com/fantasticit.png?s=72" width="72" height="72" style="border-radius:50%" alt="fantasticit"/><br/><sub><b>fantasticit</b></sub></a></td>
-      <td align="center" width="12.5%"><a href="https://github.com/chenbo29"><img src="https://github.com/chenbo29.png?s=72" width="72" height="72" style="border-radius:50%" alt="chenbo29"/><br/><sub><b>chenbo29</b></sub></a></td>
-      <td align="center" width="12.5%"><a href="https://github.com/redteav2"><img src="https://github.com/redteav2.png?s=72" width="72" height="72" style="border-radius:50%" alt="redteav2"/><br/><sub><b>redteav2</b></sub></a></td>
-      <td align="center" width="12.5%"><a href="https://github.com/trashken"><img src="https://github.com/trashken.png?s=72" width="72" height="72" style="border-radius:50%" alt="trashken"/><br/><sub><b>trashken</b></sub></a></td>
-      <td align="center" width="12.5%"><a href="https://github.com/franz007"><img src="https://github.com/franz007.png?s=72" width="72" height="72" style="border-radius:50%" alt="franz007"/><br/><sub><b>franz007</b></sub></a></td>
-      <td align="center" width="12.5%"><a href="https://github.com/funtime1"><img src="https://github.com/funtime1.png?s=72" width="72" height="72" style="border-radius:50%" alt="funtime1"/><br/><sub><b>funtime1</b></sub></a></td>
-    </tr>
-    <tr>
-      <td align="center" width="12.5%"><a href="https://github.com/scottdeift"><img src="https://github.com/scottdeift.png?s=72" width="72" height="72" style="border-radius:50%" alt="scottdeift"/><br/><sub><b>scottdeift</b></sub></a></td>
-      <td align="center" width="12.5%"><a href="https://github.com/TwoDollars666"><img src="https://github.com/TwoDollars666.png?s=72" width="72" height="72" style="border-radius:50%" alt="TwoDollars666"/><br/><sub><b>TwoDollars666</b></sub></a></td>
-      <td align="center" width="12.5%"><a href="https://github.com/Xiaonan2020"><img src="https://github.com/Xiaonan2020.png?s=72" width="72" height="72" style="border-radius:50%" alt="Xiaonan2020"/><br/><sub><b>Xiaonan2020</b></sub></a></td>
-      <td align="center" width="12.5%"><a href="https://github.com/gaoredu"><img src="https://avatars.githubusercontent.com/u/190012690?s=72" width="72" height="72" style="border-radius:50%" alt="gaoredu"/><br/><sub><b>redtea</b></sub></a></td>
-      <td align="center" width="12.5%"><a href="https://github.com/lsr365400"><img src="https://github.com/lsr365400.png?s=72" width="72" height="72" style="border-radius:50%" alt="lsr365400"/><br/><sub><b>lsr365400</b></sub></a></td>
-    </tr>
-  </tbody>
-</table>
+---
+
+## License
+
+[MIT](./LICENSE) · © ReactPress / [FECommunity](https://github.com/fecommunity)
 
 ---
 
 <div align="center">
 
-**MIT License** · © ReactPress / FECommunity
-
-<br/>
-
-<a href="https://github.com/fecommunity/reactpress/stargazers">
-  <img src="https://img.shields.io/github/stars/fecommunity/reactpress?style=for-the-badge&color=ffd700&labelColor=1a1a2e" alt="Star ReactPress on GitHub" />
-</a>
-
-<p><sub>The publishing system for React developers.<br/>Help us reach more builders — ⭐ on GitHub.</sub></p>
+<p>
+  If ReactPress saves you from wiring CMS + API + frontend yourself,
+  <a href="https://github.com/fecommunity/reactpress/stargazers"><strong>star the repo</strong></a>
+  so other React developers can find it.
+</p>
 
 <br/>
 

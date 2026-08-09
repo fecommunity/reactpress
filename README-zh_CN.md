@@ -1,94 +1,37 @@
 <div align="center">
 
 <a href="https://blog.gaoredu.com" title="ReactPress">
-  <img height="120" src="./public/brand/logo.png" alt="ReactPress 标志">
+  <img height="88" src="./public/brand/logo.png" alt="ReactPress">
 </a>
 
 <img src="./public/poster.png" alt="ReactPress — 面向 React 开发者的发布系统。" width="100%" />
 
-<h1 align="center">ReactPress</h1>
-<h3 align="center">面向 React 开发者的发布系统。</h3>
+# ReactPress
 
-<p align="center">
-  <strong>用 React 构建博客、文档、企业官网与内容驱动型应用。</strong>
-</p>
+### 面向 React 开发者的发布系统
 
-<br/>
+一条 CLI，自托管 CMS、Admin、Headless API、Next.js 主题、插件与桌面写作 — MIT 开源。
 
-<p align="center">
-  <a href="#30-秒快速开始"><strong>快速开始 ↓</strong></a>
-  &nbsp;·&nbsp;
-  <a href="https://blog.gaoredu.com"><strong>全栈演示</strong></a>
-  &nbsp;·&nbsp;
-  <a href="https://reactpress-theme-starter.vercel.app"><strong>主题演示</strong></a>
-  &nbsp;·&nbsp;
-  <a href="https://docs.gaoredu.com/"><strong>文档</strong></a>
-  &nbsp;·&nbsp;
-  <a href="./README.md"><strong>English</strong></a>
-</p>
+[快速开始](#快速开始) · [全栈演示](https://blog.gaoredu.com) · [主题演示](https://reactpress-theme-starter.vercel.app) · [文档](https://docs.gaoredu.com/) · [English](./README.md)
 
-[![GitHub stars](https://img.shields.io/github/stars/fecommunity/reactpress?style=social)](https://github.com/fecommunity/reactpress/stargazers)
-[![npm downloads](https://img.shields.io/npm/dm/@fecommunity/reactpress?style=flat-square)](https://www.npmjs.com/package/@fecommunity/reactpress)
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/fecommunity/reactpress/blob/master/LICENSE)
-[![NPM Version](https://img.shields.io/npm/v/@fecommunity/reactpress.svg?style=flat-square)](https://www.npmjs.com/package/@fecommunity/reactpress)
-[![Node.js](https://img.shields.io/badge/node-%3E%3D20-brightgreen?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org/)
-[![Lighthouse 95](https://img.shields.io/badge/Lighthouse-95%20%2F%20100%20SEO-0cce6b?style=flat-square&logo=lighthouse&logoColor=white)](https://reactpress-theme-starter.vercel.app)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/fecommunity/reactpress/pulls)
+[![npm](https://img.shields.io/npm/v/@fecommunity/reactpress.svg?style=flat-square&label=npm)](https://www.npmjs.com/package/@fecommunity/reactpress)
+[![downloads](https://img.shields.io/npm/dm/@fecommunity/reactpress.svg?style=flat-square)](https://www.npmjs.com/package/@fecommunity/reactpress)
+[![license](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](./LICENSE)
+[![node](https://img.shields.io/badge/node-%3E%3D20-brightgreen?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org/)
+[![stars](https://img.shields.io/github/stars/fecommunity/reactpress?style=flat-square)](https://github.com/fecommunity/reactpress/stargazers)
+[![lighthouse](https://img.shields.io/badge/Lighthouse_Perf-95-0cce6b?style=flat-square&logo=lighthouse&logoColor=white)](https://reactpress-theme-starter.vercel.app)
 
-<p>
-  <img src="https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=react&logoColor=white" alt="React" />
-  <img src="https://img.shields.io/badge/Next.js-000000?style=flat-square&logo=next.js&logoColor=white" alt="Next.js" />
-  <img src="https://img.shields.io/badge/NestJS-E0234E?style=flat-square&logo=nestjs&logoColor=white" alt="NestJS" />
-  <img src="https://img.shields.io/badge/Electron-47848F?style=flat-square&logo=electron&logoColor=white" alt="Electron" />
-  <img src="https://img.shields.io/badge/MySQL_/_SQLite-4479A1?style=flat-square&logo=mysql&logoColor=white" alt="MySQL / SQLite" />
-</p>
-
-<br/>
-
-<a href="https://github.com/fecommunity/reactpress/stargazers">
-  <img src="https://img.shields.io/github/stars/fecommunity/reactpress?style=for-the-badge&color=ffd700&labelColor=1a1a2e" alt="在 GitHub 上 Star ReactPress" />
-</a>
-
-<p><sub>如果 ReactPress 帮你省下了 CMS + API + 前台拼装的功夫 — 点个 ⭐ 能让下一位开发者更容易发现它。</sub></p>
+<img src="https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=react&logoColor=black" alt="React" />
+<img src="https://img.shields.io/badge/Next.js-000000?style=flat-square&logo=next.js&logoColor=white" alt="Next.js" />
+<img src="https://img.shields.io/badge/NestJS-E0234E?style=flat-square&logo=nestjs&logoColor=white" alt="NestJS" />
+<img src="https://img.shields.io/badge/Electron-47848F?style=flat-square&logo=electron&logoColor=white" alt="Electron" />
+<img src="https://img.shields.io/badge/SQLite_/_MySQL-4479A1?style=flat-square&logo=mysql&logoColor=white" alt="SQLite / MySQL" />
 
 </div>
 
 ---
 
-## 效果预览
-
-<div align="center">
-
-![ReactPress CLI — 从安装到上线约 60 秒](./public/usage.gif)
-
-<table>
-  <tr>
-    <td width="50%">
-      <a href="./desktop/README.md">
-        <img src="./public/desktop.gif" alt="桌面客户端 — SQLite 离线写作" width="100%" />
-      </a>
-      <sub><b>桌面端</b> — 离线写作，同步到线上</sub>
-    </td>
-    <td width="50%">
-      <a href="https://reactpress-theme-starter.vercel.app">
-        <img src="./public/demo.gif" alt="官方主题 — 搜索、评论、知识库" width="100%" />
-      </a>
-      <sub><b>访客站</b> — 搜索 · 评论 · 知识库 · 深色模式</sub>
-    </td>
-  </tr>
-</table>
-
-<a href="https://reactpress-theme-starter.vercel.app">
-  <img src="./public/lighthouse.png" alt="Lighthouse：性能 95、无障碍 100、最佳实践 100、SEO 100" width="720" />
-</a>
-
-<sub>评分来自<a href="https://reactpress-theme-starter.vercel.app">官方主题演示</a>；实际上线结果取决于托管与内容。</sub>
-
-</div>
-
----
-
-## 30 秒快速开始
+## 快速开始
 
 ```bash
 npm i -g @fecommunity/reactpress
@@ -96,239 +39,223 @@ mkdir my-site && cd my-site
 reactpress init
 ```
 
-**环境要求：** [Node.js 20+](https://nodejs.org/) · 无需 Docker 或外部数据库
-
-> 4.0 已发布在 npm **`@latest`**。仅预发布版本使用 `@beta`。
-
 | 入口         | 地址                                              |
 | :----------- | :------------------------------------------------ |
-| **访客站**   | http://localhost:3001                             |
-| **管理后台** | http://localhost:3001/admin/（`admin` / `admin`） |
-| **API**      | http://localhost:3002/api/health                  |
+| 访客站       | http://localhost:3001                             |
+| 管理后台     | http://localhost:3001/admin/（`admin` / `admin`） |
+| API 健康检查 | http://localhost:3002/api/health                  |
 
-启动异常时运行 `reactpress doctor` 诊断环境问题。
+**环境要求：** [Node.js 20+](https://nodejs.org/)。默认使用内置 SQLite — 无需 Docker 或外部数据库。
 
-<table align="center">
-<tr>
-<td align="center"><strong>约 60 秒</strong><br/><sub>init → 全栈就绪</sub></td>
-<td align="center"><strong>95 / 100</strong><br/><sub>Lighthouse 性能</sub></td>
-<td align="center"><strong>MIT</strong><br/><sub>可自托管</sub></td>
-<td align="center"><strong>1 条 CLI</strong><br/><sub>完整平台</sub></td>
-</tr>
-</table>
+启动异常时运行 `reactpress doctor`。
+
+> 当前稳定版：**4.0.0**（npm `@latest`）。仅预发布使用 `@beta`。
+
+---
+
+## 效果预览
 
 <div align="center">
 
-**跑通了？** [Star 本仓库](https://github.com/fecommunity/reactpress/stargazers) · [提交 Issue](https://github.com/fecommunity/reactpress/issues) · [阅读文档](https://docs.gaoredu.com/)
+![ReactPress CLI — init 流程演示](./public/usage.gif)
+
+<table>
+  <tr>
+    <td width="50%" align="center" valign="top">
+      <a href="./desktop/README.md">
+        <img src="./public/desktop.gif" alt="桌面客户端 — SQLite 离线写作" width="100%" />
+      </a>
+      <br/>
+      <sub><b>桌面端</b> — 离线写作，就绪后同步</sub>
+    </td>
+    <td width="50%" align="center" valign="top">
+      <a href="https://reactpress-theme-starter.vercel.app">
+        <img src="./public/demo.gif" alt="官方主题 — 搜索、评论、知识库" width="100%" />
+      </a>
+      <br/>
+      <sub><b>访客站</b> — 搜索 · 评论 · 知识库 · 深色模式</sub>
+    </td>
+  </tr>
+</table>
+
+<a href="https://reactpress-theme-starter.vercel.app">
+  <img src="./public/lighthouse.png" alt="官方主题演示的 Lighthouse 报告" width="720" />
+</a>
+
+<br/>
+
+<sub>
+  官方主题演示审计（见上图）：Performance <strong>95</strong>、Accessibility <strong>100</strong>、Best Practices <strong>100</strong>、SEO <strong>100</strong>。
+  请按你的托管与内容复测以获取当前分数。
+</sub>
 
 </div>
 
 ---
 
-## 目录
+## 为什么选 ReactPress？
 
-- [效果预览](#效果预览)
-- [30 秒快速开始](#30-秒快速开始)
-- [目录](#目录)
-- [痛点](#痛点)
-- [ReactPress 是什么？](#reactpress-是什么)
-- [能做什么](#能做什么)
-- [架构](#架构)
-- [主题](#主题)
-- [插件](#插件)
-- [桌面优先写作](#桌面优先写作)
-- [为什么选 ReactPress？](#为什么选-reactpress)
-- [4.0 新特性](#40-新特性)
-- [开发者](#开发者)
-- [部署](#部署)
-- [路线图（4.x）](#路线图4x)
-- [FAQ](#faq)
-- [贡献](#贡献)
+WordPress 式编辑体验很难替代；Headless CMS 给了 API，后台、前台和运维仍要自建。ReactPress 给 React 团队一条中间路径：
+
+| 路线           | 你得到                                   | 你仍要负责             |
+| :------------- | :--------------------------------------- | :--------------------- |
+| WordPress      | 成熟编辑体验                             | PHP 主题 / 耦合栈      |
+| 静态生成器     | 快速 HTML                                | 面向非开发者的真正 CMS |
+| Headless CMS   | 灵活 API                                 | 后台 + 前台 + 部署拼装 |
+| **ReactPress** | CMS + Admin + API + 主题 + 插件 + 桌面端 | 你的内容与主题代码     |
+
+**适合谁**
+
+- 想自托管博客 / 内容站，又不想硬接五个仓库的 React / Next.js 开发者
+- 需要编辑在 Admin 写作、工程师维护 Next.js 主题的小团队
+- 在比较 WordPress 替代、Headless CMS 或 Next.js 博客方案的人
 
 ---
 
-## 痛点
+## 功能
 
-现代内容系统往往逼你在几难全之间做取舍：
+| 层级        | 当前已交付                                                               |
+| :---------- | :----------------------------------------------------------------------- |
+| **CMS**     | 文章、页面、媒体、分类、标签                                             |
+| **Admin**   | `/admin/` 写作界面（浏览器与桌面端同一套 SPA）                           |
+| **API**     | Headless REST + Swagger                                                  |
+| **Themes**  | 可替换的 Next.js 访客前台（可 npm 安装）                                 |
+| **Plugins** | 服务端 Hook + 可选 Admin 插槽（`seo`、`hello-world`、`image-optimizer`） |
+| **Desktop** | Electron + 本地 SQLite；可选远程 API 与同步                              |
+| **CLI**     | `init`、`doctor`、`logs`、`stop`                                         |
 
-| 路径                                | 代价                                    |
-| :---------------------------------- | :-------------------------------------- |
-| **WordPress 式 CMS**                | 编辑体验好 — 主题慢、PHP 栈耦合         |
-| **静态站点生成器**                  | 极快 — 非开发者没有像样的 CMS           |
-| **Headless CMS**（Strapi、Payload） | API 灵活 — 后台、前台、部署仍要自行拼装 |
+内容归平台；呈现归主题（或任意 Headless 客户端）。
 
-> **前端团队值得拥有一个发布平台 — 而不是五个仓库硬接在一起。**
+---
 
+## 对比
+
+|                      | ReactPress                  | WordPress  | 静态站点 | Headless CMS |
+| :------------------- | :-------------------------- | :--------- | :------- | :----------- |
+| 编辑体验             | 有                          | 有         | 无       | 部分         |
+| 前台自由度           | 高                          | 受限       | 构建时   | 高           |
+| 开箱即用全栈         | 是                          | 靠插件     | 否       | 否           |
+| 本地首次可用         | 分钟级（`reactpress init`） | 通常更久   | 单站快   | 搭建 + 拼装  |
+| 离线写作             | 桌面端                      | 无         | 无       | 无           |
+| 默认主题 Performance | 95¹                         | 视主题而定 | 通常较高 | 取决于前台   |
+
+¹ [官方主题演示](https://reactpress-theme-starter.vercel.app) 的 Lighthouse **Performance**（见上图）。该次审计中 Accessibility / Best Practices / SEO 为 100。
+
+- **对比 WordPress** — 相近的后台编辑流；访客站用 Next.js，无 PHP 主题锁定。
+- **对比静态生成器** — 保留速度，补上真正的 CMS。
+- **对比 Strapi / Payload** — 它们交付后端；ReactPress 交付 CMS + Admin + 主题 + 桌面端这一整套产品。
+
+---
+
+## 主题
+
+可替换的 Next.js 前台。在 **管理后台 → 外观 → 主题** 中安装并启用。
+
+```bash
+npx create-next-app@latest my-blog \
+  --example "https://github.com/fecommunity/reactpress-theme-starter" \
+  --use-pnpm
+cd my-blog && pnpm dev:mock
 ```
-以前                              用 ReactPress
-────                              ─────────────
-选 CMS 后端                  →    reactpress init
-写作与管理内容             →    后台 /admin/
-访客访问主题               →    http://localhost:3001
-遇到问题                   →    reactpress doctor
-```
+
+- 在线演示：[reactpress-theme-starter.vercel.app](https://reactpress-theme-starter.vercel.app)
+- 一键部署：[![使用 Vercel 部署](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/fecommunity/reactpress-theme-starter)
+- 指南：[themes/README.md](./themes/README.md)
 
 ---
 
-## ReactPress 是什么？
+## 插件
 
-ReactPress 是 **面向 React 开发者的发布系统** — 用 React 构建博客、文档、企业官网与内容驱动型应用。一条 CLI，不是又一个需要你自己接线的 Headless 后端。
+扩展服务端，无需 fork 核心。在 **管理后台 → 插件** 中管理。
 
-一条 CLI，全部包含：
+| 插件              | 能力                                       |
+| :---------------- | :----------------------------------------- |
+| `seo`             | Slug、关键词、meta 描述 + Admin 编辑器插槽 |
+| `hello-world`     | 发布时自动生成摘要                         |
+| `image-optimizer` | 媒体库批量 WebP 优化                       |
 
-| 层级        | 你得到什么                                |
-| :---------- | :---------------------------------------- |
-| **CMS**     | WordPress 式编辑 — 文章、页面、媒体、分类 |
-| **API**     | Headless REST — React 优先、Swagger 文档  |
-| **Admin**   | Web 写作界面 — 无需另建后台               |
-| **Themes**  | 可 npm 安装的 Next.js 前台 — 可替换       |
-| **Plugins** | 基于 Hook 的扩展 — SEO、摘要、图片优化    |
-| **Desktop** | 本地优先写作 — SQLite、离线、可同步线上   |
-
-> 内容归系统管，前台归开发者管。**它不是 CMS — 它是发布平台。**
+脚手架：[reactpress-plugin-starter](https://github.com/fecommunity/reactpress-plugin-starter) · 指南：[plugins/README.md](./plugins/README.md)
 
 ---
 
-## 能做什么
+## 桌面端
 
-| 场景               | 为什么适合                            |
-| :----------------- | :------------------------------------ |
-| 个人博客           | 后台写作 + Lighthouse 级 Next.js 主题 |
-| 开发者文档与知识库 | 官方主题 + API 内置                   |
-| SaaS 营销站        | Headless API + 自定义 Next.js 前台    |
-| 多编辑团队         | Web 后台给作者，主题仓库给工程师      |
-| 离线优先工作流     | 桌面端 SQLite，就绪后同步             |
+同一套 Admin，本地优先。本地 SQLite 模式无需 Docker。
+
+|         |                                                                                                       |
+| :------ | :---------------------------------------------------------------------------------------------------- |
+| 文档    | [桌面客户端](https://docs.gaoredu.com/docs/tutorial-extras/desktop-client)                            |
+| Release | [GitHub Releases](https://github.com/fecommunity/reactpress/releases)（桌面端工作流附带安装包时提供） |
+| 源码    | `pnpm dev:desktop` · `pnpm build:desktop`                                                             |
+
+详情：[desktop/README.md](./desktop/README.md)
 
 ---
 
 ## 架构
 
 ```mermaid
-flowchart LR
-  subgraph Authoring
-    Admin["Admin"]
-    Desktop["Desktop"]
+flowchart TB
+  subgraph Authoring["创作"]
+    CLI["CLI — init · doctor · logs"]
+    Admin["Admin — React + Vite · /admin/"]
+    Desktop["Desktop — Electron · SQLite"]
   end
-  subgraph Core
-    API["CMS API"]
-    Plugins["Plugins"]
+
+  subgraph Core["平台"]
+    API["CMS API — NestJS · :3002"]
+    Plugins["Plugins — hooks"]
+    DB[("SQLite / MySQL")]
   end
-  subgraph Delivery
-    Theme["Theme"]
+
+  subgraph Delivery["交付"]
+    Theme["激活主题 — Next.js · :3001"]
+    Preview["主题预览 · :3003"]
   end
-  Admin --> API
-  Desktop --> API
+
+  CLI --> API
+  CLI --> Theme
+  Admin -->|REST| API
+  Desktop -->|REST| API
   Plugins --> API
-  API --> Theme
+  API --> DB
+  API -->|JSON| Theme
+  API --> Preview
+  Admin -.->|iframe| Preview
 ```
 
-```
-CMS Core     → 内容、媒体、设置              (NestJS)
-Admin UI     → 写作体验                      (React + Vite)
-API Layer    → Headless 访问                  (REST + Swagger)
-Theme System → 访客前台                       (Next.js, npm)
-Plugin System→ 扩展能力                       (hooks + Admin 插槽)
-Desktop App  → 离线写作                       (Electron + SQLite)
-```
+| 包          | 角色                         |
+| :---------- | :--------------------------- |
+| `cli`       | 编排                         |
+| `server`    | 业务规则、鉴权、Hook、持久化 |
+| `web`       | Admin SPA                    |
+| `themes/*`  | 访客站 SSR/ISR               |
+| `plugins/*` | 增量逻辑                     |
+| `desktop`   | 复用 Admin 的 Electron 壳    |
+| `toolkit`   | 共享 API 客户端与契约        |
 
----
-
-## 主题
-
-主题是完全可替换的 Next.js 前台 — 不绑定核心。在 **管理后台 → 外观 → 主题** 中安装并启用。
-
-无需后端即可预览：
-
-```bash
-npx create-next-app@latest my-blog --example "https://github.com/fecommunity/reactpress-theme-starter" --use-pnpm
-cd my-blog && pnpm dev:mock
-```
-
-**在线演示：** [reactpress-theme-starter.vercel.app](https://reactpress-theme-starter.vercel.app) · [![使用 Vercel 部署](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/fecommunity/reactpress-theme-starter)
-
----
-
-## 插件
-
-扩展核心，无需改源码。在 **管理后台 → 插件** 中安装并启用。
-
-| 插件              | 能力                                       |
-| :---------------- | :----------------------------------------- |
-| `seo`             | Slug、关键词、meta 描述 + Admin 编辑器插槽 |
-| `hello-world`     | 自动生成文章摘要                           |
-| `image-optimizer` | 媒体库批量 WebP 优化                       |
-
-开发指南：[plugins/README.md](./plugins/README.md) · 脚手架模板：[reactpress-plugin-starter](https://github.com/fecommunity/reactpress-plugin-starter)
-
----
-
-## 桌面优先写作
-
-离线写作，就绪后同步。无需 Docker。
-
-**[下载桌面客户端](https://docs.gaoredu.com/docs/tutorial-extras/desktop-client)**（macOS / Windows / Linux）· 或从源码打包：
-
-```bash
-pnpm dev:desktop       # monorepo 根目录
-pnpm build:desktop     # 打包安装程序
-```
-
-SQLite 本地存储 · 离线编辑 · 远程 API 模式 · 同步到生产 · [desktop/README.md](./desktop/README.md)
-
----
-
-## 为什么选 ReactPress？
-
-|                     | ReactPress | WordPress | 静态站   | Headless CMS |
-| :-----------------: | :--------- | :-------- | :------- | :----------- |
-|    **编辑体验**     | 有         | 有        | 无       | 部分         |
-|   **前台自由度**    | 有         | 无        | 仅构建时 | 有           |
-|  **开箱完整系统**   | 有         | 靠插件    | 无       | 无           |
-|    **上手时间**     | 约 1 分钟  | 数小时    | 单站快   | 搭建 + 拼装  |
-| **本地 / 离线写作** | 桌面端     | 无        | 无       | 无           |
-| **Lighthouse 性能** | 95²        | 看主题    | 优秀     | 看前台       |
-
-**对比 WordPress** — 同样的后台工作流，现代化 Next.js 交付，无 PHP 主题臃肿。
-
-**对比静态生成器** — 保留速度，补上真正的 CMS。
-
-**对比 Strapi / Payload** — 它们只 ship 后端；ReactPress ship **完整发布平台**。
-
-² [官方主题演示](https://reactpress-theme-starter.vercel.app)
-
----
-
-## 4.0 新特性
-
-代号 **Extend** — 插件、桌面端、npm 主题。仍是 **一条 CLI、一套 Admin**。
-
-```bash
-npm i -g @fecommunity/reactpress
-```
-
-[4.0 指南](./docs/tutorial/tutorial-extras/reactpress-4-0.md) · [从 3.x 迁移](./docs/tutorial/tutorial-extras/migration-3-to-4.md)
+设计说明：[ARCHITECTURE.md](./ARCHITECTURE.md)
 
 ---
 
 ## 开发者
 
-默认 Headless，任意前台通过 REST 接入。
+默认 Headless：
 
 ```bash
 curl -H "X-API-Key: YOUR_KEY" \
   "http://localhost:3002/api/article/headless/list?status=publish&page=1&pageSize=10"
 ```
 
-| 资源         | 链接                                                                                  |
-| :----------- | :------------------------------------------------------------------------------------ |
-| Swagger      | http://localhost:3002/api                                                             |
-| 主题开发     | [themes/README.md](./themes/README.md)                                                |
-| 插件开发     | [plugins/README.md](./plugins/README.md)                                              |
-| 主题 Starter | [reactpress-theme-starter](https://github.com/fecommunity/reactpress-theme-starter)   |
-| 插件 Starter | [reactpress-plugin-starter](https://github.com/fecommunity/reactpress-plugin-starter) |
+| 资源            | 链接                                                                                  |
+| :-------------- | :------------------------------------------------------------------------------------ |
+| Swagger（本地） | http://localhost:3002/api                                                             |
+| 主题 Starter    | [reactpress-theme-starter](https://github.com/fecommunity/reactpress-theme-starter)   |
+| 插件 Starter    | [reactpress-plugin-starter](https://github.com/fecommunity/reactpress-plugin-starter) |
+| 文档            | [docs.gaoredu.com](https://docs.gaoredu.com/)                                         |
 
 <details>
-<summary><strong>CLI 命令与端口（本地 init）</strong></summary>
+<summary><strong>CLI 命令与本地端口</strong></summary>
 
 | 命令                             | 作用                                |
 | :------------------------------- | :---------------------------------- |
@@ -336,7 +263,7 @@ curl -H "X-API-Key: YOUR_KEY" \
 | `reactpress init --force`        | 重新初始化已有项目                  |
 | `reactpress doctor`              | 诊断环境与访问地址                  |
 | `reactpress logs`                | 查看 API 日志                       |
-| `reactpress stop`                | 停止 API 与访客站服务               |
+| `reactpress stop`                | 停止 API 与访客站                   |
 
 | 服务     | 地址 / 端口                  |
 | :------- | :--------------------------- |
@@ -344,25 +271,38 @@ curl -H "X-API-Key: YOUR_KEY" \
 | 管理后台 | http://localhost:3001/admin/ |
 | API      | http://localhost:3002/api    |
 
-Monorepo 贡献者请参阅 [CONTRIBUTING.md](./CONTRIBUTING.md) 及各子包 README（`server/`、`web/`、`themes/`）。
-
 </details>
 
 ---
 
 ## 部署
 
-`reactpress init` 会启动本地生产形态的全栈（SQLite API + 内嵌后台的主题）。VPS、Docker、PM2 与备份见[部署文档](https://docs.gaoredu.com/)。
+`reactpress init` 启动本地生产形态全栈（SQLite API + 内嵌 Admin 的主题）。
 
-仅部署访客站：部署 [reactpress-theme-starter](https://github.com/fecommunity/reactpress-theme-starter) 并指向你的 API。
+- 全栈托管（VPS、Docker、PM2、备份）：[部署文档](https://docs.gaoredu.com/)
+- 仅部署访客站：部署 [reactpress-theme-starter](https://github.com/fecommunity/reactpress-theme-starter) 并指向你的 API
 
 ---
 
-## 路线图（4.x）
+## 4.0 新特性
 
-- 插件 npm 目录
-- 桌面端自动更新、托盘、快捷键
-- 主题与插件市场
+已在 npm `@latest` 稳定发布（代号 **Extend**）：
+
+- 插件系统 — Hook + `plugin.json` + Admin 插槽
+- 桌面客户端 — Electron + SQLite 本地模式，可远程同步
+- npm 主题 catalog — 可安装的 Next.js 主题
+
+[4.0 指南](./docs/tutorial/tutorial-extras/reactpress-4-0.md) · [从 3.x 迁移](./docs/tutorial/tutorial-extras/migration-3-to-4.md) · [更新日志](./CHANGELOG.md)
+
+---
+
+## 路线图
+
+| 项                                          | 跟踪                                                       |
+| :------------------------------------------ | :--------------------------------------------------------- |
+| 插件 npm catalog（`reactpress plugin add`） | [#89](https://github.com/fecommunity/reactpress/issues/89) |
+| 桌面端托盘 / 快捷键 / 自动更新              | [#91](https://github.com/fecommunity/reactpress/issues/91) |
+| 主题与插件市场 UI                           | [#92](https://github.com/fecommunity/reactpress/issues/92) |
 
 ---
 
@@ -371,35 +311,28 @@ Monorepo 贡献者请参阅 [CONTRIBUTING.md](./CONTRIBUTING.md) 及各子包 RE
 <details>
 <summary><strong>需要 Docker 吗？</strong></summary>
 
-默认 CLI 流程不需要 — `reactpress init` 使用内置 SQLite。仅在 `.reactpress/config.json` 配置 `embedded-docker`（MySQL）时才需要 Docker。桌面端同样使用 SQLite，无需 Docker。
+默认 CLI 流程不需要 — `reactpress init` 使用内置 SQLite。仅在 `.reactpress/config.json` 配置 `embedded-docker`（MySQL）时才需要 Docker。桌面端本地模式同样使用 SQLite。
 
 </details>
 
 <details>
 <summary><strong>能用自己的前台吗？</strong></summary>
 
-可以 — Headless REST API + API Key。Fork [官方 starter](https://github.com/fecommunity/reactpress-theme-starter) 或对接 `/api/article`、`/api/page` 等接口。
+可以。使用 Headless REST API + API Key。Fork [官方主题 starter](https://github.com/fecommunity/reactpress-theme-starter)，或对接 `/api/article`、`/api/page` 等接口。
 
 </details>
 
 <details>
 <summary><strong>和 WordPress 有什么不同？</strong></summary>
 
-同样是后台驱动的工作流，但默认主题更快、Headless 路径更干净，现代 React/Next.js 前台无需插件堆叠。
+相近的后台编辑流；访客站用 Next.js，Headless 路径更干净，无需 PHP 主题栈。
 
 </details>
 
 <details>
 <summary><strong>4.0 能用于生产吗？</strong></summary>
 
-4.0.0 为当前稳定版（npm `@latest`）。CLI 支持 `init`、`doctor`、`logs`、`stop`。从 3.x 升级请阅读[迁移指南](./docs/tutorial/tutorial-extras/migration-3-to-4.md)。
-
-</details>
-
-<details>
-<summary><strong>WordPress 替代？Headless CMS？Next.js 博客？</strong></summary>
-
-都可以 — ReactPress 同时覆盖：自托管 WordPress 式编辑、供自定义前台的 Headless REST，以及 Lighthouse 95 的官方 Next.js 主题。
+可以。**4.0.0** 为当前稳定版（npm `@latest`）。从 3.x 升级请先在预发验证，并阅读[迁移指南](./docs/tutorial/tutorial-extras/migration-3-to-4.md)。
 
 </details>
 
@@ -407,45 +340,25 @@ Monorepo 贡献者请参阅 [CONTRIBUTING.md](./CONTRIBUTING.md) 及各子包 RE
 
 ## 贡献
 
-[贡献指南](./CONTRIBUTING.md) · [行为准则](./CODE_OF_CONDUCT.md) · [安全策略](./SECURITY.md)
+[CONTRIBUTING.md](./CONTRIBUTING.md) · [行为准则](./CODE_OF_CONDUCT.md) · [SECURITY.md](./SECURITY.md)
 
 [Issues](https://github.com/fecommunity/reactpress/issues) · [Pull requests](https://github.com/fecommunity/reactpress/pulls)
 
-<table>
-  <tbody>
-    <tr>
-      <td align="center" width="12.5%"><a href="https://github.com/fecommunity"><img src="https://github.com/fecommunity.png?s=72" width="72" height="72" style="border-radius:50%" alt="fecommunity"/><br/><sub><b>FECommunity</b></sub></a></td>
-      <td align="center" width="12.5%"><a href="https://github.com/want2sleeep"><img src="https://github.com/want2sleeep.png?s=72" width="72" height="72" style="border-radius:50%" alt="want2sleeep"/><br/><sub><b>SleepSheep</b></sub></a></td>
-      <td align="center" width="12.5%"><a href="https://github.com/fantasticit"><img src="https://github.com/fantasticit.png?s=72" width="72" height="72" style="border-radius:50%" alt="fantasticit"/><br/><sub><b>fantasticit</b></sub></a></td>
-      <td align="center" width="12.5%"><a href="https://github.com/chenbo29"><img src="https://github.com/chenbo29.png?s=72" width="72" height="72" style="border-radius:50%" alt="chenbo29"/><br/><sub><b>chenbo29</b></sub></a></td>
-      <td align="center" width="12.5%"><a href="https://github.com/redteav2"><img src="https://github.com/redteav2.png?s=72" width="72" height="72" style="border-radius:50%" alt="redteav2"/><br/><sub><b>redteav2</b></sub></a></td>
-      <td align="center" width="12.5%"><a href="https://github.com/trashken"><img src="https://github.com/trashken.png?s=72" width="72" height="72" style="border-radius:50%" alt="trashken"/><br/><sub><b>trashken</b></sub></a></td>
-      <td align="center" width="12.5%"><a href="https://github.com/franz007"><img src="https://github.com/franz007.png?s=72" width="72" height="72" style="border-radius:50%" alt="franz007"/><br/><sub><b>franz007</b></sub></a></td>
-      <td align="center" width="12.5%"><a href="https://github.com/funtime1"><img src="https://github.com/funtime1.png?s=72" width="72" height="72" style="border-radius:50%" alt="funtime1"/><br/><sub><b>funtime1</b></sub></a></td>
-    </tr>
-    <tr>
-      <td align="center" width="12.5%"><a href="https://github.com/scottdeift"><img src="https://github.com/scottdeift.png?s=72" width="72" height="72" style="border-radius:50%" alt="scottdeift"/><br/><sub><b>scottdeift</b></sub></a></td>
-      <td align="center" width="12.5%"><a href="https://github.com/TwoDollars666"><img src="https://github.com/TwoDollars666.png?s=72" width="72" height="72" style="border-radius:50%" alt="TwoDollars666"/><br/><sub><b>TwoDollars666</b></sub></a></td>
-      <td align="center" width="12.5%"><a href="https://github.com/Xiaonan2020"><img src="https://github.com/Xiaonan2020.png?s=72" width="72" height="72" style="border-radius:50%" alt="Xiaonan2020"/><br/><sub><b>Xiaonan2020</b></sub></a></td>
-      <td align="center" width="12.5%"><a href="https://github.com/gaoredu"><img src="https://avatars.githubusercontent.com/u/190012690?s=72" width="72" height="72" style="border-radius:50%" alt="gaoredu"/><br/><sub><b>redtea</b></sub></a></td>
-      <td align="center" width="12.5%"><a href="https://github.com/lsr365400"><img src="https://github.com/lsr365400.png?s=72" width="72" height="72" style="border-radius:50%" alt="lsr365400"/><br/><sub><b>lsr365400</b></sub></a></td>
-    </tr>
-  </tbody>
-</table>
+---
+
+## 许可证
+
+[MIT](./LICENSE) · © ReactPress / [FECommunity](https://github.com/fecommunity)
 
 ---
 
 <div align="center">
 
-**MIT License** · © ReactPress / FECommunity
-
-<br/>
-
-<a href="https://github.com/fecommunity/reactpress/stargazers">
-  <img src="https://img.shields.io/github/stars/fecommunity/reactpress?style=for-the-badge&color=ffd700&labelColor=1a1a2e" alt="在 GitHub 上 Star ReactPress" />
-</a>
-
-<p><sub>面向 React 开发者的发布系统。<br/>帮助更多开发者发现它 — 欢迎在 GitHub 上 ⭐。</sub></p>
+<p>
+  如果 ReactPress 帮你省下了 CMS + API + 前台拼装，
+  <a href="https://github.com/fecommunity/reactpress/stargazers"><strong>给仓库点个 Star</strong></a>
+  ，让更多 React 开发者更容易发现它。
+</p>
 
 <br/>
 
