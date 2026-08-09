@@ -157,60 +157,10 @@
   flex-shrink: 0;
 }
 
-.toolbarActionsLoading .versionSwitch {
-  opacity: 0.5;
-  pointer-events: none;
-}
-
-.versionSwitch {
-  display: inline-flex;
-  align-items: stretch;
-  transition: opacity 0.2s ease;
-}
-
-.versionDivider {
-  width: 1px;
-  align-self: stretch;
-  margin: 0.22rem 0;
-  background: var(--term-switch-divider);
-  flex-shrink: 0;
-}
-
 .toolbarMono {
   font-family: 'SF Mono', 'Menlo', 'Monaco', 'Consolas', var(--ifm-font-family-monospace);
   font-weight: 500;
   letter-spacing: 0.02em;
-}
-
-.versionOption {
-  padding: 0.24rem 0.5rem;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  color: var(--term-switch-text);
-  font-size: 0.67rem;
-  line-height: 1.2;
-  text-transform: lowercase;
-  transition: color 0.15s ease;
-}
-
-.versionOption:hover:not(:disabled) {
-  color: var(--term-switch-text-active);
-}
-
-.versionOptionActive {
-  color: var(--term-switch-text-active);
-  font-weight: 600;
-}
-
-.versionOption:disabled {
-  cursor: default;
-}
-
-.versionOption:focus-visible {
-  outline: 2px solid var(--term-btn-border-hover);
-  outline-offset: -2px;
-  z-index: 1;
 }
 
 .dots {
@@ -275,7 +225,6 @@
   gap: 0.28rem;
   padding: 0.24rem 0.52rem;
   border: none;
-  border-left: 1px solid var(--term-switch-divider);
   border-radius: 0;
   font-size: 0.67rem;
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
@@ -295,15 +244,6 @@
   height: 13px;
   flex-shrink: 0;
   opacity: 0.85;
-}
-
-.toolbarActions:not(:has(.versionSwitch)) .copyBtn {
-  border-left: none;
-}
-
-.hero .versionOption {
-  padding: 0.26rem 0.54rem;
-  font-size: 0.69rem;
 }
 
 .hero .copyBtn {
@@ -710,11 +650,6 @@
 
   .toolbarActions {
     max-width: 100%;
-  }
-
-  .versionOption {
-    padding: 0.24rem 0.4rem;
-    font-size: 0.64rem;
   }
 
   .copyBtn {

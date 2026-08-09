@@ -1,8 +1,6 @@
 import Translate, { translate } from '@docusaurus/Translate';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
-import { buildQuickStartCommands } from '@site/src/constants/quickStartCommands';
-import { buildInstallCommand, type ReactPressDistTags } from '@site/src/npm/packageVersions';
-import { useReactPressVersions } from '@site/src/npm/useReactPressVersions';
+import { buildQuickStartCommands, QUICK_START_INSTALL_COMMAND } from '@site/src/constants/quickStartCommands';
 import clsx from 'clsx';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
@@ -10,19 +8,15 @@ import styles from './styles.module.css';
 import { useCliTypewriter } from './useCliTypewriter';
 
 type Variant = 'hero' | 'section';
-export type NpmDistTag = keyof ReactPressDistTags;
 
 type Props = {
   variant?: Variant;
   className?: string;
   showHint?: boolean;
   animate?: boolean;
-  showVersionSwitch?: boolean;
-  defaultVersionTag?: NpmDistTag;
   commands?: readonly string[];
   copyCommand?: string;
   installCommand?: string;
-  betaVersion?: string;
 };
 
 const SERVICE_ROW_PATTERN = /^(\S+)\s{2,}(https?:\/\/\S+)$/;
@@ -166,32 +160,22 @@ export default function CliCommandBlock({
   className,
   showHint = variant !== 'hero',
   animate = variant === 'hero',
-  showVersionSwitch = variant === 'hero',
-  defaultVersionTag = 'latest',
   commands: commandsProp,
   copyCommand: copyCommandProp,
   installCommand: installCommandProp,
-  betaVersion,
 }: Props) {
   const { i18n } = useDocusaurusContext();
   const locale = i18n.currentLocale === 'zh' ? 'zh' : 'en';
-  const { latest, beta, isLoading: versionsLoading } = useReactPressVersions();
-  const [selectedTag, setSelectedTag] = useState<NpmDistTag>(defaultVersionTag);
   const [copied, setCopied] = useState(false);
 
-  const managedInstallCommand = useMemo(() => buildInstallCommand(selectedTag), [selectedTag]);
-  const managedCommands = useMemo(() => buildQuickStartCommands(managedInstallCommand), [managedInstallCommand]);
-  const managedCopyCommand = useMemo(() => managedCommands.join('\n'), [managedCommands]);
-  const selectedVersion = selectedTag === 'beta' ? beta : latest;
-
-  const useManagedCommands = showVersionSwitch;
-  const installCommand = useManagedCommands ? managedInstallCommand : (installCommandProp ?? managedInstallCommand);
-  const lines = useManagedCommands
-    ? managedCommands
-    : commandsProp && commandsProp.length > 0
-      ? commandsProp
-      : managedCommands;
-  const copyCommand = useManagedCommands ? managedCopyCommand : (copyCommandProp ?? managedCopyCommand);
+  const installCommand = installCommandProp ?? QUICK_START_INSTALL_COMMAND;
+  const lines = useMemo(() => {
+    if (commandsProp && commandsProp.length > 0) {
+      return commandsProp;
+    }
+    return buildQuickStartCommands(installCommand);
+  }, [commandsProp, installCommand]);
+  const copyCommand = useMemo(() => copyCommandProp ?? lines.join('\n'), [copyCommandProp, lines]);
 
   const {
     history,
@@ -203,7 +187,6 @@ export default function CliCommandBlock({
     locale,
     commands: lines,
     installCommand,
-    betaVersion: betaVersion ?? selectedVersion,
   });
 
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -224,11 +207,6 @@ export default function CliCommandBlock({
       window.setTimeout(() => setCopied(false), 2000);
     }
   }, [copyCommand]);
-
-  const handleVersionTagChange = useCallback((tag: NpmDistTag) => {
-    setSelectedTag(tag);
-    setCopied(false);
-  }, []);
 
   const showLiveInput = isAnimating && isTyping;
   const isReady = isAnimating && history.some((line) => line.kind === 'success') && !showLiveInput;
@@ -263,47 +241,7 @@ export default function CliCommandBlock({
             )}
           </div>
           <div className={styles.toolbarTrailing}>
-            <div
-              className={clsx(
-                styles.toolbarActions,
-                showVersionSwitch && versionsLoading && styles.toolbarActionsLoading
-              )}
-            >
-              {showVersionSwitch && (
-                <div
-                  className={styles.versionSwitch}
-                  role="group"
-                  aria-busy={versionsLoading || undefined}
-                  aria-label={translate({
-                    message: 'Choose npm dist-tag for install command',
-                    id: 'home.cli.versionSwitch.aria',
-                  })}
-                >
-                  {(['beta', 'latest'] as const).map((tag, index) => {
-                    const version = tag === 'beta' ? beta : latest;
-                    const isActive = selectedTag === tag;
-                    return (
-                      <React.Fragment key={tag}>
-                        {index > 0 && <span className={styles.versionDivider} aria-hidden />}
-                        <button
-                          type="button"
-                          className={clsx(
-                            styles.versionOption,
-                            styles.toolbarMono,
-                            isActive && styles.versionOptionActive
-                          )}
-                          disabled={versionsLoading}
-                          aria-pressed={isActive}
-                          aria-label={`${tag} (${version})`}
-                          onClick={() => handleVersionTagChange(tag)}
-                        >
-                          <Translate id={`home.hero.version.tag.${tag}`}>{tag}</Translate>
-                        </button>
-                      </React.Fragment>
-                    );
-                  })}
-                </div>
-              )}
+            <div className={styles.toolbarActions}>
               <button
                 type="button"
                 className={clsx(styles.copyBtn, copied && styles.copyBtnDone)}

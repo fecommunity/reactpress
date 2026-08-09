@@ -33,7 +33,7 @@ node -v   # should show v20.x or higher
 npm install -g @fecommunity/reactpress
 ```
 
-> 4.0 stable is on npm **`@latest`**. Use `@beta` for prereleases. There is no `@4` dist-tag.
+> 4.0 stable is on npm **`@latest`** (`npm i -g @fecommunity/reactpress`).
 
 The first `npm install -g` triggers `postinstall`, which downloads bundled server runtime dependencies (~1–2 minutes).
 

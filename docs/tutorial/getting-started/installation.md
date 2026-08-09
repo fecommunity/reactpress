@@ -33,7 +33,7 @@ node -v   # 应显示 v20.x 或更高
 npm install -g @fecommunity/reactpress
 ```
 
-> 4.0 稳定版在 npm **`@latest`**。预发布使用 `@beta`。不存在 `@4` dist-tag。
+> 4.0 稳定版在 npm **`@latest`**（`npm i -g @fecommunity/reactpress`）。
 
 首次 `npm install -g` 会触发 `postinstall`，下载 bundled server 运行时依赖，约需 1–2 分钟。
 

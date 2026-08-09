@@ -1,10 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import {
-  FALLBACK_REACTPRESS_VERSIONS,
-  fetchReactPressVersions,
-  type ReactPressDistTags,
-} from './packageVersions';
+import { FALLBACK_REACTPRESS_LATEST, fetchReactPressVersions, type ReactPressDistTags } from './packageVersions';
 
 export type ReactPressVersionsState = ReactPressDistTags & {
   isLoading: boolean;
@@ -12,7 +8,9 @@ export type ReactPressVersionsState = ReactPressDistTags & {
 };
 
 export function useReactPressVersions(): ReactPressVersionsState {
-  const [versions, setVersions] = useState<ReactPressDistTags>(FALLBACK_REACTPRESS_VERSIONS);
+  const [versions, setVersions] = useState<ReactPressDistTags>({
+    latest: FALLBACK_REACTPRESS_LATEST,
+  });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 

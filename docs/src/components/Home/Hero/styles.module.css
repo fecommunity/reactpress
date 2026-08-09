@@ -264,32 +264,6 @@
   white-space: nowrap;
 }
 
-.versionTagBeta {
-  background: linear-gradient(135deg, rgba(65, 209, 255, 0.14), rgba(189, 52, 254, 0.12));
-  border-color: rgba(65, 209, 255, 0.35);
-  box-shadow: 0 2px 12px rgba(65, 209, 255, 0.12);
-  color: var(--home-secondary-text);
-}
-
-.versionTagBeta .tagLabel {
-  background: linear-gradient(135deg, #41d1ff, #bd34fe);
-  color: #0a0c12;
-  box-shadow: 0 2px 8px rgba(65, 209, 255, 0.28);
-}
-
-.versionTagBeta .tagValue {
-  color: #087ea4;
-}
-
-html[data-theme='dark'] .versionTagBeta .tagValue {
-  color: #7ddfff;
-}
-
-.versionTagBeta:hover {
-  border-color: rgba(65, 209, 255, 0.55);
-  box-shadow: 0 4px 16px rgba(65, 209, 255, 0.22);
-}
-
 .versionTagLatest {
   background: rgba(255, 255, 255, 0.55);
   border-color: var(--home-button-secondary-border);

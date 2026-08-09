@@ -16,7 +16,7 @@ import styles from './styles.module.css';
 
 function Hero() {
   const { siteConfig } = useDocusaurusContext();
-  const { latest, beta } = useReactPressVersions();
+  const { latest } = useReactPressVersions();
 
   return (
     <header className={styles.container}>
@@ -43,18 +43,7 @@ function Hero() {
           <Logo className={styles.logo} />
           <div className={styles.titleRow}>
             <h1 className={styles.title}>{siteConfig.title}</h1>
-            <div className={styles.versionTags} aria-label="package release versions">
-              <a
-                className={clsx(styles.versionTag, styles.versionTagBeta)}
-                href={buildGitHubReleaseTagUrl(beta)}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <span className={styles.tagLabel}>
-                  <Translate id="home.hero.version.tag.beta">beta</Translate>
-                </span>
-                <span className={styles.tagValue}>{beta}</span>
-              </a>
+            <div className={styles.versionTags} aria-label="package release version">
               <a
                 className={clsx(styles.versionTag, styles.versionTagLatest)}
                 href={buildGitHubReleaseTagUrl(latest)}

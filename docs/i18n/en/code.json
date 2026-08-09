@@ -352,9 +352,6 @@
   "home.hero.github": {
     "message": "GitHub"
   },
-  "home.hero.version.tag.beta": {
-    "message": "beta"
-  },
   "home.hero.version.tag.latest": {
     "message": "latest"
   },
@@ -378,9 +375,6 @@
   },
   "home.cli.hint": {
     "message": "Copy all commands and paste into your terminal to get started"
-  },
-  "home.cli.versionSwitch.aria": {
-    "message": "Choose npm dist-tag for install command"
   },
   "home.cli.running": {
     "message": "Running"
@@ -485,7 +479,7 @@
     "message": "Paste in any empty folder — zero-config site in about a minute"
   },
   "全局安装后执行 reactpress init，约 1 分钟零配置起站": {
-    "message": "After global install, run reactpress init — zero-config site in about a minute"
+    "message": "After global install, initialize in an empty folder — your site is ready in about a minute"
   },
   "4.0 核心亮点": {
     "message": "4.0 highlights"
@@ -734,9 +728,6 @@
     "message": "Build blogs, documentation, company websites, and content-driven applications with React."
   },
   "全局安装后，在空目录初始化，约 1 分钟即可零配置起站": {
-    "message": "After global install, initialize in an empty folder — your site is ready in about a minute"
-  },
-  "全局安装后执行 reactpress init，约 1 分钟零配置起站": {
     "message": "After global install, initialize in an empty folder — your site is ready in about a minute"
   }
 }

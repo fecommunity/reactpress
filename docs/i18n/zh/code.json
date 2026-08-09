@@ -41,9 +41,6 @@
   "home.hero.github": {
     "message": "GitHub"
   },
-  "home.hero.version.tag.beta": {
-    "message": "beta"
-  },
   "home.hero.version.tag.latest": {
     "message": "latest"
   },
@@ -106,9 +103,6 @@
   },
   "home.cli.hint": {
     "message": "复制全部命令，粘贴到终端按序执行即可起站"
-  },
-  "home.cli.versionSwitch.aria": {
-    "message": "选择 npm 安装版本（beta 或 latest）"
   },
   "home.highlights.eyebrow": {
     "message": "ReactPress 4.0"

@@ -17,7 +17,6 @@ type Options = {
   locale?: QuickStartLocale;
   commands?: readonly string[];
   installCommand?: string;
-  betaVersion?: string;
   loop?: boolean;
   charDelayMs?: number;
   linePauseMs?: number;
@@ -35,10 +34,9 @@ function prefersReducedMotion(): boolean {
 function buildStaticTerminal(
   commands: readonly string[],
   locale: QuickStartLocale,
-  installCommand: string,
-  betaVersion: string,
+  installCommand: string
 ): TerminalLine[] {
-  const demoOutputs = getQuickStartDemoOutputs(locale, installCommand, betaVersion);
+  const demoOutputs = getQuickStartDemoOutputs(locale, installCommand);
   const readyLines = getQuickStartDevReadyLines(locale);
   const lines: TerminalLine[] = [];
   for (const cmd of commands) {
@@ -59,26 +57,17 @@ export function useCliTypewriter({
   locale = 'en',
   commands = QUICK_START_COMMANDS,
   installCommand = QUICK_START_COMMANDS[0],
-  betaVersion,
   loop = true,
   charDelayMs = 40,
   linePauseMs = 380,
   outputDelayMs = 120,
   holdMs = 4500,
 }: Options) {
-  const resolvedBetaVersion = betaVersion ?? installCommand.split('@').pop() ?? 'beta';
-
-  const demoOutputs = useMemo(
-    () => getQuickStartDemoOutputs(locale, installCommand, resolvedBetaVersion),
-    [locale, installCommand, resolvedBetaVersion],
-  );
-  const readyLines = useMemo(
-    () => getQuickStartDevReadyLines(locale),
-    [locale],
-  );
+  const demoOutputs = useMemo(() => getQuickStartDemoOutputs(locale, installCommand), [locale, installCommand]);
+  const readyLines = useMemo(() => getQuickStartDevReadyLines(locale), [locale]);
   const staticLines = useMemo(
-    () => buildStaticTerminal(commands, locale, installCommand, resolvedBetaVersion),
-    [commands, locale, installCommand, resolvedBetaVersion],
+    () => buildStaticTerminal(commands, locale, installCommand),
+    [commands, locale, installCommand]
   );
 
   const [history, setHistory] = useState<TerminalLine[]>([]);
@@ -179,18 +168,7 @@ export function useCliTypewriter({
       cancelled = true;
       timers.forEach(clearTimeout);
     };
-  }, [
-    animate,
-    commands,
-    demoOutputs,
-    readyLines,
-    staticLines,
-    loop,
-    charDelayMs,
-    linePauseMs,
-    outputDelayMs,
-    holdMs,
-  ]);
+  }, [animate, commands, demoOutputs, readyLines, staticLines, loop, charDelayMs, linePauseMs, outputDelayMs, holdMs]);
 
   return {
     animate,

@@ -58,8 +58,7 @@ export const FAQ_ENTRIES_ZH: FaqEntry[] = [
   },
   {
     question: 'ReactPress 4.0 可用于生产环境吗？',
-    answer:
-      '4.0 处于活跃 beta。init 与 doctor 等核心路径已稳定；生产升级前请在预发环境验证，并阅读 3.x 到 4.0 迁移指南。',
+    answer: '4.0.0 为当前稳定版（npm `@latest`）。从 3.x 升级时请先在预发环境验证，并阅读 3.x 到 4.0 迁移指南。',
   },
   {
     question: 'ReactPress 免费吗？',

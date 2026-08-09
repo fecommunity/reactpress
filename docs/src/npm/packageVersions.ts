@@ -15,18 +15,19 @@ export function buildGitHubReleaseTagUrl(version: string): string {
 }
 
 /** Fallback when the registry is unreachable (SSR / offline). */
+export const FALLBACK_REACTPRESS_LATEST = '4.0.0';
+
+/** @deprecated Use FALLBACK_REACTPRESS_LATEST */
 export const FALLBACK_REACTPRESS_VERSIONS = {
-  latest: '4.0.0',
-  beta: '4.0.0-beta.18',
+  latest: FALLBACK_REACTPRESS_LATEST,
 } as const;
 
 export type ReactPressDistTags = {
   latest: string;
-  beta: string;
 };
 
 type NpmRegistryResponse = {
-  'dist-tags'?: Partial<ReactPressDistTags>;
+  'dist-tags'?: Partial<ReactPressDistTags> & Record<string, string>;
 };
 
 export async function fetchReactPressVersions(): Promise<ReactPressDistTags> {
@@ -39,20 +40,20 @@ export async function fetchReactPressVersions(): Promise<ReactPressDistTags> {
   const distTags = data['dist-tags'] ?? {};
 
   return {
-    latest: distTags.latest ?? FALLBACK_REACTPRESS_VERSIONS.latest,
-    beta: distTags.beta ?? FALLBACK_REACTPRESS_VERSIONS.beta,
+    latest: distTags.latest ?? FALLBACK_REACTPRESS_LATEST,
   };
 }
 
-export function buildInstallCommand(tag: 'beta' | 'latest' = 'latest'): string {
-  return `npm i -g ${REACTPRESS_NPM_PACKAGE}@${tag}`;
+/** Global install command — always npm `@latest`. */
+export function buildInstallCommand(): string {
+  return `npm i -g ${REACTPRESS_NPM_PACKAGE}`;
 }
 
 export function buildNpmInstallOutput(version: string): string {
   return `${REACTPRESS_NPM_PACKAGE}@${version}`;
 }
 
-/** e.g. 4.0.0-beta.18 → 4.0 */
+/** e.g. 4.0.0 → 4.0 */
 export function formatMajorMinor(version: string): string {
   const match = version.match(/^(\d+)\.(\d+)/);
   return match ? `${match[1]}.${match[2]}` : version;

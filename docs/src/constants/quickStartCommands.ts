@@ -1,7 +1,7 @@
-import { buildInstallCommand, FALLBACK_REACTPRESS_VERSIONS } from '@site/src/npm/packageVersions';
+import { buildInstallCommand, FALLBACK_REACTPRESS_LATEST } from '@site/src/npm/packageVersions';
 
 /** ReactPress quick-start commands (homepage CLI demo). */
-export const QUICK_START_INSTALL_COMMAND = buildInstallCommand('latest');
+export const QUICK_START_INSTALL_COMMAND = buildInstallCommand();
 
 export const QUICK_START_COMMANDS = [
   QUICK_START_INSTALL_COMMAND,
@@ -35,12 +35,8 @@ const QUICK_START_DEV_READY_LINES_ZH: DevReadyLines = [
   'API      http://localhost:3002/api',
 ];
 
-/** @deprecated Use getQuickStartDemoOutputs(locale, installCommand, version) */
-export const QUICK_START_DEMO_OUTPUTS = getQuickStartDemoOutputs(
-  'en',
-  QUICK_START_INSTALL_COMMAND,
-  FALLBACK_REACTPRESS_VERSIONS.latest
-);
+/** @deprecated Use getQuickStartDemoOutputs(locale, installCommand) */
+export const QUICK_START_DEMO_OUTPUTS = getQuickStartDemoOutputs('en', QUICK_START_INSTALL_COMMAND);
 
 /** @deprecated Use getQuickStartDevReadyLines(locale) */
 export const QUICK_START_DEV_READY_LINES = QUICK_START_DEV_READY_LINES_EN;
@@ -49,18 +45,18 @@ export function buildQuickStartCommands(installCommand = QUICK_START_INSTALL_COM
   return [installCommand, 'mkdir my-blog && cd my-blog', 'reactpress init'] as const;
 }
 
-export function getInstallDemoOutput(_betaVersion: string): readonly string[] {
+export function getInstallDemoOutput(_version: string = FALLBACK_REACTPRESS_LATEST): readonly string[] {
   return ['added 1 package in 12s'];
 }
 
-export function getQuickStartDemoOutputs(locale: string, installCommand: string, betaVersion: string): DemoOutputs {
-  const installDemoOutput = getInstallDemoOutput(betaVersion);
-  const shared: DemoOutputs = {
+export function getQuickStartDemoOutputs(locale: string, installCommand: string): DemoOutputs {
+  void locale;
+  const installDemoOutput = getInstallDemoOutput();
+  return {
     [installCommand]: installDemoOutput,
     'mkdir my-blog && cd my-blog': [],
     'reactpress init': [],
   };
-  return shared;
 }
 
 export function getQuickStartDevReadyLines(locale: string): DevReadyLines {
