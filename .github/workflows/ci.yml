@@ -34,8 +34,10 @@ jobs:
     runs-on: ubuntu-latest
     services:
       mysql:
-        # Docker Hub is often slow/unreachable on GHA; use AWS ECR public mirror of official mysql image.
-        image: public.ecr.aws/docker/library/mysql:8.0
+        # GitHub-hosted runners are exempt from Docker Hub's public-image rate limit.
+        # Anonymous pulls from public.ecr.aws share a per-IP data cap and fail with
+        # "toomanyrequests: Data limit exceeded" before any job step can log in.
+        image: docker.io/library/mysql:8.0
         env:
           MYSQL_ROOT_PASSWORD: reactpress
           MYSQL_DATABASE: reactpress
