@@ -1,6 +1,6 @@
 # Repository root static assets
 
-Marketing, demo, and brand assets for the ReactPress publishing platform — root [README](../README.md), [README-zh_CN](../README-zh_CN.md), and [docs site](https://docs.gaoredu.com/).
+Marketing, demo, and brand assets for the ReactPress publishing platform — root [README](../README.md), [README-zh_CN](../README-zh_CN.md), and [docs site](https://reactpress.cc/).
 
 ## Brand & icons
 
@@ -10,20 +10,20 @@ Generate or refresh brand files from source SVGs:
 pnpm export:brand
 ```
 
-| Directory | Contents |
-| :--- | :--- |
-| `brand/` | Logo and wordmark: `logo.svg`, `wordmark.svg`, `logo.png`, etc. |
-| `favicon/` | Browser favicons: `favicon.ico`, `favicon-16/32/48.png` |
-| `icons/` | PWA / Apple Touch: `apple-touch-icon.png`, `icon-192/512.png` |
+| Directory  | Contents                                                        |
+| :--------- | :-------------------------------------------------------------- |
+| `brand/`   | Logo and wordmark: `logo.svg`, `wordmark.svg`, `logo.png`, etc. |
+| `favicon/` | Browser favicons: `favicon.ico`, `favicon-16/32/48.png`         |
+| `icons/`   | PWA / Apple Touch: `apple-touch-icon.png`, `icon-192/512.png`   |
 
 ## Demo media
 
 Root-level demo media (`usage.gif`, `demo.gif`, `desktop.gif`, `lighthouse.png`) is referenced by [README.md](../README.md) and [README-zh_CN](../README-zh_CN.md).
 
-| Directory | Contents |
-| :--- | :--- |
-| `admin/` | Admin UI screenshots for [web/README](../web/README.md) and [docs site](https://docs.gaoredu.com/): `post.png`, `midia.png`, `plugins.png`, `theme-custom.png`, `settings.png` |
-| `star-history/` | GitHub star history charts for root README files (updated by `.github/workflows/star-history.yml`) |
+| Directory       | Contents                                                                                                                                                                    |
+| :-------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `admin/`        | Admin UI screenshots for [web/README](../web/README.md) and [docs site](https://reactpress.cc/): `post.png`, `midia.png`, `plugins.png`, `theme-custom.png`, `settings.png` |
+| `star-history/` | GitHub star history charts for root README files (updated by `.github/workflows/star-history.yml`)                                                                          |
 
 A copy of `admin/` is synced to `docs/static/img/admin/` for the documentation site.
 

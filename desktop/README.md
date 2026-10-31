@@ -6,16 +6,16 @@ Electron desktop client for ReactPress 4.0 — offline-first writing with embedd
 
 - **Local mode**: SQLite API, no Docker required (default `admin` / `admin`)
 - **Remote mode**: Connect to your production API
-- **Docs**: [docs.gaoredu.com](https://docs.gaoredu.com/)
-- **Download**: [Desktop client](https://docs.gaoredu.com/docs/tutorial-extras/desktop-client) · [GitHub Releases](https://github.com/fecommunity/reactpress/releases)
+- **Docs**: [reactpress.cc](https://reactpress.cc/)
+- **Download**: [Desktop client](https://reactpress.cc/docs/tutorial-extras/desktop-client) · [GitHub Releases](https://github.com/fecommunity/reactpress/releases)
 
 ## Role
 
-| Layer | Responsibility |
-|------|------|
-| **desktop/** | Window, preload/IPC, local API process, config persistence |
-| **web/** | Admin UI, routing, forms (minor adaptation via `getRuntime() === 'electron'`) |
-| **server/** | REST API (spawned by main process in local mode, or connect to remote) |
+| Layer        | Responsibility                                                                |
+| ------------ | ----------------------------------------------------------------------------- |
+| **desktop/** | Window, preload/IPC, local API process, config persistence                    |
+| **web/**     | Admin UI, routing, forms (minor adaptation via `getRuntime() === 'electron'`) |
+| **server/**  | REST API (spawned by main process in local mode, or connect to remote)        |
 
 ## Modes
 
@@ -84,22 +84,22 @@ pnpm build:desktop:force
 
 **Recommended debug workflow (speed vs dev/prod parity):**
 
-| Stage | Command | Notes |
-|------|------|------|
-| Daily UI / API logic | `pnpm dev:desktop` | Vite HMR, monorepo source paths — fastest |
+| Stage                    | Command                                       | Notes                                                               |
+| ------------------------ | --------------------------------------------- | ------------------------------------------------------------------- |
+| Daily UI / API logic     | `pnpm dev:desktop`                            | Vite HMR, monorepo source paths — fastest                           |
 | Verify packaged behavior | `pnpm build:desktop:dir && pnpm open:desktop` | Same `process.resourcesPath`, NODE_PATH, theme startup as installer |
-| Release | `pnpm build:desktop` | Run after dir verification passes |
+| Release                  | `pnpm build:desktop`                          | Run after dir verification passes                                   |
 
 Incremental optimization: unchanged workspace builds (toolkit/cli/server/web/desktop) and staging (`pnpm deploy` + shared Next install) are skipped; when only desktop main process changes, a second `build:desktop:dir` often finishes in tens of seconds + electron-builder.
 
 `dev:desktop` vs packaged build:
 
-| Dimension | `dev:desktop` | Packaged (`open:desktop` / DMG) |
-|------|---------------|-------------------------------|
-| Admin UI | Vite dev server (`localhost`) | Static `web/dist` (`file://`) |
-| API / theme paths | Monorepo source + workspace `node_modules` | Hoisted deploy under `Resources/` |
-| Theme deps | Can `pnpm install` | Shared `runtime-deps`, `REACTPRESS_SKIP_THEME_INSTALL` |
-| Detection | `ELECTRON_IS_DEV=1` | `app.isPackaged` |
+| Dimension         | `dev:desktop`                              | Packaged (`open:desktop` / DMG)                        |
+| ----------------- | ------------------------------------------ | ------------------------------------------------------ |
+| Admin UI          | Vite dev server (`localhost`)              | Static `web/dist` (`file://`)                          |
+| API / theme paths | Monorepo source + workspace `node_modules` | Hoisted deploy under `Resources/`                      |
+| Theme deps        | Can `pnpm install`                         | Shared `runtime-deps`, `REACTPRESS_SKIP_THEME_INSTALL` |
+| Detection         | `ELECTRON_IS_DEV=1`                        | `app.isPackaged`                                       |
 
 Prefer `build:desktop:dir` + `open:desktop` for daily debugging to avoid waiting for DMG each time.
 
@@ -113,11 +113,11 @@ Size optimization notes: [docs/size-optimization.md](./docs/size-optimization.md
 
 Packaged builds write main process, embedded API, and theme subprocess output to log files (not just `Error` lines).
 
-| Item | Path / notes |
-|----|-------------|
-| Log directory | `~/Library/Application Support/ReactPress/logs/` (macOS) |
-| Log file | `system-YYYY-MM-DD.log` (daily rotation, 5MB max per file) |
-| Contents | Startup args, API / theme stdout/stderr, uncaught exceptions |
+| Item          | Path / notes                                                 |
+| ------------- | ------------------------------------------------------------ |
+| Log directory | `~/Library/Application Support/ReactPress/logs/` (macOS)     |
+| Log file      | `system-YYYY-MM-DD.log` (daily rotation, 5MB max per file)   |
+| Contents      | Startup args, API / theme stdout/stderr, uncaught exceptions |
 
 **Verbose debugging** (mirror to terminal / open DevTools, full Nest API logs):
 
@@ -145,14 +145,14 @@ desktop/
 
 ## Root scripts
 
-| Command | Description |
-|------|------|
-| `pnpm dev:desktop` | Local SQLite + Admin + Electron |
-| `pnpm dev:web:local` | Local SQLite + Admin (browser, no Electron) |
+| Command                   | Description                                      |
+| ------------------------- | ------------------------------------------------ |
+| `pnpm dev:desktop`        | Local SQLite + Admin + Electron                  |
+| `pnpm dev:web:local`      | Local SQLite + Admin (browser, no Electron)      |
 | `pnpm build:web:electron` | Build Admin (Vite `electron` mode, `base: './'`) |
-| `pnpm build:desktop` | Above + electron-builder package |
-| `pnpm build:desktop:dir` | Unpacked `.app` (faster, verify prod paths) |
-| `pnpm open:desktop` | Launch `build:desktop:dir` output |
+| `pnpm build:desktop`      | Above + electron-builder package                 |
+| `pnpm build:desktop:dir`  | Unpacked `.app` (faster, verify prod paths)      |
+| `pnpm open:desktop`       | Launch `build:desktop:dir` output                |
 
 ## Web-side adaptation
 

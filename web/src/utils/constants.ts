@@ -45,8 +45,7 @@ export const REACTPRESS_GITHUB_URL = "https://github.com/fecommunity/reactpress"
 
 /** Public docs site (Docusaurus). Override with `VITE_REACTPRESS_DOCS_URL`. */
 export const REACTPRESS_DOCS_BASE_URL =
-  import.meta.env.VITE_REACTPRESS_DOCS_URL?.trim().replace(/\/$/, "") ||
-  "https://reactpress.surge.sh";
+  import.meta.env.VITE_REACTPRESS_DOCS_URL?.trim().replace(/\/$/, "") || "https://reactpress.cc";
 
 /** Live demo site (public blog). */
 export const REACTPRESS_DEMO_URL = "https://blog.gaoredu.com";

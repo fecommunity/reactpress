@@ -154,7 +154,7 @@ Published packages: **toolkit**, **web**, **server** (deprecated), **cli** (`@fe
 | Theme manifest schema | [themes/theme.manifest.schema.json](./themes/theme.manifest.schema.json)                             |
 | Changelog             | [CHANGELOG.md](./CHANGELOG.md)                                                                       |
 
-Live docs: [blog.gaoredu.com](https://blog.gaoredu.com)
+Live docs: [reactpress.cc](https://reactpress.cc)
 
 ## Documentation language
 

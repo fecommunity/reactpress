@@ -1,7 +1,7 @@
 import type { Tag } from '@docusaurus/types';
 import { buildOrganizationGraph } from './structuredData';
 
-const DEFAULT_SITE_URL = 'https://docs.gaoredu.com';
+const DEFAULT_SITE_URL = 'https://reactpress.cc';
 const GOOGLE_ADSENSE_CLIENT = 'ca-pub-5349318179336721';
 
 export function getSiteUrl(): string {

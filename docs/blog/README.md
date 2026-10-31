@@ -5,7 +5,7 @@ slug: readme-internal
 
 # ReactPress docs blog
 
-Long-form articles and release notes for [docs.gaoredu.com](https://docs.gaoredu.com).
+Long-form articles and release notes for [reactpress.cc](https://reactpress.cc).
 
 ## Routes
 

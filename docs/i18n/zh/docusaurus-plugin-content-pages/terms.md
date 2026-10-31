@@ -8,7 +8,7 @@ keywords: [reactpress, 使用条款, 许可, 免责声明]
 
 **最后更新：** 2026 年 7 月
 
-访问 ReactPress 官方文档站（`docs.gaoredu.com`）即表示您同意本使用条款。若不同意，请勿使用本站。
+访问 ReactPress 官方文档站（`reactpress.cc`）即表示您同意本使用条款。若不同意，请勿使用本站。
 
 ## 站点用途
 

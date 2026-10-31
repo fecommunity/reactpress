@@ -1,6 +1,6 @@
 ---
 title: 隐私政策
-description: ReactPress 文档站隐私政策 — docs.gaoredu.com 收集的数据、Cookie、分析与联系方式。
+description: ReactPress 文档站隐私政策 — reactpress.cc 收集的数据、Cookie、分析与联系方式。
 keywords: [reactpress, 隐私政策, gdpr, 分析]
 ---
 
@@ -8,7 +8,7 @@ keywords: [reactpress, 隐私政策, gdpr, 分析]
 
 **最后更新：** 2026 年 7 月
 
-本隐私政策说明 **ReactPress 官方文档站**（`docs.gaoredu.com`，作为 ReactPress 开源项目的一部分运营）在您访问或使用本网站时如何处理信息。
+本隐私政策说明 **ReactPress 官方文档站**（`reactpress.cc`，作为 ReactPress 开源项目的一部分运营）在您访问或使用本网站时如何处理信息。
 
 > 本政策仅适用于**文档网站**。您使用 ReactPress 自行部署的站点由您自行管理，适用您自己的政策。
 

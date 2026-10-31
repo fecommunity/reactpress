@@ -4,7 +4,7 @@
   "description": "ReactPress CLI — Publish with React. Ship like WordPress. CMS, Admin, Headless API, and Next.js themes in one command. Self-hosted, MIT. `npx @fecommunity/reactpress init`",
   "author": "fecommunity",
   "license": "MIT",
-  "homepage": "https://docs.gaoredu.com/",
+  "homepage": "https://reactpress.cc/",
   "bugs": {
     "url": "https://github.com/fecommunity/reactpress/issues"
   },

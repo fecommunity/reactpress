@@ -10,14 +10,14 @@
 
 This package remains available for legacy deployments and direct API integration. It powers themes, Admin, and desktop clients through [@fecommunity/reactpress-toolkit](../toolkit/).
 
-| Capability | Detail |
-| :----------- | :----- |
-| **Content** | Articles, pages, media, comments, search, site settings |
-| **Extensibility** | Plugin hook runtime and theme catalog (ReactPress 4.0) |
-| **API** | Headless REST with JWT auth, rate limiting, Swagger/OpenAPI |
-| **Database** | MySQL (production) or SQLite (local / desktop) |
+| Capability        | Detail                                                      |
+| :---------------- | :---------------------------------------------------------- |
+| **Content**       | Articles, pages, media, comments, search, site settings     |
+| **Extensibility** | Plugin hook runtime and theme catalog (ReactPress 4.0)      |
+| **API**           | Headless REST with JWT auth, rate limiting, Swagger/OpenAPI |
+| **Database**      | MySQL (production) or SQLite (local / desktop)              |
 
-[Documentation](https://docs.gaoredu.com/) · [Migrate to CLI](../cli/) · [GitHub](https://github.com/fecommunity/reactpress)
+[Documentation](https://reactpress.cc/) · [Migrate to CLI](../cli/) · [GitHub](https://github.com/fecommunity/reactpress)
 
 ## Quick start
 
@@ -52,12 +52,12 @@ pnpm install
 pnpm run --dir server dev
 ```
 
-| Command | Description |
-| :------ | :---------- |
-| `pnpm run dev` | Dev server with hot reload |
-| `pnpm run build` | Production build |
-| `pnpm run test` | Unit tests |
-| `pnpm run pm2:start` | Start with PM2 |
+| Command              | Description                |
+| :------------------- | :------------------------- |
+| `pnpm run dev`       | Dev server with hot reload |
+| `pnpm run build`     | Production build           |
+| `pnpm run test`      | Unit tests                 |
+| `pnpm run pm2:start` | Start with PM2             |
 
 ## Project structure
 
@@ -73,13 +73,13 @@ server/
 
 The install wizard generates `.env`. Key variables:
 
-| Variable | Description | Default |
-| :------- | :---------- | :------ |
-| `DB_HOST` | Database host | `127.0.0.1` |
-| `DB_PORT` | Database port | `3306` |
-| `DB_DATABASE` | Database name | `reactpress` |
-| `SERVER_PORT` | API port | `3002` |
-| `JWT_SECRET` | JWT signing key | — |
+| Variable          | Description     | Default                 |
+| :---------------- | :-------------- | :---------------------- |
+| `DB_HOST`         | Database host   | `127.0.0.1`             |
+| `DB_PORT`         | Database port   | `3306`                  |
+| `DB_DATABASE`     | Database name   | `reactpress`            |
+| `SERVER_PORT`     | API port        | `3002`                  |
+| `JWT_SECRET`      | JWT signing key | —                       |
 | `CLIENT_SITE_URL` | Public site URL | `http://localhost:3001` |
 
 ## Integration
@@ -94,7 +94,7 @@ OpenAPI spec from this server drives toolkit code generation (`pnpm run --dir to
 
 ## Docs & support
 
-- [Documentation](https://docs.gaoredu.com/)
+- [Documentation](https://reactpress.cc/)
 - [Issues](https://github.com/fecommunity/reactpress/issues)
 - [Contributing](../CONTRIBUTING.md)
 

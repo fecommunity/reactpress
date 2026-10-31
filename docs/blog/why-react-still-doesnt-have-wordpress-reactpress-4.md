@@ -718,7 +718,7 @@ For **Next.js CMS** evaluations, this matters: you should not trade WordPress-st
 | :-------------- | :--------------------------------------------------------------------------------- |
 | Production blog | [blog.gaoredu.com](https://blog.gaoredu.com)                                       |
 | Theme starter   | [reactpress-theme-starter.vercel.app](https://reactpress-theme-starter.vercel.app) |
-| Documentation   | [docs.gaoredu.com](https://docs.gaoredu.com)                                       |
+| Documentation   | [reactpress.cc](https://reactpress.cc)                                             |
 
 ### 6.5 Before / after assembly
 
@@ -1438,7 +1438,7 @@ Content yes (scripts/REST). Theme requires Next.js rewrite. Plan engineering for
 
 ### Where is documentation?
 
-[docs.gaoredu.com](https://docs.gaoredu.com) — installation, architecture, plugin/theme development, deployment, desktop client.
+[reactpress.cc](https://reactpress.cc) — installation, architecture, plugin/theme development, deployment, desktop client.
 
 ### How do I report security issues?
 
@@ -1628,7 +1628,7 @@ Codename **Extend**. SQLite default, bundled CLI runtime (zero extra npm deps), 
 
 ### B.6 4.0.0 stable promotion
 
-npm `@latest` promotion, desktop installers on Releases, docs at `docs.gaoredu.com`, README and media refresh.
+npm `@latest` promotion, desktop installers on Releases, docs at `reactpress.cc`, README and media refresh.
 
 ---
 
@@ -1984,7 +1984,7 @@ React is at the "2012–2015 REST plugins" moment — **API exists everywhere, i
 
 ## Appendix Q: International teams
 
-ReactPress docs ship in **English and Chinese** (`docs.gaoredu.com` i18n). Core Admin UI strings are localization-ready via toolkit locale files.
+ReactPress docs ship in **English and Chinese** (`reactpress.cc` i18n). Core Admin UI strings are localization-ready via toolkit locale files.
 
 For multi-language **content**:
 
@@ -2467,7 +2467,7 @@ Docusaurus renders this post at `/blog/why-react-still-doesnt-have-wordpress-rea
 
 If citing in academic or industry reports:
 
-> ReactPress Contributors. (2026). _Why React Still Doesn't Have Its WordPress — And Why We Built ReactPress 4.0_. https://docs.gaoredu.com/blog/why-react-still-doesnt-have-wordpress-reactpress-4
+> ReactPress Contributors. (2026). _Why React Still Doesn't Have Its WordPress — And Why We Built ReactPress 4.0_. https://reactpress.cc/blog/why-react-still-doesnt-have-wordpress-reactpress-4
 
 ### AG.4 Document statistics
 
@@ -2500,7 +2500,7 @@ All images served from `/img/blog/` (copied from repository `public/` for docs s
 | `theme-custom.png` | Appearance / themes              |
 | `settings.png`     | Site settings panel              |
 
-When republishing off-site, prefer linking to `https://docs.gaoredu.com/img/blog/...` or GitHub `raw.githubusercontent.com` URLs for CDN stability.
+When republishing off-site, prefer linking to `https://reactpress.cc/img/blog/...` or GitHub `raw.githubusercontent.com` URLs for CDN stability.
 
 ### AG.6 Translation note
 
@@ -2561,7 +2561,7 @@ _Document ID: `why-react-still-doesnt-have-wordpress-reactpress-4` · Character 
 - [GitHub — fecommunity/reactpress](https://github.com/fecommunity/reactpress)
 - [Live demo — blog.gaoredu.com](https://blog.gaoredu.com)
 - [Theme demo — reactpress-theme-starter.vercel.app](https://reactpress-theme-starter.vercel.app)
-- [Documentation — docs.gaoredu.com](https://docs.gaoredu.com)
+- [Documentation — reactpress.cc](https://reactpress.cc)
 - [中文版 / Chinese version](pathname:///zh/blog/why-react-still-doesnt-have-wordpress-reactpress-4)
 - [ReactPress 4.0 guide](/docs/tutorial-extras/reactpress-4-0)
 - [ReactPress vs WordPress](/docs/getting-started/reactpress-vs-wordpress)

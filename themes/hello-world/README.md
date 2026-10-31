@@ -4,15 +4,15 @@
 
 **Minimal Next.js 15 theme** for the [ReactPress](https://github.com/fecommunity/reactpress) publishing platform. Pages Router blog with home, articles, categories, tags, search, and custom pages — the reference template to copy and customize.
 
-| Item | Details |
-| :--- | :------ |
-| **Routing** | Next.js Pages Router (`pages/`) |
-| **Entry** | `pages/_app.tsx` → `createThemeApp(theme.json)` |
-| **Build** | `createReactPressNextConfig()` (`next.config.js`) |
-| **Contract** | `theme.json` (manifest + appearance + templates) |
-| **SDK** | `@fecommunity/reactpress-toolkit/app`, `/theme`, `/ui` |
+| Item         | Details                                                |
+| :----------- | :----------------------------------------------------- |
+| **Routing**  | Next.js Pages Router (`pages/`)                        |
+| **Entry**    | `pages/_app.tsx` → `createThemeApp(theme.json)`        |
+| **Build**    | `createReactPressNextConfig()` (`next.config.js`)      |
+| **Contract** | `theme.json` (manifest + appearance + templates)       |
+| **SDK**      | `@fecommunity/reactpress-toolkit/app`, `/theme`, `/ui` |
 
-[Theme demo (production)](https://github.com/fecommunity/reactpress-theme-starter) · [Theme system](../README.md) · [Documentation](https://docs.gaoredu.com/)
+[Theme demo (production)](https://github.com/fecommunity/reactpress-theme-starter) · [Theme system](../README.md) · [Documentation](https://reactpress.cc/)
 
 ## Directory structure
 
@@ -65,12 +65,12 @@ cp -r themes/hello-world themes/my-theme
 
 ## theme.json essentials
 
-| Field | Purpose |
-| --- | --- |
-| `templates` | Template id → `pages/` path mapping |
+| Field                 | Purpose                                           |
+| --------------------- | ------------------------------------------------- |
+| `templates`           | Template id → `pages/` path mapping               |
 | `appearance.sections` | Customizer fields (colors, logo, dark mode, etc.) |
-| `supports` | Capability flags (e.g. `darkMode`, `menus`) |
-| `requires` | Minimum ReactPress version |
+| `supports`            | Capability flags (e.g. `darkMode`, `menus`)       |
+| `requires`            | Minimum ReactPress version                        |
 
 Full schema: [`theme.manifest.schema.json`](../theme.manifest.schema.json).
 

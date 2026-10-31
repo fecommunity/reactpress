@@ -363,7 +363,7 @@ my-site/
 | :-------- | :--------------------------------------------------------------------------------- |
 | 生产站点  | [blog.gaoredu.com](https://blog.gaoredu.com)                                       |
 | 主题 Demo | [reactpress-theme-starter.vercel.app](https://reactpress-theme-starter.vercel.app) |
-| 文档      | [docs.gaoredu.com](https://docs.gaoredu.com)                                       |
+| 文档      | [reactpress.cc](https://reactpress.cc)                                             |
 
 ---
 

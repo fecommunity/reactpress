@@ -1,5 +1,5 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://docs.gaoredu.com/sitemap.xml
-Sitemap: https://docs.gaoredu.com/zh/sitemap.xml
+Sitemap: https://reactpress.cc/sitemap.xml
+Sitemap: https://reactpress.cc/zh/sitemap.xml

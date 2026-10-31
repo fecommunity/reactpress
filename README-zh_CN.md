@@ -12,7 +12,7 @@
 
 写作者有真正的编辑器，你有自己掌控的站点。一次安装就能用 — 不是 WordPress，也不是五件工具硬拼。
 
-[全栈演示](https://blog.gaoredu.com) · [主题演示](https://reactpress-theme-starter.vercel.app) · [文档](https://docs.gaoredu.com/) · [English](./README.md)
+[全栈演示](https://blog.gaoredu.com) · [主题演示](https://reactpress-theme-starter.vercel.app) · [文档](https://reactpress.cc/) · [English](./README.md)
 
 [![npm](https://img.shields.io/npm/v/@fecommunity/reactpress.svg?style=flat-square&label=npm)](https://www.npmjs.com/package/@fecommunity/reactpress)
 [![stars](https://img.shields.io/github/stars/fecommunity/reactpress?style=flat-square)](https://github.com/fecommunity/reactpress/stargazers)
@@ -111,11 +111,11 @@ reactpress init
 
 |               |                                                                                                   |
 | :------------ | :------------------------------------------------------------------------------------------------ |
-| 文档          | [docs.gaoredu.com](https://docs.gaoredu.com/)                                                     |
+| 文档          | [reactpress.cc](https://reactpress.cc/)                                                           |
 | 换对外主题    | [themes](./themes/README.md) · [starter](https://github.com/fecommunity/reactpress-theme-starter) |
 | 扩展而不 fork | [plugins](./plugins/README.md)                                                                    |
 | 桌面写作      | [desktop](./desktop/README.md)                                                                    |
-| 部署上线      | [部署文档](https://docs.gaoredu.com/)                                                             |
+| 部署上线      | [部署文档](https://reactpress.cc/)                                                                |
 
 [参与贡献](./CONTRIBUTING.md) · [更新日志](./CHANGELOG.md) · [MIT 许可证](./LICENSE)
 

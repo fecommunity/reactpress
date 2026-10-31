@@ -9,34 +9,34 @@
 
 The shared foundation for **ReactPress themes, plugins, Admin extensions, and custom frontends**. Auto-generated OpenAPI clients, Next.js theme SSR helpers, plugin admin hooks, and headless React UI — so you extend the platform instead of duplicating API or rendering logic.
 
-| Use case | Start here |
-| :------- | :--------- |
-| **Next.js themes** | `./theme`, `./theme/next-config`, `./app` |
-| **Plugins** | `./plugin`, `./plugin/admin`, `./plugin/client` |
-| **API integration** | `./api`, `./api/instance`, `./types` |
-| **Headless UI** | `./ui` — unstyled components and hooks |
+| Use case            | Start here                                      |
+| :------------------ | :---------------------------------------------- |
+| **Next.js themes**  | `./theme`, `./theme/next-config`, `./app`       |
+| **Plugins**         | `./plugin`, `./plugin/admin`, `./plugin/client` |
+| **API integration** | `./api`, `./api/instance`, `./types`            |
+| **Headless UI**     | `./ui` — unstyled components and hooks          |
 
-[Documentation](https://docs.gaoredu.com/) · [ReactPress CLI](../cli/) · [GitHub](https://github.com/fecommunity/reactpress)
+[Documentation](https://reactpress.cc/) · [ReactPress CLI](../cli/) · [GitHub](https://github.com/fecommunity/reactpress)
 
 ## Package exports (`package.json` → `exports`)
 
-| Subpath | Purpose |
-|--------|------|
-| `.` | Root entry: `api`, `config`, `theme`, `ui`, `plugin` namespaces and common re-exports |
-| `./api` | HTTP client classes per resource |
-| `./api/instance` | Default `api` instance and `createApiInstance` |
-| `./types` | Swagger-generated request/response types |
-| `./utils` | Framework-agnostic utilities (see module table below) |
-| `./config` | Env vars, global defaults, `i18n` strings (`config/locales/*.json`) |
-| `./theme` | Visitor themes: SSR data fetch, runtime, extension config types; re-exports `./ui` |
-| `./theme/next-config` | `createReactPressNextConfig()` |
-| `./theme/node` | Node-only helpers (e.g. read theme admin locale files) |
-| `./ui` | Unstyled theme components and hooks |
-| `./plugin` | Admin plugin aggregate entry |
-| `./plugin/admin` | Menu registration, permission constants |
-| `./plugin/client` | Web/Electron API client factory (recommended) |
-| `./plugin/react` | Same as `./plugin/client` (legacy path) |
-| `./plugin/dev` | Vite dev port redirect, etc. |
+| Subpath               | Purpose                                                                               |
+| --------------------- | ------------------------------------------------------------------------------------- |
+| `.`                   | Root entry: `api`, `config`, `theme`, `ui`, `plugin` namespaces and common re-exports |
+| `./api`               | HTTP client classes per resource                                                      |
+| `./api/instance`      | Default `api` instance and `createApiInstance`                                        |
+| `./types`             | Swagger-generated request/response types                                              |
+| `./utils`             | Framework-agnostic utilities (see module table below)                                 |
+| `./config`            | Env vars, global defaults, `i18n` strings (`config/locales/*.json`)                   |
+| `./theme`             | Visitor themes: SSR data fetch, runtime, extension config types; re-exports `./ui`    |
+| `./theme/next-config` | `createReactPressNextConfig()`                                                        |
+| `./theme/node`        | Node-only helpers (e.g. read theme admin locale files)                                |
+| `./ui`                | Unstyled theme components and hooks                                                   |
+| `./plugin`            | Admin plugin aggregate entry                                                          |
+| `./plugin/admin`      | Menu registration, permission constants                                               |
+| `./plugin/client`     | Web/Electron API client factory (recommended)                                         |
+| `./plugin/react`      | Same as `./plugin/client` (legacy path)                                               |
+| `./plugin/dev`        | Vite dev port redirect, etc.                                                          |
 
 **Convention:** Only top-level directories under `src/` match the exports above; implementation details live in subdirectories with thin shims at the root (e.g. `theme/node.ts` → `theme/build/node.ts`).
 
@@ -123,16 +123,16 @@ import {
 } from '@fecommunity/reactpress-toolkit/utils';
 ```
 
-| Module | Typical use |
-|------|----------|
-| `json` | Parse JSON strings in settings |
+| Module         | Typical use                                   |
+| -------------- | --------------------------------------------- |
+| `json`         | Parse JSON strings in settings                |
 | `api-envelope` | Unwrap Nest `TransformInterceptor` `{ data }` |
-| `date` | Article publish date display |
-| `string` | Strip HTML for archive excerpts, truncate |
-| `object` | Merge theme.json config, dot-path read/write |
-| `setting` | Map settings rows to props |
-| `cookie` | Read `Cookie` header in SSR |
-| `email` | Visitor comment email format |
+| `date`         | Article publish date display                  |
+| `string`       | Strip HTML for archive excerpts, truncate     |
+| `object`       | Merge theme.json config, dot-path read/write  |
+| `setting`      | Map settings rows to props                    |
+| `cookie`       | Read `Cookie` header in SSR                   |
+| `email`        | Visitor comment email format                  |
 
 ### Admin plugins
 
@@ -151,9 +151,9 @@ import { createClient, resolveApiBaseUrl } from '@fecommunity/reactpress-toolkit
 
 Entry factories for theme `_app.tsx`, UI-framework agnostic:
 
-| Factory | Purpose |
-|------|------|
-| `createThemeApp` | Minimal theme (hello-world): `ReactPressProvider` + `ThemeCssVars` |
+| Factory               | Purpose                                                                                |
+| --------------------- | -------------------------------------------------------------------------------------- |
+| `createThemeApp`      | Minimal theme (hello-world): `ReactPressProvider` + `ThemeCssVars`                     |
 | `createReactPressApp` | Full theme: SSR catalog, i18n, analytics, PV; inject Ant Design etc. via `wrapContent` |
 
 ```typescript
@@ -230,23 +230,23 @@ Also importable from `./theme`:
 import { NavMenu, ArticleList, ReactPressProvider, useLocale } from '@fecommunity/reactpress-toolkit/ui';
 ```
 
-| Symbol | Description |
-|------|------|
-| `ReactPressProvider` | Inject site context in `_app` |
-| `useLocale` / `useThemeRuntime` / `useThemeMod` | Language and theme mods |
-| `useToggle` / `useAsyncLoading` | Boolean toggle, debounced loading |
-| `usePagination` | `[items, total]` paginated lists |
-| `useReportArticleView` / `useReportPageView` | Article views, site PV |
-| `useRouteParam` / `useNavActive` | Dynamic route params, nav highlight |
-| `useWarningOnExit` | Confirm before leaving page (Next Router) |
-| `NavMenu` | Config-driven nav via `renderLink` + Next `Link` |
-| `ArticleList` | List renderer via `renderArticle` |
-| `SiteCatalogProvider` / `useSiteSetting` / `useSiteUser` | Site catalog + user session |
-| `SiteSeo` / `RouteProgress` / `SiteAnalytics` | SEO meta, progress bar, GA/Baidu |
-| `ArticleReader` / `HtmlContent` / `ArticleToc` | Article reading, HTML, TOC |
-| `ImageViewer` / `LocaleTime` | Image preview, localized time |
-| `createReactPressApp` | Full theme `_app` factory |
-| `fetchAppBootstrap` | `_app.getInitialProps` SSR data |
+| Symbol                                                   | Description                                      |
+| -------------------------------------------------------- | ------------------------------------------------ |
+| `ReactPressProvider`                                     | Inject site context in `_app`                    |
+| `useLocale` / `useThemeRuntime` / `useThemeMod`          | Language and theme mods                          |
+| `useToggle` / `useAsyncLoading`                          | Boolean toggle, debounced loading                |
+| `usePagination`                                          | `[items, total]` paginated lists                 |
+| `useReportArticleView` / `useReportPageView`             | Article views, site PV                           |
+| `useRouteParam` / `useNavActive`                         | Dynamic route params, nav highlight              |
+| `useWarningOnExit`                                       | Confirm before leaving page (Next Router)        |
+| `NavMenu`                                                | Config-driven nav via `renderLink` + Next `Link` |
+| `ArticleList`                                            | List renderer via `renderArticle`                |
+| `SiteCatalogProvider` / `useSiteSetting` / `useSiteUser` | Site catalog + user session                      |
+| `SiteSeo` / `RouteProgress` / `SiteAnalytics`            | SEO meta, progress bar, GA/Baidu                 |
+| `ArticleReader` / `HtmlContent` / `ArticleToc`           | Article reading, HTML, TOC                       |
+| `ImageViewer` / `LocaleTime`                             | Image preview, localized time                    |
+| `createReactPressApp`                                    | Full theme `_app` factory                        |
+| `fetchAppBootstrap`                                      | `_app.getInitialProps` SSR data                  |
 
 ### Extension config types
 
@@ -277,11 +277,11 @@ Output in `dist/`; `createApp.js` is emitted via `tsc` (`allowJs`) to `dist/them
 
 ## Scripts
 
-| Command | Description |
-|------|------|
-| `pnpm run generate` | Generate API from server Swagger |
-| `pnpm run build` | `tsc` + copy locales |
-| `pnpm run typecheck` | Type check only |
+| Command              | Description                      |
+| -------------------- | -------------------------------- |
+| `pnpm run generate`  | Generate API from server Swagger |
+| `pnpm run build`     | `tsc` + copy locales             |
+| `pnpm run typecheck` | Type check only                  |
 
 ## License
 

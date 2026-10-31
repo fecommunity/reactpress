@@ -55,7 +55,7 @@ pnpm dev:desktop
 
 打包：`pnpm build:desktop` → `desktop/release/`。
 
-预构建安装包：[桌面客户端文档](https://docs.gaoredu.com/docs/tutorial-extras/desktop-client) · [GitHub Releases](https://github.com/fecommunity/reactpress/releases)
+预构建安装包：[桌面客户端文档](https://reactpress.cc/docs/tutorial-extras/desktop-client) · [GitHub Releases](https://github.com/fecommunity/reactpress/releases)
 
 详见仓库 [desktop/README.md](https://github.com/fecommunity/reactpress/blob/master/desktop/README.md)。
 

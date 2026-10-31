@@ -12,7 +12,7 @@
 
 A real editor for writers. A Next.js site you control. One install — not WordPress, and not five tools glued together.
 
-[Live demo](https://blog.gaoredu.com) · [Theme demo](https://reactpress-theme-starter.vercel.app) · [Docs](https://docs.gaoredu.com/) · [中文](./README-zh_CN.md)
+[Live demo](https://blog.gaoredu.com) · [Theme demo](https://reactpress-theme-starter.vercel.app) · [Docs](https://reactpress.cc/) · [中文](./README-zh_CN.md)
 
 [![npm](https://img.shields.io/npm/v/@fecommunity/reactpress.svg?style=flat-square&label=npm)](https://www.npmjs.com/package/@fecommunity/reactpress)
 [![stars](https://img.shields.io/github/stars/fecommunity/reactpress?style=flat-square)](https://github.com/fecommunity/reactpress/stargazers)
@@ -111,11 +111,11 @@ Node 20+. No Docker, no extra database for the default path. If something fails:
 
 |                        |                                                                                                   |
 | :--------------------- | :------------------------------------------------------------------------------------------------ |
-| Docs                   | [docs.gaoredu.com](https://docs.gaoredu.com/)                                                     |
+| Docs                   | [reactpress.cc](https://reactpress.cc/)                                                           |
 | Swap the public theme  | [themes](./themes/README.md) · [starter](https://github.com/fecommunity/reactpress-theme-starter) |
 | Extend without forking | [plugins](./plugins/README.md)                                                                    |
 | Desktop writing        | [desktop](./desktop/README.md)                                                                    |
-| Host it                | [Deployment](https://docs.gaoredu.com/)                                                           |
+| Host it                | [Deployment](https://reactpress.cc/)                                                              |
 
 [Contributing](./CONTRIBUTING.md) · [Changelog](./CHANGELOG.md) · [MIT License](./LICENSE)
 

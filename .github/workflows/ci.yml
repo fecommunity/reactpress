@@ -25,7 +25,7 @@ jobs:
       - name: Build docs
         run: pnpm run build:docs
         env:
-          DOCS_SITE_URL: ${{ vars.DOCS_SITE_URL || 'https://docs.gaoredu.com' }}
+          DOCS_SITE_URL: ${{ vars.DOCS_SITE_URL || 'https://reactpress.cc' }}
           DOCS_ALGOLIA_APP_ID: ${{ vars.DOCS_ALGOLIA_APP_ID }}
           DOCS_ALGOLIA_API_KEY: ${{ vars.DOCS_ALGOLIA_API_KEY }}
           DOCS_ALGOLIA_INDEX_NAME: ${{ vars.DOCS_ALGOLIA_INDEX_NAME }}

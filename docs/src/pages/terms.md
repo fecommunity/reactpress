@@ -8,7 +8,7 @@ keywords: [reactpress, terms of use, license, disclaimer]
 
 **Last updated:** July 2026
 
-By accessing the ReactPress official documentation site (`docs.gaoredu.com`), you agree to these Terms of Use. If you do not agree, please do not use this site.
+By accessing the ReactPress official documentation site (`reactpress.cc`), you agree to these Terms of Use. If you do not agree, please do not use this site.
 
 ## Purpose of this site
 

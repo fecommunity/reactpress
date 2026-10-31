@@ -1,6 +1,6 @@
 ---
 title: Privacy Policy
-description: ReactPress documentation site privacy policy — what data we collect on docs.gaoredu.com, cookies, analytics, and how to contact us.
+description: ReactPress documentation site privacy policy — what data we collect on reactpress.cc, cookies, analytics, and how to contact us.
 keywords: [reactpress, privacy policy, gdpr, analytics]
 ---
 
@@ -8,7 +8,7 @@ keywords: [reactpress, privacy policy, gdpr, analytics]
 
 **Last updated:** July 2026
 
-This Privacy Policy describes how the **ReactPress official documentation site** (`docs.gaoredu.com`, operated as part of the ReactPress open-source project) handles information when you visit or use this website.
+This Privacy Policy describes how the **ReactPress official documentation site** (`reactpress.cc`, operated as part of the ReactPress open-source project) handles information when you visit or use this website.
 
 > This policy applies to the **documentation website only**. Sites you deploy with ReactPress are under your own control and policies.
 

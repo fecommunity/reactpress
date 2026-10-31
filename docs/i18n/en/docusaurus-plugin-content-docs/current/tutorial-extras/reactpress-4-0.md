@@ -55,7 +55,7 @@ pnpm dev:desktop
 
 Package: `pnpm build:desktop` → `desktop/release/`.
 
-Prebuilt installers: [Desktop client docs](https://docs.gaoredu.com/docs/tutorial-extras/desktop-client) · [GitHub Releases](https://github.com/fecommunity/reactpress/releases)
+Prebuilt installers: [Desktop client docs](https://reactpress.cc/docs/tutorial-extras/desktop-client) · [GitHub Releases](https://github.com/fecommunity/reactpress/releases)
 
 See [desktop/README.md](https://github.com/fecommunity/reactpress/blob/master/desktop/README.md).
 
