@@ -1,8 +1,8 @@
 # @fecommunity/reactpress
 
-> **Publish with React. Ship like WordPress.**
+> **The Modern Web Creation Platform.**
 >
-> CMS, Admin, Headless API, Next.js themes, plugins & desktop — one CLI, zero assembly.
+> **Build. Manage. Extend.** — CMS, Admin, Headless API, Next.js themes, plugins & desktop in one CLI.
 
 [![npm latest](https://img.shields.io/npm/v/@fecommunity/reactpress.svg?label=latest)](https://www.npmjs.com/package/@fecommunity/reactpress)
 [![npm beta](https://img.shields.io/npm/v/@fecommunity/reactpress/beta.svg?label=beta)](https://www.npmjs.com/package/@fecommunity/reactpress/v/beta)
@@ -77,4 +77,4 @@ Run `reactpress doctor` if something does not start correctly.
 
 MIT © [FECommunity](https://github.com/fecommunity)
 
-<p align="center"><sub>Part of <a href="https://github.com/fecommunity/reactpress">ReactPress</a> — content owned by the system, frontend owned by developers.</sub></p>
+<p align="center"><sub>Part of <a href="https://github.com/fecommunity/reactpress">ReactPress</a> — The Modern Web Creation Platform. Build. Manage. Extend.</sub></p>

@@ -25,7 +25,7 @@ const items: HighlightItem[] = [
     title: translate({ message: 'Plugin ecosystem', id: 'home.highlight.plugins.title' }),
     description: translate({
       message:
-        'WordPress-grade extensibility — Hook system, plugin.json manifest, and admin slots. SEO and auto-summary ship built-in.',
+        'Hook system, plugin.json manifest, and Admin slots — SEO, auto-summary, and image pipelines ship built-in.',
       id: 'home.highlight.plugins.desc',
     }),
     accent: 'purple',
@@ -84,14 +84,14 @@ export default function Highlights() {
     <section className={styles.section} aria-labelledby="home-highlights-heading">
       <header className={styles.header}>
         <p className={styles.eyebrow}>
-          <Translate id="home.highlights.eyebrow">ReactPress 4.0</Translate>
+          <Translate id="home.highlights.eyebrow">Core product · ReactPress CMS</Translate>
         </p>
         <h2 id="home-highlights-heading" className={styles.heading}>
-          <Translate id="home.highlights.title">Built different. Shipped whole.</Translate>
+          <Translate id="home.highlights.title">A focused CMS. A growing platform.</Translate>
         </h2>
         <p className={styles.subheading}>
           <Translate id="home.highlights.subtitle">
-            Everything WordPress taught the web — rebuilt on React, delivered as one platform.
+            Ship websites with one CLI today — plugins, themes, and ecosystem layers when you need them.
           </Translate>
         </p>
       </header>

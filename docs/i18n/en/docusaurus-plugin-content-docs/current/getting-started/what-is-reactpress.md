@@ -2,14 +2,15 @@
 sidebar_position: 2
 title: What is ReactPress?
 description: >-
-  What is ReactPress? The open-source publishing system for React developers —
-  CMS Admin, NestJS API, Next.js themes, plugins, and a desktop client in one CLI.
+  What is ReactPress? The Modern Web Creation Platform for React developers —
+  build, manage, and extend modern websites. CMS Admin, NestJS API, Next.js
+  themes, plugins, and a desktop client in one CLI.
 keywords:
   [
     what is reactpress,
     reactpress,
+    modern web creation platform,
     react cms,
-    react publishing platform,
     next.js cms,
     open source cms,
     wordpress alternative,
@@ -19,7 +20,9 @@ keywords:
 
 # What is ReactPress?
 
-**ReactPress** is **the publishing system for React developers**. Build blogs, documentation sites, company websites, and content-driven applications with React — without assembling a Headless CMS, Admin UI, and frontend from scratch.
+**ReactPress** is **The Modern Web Creation Platform** for React developers. Build, manage, and extend modern websites with React — without assembling a Headless CMS, Admin UI, and frontend from scratch.
+
+The core product is **ReactPress CMS**. Plugins, themes, templates, and components are the extension layer. A public Marketplace is a later ecosystem phase — today the focus is a CMS React developers actually want to use.
 
 One global CLI ships:
 
@@ -46,9 +49,11 @@ reactpress init
 
 Many tools in the React ecosystem deliver **only an API** (Strapi, Payload, Contentful, Sanity). You still build Admin screens, the marketing site, media workflows, and deploy scripts yourself.
 
-ReactPress is a **complete publishing platform**:
+ReactPress is a **complete web creation platform** (not “WordPress rewritten in React”):
 
-> **Admin manages content · Theme manages presentation · Plugin manages logic · API manages data · Toolkit manages contracts**
+> **Build with React · Manage with CMS · Extend with plugins & themes**
+
+> Admin manages content · Theme manages presentation · Plugin manages logic · API manages data · Toolkit manages contracts
 
 You can still go fully Headless — the REST API is on by default — but you are not forced to invent the rest of the product on day one.
 

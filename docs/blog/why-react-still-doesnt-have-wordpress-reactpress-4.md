@@ -26,7 +26,7 @@ keywords:
 
 <!--truncate-->
 
-![ReactPress — Publish with React. Ship like WordPress.](/img/blog/poster.png)
+![ReactPress — The Modern Web Creation Platform.](/img/blog/poster.png)
 
 If you are a front-end engineer, you have probably lived this loop:
 
@@ -357,7 +357,7 @@ So **Next.js CMS** became an **integration problem**: every team wires Headless 
 | Open source CMS           | Self-host        | Data sovereignty, auditability   |
 | React publishing platform | End-to-end       | **One command, not five repos**  |
 
-ReactPress answers the last row: **Publish with React. Ship like WordPress.**
+ReactPress answers the last row: **Build. Manage. Extend.**
 
 ### 3.4 Our own iteration history
 
@@ -2487,18 +2487,18 @@ If citing in academic or industry reports:
 
 All images served from `/img/blog/` (copied from repository `public/` for docs static hosting):
 
-| File               | Description                      |
-| :----------------- | :------------------------------- |
-| `poster.png`       | Hero banner — Publish with React |
-| `usage.gif`        | CLI init ~60 second demo         |
-| `demo.gif`         | Official theme visitor features  |
-| `lighthouse.png`   | Performance and SEO scores       |
-| `desktop.gif`      | Electron offline writing         |
-| `post.png`         | Admin Markdown editor            |
-| `midia.png`        | Media library                    |
-| `plugins.png`      | Plugin management UI             |
-| `theme-custom.png` | Appearance / themes              |
-| `settings.png`     | Site settings panel              |
+| File               | Description                                    |
+| :----------------- | :--------------------------------------------- |
+| `poster.png`       | Hero banner — The Modern Web Creation Platform |
+| `usage.gif`        | CLI init ~60 second demo                       |
+| `demo.gif`         | Official theme visitor features                |
+| `lighthouse.png`   | Performance and SEO scores                     |
+| `desktop.gif`      | Electron offline writing                       |
+| `post.png`         | Admin Markdown editor                          |
+| `midia.png`        | Media library                                  |
+| `plugins.png`      | Plugin management UI                           |
+| `theme-custom.png` | Appearance / themes                            |
+| `settings.png`     | Site settings panel                            |
 
 When republishing off-site, prefer linking to `https://reactpress.cc/img/blog/...` or GitHub `raw.githubusercontent.com` URLs for CDN stability.
 
@@ -2548,7 +2548,7 @@ reactpress init
 
 Sixty seconds later, open http://localhost:3001/admin/ and write post number one.
 
-**Publish with React. Ship like WordPress.**
+**Build. Manage. Extend.**
 
 This concludes the long-form guide. For shorter onboarding, start with [5-minute first site](/docs/getting-started/first-site) or [ReactPress 4.0 overview](/docs/tutorial-extras/reactpress-4-0). Return here when you need the full industry context, comparison matrices, and operational appendices that justify choosing a **React publishing platform** over yet another weekend of Headless assembly.
 

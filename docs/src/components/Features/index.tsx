@@ -18,7 +18,7 @@ const FeatureList: FeatureItem[] = [
     Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
     description: translate({
       message:
-        'Installer-style wizard configures your site and database automatically — as familiar as setting up WordPress, as fast as running two commands.',
+        'Installer-style wizard configures your site and database automatically — two commands, embedded SQLite, no Docker required by default.',
       id: 'home.feature.zero.desc',
     }),
     accent: 1,

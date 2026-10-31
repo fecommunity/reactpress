@@ -4,13 +4,15 @@
   <img height="88" src="./public/brand/logo.png" alt="ReactPress">
 </a>
 
-<img src="./public/poster.png" alt="ReactPress — 给活在 React 里的人用的自托管发布系统。" width="100%" />
+<img src="./public/poster.png" alt="ReactPress — 现代化 Web 创作平台（The Modern Web Creation Platform）。" width="100%" />
 
 # ReactPress
 
-### 给活在 React 里的人用的自托管发布系统
+### 现代化 Web 创作平台
 
-写作者有真正的编辑器，你有自己掌控的站点。一次安装就能用 — 不是 WordPress，也不是五件工具硬拼。
+**Build. Manage. Extend.**
+
+写作后台、你掌控的 Next.js 站点，以及可扩展的主题与插件 — 一次安装全有。
 
 [全栈演示](https://blog.gaoredu.com) · [主题演示](https://reactpress-theme-starter.vercel.app) · [文档](https://reactpress.cc/) · [English](./README.md)
 

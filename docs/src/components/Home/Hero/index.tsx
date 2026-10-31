@@ -68,12 +68,10 @@ function Hero() {
             </span>
           </div>
           <p className={styles.slogan}>
-            <Translate id="theme.tagline">The publishing system for React developers.</Translate>
+            <Translate id="theme.tagline">The Modern Web Creation Platform.</Translate>
           </p>
           <p className={styles.subTitle}>
-            <Translate id="home.hero.subTitle">
-              Build blogs, documentation, company websites, and content-driven applications with React.
-            </Translate>
+            <Translate id="home.hero.subTitle">Build, manage, and extend modern websites with React.</Translate>
           </p>
 
           <div className={styles.actions}>

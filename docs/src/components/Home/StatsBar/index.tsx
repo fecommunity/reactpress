@@ -60,9 +60,7 @@ export default function StatsBar() {
           </div>
         ))}
         <p className={styles.tagline}>
-          <Translate id="home.stats.tagline">
-            WordPress familiarity. React-native delivery. No duct tape.
-          </Translate>
+          <Translate id="home.stats.tagline">Build. Manage. Extend. — for React developers.</Translate>
         </p>
       </div>
     </section>

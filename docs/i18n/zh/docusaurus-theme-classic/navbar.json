@@ -23,6 +23,18 @@
     "message": "文档",
     "description": "Navbar item with label Docs"
   },
+  "item.label.Themes": {
+    "message": "主题",
+    "description": "Navbar item with label Themes"
+  },
+  "item.label.Plugins": {
+    "message": "插件",
+    "description": "Navbar item with label Plugins"
+  },
+  "item.label.Guides": {
+    "message": "指南",
+    "description": "Navbar item with label Guides"
+  },
   "item.label.Download": {
     "message": "下载",
     "description": "Navbar item with label Download"

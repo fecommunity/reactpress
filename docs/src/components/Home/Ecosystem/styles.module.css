@@ -1,0 +1,174 @@
+.section {
+  position: relative;
+  z-index: 3;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0.25rem 1.25rem 3rem;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 1.75rem;
+}
+
+.eyebrow {
+  display: inline-block;
+  margin: 0 0 0.5rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--home-button-primary);
+}
+
+html[data-theme='dark'] .eyebrow {
+  color: #7ddfff;
+}
+
+.heading {
+  font-size: clamp(1.45rem, 3.5vw, 1.85rem);
+  font-weight: 800;
+  margin: 0;
+  letter-spacing: -0.03em;
+  line-height: 1.25;
+  color: var(--home-text);
+  animation: fadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.subheading {
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--home-secondary-text);
+  max-width: 36rem;
+  margin: 0.55rem auto 0;
+  animation: fadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.05s both;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.9rem;
+}
+
+.card {
+  display: block;
+  text-decoration: none !important;
+  color: inherit;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 1.3rem 1.35rem 1.25rem;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  animation: fadeUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+html[data-theme='light'] .card {
+  background: rgba(255, 255, 255, 0.78);
+  border-color: var(--home-border);
+  box-shadow: 0 6px 28px rgba(8, 126, 164, 0.08);
+}
+
+.card:hover {
+  border-color: rgba(65, 209, 255, 0.45);
+  box-shadow: 0 12px 36px rgba(65, 209, 255, 0.14);
+  transform: translateY(-3px);
+}
+
+.iconWrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 10px;
+  margin-bottom: 0.75rem;
+}
+
+.card[data-accent='themes'] .iconWrap {
+  background: rgba(8, 126, 164, 0.12);
+  color: #087ea4;
+}
+
+.card[data-accent='plugins'] .iconWrap {
+  background: rgba(189, 52, 254, 0.12);
+  color: #bd34fe;
+}
+
+.card[data-accent='templates'] .iconWrap {
+  background: rgba(65, 209, 255, 0.12);
+  color: #41d1ff;
+}
+
+.card[data-accent='guides'] .iconWrap {
+  background: rgba(8, 126, 164, 0.14);
+  color: #0a6b8a;
+}
+
+html[data-theme='dark'] .card[data-accent='themes'] .iconWrap,
+html[data-theme='dark'] .card[data-accent='guides'] .iconWrap {
+  color: #7ddfff;
+}
+
+.icon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.cardTitle {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 0.4rem;
+  color: var(--home-text);
+}
+
+.cardDesc {
+  font-size: 0.86rem;
+  line-height: 1.55;
+  margin: 0 0 0.85rem;
+  color: var(--home-secondary-text);
+}
+
+.cta {
+  font-size: 0.82rem;
+  font-weight: 650;
+  color: var(--home-button-primary);
+}
+
+html[data-theme='dark'] .cta {
+  color: #7ddfff;
+}
+
+.card:hover .cta {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heading,
+  .subheading,
+  .card {
+    animation: none;
+  }
+}
+
+@media (max-width: 700px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

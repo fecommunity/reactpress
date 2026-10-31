@@ -24,7 +24,7 @@ keywords:
 
 <!--truncate-->
 
-![ReactPress — Publish with React. Ship like WordPress.](/img/blog/poster.png)
+![ReactPress — The Modern Web Creation Platform.](/img/blog/poster.png)
 
 “We want a **self-hosted Next.js blog**” sounds simple. In practice it splits into three projects: a CMS, an Admin, and a theme — plus backups, SEO, and auth. This guide shows a **practical 2026 path** that keeps data on your infrastructure and still feels like a product, not a weekend mash-up.
 

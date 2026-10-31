@@ -16,15 +16,15 @@ keywords:
 
 ## 一句话总结
 
-|              | ReactPress                                                                      | WordPress                                    |
-| ------------ | ------------------------------------------------------------------------------- | -------------------------------------------- |
-| **定位**     | **面向 React 开发者的完整发布系统**（Admin + API + Next.js 主题 + 插件 + 桌面） | 全球最流行的 PHP CMS，插件与主题生态极其成熟 |
-| **技术栈**   | React、Next.js、NestJS、SQLite / MySQL                                          | PHP、MySQL、传统主题                         |
-| **上手**     | `npm i -g @fecommunity/reactpress` → `reactpress init` — 约 **60 秒**           | 托管一键安装或 LAMP，通常分钟级              |
-| **编辑**     | Markdown 优先的 Admin；熟悉的文章/页面/媒体模型                                 | Gutenberg 块编辑；编辑器生态庞大             |
-| **访客交付** | 默认 Next.js SSR / ISR                                                          | PHP 主题；常依赖缓存插件                     |
-| **Headless** | 一等公民 REST + TypeScript toolkit                                              | 有 REST；Headless 常需额外配置               |
-| **最适合**   | React 团队、SSR SEO、现代自托管栈                                               | 非技术编辑、插件市场、成熟托管               |
+|              | ReactPress                                                              | WordPress                                    |
+| ------------ | ----------------------------------------------------------------------- | -------------------------------------------- |
+| **定位**     | 面向 React 开发者的 **现代化 Web 创作平台**（CMS + 主题 + 插件 + 桌面） | 全球最流行的 PHP CMS，插件与主题生态极其成熟 |
+| **技术栈**   | React、Next.js、NestJS、SQLite / MySQL                                  | PHP、MySQL、传统主题                         |
+| **上手**     | `npm i -g @fecommunity/reactpress` → `reactpress init` — 约 **60 秒**   | 托管一键安装或 LAMP，通常分钟级              |
+| **编辑**     | Markdown 优先的 Admin；熟悉的文章/页面/媒体模型                         | Gutenberg 块编辑；编辑器生态庞大             |
+| **访客交付** | 默认 Next.js SSR / ISR                                                  | PHP 主题；常依赖缓存插件                     |
+| **Headless** | 一等公民 REST + TypeScript toolkit                                      | 有 REST；Headless 常需额外配置               |
+| **最适合**   | React 团队、SSR SEO、现代自托管栈                                       | 非技术编辑、插件市场、成熟托管               |
 
 ## 技术架构
 

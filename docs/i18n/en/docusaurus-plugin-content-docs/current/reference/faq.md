@@ -46,7 +46,7 @@ First bootstrap: `admin` / `admin`. Change password immediately after login; in 
 <details>
 <summary><strong>What is ReactPress?</strong></summary>
 
-An open-source **publishing system for React developers** (Admin + NestJS API + Next.js themes + plugins + desktop client) — not a Headless-only API. See [What is ReactPress?](../getting-started/what-is-reactpress.md).
+An open-source **Modern Web Creation Platform** for React developers (Admin + NestJS API + Next.js themes + plugins + desktop client) — not a Headless-only API. Slogan: **Build. Manage. Extend.** See [What is ReactPress?](../getting-started/what-is-reactpress.md).
 
 </details>
 
@@ -60,9 +60,7 @@ Yes. ReactPress provides Headless REST + API Key. Fork [reactpress-theme-starter
 <details>
 <summary><strong>How is it different from WordPress?</strong></summary>
 
-Similar: Admin-driven content workflow, theme and plugin extensions.
-
-Different: Default Next.js themes are faster, Headless path is clearer, no PHP theme baggage; plus Electron desktop for offline writing.
+WordPress is a PHP CMS for a broad audience. ReactPress emphasizes a **developer-first React workflow**: Next.js SSR themes, clearer Headless REST, Hook plugins, and an Electron desktop client — without PHP. See [ReactPress vs WordPress](../getting-started/reactpress-vs-wordpress.md).
 
 </details>
 

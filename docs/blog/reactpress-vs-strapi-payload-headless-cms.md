@@ -24,7 +24,7 @@ keywords:
 
 <!--truncate-->
 
-![ReactPress — Publish with React. Ship like WordPress.](/img/blog/poster.png)
+![ReactPress — The Modern Web Creation Platform.](/img/blog/poster.png)
 
 If your team builds on **React / Next.js**, the shortlist for content infrastructure usually looks like this: **Strapi**, **Payload**, maybe Contentful or Sanity — and then someone asks, _“Where do we put the actual blog?”_
 

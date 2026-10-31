@@ -24,7 +24,7 @@ keywords:
 
 <!--truncate-->
 
-![ReactPress — Publish with React. Ship like WordPress.](/img/blog/poster.png)
+![ReactPress — The Modern Web Creation Platform.](/img/blog/poster.png)
 
 「我们要一个**自托管的 Next.js 博客**」听起来简单。实操上往往会拆成三个项目：CMS、Admin、主题 — 外加备份、SEO 与鉴权。本指南给出一条**务实的 2026 路径**：数据留在自有基础设施上，体验仍像产品，而不是周末硬拼。
 

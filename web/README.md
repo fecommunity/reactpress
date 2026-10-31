@@ -295,4 +295,4 @@ reactpress publish --publish
 
 Selecting `@fecommunity/reactpress-web` builds `toolkit` and `web/dist` first, then publishes to npm.
 
-<p align="center"><sub>Part of <a href="https://github.com/fecommunity/reactpress">ReactPress</a> — Publish with React. Ship like WordPress.</sub></p>
+<p align="center"><sub>Part of <a href="https://github.com/fecommunity/reactpress">ReactPress</a> — The Modern Web Creation Platform. Build. Manage. Extend.</sub></p>

@@ -1,15 +1,95 @@
 {
-  "link.title.Docs": {
-    "message": "Docs",
-    "description": "The title of the footer links column with title=Docs in the footer"
+  "link.title.Product": {
+    "message": "Product",
+    "description": "The title of the footer links column with title=Product in the footer"
+  },
+  "link.title.Ecosystem": {
+    "message": "Ecosystem",
+    "description": "The title of the footer links column with title=Ecosystem in the footer"
   },
   "link.title.Community": {
     "message": "Community",
     "description": "The title of the footer links column with title=Community in the footer"
   },
+  "link.title.Legal & trust": {
+    "message": "Legal & trust",
+    "description": "The title of the footer links column with title=Legal & trust in the footer"
+  },
+  "link.title.Docs": {
+    "message": "Docs",
+    "description": "The title of the footer links column with title=Docs in the footer"
+  },
   "link.title.More": {
     "message": "More",
     "description": "The title of the footer links column with title=More in the footer"
+  },
+  "link.item.label.Documentation": {
+    "message": "Documentation",
+    "description": "The label of footer link with label=Documentation"
+  },
+  "link.item.label.Quick start": {
+    "message": "Quick start",
+    "description": "The label of footer link with label=Quick start"
+  },
+  "link.item.label.Download desktop": {
+    "message": "Download desktop",
+    "description": "The label of footer link with label=Download desktop"
+  },
+  "link.item.label.Live demo": {
+    "message": "Live demo",
+    "description": "The label of footer link with label=Live demo"
+  },
+  "link.item.label.Themes": {
+    "message": "Themes",
+    "description": "The label of footer link with label=Themes"
+  },
+  "link.item.label.Plugins": {
+    "message": "Plugins",
+    "description": "The label of footer link with label=Plugins"
+  },
+  "link.item.label.Best practices": {
+    "message": "Best practices",
+    "description": "The label of footer link with label=Best practices"
+  },
+  "link.item.label.Theme development": {
+    "message": "Theme development",
+    "description": "The label of footer link with label=Theme development"
+  },
+  "link.item.label.Plugin development": {
+    "message": "Plugin development",
+    "description": "The label of footer link with label=Plugin development"
+  },
+  "link.item.label.GitHub Issues": {
+    "message": "GitHub Issues",
+    "description": "The label of footer link with label=GitHub Issues"
+  },
+  "link.item.label.GitHub Releases": {
+    "message": "GitHub Releases",
+    "description": "The label of footer link with label=GitHub Releases"
+  },
+  "link.item.label.About": {
+    "message": "About",
+    "description": "The label of footer link with label=About"
+  },
+  "link.item.label.FAQ": {
+    "message": "FAQ",
+    "description": "The label of footer link with label=FAQ"
+  },
+  "link.item.label.Contact": {
+    "message": "Contact",
+    "description": "The label of footer link with label=Contact"
+  },
+  "link.item.label.Privacy": {
+    "message": "Privacy",
+    "description": "The label of footer link with label=Privacy"
+  },
+  "link.item.label.Terms": {
+    "message": "Terms",
+    "description": "The label of footer link with label=Terms"
+  },
+  "link.item.label.npm package": {
+    "message": "npm package",
+    "description": "The label of footer link with label=npm package"
   },
   "link.item.label.Tutorial": {
     "message": "Tutorial",

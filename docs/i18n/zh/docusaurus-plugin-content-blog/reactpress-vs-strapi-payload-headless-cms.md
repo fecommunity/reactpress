@@ -24,7 +24,7 @@ keywords:
 
 <!--truncate-->
 
-![ReactPress — Publish with React. Ship like WordPress.](/img/blog/poster.png)
+![ReactPress — The Modern Web Creation Platform.](/img/blog/poster.png)
 
 如果团队以 **React / Next.js** 为主栈，内容基础设施候选往往是：**Strapi**、**Payload**，再加上 Contentful 或 Sanity — 然后有人问：_「博客本身放哪？」_
 

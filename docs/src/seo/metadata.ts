@@ -5,12 +5,12 @@ export function buildSiteMetadata(): SiteMetaTag[] {
     {
       name: 'description',
       content:
-        'Official ReactPress docs — the publishing system for React developers. Build blogs, documentation, company websites, and content-driven applications with React. One CLI, ~60 seconds to live.',
+        'ReactPress — The Modern Web Creation Platform. Build, manage, and extend modern websites with React. Open-source CMS, themes, plugins, and developer guides. One CLI, ~60 seconds to live.',
     },
     {
       name: 'keywords',
       content:
-        'reactpress, react cms, open source cms, publishing platform, wordpress alternative, headless cms, next.js blog, react blog, static site generator, cms, blog, react, nestjs, electron, plugin, self-hosted, 博客, 内容管理, 发布平台, 插件, 桌面客户端',
+        'reactpress, modern web creation platform, react cms, open source cms, themes, plugins, wordpress alternative, headless cms, next.js blog, react blog, nestjs, electron, self-hosted, 现代化 web 创作平台, 博客, 内容管理, 主题, 插件, 桌面客户端',
     },
     { name: 'robots', content: 'index, follow, max-image-preview:large' },
     { name: 'googlebot', content: 'index, follow' },

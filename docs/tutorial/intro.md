@@ -2,9 +2,24 @@
 sidebar_position: 1
 id: intro
 title: 介绍
-description: ReactPress 官方文档 — 面向 React 开发者的发布系统。用 React 构建博客、文档、企业官网与内容驱动型应用。一条 CLI，约 60 秒上线。
+description: >-
+  ReactPress 官方文档 — 面向 React 开发者的现代化 Web 创作平台。构建、管理并扩展现代网站。
+  一条 CLI，约 60 秒上线。
 keywords:
-  [reactpress, 发布平台, wordpress 替代, headless cms, 博客, next.js, react, nestjs, 插件, 桌面客户端, 自托管, 官方文档]
+  [
+    reactpress,
+    现代化 web 创作平台,
+    react cms,
+    wordpress 替代,
+    headless cms,
+    主题,
+    插件,
+    next.js,
+    react,
+    nestjs,
+    自托管,
+    官方文档,
+  ]
 ---
 
 ## 学习路径（0 → 100）
@@ -22,7 +37,7 @@ keywords:
 
 ## 项目简介
 
-**ReactPress** 是 **面向 React 开发者的发布系统** — 用 React 构建博客、文档、企业官网与内容驱动型应用。一条 CLI 即可运行 CMS API、Web 管理后台、可替换的 Next.js 主题、插件扩展与 Electron 桌面客户端。
+**ReactPress** 是面向 React 开发者的 **现代化 Web 创作平台（The Modern Web Creation Platform）** — 构建、管理并扩展现代网站。核心产品是 ReactPress CMS；一条 CLI 即可运行 CMS API、Web 管理后台、可替换的 Next.js 主题、插件扩展与 Electron 桌面客户端。口号：**Build. Manage. Extend.**
 
 **ReactPress 4.0**（代号 **Extend**）在 3.x 之上新增**插件系统**、**桌面客户端**与 **npm 主题 catalog**。新用户推荐 `npm i -g @fecommunity/reactpress`，详见 [ReactPress 4.0 扩展版](./tutorial-extras/reactpress-4-0.md)。桌面端安装见 [桌面客户端](./tutorial-extras/desktop-client.md)。仍使用 3.x 见 [3.0 平台版](./tutorial-extras/reactpress-3-0.md)。
 
@@ -153,7 +168,7 @@ Email: admin@gaoredu.com
 <details>
 <summary><strong>ReactPress 是什么？</strong></summary>
 
-面向 React 开发者的发布系统 — 用 React 构建博客、文档、企业官网与内容驱动型应用。一条 CLI 包含 CMS API、Web Admin、Next.js 主题、插件与桌面客户端。
+面向 React 开发者的现代化 Web 创作平台 — 构建、管理并扩展现代网站。一条 CLI 包含 CMS API、Web Admin、Next.js 主题、插件与桌面客户端。
 
 </details>
 

@@ -23,7 +23,7 @@ keywords:
 
 <!--truncate-->
 
-![ReactPress — Publish with React. Ship like WordPress.](/img/blog/poster.png)
+![ReactPress — The Modern Web Creation Platform.](/img/blog/poster.png)
 
 Next.js 博客能排上去，也可能因为第一天就忘了默认项而消失：纯客户端文章页、缺少 sitemap、稀薄 meta、臃肿图片。这份 **2026 SEO 清单**面向带着**真实 CMS** 发 Next.js 博客的团队，并说明 **ReactPress** 如何盖住那些无聊但关键的基础，让你专注内容。
 

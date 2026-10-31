@@ -2,19 +2,21 @@
 sidebar_position: 1
 id: intro
 title: Introduction
-description: Official ReactPress docs — the publishing system for React developers. Build blogs, documentation, company websites, and content-driven applications with React. One CLI, ~60 seconds to live.
+description: >-
+  Official ReactPress docs — The Modern Web Creation Platform. Build, manage, and
+  extend modern websites with React. One CLI, ~60 seconds to live.
 keywords:
   [
     reactpress,
-    publishing platform,
+    modern web creation platform,
+    react cms,
     wordpress alternative,
     headless cms,
-    blog,
+    themes,
+    plugins,
     next.js,
     react,
     nestjs,
-    plugin,
-    desktop,
     self-hosted,
   ]
 ---
@@ -34,7 +36,7 @@ Choose a starting point by role. Every doc includes an SEO summary and next-step
 
 ## Introduction
 
-**ReactPress** is **the publishing system for React developers** — build blogs, documentation, company websites, and content-driven applications with React. One CLI ships CMS API, Web Admin, swappable Next.js themes, plugins, and an Electron desktop client.
+**ReactPress** is **The Modern Web Creation Platform** — build, manage, and extend modern websites with React. The core product is ReactPress CMS; one CLI ships CMS API, Web Admin, swappable Next.js themes, plugins, and an Electron desktop client. Slogan: **Build. Manage. Extend.**
 
 **ReactPress 4.0** (codename **Extend**) adds a **plugin system**, **desktop client**, and **npm theme catalog** on top of 3.x. New users: `npm i -g @fecommunity/reactpress`. See [ReactPress 4.0 Extend](./tutorial-extras/reactpress-4-0.md). Install the desktop app: [Desktop client](./tutorial-extras/desktop-client.md). Still on 3.x? See [ReactPress 3.0 Platform](./tutorial-extras/reactpress-3-0.md).
 
@@ -45,7 +47,7 @@ Choose a starting point by role. Every doc includes an SEO summary and next-step
 | **Feature**                         | **ReactPress**                                                            | **WordPress**                                           | **VuePress**                                      |
 | ----------------------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------- | ------------------------------------------------- |
 | **Technology Stack**                | React + Next.js + SQLite/MySQL + NestJS                                   | PHP + MySQL                                             | Vue.js                                            |
-| **Type**                            | Open-source publishing platform / CMS                                     | Open-source publishing platform / CMS                   | Static site generator / Documentation tool        |
+| **Type**                            | Modern Web Creation Platform / CMS                                        | Open-source publishing platform / CMS                   | Static site generator / Documentation tool        |
 | **Front-end & Back-end Separation** | Supported                                                                 | Not supported (traditional approach)                    | Supported                                         |
 | **Component-based Development**     | Supported                                                                 | Limited support (via plugins and themes)                | Supported                                         |
 | **Performance Optimization**        | Virtual DOM, Code Splitting, Lazy Loading                                 | Plugin-dependent optimization                           | Static page generation, excellent performance     |
@@ -163,7 +165,7 @@ Email: admin@gaoredu.com
 <details>
 <summary><strong>What is ReactPress?</strong></summary>
 
-The publishing system for React developers — build blogs, documentation, company websites, and content-driven applications with React. CMS API, Web Admin, Next.js themes, plugins, and desktop client in one CLI.
+The Modern Web Creation Platform for React developers — build, manage, and extend modern websites with React. CMS API, Web Admin, Next.js themes, plugins, and desktop client in one CLI.
 
 </details>
 

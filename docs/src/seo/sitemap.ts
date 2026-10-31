@@ -34,6 +34,13 @@ function applyPriorityRules(item: SitemapItemInput): SitemapItemInput {
   ) {
     return { ...item, priority: 0.85, changefreq: 'weekly' };
   }
+  if (
+    localeNeutralPathKey(pathname) === '/themes' ||
+    localeNeutralPathKey(pathname) === '/plugins' ||
+    localeNeutralPathKey(pathname) === '/best-practices'
+  ) {
+    return { ...item, priority: 0.88, changefreq: 'weekly' };
+  }
   if (localeNeutralPathKey(pathname) === '/about' || localeNeutralPathKey(pathname) === '/contact') {
     return { ...item, priority: 0.6, changefreq: 'monthly' };
   }

@@ -1,18 +1,18 @@
 {
   "theme.tagline": {
-    "message": "面向 React 开发者的发布系统。"
+    "message": "现代化 Web 创作平台。"
   },
   "home.meta.title": {
-    "message": "ReactPress — 面向 React 开发者的发布系统"
+    "message": "ReactPress — 现代化 Web 创作平台"
   },
   "home.meta.description": {
-    "message": "ReactPress 官方文档 — 面向 React 开发者的发布系统。用 React 构建博客、文档、企业官网与内容驱动型应用。一条 CLI，约 60 秒上线。"
+    "message": "ReactPress 是面向 React 开发者的开源现代化 Web 创作平台。构建、管理并扩展现代网站 — CMS 核心、主题、插件与开发者指南。一条 CLI，约 60 秒上线。"
   },
   "home.hero.eyebrow": {
     "message": "开源 · 自托管 · React 原生"
   },
   "home.hero.subTitle": {
-    "message": "用 React 构建博客、文档、企业官网与内容驱动型应用。"
+    "message": "用 React 构建、管理并扩展现代网站。"
   },
   "home.hero.chip.cms": {
     "message": "内容 CMS"
@@ -72,7 +72,7 @@
     "message": "插件体系"
   },
   "home.stats.tagline": {
-    "message": "WordPress 的熟悉感，React 的原生交付 — 无需胶水缝合。"
+    "message": "Build. Manage. Extend. — 为 React 开发者而生。"
   },
   "home.cli.running": {
     "message": "运行中"
@@ -105,19 +105,19 @@
     "message": "复制全部命令，粘贴到终端按序执行即可起站"
   },
   "home.highlights.eyebrow": {
-    "message": "ReactPress 4.0"
+    "message": "核心产品 · ReactPress CMS"
   },
   "home.highlights.title": {
-    "message": "不一样地构建，完整地交付"
+    "message": "聚焦的 CMS，成长的平台"
   },
   "home.highlights.subtitle": {
-    "message": "WordPress 教会互联网的每一件事 — 用 React 重建，作为一个平台整体交付。"
+    "message": "今天用一条 CLI 上线网站 — 需要时再叠加插件、主题与生态能力。"
   },
   "home.highlight.plugins.title": {
     "message": "插件生态"
   },
   "home.highlight.plugins.desc": {
-    "message": "WordPress 级扩展能力 — Hook 体系、plugin.json 清单与 Admin 插槽，SEO 与自动摘要开箱即用。"
+    "message": "Hook 体系、plugin.json 清单与 Admin 插槽 — SEO、自动摘要与图片流水线开箱即用。"
   },
   "home.highlight.desktop.title": {
     "message": "桌面客户端"
@@ -149,11 +149,83 @@
   "home.highlight.dx.desc": {
     "message": "CMS、后台、API、主题、插件与桌面端 — 不必拼凑五个仓库才能发布内容。"
   },
+  "home.platform.eyebrow": {
+    "message": "ReactPress 平台"
+  },
+  "home.platform.title": {
+    "message": "Build. Manage. Extend."
+  },
+  "home.platform.subtitle": {
+    "message": "开源平台，将网站创建、内容管理与扩展能力合而为一，专为现代 Web 开发者设计。"
+  },
+  "home.platform.build.title": {
+    "message": "Build"
+  },
+  "home.platform.build.desc": {
+    "message": "用 React 与开发者优先的工作流创建现代网站。"
+  },
+  "home.platform.manage.title": {
+    "message": "Manage"
+  },
+  "home.platform.manage.desc": {
+    "message": "通过统一的 CMS 管理内容与网站。"
+  },
+  "home.platform.extend.title": {
+    "message": "Extend"
+  },
+  "home.platform.extend.desc": {
+    "message": "用插件、主题、模板与组件定制并扩展能力。"
+  },
+  "home.ecosystem.eyebrow": {
+    "message": "生态"
+  },
+  "home.ecosystem.title": {
+    "message": "主题、插件与指南 — 统一入口"
+  },
+  "home.ecosystem.subtitle": {
+    "message": "ReactPress.cc 是整个平台的流量入口：今天是 CMS 核心，扩展与最佳实践与你一同成长。"
+  },
+  "home.ecosystem.themes.title": {
+    "message": "主题"
+  },
+  "home.ecosystem.themes.desc": {
+    "message": "从 npm 安装 Next.js SSR 主题 — 无需重写 CMS 即可更换外观。"
+  },
+  "home.ecosystem.themes.cta": {
+    "message": "探索主题"
+  },
+  "home.ecosystem.plugins.title": {
+    "message": "插件"
+  },
+  "home.ecosystem.plugins.desc": {
+    "message": "用 Hook 扩展后台与 API — SEO、摘要、图片流水线与自定义插槽。"
+  },
+  "home.ecosystem.plugins.cta": {
+    "message": "探索插件"
+  },
+  "home.ecosystem.templates.title": {
+    "message": "模板"
+  },
+  "home.ecosystem.templates.desc": {
+    "message": "用 theme-starter 脚手架与生产级站点模板更快起步。"
+  },
+  "home.ecosystem.templates.cta": {
+    "message": "浏览模板"
+  },
+  "home.ecosystem.guides.title": {
+    "message": "最佳实践"
+  },
+  "home.ecosystem.guides.desc": {
+    "message": "SEO、自托管、Headless API 与现代 React 站点上线指南。"
+  },
+  "home.ecosystem.guides.cta": {
+    "message": "阅读指南"
+  },
   "home.call.feature": {
-    "message": "所需尽有，无需拼装"
+    "message": "一个平台，开发者优先的工作流"
   },
   "home.call.subtitle": {
-    "message": "从个人博客到团队内容中心 — 发布、治理与集成，不必再胶水粘合各套工具。"
+    "message": "网站创建、内容管理与扩展能力 — 统一在 React 原生技术栈中。"
   },
   "home.call.cta": {
     "message": "探索完整文档"
@@ -162,7 +234,7 @@
     "message": "零配置起站"
   },
   "home.feature.zero.desc": {
-    "message": "安装向导自动完成站点与数据库配置 — 像装 WordPress 一样熟悉，像跑两条命令一样快。"
+    "message": "安装向导自动完成站点与数据库配置 — 两条命令、嵌入式 SQLite，默认无需 Docker。"
   },
   "home.feature.cli.title": {
     "message": "命令行一站式"

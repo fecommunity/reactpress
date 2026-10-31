@@ -4,13 +4,15 @@
   <img height="88" src="./public/brand/logo.png" alt="ReactPress">
 </a>
 
-<img src="./public/poster.png" alt="ReactPress — self-hosted publishing for React developers." width="100%" />
+<img src="./public/poster.png" alt="ReactPress — The Modern Web Creation Platform." width="100%" />
 
 # ReactPress
 
-### Self-hosted publishing for people who live in React
+### The Modern Web Creation Platform.
 
-A real editor for writers. A Next.js site you control. One install — not WordPress, and not five tools glued together.
+**Build. Manage. Extend.**
+
+A writing Admin, a Next.js site you own, and themes & plugins to grow — all from one install.
 
 [Live demo](https://blog.gaoredu.com) · [Theme demo](https://reactpress-theme-starter.vercel.app) · [Docs](https://reactpress.cc/) · [中文](./README-zh_CN.md)
 

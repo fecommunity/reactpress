@@ -25,15 +25,15 @@ New to the product? Start with [What is ReactPress?](./what-is-reactpress.md).
 
 ## At a glance
 
-|                      | ReactPress                                                                                         | WordPress                                                 |
-| -------------------- | -------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
-| **Positioning**      | Full **publishing system for React developers** (Admin + API + Next.js themes + plugins + desktop) | World’s most popular PHP CMS; huge plugin/theme market    |
-| **Stack**            | React, Next.js, NestJS, SQLite / MySQL                                                             | PHP, MySQL, classic themes                                |
-| **Time to live**     | `npm i -g @fecommunity/reactpress` → `reactpress init` — ~**60 seconds**                           | One-click host or LAMP — often minutes                    |
-| **Editing**          | Markdown-first Admin; familiar post/page/media model                                               | Gutenberg blocks; enormous editor ecosystem               |
-| **Visitor delivery** | Next.js SSR / ISR by default                                                                       | PHP themes; caching plugins common                        |
-| **Headless**         | First-class REST + TypeScript toolkit                                                              | REST exists; Headless usually extra setup                 |
-| **Best for**         | React teams, SSR SEO, self-hosted modern stack                                                     | Non-technical editors, plugin marketplace, mature hosting |
+|                      | ReactPress                                                                               | WordPress                                                 |
+| -------------------- | ---------------------------------------------------------------------------------------- | --------------------------------------------------------- |
+| **Positioning**      | **Modern Web Creation Platform** for React developers (CMS + themes + plugins + desktop) | World’s most popular PHP CMS; huge plugin/theme market    |
+| **Stack**            | React, Next.js, NestJS, SQLite / MySQL                                                   | PHP, MySQL, classic themes                                |
+| **Time to live**     | `npm i -g @fecommunity/reactpress` → `reactpress init` — ~**60 seconds**                 | One-click host or LAMP — often minutes                    |
+| **Editing**          | Markdown-first Admin; familiar post/page/media model                                     | Gutenberg blocks; enormous editor ecosystem               |
+| **Visitor delivery** | Next.js SSR / ISR by default                                                             | PHP themes; caching plugins common                        |
+| **Headless**         | First-class REST + TypeScript toolkit                                                    | REST exists; Headless usually extra setup                 |
+| **Best for**         | React teams, SSR SEO, self-hosted modern stack                                           | Non-technical editors, plugin marketplace, mature hosting |
 
 ## Architecture
 

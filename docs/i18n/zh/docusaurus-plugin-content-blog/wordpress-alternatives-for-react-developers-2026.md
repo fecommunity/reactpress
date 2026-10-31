@@ -24,7 +24,7 @@ keywords:
 
 <!--truncate-->
 
-![ReactPress — Publish with React. Ship like WordPress.](/img/blog/poster.png)
+![ReactPress — The Modern Web Creation Platform.](/img/blog/poster.png)
 
 WordPress 仍占据很大份额。但对 **React 开发者**来说，痛点很熟悉：PHP 主题、插件体积、以及与产品其他部分不一致的前端栈。
 

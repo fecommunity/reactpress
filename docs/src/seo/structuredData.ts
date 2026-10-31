@@ -12,12 +12,12 @@ export const FAQ_ENTRIES_EN: FaqEntry[] = [
   {
     question: 'What is ReactPress?',
     answer:
-      'ReactPress is the publishing system for React developers — build blogs, documentation, company websites, and content-driven applications with React. One CLI ships CMS API, Web Admin, Next.js themes, plugins, and a desktop client.',
+      'ReactPress is the Modern Web Creation Platform for React developers — build, manage, and extend modern websites with React. One CLI ships CMS API, Web Admin, Next.js themes, plugins, and a desktop client.',
   },
   {
     question: 'How is ReactPress different from WordPress?',
     answer:
-      'Both offer Admin-driven publishing with themes and plugins. ReactPress ships Next.js SSR themes, a clearer Headless API path, and an Electron desktop client — without PHP.',
+      'WordPress is a PHP CMS for a broad audience. ReactPress is a React-native platform focused on developer workflow: Next.js SSR themes, Headless REST, Hook plugins, and an Electron desktop client — without PHP.',
   },
   {
     question: 'Can I use my own frontend with ReactPress?',
@@ -44,12 +44,12 @@ export const FAQ_ENTRIES_ZH: FaqEntry[] = [
   {
     question: 'ReactPress 是什么？',
     answer:
-      'ReactPress 是面向 React 开发者的发布系统 — 用 React 构建博客、文档、企业官网与内容驱动型应用。一条 CLI 即可运行 CMS API、Web 管理后台、Next.js 主题、插件与 Electron 桌面客户端。',
+      'ReactPress 是面向 React 开发者的现代化 Web 创作平台（Modern Web Creation Platform）— 构建、管理并扩展现代网站。一条 CLI 即可运行 CMS API、Web 管理后台、Next.js 主题、插件与 Electron 桌面客户端。',
   },
   {
     question: 'ReactPress 与 WordPress 有何不同？',
     answer:
-      '两者都支持后台驱动的主题与插件扩展。ReactPress 提供 Next.js SSR 主题、更清晰的 Headless REST 路径与 Electron 桌面客户端，且无需 PHP。',
+      'WordPress 是面向广泛站长的 PHP CMS。ReactPress 聚焦 React 开发者工作流：Next.js SSR 主题、Headless REST、Hook 插件与 Electron 桌面客户端，无需 PHP。',
   },
   {
     question: '可以使用自定义前端吗？',
@@ -76,7 +76,7 @@ export function buildOrganizationGraph(baseUrl: string) {
         'alternateName': 'ReactPress Official Documentation',
         'url': `${baseUrl}/`,
         'description':
-          'Official ReactPress docs — the publishing system for React developers. Build blogs, documentation, company websites, and content-driven applications with React.',
+          'ReactPress — The Modern Web Creation Platform. Build, manage, and extend modern websites with React. Open-source CMS, themes, plugins, and developer guides.',
         'inLanguage': ['en', 'zh-CN'],
         'publisher': { '@id': `${baseUrl}/#organization` },
       },

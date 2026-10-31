@@ -24,7 +24,7 @@ keywords:
 
 <!--truncate-->
 
-![ReactPress — Publish with React. Ship like WordPress.](/img/blog/poster.png)
+![ReactPress — The Modern Web Creation Platform.](/img/blog/poster.png)
 
 WordPress still runs a huge share of the web. For **React developers**, though, the pain is familiar: PHP themes, plugin weight, and a frontend stack that does not match the rest of the product.
 

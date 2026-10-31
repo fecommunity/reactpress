@@ -14,7 +14,7 @@ const algoliaConfig = resolveAlgoliaConfig();
 const config: Config = {
   title: 'ReactPress',
   titleDelimiter: '-',
-  tagline: 'The publishing system for React developers.',
+  tagline: 'The Modern Web Creation Platform.',
   // Default meta description for non-home pages (home overrides in src/pages/index.tsx)
   favicon: 'img/favicon.ico',
 
@@ -84,7 +84,7 @@ const config: Config = {
           showReadingTime: true,
           blogTitle: 'Blog',
           blogDescription:
-            'ReactPress blog — long-form articles on React CMS, Next.js publishing, and open-source platform updates. Release notes live under Changelog.',
+            'ReactPress blog — guides on the modern web creation platform: React CMS, Next.js sites, themes, plugins, and open-source updates. Release notes live under Changelog.',
           feedOptions: {
             type: ['rss', 'atom'],
             xslt: true,
@@ -132,6 +132,9 @@ const config: Config = {
           position: 'left',
           label: 'Docs',
         },
+        { to: '/themes', label: 'Themes', position: 'left' },
+        { to: '/plugins', label: 'Plugins', position: 'left' },
+        { to: '/best-practices', label: 'Guides', position: 'left' },
         {
           to: '/blog',
           label: 'Blog',
@@ -183,6 +186,31 @@ const config: Config = {
           ],
         },
         {
+          title: 'Ecosystem',
+          items: [
+            {
+              label: 'Themes',
+              to: '/themes',
+            },
+            {
+              label: 'Plugins',
+              to: '/plugins',
+            },
+            {
+              label: 'Best practices',
+              to: '/best-practices',
+            },
+            {
+              label: 'Theme development',
+              to: '/docs/developer-guide/theme-development',
+            },
+            {
+              label: 'Plugin development',
+              to: '/docs/developer-guide/plugin-development',
+            },
+          ],
+        },
+        {
           title: 'Community',
           items: [
             {
@@ -192,6 +220,14 @@ const config: Config = {
             {
               label: 'GitHub Releases',
               href: 'https://github.com/fecommunity/reactpress/releases',
+            },
+            {
+              label: 'Blog',
+              to: '/blog',
+            },
+            {
+              label: 'Changelog',
+              to: '/blog/changelog',
             },
           ],
         },
@@ -217,23 +253,6 @@ const config: Config = {
             {
               label: 'Terms',
               to: '/terms',
-            },
-          ],
-        },
-        {
-          title: 'More',
-          items: [
-            {
-              label: 'Blog',
-              to: '/blog',
-            },
-            {
-              label: 'Changelog',
-              to: '/blog/changelog',
-            },
-            {
-              label: 'GitHub',
-              href: 'https://github.com/fecommunity/reactpress',
             },
             {
               label: 'npm package',

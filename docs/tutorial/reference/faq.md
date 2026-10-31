@@ -46,7 +46,7 @@ Monorepo 本地开发时，Admin Vite dev server 可能在 `http://localhost:300
 <details>
 <summary><strong>ReactPress 是什么？</strong></summary>
 
-面向 React 开发者的开源**发布系统**（Admin + NestJS API + Next.js 主题 + 插件 + 桌面客户端），不是只提供 API 的 Headless CMS。详见 [ReactPress 是什么？](../getting-started/what-is-reactpress.md)。
+面向 React 开发者的开源**现代化 Web 创作平台**（Admin + NestJS API + Next.js 主题 + 插件 + 桌面客户端），不是只提供 API 的 Headless CMS。口号：**Build. Manage. Extend.** 详见 [ReactPress 是什么？](../getting-started/what-is-reactpress.md)。
 
 </details>
 
@@ -60,16 +60,14 @@ Monorepo 本地开发时，Admin Vite dev server 可能在 `http://localhost:300
 <details>
 <summary><strong>和 WordPress 有什么不同？</strong></summary>
 
-相同点：Admin 驱动的内容工作流、主题与插件扩展。
-
-不同点：默认 Next.js 主题更快、Headless 路径更清晰、无 PHP 主题包袱；另提供 Electron 桌面离线写作。
+WordPress 是面向广泛站长的 PHP CMS。ReactPress 强调 **React 开发者优先的工作流**：Next.js SSR 主题、更清晰的 Headless REST、Hook 插件与 Electron 桌面客户端，无需 PHP。见 [ReactPress vs WordPress](../getting-started/reactpress-vs-wordpress.md)。
 
 </details>
 
 <details>
 <summary><strong>和 Strapi / Payload 等 Headless CMS 比呢？</strong></summary>
 
-它们主要交付**后端 API**；ReactPress 交付**完整发布平台**（Admin + API + 主题 catalog + 插件 + 桌面），一条 CLI 即可运行，减少组装成本。
+它们主要交付**后端 API**；ReactPress 交付**现代化 Web 创作平台**（Admin + API + 主题 catalog + 插件 + 桌面），一条 CLI 即可运行，减少组装成本。
 
 </details>
 

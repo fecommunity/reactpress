@@ -24,7 +24,7 @@ keywords:
 
 <!--truncate-->
 
-![ReactPress — Publish with React. Ship like WordPress.](/img/blog/poster.png)
+![ReactPress — The Modern Web Creation Platform.](/img/blog/poster.png)
 
 如果你是一名前端工程师，大概率经历过这样的循环：
 
@@ -706,7 +706,7 @@ mkdir my-blog && cd my-blog
 reactpress init
 ```
 
-**Publish with React. Ship like WordPress.**
+**Build. Manage. Extend.**
 
 ---
 
