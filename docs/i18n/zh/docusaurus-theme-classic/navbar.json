@@ -23,6 +23,18 @@
     "message": "文档",
     "description": "Navbar item with label Docs"
   },
+  "item.label.Ecosystem": {
+    "message": "生态",
+    "description": "Navbar item with label Ecosystem"
+  },
+  "item.label.Community": {
+    "message": "社区",
+    "description": "Navbar item with label Community"
+  },
+  "item.label.Resources": {
+    "message": "资源",
+    "description": "Navbar item with label Resources"
+  },
   "item.label.Themes": {
     "message": "主题",
     "description": "Navbar item with label Themes"

@@ -23,6 +23,18 @@
     "message": "Docs",
     "description": "Navbar item with label Docs"
   },
+  "item.label.Ecosystem": {
+    "message": "Ecosystem",
+    "description": "Navbar item with label Ecosystem"
+  },
+  "item.label.Community": {
+    "message": "Community",
+    "description": "Navbar item with label Community"
+  },
+  "item.label.Resources": {
+    "message": "Resources",
+    "description": "Navbar item with label Resources"
+  },
   "item.label.Themes": {
     "message": "Themes",
     "description": "Navbar item with label Themes"

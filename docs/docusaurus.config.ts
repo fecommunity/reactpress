@@ -132,24 +132,43 @@ const config: Config = {
           position: 'left',
           label: 'Docs',
         },
-        { to: '/themes', label: 'Themes', position: 'left' },
-        { to: '/plugins', label: 'Plugins', position: 'left' },
-        { to: '/best-practices', label: 'Guides', position: 'left' },
         {
-          to: '/blog',
-          label: 'Blog',
+          type: 'dropdown',
+          label: 'Ecosystem',
           position: 'left',
-          // Exclude /blog/changelog so Blog and Changelog are not both active.
-          activeBaseRegex: `/blog(?!/changelog(?:/|$))`,
+          items: [
+            { to: '/themes', label: 'Themes' },
+            { to: '/plugins', label: 'Plugins' },
+            { to: '/best-practices', label: 'Guides' },
+          ],
         },
         {
-          to: '/blog/changelog',
-          label: 'Changelog',
+          type: 'dropdown',
+          label: 'Community',
           position: 'left',
-          activeBasePath: '/blog/changelog',
+          items: [
+            {
+              to: '/blog',
+              label: 'Blog',
+              // Exclude /blog/changelog so Blog and Changelog are not both active.
+              activeBaseRegex: `/blog(?!/changelog(?:/|$))`,
+            },
+            {
+              to: '/blog/changelog',
+              label: 'Changelog',
+              activeBasePath: '/blog/changelog',
+            },
+          ],
         },
-        { to: '/docs/tutorial-extras/desktop-client', label: 'Download', position: 'left' },
-        { href: 'https://blog.gaoredu.com', label: 'Demo', position: 'left' },
+        {
+          type: 'dropdown',
+          label: 'Resources',
+          position: 'left',
+          items: [
+            { to: '/docs/tutorial-extras/desktop-client', label: 'Download' },
+            { href: 'https://blog.gaoredu.com', label: 'Demo' },
+          ],
+        },
         {
           type: 'localeDropdown',
           position: 'right',
